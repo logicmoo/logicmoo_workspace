@@ -240,7 +240,7 @@ set_local_po ints(C,Point,Grid,GridO):- point_t o_hvc(H,V,Old,Point), replace_lo
 %set_local_points([],Grid,Grid):- !.
 %set_local_points([H|T],Grid,GridO):- !, set_local_points(H,Grid,GridM),set_local_points(T,GridM,GridO).
 set_local_points(Point,Grid,GridO):- replace_local_points(Point,_AnyOldColor,Grid,GridO),!.
-set_local_points(Point,Grid,GridO):- ignore((rtrace((replace_local_points(Point,_AnyOldColor,Grid,GridO))),break)),!.
+set_local_points(Point,Grid,GridO):- dumpST,ignore((rtrace((replace_local_points(Point,_AnyOldColor,Grid,GridO))),break)),!.
 %set_local_points(Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
 %set_local_points(Point,Grid,Grid):-  wdmsg(warn(skip(set_local_points(Point)))).
 
@@ -275,7 +275,7 @@ subst_color(Color1,Color2,Grid,NewGrid):-
   quietly((
    color_code(Color1,Num1),
    color_code(Color2,Num2),
-   subst_w_attv(Grid,Num1,Num2,NewGrid))).
+   subst001(Grid,Num1,Num2,NewGrid))).
 
 blacken_color(Color1,Grid,NewGrid):- black_cell(Cell), subst_color(Color1,Cell,Grid,NewGrid).
 swap_colors(Color1,Color2,Grid,NewGrid):- subst_color(Color1,Swap1,Grid,MGrid),
@@ -298,7 +298,7 @@ grid_set_all_bg_colors(Color,I,O):- is_bg_color(I),O=Color.
 backfill_vars(GridO):- clause(backfill(GridO),true).
 
 unbind_color(Color1,Grid,GridO):- is_grid(Grid),!,grid_color_code(Color1,Num1),unbind_color0(Num1,Grid,GridO).
-unbind_color(Color1,Grid,GridO):- color_code(Color1,Num1),subst_w_attv(Grid,Num1,_,GridO).
+unbind_color(Color1,Grid,GridO):- color_code(Color1,Num1),subst001(Grid,Num1,_,GridO).
 
 unbind_color0(Num1,Grid,GridO):- is_list(Grid),!,maplist(unbind_color0(Num1),Grid,GridO).
 unbind_color0(Num1,Num1,_):-!.
@@ -313,7 +313,7 @@ colors_to_vars(Colors,Vars,Grid,GridO):- (plain_var(Colors)->unique_colors(Grid,
    pt(Grid-->GridO).
 
 subst_cvars([],[],A,A):-!. 
-subst_cvars([F|FF],[R|RR],S,D):- !, freeze(R,(\=(R,_-_))),subst_w_attv(S,F,R,M), subst_cvars(FF,RR,M,D).
+subst_cvars([F|FF],[R|RR],S,D):- !, freeze(R,(\=(R,_-_))),subst001(S,F,R,M), subst_cvars(FF,RR,M,D).
 
 /*
 colors_to_vars(B,A,Grid,GridO):- is_list(Grid),!,maplist(colors_to_vars(B,A),Grid,GridO).
@@ -324,7 +324,7 @@ colors_to_vars(_,_,V,V).
 %add_borders(C,G,GridNew):- G\=@=Grid,!,add_borders(C,Grid,GridNew).
 add_borders(Color,Grid,GridO):- 
  grid_size(Grid,H,V),
- get_vm(VM),
+ get_training(VM),
  wots(_,
   (run_dsl(VM,[replace_row_e(1,Color),
   replace_row_e(V,Color),
@@ -400,7 +400,7 @@ grid_size_term(I,size(X,Y)):- grid_size(I,X,Y),!.
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
 grid_size(G,H,V):- is_grid(G),!,grid_size_nd(G,H,V),!.
-grid_size(G,X,Y):- is_group(G),!,maplist(grid_size_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
+grid_size(G,X,Y):- is_group(G),!,mapgroup(grid_size_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
 grid_size(I,X,Y):- indv_props(I,L),(member(grid_size(X,Y),L);member(vis_hv(X,Y),L)),!.
 %grid_size(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 %grid_size(G,H,V):- quietly(is_object(G)), !, vis_hv(G,H,V).

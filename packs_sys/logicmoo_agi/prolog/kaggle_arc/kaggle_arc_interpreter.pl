@@ -43,6 +43,7 @@ pass_thru_workflow([options(V)]):- nonvar(V).
 member_or_it(G,InO):- is_list(InO),!,member(G,InO).
 member_or_it(G,G).
 
+
 show_workflow(InO,_,InO):-pass_thru_workflow(InO),!. 
 show_workflow(In,String,Out):- nonvar(Out),!,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
 show_workflow(InO,String,InO):- string(String),!, 
@@ -54,15 +55,17 @@ show_workflow(In,[H|T],Out):-
 show_workflow(In,add(P),Out):- !,
   show_workflow(In,P,Mid),!,
   my_append(Mid,In,Out).
-show_workflow(In,each(P),Out):- 
-  show_workflow_each(In,P,Out).
+show_workflow(In,each(P),Out):- show_workflow_each(In,P,Out).
 show_workflow(In,P,Out):- must_det_ll(call(P,In,Out)),!.
 show_workflow(In,P,In):- arcdbg(warn(failed(show_workflow(P)))),!.
  
 show_workflow_each([],_P,[]):-!.
+
+show_workflow_each(In,P,Out):- \+ is_list(In),into_list(In,List),!,show_workflow_each(List,P,Out).
+
 show_workflow_each(In,P,Out):- is_grid(In),!,show_workflow(In,P,Out).
 show_workflow_each([H|T],P,[Mid|Out]):-
-  show_workflow_each(H,P,Mid),!,
+  show_workflow(H,P,Mid),!,
   show_workflow_each(T,P,Out).
 show_workflow_each(In,P,Out):- show_workflow(In,P,Out).
 
@@ -81,7 +84,7 @@ test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 call_expanded(VM,G):-  exp_call(VM,G,GG),G\==GG,!,call_expanded(VM,GG).
-call_expanded(_VM,G):- catch(call(G),_,rtrace(G)).
+call_expanded(_VM,G):- catch(call(G),E,(dumpST,pt(E),rtrace(G))).
 
 exp_call(_,Var,Var):- var(Var),!.
 exp_call(_,Var,Var):- is_list(Var),!.
@@ -97,7 +100,7 @@ exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X).
 exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)).
 exp_call(_,E,E).
 
-run_dsl(VM,Prog,In,Out):- ((var(VM)->get_vm(VM);true)), nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
+run_dsl(VM,Prog,In,Out):- ((var(VM)->get_training(VM);true)), nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
 
 run_dsl(VM,Mode,AttVar,In,Out):- attvar(AttVar),get_attr(AttVar,prog,Prog),!,run_dsl(VM,Mode,Prog,In,Out).
 run_dsl(VM,Mode,Prog,_In,_Out):- var(Prog),!,term_hash(VM,Hash),throw(var_solving_progs(vm(Hash),Mode,Prog,in,out)).
@@ -156,36 +159,30 @@ sync_colors(Orig,Colors):- is_object(Orig),!,colors(Orig,Colors),
   globalpoints(Orig,OrigGPoints),colors(OrigGPoints,Colors),
   localpoints(Orig,OrigLPoints),colors(OrigLPoints,Colors),!.
 sync_colors(Orig,Colors):- colors(Orig,Colors).
-closure_grid_to_object(Orig,Grid,NewObj):- 
-  sync_colors(Orig,Colors),
-  object_indv_id(Orig,ID,_Iv),
-  grid_size(Grid,H,V), 
-  
-  globalpoints(Grid,Points),
-  make_indiv_object(ID,H,V,Points,[iz(grid)],PartialObj),
-  sync_colors(PartialObj,Colors),
-  transfer_props(Orig,[loc_xy,iz],PartialObj,NewObj),!.
+
+uncast_grid_to_object(Orig,Grid,NewObj):- 
+  rebuild_from_localpoints(Orig,Grid,NewObj).
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
 
 :- decl_pt(into_grid(+(any),-mv(grid))).
-into_grids(P,G):- no_repeats(G,quietly(recast_to_grid(P,G, _))).
+into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(any),-grid)).
-into_grid(P,G):- quietly(recast_to_grid(P,G, _)).
+into_grid(P,G):- quietly(cast_to_grid(P,G, _)).
 
 print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).
 print_grid_to_atom(G,S):- with_output_to(atom(S),print_grid(G)).
 % ?- print_grid(gridFn(X)).
-recast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
-recast_to_grid(Obj,Grid, closure_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
-recast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
-recast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
-recast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
-recast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
+cast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
+cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
+cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
+cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
+cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
+cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
 
-recast_to_grid(Naming,Grid, Closure ):- (named_gridoid(Naming,NG),recast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure).
+cast_to_grid(Naming,Grid, Closure ):- (named_gridoid(Naming,NG),cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure).
 recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
   make_grid(GH,GV,Grid),
@@ -204,6 +201,7 @@ named_gridoid(ID,G):- plain_var(ID),!,known_gridoid(ID,G).
 named_gridoid(ID,G):- known_gridoid(ID,G).
 
 known_gridoid(ID,GO):- known_gridoid0(ID,G),to_real_grid(G,GO).
+known_gridoid0(ID,_):- is_grid(ID),!,fail.
 known_gridoid0(ID,G):- is_grid_id(G,ID).
 known_gridoid0(ID,G):- is_shared_saved(ID,G).
 known_gridoid0(ID,G):- is_unshared_saved(ID,G).
@@ -213,16 +211,16 @@ known_gridoid0(ID,G):- ID= TstName*ExampleNum*IO, fix_test_name(TstName,Name,_),
 known_gridoid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),kaggle_arc_io(Name,ExampleNum,_IO,G).
 known_gridoid0(ID,G):- fix_test_name(ID,Name,ExampleNum),nop(ignore(ExampleNum=tst+0)),kaggle_arc_io(Name,ExampleNum,_IO,G).
 
-to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst(G1,bg,BG,GO))). % ,ignore([[BG|_]|_]=GO).
+to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,GO))). % ,ignore([[BG|_]|_]=GO).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 
 into_gridnameA(G,TstName):- known_gridoid(TstName,G).
 
 grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
-grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(Grid,ID).
-grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_),!,grid_to_id(GGrid,ID).
+%grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
 grid_to_id(Grid,ID):- known_gridoid0(ID,GVar),Grid=@=GVar,!.
+grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_),!,grid_to_id(GGrid,ID).
 grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(ID), set_grid_id(Grid,ID),!.
 
 makeup_gridname(GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridName = ID*('ExampleNum'+F)*io.
@@ -261,11 +259,11 @@ into_group(P,G):- is_object(P),points_to_grid(P,M),!,into_group(M,G).
 %into_group(G,G):- is_grid(G),!.
 
 into_group(P,G):- is_group(P),set_grid_nums(P),
-  maplist(into_group,P,Gs),!,combine_grids(overlay,Gs,G).
+  mapgroup(into_group,P,Gs),!,combine_grids(overlay,Gs,G).
 into_group(P,G):-
-  maplist(into_group,P,Gs),!, 
+  mapgroup(into_group,P,Gs),!, 
   set_grid_nums(Gs), arg(1,Gs,G).
-into_group(P,G):- maplist(into_group,P,Gs),!, set_grid_nums(Gs), combine_grids(overlay,Gs,G).
+into_group(P,G):- mapgroup(into_group,P,Gs),!, set_grid_nums(Gs), combine_grids(overlay,Gs,G).
 */
 
 
@@ -318,14 +316,11 @@ do_change_nd([H|T],Grid1,Grid2):- one_change(H,Grid1,GridM),do_change_nd(T,GridM
 one_change(same,Grid1,Grid2):- is_grid(Grid2),Grid1=Grid2,!.
 one_change(colorChange(C1,C2),Grid1,Grid2):- 
   first_color(Grid1,C1),ignore((is_grid(Grid2),first_color(Grid2,C2))),
-  subst_w_attv(Grid1,C1,C2,Grid2).
+  subst001(Grid1,C1,C2,Grid2).
 one_change(blank1Color(C1),Grid1,Grid2):- 
   first_color(Grid1,C1),copy_cells(==(C1),free_cell,Grid1,Grid2).
 one_change(same_size,Grid1,Grid2):- plain_var(Grid2),grid_size(Grid1,H,V),grid_size(Grid2,H,V),!.
 
-subst_w_attv(I,F,R,O):- quietly((subst(I,F,R,O))),!.
-%subst_w_attv(I,F,R,O):- map_pred(subst_and_attv(F,R),I,O).
-%subst_and_attv(F,R,I,O):- F == R, O = I, !.
 
 /*
 nth_fact(P, I):- clause(P, true, Ref), nth_clause(P, I, Ref).
@@ -340,7 +335,7 @@ do_change_nd([H|T], Grid1, Grid2):- one_change(H, Grid1, GridM), do_change_nd(T,
 
 one_change(same, Grid1, Grid2):- is_grid(Grid2), Grid1=Grid2, !.
 one_change(colorChange(C1, C2), Grid1, Grid2):- 
- first_color(Grid1, C1), ignore((is_grid(Grid2), first_color(Grid2, C2))), subst(Grid1, C1, C2, Grid2).
+ first_color(Grid1, C1), ignore((is_grid(Grid2), first_color(Grid2, C2))), subst001(Grid1, C1, C2, Grid2).
 one_change(blank1Color(C1), Grid1, Grid2):- 
  first_color(Grid1, C1), copy_cells(==(C1), free_cell, Grid1, Grid2).
 one_change(same_size, Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1), grid_size(Grid2, C1), !.

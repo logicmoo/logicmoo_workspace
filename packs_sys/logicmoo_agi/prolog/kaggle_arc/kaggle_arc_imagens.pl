@@ -135,7 +135,7 @@ the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Complex)
   make_indiv_object('ID',H,V,Points,[iz(hammer)],LibObj).
 
 
-shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,maplist(shape_info_props,Shapes,ShapeProps).
+shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,mapgroup(shape_info_props,Shapes,ShapeProps).
 shape_info_props(Shape,iz(Shape)).
 
 l_shape(LibObj):- 
@@ -150,22 +150,25 @@ l_shape(LibObj):-
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
   globalpoints(ScaledGrid,Points)))),
   catch(make_indiv_object(ID,H,V,Points,[iz(l_shape)|ShapeProps],LibObj),_,
-    (rtrace(make_indiv_object(ID,H,V,Points,[iz(l_shape)|ShapeProps],LibObj)))).
+    (dumpST,trace,make_indiv_object(ID,H,V,Points,[iz(l_shape)|ShapeProps],LibObj))).
 
 % todo temp
-sortshapes(List,Set):- my_list_to_set(List, using_compare(shape_key), Set).
+sortshapes(List,Set):- my_list_to_set_cmp(List, using_compare(shape_key), Set).
 % sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
 %sortshapes(List,ListS):- sort(List,ListS),!.
 
-my_list_to_set(List, Set):- my_list_to_set(List, (==) ,Set).
+my_list_to_set(List, Set):- my_list_to_set(List, (=) ,Set).
+my_list_to_set_variant(List, Set):- my_list_to_set(List, (=@=) ,Set).
+my_list_to_set_cmp(List, Set):- my_list_to_set(List, (=@=) ,Set).
 
-my_list_to_set([E|List],Comparator, Set):-
-   select(C,List,Rest),
-   call(Comparator,Delta,E,C), Delta == (=), !,
-   my_list_to_set([C|Rest],Comparator, Set).
-my_list_to_set([E|List],Comparator, [E|Set]):- !,
-   my_list_to_set(List,Comparator, Set).
+my_list_to_set([E|List],P2, Set):- select(C,List,Rest), call(P2,E,C), !, my_list_to_set([E|Rest],P2, Set).
+my_list_to_set([E|List],P2, [E|Set]):-!, my_list_to_set(List,P2, Set).
 my_list_to_set([],_,[]).
+
+my_list_to_set_cmp([E|List],C3, Set):- select(C,List,Rest), call(C3,R,E,C), 
+   R== (=), my_list_to_set_cmp([C|Rest],C3, Set),!.
+  my_list_to_set_cmp([E|List],C3, [E|Set]):-!, my_list_to_set_cmp(List,C3, Set).
+my_list_to_set_cmp([],_,[]).
 
 
 frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),singletons(true)]).
@@ -186,7 +189,7 @@ decolorize(Shape,ShapeO):-
   all_dif_colors(Vars).
 
 /*
-  maplist(label_as_fg(Vars),Vars,CVars).
+  mapgroup(label_as_fg(Vars),Vars,CVars).
 */
 all_dif_colors(Vars):- all_dif_colors(Vars,Vars).
 all_dif_colors([],_):-!.
@@ -210,8 +213,8 @@ add_shape_lib(Type,Obj):- \+ ground(Obj),pt(add_shape_lib(Type,Obj)),fail.
 add_shape_lib(Type,Obj):-  is_object(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 
-add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,maplist(add_shape_lib(Type),[Obj|L]).
-add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, maplist(add_shape_lib(Type),Obj).
+add_shape_lib(Type,[Obj|L]):- (is_group(Obj);is_object(Obj) ; is_grid(Obj)),!,mapgroup(add_shape_lib(Type),[Obj|L]).
+add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, mapgroup(add_shape_lib(Type),Obj).
 
 add_shape_lib(Type,Obj):- add_shape_lib0(Type,Obj).
 
@@ -224,7 +227,7 @@ add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
 
 
 %assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<4,!.
-assert_shape_lib(Type,Obj):- is_list(Type),!,maplist(rev_lambda(assert_shape_lib(Obj)),Type).
+assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(rev_lambda(assert_shape_lib(Obj)),Type).
 assert_shape_lib(Type,Obj):- my_asserta_if_new(in_shape_lib(Type,Obj)).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
@@ -252,8 +255,8 @@ box_grid(C,Grid,GridO):-
   likely_fgc(C), 
   ensure_grid(Grid),
   grid_size(Grid,H,_), H2 is H +2,
-  length(TB,H2),maplist(=(C),TB),
-  maplist(pad_sides(=(C)),Grid,FillRows),
+  length(TB,H2),mapgroup(=(C),TB),
+  mapgroup(pad_sides(=(C)),Grid,FillRows),
   my_append([TB|FillRows],[TB],D),
   restructure(D,GridO),!.
 
@@ -263,7 +266,7 @@ box_grid_n_times(N,C,Grid,D):- !,
   make_shape(box_grid(C,Grid),G), plus(M,1,N),
   make_shape(box_grid_n_times(M,C,G),D).
 
-restructure(X,Y):- is_list(X),!,maplist(restructure,X,Y).
+restructure(X,Y):- is_list(X),!,mapgroup(restructure,X,Y).
 restructure(X,X).
 
 :- decl_sf(solid_square(fg_color,size)).
@@ -271,9 +274,9 @@ solid_square(C,HW,Grid):-
   likely_fgc(C), 
   between(1,30,HW),
   length(Fill,HW),
-  maplist(=(C),Fill),
+  mapgroup(=(C),Fill),
   length(FillRows,HW),
-  maplist(=(Fill),FillRows),!,
+  mapgroup(=(Fill),FillRows),!,
   restructure(FillRows,Grid).
 
 decl_sf(hollow_square(fg_color,bg_color,size)).
@@ -287,7 +290,7 @@ hollow_square(C,BG,HW,D):-
 
 
 dupe_shape(E,F):- \+ is_list(E),!,duplicate_term(E,F).
-dupe_shape(L,E):- maplist(dupe_shape,L,E).
+dupe_shape(L,E):- mapgroup(dupe_shape,L,E).
   
 
 show_shape_lib_expanded(Name):- 
@@ -296,10 +299,10 @@ show_shape_lib_expanded(Name):-
 
 show_shape_lib:- %mmake, 
   findall(Name,(clause(in_shape_lib(Name,_Obj),_),nonvar(Name)),Gallery),
-  list_to_set(Gallery,GalleryS),maplist(show_shape_lib,GalleryS).
+  list_to_set(Gallery,GalleryS),mapgroup(show_shape_lib,GalleryS).
 
 clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
-  list_to_set(Gallery,GalleryS),maplist(clear_shape_lib,GalleryS).
+  list_to_set(Gallery,GalleryS),mapgroup(clear_shape_lib,GalleryS).
 
 
 % ===========================================================
@@ -323,10 +326,10 @@ print_shape_0(Shape):-
   localpoints(Shape,Points),
   
   numbervars(Points,0,_,[attvar(bind)]),
-  subst(Points,'$VAR'(0),grey,Points0),
-  subst(Points0,'$VAR'(1),grey,Points1),
-  subst(Points1,'$VAR'(2),grey,Points2),
-  subst(Points2,'$VAR'(3),grey,Points3),
+  subst001(Points,'$VAR'(0),grey,Points0),
+  subst001(Points0,'$VAR'(1),grey,Points1),
+  subst001(Points1,'$VAR'(2),grey,Points2),
+  subst001(Points2,'$VAR'(3),grey,Points3),
   points_to_grid(H,V,Points3,Grid),
   %object_grid(Shape,FG),
   %numbervars(Shape,0,_,[attvar(bind)]),
@@ -340,12 +343,12 @@ show_shape_lib(Name):- make,
  pt(?- show_shape_lib(Name)),
  mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pt(shape_lib_direct(Name)=Len))),
  ignore(( Len\==0,
-  maplist(show_shape,GalleryS),  
+  mapgroup(show_shape,GalleryS),  
   mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), underline_print(pt(shape_lib_expanded(Name)=LenOS)))),
-  maplist(show_shape,GallerySOS),
+  mapgroup(show_shape,GallerySOS),
   %shape_lib_rules(Name,Rules),length(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
   mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, pt(shapelib_opts(LenOpts)=Opts)))),!,
-  ignore((fail,GalleryS\==[], maplist(show_shape,GalleryS))))).
+  ignore((fail,GalleryS\==[], mapgroup(show_shape,GalleryS))))).
 
 clear_shape_lib(Name):- 
   findall(_,(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),L),
@@ -364,7 +367,7 @@ shape_lib_direct(Name,GalleryS):-
 shape_lib_rules(Name,GalleryS):- 
   findall(Rule,
    (clause(in_shape_lib(Name,Obj),Body),Rule=(in_shape_lib(Name,Obj):- Body)),Gallery),  
-  maplist(label_rules(Name),Gallery),
+  mapgroup(label_rules(Name),Gallery),
   sortshapes(Gallery,GalleryS).
 
 label_rules(_Complex,(Obj:- Body)):- 
@@ -429,11 +432,8 @@ is_shapelib_opt(as_is, = ).
 apply_shapelib_xforms(Name,GalleryS,SmallLib):-  shapelib_opts(Name,Opts),expand_shape_directives(GalleryS,Opts,SmallLib).
 apply_shapelib_xforms(_Name,Gallery,Gallery):- !.
 
-
-expand_shape_directives(Shapes,Opts,NewGroup):- \+ is_list(Shapes),!,expand_shape_directives([Shapes],Opts,NewGroup).
 % default expansion
-expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
-  must_det_ll(((
+expand_shape_directives(Shapes,None,SmallLib):- None==[],!,
  print_collapsed(100,
   show_workflow(Shapes,
    [ =, %"Vanila indivs",
@@ -449,8 +449,8 @@ expand_shape_directives(Shapes,[],SmallLib):- must_be_free(SmallLib),
 
        smallest_first, "smallest first",
     %decolorize % decolorized points are not yet printable 
-    =],SmallLib)
-    )))).
+    =],SmallLib)).
+
 expand_shape_directives(A,Opts,B):- show_workflow(A,Opts,B),!.
 
 :- dynamic(is_shapelib_opt/2).

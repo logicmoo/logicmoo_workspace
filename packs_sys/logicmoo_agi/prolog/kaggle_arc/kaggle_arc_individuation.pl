@@ -287,7 +287,9 @@ detect_indvs(In,Out,Grid):- individuate(In,Grid,Out).
 
 individuation_reserved_options(ROptions,Reserved,Options):- 
    fix_indivs_options(ROptions,ReservedOptions),
-   my_partition(is_object_or_grid,ReservedOptions,Reserved,Options),
+   %my_partition(is_object_or_grid,ReservedOptions,Reserved,Options),
+   Options = ReservedOptions,
+   Reserved = [],
    %select_default_i_options(Grid,H,V,Points,DefaultOptions),
    %default_i_options(DefaultOptions),
    %subst(Options0,defaults,DefaultOptions,Options),
@@ -304,8 +306,9 @@ individuate(ROptions,GridIn,IndvS):-
    must_be_free(IndvS),
    flag(indiv,_,0),
    into_points_grid(GridIn,Points,Grid),
-   quietly(grid_size(Grid,H,V)), 
    grid_to_id(Grid,ID),
+  my_assertion(\+ is_grid(ID)),
+   quietly(grid_size(Grid,H,V)), 
    pt(yellow,ig(ROptions,ID)=(H,V)),
    individuate(H,V,ID,ROptions,Grid,Points,IndvS).
 
@@ -315,6 +318,7 @@ individuate(GH,GV,ID,ROptions,_Grid,Points,IndvS):- \+ is_list(ROptions),
 individuate(GH,GV,ID,whole,_Grid,Points,IndvS):-  individuate_whole(GH,GV,ID,Points,IndvS).
 individuate(H,V,ID,ROptions,Grid,Points,IndvSS):-
    individuation_reserved_options(ROptions,Reserved,NewOptions),
+   %trace,
    make_fti(H,V,ID,Grid,[],Reserved,NewOptions,Points,VM),
    individuals_raw(VM,H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuate=IndvSRaw))),
@@ -354,9 +358,9 @@ individuate_whole(GH,GV,ID,PointsIn,IndvSO):-
 
 % Thunk(ArgList->VM)
 call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- !,
-  (var(VM)->(trace,make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM));true),
+  (var(VM)->(make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM));true),
   clause(fti(VM,Options),Body),
-  call((Body,deterministic(YN))),
+  call((Body,deterministic(YN),true)),
   (YN == true -> ! ; true),
   NewReserved = VM.robjs,
   NewOptions = VM.program,
@@ -365,32 +369,19 @@ call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Point
   SofarMaybeNew = VM.objs .
 call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- fail,
   clause(fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints),Body),
-  call((Body,deterministic(YN))),
+  call((Body,deterministic(YN),true)),
   (YN == true -> ! ; true).
 
-
-make_fti(VM):- make_fti(_GH,_GV,_ID,_Grid,_Sofar,_Reserved,_Options,_Points,VM),
-   VM.mappings=[map].
 make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-  
-  statistics(cputime,X),Timeleft is X+10,
-  ArgVM = _{
+  statistics(cputime,X),Timeleft is X+30,
+  ArgVM = vm{
    % parent VM
    parent:_,
-
-
-   test:ID,mappings:_,
-
-   pre_in:_, pre_out:_,
-
-   inC:_InC,outC:_OutC,
-   removed:_,added:_, kept:_,
-   
-   grid_in:_,grid_out:_,
 
    % Options and TODO List (are actually same things)
    program:Options, options:Options, options_o:Options, todo_prev:[],
    % how much time is left before we turn on debugger
-   timeleft:Timeleft, iteration_max:20,
+   timeleft:Timeleft, objects_max:30,
    % Grid and point representations
    grid:Grid, points:Points,
    % Original copies of Grid and point representations
@@ -401,7 +392,7 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    notes:_, debug:_,
    % height width and lookup key for image
    h:GH, v:GV, id:ID},
-   (var(VM) -> ArgVM = VM ; true),
+   (var(VM) -> (fix_test_name(ID,TestID,_), test_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
    (nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
@@ -417,7 +408,7 @@ transfer_onto_dict(ArgVM,VM):-
 b_set_pairs(VM,K-V):- (nonvar(V),V\==[])->my_b_set_dict(K,VM,V);true.
 nb_set_pairs(VM,K-V):- (nonvar(V),V\==[])->nb_set_dict(K,VM,V);true.
 nb_link_pairs(VM,K-V):- (nonvar(V),V\==[])->nb_link_dict(K,VM,V);true.
-nb_link_pairs_if_missing(VM,K-NewV):- V = VM.K, (var(V)->nb_link_dict(K,VM,NewV);true).
+nb_link_pairs_if_missing(VM,K-NewV):- V = VM.K, ((var(V),\+ attvar(V))->nb_link_dict(K,VM,NewV);true).
 
 individuals_raw(VM,GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_ll((
@@ -958,7 +949,15 @@ fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[IsToBeRewritten|NO],Reserved,Points,
 
 
 % @TODO will get sub objects later
-into_list(I,O):- listify(I,O).
+not_list(G):- \+ is_list(G).
+
+mapgroup(P2,G1,L2):- into_list(G1,L1),!, maplist(P2,L1,L2).
+mapgroup(P1,G1):- into_list(G1,L1), !, maplist(P1,L1).
+
+into_list(G,L):- is_list(G),!,L=G.
+into_list(G,L):- is_dict(G),!,L = G.objs,my_assertion(is_list(L)).
+into_list(I,O):- listify(I,O),!.
+
 assume_vm(_).
 :- style_check(-singleton).
 

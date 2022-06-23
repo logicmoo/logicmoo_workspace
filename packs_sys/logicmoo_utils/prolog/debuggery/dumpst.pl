@@ -151,8 +151,8 @@ dumpST0(Frame,MaxDepth):-  prolog_current_frame(Current),(number(Frame);get_dump
 %
 % Dump S True Stucture.
 %
-dumpST:- prolog_current_frame(Current),get_dump_frame(Current,Frame),
-  no_bfly(zotrace(with_all_dmsg((b_setval('$dump_frame',Frame),dumpST1)))).
+dumpST:- ((prolog_current_frame(Current),get_dump_frame(Current,Frame),
+  no_bfly(zotrace(with_all_dmsg((b_setval('$dump_frame',Frame),dumpST1)))))).
 
 %no_bfly(Goal):- current_predicate(in_bfly/2)->in_bfly(f,Goal);call(Goal). 
 

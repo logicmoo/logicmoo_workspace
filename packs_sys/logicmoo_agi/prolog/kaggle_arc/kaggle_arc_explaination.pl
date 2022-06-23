@@ -13,10 +13,11 @@
 
 set_grid_id(Grid,ID):-
   my_assertion((ground(ID),nonvar_or_ci(Grid))),
+  my_assertion(\+ is_grid(ID)),
   nb_setval(grid_name,ID),
   ignore(( \+ into_gridnameA(Grid,ID),
   copy_term(Grid,GGrid),numbervars(GGrid,1,_),
-  asserta(is_grid_id(Grid,GGrid)))).
+  asserta(is_grid_id(GGrid,ID)))).
 
 :- dynamic(is_grid_id/2).
 
@@ -28,7 +29,7 @@ kaggle_arc_db(Name,Example,Num,out,G):- kaggle_arc(Name,Example+Num,_,G).
 kaggle_arc_db(Name,Example,Num,in,G):- kaggle_arc(Name,Example+Num,G,_).
 
 maybe_confirm_sol(VM,Name,ExampleNum,TestIn,ExpectedOut):- 
-   sols_for(Name,Sol), confirm_sol(VM,Sol,Name,ExampleNum,TestIn,ExpectedOut),!.
+   sols_for(Name,Sol), !, confirm_sol(VM,Sol,Name,ExampleNum,TestIn,ExpectedOut),!.
 
 sols_for(Name,Sol):- test_info(Name,Sols),member(sol(Sol),Sols).
 
@@ -144,7 +145,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 
 debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A).
 debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
- must_det_ll((
+ must_det_l((
   ignore((o2g(Obj,GGG), nonvar(GGG),my_asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=grey),

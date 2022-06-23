@@ -8,7 +8,8 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
-print_collapsed(Size,G):-  !,
+print_collapsed(_Size,G):- !, call(G).
+print_collapsed(Size,G):- 
  locally(b_setval(print_collapsed,true), print_collapsed0(Size,G)).
 
 print_collapsed0(Size,G):- Size<10, !, call(G). 
@@ -19,6 +20,11 @@ print_collapsed0(_,G):- wots(S,G),write(S).
 tersify(I,O):- tracing,!,I=O.
 %tersify(I,O):- term_variables(I,Vs), \+ ( member(V,Vs), attvar(V)),!,I=O.
 tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
+
+:- multifile(dumpst_hook:simple_rewrite/2).
+:- dynamic(dumpst_hook:simple_rewrite/2).
+dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
+%dumpst_hook:simple_rewrite(I,O):- tersify(I,O).
 
 terseA(_,[],[]):- !.
 terseA(I,[A|L],[B|LL]):-terseA(I,A,B),terseA(I,L,LL).
@@ -132,6 +138,8 @@ via_print_grid(G):- is_gridoid(G).
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
 arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,format(user_error,"~N~q~n",[E])).
 
+arc_portray(G, _):- is_dict(G), !, write('..dict..').
+arc_portray(G, _):- is_grid(G), !, write('..grid..').
 arc_portray(G, false):- is_group(G), is_list(G), length(G,L), L>1, 
    dash_chars, 
    print_grid(G),nl,
@@ -266,7 +274,7 @@ show_pair_grid(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
 print_side_by_side4(G1,N1,LW,G2,N2):- 
    print_side_by_side(G1,LW,G2), 
    data_type(G1,S1), data_type(G2,S2),
-   print_side_by_side4d(S1," ~q. % (~w)",N1,LW,S2," ~q.  % (~w)", N2).
+   print_side_by_side4d(S1," ~w   (~w)",N1,LW,S2," ~w  (~w)", N2).
 
 print_side_by_side4d(S1,F1,N1,W0,S2,F2,N2):- number(W0), W0 < 0, LW is -W0, !, print_side_by_side4d(S2,F2,N2,LW,S1,F1,N1).
 print_side_by_side4d(S1,F1,N1,_LW,S2,F2,N2):- 

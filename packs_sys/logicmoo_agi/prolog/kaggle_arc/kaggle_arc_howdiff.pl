@@ -119,7 +119,8 @@ combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,my_append(L1,L2,L12).
 
 
 
-
+showdiff_groups(AG,BG):- not_list(AG),into_list(AG,AGL),!,showdiff_groups(AGL,BG).
+showdiff_groups(AG,BG):- not_list(BG),into_list(BG,BGL),!,showdiff_groups(AG,BGL).
 showdiff_groups(AG,BG):-
   maplist(obj_grp_comparable,AG,A1),
   maplist(obj_grp_comparable,BG,B1),

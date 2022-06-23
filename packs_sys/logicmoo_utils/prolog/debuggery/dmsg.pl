@@ -1305,7 +1305,7 @@ same_streams(TErr,Err):- stream_property(TErr,file_no(A)),stream_property(Err,fi
 %
 % Wdmsg.
 %
-wdmsg(_):- notrace((ttyflush,current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never))),!.
+wdmsg(_):- ttyflush,current_prolog_flag(debug_level,0),current_prolog_flag(dmsg_level,never),!.
 wdmsg(X):- likely_folded(wdmsg_goal(in_cmt(line,fmt(X)),dmsg(X))).
 
 likely_folded(X):- dis_pp(bfly)->pretty_clauses:with_folding_depth(1,X);call(X).

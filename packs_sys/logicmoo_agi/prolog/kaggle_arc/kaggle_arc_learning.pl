@@ -18,7 +18,7 @@ between_each(_P2,[]):- !.
 between_each(_P2,[_]):- !.
 between_each(P2,[X, Y]):- !, call(P2, X, Y).
 between_each(P2,[X, Y, Z]):- !, call(P2, X, Y), call(P2, X, Z), call(P2, Z, Y).
-between_each(P2,[X|Text]):- maplist(dif(X), Text), between_each(P2,Text).
+between_each(P2,[X|Text]):- mapgroup(dif(X), Text), between_each(P2,Text).
 
 
 rot_by_90([A,B,C,D]):- rot_by_90_0([A,B,C,D,A,B,C]).

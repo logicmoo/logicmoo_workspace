@@ -122,7 +122,8 @@ data_type(O,T):- nonvar(T),data_type(O,C),T=@=C,!.
 data_type(O,plain_var):- plain_var(O),!.
 data_type([],nil):-!.
 data_type(O,object):- is_object(O),!.
-data_type(O,group(L)):- is_group(O),!,length(O,L).
+data_type(O,dict(L)):- is_dict(O),get_dict(objs,O,Value),!,data_type(Value,L).
+data_type(O,group(N)):- is_group(O),into_list(O,L),!,length(L,N).
 data_type(O,cpoint):- is_cpoint(O),!.
 data_type(O,nc_point):- is_nc_point(O),!.
 data_type(O,bg_color):- is_spec_bg_color(O,_),!.
@@ -208,7 +209,7 @@ is_gridoid(G):- is_list_of_gridoids(G).
 vm_grid(VM,VM.grid).
 vm_obj(VM,O):- member(O,VM.objs).
 
-is_grid(G):- \+ \+  quietly(fast_is_grid(G)).
+is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
 
 fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), is_grid_cell(C).
 
@@ -226,6 +227,7 @@ is_grid_cell(C):- is_colorish(C),!.
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
 
 %is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
+is_group(Dict):- is_dict(Dict),!,get_dict(obj,Dict,_).
 is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 
 is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V),!.

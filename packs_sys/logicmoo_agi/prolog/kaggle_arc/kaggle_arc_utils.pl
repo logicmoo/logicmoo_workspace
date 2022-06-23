@@ -139,8 +139,21 @@ map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Ar
 map_pred(_Pred, P, _, _, P).
 
 
+subst001(I,F,R,O):- notrace(subst0011(I,F,R,O)).
+
+subst0011( Term, X, Y, NewTerm ) :-
+  X==Term-> Y=NewTerm ;
+  is_list(Term)-> maplist(subst0011, Term, X, Y, NewTerm );
+  ( \+ compound(Term); Term='$VAR'(_))->Term=NewTerm;
+  (compound_name_arguments(Term, F, Args),
+    maplist(subst0011, Args, X, Y, ArgsNew),
+    compound_name_arguments( NewTerm, F, ArgsNew )).
+
+
 plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
+my_assertion(G):- call(G),!.
+my_assertion(G):- dumpST,!,trace,ls,wdmsg(my_assertion(G)),trace,!.
 must_be_free(AllNew):- var(AllNew),!.
 must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
 must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.
@@ -163,6 +176,88 @@ pred_intersection(P2,[A|APoints],BPoints,[A|IntersectedA],[B|IntersectedB],LeftO
   pred_intersection(P2,APoints,BPointsMinusA,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
 pred_intersection(P2,[A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA],LeftOverB):-
   pred_intersection(P2,APoints,BPoints,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
+
+
+
+
+run_source_code(ShareVars, SourceCode, Vs, QQ):- 
+  QQ = source_buffer(SourceCode,Vs),!, 
+  %print(term=Sourcecode -> vs=Vs), 
+  maplist(share_vars(Vs),ShareVars),
+  (\+ is_list(SourceCode)
+    -> mort(SourceCode)
+    ; maplist(mort,SourceCode)).
+
+run_source_code(ShareVars, Vs, QQ):- 
+  QQ = source_buffer(SourceCode,Vs),!, 
+  %print(term=Sourcecode -> vs=Vs), 
+  maplist(share_vars(Vs),ShareVars),
+  (\+ is_list(SourceCode)
+    -> mort(SourceCode)
+    ; maplist(mort,SourceCode)).
+
+
+%vars_to_dictation([_=Value|Gotten],TIn,TOut):- is_dict(Value),!, vars_to_dictation(Gotten,TIn,TOut).
+  
+vars_to_dictation([Name=Value|Gotten],TIn,TOut):- 
+  my_assertion(atom(Name)),
+  vars_to_dictation(Gotten,TIn,TMid), 
+  to_prop_name(Name,UName),
+  tio_tersify(Value,ValueT),!,
+  put_dict(UName,TMid,ValueT,TOut).
+vars_to_dictation([],T,T).
+
+%tio_tersify(Value,ValueT):- is_grid(Value),!,ValueT=_.
+tio_tersify(Value,Value).
+copy_qq_([]) --> [].
+copy_qq_([C|Cs]) --> [C], copy_qq_(Cs).
+copy_qq(A) --> copy_qq_(Cs), {atom_codes(A, Cs)}.
+
+to_prop_name(Name,UName):- to_case_breaks(Name,Breaks),xtis_to_atomic(Breaks,UName).
+
+xtis_to_atomic([xti(Str,upper),xti(StrL,lower)|Breaks],StrO):- string_upper(Str,Str),
+   atom_chars(Str,CharsList),append(Left,[U],CharsList),
+   name(S1,Left),atomic_list_concat([S1,'_',U,StrL],'',StrUL),!,
+   xtis_to_atomic([xti(StrUL,lower)|Breaks],StrO).
+xtis_to_atomic([],'').
+xtis_to_atomic([xti(Str,_)],Lower):- downcase_atom(Str,Lower).
+xtis_to_atomic([XTI|Breaks],Atomic):- 
+  xtis_to_atomic([XTI],S1),xtis_to_atomic(Breaks,S2),!,atomic_list_concat([S1,S2],'_',Atomic).
+
+share_vars(Vs,Name=Value):- member(VName=VValue,Vs),VName==Name,!,(Value=VValue->true;trace_or_throw(cant(share_vars(Vs,Name=Value)))).
+share_vars(_,Name=_):- string_concat('_',_,Name),!. % Hide some vars
+share_vars(V,Name=Value):- dmsg(missing(share_vars(V,Name=Value))),!.
+
+dictate_sourcecode(Content, _Vars, OutterVars, TP):-     
+    phrase_from_quasi_quotation(copy_qq(Chars), Content),    
+    atom_to_term(Chars,Sourcecode0,Vs0),
+    parse_expansions([],Vs0, Vs, Sourcecode0, Sourcecode),!,
+    maplist(share_vars(Vs),OutterVars),
+    \+ \+ ((  maplist(ignore_numvars,Vs),
+              numbervars(TP,0,_),
+              print(program=Sourcecode),nl,
+              maplist(print_prop_val,Vs))),
+    !, TP = source_buffer(Sourcecode, Vs).
+
+parse_expansions(_,Vs,Vs,Src,Src):- \+ compound(Src),!.
+parse_expansions(_,Vs0,Vs,dont_include(Var),nop(dont_include(Var))):- 
+  dont_include_var(Vs0,Vs,Var),!.
+parse_expansions(F, Vs0,Vs,[Src0|Sourcecode0],[Src|Sourcecode]):- !,
+  parse_expansions(F, Vs0, Vs1, Src0, Src),
+  parse_expansions(F, Vs1, Vs, Sourcecode0, Sourcecode).
+parse_expansions(FF, Vs0, Vs, Cmpd0, Cmpd):- 
+  compound_name_arguments(Cmpd0,F,Args0), 
+  parse_expansions([F|FF], Vs0, Vs, Args0,Args),
+  compound_name_arguments(Cmpd,F,Args).
+
+dont_include_var(Vs0,Vs,Var):- select(_=VV,Vs0,Vs),VV==Var,!.
+dont_include_var(Vs,Vs,_).
+  
+
+print_prop_val(N=V):- to_prop_name(N,P),format('~N\t\t'),print(P=V),nl.
+:- quasi_quotation_syntax(dictate_sourcecode).
+
+ignore_numvars(Name='$VAR'(Name)).
 
 :- fixup_exports.
 

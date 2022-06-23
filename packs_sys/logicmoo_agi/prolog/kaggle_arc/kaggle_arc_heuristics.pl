@@ -60,7 +60,7 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
     CommonCsL>0,IPCsL>0,OPCsL==0,  
     %ignore((
     mass(ImO,IMass),mass(OmI,OMass),IMass>0, OMass==0,
-    % individuate([],[options([full])],ImO,NoiseObject), 
+    % individu ate([],[options([full])],ImO,NoiseObject), 
     grid_to_individual(ImO,NoiseObject),!,
     add_shape_lib(noise,NoiseObject),
     add_shape_lib(in,NoiseObject),
@@ -88,7 +88,7 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
   % mass(In,InMass),mass(Out,OutMass),
   mass(ImO,IMass),mass(OmI,OMass),
   IMass>0, OMass>0, OPCsL == 0,
-  individuate([],options([solid(rectangle),defaults]),ImO,NewImO), 
+  individu ate([],options([solid(rectangle),defaults]),ImO,NewImO), 
   add_shape_lib(pair,NewImO),
   show_pair_no_i(IH,IV,OH,OV,'Filter noise',PairName,ImO,OmI),
   add_comparitor(-size),
@@ -102,7 +102,7 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
 /*
 individualize_into_lib(in(_),Options,Grid):- !, individualize_into_lib(pair,Options,Grid).
 individualize_into_lib(TargetLib,Options,Grid):-
-  individuate([],Options,Grid,Result),
+  individu ate([],Options,Grid,Result),
   do_action(add_shape_lib(TargetLib,Result)).
 
 switch_grid_lib(out(N),in(N)):- !, N<3.
@@ -159,7 +159,7 @@ one_is_zero(IMass,OMass):-
 
 remove_colors([],Out,Out):-!.
 remove_colors([C|IPLs],In,Out):- 
- subst_w_attv(In,C,black,Mid),
+ subst001(In,C,black,Mid),
  remove_colors(IPLs,Mid,Out).
 
 

@@ -131,7 +131,7 @@ test_ogs(H,V):- clsmake,
 
 grid_minus_grid(B,A,OI):- grid_size(B,BH,BV),grid_size(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
 grid_minus_grid(B,A,OI):- remove_global_points(A,B,OI),!.
-%grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
+%grid_minus_grid(B,A,OI):- is_list(B),mapgroup(grid_minus_grid,B,A,OI).
 %grid_minus_grid(B,A,C):- ignore(grid_minus_grid0(B,A,C)).
 %grid_minus_grid(B,_,B):- !.
 %grid_minus_grid0(B,A,OI):- B==A,!, OI=black.
@@ -233,7 +233,7 @@ ogs_1(H,V,FindI,Search):-
   V is Vi + 1.
 
 ogs_2(H,V,MH,MV,[R1|FGrid],Search):-  
-  grid_detect_bg(Search,Background), my_assertion(Background\==[]), maplist(never_fg,Background),
+  grid_detect_bg(Search,Background), my_assertion(Background\==[]), mapgroup(never_fg,Background),
   my_append(R1,_,Rho),!,
   my_append(VPad,[LPadAndRow|Next],Search),
   length(VPad,V),
@@ -258,18 +258,18 @@ grid_detect_bg(Grid1,Background):-
 grid_label_bg(CT,GridIn,GridO):- CT=f,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
-  maplist(to_grid_bg(CT,Grid1),Background),
-  get_bgc(BG),subst_w_attv(Grid1,BG,bg,GridO),!.
+  mapgroup(to_grid_bg(CT,Grid1),Background),
+  get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- CT=s,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
-  maplist(to_grid_bg(CT,Grid1),Background),
-  get_bgc(BG),subst_w_attv(Grid1,BG,bg,GridO),!.
+  mapgroup(to_grid_bg(CT,Grid1),Background),
+  get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- 
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
-  maplist(to_grid_bg(CT,Grid1),Background),
-  get_bgc(BG),subst_w_attv(Grid1,BG,bg,GridO),!.
+  mapgroup(to_grid_bg(CT,Grid1),Background),
+  get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
 
 
 to_grid_bg(_CT,_,E):- cant_be_color(E),!.
@@ -292,7 +292,7 @@ grid_label_fg(_CT,_,[]):-!.
 grid_label_fg(CT,GridIn,Foreground1):- 
   copy_term(Foreground1,ForegroundCopy),
   numbervars(ForegroundCopy,2021,_,[attvar(skip)]),
-  maplist(to_grid_fg(CT,GridIn),Foreground1,ForegroundCopy),!.
+  mapgroup(to_grid_fg(CT,GridIn),Foreground1,ForegroundCopy),!.
 
 %maybe_grid_numbervars(GridIn,GridIn):-!.
 maybe_grid_numbervars(GridIn,GridIn):- \+ is_grid(GridIn),!.
@@ -341,9 +341,9 @@ fpad_grid(CT,Before,After):-  fpad_grid(CT,=(bg),Before,After).
 fpad_grid(CT,P1,O,GridO):- is_object(O),!,object_grid(O,GridIn),!,fpad_grid(CT,P1,GridIn,GridO).
 fpad_grid(_CT,P1,Grid,Grid2):-
   grid_size(Grid,H,_), H2 is H +2,
-  length(T,H2),maplist(P1,T),
-  length(B,H2),maplist(P1,B),
-  maplist(pad_sides(P1),Grid,FillRows),
+  length(T,H2),mapgroup(P1,T),
+  length(B,H2),mapgroup(P1,B),
+  mapgroup(pad_sides(P1),Grid,FillRows),
   my_append([T|FillRows],[B],Grid2).
 
 
@@ -361,7 +361,7 @@ constrain_grid(CT,Trig,Grid1,GridO):-
 
 
 release_bg(CT,Trig,Grid2,GridO):- must_det_ll((release_bg0(CT,Trig,Grid2,GridO))),!.
-release_bg0(CT,Trig,GridIn,GridO):- is_list(GridIn), !, maplist(release_bg0(CT,Trig),GridIn,GridO).
+release_bg0(CT,Trig,GridIn,GridO):- is_list(GridIn), !, mapgroup(release_bg0(CT,Trig),GridIn,GridO).
 release_bg0(_CT,_Trig,GridIn,GridIn):- attvar(GridIn),!.
 release_bg0(_CT,_Trig,GridIn,GridIn):- plain_var(GridIn),!.
 %release_bg0(CT,Trig,GridIn-P,GridO-P):- !, release_bg0(CT,Trig,GridIn,GridO).
@@ -383,7 +383,7 @@ maybe_constrain_fg(_Trig,GridIn):-
 
 set_fg_vars(Vars):-
   copy_term(Vars,CVars), numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]), 
-  maplist(set_as_fg,Vars,CVars),!.
+  mapgroup(set_as_fg,Vars,CVars),!.
 
 set_as_fg(V,fg(N)):- atomic(N), put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),nb_linkval(Lookup,V).
 set_as_fg(V,Sym):- put_attr(V,ci,Sym).
@@ -527,7 +527,7 @@ S="
      B    
      B    
  _________",
- into_g666(S,G1),Color=blue,once(subst(G1,blue,Color,G)).
+ into_g666(S,G1),Color=blue,once(subst001(G1,blue,Color,G)).
 
 
 f666(_Ham,G):- 
@@ -538,7 +538,7 @@ S="
      B    
      B    
  _________",
- into_g666(S,G1),Same=_,once(subst(G1,blue,Same,G)).
+ into_g666(S,G1),Same=_,once(subst001(G1,blue,Same,G)).
 
 h666(_Ham,G):- into_grid(v(aa4ec2a5)*(tst+0)*in,G).
 
@@ -583,16 +583,16 @@ ascii_to_grid(Text,G):-
 ascii_to_growthchart(Text,GrowthChart):- 
  replace_in_string([ 
    '\r'='\n','\n\n'='\n','$ '='$','$\n'='\n','$'=''],Text,Ascii0),
-   atomics_to_string(Rows1,'\n',Ascii0),Rows1=[_|Rows],maplist(atom_chars,Rows,GrowthChart),!.
+   atomics_to_string(Rows1,'\n',Ascii0),Rows1=[_|Rows],mapgroup(atom_chars,Rows,GrowthChart),!.
 
 
-into_grid_color(L,O):- is_list(L),!,maplist(into_grid_color,L,O).
+into_grid_color(L,O):- is_list(L),!,mapgroup(into_grid_color,L,O).
 into_grid_color(L,O):- plain_var(L),!,L=O.
 into_grid_color(L,O):- color_code(L,O),!.
 into_grid_color(O,O).
 
 into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),!,into_g666(TG,G),!.
-into_g666(Grid,G):- is_grid(Grid),!,maplist(into_grid_color,Grid,G),!.
+into_g666(Grid,G):- is_grid(Grid),!,mapgroup(into_grid_color,Grid,G),!.
 into_g666(Obj,G):- is_object(Obj),!,must_det_ll(object_grid(Obj,OG)),!,into_g666(OG,G).
 
 ss666(T,G):- h666(T,S),must_det_ll(into_g666(S,G)).

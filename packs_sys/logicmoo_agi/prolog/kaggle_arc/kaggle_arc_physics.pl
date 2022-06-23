@@ -66,11 +66,13 @@ gravity_1_n_0([Row1,Row2|Grid],GridNew):- nth1(Col,Row1,E1),nth1(Col,Row2,E2),
 gravity_1_n_0([Row1|Grid],[Row1|GridNew]):- gravity_1_n_0(Grid,GridNew).
 
 
-any_xform(Rot90,Any,XNewGrid):- 
-  recast_to_grid(Any,RealGrid,UnconvertClosure),!,
-  grid_xform(Rot90,RealGrid,NewGridR),
-  uncast(Any,UnconvertClosure,NewGridR,NewGrid),
-  record_xform(Rot90,NewGrid,XNewGrid).
+any_xform(Rot90,Any,NewAny):- 
+  cast_to_grid(Any,RealGrid,UnconvertClosure),!,
+  grid_xform(Rot90,RealGrid,NewRealGrid),
+  uncast(Any,UnconvertClosure,NewRealGrid,NewAnyWUpdate),
+  record_object_change(Rot90,NewAnyWUpdate,NewAny).
+
+
 
 
 :- dynamic(xform_cache/5).
@@ -85,9 +87,9 @@ xform_cache(rot45,5,5,[ [ A, B, C, D, E],
                             [ F, L, Q, R, X],
                             [ K, P, U, V, W]]).
 
-grid_xform(Rot90,Grid,NewGrid):- 
+grid_xform(Rot90,Grid,NewAnyWUpdate):- 
   grid_size(Grid,H,V),
-  apply_transformer(Rot90,H,V,Grid,NewGrid).
+  apply_transformer(Rot90,H,V,Grid,NewAnyWUpdate).
 apply_transformer(Name,H,V,G,O):-
   get_xformer(Name,H,V,In,Out),!,
   G=In,O=Out.
@@ -105,17 +107,17 @@ same(X,X).
 rot270:- test_p2(rot270).
 rot90:- test_p2(rot90).
 %srot90V,flipV
-rot90( Grid,NewGrid):- any_xform(grid_rot90,Grid,NewGrid).
-rot180( Grid,NewGrid):- any_xform(grid_rot180,Grid,NewGrid).
-rot270( Grid,NewGrid):- any_xform(grid_rot270,Grid,NewGrid).
-flipH( Grid,NewGrid):- any_xform(grid_flipH,Grid,NewGrid).
-flipV( Grid,NewGrid):- any_xform(grid_flipV,Grid,NewGrid).
-flipHV( Grid,NewGrid):- any_xform(grid_flipHV,Grid,NewGrid).
+rot90( Grid,NewAnyWUpdate):- any_xform(grid_rot90,Grid,NewAnyWUpdate).
+rot180( Grid,NewAnyWUpdate):- any_xform(grid_rot180,Grid,NewAnyWUpdate).
+rot270( Grid,NewAnyWUpdate):- any_xform(grid_rot270,Grid,NewAnyWUpdate).
+flipH( Grid,NewAnyWUpdate):- any_xform(grid_flipH,Grid,NewAnyWUpdate).
+flipV( Grid,NewAnyWUpdate):- any_xform(grid_flipV,Grid,NewAnyWUpdate).
+flipHV( Grid,NewAnyWUpdate):- any_xform(grid_flipHV,Grid,NewAnyWUpdate).
 
-grid_rot90(Grid,NewGrid):-  grid_flipHV(Grid,GridM),grid_rot270(GridM,NewGrid). 
+grid_rot90(Grid,NewAnyWUpdate):-  grid_flipHV(Grid,GridM),grid_rot270(GridM,NewAnyWUpdate). 
 grid_rot180(Grid,FlipHV):- grid_flipHV(Grid,FlipHV).
-grid_rot270(Grid,NewGrid):- get_colums(Grid,NewGrid),!.
-grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
+grid_rot270(Grid,NewAnyWUpdate):- get_colums(Grid,NewAnyWUpdate),!.
+grid_flipH(Grid,FlipH):- mapgroup(reverse,Grid,FlipH).
 grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
 grid_flipHV(Grid,FlipHV):-grid_flipH(Grid,FlipH),grid_flipV(FlipH,FlipHV),!.
 
@@ -199,7 +201,7 @@ move_rightof_itself(I,M):- move_dir_itself(1,e,I,M).
 :- decl_pt(move_dir_itself(int,dir,object,+)).
 %move_dir_itself(N,D,I,M):- check_args(move_dir_itself(N,D,I,M),MaybeCut),(MaybeCut==t->!;true).
 move_dir_itself(N,D,I,M):- is_object(I),vis_hv(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
-move_dir_itself(N,D,L,LM):- is_group(L),!,maplist(move_dir_itself(N,D),L,LM).
+move_dir_itself(N,D,L,LM):- is_group(L),!,mapgroup(move_dir_itself(N,D),L,LM).
 move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 
 move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
@@ -209,7 +211,7 @@ move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
   loc_xy(I,OX,OY),
   move_dir(N,OX,OY,D,X,Y,NX,NY),
   (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
-move_scale_dir_object(N,D,L,LM):- is_group(L),!,maplist(move_scale_dir_object(N,D),L,LM).
+move_scale_dir_object(N,D,L,LM):- is_group(L),!,mapgroup(move_scale_dir_object(N,D),L,LM).
 move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(N,D,M,O).
 
 move_object(NX,NY,I,M):- is_object(I),!,
@@ -218,7 +220,7 @@ move_object(NX,NY,I,M):- is_object(I),!,
   ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
     setq(I,[globalpoints(GPoints),loc_xy(NX,NY)],M))))).
-move_object(H,V,L,LM):- is_group(L),!,maplist(move_object(H,V),L,LM).
+move_object(H,V,L,LM):- is_group(L),!,mapgroup(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
 is_input(VM):- VM.id = _ * _ * in.
@@ -250,8 +252,8 @@ find_touches(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
  once(find_touches_objects(VM,Found,OtherObjects,_NewTouchesO,DirNewTouches)),
   NewTouches\==[], !,
   must_det_ll((
-  maplist(mention_touches(Found),DirNewTouches,NewTouchesM),
-    maplist(arg(2),DirNewTouches,NewTouches),
+  mapgroup(mention_touches(Found),DirNewTouches,NewTouchesM),
+    mapgroup(arg(2),DirNewTouches,NewTouches),
     replace_i_each(OtherObjects,NewTouches,NewTouchesM,NewOtherObjects),    
     replace_i_each(ScanNext,NewTouches,NewTouchesM,NewScanNext),
   ignore((length(NewTouches,N),N>0,quietly(print_grid(VM.h,VM.v,"touching",[Found|NewTouchesM])))), !,
@@ -296,7 +298,7 @@ find_engulfs(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
   
   NewInside\==[], 
   must_det_ll((
-  maplist(mention_inside(Found),NewInside,NewInsideM),
+  mapgroup(mention_inside(Found),NewInside,NewInsideM),
   replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
   replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
   ignore((length(NewInside,N),N>0,quietly(print_grid(VM.h,VM.v,"find_engulfs",[Found|NewInsideM])))),      
@@ -342,7 +344,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   points_to_grid(H,V,ContainedPoints,Grid),
   %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
   individuate(H,V,ID,[subshape_in_object],Grid,ContainedPoints,NewInside),
-  maplist(mention_inside(Found),NewInside,NewInsideM))),
+  mapgroup(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained",[Found|NewInsideM])))),
   find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
   my_append(NewInsideM,SofarInstead,SofarInsteadM).
@@ -391,7 +393,7 @@ scan_to_colider(Obj,Next,Dir,ObjPoints,DirHits):-
   scan_to_colider(Obj,NNext,Dir,ObjPoints,DirHits).
 
 replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):-!,
-  subst(OtherObjects,I,O,OtherObjectsM),
+  subst001(OtherObjects,I,O,OtherObjectsM),
   replace_i_each(OtherObjectsM,NewInside,NewInsideM,NewOtherObjects).
 replace_i_each(E,[],[],E).
 

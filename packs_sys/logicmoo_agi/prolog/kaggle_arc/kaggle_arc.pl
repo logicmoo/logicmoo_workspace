@@ -43,8 +43,8 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
   % :- (getenv('DISPLAY',_) -> guitracer ; true).
   :- set_prolog_flag(toplevel_print_anon,false).
   :- set_prolog_flag(toplevel_print_factorized,true).
-    :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
-    :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(20), attributes(dots)]).
+    :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(4), attributes(dots)]).
+    :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(4), attributes(dots)]).
 
 
 clsmake:- cls1,!,update_changed_files,make,!.
@@ -66,16 +66,17 @@ clsmake:- update_changed_files,!.
 % we alias these so we can catch out of control list growth
 my_append(A,B):- append(A,B).
 my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
+check_len(_).
 
 must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
 must_det_ll((X;Y)):- !, (must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A ->X;Y)):- !,(call(A)->must_det_ll(X);must_det_ll(Y)).
 must_det_ll(X):- call(X),!.
 
-must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
+%must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
+%must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
 
-goal_expansion(G,I,GG,O):- nonvar(I),source_location(_,_), compound(G), must_det_l_goal_expansion(G,GG),I=O.
-check_len(_).
+% goal_expansion(G,I,GG,O):- nonvar(I),source_location(_,_), compound(G), must_det_l_goal_expansion(G,GG),I=O.
 
 %:- system:ensure_loaded(library(pfc_lib)).
 %:- expects_dialect(pfc).
@@ -98,7 +99,7 @@ term_expansion_setter((Head:-Body),Out):-
    expand_term((Head:- BodyCode),Out),!.
 %term_expansion_setter((Head:-Body),(Head:-GBody)):- goal_expansion_setter(Body,GBody),!.
 
-%goal_expansion(Goal,'.'(VM, Objs, Obj)):- Goal = ('.'(VM, Objs, A), Obj = V),  var(Obj).
+%goal_expansion(Goal,'.'(Training, Objs, Obj)):- Goal = ('.'(Training, Objs, A), Obj = V),  var(Obj).
 
 /*
 
@@ -178,6 +179,10 @@ doit(set(E.v)):- that.
 :- ensure_loaded(kaggle_arc_recognise).
 :- ensure_loaded(kaggle_arc_uniqueness).
 :- ensure_loaded(kaggle_arc_ui_html).
+:- ensure_loaded(kaggle_arc_test_easy).
+:- ensure_loaded(kaggle_arc_test_old).
+
+
 
 %:- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
 
@@ -224,7 +229,7 @@ arc1(G,TName):-
    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
    clear_shape_lib(intruder),!,
    % choice point created here purposely
-  nb_delete('$vm_pair'),
+  nb_delete('$training_vm'),
   forall(kaggle_arc(TestID,ExampleNum,In,Out),
   ignore((catch((call(G),
     run_arc_io(TestID,ExampleNum,In,Out)),'$aborted',true)))))).
@@ -257,24 +262,25 @@ make_indivs1(Pred,In,Out,InC,OutC):-
   make_indivs_no_swap(Pred,In,Out,InC,OutC),
   save_off(Pred,In,Out,InC,OutC).
 
-save_off(_Pred,In,Out,InC,OutC):-
+save_off(_Pred,_In,_Out,InC,OutC):-
  ((
-  get_vm(VM),!,
-  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),!,
+  get_training(Training),!,
+  pred_intersection(overlap_same_obj,_InC,_OutC,_RetainedIn,_RetainedOut,Removed,Added),!,
   add_shape_lib(pair,Removed),!,  
   add_shape_lib(pair,Added),!,
-  %add_shape_lib(pair,RetainedIn),!,
+  add_shape_lib(pair,RetainedIn),!,
   %rtrace,
-  set(VM.grid_in) = In,!,
+  % % %  set(Training.grid_in) = In,!,
   %trace,
-  set(VM.grid_out) = Out,
-  set(VM.inC) = InC,
-  set(VM.outC) = OutC,
-  set(VM.added) = Added,
-  set(VM.removed) = Removed,
-  set(VM.kept) = RetainedIn,
+
+  % % %  set(Training.grid_out) = Out,
+  % % %  set(Training.inC) = InC,
+  % % %  set(Training.outC) = OutC,
+  % % %  set(Training.added) = Added,
+  % % %  set(Training.removed) = Removed,
+  % % %  set(Training.kept) = RetainedIn,
   %nortrace,
-  nop(set_vm(VM)))),!.
+  nop(set_training(Training)))),!.
 
 make_indivs_no_swap(Pred,In,Out,InC,OutC):-
  must_det_ll((
@@ -289,14 +295,14 @@ make_indivs_no_swap(Pred,In,Out,InC,OutC):-
 
 call_indv(Pred,Out,OutC):-
  must_det_ll((
-  get_vm(VM),
-  set(VM.grid) = Out, set(VM.grid_o) = Out,
-  %set(VM.objs) = _, set(VM.points) = _,
-  %set(VM.robjs) = _, set(VM.points_o) = _,
-  grid_size(Out,H,V), set(VM.h) = H, set(VM.v) = V,
+  %get_training(Training),
+  % % %  set(Training.grid) = Out, % % %  set(Training.grid_o) = Out,
+  %% % %  set(Training.objs) = _, % % %  set(Training.points) = _,
+  %% % %  set(Training.robjs) = _, % % %  set(Training.points_o) = _,
+  %grid_size(Out,H,V), % % %  set(Training.h) = H, % % %  set(Training.v) = V,
   %nortrace,
   call(Pred,Out,OutC))),!.
-  %set_vm(VM).
+  %set_training(Training).
 
 
 /*
@@ -321,42 +327,94 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
     describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
   show_pair_I_info(NameIn,NameOut,InC,OutC).
 */
-get_vm(VM):- nb_current('$vm_pair',VM),is_dict(VM),!.
-get_vm(VM):- make_fti(VM), nb_linkval('$vm_pair',VM),!.
-%set_vm(VM):- nb_linkval('$vm_pair',VM).
+get_training(Training):- nb_current('$training_vm',Training),is_dict(Training),!.
+get_training(Training):- notrace(get_current_test(TestID)),make_training(TestID,Training), nb_linkval('$training_vm',Training),!.
+set_training(Training):- nb_linkval('$training_vm',Training).
+
+make_training(TestID,VM):- make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
+ must_det_l((
+    test_hints(TestID,ArgVM,VM0),
+    vars_to_dictation([test_id=TestID,mappings=[]],VM0,VM),
+
+    /*
+     test:ID,mappings:_,
+     pre_in:_, pre_out:_,
+     inC:_InC,outC:_OutC,
+     removed:_,added:_, kept:_,   
+     grid_in:_,grid_out:_,
+  */
+     set(VM.mappings) =[map])), !. % pt(VM),nl.
+
 
 gather_more_task_info(TestID,III):- more_task_info(TestID,III).
 gather_more_task_info(TestID,III):- fav(TestID,III).
   
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
-train_test:- get_current_test(TestID),
+train_test:- notrace(get_current_test(TestID)),
   train_test(TestID,(trn+_)),!,
   solve_test(TestID,(trn+_)),!.
 
-train_test(TestID,ExampleNum):-
- forall(kaggle_arc(TestID,ExampleNum,In,Out),
- (must_det_ll((
-  get_vm(PrevPairEnv),
+train_test(TestID,ExampleNum):- 
+  locally(set_prolog_flag(gc,false),
+   train_test0(TestID,ExampleNum)).
+
+
+train_using_hints(TestID,DictIn,DictOut):- update_model_from_hints(TestID,trn,0,DictIn,DictOut).
+update_model_from_hints(TestID,Trn,N,DictIn,DictOut):-
+  (kaggle_arc(TestID,(Trn+N),In,Out),
+  train_for_objects(DictIn,TestID,[Trn,'_','i',N,'_','o',N,'_'],In,Out,DictM),
+  NN is N + 1),
+ (kaggle_arc(TestID,(Trn+NN),In2,Out2) -> 
+    (train_for_objects(DictM,TestID,[Trn,'_','i',N,'_','i',NN,'_'],In,In2,Dict0),
+     train_for_objects(Dict0,TestID,[Trn,'_','o',N,'_','o',NN,'_'],Out,Out2,Dict1),
+     update_model_from_hints(TestID,Trn,NN,Dict1,DictOut));
+  (DictM = DictOut)),!.
+
+
+train_test0(TestID,ExampleNum):-
+ must_det_l((
+  set_training(PrevPairEnv),
   flag(indiv,_,0),
   nb_setval(prev_pairEnv,PrevPairEnv),
-  nb_delete('$vm_pair'),
-  get_vm(VM),
-  must_be_nonvar(VM),
-  set(VM.grid_in) = In,
-  set(VM.grid_out) = Out,
+  nb_delete('$training_vm'),
+  get_training(Training),
+  test_hints(TestID,Training,Dictation),
+  set_training(Dictation),
+  train_using_hints(TestID,Dictation,DictOut),
+  set_training(DictOut),
+  garbage_collect,
+  ((forall(gather_more_task_info(TestID,III),pt(III)),nl)),!,
+  ((catch(maybe_confirm_dsl(Training,TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))))).
+
+which_io(i,in). which_io(o,out).
+train_for_objects(Dict0,TestID,ExampleNum,In,Out,Dict1):-
+ ExampleNum = [Trn,'_',IsIO1,N,'_',IsIO2,NN,'_'],
+ which_io(IsIO1,IO1),
+ which_io(IsIO2,IO2),
+ pt(ExampleNum:IO1:IO2),
+ must_det_l((
+  atomic_list_concat([Trn,'_',IsIO1,N,'_',IsIO2,NN,'_'],Prefix),
+  ExampleNum = (Trn+Prefix),
+  kaggle_arc(TestID,(Trn+N),IO1,Out),
+  kaggle_arc(TestID,(Trn+NN),IO2,In),
+  garbage_collect,
+  Dict0=Dict1,
+  %must_be_nonvar(Training),
+  %% % %  set(Training.grid_in) = In,
+  %% % %  set(Training.grid_out) = Out,
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
-  set(VM.test) = PairName,
+  %% % %  set(Training.test) = PairName,
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
   ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   %print_collapsed
-  % set_vm(VM),!,
+  % set_training(Training),!,
   show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
   %make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),!,
-  %set(VM.pre_out) = PreOutC,
-  %set(VM.pre_in) = PreInC,  
+  %% % %  set(Training.pre_out) = PreOutC,
+  %% % %  set(Training.pre_in) = PreInC,  
   make_indivs(individuate(complete),In,Out,InC,OutC),!,
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   add_shape_lib(in,Removed),
@@ -364,11 +422,9 @@ train_test(TestID,ExampleNum):-
   % add_shape_lib(pair,RetainedOut),
   add_shape_lib(out,Added),
   max_min(IH,OH,IOH,_),
-  max_min(IV,OV,IOV,_),
+  max_min(IV,OV,IOV,_))),
   %make_indivs(individuate_second_pass,In,Out,InP2,OutP2),
   %make_indivs(individuate_complete,InP2,OutP2,InC2,OutC2),
-
-
   dash_chars,dash_chars,dash_chars,dash_chars,
   %show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,PreInC,PreOutC),
@@ -378,11 +434,8 @@ train_test(TestID,ExampleNum):-
   show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
   %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
-  show_pair_diff(IH,IV,   OH, OV,in(individuate),out(individuate),PairName,InC,OutC),
+  show_pair_diff(IH,IV,   OH, OV,in(individuate),out(individuate),PairName,InC,OutC),!.
   %ignore((catch(with_named_pair(solve,TestID,PairName,In,Out),E1,wdmsg(E1)))),
-  
-  ((forall(gather_more_task_info(TestID,III),pt(III)),nl)),!,
-  ((catch(maybe_confirm_dsl(VM,TestID,ExampleNum,InC,Out),E2,wdmsg(E2)))))))).
 
 
 solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)),!.
@@ -390,28 +443,28 @@ solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)),!.
 solve_test(TestID,ExampleNum):-
  forall(kaggle_arc(TestID,ExampleNum,In,Out),
   (nop(sols_for(TestID,_Sol)),
-   must_det_ll((
-    get_vm(PrevPairEnv),
+   must_det_l((
+    get_training(PrevPairEnv),
     nb_setval(prev_pairEnv,PrevPairEnv),
-    nb_delete('$vm_pair'),
-    get_vm(VM),
+    nb_delete('$training_vm'),
+    get_training(Training),
     flag(indiv,_,0),
     name_the_pair(TestID,ExampleNum,In,Out,PairName),
     grid_size(In,IH,IV), grid_size(Out,OH,OV),
     ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
     ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
     clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-    get_vm(VM),
-    set(VM.test) = PairName,
-    set(VM.grid_in) = In,
-    set(VM.grid_out) = Out,
+    get_training(Training),
+    %% % %  set(Training.test) = PairName,
+    %% % %  set(Training.grid_in) = In,
+    %% % %  set(Training.grid_out) = Out,
     %print_collapsed
-    %set_vm(VM),!,
+    %set_training(Training),!,
     dash_chars, dash_chars,
     show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
     dash_chars, dash_chars,
     forall(gather_more_task_info(TestID,III),pt(III)),
-    maybe_confirm_sol(VM,TestID,ExampleNum,In,Out))))),!.
+    ignore(maybe_confirm_sol(Training,TestID,ExampleNum,In,Out)))))),!.
 
 
 
@@ -529,4 +582,4 @@ reuse_a_b(A,B,AA):-
 %:- initialization(demo,restore_state).
 %:- initialization(demo,main).
 %:- initialization(demo,after_load).
-:- add_history((cls,demo)).
+:- add_history((cls,make,demo)).

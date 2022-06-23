@@ -12,7 +12,7 @@
 save_grouped(H,G):-
   sort(G,GS),
   (my_asserta_if_new(why_grouped(H,GS))),
-  nop(maplist(register_obj,GS)).
+  nop(mapgroup(register_obj,GS)).
 
 
 :- dynamic(why_grouped/2).
@@ -85,7 +85,7 @@ report_unique(Dict):-
   setL/listL=SetL/ListL,others=HTraitSetO,how=How,
   groupSizeMask=GroupSizeMask,group:GroupO,countMask=CountMask,otherL=OtherL)))).
 
-maplist_e(P2,A,B):- is_list(A),!,maplist(P2,A,B).
+maplist_e(P2,A,B):- is_list(A),!,mapgroup(P2,A,B).
 maplist_e(P2,A,B):- call(P2,A,B).
 
 :- style_check(-singleton).
@@ -105,7 +105,7 @@ what_unique_dict(Dict):-
   obj_exclude(Obj,Group,Others),  
   length_criteria(Group,GroupSizeMask),
   length(Group,ActualGroupSize),
-  maplist(each_trait,[Obj|Others],[_-ObjT|TraitList]),
+  mapgroup(each_trait,[Obj|Others],[_-ObjT|TraitList]),
   member(Trait,ObjT),
   \+ too_non_unique(Trait),
   \+ too_unique(Trait),
