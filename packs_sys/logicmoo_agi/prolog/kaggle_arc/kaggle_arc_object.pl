@@ -429,6 +429,9 @@ all_points_between_include_bg(Grid,Hi,Vi,GH,GV,Points,PointsO):-
    (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
    all_points_between_include_bg(Grid,H,V,GH,GV,PointsT,PointsO).
 
+grid_cpoint(Grid,C-Point,Hi,Vi):- hv_c_value(Grid,C2,Hi,Vi),
+(is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=C2)),
+  hv_point(Hi,Vi,Point).
 grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Points),!. 
 grid_to_points_include_bg(Grid,HH,HV,Points):- all_points_between_include_bg(Grid,HH,HV,HH,HV,[],Points),!. 
 /*
