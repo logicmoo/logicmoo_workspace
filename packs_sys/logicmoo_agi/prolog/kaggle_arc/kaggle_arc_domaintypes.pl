@@ -88,13 +88,20 @@ subClassOf(outline(_),thick1).
 subClassOf(hv_line(H,V),line(H,V,_,_)).
 subClassOf(dg_line(U,D),line(_,_,U,D)).
 
+subClassOf(dot,hv_symmetric).
 subClassOf(square,hv_symmetric).
 subClassOf(diamond,hv_symmetric).
-subClassOf(h_symmetric,hv_symmetric).
 subClassOf(circle,hv_symmetric).
-subClassOf(triangle,h_symmetric).
 subClassOf(round,hv_symmetric).
+subClassOf(h_symmetric,hv_symmetric).
+subClassOf(v_symmetric,hv_symmetric).
 
+subClassOf(triangle,h_symmetric).
+subClassOf(hv_line(v),h_symmetric).
+subClassOf([monochrome,contiguous,hv_line(v)],v_symmetric).
+
+subClassOf(hv_line(h),v_symmetric).
+subClassOf([monochrome,contiguous,hv_line(h)],h_symmetric).
 
 meets_indiv_criteria(_,_).
 
@@ -138,12 +145,12 @@ data_type(Out,length=H):- is_list(Out),!,length(Out,H).
 data_type(Out,F/A):- compound_name_arity(Out,F,A),!.
 
 
-is_spec_bg_color(C,C):- is_colorish(C),is_bg_color(C).
+is_spec_bg_color(C,C):- is_bg_color(C).
 
-is_spec_fg_color(C0,C):- var(C0),!,get_attr(C0,ci,fg(_)), C=C0.
+is_spec_fg_color(C0,C):- attvar(C0),!,get_attr(C0,ci,fg(_)), C=C0.
 is_spec_fg_color(C0,C):- \+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
 
-is_spec_color(C0,C):- (is_spec_fg_color(C0,C);is_spec_bg_color(C0,C)).
+is_spec_color(C0,C):- (is_spec_fg_color(C0,C);is_spec_bg_color(C0,C)),!.
 
 is_color(C):- attvar(C),!,get_attr(C,ci,_).
 is_color(C):- atom(C),color_int(C,N),integer(N).
@@ -154,6 +161,7 @@ is_colorish(C):- cant_be_color(C,_),!.
 is_colorish(C):- get_bgc(BG),BG==C,!.
 is_colorish(C):- bg_sym(BG),BG==C,!.
 is_colorish(C):- fg_sym(FG),FG==C,!.
+is_colorish(C):- compound_var(C,_).
 
 is_grid_color(C):- plain_var(C),!,fail.
 % makes grid colors an integer.. 
@@ -169,7 +177,7 @@ is_point(P):- is_nc_point(P),!.
 is_point(P):- is_cpoint(P).
 
 is_points_list(P):- var(P),!,fail.
-is_points_list([G|L]):- is_point(G),maplist(is_point,L).
+is_points_list([G|L]):- is_point(G),!,maplist(is_point,L).
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
 enum_fg_colors(Color):- enum_colors(Color),is_color_no_bgc(Color).
@@ -220,8 +228,9 @@ slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
 
 %is_object(H):- is_list(H),maplist(is_cpoint,H).
 is_grid_cell(C):- var(C),!.
-is_grid_cell(C):- atomic(C),!.
 is_grid_cell(C):- is_colorish(C),!.
+is_grid_cell(C):- atomic(C),!.
+
 
 
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
@@ -287,6 +296,14 @@ non_h_ori(rot90).
 non_h_ori(flipV).
 non_h_ori(rot270).
 
+non_diag_ori(same).
+non_diag_ori(flipV).
+
+non_v_ori(same).
+non_v_ori(rot90).
+non_v_ori(flipH).
+non_v_ori(rot270).
+
 enum_orientation(same).
 enum_orientation(flipV).
 enum_orientation(rot180). % = flipHV
@@ -322,9 +339,9 @@ apv(sub_points([])).
 
 
 color_and_rotation(Group,List):- override_group(color_and_rotation(Group,List)),!.
-color_and_rotation(RedHammer,Hammer):-
-  all_colors(RedHammer,Hammer1),
-  all_rotations(Hammer1,Hammer).
+color_and_rotation(Hammer0,Hammer):-
+  all_rotations(Hammer0,Hammer1),
+     all_colors(Hammer1,Hammer).
 
 all_colors(Group,List):- override_group(all_colors(Group,List)),!.
 all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
@@ -359,8 +376,11 @@ all_orientations(RedHammer,Hammer):-
  (var(RedHammer) -> freeze(RedHammer,all_orientations(RedHammer,Hammer)) 
    ; no_repeats(Grid,(shape_orientations(RedHammer,Hammer),object_grid(Hammer,Grid)))).
 
+shape_orientations(Shape,Shape):- iz(Shape,leftover_as_one),!.
 shape_orientations(Shape,Shape):- iz(Shape,hv_symmetric),!.
-shape_orientations(Shape,Hammer):- iz(Shape,h_symmetric),!, non_h_ori(Rot),call(Rot,Shape,Hammer).
+shape_orientations(Shape,Line):- iz(Shape,diag_symmetric),!, non_diag_ori(Rot),call(Rot,Shape,Line).
+shape_orientations(Shape,Line):- iz(Shape,h_symmetric),!, non_h_ori(Rot),call(Rot,Shape,Line).
+shape_orientations(Shape,Line):- iz(Shape,v_symmetric),!, non_v_ori(Rot),call(Rot,Shape,Line).
 shape_orientations(RedHammer,Hammer):- enum_orientation(ROT), call(ROT,RedHammer,Hammer).
 
 

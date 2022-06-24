@@ -203,7 +203,7 @@ all_dif_color(V,[All|Vars]):- (V==All;dif(V,All))->all_dif_color(V,Vars).
 %get_fgc(fg).
 get_fgc(C):- enum_fg_colors(C).
 
-rev_lambda(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
+lambda_rev(P,A):- P=..[F|Args],C =..[F,A|Args],call(C).
 llamma(P,A):- \+ \+ call(P,A).
 
 % \+ is_points_list(Obj),
@@ -227,7 +227,7 @@ add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
 
 
 %assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<4,!.
-assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(rev_lambda(assert_shape_lib(Obj)),Type).
+assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(lambda_rev(assert_shape_lib(Obj)),Type).
 assert_shape_lib(Type,Obj):- my_asserta_if_new(in_shape_lib(Type,Obj)).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).

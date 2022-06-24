@@ -235,8 +235,8 @@ verify_object(Obj):-
 override_object(E,I,O):- with_object(override,E,I,O).
 
 with_object(Op,E,obj(List),O):- !, with_objprops(Op,E,List,MidList),O=obj(MidList),!,verify_object(O).
-with_object(Op,E,I,O):- is_list(I), !, with_objprops(Op,E,I,O).
 with_object(Op,E,I,O):- is_group(I), mapgroup(with_object(Op,E),I,O).
+with_object(Op,E,I,O):- is_list(I), !, with_objprops(Op,E,I,O).
 with_object(Op,E,     I,     O):- with_objprops(Op,E,I,O).
 
 with_objprops(Op,obj(E),List,MidList):- !, with_objprops(Op,E,List,MidList).
@@ -541,6 +541,7 @@ rebuild_from_localpoints(Obj,NewObj):-
   rebuild_from_localpoints(Obj,Points,NewObj).
 
 rebuild_from_localpoints(Obj,WithPoints,NewObj):-
+ must_det_ll((
   localpoints(WithPoints,Points),
   rotation(Obj,Rot),unrotate(Rot,UnRot),
   loc_xy(Obj,X,Y),vis_hv(Obj,H,V),
@@ -551,9 +552,10 @@ rebuild_from_localpoints(Obj,WithPoints,NewObj):-
   localpoints(UnRotGrid,LPoints),
   offset_points(X,Y,LPoints,GPoints),
   indv_props(Obj,Props),
-  my_partition(rev_lambda(member([colors(_),mass(_),shape(_),
+  my_partition(lambda_rev(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
-    make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
+    make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj))),
+   verify_object(NewObj),
   !.
 
 
@@ -569,7 +571,7 @@ rebuild_from_globalpoints(Obj,GPoints,NewObj):-
   call(UnRot,Grid,UnRotGrid),
   localpoints(UnRotGrid,Points),
   indv_props(Obj,Props),
-  my_partition(rev_lambda(member([colors(_),mass(_),shape(_),
+  my_partition(lambda_rev(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
     make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
     verify_object(NewObj),

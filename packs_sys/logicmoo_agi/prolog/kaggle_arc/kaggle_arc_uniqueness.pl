@@ -15,6 +15,8 @@ save_grouped(H,G):-
   nop(mapgroup(register_obj,GS)).
 
 
+normal_group_form(Group,Group):-!.
+
 :- dynamic(why_grouped/2).
 
 %select_group(Group,How):- no_repeats(Group,select_group0(Group,How)).
@@ -89,7 +91,7 @@ maplist_e(P2,A,B):- is_list(A),!,mapgroup(P2,A,B).
 maplist_e(P2,A,B):- call(P2,A,B).
 
 :- style_check(-singleton).
-:- add_history(what_unique(SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
+%:- add_history(what_unique(SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
 :- style_check(+singleton).
 
 
