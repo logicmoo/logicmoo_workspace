@@ -119,7 +119,7 @@
             logOnFailure/1,
             logOnFailure0/1,
             logOnFailureEach/1,
-            on_f_log_ignore/1,
+            on_f_log_ignore/2,
             logicmoo_bugger_loaded/0,
             meta_interp/2,
             meta_interp_signal/1,
@@ -274,7 +274,7 @@ This module supplies support for utilities, like DCG_must and must_trace, that a
         on_f_debug_ignore(:),
         logOnFailure0(:),
         logOnFailure(:),
-        on_f_log_ignore(:),
+        on_f_log_ignore(+,+),
         meta_interp(:, +),
         must_each(:),
         must_maplist_det(:, ?),
@@ -2138,7 +2138,7 @@ logOnFailureEach(Goal):-with_each(1,on_f_log_fail,Goal).
 %
 % Whenever Functor Log Ignore.
 %
-on_f_log_ignore(Goal):-ignore(logOnFailure0(on_x_log_throw(Goal))).
+on_f_log_ignore(M,Goal):-ignore(logOnFailure0(on_x_log_throw(M:Goal))).
 
 
 %on_f_debug(Goal):-ctrace,Goal.

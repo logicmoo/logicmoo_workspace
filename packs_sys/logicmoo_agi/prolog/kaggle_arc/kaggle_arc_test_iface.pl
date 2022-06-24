@@ -47,7 +47,7 @@ do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ')
 do_menu_key('P'):- !, do_menu_key('p').
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmd(_Mode,Key,_Info,Goal),!, format('~N~n'),
   dmsg(calling(Goal)),!, ignore(once((Goal*->true;(fail,trace,dumpST,rtrace(Goal))))),!,read_pending_codes(user_input,_,[]),!,fail.
-do_menu_key(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),menu,fail.
+do_menu_key(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),once(mmake),menu,fail.
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
 interactive_test_menu:- 
   repeat, 
@@ -129,7 +129,7 @@ fully_test:- print_test, !, train_test, !, solve_test, !.
 run_next_test:- notrace(next_test), fully_test.
 
 info(_).
-demo:- interactive_test_menu.
+demo:- make, interactive_test_menu.
 rat:- info("Run all tests"), run_all_tests.
 noninteractive_test(X):- time(ignore(forall(arc1(true,X),true))).
 
@@ -280,7 +280,7 @@ make_comparison(DictIn,TestID,Prefix,In,Out,DictOut):-
   vars_to_dictation(VsT,DictIn,DictOut).
   
   
-test_hints(TestID,DictIn,DictOut):- test_hints_5(TestID,trn,0,DictIn,DictOut).
+make_training_hints(TestID,DictIn,DictOut):- test_hints_5(TestID,trn,0,DictIn,DictOut).
 test_hints_5(TestID,Trn,N,DictIn,DictOut):-
   (kaggle_arc(TestID,(Trn+N),In,Out),
   make_comparison(DictIn,TestID,[Trn,'_i',N,'_o',N,'_'],In,Out,DictM),
@@ -293,11 +293,12 @@ test_hints_5(TestID,Trn,N,DictIn,DictOut):-
   
 
 print_test_hints(TestID):- 
-  test_hints(TestID,print_test{},DictOut),
   hardness_of_name(TestID,Hard),!,
   write('/*'),
   pt(hard=Hard),
-  pt(all=DictOut),writeln('*/').
+  %make_training_hints(TestID,print_test{},DictOut),
+  %pt(all=DictOut),
+  writeln('*/').
 
 
 precat_name(P,N=V,NN=V):- atom_concat(P,N,NN).

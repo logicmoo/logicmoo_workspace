@@ -277,13 +277,37 @@ same_colorless_points(I,O,OUT):-
   member(shape(_),SL),
   diff_objects(I,O,OUT).
 
-combine_duplicates(IndvS,[IO|IndvSO]):- 
+
+combine_duplicates_old(IndvS,[IO|IndvSO]):- 
   select(I,IndvS,IndvS1),select(O,IndvS1,IndvS2),
   compare_objs1(perfect,I,O),
   override_object(O,I,IO),
-  combine_duplicates(IndvS2,IndvSO).
-combine_duplicates(IndvSO,IndvSO).
+  combine_duplicates_old(IndvS2,IndvSO).
+combine_duplicates_old(IndvSO,IndvSO).
 
+
+combine_duplicates(_VM):-!.
+combine_duplicates(VM):- combine_duplicates(VM,VM.objs,set(VM.objs)).
+combine_duplicates(VM,IndvS,IndvSO):-
+  combine_duplicates1(VM,IndvS,IndvSM),
+  combine_duplicates1(VM,IndvSM,IndvSO),!.
+
+combine_duplicates1(VM,IndvS,IndvSO):- 
+  append(NoDupes,[I|Rest],IndvS),select(O,Rest,IndvS2),
+  overlap_same_obj_no_diff(I,O),!,
+  %merge_2objs(VM,I,O,[],IO),
+  must_det_ll((indv_props(I,Props),
+  override_object(Props,O,IO),
+  combine_duplicates1(VM,[IO|IndvS2],NoMoreDupes),
+  append(NoDupes,NoMoreDupes,IndvSO))).
+combine_duplicates1(_VM,IndvSO,IndvSO).
+
+overlap_same_obj_no_diff(I,O):- !, globalpoints(I,II),globalpoints(O,OO),!,pred_intersection((=@=),II,OO,_,_,[],[]),!.
+overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Diff),Diff==[]. 
+
+overlap_same_obj(I,O):- compare_objs1(same,I,O).
+
+combine_objects(VM):- combine_objects(VM.objs,set(VM.objs)).
 %combine_objects(I,I):-!.
 combine_objects(IndvS,[obj(IO)|IndvSO]):- 
   select(obj([A,B,C,D|I]),IndvS,IndvS1),
@@ -294,8 +318,8 @@ combine_objects(IndvS,[obj(IO)|IndvSO]):-
 combine_objects(IndvSO,IndvSO).
 
 
-overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Diff),Diff==[]. 
-overlap_same_obj(I,O):- compare_objs1(same,I,O).
+%overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Diff),Diff==[]. 
+%overlap_same_obj(I,O):- compare_objs1(same,I,O).
 
 showdiff_objects(A,B):- into_obj(A,A1),into_obj(B,B1), !, showdiff_objects(sameness,A1,B1),!.
 showdiff_objects(N,O1,O2):- diff_objects(O1,O2,Diffs), showdiff_objects(N,O1,O2,Diffs).
@@ -375,7 +399,7 @@ changed_by(vis_hv,copy).
 
 needs_indivs(I,_):- is_object(I),!,fail.
 %needs_indivs(I,O):- is_grid(I),_unshared_indivs(I,O),!.
-needs_indivs(I,O):- is_gridoid(I), \+ is_group(I), trace, compute_unshared_indivs(I,O),!.
+needs_indivs(I,O):- is_gridoid(I), \+ is_group(I), dumpST, trace, compute_unshared_indivs(I,O),!.
 
 %diff_terms(IPs,OPs,Difs2):- diff_terms(IPs,OPs,Difs2).
 diff_numbers(I,O,0):- I =:= O,!.

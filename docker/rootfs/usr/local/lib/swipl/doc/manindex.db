@@ -3590,6 +3590,25 @@ i(/(re_replace,5),"Replace matches of the regular expression Pattern in String w
 i(/(re_compile,3),"Compiles Pattern to a Regex blob of type regex (see blob/2).",swi_man_packages('pcre.html'),packages,19336).
 i(/(re_flush,0),"Clean pattern and replacement caches.",swi_man_packages('pcre.html'),packages,29388).
 i(/(re_config,1),"Extract configuration information from the pcre library.",swi_man_packages('pcre.html'),packages,29647).
+i(section(0,'0','packages/libedit.html'),"SWI-Prolog binding to BSD libedit",swi_man_packages('libedit.html'),packages,2785).
+i(section(2,'1','sec:editline'),"library(editline): BSD libedit based command line editing",swi_man_packages('libedit.html'),packages,3472).
+i(/(el_wrap,0),"Enable using editline on the standard user streams if user_input is connected to a terminal.",swi_man_packages('libedit.html'),packages,3934).
+i(/(el_wrap,4),"Enable editline on the stream-triple <In,Out,Error>.",swi_man_packages('libedit.html'),packages,4514).
+i(/(el_setup,1),"This hooks is called as forall(el_setup(Input), true) after the input stream has been wrapped, the default Prolog commands have been added and the default user setup file has been sourced using el_source/2.",swi_man_packages('libedit.html'),packages,5111).
+i(/(el_wrapped,1),"True if In is a stream wrapped by el_wrap/3.",swi_man_packages('libedit.html'),packages,5608).
+i(/(el_unwrap,1),"Remove the libedit wrapper for In and the related output and error streams.",swi_man_packages('libedit.html'),packages,5859).
+i(/(el_source,2),"Initialise editline by reading the contents of File.",swi_man_packages('libedit.html'),packages,6304).
+i(/(el_bind,2),"Invoke the libedit bind command with the given arguments.",swi_man_packages('libedit.html'),packages,6597).
+i(/(el_addfn,4),"Add a new command to the command line editor associated with Input.",swi_man_packages('libedit.html'),packages,7426).
+i(/(el_line,2),"Fetch the currently buffered input line.",swi_man_packages('libedit.html'),packages,9430).
+i(/(el_cursor,2),"Move the cursor Move character forwards (positive) or backwards (negative).",swi_man_packages('libedit.html'),packages,9838).
+i(/(el_insertstr,2),"Insert Text at the cursor.",swi_man_packages('libedit.html'),packages,10115).
+i(/(el_deletestr,2),"Delete Count characters before the cursor.",swi_man_packages('libedit.html'),packages,10329).
+i(/(el_history,2),"Perform a generic action on the history.",swi_man_packages('libedit.html'),packages,10560).
+i(/(el_history_events,2),"Unify Events with a list of pairs of the form Num-String, where Num is the event number and String is the associated string without terminating newline.",swi_man_packages('libedit.html'),packages,11272).
+i(/(el_add_history,2),"Add a line to the command line history.",swi_man_packages('libedit.html'),packages,11669).
+i(/(el_read_history,2),"Read the history saved using el_write_history/2.",swi_man_packages('libedit.html'),packages,11891).
+i(/(el_write_history,2),"Save editline history to File.",swi_man_packages('libedit.html'),packages,12329).
 i(section(0,'0','packages/ssl.html'),"SWI-Prolog SSL Interface",swi_man_packages('ssl.html'),packages,2776).
 i(section(2,'1','sec:ssl-intro'),"Introduction",swi_man_packages('ssl.html'),packages,9022).
 i(section(2,'2','sec:ssl'),"library(ssl): Secure Socket Layer (SSL) library",swi_man_packages('ssl.html'),packages,11054).

@@ -181,7 +181,7 @@ from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
 
 
 %hv_c_value(O,_Color,_H,_V):- is_object(O), iz(O,combined), !, fail.
-hv_c_value(ID,C,H,V):- (var(H);var(V)),!,trace, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
+hv_c_value(ID,C,H,V):- (var(H);var(V)),!,dumpST,trace, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
 hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
 hv_c_value(O,Color,H,V):- is_list_of(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).
 hv_c_value(O,fg   ,H,V):- is_list_of(is_nc_point,O),!,hv_point(H,V,Point),member(Point,O).
@@ -259,7 +259,7 @@ nb_rplc_hv_value(Grid,OldC,NewC,H,V):- nth1(V,Grid,Row),nb_rplc_nth1(H,Row,OldC,
 
 */
 
-%my_assertion_is_color(_):-!.
+my_assertion_is_color(_):-!.
 my_assertion_is_color(X):- my_assertion(is_color(X)).
 %replace_local_hvcpoint(_H,_V,NewC,OldC,Point,G,GO):-nonvar_or_ci(G),!,G=obj(L),is_list(L),
 replace_global_hvc_point(H,V,NewC,OldC,Grid,GridO):- is_grid(Grid),!, my_assertion_is_color((NewC)), replace_grid_point(H,V,NewC,OldC,Grid,GridO).

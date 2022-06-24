@@ -8,13 +8,12 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
-print_collapsed(_Size,G):- !, call(G).
 print_collapsed(Size,G):- 
- locally(b_setval(print_collapsed,true), print_collapsed0(Size,G)).
+ locally(b_setval(print_collapsed,Size), print_collapsed0(Size,G)).
 
 print_collapsed0(Size,G):- Size<10, !, call(G). 
 % print_collapsed(Size,G):-  call(G). 
-print_collapsed0(Size,G):- Size>20, !, wots(_S,G).
+print_collapsed0(Size,G):- Size>=10, !, wots(_S,G).
 print_collapsed0(_,G):- wots(S,G),write(S).
 
 tersify(I,O):- tracing,!,I=O.
@@ -23,11 +22,15 @@ tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 
 :- multifile(dumpst_hook:simple_rewrite/2).
 :- dynamic(dumpst_hook:simple_rewrite/2).
+%dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
 dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
-%dumpst_hook:simple_rewrite(I,O):- tersify(I,O).
+dumpst_hook:simple_rewrite(I,O):- is_dict(I),!, O='..vvmm..'.
+%dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
+dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,O='..points..'(N),!.
 
 terseA(_,[],[]):- !.
-terseA(I,[A|L],[B|LL]):-terseA(I,A,B),terseA(I,L,LL).
+terseA(_,L,'... attrs ...'(N)):- is_list(L),length(L,N),N>10,!.
+terseA(I,[A|L],[B|LL]):-terseA(I,A,B),terseA(I,L,LL),!.
 terseA(I,dif(A,B),B):-A==I,!.
 terseA(I,dif(B,A),B):-A==I,!.
 terseA(_,put_attr(_,B,A),A):- B==ci,!.
@@ -577,6 +580,10 @@ print_gw1(C):- compound_var(C,N),print_gw1(N),!.
 print_gw1(N):- get_bgc(BG),is_color(BG), BG\==black, color_print(BG,'.'),print_g1(N),!.
 print_gw1(N):- get_bgc(BG),is_color(BG), write(' '),print_g1(N),!.
 print_gw1(N):- compound(N),N = C-W,!,color_print(C,W),!.
+regression_test:- G = [[1,2,3],[1,2,3],[1,2,3]], print_grid(G).
+regression_test:- G = [[1,2,3],[1,_,3],[1,2,3]], print_grid(G).
+regression_test:- G = [[A,2,3],[_,2,_],[A,2,3]], print_grid(G).
+regression_test:- G = [['$VAR'(1),2,3],[_,2,'$VAR'(3)],[_,2,'$VAR'('Good')],['$VAR'(1),2,3]], print_grid(G).
 
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
 

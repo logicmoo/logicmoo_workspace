@@ -139,21 +139,21 @@ map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Ar
 map_pred(_Pred, P, _, _, P).
 
 
-subst001(I,F,R,O):- notrace(subst0011(I,F,R,O)).
+subst001(I,F,R,O):- subst0011(F,R,I,O),!.
 
-subst0011( Term, X, Y, NewTerm ) :-
-  X==Term-> Y=NewTerm ;
-  is_list(Term)-> maplist(subst0011, Term, X, Y, NewTerm );
-  ( \+ compound(Term); Term='$VAR'(_))->Term=NewTerm;
-  (compound_name_arguments(Term, F, Args),
-    maplist(subst0011, Args, X, Y, ArgsNew),
-    compound_name_arguments( NewTerm, F, ArgsNew )).
+subst0011(X, Y, Term, NewTerm ) :-
+ (X==Term-> Y=NewTerm ;
+  (is_list(Term)-> maplist(subst0011(X, Y), Term, NewTerm );
+   (( \+ compound(Term); Term='$VAR'(_))->Term=NewTerm;
+     ((compound_name_arguments(Term, F, Args),
+       maplist(subst0011(X, Y), Args, ArgsNew),
+        compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 
 plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
 my_assertion(G):- call(G),!.
-my_assertion(G):- dumpST,!,trace,ls,wdmsg(my_assertion(G)),trace,!.
+my_assertion(G):- dumpST,!,trace,wdmsg(my_assertion(G)),break,!.
 must_be_free(AllNew):- var(AllNew),!.
 must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
 must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.

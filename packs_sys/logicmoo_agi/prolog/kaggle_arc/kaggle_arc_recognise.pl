@@ -13,7 +13,7 @@
 
 test_ogs:- clsmake, mmake, time(forall(test_ogs(_,_),true)).
 
-:- add_history(test_ogs).
+:- add_history1(test_ogs).
 
 test_ogs0:- clsmake, time(forall(test_ogs0(_,_),true)).
 test_ogs1:- clsmake, time(forall(test_ogs1(_,_),true)).
@@ -109,18 +109,19 @@ test_ogs(H,V):- clsmake,
   wqln("searching..."),
   ff666(T,UFG),
   copy_term(UFG,FG),
-  ss666(T,SG),
+  ss666(_,USG),
+  copy_term(UFG,SG),
 
   (ogs(H,V,FG,SG) *-> Match=true; Match=false),
 
   Run = ((
     %ptt(fg=FG),
-    print_grid(FG),
+    print_grid(_,_,"search for",UFG),
    % (Match == true -> ptt(xfg=FG) ; true),
     %ptt(xfb=FG),
     ptt(tf=T))),
 
-  ignore(((Match==true->show_match(H,V,Run,UFG,SG);show_mismatch(FG,Run,SG)))),
+  ignore(((Match==true->show_match(H,V,Run,FG,USG);show_mismatch(FG,Run,SG)))),
 
   ignore(got_result(SG,FG,Match)),
   fail,
@@ -131,7 +132,7 @@ test_ogs(H,V):- clsmake,
 
 grid_minus_grid(B,A,OI):- grid_size(B,BH,BV),grid_size(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
 grid_minus_grid(B,A,OI):- remove_global_points(A,B,OI),!.
-%grid_minus_grid(B,A,OI):- is_list(B),mapgroup(grid_minus_grid,B,A,OI).
+%grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
 %grid_minus_grid(B,A,C):- ignore(grid_minus_grid0(B,A,C)).
 %grid_minus_grid(B,_,B):- !.
 %grid_minus_grid0(B,A,OI):- B==A,!, OI=black.
@@ -157,34 +158,35 @@ h666(_,G):- fail,ff666(_,G0),
 
 show_mismatch(F,G):-  %fail, 
   nl,dash_chars,
-  show_m_pair(color_print(yellow,"Mismatched"),1,1,F,G),
+  show_m_pair(false,color_print(yellow,"Mismatched"),1,1,F,G),
   nl,dash_chars,!.
 
 show_mismatch(F,C,G):- %fail, 
   nl,dash_chars,
-  show_m_pair((color_print(yellow,"Mismatched"),C),1,1,F,G),
+  show_m_pair(false,(color_print(yellow,"Mismatched"),C),1,1,F,G),
   nl,dash_chars,!.
 
 show_match(H,V,F,G):- 
   nl,dash_chars,
-  show_m_pair(color_print(green,"Matched"),H,V,F,G),
+  show_m_pair(true,color_print(green,"Matched"),H,V,F,G),
   nl,dash_chars,!.
 
 show_match(H,V,C,F,G):- 
   nl,dash_chars,
-  show_m_pair((color_print(green,"Matched"),C),H,V,F,G),
+  show_m_pair(true,(color_print(green,"Matched"),C),H,V,F,G),
   nl,dash_chars,!.
 
-show_m_pair(S,H,V,F,G):- 
-  grid_size(G,GH,GV),
+show_m_pair(_TF,S,H,V,F,G):- 
+  %grid_size(G,GH,GV),
   %make_grid(GH,GV,FDisp),
   H2 is H-3, V2 is V-3,
   offset_grid(H2,V2,F,OF),
-  constrain_grid(f,_Trig,OF,FF),!,
-  print_grid(GH,GV,FF),
+  constrain_grid(f,_TrigF,OF,FF),!,
+  print_grid(_,_,"find",FF),
   nl,
   dash_chars(60,' '),call(S),nl,
-  print_grid(G),!.
+  constrain_grid(s,_TrigG,G,CG),!,
+  print_grid(_,_,"find on",CG),!.
 
 print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid(f,_Trig,F,_FG),print_grid(GH,GV,F),nl)))),!.
 print_sgrid(F):- ((\+ \+ ((constrain_grid(s,_Trig,F,_FG),print_grid(F),nl)))),!.
@@ -233,7 +235,7 @@ ogs_1(H,V,FindI,Search):-
   V is Vi + 1.
 
 ogs_2(H,V,MH,MV,[R1|FGrid],Search):-  
-  grid_detect_bg(Search,Background), my_assertion(Background\==[]), mapgroup(never_fg,Background),
+  grid_detect_bg(Search,Background), my_assertion(Background\==[]), maplist(never_fg,Background),
   my_append(R1,_,Rho),!,
   my_append(VPad,[LPadAndRow|Next],Search),
   length(VPad,V),
@@ -258,19 +260,19 @@ grid_detect_bg(Grid1,Background):-
 grid_label_bg(CT,GridIn,GridO):- CT=f,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
-  mapgroup(to_grid_bg(CT,Grid1),Background),
+  maplist(to_grid_bg(CT,Grid1),Background),
   get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- CT=s,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
-  mapgroup(to_grid_bg(CT,Grid1),Background),
+  maplist(to_grid_bg(CT,Grid1),Background),
   get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- 
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
-  mapgroup(to_grid_bg(CT,Grid1),Background),
+  maplist(to_grid_bg(CT,Grid1),Background),
   get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
-
+grid_label_bg(_,GridO,GridO):-!.
 
 to_grid_bg(_CT,_,E):- cant_be_color(E),!.
 to_grid_bg(_CT,_,BG):- get_bgc(BG),!.
@@ -292,7 +294,7 @@ grid_label_fg(_CT,_,[]):-!.
 grid_label_fg(CT,GridIn,Foreground1):- 
   copy_term(Foreground1,ForegroundCopy),
   numbervars(ForegroundCopy,2021,_,[attvar(skip)]),
-  mapgroup(to_grid_fg(CT,GridIn),Foreground1,ForegroundCopy),!.
+  maplist(to_grid_fg(CT,GridIn),Foreground1,ForegroundCopy),!.
 
 %maybe_grid_numbervars(GridIn,GridIn):-!.
 maybe_grid_numbervars(GridIn,GridIn):- \+ is_grid(GridIn),!.
@@ -341,9 +343,9 @@ fpad_grid(CT,Before,After):-  fpad_grid(CT,=(bg),Before,After).
 fpad_grid(CT,P1,O,GridO):- is_object(O),!,object_grid(O,GridIn),!,fpad_grid(CT,P1,GridIn,GridO).
 fpad_grid(_CT,P1,Grid,Grid2):-
   grid_size(Grid,H,_), H2 is H +2,
-  length(T,H2),mapgroup(P1,T),
-  length(B,H2),mapgroup(P1,B),
-  mapgroup(pad_sides(P1),Grid,FillRows),
+  length(T,H2),maplist(P1,T),
+  length(B,H2),maplist(P1,B),
+  maplist(pad_sides(P1),Grid,FillRows),
   my_append([T|FillRows],[B],Grid2).
 
 
@@ -361,7 +363,7 @@ constrain_grid(CT,Trig,Grid1,GridO):-
 
 
 release_bg(CT,Trig,Grid2,GridO):- must_det_ll((release_bg0(CT,Trig,Grid2,GridO))),!.
-release_bg0(CT,Trig,GridIn,GridO):- is_list(GridIn), !, mapgroup(release_bg0(CT,Trig),GridIn,GridO).
+release_bg0(CT,Trig,GridIn,GridO):- is_list(GridIn), !, maplist(release_bg0(CT,Trig),GridIn,GridO).
 release_bg0(_CT,_Trig,GridIn,GridIn):- attvar(GridIn),!.
 release_bg0(_CT,_Trig,GridIn,GridIn):- plain_var(GridIn),!.
 %release_bg0(CT,Trig,GridIn-P,GridO-P):- !, release_bg0(CT,Trig,GridIn,GridO).
@@ -383,7 +385,7 @@ maybe_constrain_fg(_Trig,GridIn):-
 
 set_fg_vars(Vars):-
   copy_term(Vars,CVars), numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]), 
-  mapgroup(set_as_fg,Vars,CVars),!.
+  maplist(set_as_fg,Vars,CVars),!.
 
 set_as_fg(V,fg(N)):- atomic(N), put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),nb_linkval(Lookup,V).
 set_as_fg(V,Sym):- put_attr(V,ci,Sym).

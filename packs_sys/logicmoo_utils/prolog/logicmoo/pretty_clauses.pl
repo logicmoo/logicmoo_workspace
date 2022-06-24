@@ -945,12 +945,13 @@ prolog_pretty_print_term(A,Options):-
 % @TODO comment out the next line
 %simple_write_term(A):- !, with_no_hrefs(t,(if_defined(rok_writeq(A),write_q(A)))),!.
 
-simple_write_term(A):- in_pp(bfly),!,print_html_term(A).
-simple_write_term(A):- write_q(A).
-simple_write_term(A,Options):- Options==[], !, simple_write_term(A).
-simple_write_term(A,_):- in_pp(bfly),!,print_html_term(A).
-simple_write_term(A,Options):-  without_ec_portray_hook(\+ \+ write_term(A,Options)),!.
+system:simple_write_term(A):- in_pp(bfly),!,print_html_term(A).
+system:simple_write_term(A):- write_q(A).
+system:simple_write_term(A,Options):- Options==[], !, simple_write_term(A).
+system:simple_write_term(A,_):- in_pp(bfly),!,print_html_term(A).
+system:simple_write_term(A,Options):-  without_ec_portray_hook(\+ \+ write_term(A,Options)),!.
 
+:- fixup_exports.
 %simple_write_term(A,Options):-  write_term(A,[portray_goal(pretty_clauses:pprint_tree)|Options]).
 
 get_portrayal_vars(Vs):- nb_current('$variable_names',Vs)-> true ; Vs=[].
@@ -1432,6 +1433,10 @@ print_tree_width(W120):- W120=120.
 maybe_prefix_spaces(V,Tab):- ignore(( \+ as_is(V),prefix_spaces(Tab) )).
 maybe_print_tab_term(Tab,V):- maybe_prefix_spaces(V,Tab), print_tree_no_nl( V ).
 
+term_contains_ansi(S):- \+ compound(S),!,string(S),sub_string(S,_,_,_,'\x1B').
+term_contains_ansi(S):- arg(_,S,E),term_contains_ansi(E),!.
+:- export(term_contains_ansi/1).
+
 :- thread_local(t_l:printing_dict/0).
 
 is_infix_op(OP):- current_op(_,XFY,OP), (yfx==XFY ; xfx==XFY ; xfy==XFY ).
@@ -1440,10 +1445,11 @@ print_lc_tab_term(LC,Tab,T):- write(LC),print_tab_term(Tab,T).
 
 pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
+pt1(_FS,_Tab,S) :- string(S),atom_codes(S,[27|_]), !,  write('"'),writeq(S),write('"').
+
 pt1(_, Tab,Term) :- 
   with_no_hrefs(t,(if_defined(rok_linkable(Term),fail), !,
   prefix_spaces(Tab), write_atom_link(Term))),!.
-
 
 pt1(_FS,Tab,[H|T]) :- is_codelist([H|T]), !,
    sformat(S, '`~s`', [[H|T]]),
@@ -1726,6 +1732,7 @@ pt_cont_args(Sep1, Tab,Sep, Mid, FS,[A|As]) :- !,
 :- export(print_tab_term/3).
 
 is_arity_lt1(S):- notrace(is_arity_lt10(S)).
+is_arity_lt1(V):- term_contains_ansi(V),!,fail.
 is_arity_lt10(A) :- \+ compound(A),!.
 is_arity_lt10(A) :- compound_name_arity(A,_,0),!.
 is_arity_lt10(A) :- functor(A,'$VAR',_),!.
@@ -1749,6 +1756,7 @@ use_system_portray(A=B):- use_system_portray(A),use_system_portray(B),!.
 as_is(V):-notrace(as_is0(V)).
 
 as_is0(V):- var(V).
+as_is0(V):- term_contains_ansi(V),!,fail.
 as_is0(V) :- is_dict(V), !, fail.
 as_is0(A) :- is_arity_lt1(A), !.
 as_is0(A) :- functor(A,F,_), simple_f(F), !.
@@ -1795,6 +1803,7 @@ simple_f(isa).
 simple_f(has_rel).
 simple_f(HasSpace):- atom_contains(HasSpace,' ').
 
+simple_arg(V):- term_contains_ansi(V),!,fail.
 simple_arg(S):- (nvar(S) ; \+ compound(S)),!.
 %simple_arg(S):- S=[_,A], simple_arg(A), !.
 simple_arg(S):- \+ (arg(_,S,Var), compound(Var), \+ nvar(Var)).

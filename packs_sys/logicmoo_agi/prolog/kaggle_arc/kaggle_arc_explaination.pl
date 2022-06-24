@@ -145,7 +145,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 
 debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A).
 debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
- must_det_l((
+ must_det_ll((
   ignore((o2g(Obj,GGG), nonvar(GGG),my_asserta_if_new(g2o(GGG,Obj)))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=grey),

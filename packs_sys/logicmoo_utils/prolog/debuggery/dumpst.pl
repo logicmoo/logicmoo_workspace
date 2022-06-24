@@ -354,6 +354,15 @@ fdmsg1(M):-dmsg(failed_fdmsg1(M)).
 do_fdmsg1(G):- 
   simplify_goal_printed(G,GG),!,
   (GG\==G->write('#');true),
+  do_fdmsg2(GG),!.
+
+term_contains_ansi_b(S,S):- \+ compound(S),!,string(S),sub_string(S,_,_,_,'\x1B').
+term_contains_ansi_b(S,N):- arg(_,S,E),term_contains_ansi_b(E,N),!.
+
+%do_fdmsg2(GG):- term_contains_ansi_b(GG,_),pt(GG),!.
+do_fdmsg2(GG):- term_contains_ansi_b(GG,_),write(GG),!.
+%do_fdmsg2(GG):- term_contains_ansi_b(GG,N),write(N),fail.
+do_fdmsg2(GG):-
   term_variables(GG,_Vars),
   copy_term_nat(GG,GGG), =(GG,GGG),
   numbervars(GGG,0,_,[attvar(skip)]),

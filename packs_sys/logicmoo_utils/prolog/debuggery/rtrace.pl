@@ -132,7 +132,7 @@ reset_macro(X,X).
 tAt_normal:- tAt(false, 271, 271, false).
 tAt_rtrace:- tAt(false, 319, 256, tracing).
 tAt_quietly:- tAt(false, 271, 319, false).
-tAt(GuiWas,OldV,OldL,WasDebug):-
+system:tAt(GuiWas,OldV,OldL,WasDebug):-
   notrace, set_prolog_flag(gui_tracer,GuiWas),
   '$leash'(_, OldL),'$visible'(_, OldV),
    (WasDebug\==tracing->set_prolog_flag(debug,WasDebug) ;trace).

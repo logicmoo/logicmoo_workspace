@@ -310,7 +310,7 @@ consensus2(Vars,[C|BG],Blk,Color,Other,C).
 :- style_check(+singleton).
 
 print_grid_i(O):- print_grid(O),!.
-print_grid_i(O):- trace,print_grid(O),!.
+print_grid_i(O):- dumpST,trace,print_grid(O),!.
 
 maybe_repair_image(Ordered,Objects,CorrectObjects,Keep):- 
   maplist(object_grid,Objects,AllGrids),

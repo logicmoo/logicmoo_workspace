@@ -645,7 +645,7 @@ is_regular_format_args(X,_):- \+ atomic(X),!,fail.
 is_regular_format_args(X,Y):- (string(X);atom(Y)), atom_contains(X,'~').
 is_regular_format_args(_,Y):- is_list(Y),!.
 
-smart_format(X,Y,Z):- format(X,Y,Z).
+system:smart_format(X,Y,Z):- format(X,Y,Z).
 smart_format(X,Y):- smart_format([X,Y]).
 
 smart_format(DDD):- \+ is_list(DDD),!, format('~q',[DDD]).
@@ -653,6 +653,10 @@ smart_format(DDD):- \+ is_list(DDD),!, format('~q',[DDD]).
 smart_format([X,Y]):- is_regular_format_args(X,Y),!,catch(format(X,Y),error(smart_format(A),B),writeq(smart_format(X,Y)=error(smart_format(A),B))),!.
 smart_format([X|More]):- (compound(X);is_stream(X)),!,with_output_to(X,smart_format(More)),!.
 smart_format([X,Y]):- smart_format(X-Y),!.
+
+:- export(smart_format/3).
+:- export(smart_format/2).
+:- export(smart_format/1).
 
 fmt0(X,Y):-catchvvnt((smart_format(X,Y),flush_output_safe),E,dfmt(E:smart_format(X,Y))).
 
@@ -1668,6 +1672,7 @@ woto_tty(S,TTY,Goal):- with_output_to(S,(set_stream(current_output,tty(TTY)),Goa
 :- export(woto/2).
 woto(S,Goal):- use_tty(S,TTY),woto_tty(S,TTY,Goal).
 
+
 :- meta_predicate(wots(-,0)).
 :- export(wots/2).
 wots(S,Goal):- woto(string(S),Goal).
@@ -2230,4 +2235,6 @@ cls:- ignore(catch(system:shell(cls,0),_,fail)).
 :- '$hide'(wdmsg/1).
 :- '$hide'(wdmsg/2).
 :- '$hide'(dmsg/1).
+
+:- fixup_exports.
 

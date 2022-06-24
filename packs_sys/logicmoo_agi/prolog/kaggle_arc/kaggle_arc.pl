@@ -69,25 +69,33 @@ my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 check_len(_).
 
 must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
-must_det_ll((X;Y)):- !, (must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A ->X;Y)):- !,(call(A)->must_det_ll(X);must_det_ll(Y)).
-must_det_ll(X):- call(X),!.
+must_det_ll((X;Y)):- !, ((call(X);call(Y))->true;must_det_ll_failed(X;Y)).
+must_det_ll(once(A)):- !, once(must_det_ll(A)).
+must_det_ll(X):- once(X),!.
+must_det_ll(X):- must_det_ll_failed(X).
 
-%must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
-%must_det_l_goal_expansion(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
+must_det_ll_failed(X):- (wdmsg(failed(X)),dumpST)->trace,fail.
+must_det_ll_failed(X):- rtrace(X),!.
+% must_det_ll(X):- must_det_ll(X),!.
 
-% goal_expansion(G,I,GG,O):- nonvar(I),source_location(_,_), compound(G), must_det_l_goal_expansion(G,GG),I=O.
+remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
+remove_must_dets(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
+
+% goal_expansion(must_det_l(G),I,must_det_ll(G),O):- nonvar(I),source_location(_,_), nonvar(G),I=O.
+
+%goal_expansion(G,I,GG,O):- nonvar(I),source_location(_,_), compound(G), remove_must_dets(G,GG),I=O.
 
 %:- system:ensure_loaded(library(pfc_lib)).
 %:- expects_dialect(pfc).
 
 /*
-goal_expansion(Goal,Out):- compound(Goal), arg(N,Goal,E), 
-   compound(E), E = set(Obj,Member), setarg(N,Goal,Var),
+goal_expansion(Goal,Out):- compound(Goal), arg(N1,Goal,E), 
+   compound(E), E = set(Obj,Member), setarg(N1,Goal,Var),
    expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
 */
 get_setarg_p1(E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(E,Cmpd,SA).
-get_setarg_p2(E,Cmpd,SA):- arg(N,Cmpd,E), SA=setarg(N,Cmpd).
+get_setarg_p2(E,Cmpd,SA):- arg(N1,Cmpd,E), SA=setarg(N1,Cmpd).
 get_setarg_p2(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
 
 
@@ -113,12 +121,12 @@ is_obj_setter(set(ObjMember),Obj,Member,_Var):- compound(ObjMember), ObjMember =
 goal_expansion_setter(Goal,_):- \+ compound(Goal), !, fail.
 goal_expansion_setter(Goal,Out):- 
    predicate_property(Goal,meta_predicate(_)),!, fail,
-   arg(N,Goal,P), goal_expansion_setter(P,MOut),
-   setarg(N,Goal,MOut), !, expand_goal(Goal, Out).
+   arg(N1,Goal,P), goal_expansion_setter(P,MOut),
+   setarg(N1,Goal,MOut), !, expand_goal(Goal, Out).
 
 goal_expansion_setter(Goal,Out):-
-   arg(N,Goal,P),  is_obj_setter(P,Obj,Member,Var),
-   setarg(N,Goal,Var), !, expand_goal((Goal,my_b_set_dict(Member,Obj,Var)), Out).
+   arg(N1,Goal,P),  is_obj_setter(P,Obj,Member,Var),
+   setarg(N1,Goal,Var), !, expand_goal((Goal,my_b_set_dict(Member,Obj,Var)), Out).
 
 goal_expansion_setter(Goal,Out):-
    get_setarg_p1(I,Goal,P1), is_obj_setter(I,Obj,Member,Var),
@@ -126,8 +134,8 @@ goal_expansion_setter(Goal,Out):-
    expand_goal((Goal,my_b_set_dict(Member,Obj,Var)),Out).
 
 my_b_set_dict(Member,Obj,Var):- must_be_nonvar(Member), must_be_nonvar(Obj),  
-  nb_set_dict(Member,Obj,Var),
-  nb_link_dict(Member,Obj,Var),
+  %nb_set_dict(Member,Obj,Var),
+  %nb_link_dict(Member,Obj,Var),
   b_set_dict(Member,Obj,Var).
 
 system:term_expansion((Head:-Body),I,Out,O):- nonvar(I),  compound(Head), term_expansion_setter((Head:-Body),Out),(Head:-Body)=In,In\==Out,I=O,!,
@@ -158,6 +166,8 @@ doit(set(E.v)):- that.
 :- add_history1(fav1).
 :- add_history1(fav3).
 
+:- multifile(regression_test/0).
+:- dynamic(regression_test/0).
 
 %:- learn_shapes.
 :- ensure_loaded(kaggle_arc_utils).
@@ -230,9 +240,9 @@ arc1(G,TName):-
    clear_shape_lib(intruder),!,
    % choice point created here purposely
   nb_delete('$training_vm'),
-  forall(kaggle_arc(TestID,ExampleNum,In,Out),
+  forall(kaggle_arc(TestID,ExampleNum,_In,_Out),
   ignore((catch((call(G),
-    run_arc_io(TestID,ExampleNum,In,Out)),'$aborted',true)))))).
+    run_arc_io(TestID,ExampleNum)),'$aborted',true)))))).
 
 
 cls1:- nop(catch(cls,_,true)).
@@ -244,9 +254,9 @@ arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc(TestID,_ExampleNum,In,Out)
 %is_buggy_pair(t('3631a71a')*(tst+0),"segv").
 %is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
 
-run_arc_io(TestID,ExampleNum):- Pair = TestID*ExampleNum, is_buggy_pair(Pair,Why),!,format("~N % Skipping ~q because: ~w ~n~n",[Pair,Why]).
+run_arc_io(TestID,ExampleNum):- Pair = TestID*ExampleNum, is_buggy_pair(Pair,Why),!,format("~N1 % Skipping ~q because: ~w ~n~n",[Pair,Why]).
 run_arc_io(TestID,ExampleNum):- 
-  time(train_test(TestID,ExampleNum)),
+  time(train_test(TestID)),
   time(solve_test(TestID,ExampleNum)).
 
 make_indivs(Pred,In,Out,InC,OutC):-
@@ -260,7 +270,7 @@ make_indivs1(Pred,In,Out,InC,OutC):-
 
 make_indivs1(Pred,In,Out,InC,OutC):- 
   make_indivs_no_swap(Pred,In,Out,InC,OutC),
-  save_off(Pred,In,Out,InC,OutC).
+  nop(save_off(Pred,In,Out,InC,OutC)).
 
 save_off(_Pred,_In,_Out,InC,OutC):-
  ((
@@ -332,8 +342,8 @@ get_training(Training):- notrace(get_current_test(TestID)),make_training(TestID,
 set_training(Training):- nb_linkval('$training_vm',Training).
 
 make_training(TestID,VM):- make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
- must_det_l((
-    test_hints(TestID,ArgVM,VM0),
+ must_det_ll((
+    make_training_hints(TestID,ArgVM,VM0),
     vars_to_dictation([test_id=TestID,mappings=[]],VM0,VM),
 
     /*
@@ -351,56 +361,47 @@ gather_more_task_info(TestID,III):- fav(TestID,III).
   
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
-train_test:- notrace(get_current_test(TestID)),
-  train_test(TestID,(trn+_)),!,
-  solve_test(TestID,(trn+_)),!.
+train_test:- notrace(get_current_test(TestID)), train_test(TestID).
 
-train_test(TestID,ExampleNum):- 
+train_test(TestID):- 
   locally(set_prolog_flag(gc,false),
-   train_test0(TestID,ExampleNum)).
-
-
-train_using_hints(TestID,DictIn,DictOut):- update_model_from_hints(TestID,trn,0,DictIn,DictOut).
-update_model_from_hints(TestID,Trn,N,DictIn,DictOut):-
-  (kaggle_arc(TestID,(Trn+N),In,Out),
-  NN is N + 1),
- (kaggle_arc(TestID,(Trn+NN),In2,Out2) -> 
-    (
-      train_for_objects(Dict0,TestID,[Trn,'_','o',N,'_','o',NN,'_'],Out,Out2,Dict1),
-     train_for_objects(DictIn,TestID,[Trn,'_','i',N,'_','i',NN,'_'],In,In2,Dict0),
-     update_model_from_hints(TestID,Trn,NN,Dict1,DictM));
-  (DictM = DictIn)),!,
-  train_for_objects(DictM,TestID,[Trn,'_','i',N,'_','o',N,'_'],In,Out,DictOut),!.
-
-
-
-train_test0(TestID,ExampleNum):-
- must_det_l((
+ must_det_ll((
   set_training(PrevPairEnv),
   flag(indiv,_,0),
   nb_setval(prev_pairEnv,PrevPairEnv),
   nb_delete('$training_vm'),
   get_training(Training),
-  test_hints(TestID,Training,Dictation),
+  make_training_hints(TestID,Training,Dictation),
   set_training(Dictation),
   train_using_hints(TestID,Dictation,DictOut),
   set_training(DictOut),
   garbage_collect,
-  ((forall(gather_more_task_info(TestID,III),pt(III)),nl)),!,
-  kaggle_arc(TestID,(ExampleNum+_),In,Out),
-  ((catch(maybe_confirm_dsl(Training,TestID,ExampleNum,In,Out),E2,wdmsg(E2)))))).
+  ((forall(gather_more_task_info(TestID,III),pt(III)),nl))))),!.
+  %kaggle_arc(TestID,(ExampleNum+_),In,Out),
+  %nop((catch(maybe_confirm_dsl(Training,TestID,ExampleNum,In,Out),E2,wdmsg(E2))))))).
+
+train_using_hints(TestID,DictIn,DictOut):- train_for_objects(TestID,trn,0,DictIn,DictOut).
+train_for_objects(TestID,Trn,N1,DictIn,DictOut):-
+  (kaggle_arc(TestID,(Trn+N1),In,Out),
+  N2 is N1 + 1),
+ (kaggle_arc(TestID,(Trn+N2),In2,Out2) -> 
+    (train_for_objects_from_pair(Dict0,TestID,[Trn,'_','o',N1,'_','o',N2,'_'],Out,Out2,Dict1),
+     train_for_objects_from_pair(DictIn,TestID,[Trn,'_','i',N1,'_','i',N2,'_'],In,In2,Dict0),
+     train_for_objects(TestID,Trn,N2,Dict1,DictM));
+  (DictM = DictIn)),!,
+  train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,DictOut),!.
 
 which_io(i,in). which_io(o,out).
-train_for_objects(Dict0,TestID,Desc,In,Out,Dict1):-
- Desc = [Trn,'_',IsIO1,N,'_',IsIO2,NN,'_'],
+train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict1):-
+ Desc = [Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
- pt(ExampleNum:IO1:IO2:Desc),
- must_det_l((
-  atomic_list_concat([Trn,'_',IsIO1,N,'_',IsIO2,NN,'_'],Prefix),
+ atom_concat(IO1,N1,ION1),
+ atom_concat(IO2,N2,ION2),
+ pt(train_for_objects_from_pair=ExampleNum:IO1:IO2:Desc),
+ must_det_ll((
+  atomic_list_concat([Trn,'_',ION1,'_',ION2,'_'],Prefix),
   ExampleNum = (Trn+Prefix),
-  %kaggle_arc(TestID,(Trn+N),IO1,Out),
-  %kaggle_arc(TestID,(Trn+NN),IO2,In),
   garbage_collect,
   Dict0=Dict1,
   %must_be_nonvar(Training),
@@ -414,31 +415,28 @@ train_for_objects(Dict0,TestID,Desc,In,Out,Dict1):-
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   %print_collapsed
   % set_training(Training),!,
-  show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
+  show_pair_grid(IH,IV,OH,OV,original(ION1),original(ION2),PairName,In,Out),!,  
   %make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),!,
   %% % %  set(Training.pre_out) = PreOutC,
   %% % %  set(Training.pre_in) = PreInC,  
-  make_indivs(individuate(complete),In,Out,InC,OutC),!,
+  individuate(complete,In,InC),
+  individuate(complete,Out,OutC),
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   add_shape_lib(in,Removed),
   add_shape_lib(pair,RetainedIn),
   % add_shape_lib(pair,RetainedOut),
   add_shape_lib(out,Added),
-  max_min(IH,OH,IOH,_),
-  max_min(IV,OV,IOV,_))),
-  %make_indivs(individuate_second_pass,In,Out,InP2,OutP2),
-  %make_indivs(individuate_complete,InP2,OutP2,InC2,OutC2),
   dash_chars,dash_chars,dash_chars,dash_chars,
-  %show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
-  %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,PreInC,PreOutC),
-  show_pair_grid(IH,IV,   OH, OV,original_in,original_out,PairName,In,Out),
-  show_pair_diff(IOH,IOV,IOH,IOV,removed,added,PairName,Removed,Added),
+  show_pair_grid(IH,IV,   OH, OV,original(ION1),original(ION2),PairName,In,Out),
+  max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
+  ((Removed==Added, Removed==[]) -> pt(yellow,nothing_removed_added(ION1/ION2)) ;
+   show_pair_diff(IOH,IOV,IOH,IOV,removed(ION1/ION2),added(ION1/ION2),PairName,Removed,Added)),
+  ((RetainedIn==RetainedOut, RetainedIn==[]) -> pt(yellow,nothing_retained(ION1/ION2)) ;
+   show_pair_diff(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
+  ((InC==OutC, InC==[]) -> pt(yellow,nothing_individuated(ION1/ION2)) ;
+   show_pair_diff(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!,
+  dash_chars,dash_chars,dash_chars,dash_chars)).
 
-  show_pair_diff(IH,IV,   OH, OV,retained_in,retained_out,PairName,RetainedIn,RetainedOut),
-  %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InP2,OutP2),
-  %show_pair_grid(IH,IV,   OH, OV,i_pass1,o_pass1,PairName,InC2,OutC2),
-  show_pair_diff(IH,IV,   OH, OV,in(individuate),out(individuate),PairName,InC,OutC),!.
-  %ignore((catch(with_named_pair(solve,TestID,PairName,In,Out),E1,wdmsg(E1)))),
 
 
 solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)),!.
@@ -446,7 +444,7 @@ solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)),!.
 solve_test(TestID,ExampleNum):-
  forall(kaggle_arc(TestID,ExampleNum,In,Out),
   (nop(sols_for(TestID,_Sol)),
-   must_det_l((
+   must_det_ll((
     get_training(PrevPairEnv),
     nb_setval(prev_pairEnv,PrevPairEnv),
     nb_delete('$training_vm'),
@@ -515,21 +513,21 @@ solve_test(TestID,ExampleNum):-
        individuate(defaults,Out,UnsharedOut),
        writeln(inUnsharedOut),
        show_pair_i(IH,IV,OH,OV,late_test,PairName,UnsharedIn,UnsharedOut),
-       format('~N-sofar~N'),!,
+       format('~N1-sofar~N1'),!,
        %pt(yellow,in=UnsharedIn),
        pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
-       format('~N-pred_intersection~N'),
+       format('~N1-pred_intersection~N1'),
         individuate(UnsharedOut,Out,SharedInR),
         individuate(UnsharedIn,In,SharedOutR),
         show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))), !.*/
-  %format('~N-Rule made from~N'),
+  %format('~N1-Rule made from~N1'),
   %show_rules,
 /*  RESS =.. [res,unsharedIn=UnsharedIn,
              %onlyIn= IPCs,
             commonIn=CommonCsIn,commonOut=CommonCsOut, %onlyOut=OPCs, 
              unsharedOut=UnsharedOut],
   tersify(RESS,ShortInfo),         
-  format('~N-Stats:~N'),
+  format('~N1-Stats:~N1'),
   pt(yellow,sol=ShortInfo), !.
   */
 	
@@ -578,11 +576,12 @@ reuse_a_b(A,B,AA):-
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
     (pt(same_object(GlyphA,GlyphB,How))))).
 
-
+regression_tests:- make, forall((clause(regression_test,Body),ptt(Body)),must_det_ll(Body)).
+:- add_history1(regression_tests).
 
 :- fixup_exports.
 %:- initialization(demo,program).
 %:- initialization(demo,restore_state).
 %:- initialization(demo,main).
 %:- initialization(demo,after_load).
-:- add_history((cls,make,demo)).
+:- add_history1((cls,make,demo)).

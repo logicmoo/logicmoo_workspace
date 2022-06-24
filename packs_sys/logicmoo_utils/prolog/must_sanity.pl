@@ -296,18 +296,29 @@ scce_orig0(Setup0,Goal,Cleanup0):-
       *-> (tracing->(deterministic(DET));deterministic(DET)); (Cleanup,!,fail)),
      Cleanup,
      (notrace(DET == true) -> ! ; (true;(Setup,fail))).
-      
-:- '$hide'(scce_orig/3).
-:- '$set_predicate_attribute'(scce_orig/3, hide_childs, true).
+
+'my_set_predicate_attribute'(M:F/A,B,C):- functor(P,F,A),'my_set_predicate_attribute'(M:P,B,C),!.
+'my_set_predicate_attribute'(F/A,B,C):- functor(P,F,A),'my_set_predicate_attribute'(P,B,C),!.
+'my_set_predicate_attribute'(A,B,C):- current_prolog_flag(access_level,system),!,'$set_predicate_attribute'(A,B,C).
+'my_set_predicate_attribute'(A,B,C):- 
+  current_prolog_flag(access_level,Was),
+  redefine_system_predicate(A),
+  setup_call_cleanup(set_prolog_flag(access_level,system),
+    '$set_predicate_attribute'(A,B,C),set_prolog_flag(access_level,Was)).
+
+
+%:- '$hide'(scce_orig/3).
+%:- 'my_set_predicate_attribute'(scce_orig(_,_,_), hide_childs, true).
 
 :- '$hide'(xnotrace/1).
-:- '$set_predicate_attribute'(xnotrace/1, hide_childs, true).
+:- 'my_set_predicate_attribute'(xnotrace/1, hide_childs, true).
 
 %:- '$hide'(system:setup_call_catcher_cleanup/4).
-%:- '$set_predicate_attribute'(system:setup_call_catcher_cleanup/4, hide_childs, false).
+%:- 'my_set_predicate_attribute'(system:setup_call_catcher_cleanup/4, hide_childs, false).
 
+:- redefine_system_predicate(call_cleanup(_,_)).
 :- '$hide'(system:call_cleanup/2).
-:- '$set_predicate_attribute'(call_cleanup/2, hide_childs, false).
+:- 'my_set_predicate_attribute'(call_cleanup/2, hide_childs, false).
 
 
 scce_orig2(Setup,Goal,Cleanup):-

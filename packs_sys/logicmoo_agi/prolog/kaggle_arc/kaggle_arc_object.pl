@@ -153,7 +153,7 @@ make_indiv_object(Points,Overrides,Obj):-
 
 
 make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):- 
- (Points==[]-> trace ; true),
+ (Points==[]-> (dumpST,trace) ; true),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
   %nb_current(test_pairname,ID),
@@ -163,7 +163,8 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
      mapgroup(between(1,30),[H,V,LoH,LoV,HiH,HiV,Width,Height]))),
  must_det_ll((
   my_assertion(is_list([overrides|Overrides])),
-  my_assertion(mapgroup(is_cpoint,Points)),
+  my_assertion(maplist(is_cpoint,Points)),
+  colors(Points,CC),
   %my_assertion(ground(Points)),
   flag(indiv,Fv,Fv+1),
   Iv is (Fv rem 3000) + 1,
@@ -189,7 +190,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
     [changes([])|OShapes], % [grid(LocalGrid)],    
     [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps))),  
   with_objprops(override,Overrides,Ps,OUT1),
-  sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj).
+  sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj).
 
 top(7).
 
@@ -227,11 +228,16 @@ add_shape_info([Info|L],I,O):-!,add_shape_info(Info,I,M),add_shape_info(L,M,O).
 add_shape_info([],I,I):-!.
 add_shape_info(Info,I,O):- override_object(iz(Info),I,O).
 
+verify_object(Obj):-
+  localpoints(Obj,_LP),
+  globalpoints(Obj,_GP).
 
 override_object(E,I,O):- with_object(override,E,I,O).
 
-with_object(Op,E,obj(List),obj(MidList)):- !, with_objprops(Op,E,List,MidList).
-with_object(Op,E,I,O):- my_assertion(is_list(I)),maplist(with_object(Op,E),I,O).
+with_object(Op,E,obj(List),O):- !, with_objprops(Op,E,List,MidList),O=obj(MidList),!,verify_object(O).
+with_object(Op,E,I,O):- is_list(I), !, with_objprops(Op,E,I,O).
+with_object(Op,E,I,O):- is_group(I), mapgroup(with_object(Op,E),I,O).
+with_object(Op,E,     I,     O):- with_objprops(Op,E,I,O).
 
 with_objprops(Op,obj(E),List,MidList):- !, with_objprops(Op,E,List,MidList).
 with_objprops(Op,E,obj(List),obj(MidList)):- !, with_objprops(Op,E,List,MidList).
@@ -382,8 +388,10 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
  findall(Dir,(is_adjacent_point(HV,Dir,HV2),Dir\==c,member(CC-HV2,List),colors_join(C,CC)),Ns),
   length(Ns,I),P = I-HV.
 
+var_check(I,G):- var(I),!,var_check_throw(I,G).
+var_check(I,G):- resolve_reference(I,O),!,subst001(G,I,O,GG),!,call(GG).
 var_check(I,G):- var(I),!,(enum_object(I)*->G;var_check_throw(I,G)).
-var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,trace_or_throw(maybe_enum_i(I,G)),call(G).
+var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,dumpST,trace_or_throw(maybe_enum_i(I,G)),call(G).
 
 object_shapeW(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(iz(X),L).
 object_shapeW(I,X):- indv_props(I,L),!,member(iz(X),L).
@@ -392,6 +400,7 @@ isz(I,X):- var_check(I,iz(I,X))*->true;(indv_props(I,L),member(iz(X),L)).
 
 obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),member(X,L)).
 
+resolve_reference(R,Var):- compound(R),arc_expand_arg(R,Var,Goal),!,call(Goal).
 rotation(G,X):- is_group(G),!,mapgroup(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- var_check(I,rotation(I,X)).
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
@@ -474,9 +483,11 @@ globalpoints(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Po
 */
 
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
-colors(I,X):- indv_props(I,L),member(colors(X),L),!.
+colors(I,X):- is_object(I),indv_props(I,L),member(colors(X),L),!.
+colors(G,[cc(black,0.0)]):- G==[],!.
 colors(G,BFO):- colors_via_pixels(G,BFO),!.
-colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),list_to_set(GF,GS),count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,
+colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),list_to_set(GF,GS),
+  count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,
   into_cc(SK,BFO))).
 %colors(G,X):- is_group(G),!,mapgroup(colors,G,Points),append_sets(Points,X).
 
@@ -561,6 +572,7 @@ rebuild_from_globalpoints(Obj,GPoints,NewObj):-
   my_partition(rev_lambda(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
     make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
+    verify_object(NewObj),
  !.
 
 

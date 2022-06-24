@@ -91,11 +91,12 @@ grid_xform(Rot90,Grid,NewAnyWUpdate):-
   grid_size(Grid,H,V),
   apply_transformer(Rot90,H,V,Grid,NewAnyWUpdate).
 apply_transformer(Name,H,V,G,O):-
-  get_xformer(Name,H,V,In,Out),!,
+  get_spatial_xformer(Name,H,V,In,Out),!,
   G=In,O=Out.
 
-get_xformer(Name,H,V,In,Out):- xform_cache(Name,H,V,In,Out),!.
-get_xformer(Name,H,V,In,Out):- 
+get_spatial_xformer(_Name,1,1,In,In):- !.
+get_spatial_xformer(Name,H,V,In,Out):- xform_cache(Name,H,V,In,Out),!.
+get_spatial_xformer(Name,H,V,In,Out):- 
    make_grid(H,V,In),
    call(Name,In,Out),!,
    asserta(xform_cache(Name,H,V,In,Out)),!.
@@ -230,19 +231,33 @@ is_input(VM):- VM.id = _ * _ * in.
 % ==============================================
 
 find_touches(VM):- Objs = VM.objs,
-  show_object_changes(VM,find_touches,
+  show_vm_changes(VM,find_touches,
      find_touches(VM,Objs,Objs,set(VM.objs))),!.
 
+%ignore(((NewOptions\==Options;(GoneMissing\==[];SofarMaybeNewL\==SofarL)),
+
+%show_object_changes(_VM,_S,Goal):-!, call(Goal).
+
+show_vm_changes(VM,S,Goal):-
+  show_object_changes(VM,S,show_point_changes(VM,S,show_grid_changes(VM,S,Goal))).
+
 show_object_changes(VM,S,Goal):-
-  show_point_changes(VM,S,
-       setup_call_cleanup(print_grid(VM.h,VM.v,objs:S,VM.objs),
+       setup_call_cleanup(duplicate_term(VM.objs,Was),
                      Goal,
-                     print_grid(VM.h,VM.v,new_objs:S,VM.objs))).
+        ignore((VM.objs\==Was,
+          print_side_by_side4(print_grid(VM.h,VM.v,Was),objs>was:S,_,print_grid(VM.h,VM.v,VM.objs),objs>new:S)))).
 
 show_point_changes(VM,S,Goal):-
-  setup_call_cleanup(print_grid(VM.h,VM.v,points:S,VM.objs),
+   setup_call_cleanup(duplicate_term(VM.points,Was),
+      Goal,
+     ignore((VM.points\==Was,
+        print_side_by_side4(print_grid(VM.h,VM.v,Was),points>was:S,_,print_grid(VM.h,VM.v,VM.points),points>new:S)))).
+
+show_grid_changes(VM,S,Goal):-
+   setup_call_cleanup(duplicate_term(VM.grid,Was),
                      Goal,
-                     print_grid(VM.h,VM.v,new_points:S,VM.objs)).
+     ignore((VM.grid\==Was,
+        print_side_by_side4(print_grid(VM.h,VM.v,Was),grid>was:S,_,print_grid(VM.h,VM.v,VM.grid),grid>new:S)))).
 
 
 %find_touches(VM,ScanNext,SofarInsteadO):- find_touches(VM,ScanNext,ScanNext,SofarInsteadO).
@@ -286,7 +301,7 @@ dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacen
 % ENGULFS
 % ==============================================
 find_engulfs(VM):- 
-  show_object_changes(VM,find_engulfs,find_engulfs(VM,VM.objs,set(VM.objs))),!.
+  show_vm_changes(VM,find_engulfs,find_engulfs(VM,VM.objs,set(VM.objs))),!.
 
 find_engulfs(VM,ScanNext,SofarInsteadO):-
   find_engulfs(VM,ScanNext,ScanNext,SofarInsteadO).
@@ -392,10 +407,10 @@ scan_to_colider(Obj,Next,Dir,ObjPoints,DirHits):-
   is_adjacent_point(Next,Dir,NNext),
   scan_to_colider(Obj,NNext,Dir,ObjPoints,DirHits).
 
-replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):-!,
-  subst001(OtherObjects,I,O,OtherObjectsM),
+replace_i_each(OtherObjects,[I|NewInside],[O|NewInsideM],NewOtherObjects):- must_be_free(NewOtherObjects),
+  subst001(OtherObjects,I,O,OtherObjectsM),!,
   replace_i_each(OtherObjectsM,NewInside,NewInsideM,NewOtherObjects).
-replace_i_each(E,[],[],E).
+replace_i_each(E,[],[],E):-!.
 
 :- fixup_exports.
 

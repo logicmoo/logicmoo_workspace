@@ -85,9 +85,10 @@ system:nop(_).
 :- export(system:nop/1).
 :- endif.
 :- meta_predicate l_once(0).
-qdmsg(_):- current_prolog_flag(dmsg_level,never),!.
-qdmsg(M):-compound(M),cfunctor(M,F,_),!,debug(logicmoo(F),'~q',[M]).
-qdmsg(M):-debug(logicmoo(M),'QMSG: ~q',[M]).
+system:qdmsg(_):- current_prolog_flag(dmsg_level,never),!.
+system:qdmsg(M):-compound(M),cfunctor(M,F,_),!,debug(logicmoo(F),'~q',[M]).
+system:qdmsg(M):-debug(logicmoo(M),'QMSG: ~q',[M]).
+:- export(system:qdmsg/1).
 
 
 
@@ -226,8 +227,8 @@ signal_eom(Module):- must(prolog_load_context(module,Module)),
   % dmsg(info(load_mpred_file_complete(Module:File))),
    GETTER=t_l:eof_hook(_File,TODO),
    must((forall(clause(GETTER,Body,Ref),(qdmsg(found_eom_hook(GETTER:-Body)),
-        doall((forall(Body,  ((qdmsg(do_eof_hook(Module:on_f_log_ignore(GETTER))),
-        show_failure(eom_action(Module),Module:on_f_log_ignore(TODO))))))),ignore(erase(Ref)))))),fail.
+        doall((forall(Body,  ((qdmsg(do_eof_hook(on_f_log_ignore(Module,GETTER))),
+        show_failure(eom_action(Module),on_f_log_ignore(Module,TODO))))))),ignore(erase(Ref)))))),fail.
 signal_eom(Module):- nop(dmsg(signal_eom(Module))),!.
 
 
@@ -240,16 +241,16 @@ do_eof_actions(Module,File):-
    qdmsg(info(load_mpred_file_complete(Module:File))),
    GETTER=user:global_eof_hook(WasM,File,TODO),   
    must((forall(clause(GETTER,Body,_Ref),(qdmsg(found_eof_hook(GETTER:-Body)),
-        doall((forall(Body,  ((qdmsg(call_eof_hook(Module:on_f_log_ignore(GETTER))),
-        show_failure(signal_eom(Module),Module:on_f_log_ignore(WasM:TODO))))))))))),fail.
+        doall((forall(Body,  ((qdmsg(call_eof_hook(on_f_log_ignore(Module,GETTER))),
+        show_failure(signal_eom(Module),on_f_log_ignore(WasM,TODO))))))))))),fail.
 
 do_eof_actions(Module,File):- must(prolog_load_context(module,Module)),
    qdmsg(info(load_mpred_file_complete(Module:File))),
     GETTER=t_l:eof_hook(File,TODO),
 
     must((forall(clause(GETTER,Body,Ref),(qdmsg(found_eof_hook(GETTER:-Body)),
-         doall((forall(Body,  ((qdmsg(call_eof_hook(Module:on_f_log_ignore(GETTER))),
-         show_failure(signal_eom(Module),Module:on_f_log_ignore(TODO))))))),ignore(erase(Ref)))))),fail.
+         doall((forall(Body,  ((qdmsg(call_eof_hook(on_f_log_ignore(Module,GETTER))),
+         show_failure(signal_eom(Module),on_f_log_ignore(Module,TODO))))))),ignore(erase(Ref)))))),fail.
 do_eof_actions(Module,File):- nop(dmsg(do_eof_actions(Module,File))),!.
 
 
