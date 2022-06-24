@@ -45,7 +45,7 @@ member_or_it(G,G).
 
 
 show_workflow(InO,_,InO):-pass_thru_workflow(InO),!. 
-show_workflow(In,String,Out):- nonvar(Out),!,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
+show_workflow(In,String,Out):- nonvar(Out),!,dumpST,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
 show_workflow(InO,String,InO):- string(String),!, 
  ignore((InO\==[], nl, writeln(String), forall(member_or_it(G,InO),ignore(print_grid(_,_,String,G))))).
 show_workflow(InO,[],InO):-!.
@@ -128,7 +128,7 @@ run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
 run_dsl(_VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
-run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_l((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
+run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
 run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
 
@@ -229,7 +229,8 @@ incomplete(X,X).
 
 into_obj(G,O):- no_repeats(O,into_obj0(G,O)).
 
-o2g(Obj,Glyph):- object_glyph(Obj,Glyph).
+o2g(Obj,Glyph):- g2o(Glyph,Obj),!.
+o2g(Obj,Glyph):- object_glyph(Obj,Glyph),asserta(g2o(Glyph,Obj)),!.
 o2c(Obj,Glyph):- color(Obj,Glyph).
 o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
 :- dynamic(g2o/2).

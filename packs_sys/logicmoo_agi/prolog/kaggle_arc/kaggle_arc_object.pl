@@ -236,7 +236,7 @@ override_object(E,I,O):- with_object(override,E,I,O).
 
 with_object(Op,E,obj(List),O):- !, with_objprops(Op,E,List,MidList),O=obj(MidList),!,verify_object(O).
 with_object(Op,E,I,O):- is_group(I), mapgroup(with_object(Op,E),I,O).
-with_object(Op,E,I,O):- is_list(I), !, with_objprops(Op,E,I,O).
+% with_object(Op,E,I,O):- is_list(I), !, with_objprops(Op,E,I,O).
 with_object(Op,E,     I,     O):- with_objprops(Op,E,I,O).
 
 with_objprops(Op,obj(E),List,MidList):- !, with_objprops(Op,E,List,MidList).
@@ -443,6 +443,7 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
 
 globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF)), (TF==true-> ! ; true).
 globalpoints(G,[G]):- is_point(G),!.
+globalpoints(G,G):- maplist(is_point,G),!.
 globalpoints([],[]):-!.
 globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoints(Atom)).
 globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
@@ -461,7 +462,9 @@ localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF)), (TF==true
 localpoints(G,[G]):- is_point(G),!.
 localpoints(I,X):- localpoints0(I,X),!.
 localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
-localpoints(Grid,Points):- is_list(Grid),!,mapgroup(localpoints,Grid,MPoints),append_sets(MPoints,Points).
+localpoints(Grid,Points):- is_group(Grid),!,mapgroup(localpoints,Grid,MPoints),append_sets(MPoints,Points).
+localpoints(G,G):- maplist(is_point,G),!.
+localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),append_sets(MPoints,Points).
 
 localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(localpoints(Atom)).
 localpoints(I,X):- globalpoints0(I,X),!.

@@ -55,8 +55,8 @@ tersify1(I,groupFn(O)):- is_group(I),why_grouped(O,II),!,I==II.
 tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
 tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
 
-tersifyG(I,O):- tersifyL(I,O),numbervars(O,1,_,[attvar(bind),singletons(false)]).
-tersifyL(I,O):- is_list(I), maplist(tersifyL,I,O).
+tersifyG(I,O):- tersifyL(I,O),numbervars(O,1,_,[attvar(bind),singletons(false)]),!.
+tersifyL(I,O):- is_list(I), maplist(tersifyL,I,O),!.
 tersifyL(I,O):- tersify0(I,O),!.
 tersifyL(I,O):- tersify1(I,O),!.
 tersifyL(I,I).
@@ -134,16 +134,18 @@ arcdbg(G):- wdmsg(G).
 
 via_print_grid(G):- is_grid(G).
 via_print_grid(G):- is_object(G).
-via_print_grid(G):- maplist(is_object,G).
-via_print_grid(G):- is_points_list(G),ground(G).
+via_print_grid(G):- is_group(G).
+via_print_grid(G):- is_points_list(G).
 via_print_grid(G):- is_gridoid(G).
 
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
 arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,format(user_error,"~N~q~n",[E])).
 
 arc_portray(G, _):- is_dict(G), !, write('..dict..').
-arc_portray(G, _):- is_grid(G), !, write('..grid..').
-arc_portray(G, false):- is_group(G), is_list(G), length(G,L), L>1, 
+arc_portray(G, true):- is_grid(G), !, data_type(G,W),writeq(grid(W)).
+arc_portray(G, _):- is_dict(G), !, write('..VM..').
+
+arc_portray(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1, 
    dash_chars, 
    print_grid(G),nl,
    once((why_grouped(Why,WG),WG=@=G);Why = (size=L)),
@@ -156,8 +158,8 @@ arc_portray(G,false):- is_object(G),!,print_grid(G),nl,underline_print(debug_ind
 arc_portray(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_grid(H,V,G).
 
 % Portray In tracer
-arc_portray(G,true):- is_object(G),underline_print(woto(ptt(G))).
-arc_portray(G,true):- via_print_grid(G),write(' '),underline_print(woto(ptt(G))),write(' ').
+arc_portray(G,true):- is_object(G),underline_print((ptt(G))).
+arc_portray(G,true):- via_print_grid(G),write(' '),underline_print((ptt(G))),write(' ').
 arc_portray(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
 
 user:portray(Grid):- arc_portray(Grid),!.
@@ -450,7 +452,7 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
   forall(between(SV,EV,V),
    ((format('~N|'),
      forall(between(SH,EH,H),
-     ignore((((hv_cg_value(Grid,CG,H,V);hv_c_value(Grid,CG,H,V);CG=BGC)->
+     ignore((((hv_cg_value(Grid,CG,H,V);grid_cpoint(Grid,CG-_,H,V);CG=BGC)->
         (once(print_gw1(CG))))))),write(' |')))),
   %print_g(H,V,C,LoH,LoV,HiH,HiV)
   format('~N'),!,
@@ -566,33 +568,46 @@ grid_dot(169).
 print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
 
 object_glyph(G,Glyph):- is_grid(G),!,grid_dot(Dot),name(Glyph,[Dot]).
-object_glyph(G,Glyph):- plain_var(G),!,var_dot(Dot),name(Glyph,[Dot]).
-object_glyph(G,Glyph):- object_indv_id(G,_Tst,GN2), int2glyph(GN2,Glyph).
+object_glyph(G,Glyph):- is_object(G),!,object_indv_id(G,_Tst,GN2), int2glyph(GN2,Glyph).
+object_glyph(G,Glyph):- nobject_glyph(G,Glyph).
+
+nobject_glyph(G,Glyph):- integer(G), between(0,9,G),atom_number(Glyph,G),!.
+nobject_glyph(G,Glyph):- plain_var(G),!,plain_var_glyph(G,Glyph).
+nobject_glyph(G,Glyph):- compound_var(G,N),!,nobject_glyph(N,Glyph).
+nobject_glyph(A,Glyph):- atom(A),atom_chars(A,Chars),last(Chars,Glyph),!.
+nobject_glyph(G,Glyph):- term_to_atom(G,A),nobject_glyph(A,Glyph).
 
 
 object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_print(C,Glyph)).
 
-int2glyph(GN2,Glyph):- i_sym(GN2,GN),!,i_glyph(GN,Glyph).
+int2glyph(GN2,Glyph):- notrace((i_sym(GN2,GN),!,i_glyph(GN,Glyph))).
 
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 
-print_gw1(C):- compound_var(C,N),print_gw1(N),!.
-print_gw1(N):- get_bgc(BG),is_color(BG), BG\==black, color_print(BG,'.'),print_g1(N),!.
-print_gw1(N):- get_bgc(BG),is_color(BG), write(' '),print_g1(N),!.
-print_gw1(N):- compound(N),N = C-W,!,color_print(C,W),!.
+print_gw1(N):- ignore((get_bgc(BG),is_color(BG), once((BG\==black-> color_print(BG,'.');write(' '));write(',')))),
+  must_det_ll(print_g1(N);write('?')),!.
+%print_gw1(N):- compound(N),N = C-W,!,color_print(C,W),!.
+
 regression_test:- G = [[1,2,3],[1,2,3],[1,2,3]], print_grid(G).
 regression_test:- G = [[1,2,3],[1,_,3],[1,2,3]], print_grid(G).
 regression_test:- G = [[A,2,3],[_,2,_],[A,2,3]], print_grid(G).
 regression_test:- G = [['$VAR'(1),2,3],[_,2,'$VAR'(3)],[_,2,'$VAR'('Good')],['$VAR'(1),2,3]], print_grid(G).
 
+
+%print_g1(C):- compound_var(C,N),underline_print(print_g1(N)),!.
+print_g1(C):- plain_var(C), nobject_glyph(C,G),underline_print(print_g1(G-G)),!.
+print_g1(C):- compound_var(C,N),nobject_glyph(N,G),underline_print(print_g1(G-G)),!.
+print_g1(C):- is_bg_color(C),get_bgc(BG),\+ attvar(C),!,color_print(BG,' '),!.
+print_g1(N):- \+ compound(N), \+ is_colorish(N), print_g1(N-N).
 print_g1(N):- into_color_glyph(N,C,Code),as_name(Code,S), color_print(C,S),!.
 
-print_g1(C):- plain_var(C), color_print(C,'.'),!.
+plain_var_glyph(Var,Name):- plain_var(Var), get_var_name_or_fake(Var,Fake),format(chars(Codes),'~w',[Fake]),
+  include(lambda_rev(code_type(digit)),Codes,NewCodes),
+  (NewCodes==[]-> last(Codes,Name) ; (atom_chars(Atom,NewCodes), atom_number(Atom,Int),i_glyph(Int,Name))).
+%print_g2(C,S):- atom_number(S,_), cant_be_dot(DOT), name(N,[DOT]), color_print(C,N),!.
+%print_g2(C,S):- color_print(C,S),!.
 
-print_g2(C,S):- atom_number(S,_), cant_be_dot(DOT), name(N,[DOT]), color_print(C,N),!.
-print_g2(C,S):- color_print(C,S),!.
-
-as_name(N,Glyph):- plain_var(N),!,format(chars(Codes),'~p',[N]),last(Codes,Glyph).
+as_name(N,Glyph):- plain_var(N),!,plain_var_glyph(N,Glyph).
 as_name(Code,S):- atom(Code), S=Code.
 as_name(Code,S):- integer(Code), name(S,[Code]).
 
@@ -621,7 +636,7 @@ into_color_glyph(C,C,FGD):- fg_dot(FGD),!.
 
 i_glyph(N,Glyph):- bg_sym(BG), BG==N, !, bg_dot(Code), name(Glyph,[Code]).
 i_glyph(Code,Glyph):- integer(Code), Code> 255, !,name(Glyph,[Code]).
-i_glyph(N,Glyph):- integer(N),i_sym(N,Code),name(Glyph,[Code]).
+i_glyph(N,Glyph):- integer(N),notrace((i_sym(N,Code),name(Glyph,[Code]))).
 i_glyph(N,Glyph):- plain_var(N),!,format(chars(Codes),'~p',[N]),last(Codes,Glyph).
 %i_glyph(N,Glyph):- atom(N),atom_chars(N,Chars),last(Chars,LGlyph),upcase_atom(LGlyph,Glyph).
                                                                             
