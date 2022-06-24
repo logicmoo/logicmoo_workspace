@@ -161,7 +161,10 @@ sync_colors(Orig,Colors):- is_object(Orig),!,colors(Orig,Colors),
 sync_colors(Orig,Colors):- colors(Orig,Colors).
 
 uncast_grid_to_object(Orig,Grid,NewObj):- 
-  rebuild_from_localpoints(Orig,Grid,NewObj).
+ must_det_ll((
+  localpoints(Grid,LocalPoints),
+  (( LocalPoints==[]) -> (dumpST,writeq(LocalPoints),trace ); true),
+  rebuild_from_localpoints(Orig,LocalPoints,NewObj))).
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
@@ -182,7 +185,10 @@ cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_gr
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
 
-cast_to_grid(Naming,Grid, Closure ):- (named_gridoid(Naming,NG),cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure).
+cast_to_grid(Naming,Grid, Closure ):- 
+  (named_gridoid(Naming,NG),
+    cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure).
+  
 recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
   make_grid(GH,GV,Grid),
