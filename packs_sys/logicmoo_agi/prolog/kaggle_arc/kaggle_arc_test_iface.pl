@@ -14,12 +14,14 @@ write_menu(Mode):-
   format('~N'),
   get_current_test(TestID),
   format(' Current Test: ~q ~n~n',[TestID]),
-  forall(menu_cmd(Mode,Key,Info,Goal),print_menu_cmd(Key,Info,Goal)),
-  format('~N').
+  forall(menu_cmd(Mode,Key,Info,Goal),print_menu_cmd(Key,Info,Goal)),format('~N  '),
+  forall(menu_cmd1(Mode,Key,Info,Goal),print_menu_cmd1(Key,Info,Goal)),format('~N').
 print_menu_cmd(Key):- ignore((menu_cmd(_,Key,Info,Goal),print_menu_cmd(Key,Info,Goal))).
 print_menu_cmd(Key,Info,_Goal):- format('~N   ~w: ~w \t\t ~n',[Key,Info]).
+print_menu_cmd1(_Key,Info,_Goal):- format(' ~w',[Info]).
 
 :- multifile(menu_cmd/4).
+:- multifile(menu_cmd1/4).
 menu_cmd(i,'i','Examine (i)ndividuator,',(clsR,!,ndividuator)).
 menu_cmd(_,'p','     or (p)rint training pairs (captial to reveal Solutions)',(print_test)).
 menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(clsR,!,train_test)).
@@ -33,10 +35,16 @@ menu_cmd(_,'l','     or (l)eap to next Suite',(restart_suite)).
  
 menu_cmd(i,'R','(R)un the Suite noninteractively',(run_all_tests,menu)).
 menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).
-menu_cmd(_,'c','(c)lear the scrollback buffer',(cls)).
-menu_cmd(_,'B','(B)reak to interpreter',(break)).
-menu_cmd(_,'m','Recomple this progra(m).',(make,menu)).
-menu_cmd(_,'x','E(x)it to shell or (Q)uit.',halt(4)).
+
+menu_cmd1(_,'m','Recomple this progra(m),',(make,menu)).
+menu_cmd1(_,'c','(c)lear the scrollback buffer,',(cls)).
+menu_cmd1(_,'T','(T)est regressions,\n     ',(make,menu)).
+menu_cmd1(_,'Q','(Q)uit Menu,',true).
+menu_cmd1(_,'X','e(X)it to shell,',halt(4)).
+menu_cmd1(_,'B','or (B)reak to interpreter.',(break)).
+
+menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd(Mode,Key,Mesg,Goal).
+menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd1(Mode,Key,Mesg,Goal).
 
 clsR:- !. % once(cls).
 
@@ -45,7 +53,7 @@ interact:-
   char_code(Key,Code),  put_char(Key), nb_setval(last_menu_key,Key), do_menu_key(Key),!.
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ').
 do_menu_key('P'):- !, do_menu_key('p').
-do_menu_key(Key):- print_menu_cmd(Key),menu_cmd(_Mode,Key,_Info,Goal),!, format('~N~n'),
+do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
   dmsg(calling(Goal)),!, ignore(once((Goal*->true;(fail,trace,dumpST,rtrace(Goal))))),!,read_pending_codes(user_input,_,[]),!,fail.
 do_menu_key(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),once(mmake),menu,fail.
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
@@ -154,7 +162,7 @@ print_test4(TestID):-
      forall(kaggle_arc(TestID,ExampleNum1,In,Out),
       ignore((
        once(in_out_name(ExampleNum1,NameIn,_NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side4(In,NameIn,_,Out,' ')]))))),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side4(red,In,NameIn,_,Out,' ')]))))),
        write('%= '), parcCmt(TestID),
   dash_chars,
     forall(arg(_,v((tst+_)),ExampleNum2),
@@ -163,8 +171,8 @@ print_test4(TestID):-
        once(in_out_name(ExampleNum2,NameIn,NameOut)),
        grid_size(Out,OH,OV),make_grid(OH,OV,Blank),
        (nb_current(last_menu_key,'P')
-         -> format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(In,NameIn,_,Out,NameOut)])
-         ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(In,NameIn,_,Blank,"Hidden Output")])))))),!.
+         -> format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(red,In,NameIn,_,Out,NameOut)])
+         ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(red,In,NameIn,_,Blank,"Hidden Output")])))))),!.
 
 %print_test(TName):- !, parcCmt(TName).
 print_qtest:- get_current_test(TestID),print_qtest(TestID).
@@ -174,7 +182,7 @@ print_qtest(TestID):-
      forall(kaggle_arc(TestID,ExampleNum,In,Out),
       ignore((
        once(in_out_name(ExampleNum,NameIn,NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(In,NameIn,_LW,Out,NameOut+TestID)]))))),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(red,In,NameIn,_LW,Out,NameOut+TestID)]))))),
        write('%= '), parcCmt(TestID).
 
 print_single_test(TName):-
@@ -182,7 +190,7 @@ print_single_test(TName):-
   kaggle_arc(TestID,ExampleNum,In,Out),
   nb_current(test_name,WasTestID),
   once(in_out_name(ExampleNum,NameIn,NameOut)),
-  format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(In,NameIn,_LW,Out,NameOut)]),
+  format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(red,In,NameIn,_LW,Out,NameOut)]),
   ignore((WasTestID\==TestID, write('%= '), parcCmt(TName), nl)).
 
 in_out_name(trn+NN,SI,SO):- N is NN+1, format(atom(SI),'Training Pair #~w Input',[N]),format(atom(SO),'Output',[]).
@@ -393,7 +401,7 @@ test_p2(P2):- clsmake,
   append_termlist(P2,[N1,'$VAR'('Result')],N2), 
   time(forall(into_gridoid(N1,G1), 
      forall(call(P2,G1,G2),
-       once(ignore((print_side_by_side4(G1,N1,_LW,G2,?-N2),dash_chars)))))).
+       once(ignore((print_side_by_side4(red,G1,N1,_LW,G2,?-N2),dash_chars)))))).
 
 %:- style_check(-singleton).
 whole(I,O):- is_group(I),length(I,1),I=O,!.

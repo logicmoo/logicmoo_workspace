@@ -179,6 +179,8 @@ print_side_by_side(C1,C2):- print_side_by_side(C1,_LW,C2), !.
 gridoid_size(G,30,30):- \+ compound(G),!.
 gridoid_size(print_grid(H,V,_),H,V):- nonvar(H),nonvar(V),!.
 gridoid_size(print_grid(H,V,_,_),H,V):- nonvar(H),nonvar(V),!.
+gridoid_size(print_grid0(H,V,_),H,V):- nonvar(H),nonvar(V),!.
+gridoid_size(print_grid0(H,V,_,_),H,V):- nonvar(H),nonvar(V),!.
 gridoid_size(G,H,V):- compound_name_arity(G,print_grid,A),arg(A,G,GG),gridoid_size(GG,H,V).
 gridoid_size(G,H,V):- is_gridoid(G),!,grid_size(G,H,V).
 
@@ -248,7 +250,7 @@ append_term_safe(Type,PairName,append_term(Type,PairName)).
 
 show_pair(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
 show_pair(IH,IV,OH,OV,Type,PairName,In,Out):-
-  %show_pair_grid(IH,IV,OH,OV,Type,PairName,In,Out),
+  %show_pair_grid(TitleColor,IH,IV,OH,OV,Type,PairName,In,Out),
   %show_pair_info(IH,IV,OH,OV,Type,PairName,In,Out),
   show_pair_diff(IH,IV,OH,OV,in(Type),out(Type),PairName,In,Out).
 
@@ -261,8 +263,8 @@ show_pair_no_i(IH,IV,OH,OV,Type,PairName,In,Out):-
   wots(U2, print_grid(OH,OV,NameOut+fav(PairName),Out)),
   print_side_by_side(U1,LW,U2),!.
 
-show_pair_grid(_,_,_,_, _,_,_,_):- is_print_collapsed,!.
-show_pair_grid(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
+show_pair_grid(_,_,_,_,_, _,_,_,_):- is_print_collapsed,!.
+show_pair_grid(TitleColor,IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   toUpperC(NameIn,NameInU),toUpperC(NameOut,NameOutU),
  % ignore(IH=1),
   %LW is (IH * 2 + 12),
@@ -270,20 +272,20 @@ show_pair_grid(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
 %  wots(U2, print_grid(OH,OV,Out)),
   INFO = [grid_dim,mass,length,colors_count_size,colors],
 %  print_side_by_side(U1,LW,U2),
-  print_side_by_side4(print_grid(IH,IV,In),NameInU,LW,print_grid(OH,OV,Out),NameOutU),
+  print_side_by_side4(TitleColor,print_grid(IH,IV,In),NameInU,LW,print_grid(OH,OV,Out),NameOutU),
   print_side_by_side(
      describe_feature(In,[call(wqnl(NameInU+fav(PairName)))|INFO]),LW,
     describe_feature(Out,[call(wqnl(NameOutU+fav(PairName)))|INFO])),!.
 
-%print_side_by_side4(G1,N1,G2,N2):- print_side_by_side(G1-wqs(N1),G2-wqs(N2)). 
-print_side_by_side4(G1,N1,LW,G2,N2):- 
+%print_side_by_side4(TitleColor,G1,N1,G2,N2):- print_side_by_side(G1-wqs(N1),G2-wqs(N2)). 
+print_side_by_side4(TitleColor,G1,N1,LW,G2,N2):- 
    print_side_by_side(G1,LW,G2), 
    data_type(G1,S1), data_type(G2,S2),
-   print_side_by_side4d(S1," ~w   (~w)",N1,LW,S2," ~w  (~w)", N2).
+   print_side_by_side4d(TitleColor,S1," ~w   (~w)",N1,LW,S2," ~w  (~w)", N2).
 
-print_side_by_side4d(S1,F1,N1,W0,S2,F2,N2):- number(W0), W0 < 0, LW is -W0, !, print_side_by_side4d(S2,F2,N2,LW,S1,F1,N1).
-print_side_by_side4d(S1,F1,N1,_LW,S2,F2,N2):- 
-   format('~N',[]), write('\t'),format_cyan_u(F1,[N1,S1]),write('\t\t'),format_cyan_u(F2,[N2,S2]),write('\n'),!.
+print_side_by_side4d(TitleColor,S1,F1,N1,W0,S2,F2,N2):- number(W0), W0 < 0, LW is -W0, !, print_side_by_side4d(TitleColor,S2,F2,N2,LW,S1,F1,N1).
+print_side_by_side4d(TitleColor,S1,F1,N1,_LW,S2,F2,N2):- 
+   format('~N',[]), write('\t'),format_u(TitleColor,F1,[N1,S1]),write('\t\t'),format_u(TitleColor,F2,[N2,S2]),write('\n'),!.
 
 toUpperC(A,AU):- A==[],!,AU='  []  '.
 toUpperC(A,AU):- string(A),!,AU=A.
@@ -295,7 +297,7 @@ toUpperC(A,AU):- term_to_atom(A,AU).
 
 show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   toUpperC(NameIn,NameInU),toUpperC(NameOut,NameOutU),
-  show_pair_grid(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),
+  show_pair_grid(cyan,IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),
   ((is_group(In),is_group(Out))-> once(showdiff(In,Out));
     ignore((is_group(In),desc(wqnl(NameInU+fav(PairName)), debug_indiv(In)))),
     ignore((is_group(Out),desc(wqnl(NameOutU+fav(PairName)), debug_indiv(Out))))),!.
@@ -305,15 +307,19 @@ uses_space(C):- code_type(C,print).
 
 into_ss_string(Var,_):- plain_var(Var),!,throw(var_into_ss_string(Var)).
 into_ss_string(G,SS):- is_gridoid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
-into_ss_string(wqs(W),SS):- !,wots(SS,format_cyan_u("\t~@",[wqs(W)])).
-into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(print_grid(G),SS):- into_ss_string(print_grid0(_,_,G),SS).
+into_ss_string(print_grid(X,Y,G),SS):- into_ss_string(print_grid0(X,Y,G),SS).
+into_ss_string(print_grid0(G),SS):- wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(print_grid0(X,Y,G),SS):- wots(S,print_grid0(X,Y,G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(wqs(W),SS):- !,wots(SS,format_u(yellow,"\t~@",[wqs(W)])).
+into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
 into_ss_string(ss(Len,L),ss(Len,L)):-!.
 into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
 into_ss_string(S,SS):- string(S), !, atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
-into_ss_string(uc(W),SS):- !,wots(SS,format_cyan_u("\t~@",[wqs(W)])).
+into_ss_string(uc(W),SS):- !,wots(SS,format_u(yellow,"\t~@",[wqs(W)])).
 into_ss_string(uc(C,W),SS):- !,wots(SS,color_print(C,call(underline_print(format("\t~@",[wqs(W)]))))).
 into_ss_string(call(C),SS):- wots(S,catch(C,E,true)), 
   (((nonvar_or_ci(E),notrace,break,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
@@ -386,16 +392,20 @@ is_print_collapsed:- nb_current(print_collapsed,true).
 print_grid(_):- is_print_collapsed,!.
 print_grid(Grid):- use_row_db, is_grid(Grid),!, grid_to_id(Grid,ID),print_grid(ID).
 
-print_grid(Grid):-  quietly(print_grid0(_,_,Grid)),!.
+print_grid(Grid):-  quietly(print_grid0(Grid)),!.
+
+print_grid0(Grid):-  print_grid0(_,_,Grid),!.
+
 %print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
-format_cyan_u(Format,Args):- color_print(cyan,call(underline_print(format(Format,Args)))).
+format_u(TitleColor,Format,Args):- color_print(TitleColor,call(underline_print(format(Format,Args)))).
 
-print_grid(OH,OV,Name,Out):- print_grid(OH,OV,Out),!,format('~N  '),
+print_grid(OH,OV,Name,Out):- print_grid0(OH,OV,Out),!,format('~N  '),
   data_type(Out,SS), toUpperC(Name,NameU),
-  format_cyan_u("~w  (~w)",[NameU, SS]),!.
+  mesg_color(SS,TitleColor),
+  format_u(TitleColor,"~w  (~w)",[NameU, SS]),!.
 %print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
-print_grid(H,V,Grid):- quietly(print_grid0(H,V,Grid)).
+print_grid(H,V,Grid):- dumpST0, quietly(print_grid0(H,V,Grid)).
 
 print_grid0(_,_,_):- is_print_collapsed,!.
 print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0(H,V,GG).

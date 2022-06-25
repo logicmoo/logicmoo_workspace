@@ -53,6 +53,15 @@ allow_dir_list(hv_line(v),[n,s]).
 allow_dir_list(dg_line(u),[sw,ne]).
 allow_dir_list(dg_line(d),[nw,se]).
 
+inv_points_corner(square,diamonds).
+inv_points_corner(rectangle,diamonds).
+inv_points_corner(diamonds,square).
+inv_points_corner(outline,none).
+inv_points_corner(all,none).
+
+points_corner_dir(Shape,Dir):- \+ inv_points_corner(Shape,_), allowed_dir(Shape,Dir).
+points_corner_dir(Shape,Dir):- inv_points_corner(Shape,OShape), allowed_dir(OShape,Dir).
+
 shape_type_dirs(ST,DIRS):- allow_dir_list(ST,DIRS).
 shape_type_dir(ST,DIR):- allowed_dir(ST,DIR).
 %allow_dir_list(hv_line(h),[e,w]). allow_dir_list(hv_line(v),[n,s]). 

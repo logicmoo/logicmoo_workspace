@@ -167,6 +167,9 @@ intersection([A|APoints],BPoints,[A|Intersected],LeftOverA,LeftOverB):-
 intersection([A|APoints],BPoints,Intersected,[A|LeftOverA],LeftOverB):-
   intersection(APoints,BPoints,Intersected,LeftOverA,LeftOverB).
 
+:- meta_predicate(each_obj(?,?,0)).
+each_obj([],_,_):-!.
+each_obj([Obj|List],Obj,Goal):- ignore(Goal), each_obj(List,Obj,Goal).
 
 pred_intersection(_P2,[],LeftOverB,  [],[], [],LeftOverB):-!.
 pred_intersection(_P2,LeftOverA,[],  [],[], LeftOverA,[]):-!.

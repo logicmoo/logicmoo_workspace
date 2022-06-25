@@ -93,11 +93,6 @@ make_indiv_object_list(ID,H,V,Points,OUT):-
   mapgroup(make_indiv_object(ID,H,V),Points,OUT).
 */
 
-make_point_object(ID,H,V,Options,Point,Obj):-
-   my_assertion(is_cpoint(Point)),
-   make_indiv_object(ID,H,V,[Point],[iz(dots),iz(shape(dot))|Options],OUT),
-   as_obj(OUT,Obj).
-
 %make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-
 
 make_indiv_object(_ID,_H,_V,IPoints,Obj):- 
@@ -194,6 +189,15 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
 
 top(7).
 
+
+make_point_object(ID,H,V,Options,C-Point,Obj):-
+  hv_point(X,Y,Point), flag(indiv,Fv,Fv+1),
+   Iv is (Fv rem 3000) + 1,
+    as_obj([mass(1),shape([point_01_01]),colors([cc(C,1.0)]),localpoints([C-point_01_01]),vis_hv(1,1),
+    rotation(same),loc_xy(X,Y),
+    changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),
+    object_indv_id(ID,Iv),globalpoints([C-Point]),
+    grid_size(H,V)|Options],Obj).
 
 
 record_object_change(Rot90,Obj,XObj):- is_object(Obj), object_changes(Obj,Was),
@@ -415,25 +419,44 @@ rotation(_,same).
 object_changes(G,X):- is_group(G),!,mapgroup(object_changes,G,Points),append_sets(Points,X).
 object_changes(I,X):- indv_props_old(I,L),member(changes(X),L).
 
-all_points_between(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
-all_points_between(Grid,Hi,Vi,GH,GV,Points,PointsO):-
-  ((hv_c_value(Grid,C2,Hi,Vi),(is_spec_fg_color(C2,C);(attvar(C2),C=C2)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
-  (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
-  all_points_between(Grid,H,V,GH,GV,PointsT,PointsO).
+% Is there an advantage to counting down?
+all_points_between(_Grid,_LowH,_LowV,_GH,GV,_Hi,Vi,Points,Points):- Vi>GV,!.
+all_points_between(Grid,LowH,LowV,GH,GV,Hi,Vi,Points,PointsO):-
+  ((color_spec_or_fail(Grid,C,Hi,Vi), hv_point(Hi,Vi,Point)) 
+   -> PointsT = [C-Point|Points] ; PointsT = Points),
+  (Hi>GH -> (H = LowH, V is Vi+1) ; (H is Hi +1, V = Vi )),!,
+   all_points_between(Grid,LowH,LowV,GH,GV,H,V,PointsT,PointsO).
 
-all_points_between_include_bg(_Grid,_Hi,0,_GH,_GV,Points,Points):-!.
-all_points_between_include_bg(Grid,Hi,Vi,GH,GV,Points,PointsO):-
+color_spec_or_fail(Grid,C,Hi,Vi):- hv_c_value(Grid,C2,Hi,Vi),
+  (is_spec_fg_color(C2,C);(attvar(C2),C=C2)).
+
+% Is there an advantage to counting down?
+all_points_between_include_bg(_Grid,_LowH,_LowV,_GH,GV,_Hi,Vi,Points,Points):- Vi>GV,!.
+all_points_between_include_bg(Grid,LowH,LowV,GH,GV,Hi,Vi,Points,PointsO):-
+  ((color_spec_or_fail_include_bg(Grid,C,Hi,Vi),
+  hv_point(Hi,Vi,Point))
+     -> PointsT = [C-Point|Points] ; PointsT = Points),
+   (Hi>GH -> (H = LowH, V is Vi+1) ; (H is Hi +1, V = Vi )),!,
+   all_points_between_include_bg(Grid,LowH,LowV,GH,GV,H,V,PointsT,PointsO).
+
+color_spec_or_fail_include_bg(Grid,C,Hi,Vi):-
+  hv_c_value(Grid,C2,Hi,Vi),
+  (is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=C2)).
+
+color_spec_or_fail_include_bg_more(Grid,C,Hi,Vi):- 
   get_bgc(BGC),
-   hv_c_value_or(Grid,C2,Hi,Vi,BGC),
-   (((is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=BGC)),hv_point(Hi,Vi,Point)) -> PointsT = [C-Point|Points] ; PointsT = Points),
-   (Hi==1 -> (H = GH, V is Vi-1) ; (H is Hi -1, V=Vi)),!,
-   all_points_between_include_bg(Grid,H,V,GH,GV,PointsT,PointsO).
-
+  hv_c_value_or(Grid,C2,Hi,Vi,BGC),
+  (is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=BGC)).
+  
 grid_cpoint(Grid,C-Point,Hi,Vi):- hv_c_value(Grid,C2,Hi,Vi),
 (is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=C2)),
   hv_point(Hi,Vi,Point).
-grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,HH,HV,HH,HV,[],Points),!. 
-grid_to_points_include_bg(Grid,HH,HV,Points):- all_points_between_include_bg(Grid,HH,HV,HH,HV,[],Points),!. 
+
+grid_to_points(Grid,Points):- grid_size(Grid,HH,HV),!, grid_to_points(Grid,HH,HV,Points).
+% Is there an advantage to counting down?
+grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,1,1,HH,HV,1,1,[],Points),!. 
+% Is there an advantage to counting down?
+grid_to_points_include_bg(Grid,Points):- grid_size(Grid,HH,HV),!,all_points_between_include_bg(Grid,1,1,HH,HV,1,1,[],Points),!. 
 /*
 grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
@@ -442,16 +465,20 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
           is_spec_fg_color(C2,C),
           hv_point(H,V,Point)))),Points),!.
 */
+point_corners(Obj,Dir,CPoint):-  globalpoints(Obj,Points),sort(Points,SPoints),
+  isz(Obj,Shape),
+  (points_corner_dir(Shape,Dir)*->(SPoints=[CPoint|_];last(SPoints,CPoint));fail).
+   
 
-
-globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF)), (TF==true-> ! ; true).
+globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 globalpoints(G,[G]):- is_point(G),!.
+globalpoints(C-P,[C-P]):-!.
 globalpoints(G,G):- maplist(is_point,G),!.
 globalpoints([],[]):-!.
 globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoints(Atom)).
 globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
 globalpoints(I,X):- globalpoints0(I,X),!.
-globalpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
+globalpoints(Grid,Points):- is_grid(Grid),!, grid_to_points(Grid,Points).
 globalpoints(Grid,Points):- is_list(Grid),!,mapgroup(call(globalpoints),Grid,MPoints),append_sets(MPoints,Points).
 globalpoints(I,X):- localpoints0(I,X),!.
 globalpoints(G,G):- mapgroup(is_point,G),!.
@@ -460,7 +487,7 @@ globalpoints(I,X):- throw(unknown(globalpoints(I,X))).
   globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L), my_assertion(mapgroup(is_cpoint,X)),!.
   %globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
 
-localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF)), (TF==true-> ! ; true).
+localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 
 localpoints(G,[G]):- is_point(G),!.
 localpoints(I,X):- localpoints0(I,X),!.
@@ -477,7 +504,7 @@ localpoints(I,X):- throw(unknown(localpoints(I,X))).
   localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(mapgroup(is_cpoint,X)),!.
   %localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 
-localpoints_include_bg(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points_include_bg(Grid,HH,VV,Points),!.
+localpoints_include_bg(Grid,Points):- is_grid(Grid),!, grid_to_points_include_bg(Grid,Points),!.
 localpoints_include_bg(I,X):- \+ is_grid(I), localpoints(I,X),!.
  
 

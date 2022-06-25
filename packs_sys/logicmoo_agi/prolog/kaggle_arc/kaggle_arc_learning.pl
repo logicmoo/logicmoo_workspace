@@ -38,6 +38,7 @@ find_by_shape(Grid,Find,Founds):-
   (all_rotations(F,F1),
    %print_grid(F1),!,
    ogs(H,V,F1,Grid),% trace,
+
    grid_to_points(F1,GH,GV,Points),
    pt(Points),
    make_indiv_object(ID,GH,GV,Points,[iz(find_by_shape),F1,loc_xy(H,V)],F2)),
@@ -107,7 +108,7 @@ with_pair(Action,TestID,Type,Num,In,Out):- !,
 with_named_pair(preview,TestID,PairName,In,Out):- !,
   dash_chars(60,"|"),nl,nl,nop((wqnl(arc1(TestID)),nl)),
   grid_size(In,IH,IV), grid_size(Out,OH,OV),
-  show_pair_grid(IH,IV,OH,OV,in,out,PairName,In,Out).
+  show_pair_grid(red,IH,IV,OH,OV,in,out,PairName,In,Out).
 
 with_named_pair(solve,TestID,PairName,In,Out):- !,
   with_named_pair(cheat,TestID,PairName,In,Out).

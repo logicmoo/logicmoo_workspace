@@ -100,9 +100,9 @@ get_setarg_p2(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
 
 
 term_expansion_setter((Head:-Body),Out):- 
-   get_setarg_p1(I,Head,P1), is_obj_setter(I,Obj,Member,Var),
+   get_setarg_p1(I,Head,P1), is_setter_syntax(I,Obj,Member,Var,How),
    call(P1,Var),
-   BodyCode = (Body, my_b_set_dict(Member,Obj,Var)),
+   BodyCode = (Body, set_omember(How,Member,Obj,Var)),
    % goal_expansion_setter(BodyCode,Goal),
    expand_term((Head:- BodyCode),Out),!.
 %term_expansion_setter((Head:-Body),(Head:-GBody)):- goal_expansion_setter(Body,GBody),!.
@@ -114,29 +114,51 @@ term_expansion_setter((Head:-Body),Out):-
 set(_355218._355220)=_355272)
 */
 
-is_obj_setter(I,_Obj,_Member,_Var):- \+ compound(I),!,fail.
-is_obj_setter(set(Obj,Member),Obj,Member,_Var).
-is_obj_setter(set(ObjMember),Obj,Member,_Var):- compound(ObjMember), ObjMember =.. ['.',Obj,Member],!.
+is_setter_syntax(I,_Obj,_Member,_Var,_):- \+ compound(I),!,fail.
+is_setter_syntax(set(Obj,Member),Obj,Member,_Var,b).
+is_setter_syntax(set(ObjMember),Obj,Member,_Var,b):- obj_member_syntax(ObjMember,Obj,Member).
+/*
+is_setter_syntax(gset(Obj,Member),Obj,Member,_Var,nb).
+is_setter_syntax(hset(How,Obj,Member),Obj,Member,_Var,How).
+is_setter_syntax(gset(ObjMember),Obj,Member,_Var,nb):- obj_member_syntax(ObjMember,Obj,Member).
+is_setter_syntax(hset(How,ObjMember),Obj,Member,_Var,How):- obj_member_syntax(ObjMember,Obj,Member).
+*/
+
+obj_member_syntax(ObjMember,Obj,Member):-compound(ObjMember), ObjMember =.. ['.',Obj,Member],!.
+
 
 goal_expansion_setter(Goal,_):- \+ compound(Goal), !, fail.
+goal_expansion_setter(set_omember(A,B,C,D),set_omember(A,B,C,D)):-!.
+goal_expansion_setter(set_omember(A,B,C),set_omember(b,A,B,C)):-!.
 goal_expansion_setter(Goal,Out):- 
    predicate_property(Goal,meta_predicate(_)),!, fail,
    arg(N1,Goal,P), goal_expansion_setter(P,MOut),
    setarg(N1,Goal,MOut), !, expand_goal(Goal, Out).
 
 goal_expansion_setter(Goal,Out):-
-   arg(N1,Goal,P),  is_obj_setter(P,Obj,Member,Var),
-   setarg(N1,Goal,Var), !, expand_goal((Goal,my_b_set_dict(Member,Obj,Var)), Out).
+   arg(N1,Goal,P),  is_setter_syntax(P,Obj,Member,Var,How),
+   setarg(N1,Goal,Var), !, expand_goal((Goal,set_omember(How,Member,Obj,Var)), Out).
 
 goal_expansion_setter(Goal,Out):-
-   get_setarg_p1(I,Goal,P1), is_obj_setter(I,Obj,Member,Var),
+   get_setarg_p1(I,Goal,P1), is_setter_syntax(I,Obj,Member,Var,How),
    call(P1,Var),!,
-   expand_goal((Goal,my_b_set_dict(Member,Obj,Var)),Out).
+   expand_goal((Goal,set_omember(How,Member,Obj,Var)),Out).
 
-my_b_set_dict(Member,Obj,Var):- must_be_nonvar(Member), must_be_nonvar(Obj),  
-  %nb_set_dict(Member,Obj,Var),
-  %nb_link_dict(Member,Obj,Var),
-  b_set_dict(Member,Obj,Var).
+
+my_b_set_dict(Member,Obj,Var):- set_omemberh(b,Member,Obj,Var).
+%nb_set_dict(Member,Obj,Var),
+set_omemberh(b,Member,Obj,Var):- !, b_set_dict(Member,Obj,Var).
+%nb_link_dict(Member,Obj,Var),
+set_omemberh(nb,Member,Obj,Var):- !, nb_set_dict(Member,Obj,Var).
+set_omemberh(How,Member,Obj,Var):- call(call,How,Member,Obj,Var),!.
+
+set_omember(Member,Obj,Var):-  set_omember(b,Member,Obj,Var).
+
+set_omember(How,Member,Obj,Var):- 
+  must_be_nonvar(Member), must_be_nonvar(Obj),  must_be_nonvar(How),  !,
+  set_omemberh(How,Member,Obj,Var),!.
+
+
 
 system:term_expansion((Head:-Body),I,Out,O):- nonvar(I),  compound(Head), term_expansion_setter((Head:-Body),Out),(Head:-Body)=In,In\==Out,I=O,!,
  nop((print(term_expansion_setter(In-->Out)),nl)).
@@ -155,6 +177,7 @@ d:- member(set(X.Y),V).
 doit(set(E.v)):- that.
 :- style_check(+singleton).
 */
+
 
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
@@ -341,9 +364,10 @@ get_training(Training):- nb_current('$training_vm',Training),is_dict(Training),!
 get_training(Training):- notrace(get_current_test(TestID)),make_training(TestID,Training), nb_linkval('$training_vm',Training),!.
 set_training(Training):- nb_linkval('$training_vm',Training).
 
-make_training(TestID,VM):- make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
+make_training(TestID,VM):- 
+ %make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
  must_det_ll((
-    make_training_hints(TestID,ArgVM,VM0),
+    make_training_hints(TestID,training{},VM0),
     vars_to_dictation([test_id=TestID,mappings=[]],VM0,VM),
 
     /*
@@ -415,7 +439,7 @@ train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict1):-
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   %print_collapsed
   % set_training(Training),!,
-  show_pair_grid(IH,IV,OH,OV,original(ION1),original(ION2),PairName,In,Out),!,  
+  show_pair_grid(yellow,IH,IV,OH,OV,original(ION1),original(ION2),PairName,In,Out),!,  
   %make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),!,
   %% % %  set(Training.pre_out) = PreOutC,
   %% % %  set(Training.pre_in) = PreInC,  
@@ -427,7 +451,7 @@ train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict1):-
   % add_shape_lib(pair,RetainedOut),
   add_shape_lib(out,Added),
   dash_chars,dash_chars,dash_chars,dash_chars,
-  show_pair_grid(IH,IV,   OH, OV,original(ION1),original(ION2),PairName,In,Out),
+  show_pair_grid(cyan,IH,IV,   OH, OV,original(ION1),original(ION2),PairName,In,Out),
   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
   ((Removed==Added, Removed==[]) -> pt(yellow,nothing_removed_added(ION1/ION2)) ;
    show_pair_diff(IOH,IOV,IOH,IOV,removed(ION1/ION2),added(ION1/ION2),PairName,Removed,Added)),
@@ -462,7 +486,7 @@ solve_test(TestID,ExampleNum):-
     %print_collapsed
     %set_training(Training),!,
     dash_chars, dash_chars,
-    show_pair_grid(IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
+    show_pair_grid(green,IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
     dash_chars, dash_chars,
     forall(gather_more_task_info(TestID,III),pt(III)),
     ignore(maybe_confirm_sol(Training,TestID,ExampleNum,In,Out)))))),!.
