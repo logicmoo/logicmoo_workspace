@@ -172,14 +172,14 @@ individuation_macros(complete, [
 
 % the standard things done in most indiviguators
 individuation_macros(standard, [
-    fourway,
+    fourway, % find fold patterns 
     std_shape_lib, % stuff that was learned/shown previously
-   % +max_learn_objects(colormass,20),
-   % +max_iterate(colormass,20),
-     % blobs of any shape that are the same color  
-    % find fold patterns   
-    rectangle,
- % @TODO DISABLED FOR TESTS   colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
+   +max_learn_objects(colormass,30),
+   +max_learn_objects(rectangle,30),
+   +max_learn_objects(hv_line(_),30),
+   +max_learn_objects(dg_line(_),30),
+    rectangle, % blobs of any shape that are the same color  
+    % @TODO DISABLED FOR TESTS   colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
     subshape_main, % macro for sharing code with "subshape_in_object"
     colormass,
     connects(jumps(X),jumps(X)), % connected jumps    
@@ -625,7 +625,7 @@ fti(VM,[colormass_merger(Size)|TODO]):-
   %colormass_merger(3,VM),
   set(VM.program) = TODO.
 
-colormass_merger(Size,_VM):-!.
+%colormass_merger(_Size,_VM):-!.
 colormass_merger(Size,VM):-
   Objs = VM.objs,
   my_partition(less_mass(Size),Objs,Smaller,Bigger),
@@ -669,8 +669,7 @@ fti(VM,[Routine|set(VM.program)]):-
    length(VM.objs,Count),
    Count>Max,!,fail.
 
-fti(VM,[remove_used_points|set(VM.program)]):- 
-   remCPoints(VM,VM.objs).
+fti(VM,[remove_used_points|set(VM.program)]):- !, remCPoints(VM,VM.objs).
 
 
 fti(VM,[call(G)|set(VM.program)]):- call_expanded(VM,G).
