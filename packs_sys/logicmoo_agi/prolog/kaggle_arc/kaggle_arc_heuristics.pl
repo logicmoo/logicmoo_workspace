@@ -14,6 +14,74 @@
 :- discontiguous learn_shapelib/7.
 :- discontiguous individuals_from_pair/9.
 
+recalc_sizes(VM,[After|TODO]):-
+   length(VM.objs,Count), Count>3,
+   computeMassIndex(VM,Sizes),
+   computeMinMass(VM,Sizes,Count,Min),
+   computeMaxMass(VM,Sizes,Count,Max),
+   pt(yellow,decide_min_max_size(Sizes,Max,Min)),
+   set(VM.objs_min_mass) = Min,
+   set(VM.objs_max_mass) = Max,
+   show_vm_changes(VM,cullObjectsOutsideOf(Min,Max),cullObjectsOutsideOf(VM,Min,Max)),
+   set(VM.program) = [After,recalc_sizes|TODO].
+
+cullObjectsOutsideOfRanges(VM):- length(VM.objs,N),N< floor(VM.objs_max_len/2),!.
+cullObjectsOutsideOfRanges(VM):-cullObjectsOutsideOf(VM,VM.objs_min_mass,VM.objs_max_mass). 
+cullObjectsOutsideOf(VM,Min,Max):- 
+  (var(Min)->computeMinMass(VM,Min);true),
+  (var(Max)->computeMaxMass(VM,Max);true),
+  Objs = VM.objs,
+  my_partition(within_mass(Min,Max),Objs,Keep,Cull),
+  length(Keep,Len),ignore((Len>20,
+     print_side_by_side(Keep,Cull),
+     my_partition(within_mass(1,1),Cull,_Ones,NonOnes),
+     remObjects(VM,NonOnes))).
+
+within_mass(Min,Max,Obj):- mass(Obj,Mass),between(Min,Max,Mass).
+
+size_to_keys(N,N-N).
+computeMassIndex(VM,Sizes):-  maplist(mass,VM.objs,UKeySizes), maplist(size_to_keys,UKeySizes,KSizes),keysort(KSizes,SKSizes),
+  maplist(arg(2),SKSizes,SKSizesR),reverse(SKSizesR,Sizes).
+
+computeMinMass(VM,Min):- computeMassIndex(VM,List),length(List,Count),computeMinMass(VM,List,Count,Min).
+computeMinMass(VM,List,Count,Min):- Count>VM.objs_max_len,length(Left,VM.objs_max_len),append(Left,_,List),
+   computeMinMass(VM,Left,VM.objs_max_len,Min).
+computeMinMass(VM,List,Count,Min):-  Count>20, length(Left,20), append(Left,_,List), computeMinMass(VM,Left,20,Min).
+computeMinMass(VM,List,_Count,Min):-  last(List,SMin),max_min(VM.objs_min_mass,SMin,Min,_). 
+computeMinMass(VM,List,_Count,Min):-  append(_,[A,B|_],List),A>B,max_min(VM.objs_max_mass,A,_Max,_),!,SMin is floor(B/2),
+  max_min(VM.objs_min_mass,SMin,Min,_).
+
+computeMaxMass(VM,Max):- computeMassIndex(VM,List),length(List,Count),computeMaxMass(VM,List,Count,Max).
+computeMaxMass(VM,List,Count,Min):- Count>VM.objs_max_len,length(Left,VM.objs_max_len),append(Left,_,List),
+   computeMaxMass(VM,Left,VM.objs_max_len,Min).
+computeMaxMass(VM,List,Count,Min):-  Count>20, length(Left,20), append(Left,_,List), computeMaxMass(VM,Left,20,Min).
+computeMaxMass(VM,List,_Count,Max):- append(_,[A,B|_],List),A>B,max_min(VM.objs_max_mass,A,Max,_),!.
+computeMaxMass(VM,_List,_Count,Max):- max_min(VM.objs_max_mass,700,_,Max).
+
+
+proportional_objs_how(AG,BG,Set):- findall(DD,proportional_objs_how(AG,BG,DD),List),list_to_set(List,Set).
+proportionate(List1,List2):- proportionate(List1,List2,_),!.
+proportionate([],[],_).
+proportionate([HV1|List1],[HV2|List2],N):-
+   proportional(HV1,HV2,N),
+   proportionate(List1,List2,N2), 
+   N2=N.
+
+proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
+proportional(size(H1,V1),size(H2,V2),area(HV)):- !, HV1 is H1*V1, HV2 is H2*V2, proportional_size(HV1,HV2,HV).
+proportional(loc(H1,V1),loc(H2,V2),loc(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
+proportional(N1,N2,N):- number(N1),number(N2),!,proportional_size(N1,N2,N).
+proportional(N1,N2,N):- is_object(N1),is_object(N2),!,proportional_objs(N1,N2,N).
+
+proportional_objs(Obj1,Obj2,vis_hv_term(N)):- vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,loc_xy_term(N)):- loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,mass(N)):- mass(Obj1,N1),mass(Obj2,N2),proportional_size(N1,N2,N).
+
+proportional_loc(N1,N2,moved(N)):- N is N1-N2.
+proportional_size(N1,N2,difference(N)):- N is N1-N2.
+proportional_size(N1,N2,ratio(N)):- N is N1/N2.
+
 
 :- discontiguous learn_color_individuals_lib_one_way/17.
 

@@ -142,7 +142,7 @@ via_print_grid(G):- is_gridoid(G).
 arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,format(user_error,"~N~q~n",[E])).
 
 arc_portray(G, _):- is_dict(G), !, write('..dict..').
-arc_portray(G, true):- is_grid(G), !, data_type(G,W),writeq(grid(W)).
+arc_portray(G, _):- is_grid(G), !, data_type(G,W),writeq(grid(W)).
 arc_portray(G, _):- is_dict(G), !, write('..VM..').
 
 arc_portray(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1, 

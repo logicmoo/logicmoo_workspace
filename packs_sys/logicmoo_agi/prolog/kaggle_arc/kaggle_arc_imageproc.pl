@@ -34,8 +34,8 @@ grid_dim(G,vis_hv(H,V)):- grid_size(G,H,V).
 props_of_points(E,Ns):- findall(obj(Ps),member(obj(Ps),E),Ns).
 
 
-black_first(SK,[cc(Z,CN)|BF]):- is_black(Z), select(cc(Z,CN),SK,BF),!.
-black_first(BF,[cc(Z,0.0)|BF]):- is_black(Z).
+black_first(SK,[cc(Z,CN)|BF]):- Z=black, select(cc(Z,CN),SK,BF),!.
+black_first(BF,[cc(Z,0.0)|BF]):- Z=black.
 
 no_black(SK,BF):-select(cc(Z,_),SK,BF),is_black(Z),!.
 no_black(SK,BF):-select(Z,SK,BF),is_black(Z),!.

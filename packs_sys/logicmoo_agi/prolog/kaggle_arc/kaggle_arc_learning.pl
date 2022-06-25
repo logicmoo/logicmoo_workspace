@@ -114,7 +114,7 @@ with_named_pair(solve,TestID,PairName,In,Out):- !,
   with_named_pair(cheat,TestID,PairName,In,Out).
 
 with_named_pair(cheat,TestID,PairName,In,Out):- !,
-  ignore(catch(maybe_confirm_sol(_VM,TestID,PairName,In,Out),E,(wdmsg(E),fail))),!.
+  ignore(catch(solve_test(TestID,PairName,In,Out),E,(wdmsg(E),fail))),!.
 
 with_named_pair(learn,TestID,PairName,In,Out):- !,
   nop((wqnl(learning(TestID=PairName)),nl)),

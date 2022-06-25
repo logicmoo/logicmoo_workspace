@@ -541,9 +541,9 @@ object_grid(Group,List):- is_group(Group),!,override_group(object_grid(Group,Lis
 object_grid(I,G):- localpoints(I,LP),vis_hv(I,H,V),points_to_grid(H,V,LP,G),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G),!.
 
-loc_xy_term(I,offset(X,Y)):- loc_xy(I,X,Y),!.
+loc_xy_term(I,loc(X,Y)):- loc_xy(I,X,Y),!.
 
-loc_xy(G,X,Y):- is_group(G),!,mapgroup(loc_xy_term,G,Offsets),sort(Offsets,[offset(X,Y)|_]). % lowest offset
+loc_xy(G,X,Y):- is_group(G),!,mapgroup(loc_xy_term,G,Offsets),sort(Offsets,[loc(X,Y)|_]). % lowest loc
 loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
 loc_xy(I,X,Y):- into_obj(I,O), indv_props(O,L),member(loc_xy(X,Y),L),!.
 %loc_xy(NT,H,V):- trace, named_gridoid(NT,G),loc_xy(G,H,V).
@@ -556,6 +556,13 @@ vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L),!.
 vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(NT,H,V):-  trace, named_gridoid(NT,G),vis_hv(G,H,V).
 
+
+vis_hv(Obj,size(H,V)):- vis_hv(Obj,H,V).
+loc_xy(Obj,loc(H,V)):- loc_xy(Obj,H,V).
+
+center_term(Obj,loc(H,V)):- center(Obj,H,V).
+
+center(Obj,CX,CY):- vis_hv(Obj,H,V), loc_xy(Obj,X,Y),CX is X + floor(H/2),CY is Y + floor(V/2).
 
 
 
@@ -645,6 +652,7 @@ find_outline(X):-
 :- add_history(find_outline).
 find_outline:- clsmake, forall(find_outline1,true).
 find_outline1:- arc_grid(Grid), dash_chars, find_outline_pred(find_outlines_fast(_),Grid).
+
 
 
 %find_outline_path:- clsmake, forall(find_outline_path1,true).

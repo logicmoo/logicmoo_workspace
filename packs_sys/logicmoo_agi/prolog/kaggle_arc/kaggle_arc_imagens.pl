@@ -181,12 +181,18 @@ shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot0(Key,KeyR).
 searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
+into_monochrome(NoBlack,Mono):- colors_count_black_first(NoBlack,CCBF),CCBF=[cc(black,0.0),cc(BGC,_)|_],!, into_monochrome(BGC,NoBlack,Mono).
+into_monochrome(Color,Mono):- into_monochrome(black,Color,Mono).
+into_monochrome(BGC,Color,Mono):- is_list(Color) -> maplist(into_monochrome(BGC),Color,Mono) ;
+                              (Color\=BGC)-> Mono = silver ; Mono = black.
+   
 decolorize(Group,List):- override_group(decolorize(Group,List)),!.
 decolorize(Shape,ShapeO):- 
   colors_to_vars(_Colors,Vars,Shape,ShapeO),
   set_fg_vars(Vars),length(Vars,L),
   writeln(set_fg_vars=L),
   all_dif_colors(Vars).
+
 
 /*
   mapgroup(label_as_fg(Vars),Vars,CVars).
@@ -228,7 +234,7 @@ add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
 
 %assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<4,!.
 assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(lambda_rev(assert_shape_lib(Obj)),Type).
-assert_shape_lib(Type,Obj):- my_asserta_if_new(in_shape_lib(Type,Obj)).
+assert_shape_lib(Type,Obj):- nop(my_asserta_if_new(in_shape_lib(Type,Obj))).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
 

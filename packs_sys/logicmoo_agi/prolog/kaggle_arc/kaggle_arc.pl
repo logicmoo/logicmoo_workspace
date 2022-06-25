@@ -14,6 +14,7 @@
 my_is_clause(H,B):- clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB.
 my_asserta_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; asserta(H:-B)).
 my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
+
 my_assertz_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; assertz(H:-B)).
 my_assertz_if_new(HB):- my_assertz_if_new(HB:-true).
 
@@ -360,7 +361,7 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
     describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
   show_pair_I_info(NameIn,NameOut,InC,OutC).
 */
-get_training(Training):- nb_current('$training_vm',Training),is_dict(Training),!.
+get_training(Training):- nb_current('$training_vm',Training),compound(Training),!.
 get_training(Training):- notrace(get_current_test(TestID)),make_training(TestID,Training), nb_linkval('$training_vm',Training),!.
 set_training(Training):- nb_linkval('$training_vm',Training).
 
@@ -368,7 +369,7 @@ make_training(TestID,VM):-
  %make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
  must_det_ll((
     make_training_hints(TestID,training{},VM0),
-    vars_to_dictation([test_id=TestID,mappings=[]],VM0,VM),
+    vars_to_dictation([test_id=TestID,test_id=TestID,mappings=[]],VM0,VM),
 
     /*
      test:ID,mappings:_,
@@ -377,32 +378,33 @@ make_training(TestID,VM):-
      removed:_,added:_, kept:_,   
      grid_in:_,grid_out:_,
   */
-     set(VM.mappings) =[map])), !. % pt(VM),nl.
+   set(VM.mappings) =[map])), !. % pt(VM),nl.
 
 
-gather_more_task_info(TestID,III):- more_task_info(TestID,III).
-gather_more_task_info(TestID,III):- fav(TestID,III).
+gather_more_task_info(TestID,S):- 
+  findall(III,more_task_info(TestID,III);fav(TestID,III),L),
+  flatten([L],LF),list_to_set(LF,S).
   
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
 train_test:- notrace(get_current_test(TestID)), train_test(TestID).
 
 train_test(TestID):- 
-  locally(set_prolog_flag(gc,false),
+  locally(set_prolog_flag(gc,true),
  must_det_ll((
+  print_testinfo(TestID),
   set_training(PrevPairEnv),
   flag(indiv,_,0),
   nb_setval(prev_pairEnv,PrevPairEnv),
   nb_delete('$training_vm'),
   get_training(Training),
-  make_training_hints(TestID,Training,Dictation),
+  my_time(make_training_hints(TestID,Training,Dictation)),
   set_training(Dictation),
-  train_using_hints(TestID,Dictation,DictOut),
+  my_time(train_using_hints(TestID,Dictation,DictOut)),
   set_training(DictOut),
-  garbage_collect,
-  ((forall(gather_more_task_info(TestID,III),pt(III)),nl))))),!.
-  %kaggle_arc(TestID,(ExampleNum+_),In,Out),
-  %nop((catch(maybe_confirm_dsl(Training,TestID,ExampleNum,In,Out),E2,wdmsg(E2))))))).
+  garbage_collect))).
+
+my_time(Goal):- statistics:time(Goal).
 
 train_using_hints(TestID,DictIn,DictOut):- train_for_objects(TestID,trn,0,DictIn,DictOut).
 train_for_objects(TestID,Trn,N1,DictIn,DictOut):-
@@ -415,8 +417,19 @@ train_for_objects(TestID,Trn,N1,DictIn,DictOut):-
   (DictM = DictIn)),!,
   train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,DictOut),!.
 
-which_io(i,in). which_io(o,out).
-train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict1):-
+which_io(i,input). which_io(o,output).
+
+
+train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
+ Desc = [_Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
+ MonoDesc = ['Mono','_',IsIO1,N1,'_',IsIO2,N2,'_'], 
+  train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1),
+  into_monochrome(In,MonoIn),
+  into_monochrome(Out,MonoOut),
+  train_for_objects_from_pair_1(Dict1,TestID,MonoDesc,MonoIn,MonoOut,Dict9).
+
+
+train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1):-
  Desc = [Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
@@ -435,12 +448,10 @@ train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict1):-
   %% % %  set(Training.test) = PairName,
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-  ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   %print_collapsed
   % set_training(Training),!,
   show_pair_grid(yellow,IH,IV,OH,OV,original(ION1),original(ION2),PairName,In,Out),!,  
-  %make_indivs(individuate(pre_pass),In,Out,PreInC,PreOutC),!,
   %% % %  set(Training.pre_out) = PreOutC,
   %% % %  set(Training.pre_in) = PreInC,  
   individuate(complete,In,InC),
@@ -459,39 +470,62 @@ train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict1):-
    show_pair_diff(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
   ((InC==OutC, InC==[]) -> pt(yellow,nothing_individuated(ION1/ION2)) ;
    show_pair_diff(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!,
-  dash_chars,dash_chars,dash_chars,dash_chars)).
+  dash_chars,dash_chars,dash_chars,dash_chars,
+  print_testinfo(TestID))).
 
 
+print_testinfo(TestID):-
+  ignore((forall(gather_more_task_info(TestID,F),forall(member(I,F),pt(test_info=I))))).
 
-solve_test:- get_current_test(TestID), solve_test(TestID,(tst+_)),!.
+trials(learn). trials(clue). trials(human). trials(sol). trials(dsl). trials(runDSL).
+
+sols_for(Name,Trial,Sol):- trials(Trial),Entry=..[Trial,Sol],
+  gather_more_task_info(Name,Sols),member(Entry,Sols).
+
+
+solve_test:- get_current_test(TestID), catch(solve_test(TestID,(tst+_)),E,wdmsg(E=solve_test(TestID,(tst+_)))),!.
+
+solve_test(Name):- 
+  fix_test_name(Name,TestID,ExampleNum),!,
+  solve_test(TestID,ExampleNum).
 
 solve_test(TestID,ExampleNum):-
- forall(kaggle_arc(TestID,ExampleNum,In,Out),
-  (nop(sols_for(TestID,_Sol)),
-   must_det_ll((
-    get_training(PrevPairEnv),
-    nb_setval(prev_pairEnv,PrevPairEnv),
-    nb_delete('$training_vm'),
-    get_training(Training),
-    flag(indiv,_,0),
-    name_the_pair(TestID,ExampleNum,In,Out,PairName),
-    grid_size(In,IH,IV), grid_size(Out,OH,OV),
+ forall(kaggle_arc(TestID,ExampleNum,TestIn,ExpectedOut),
+        ignore(solve_test(TestID,ExampleNum,TestIn,ExpectedOut))).
+
+solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
+   must_det_ll((    
+    name_the_pair(TestID,ExampleNum,TestIn,ExpectedOut,PairName),
+    grid_size(TestIn,IH,IV), grid_size(ExpectedOut,OH,OV),
     ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-    ignore((forall(gather_more_task_info(TestID,III),pt(III)),nl)), 
-    clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
+    print_testinfo(TestID), 
+    dash_chars, dash_chars,
+    show_pair_grid(green,IH,IV,OH,OV,'Test TestIn','Solution ExpectedOut (Not computed by us)',PairName,TestIn,ExpectedOut),!,  
     get_training(Training),
-    %% % %  set(Training.test) = PairName,
-    %% % %  set(Training.grid_in) = In,
-    %% % %  set(Training.grid_out) = Out,
-    %print_collapsed
-    %set_training(Training),!,
-    dash_chars, dash_chars,
-    show_pair_grid(green,IH,IV,OH,OV,original_in,original_out,PairName,In,Out),!,  
-    dash_chars, dash_chars,
-    forall(gather_more_task_info(TestID,III),pt(III)),
-    ignore(maybe_confirm_sol(Training,TestID,ExampleNum,In,Out)))))),!.
-
-
+    %flag(indiv,_,0),
+    print(training(Training)),nl,
+    dash_chars, dash_chars,    
+    print_testinfo(TestID),
+    ptt("BEGIN!!!"+TestID+ExampleNum),
+    forall(sols_for(TestID,Trial,SolutionProgram),
+     ignore((pt(cyan,trial=Trial),
+       ptt(cyan,run_dsl(TestID,Trial,SolutionProgram)),
+       (run_dsl(Training,SolutionProgram,TestIn,Grid)*->true;TestIn=Grid),
+       into_pipe(Grid,Solution))
+       *->    
+       ignore((count_difs(ExpectedOut,Solution,Errors),
+        print_side_by_side(print_grid(_,_,"Our Solution",Solution),print_grid(_,_,"Expected Solution",ExpectedOut)),
+           (Errors==0 -> 
+              (banner_lines(green),
+               arcdbg(pass(TestID,ExampleNum,SolutionProgram)),
+               banner_lines(green))
+            ; (banner_lines(red),
+             arcdbg(fail(Errors,TestID,ExampleNum,SolutionProgram)),
+               test_info(TestID,InfoF),wqnl(fav(TestID*ExampleNum,InfoF)),
+               banner_lines(red)))))
+       ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))),
+    ptt("END!!!"+TestID+ExampleNum))).
+   
 
 
 

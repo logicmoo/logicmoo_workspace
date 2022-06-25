@@ -11,7 +11,7 @@
 
 save_grouped(H,G):-
   sort(G,GS),
-  (my_asserta_if_new(why_grouped(H,GS))),
+  nop(my_asserta_if_new(why_grouped(H,GS))),
   nop(mapgroup(register_obj,GS)).
 
 

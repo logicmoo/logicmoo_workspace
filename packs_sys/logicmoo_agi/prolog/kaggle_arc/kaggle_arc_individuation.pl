@@ -78,6 +78,7 @@ individuation_macros(subshape_in_object, [
 individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
    rectangle, diamonds, 
+   recalc_sizes,
    hv_line(h),  
    dg_line(d), 
    dg_line(u), 
@@ -87,6 +88,7 @@ individuation_macros(subshape_main, [
    connects(hv_line(_),hv_line(_)),
    jumps,% run the "jumps" macro
    point_corners,
+   by_color,
    single_dots,
    merges(Z,Z), % merge lines into square
    merges(hv_line(_),hv_line(_)),
@@ -173,12 +175,13 @@ individuation_macros(complete, [
 % the standard things done in most indiviguators
 individuation_macros(standard, [
     fourway, % find fold patterns 
+    recalc_sizes,
     std_shape_lib, % stuff that was learned/shown previously
    +max_learn_objects(colormass,30),
    +max_learn_objects(rectangle,30),
    +max_learn_objects(hv_line(_),30),
    +max_learn_objects(dg_line(_),30),
-    rectangle, % blobs of any shape that are the same color  
+    rectangle, recalc_sizes, % blobs of any shape that are the same color  
     % @TODO DISABLED FOR TESTS   colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
     subshape_main, % macro for sharing code with "subshape_in_object"
     colormass,
@@ -363,6 +366,7 @@ call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Point
 
 make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-  
   statistics(cputime,X),Timeleft is X+30,
+  max_min(GH,GV,Max,_Min),
   ArgVM = vm{
    % parent VM
    parent:_,
@@ -370,7 +374,7 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    % Options and TODO List (are actually same things)
    program:Options, options:Options, options_o:Options, %todo_prev:[],
    % how much time is left before we turn on debugger
-   timeleft:Timeleft, objects_max:30,
+   timeleft:Timeleft, objs_max_len:Max, objs_min_mass:_, objs_max_mass:_,
    % Grid and point representations
    grid:Grid, points:Points,
    % Original copies of Grid and point representations
@@ -512,7 +516,7 @@ fti(_,[done|_]):- !.
 fti(VM,_):-
   Objs = VM.objs,
   length(Objs,Count),
-  (member(progress,VM.options); Count > 30; (statistics(cputime,X), X > VM.timeleft)) -> 
+  (member(progress,VM.options); Count > VM.objs_max_len; (statistics(cputime,X), X > VM.timeleft)) -> 
    as_debug(8,(mass(Objs,Mass),
        length(VM.points,PC),
       pt(t([found_mass=(Count,Mass+PC),fsi=VM.program])))),fail.
@@ -570,7 +574,7 @@ row_to_indiv(VM,N,Row):-
   grid_to_individual([Row],Obj0),  
   override_object([iz(row),-iz(grid),loc_xy(1,N),vis_hv(VM.h,1),grid_size(VM.h,VM.v)],Obj0,Obj1),  
   rebuild_from_localpoints(Obj1,LPoints,Obj),
-  addObject(VM,Obj).
+  addObjects(VM,Obj).
 
 fti(VM,[columns|set(VM.program)]):-
   rot90(VM.grid,Grid90),
@@ -583,7 +587,7 @@ column_to_indiv(VM,N,Row):-
   % a column is a row that was prematurely rotated 270 degrees
   override_object([iz(row),-iz(grid),rotation(rot270),loc_xy(1,N),vis_hv(VM.h,1),grid_size(VM.h,VM.v)],Obj0,Obj1), 
   rebuild_from_localpoints(Obj1,LPoints,Obj),
-  addObject(VM,Obj).
+  addObjects(VM,Obj).
   
   
 fti(VM,[point_corners|set(VM.program)]):-
@@ -598,7 +602,7 @@ point_corners(VM):-
      standalone_point(C-P2,Points0),
      remCPoints(VM,[C-P2]),
      make_point_object(VM.id,VM.h,VM.v,[iz(important)],C-P2,Obj),
-     addObject(VM,Obj))).
+     addObjects(VM,Obj))).
 
 select_always(E,B,A):- select(E,B,A)*->true;B=A.
 
@@ -612,7 +616,7 @@ single_dots(VM):-
    select(C-P1,VM.points,Rest),     
    standalone_point(C-P1,Rest),
    make_point_object(VM.id,VM.h,VM.v,[iz(important)],C-P1,Obj),
-   addObject(VM,Obj),
+   addObjects(VM,Obj),
    remCPoints(VM,[C-P1]),
    single_dots(VM).
 single_dots(_):-!.
@@ -648,6 +652,7 @@ find_mergeable(VM,Found,[_|ScanPoints],Engulfed):-
  find_mergeable(VM,Found,ScanPoints,Engulfed),!.
 
 fti(VM,[find_touches|set(VM.program)]):-
+  %cullObjectsOutsideOfRanges(VM),
   find_touches(VM).
 
 fti(VM,[glyphic|set(VM.program)]):-
@@ -661,7 +666,12 @@ fti(VM,[glyphic|set(VM.program)]):-
   maplist(make_point_object(ID,GH,GV,[iz(abstract),iz(colorlink)]),Points,IndvList),
   my_append([VM.objs,IndvList,[Whole]],set(VM.objs)),!.
 
+fti(VM,[recalc_sizes,After|TODO]):-
+  (recalc_sizes(VM,[After|TODO])
+     -> true; set(VM.program)= [After,recalc_sizes|TODO]).
+
 fti(VM,[max_learn_objects(Routine,Max)|set(VM.program)]):-
+   set(VM.objs_max_len) = Max,
    set(VM.options)= [max_learn_objects(Routine,Max)|VM.options].
 
 fti(VM,[Routine|set(VM.program)]):- 
@@ -699,7 +709,7 @@ colormass_subshapes(VM,VMObjs):-
   individuate(H,V,VM.id,[subshape_in_object],Grid,ContainedPoints,WasInside),
   ignore((fail,WasInside =[_,_|_], % two or more
         print_grid(H,V,"colormass_subshapes",WasInside),
-        (my_append(VM.objs,WasInside,set(VM.objs))))),
+        addObjects(VM,WasInside))),
   colormass_subshapes(VM,Next).
 
 
@@ -771,7 +781,7 @@ fti(VM,[by_color(Min,C)|set(VM.program)]):-
    length(ThisGroup,Len),  Len >= Min,
    set(VM.points)=LeftOver,
    make_indiv_object(VM.id,VM.h,VM.v,ThisGroup,[iz(by_color(Min,C))],ColorObj),
-   addObject(VM,ColorObj)))).
+   addObjects(VM,ColorObj)))).
 
 
 
@@ -992,12 +1002,22 @@ into_list(I,O):- listify(I,O),!.
 assume_vm(_).
 :- style_check(-singleton).
 
-addObject(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
+addPropPredInfo(VM,Prop,Pred2,Obj):- assume_vm(VM),!,into_list(Obj,List),
+  maplist(Pred2,List,ListData),
+  intersection(VM.Prop,ListData,PretendToAdd,Prev,ReallyAdd),
+  my_append(VM.Prop,ReallyAdd,set(VM.Prop)).
+
+remPropPredInfo(VM,Prop,Pred2,Obj):- assume_vm(VM),!,into_list(Obj,List),
+  maplist(Pred2,List,ListData),
+  intersection(VM.Prop,ListData,ReallyRemove,Keep,PretendToRemove),
+  set(VM.Prop) = Keep.
+  
+addObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
   intersection(VM.objs,List,PretendToAdd,Prev,ReallyAdd),
   addGPoints(VM, Obj),
   my_append(VM.objs,ReallyAdd,set(VM.objs)).
 
-remObject(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
+remObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
   intersection(VM.objs,List,ReallyRemove,Keep,PretendToRemove),
   remGPoints(VM, ReallyRemove),
   set(VM.objs) = Keep.
@@ -1018,6 +1038,20 @@ addRPoints(VM, Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 remRPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List), 
   intersection(VM.points_repair,List,ReallyRemove,Keep,PretendToRemove),
   set(VM.points_repair) = Keep.
+
+
+addOptions(VM, Obj):- assume_vm(VM),!,listify(Obj,List), 
+  intersection(VM.options,Options,PretendToAdd,Prev,ReallyAdd),
+  my_append(VM.options,ReallyAdd,set(VM.options)),
+  intersection(VM.program,Options,PretendToAdd,Prev,ReallyAdd),
+  my_append(VM.program,ReallyAdd,set(VM.program)).
+
+remOptions(VM,Obj):- assume_vm(VM),!,listify(Obj,List), 
+  intersection(VM.options,List,ReallyRemove,Keep,PretendToRemove),
+  set(VM.options) = Keep,
+  intersection(VM.program,List,ReallyRemove,Keep,PretendToRemove),
+  set(VM.program) = Keep.
+
 
 remGPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List), 
   Grid = VM.grid,
@@ -1042,11 +1076,11 @@ fti(VM,['fourway'|TODO]):- !,
   grid_to_3x3_objs(Ordered,VM.grid,FourWay1s,Keep),
   must_det_ll((
   intersection(Ordered,Keep,_ReallyKeptO,TookbackO,GaveExtraBackO),
-  remObject(VM,TookbackO),
+  remObjects(VM,TookbackO),
   addCPoints(VM,TookbackO),
-  addObject(VM,GaveExtraBackO),
+  addObjects(VM,GaveExtraBackO),
   remCPoints(VM,GaveExtraBackO),
-  addObject(VM,FourWay1s),
+  addObjects(VM,FourWay1s),
   remCPoints(VM,FourWay1s),
   addGPoints(VM,FourWay1s),
   %remRPoints(VM,Keep),
@@ -1065,12 +1099,12 @@ maybe_done(VM,_FourWay1s, TODO,[done|TODO]):-
     points_to_grid(VM.h,VM.v,VM.points,Grid),
     duplicate_term(VM,Dupe),
     individuate([-fourway,complete],Grid,Keep),
-  remRPoints(VM,Keep),
+  %remRPoints(VM,Keep),
   remCPoints(VM,Keep),
     transfer_onto_dict(Dupe,VM), !,
     maplist(recolor_based_on_grid(VM.grid),Keep,NewKeep),!,
-  remObject(VM,Keep),
-  addObject(VM,NewKeep).
+  remObjects(VM,Keep),
+  addObjects(VM,NewKeep).
 
 recolor_based_on_grid(Grid,Keep,NewKeep):-
    globalpoints(Grid,GPoints),
@@ -1265,18 +1299,18 @@ fsi(_VM,FinalReserve,Grid,TODO,H,V,Sofar,ID,[cycle_shapes(Shapes)|TODO],Reserved
     cycle_s(Reserved,_GH,_GV,Sofar,_ID,_Options,Reserved,Points,_Grid,Sofar,Points).
 
 
-fsi(_VM,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,OUT,NextScanPoints):- 
+fsi(VM,Reserved,Grid,OptionsOut,H,V,Sofar,ID,[Option|TODO],Reserved,Points,Grid,OUT,NextScanPoints):- 
    ( Option \==dots), 
-   find_one_individual(H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Indv,NextScanPoints),
+   find_one_individual(VM,H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Indv,NextScanPoints),
    my_append(Sofar,[Indv],OUT).
 
-find_one_individual(H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints):-
-   find_one_individual3(H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints),!.
-find_one_individual(H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints):-
-   find_one_individual2(H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints).
+find_one_individual(VM,H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints):-
+   find_one_individual3(VM,H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints),!.
+find_one_individual(VM,H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints):-
+   find_one_individual2(VM,H,V,ID,Sofar,Option,TODO,OptionsOut,Reserved,Points,Grid,Obj,NextScanPoints).
 
-find_one_individual3(H,V,ID,_Sofar,Option,TODO,OptionsOut,_Reserved,Points,_Grid,Obj,NextScanPoints):-
-    shape_min_points(Option,IndvPoints),
+find_one_individual3(VM,H,V,ID,_Sofar,Option,TODO,OptionsOut,_Reserved,Points,_Grid,Obj,NextScanPoints):-
+    shape_min_points(VM,Option,IndvPoints),
     copy_term(Option,OptionC),Option=ShapeType,    
     select(C-HV,Points,Rest0), \+ free_cell(C), % non_free_fg(C), % \+ is_black(C),
     allowed_dir(Option,Dir),adjacent_point_allowed(C,HV,Dir,HV2),select(C-HV2,Rest0,Rest1),
@@ -1289,8 +1323,8 @@ find_one_individual3(H,V,ID,_Sofar,Option,TODO,OptionsOut,_Reserved,Points,_Grid
     meets_indiv_criteria(Option,IndvPoints),
   cycle_back_in(OptionC,TODO,OptionsOut).
 
-find_one_individual2(H,V,ID,_Sofar,Option,TODO,OptionsOut,_Reserved,Points,_Grid,Obj,NextScanPoints):-
-    shape_min_points(Option,IndvPoints),
+find_one_individual2(VM,H,V,ID,_Sofar,Option,TODO,OptionsOut,_Reserved,Points,_Grid,Obj,NextScanPoints):-
+    shape_min_points(VM,Option,IndvPoints),
     copy_term(Option,OptionC),Option=ShapeType,    
   select(C-HV,Points,Rest0), \+ free_cell(C), % non_free_fg(C), % \+ is_black(C),
   allowed_dir(Option,Dir),adjacent_point_allowed(C,HV,Dir,HV2),select(C-HV2,Rest0,ScanPoints),
@@ -1307,12 +1341,15 @@ point_groups_by_color(Option,[IndvPoints|Groups],Points,Rest):-
     point_groups_by_color(Option,Groups,NextScanPoints,Rest).
 point_groups_by_color(_Option,[],Points,Points).
 
+shape_min_points(VM,Shape,MinShapeO):- MS = VM.objs_min_mass, number(MS), length(MinShape,MS),
+  !,append(MinShape,_,MinShapeO),!,shape_min_points0(Shape,MinShapeO).
+shape_min_points(_VM,Shape,MinShapeO):-shape_min_points0(Shape,MinShapeO).
 
-shape_min_points(colormass,[_,_,_,_,_|_]):-!.
-shape_min_points(rectangle,[_,_,_,_|_]):-!.
- shape_min_points(diamonds,[_,_,_,_|_]):-!.
-shape_min_points(_,[_,_|_]).
-%  shape_min_points(_,_).
+shape_min_points0(colormass,[_,_,_,_,_|_]):-!.
+shape_min_points0(rectangle,[_,_,_,_|_]):-!.
+shape_min_points0(diamonds,[_,_,_,_|_]):-!.
+shape_min_points0(_,[_,_|_]).
+%  shape_min_points(VM,_,_).
 
 
 /*

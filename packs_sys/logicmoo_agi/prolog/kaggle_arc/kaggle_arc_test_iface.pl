@@ -22,16 +22,17 @@ print_menu_cmd1(_Key,Info,_Goal):- format(' ~w',[Info]).
 
 :- multifile(menu_cmd/4).
 :- multifile(menu_cmd1/4).
-menu_cmd(i,'i','Examine (i)ndividuator,',(clsR,!,ndividuator)).
+menu_cmd(i,'i','Examine (i)ndividuator,',(cls,!,ndividuator)).
 menu_cmd(_,'p','     or (p)rint training pairs (captial to reveal Solutions)',(print_test)).
-menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(clsR,!,train_test)).
-menu_cmd(_,'s','     or (s)olve the problem as learned.',(clsR,!,solve_test)).
+menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(cls,!,train_test)).
+menu_cmd(_,'s','     or (s)olve the problem as learned.',(cls,print_test,!,solve_test)).
 menu_cmd(_,'h','     or (h)uman proposed solution.',human_test).
 menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(fully_test)).
-menu_cmd(_,'a','     or (a)dvance to the next test and run',(clsR,!,run_next_test)).
+menu_cmd(_,'a','     or (a)dvance to the next test and run',(cls,!,run_next_test)).
 menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
 menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
 menu_cmd(_,'l','     or (l)eap to next Suite',(restart_suite)).
+menu_cmd(_,'L','',(next_suite)).
  
 menu_cmd(i,'R','(R)un the Suite noninteractively',(run_all_tests,menu)).
 menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).
@@ -77,15 +78,15 @@ bad:- ig([complete],v(aa4ec2a5)*(trn+0)*in).
 
 
 restart_suite:- 
-   get_current_test(TestID),
    get_current_suite_testnames([First|_]),
-   TestID\==First,set_current_test(First),!.
-restart_suite:- 
+   set_current_test(First),!.
+next_suite:- 
    findall(SN,test_suite_name(SN),List),
    nb_current(test_order,X),
    next_in_list(X,List,N),
    nb_setval(test_order,N),!,
-   wdmsg(switched(X->N)).
+   wdmsg(switched(X-->N)),
+   restart_suite.
 
 test_suite_name(key_pad_tests).
 test_suite_name(test_names_by_fav). test_suite_name(test_names_by_hard). 

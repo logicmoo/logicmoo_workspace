@@ -14,7 +14,7 @@ area(Obj,Area):- vis_hv(Obj,H,V), Area is H * V.
 density(Obj,Density):- area(Obj,Area),mass(Obj,Mass), Density is Mass/Area.
 
 
-into_gridoid0(obj(N),O):- enum_object(O),o2g(O,G),nonvar(G),my_asserta_if_new(g2o(G,O)),sformat(N," ~w ",[G]).
+into_gridoid0(obj(N),O):- enum_object(O),o2g(O,G),sformat(N," ~w ",[G]).
 into_gridoid0(shape_lib(N:Lib),O):- shape_lib_expanded(Lib,Grids),nth1(N,Grids,O).
 into_gridoid0(N,G):- why_grouped(N,UG), UG\==[],UG\=[_],smallest_first(UG,G).
 into_gridoid0(N,G):- into_grids(N,G).

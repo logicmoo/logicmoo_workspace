@@ -121,6 +121,9 @@ combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,my_append(L1,L2,L12).
 
 showdiff_groups(AG,BG):- not_list(AG),into_list(AG,AGL),!,showdiff_groups(AGL,BG).
 showdiff_groups(AG,BG):- not_list(BG),into_list(BG,BGL),!,showdiff_groups(AG,BGL).
+showdiff_groups(AG,BG):- once((proportional_objs_how(AG,BG,DD), pt(cyan,proportional_objs(DD)),
+  maplist(showdiff_objects,AG,BG))),fail.
+  
 showdiff_groups(AG,BG):-
   maplist(obj_grp_comparable,AG,A1),
   maplist(obj_grp_comparable,BG,B1),
@@ -156,10 +159,15 @@ diff_groups(A0,B0,DD):-
   sort(B2,B3),
   diff_groups0(A3,B3,DD).
 
-diff_groups0([],[],[]):-!.
-diff_groups0([],B,left_extra(BO)):- maplist(object_dglyph,B,BO).
-diff_groups0(B,[],left_over(BO)):- maplist(object_dglyph,B,BO).
-diff_groups0(AAR,BBR,DD):-
+diff_groups2(AAR,BBR,proportional_objs(DD,Diffs)):- proportional_objs(AAR,BBR,DD),
+  maplist(diff_objects,AAR,BBR,Diffs).
+diff_groups0(A3,B3,DD):- diff_groups2(A3,B3,DD).
+diff_groups0(A3,B3,DD):- diff_groups1(A3,B3,DD).
+diff_groups1([],[],[]):-!.
+diff_groups1([],B,left_extra(BO)):- maplist(object_dglyph,B,BO).
+diff_groups1(B,[],left_over(BO)):- maplist(object_dglyph,B,BO).
+
+diff_groups1(AAR,BBR,DD):-
   %make_comparable(B0,B),
   /*
   ,*/
@@ -174,10 +182,10 @@ diff_groups0(AAR,BBR,DD):-
       object_dglyph(PA,GA),
       object_dglyph(PB,GB),
       D = change_obj(GA,GB,DAB)),
-  diff_groups0(AA,BB,D1),
+  diff_groups1(AA,BB,D1),
   combine_diffs(D1, D , DD),!.
 
-diff_groups0(A,B,disjointed(SharedT,AOnlyT,BOnlyT,AO,BO)):- 
+diff_groups1(A,B,disjointed(SharedT,AOnlyT,BOnlyT,AO,BO)):- 
   intersection(A,B,Shared,AOnly,BOnly),
   tersify(Shared,SharedT),
   tersify(AOnly,AOnlyT),
@@ -193,7 +201,7 @@ unused_diff_groups0(AAR,BBR,DD):-
   select(PA,AAR,AA),
   select(PB,BBR,BB),
   same_colorless_points(PA,PB,D1),
-  diff_groups0(AA,BB,D),
+  diff_groups1(AA,BB,D),
   combine_diffs(D1,D , DD).
 
 %object_dglyph(O,G):- object_cglyph(O,G). % want this
@@ -431,6 +439,7 @@ diff_terms(IF=IA,O,IF=D):- find_kv(O,IF,OA),!,diff_terms(IA,OA,D).
 diff_terms(I,O,D):- compound(I),compound(O),!,diff_compounds(I,O,D).
 diff_terms(I,O,diff(I->O)).
 
+never_diff(iz(_)).
 never_diff(object_indv_id(_,_)).
 diff_compounds(I,O, [] ):- (never_diff(I);never_diff(O)),!.
 diff_compounds(I,O,D):- compound_name_arguments(I,IF,IA),compound_name_arguments(O,OF,OA),

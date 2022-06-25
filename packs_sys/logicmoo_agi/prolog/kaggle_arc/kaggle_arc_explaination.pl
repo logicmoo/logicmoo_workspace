@@ -28,40 +28,9 @@ set_grid_id(Grid,ID):-
 kaggle_arc_db(Name,Example,Num,out,G):- kaggle_arc(Name,Example+Num,_,G).
 kaggle_arc_db(Name,Example,Num,in,G):- kaggle_arc(Name,Example+Num,G,_).
 
-maybe_confirm_sol(VM,Name,ExampleNum,TestIn,ExpectedOut):- 
-   sols_for(Name,Sol), !, confirm_sol(VM,Sol,Name,ExampleNum,TestIn,ExpectedOut),!.
-
-sols_for(Name,Sol):- test_info(Name,Sols),member(sol(Sol),Sols).
-
-
-maybe_confirm_dsl(VM,Name,ExampleNum,TestIn,ExpectedOut):- 
-   ignore((dsl_for(Name,Sol), confirm_dsl(VM,Sol,Name,ExampleNum,TestIn,ExpectedOut))),!.
-
-dsl_for(Name,Sol):- test_info(Name,Sols),member(lmDSL(Sol),Sols).
 
 into_pipe(Grid,Grid):- !. % into_group
 into_pipe(Grid,Solution):- into_grid(Grid,Solution).
-
-confirm_dsl(VM,SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut):-
-  confirm_sol(VM,SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut).
-confirm_sol(VM,SolutionProgram,Name,ExampleNum,TestIn,ExpectedOut):- 
- print_grid(_,_,"Expected Solution",ExpectedOut),
- ((run_dsl(VM,SolutionProgram,TestIn,Grid),
-   ptt(run_dsl(VM,SolutionProgram,TestIn)),
-   into_pipe(Grid,Solution))
-   *->    
-   (count_difs(ExpectedOut,Solution,Errors),
-    print_side_by_side(print_grid(_,_,"Our Solution",Solution),print_grid(_,_,"Expected Solution",ExpectedOut)),
-       (Errors==0 -> 
-          (banner_lines(green),
-           arcdbg(pass(Name,ExampleNum,SolutionProgram)),
-           banner_lines(green))
-        ; (banner_lines(red),
-         arcdbg(fail(Errors,Name,ExampleNum,SolutionProgram)),
-           test_info(Name,InfoF),wqnl(fav(Name*ExampleNum,InfoF)),
-           banner_lines(red))))
-   ;arcdbg(warn(unrunable(Name,ExampleNum,SolutionProgram)))).
-
 
 describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
 describe_feature(_,call(Call)):- !, call(Call).
@@ -146,7 +115,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A).
 debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
  must_det_ll((
-  ignore((o2g(Obj,GGG), nonvar(GGG),my_asserta_if_new(g2o(GGG,Obj)))),
+  ignore((o2g(Obj,GGG), nonvar(GGG),nop(my_asserta_if_new(g2o(GGG,Obj))))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC,_)|_]);FC=grey),
   sort_obj_props(A,AS),

@@ -56,14 +56,16 @@ show_rules:-
 contains_nonvar(N,Info):- sub_term(E,Info),nonvar_or_ci(E),E=N,!.
 
 max_min(A,B,C,D):- must_be_free(C),must_be_free(D),max_min0(A,B,C,D).
-max_min0(A,B,B,B):- plain_var(A),!.
+max_min0(A,B,B,B):- plain_var(A).
 max_min0(A,B,A,A):- plain_var(B),!.
-max_min0(A,B,A,B):- A>B,!.
-max_min0(A,B,B,A).
+max_min0(A,B,C,D):- number(A),number(B), !, ((A > B) -> (C=A, D=B) ; (C=B, D=A)).
+max_min0(_,A,A,A):- number(A),!.
+max_min0(A,_,A,A):- number(A),!.
+max_min0(_,_,_,_).
 
 as_debug(L,G):- as_debug(L,true,G).
 as_debug(9,_,_):- !.
-as_debug(_,C,G):- (call(C)->wots(S,G),format('~NDEBUG: ~w~N',[S]);true).
+as_debug(_,C,G):- ignore(catch((call(C)->wots(S,G),format('~NDEBUG: ~w~N',[S]);true),_,true)).
 
 count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
