@@ -322,6 +322,7 @@ colors_to_vars(_,_,V,V).
 */
 
 %add_borders(C,G,GridNew):- G\=@=Grid,!,add_borders(C,Grid,GridNew).
+/*
 add_borders(Color,Grid,GridO):- 
  grid_size(Grid,H,V),
  get_training(VM),
@@ -330,6 +331,14 @@ add_borders(Color,Grid,GridO):-
   replace_row_e(V,Color),
   replace_col_e(1,Color),
   replace_col_e(H,Color)],Grid,GridO))),!.
+*/
+add_borders(Color,Grid,GridO):- 
+ grid_size(Grid,H,V),
+  replace_row_e(1,Color,Grid,Grid0),
+  replace_row_e(V,Color,Grid0,Grid1),
+  replace_col_e(1,Color,Grid1,Grid2),
+  replace_col_e(H,Color,Grid2,GridO),!.
+
 
 
 cls_with(Color1,G,Grid):- into_grid(G,Old),grid_color_code(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
@@ -400,6 +409,7 @@ grid_size_term(I,size(X,Y)):- grid_size(I,X,Y),!.
 %grid_size(Points,H,V):- is_dict(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(NIL,1,1):- NIL==[],!.
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
+grid_size(G,H,V):- is_dict(G),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
 grid_size(G,H,V):- is_grid(G),!,grid_size_nd(G,H,V),!.
 grid_size(G,X,Y):- is_group(G),!,mapgroup(grid_size_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
 grid_size(I,X,Y):- indv_props(I,L),(member(grid_size(X,Y),L);member(vis_hv(X,Y),L)),!.

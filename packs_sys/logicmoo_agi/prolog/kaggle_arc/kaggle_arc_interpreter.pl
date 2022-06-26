@@ -179,6 +179,7 @@ print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).
 print_grid_to_atom(G,S):- with_output_to(atom(S),print_grid(G)).
 % ?- print_grid(gridFn(X)).
 cast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
+cast_to_grid(Dict,Grid, (=) ):- is_dict(Dict), get_dict(grid,Dict,Grid),!.
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.

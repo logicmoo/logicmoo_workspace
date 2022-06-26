@@ -25,7 +25,7 @@ tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 %dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
 dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
 dumpst_hook:simple_rewrite(I,O):- is_dict(I),!, O='..vvmm..'.
-dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
+%dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
 dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,O='..points..'(N),!.
 
 arc_portray(G, _):- is_dict(G), !, write('..dict..').
@@ -161,6 +161,7 @@ functor_test_color(warn,yellow).
 arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),
   wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
+
 
 
 user:portray(Grid):- arc_portray(Grid),!.
@@ -414,6 +415,7 @@ print_grid0(_H,_V,G):- G==[],!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid), pt(GG),!,nop(trace_or_throw(GG)).
 
+print_grid0(H,V,D):- is_dict(D),ignore(H = G.h),ignore(V = G.v),!,append(G.objs,[G.grid],Grid),!, print_grid0(H,V,Grid).
 print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
 print_grid0(H,V,Grid):- is_points_list(Grid), points_to_grid(H,V,Grid,PGrid),!,print_grid0(H,V,PGrid).
 print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,

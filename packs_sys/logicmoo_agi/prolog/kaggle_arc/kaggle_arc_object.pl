@@ -728,7 +728,7 @@ find_group_outlines_fix_rest(Options,G,Sols,Rest):-
 
 
 find_outlines(Grid,Solutions,Rest):- 
-  fail_over_time(4,find_outlines([perfect],Grid,Solutions,Rest)).
+  fail_over_time(2,find_outlines([perfect],Grid,Solutions,Rest)).
 
 find_outlines(Options,Grid,[Sol|Solutions],Rest):-
   find_outlinez(Options,Grid,Sol,More),!,
@@ -745,7 +745,7 @@ three_points(C,Grid2,HV1,Dir1,HV2,Dir2,HV3,Grid4):-
   %w_in_90(Dir1,Dir2),
   is_adjacent_point(HV2,Dir2,HV3),select(C-HV3,Grid3,Grid4).
   
-find_outlinez([_Perfect|_],Grid,sol(ResultO,[]),LeftOver):-  !, % Perfect = perfect, 
+find_outlinez([_Perfect|_],Grid,sol(ResultO,[]),LeftOver):-  !, fail, % Perfect = perfect, 
   as_localpoints(Grid,Points),
   select(C-HV1,Points,Grid2),
   w_in_n(Dir1,Dir2),
