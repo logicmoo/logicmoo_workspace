@@ -39,6 +39,18 @@
 :- '$dicts':import(dot_eval/3).
 :- 'system':import(dot_eval/3).
 
+
+:- 'gvlib':export(expand_gvs_head/6).
+:- 'system':import(expand_gvs_head/6).
+
+:- 
+ forall(source_file(M:H,S),
+ ((source_location(S,_), prolog_load_context(module,LC),
+ ignore((functor(H,F,A), \+ atom_concat('$',_,F), \+ lmconfig:never_export_named_gvar(F/_),
+  ignore(((atom(LC),atom(M), LC\==M,M:export(M:F/A),LC:multifile(M:F/A),fail,atom_concat('$',_,F),LC:import(M:F/A)))),
+  ignore(((\+ atom_concat('$',_,F),\+ atom_concat('__aux',_,F),LC:export(M:F/A), 
+  ignore(((current_predicate(system:F/A)->true; system:import(M:F/A)))))))))))).
+
 /*
  
  rtrace($varA.value()=X).
@@ -438,7 +450,7 @@ may_expand(Goal):-
 */
 may_expand(_).
 
-
+:- export(dot_ge/3).
 dot_ge(Goal, P, _):- 
   var(P), \+ source_location(_,_),  
   % quietly(use_dot(_Type)), 

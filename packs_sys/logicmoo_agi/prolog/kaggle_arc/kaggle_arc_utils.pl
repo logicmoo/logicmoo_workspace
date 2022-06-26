@@ -212,7 +212,7 @@ vars_to_dictation([Name=Value|Gotten],TIn,TOut):-
   put_dict(UName,TMid,ValueT,TOut).
 vars_to_dictation([],T,T).
 
-%tio_tersify(Value,ValueT):- is_grid(Value),!,ValueT=_.
+tio_tersify(Value,ValueT):- is_grid(Value),!,ValueT=_.
 tio_tersify(Value,Value).
 copy_qq_([]) --> [].
 copy_qq_([C|Cs]) --> [C], copy_qq_(Cs).

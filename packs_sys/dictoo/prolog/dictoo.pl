@@ -26,6 +26,7 @@
 :- set_module(class(library)).
 :- multifile(dot_cfg:using_dot_type/2).
 :- dynamic(dot_cfg:using_dot_type/2).
+:- export(dot_cfg:using_dot_type/2).
 
 :- multifile(dot_cfg:dictoo_decl/8).
 :- dynamic(dot_cfg:dictoo_decl/8).

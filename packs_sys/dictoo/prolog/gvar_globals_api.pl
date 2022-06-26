@@ -184,6 +184,7 @@ gvar_file_predicates_are_exported:-
  gvar_file_predicates_are_exported(S,LC).
 
 
+
 lmconfig:never_export_named_gvar(attr_unify_hook/2).
 lmconfig:never_export_named_gvar(attribute_goals/3).
 lmconfig:never_export_named_gvar(project_attributes/2).
@@ -191,6 +192,7 @@ lmconfig:never_export_named_gvar(attr_portray_hook/2).
 
 
 :- module_transparent(gvar_file_predicates_are_exported/2).
+:- export(gvar_file_predicates_are_exported/2).
 gvar_file_predicates_are_exported(S,LC):-
  forall(source_file(M:H,S),
  ignore((functor(H,F,A), \+ atom_concat('$',_,F), \+ lmconfig:never_export_named_gvar(F/_),
@@ -288,7 +290,7 @@ nb_att3_del_attr(Atts,Name):-
 
 nb_att3_get_attr(atts(Name0,Value0,Atts),Name,Value):- Name==Name0 -> Value=Value0; nb_att3_get_attr(Atts,Name,Value).
 
-
+:- fixup_exports.
 :- 
    gvar_file_predicates_are_exported,
    gvar_file_predicates_are_transparent.

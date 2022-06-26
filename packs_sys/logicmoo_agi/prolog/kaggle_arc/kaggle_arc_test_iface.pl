@@ -264,6 +264,28 @@ hardness_of_name(TestID,Hard):-
 
 :- style_check(-singleton).
 
+
+arc_index_pairs([ncg,'o',I,'o',O]):- between(0,7,I),between(0,7,O),I<O.
+arc_index_pairs([trn,'o',I,'o',O]):- between(0,7,I),between(0,7,O),I<O.
+arc_index_pairs([ncg,'i',I,'i',O]):- between(0,7,I),between(0,7,O),I<O.
+arc_index_pairs([trn,'i',I,'i',O]):- between(0,7,I),between(0,7,O),I<O.
+arc_index_pairs([trn,'i',O,'o',O]):- between(0,7,O).
+arc_index_pairs([tst,'i',O,'o',O]):- between(0,2,O).
+
+
+arc_indexed_pairs(TestID,S,Prefix,G1,G2):- kaggle_arc_io_m(TestID,tst+0,_,_),  arc_index_pairs(Prefix),
+  Prefix = [Type,IO1,D1,IO2,D2], 
+  sformat(S,'~w__~w~w_~w~w__',[Type,IO1,D1,IO2,D2]),
+  kaggle_arc_io_m(TestID,Type+D1,IO1,G1),
+  kaggle_arc_io_m(TestID,Type+D2,IO2,G2).
+
+kaggle_arc_io_m(TestID,Type+D2,IO2,G2):- IO2==i,!,kaggle_arc_io_m(TestID,Type+D2,in,G2).
+kaggle_arc_io_m(TestID,Type+D2,IO2,G2):- IO2==o,!,kaggle_arc_io_m(TestID,Type+D2,out,G2).
+kaggle_arc_io_m(TestID,ncg+D2,IO2,G2):- !,kaggle_arc_io(TestID,trn+D2,IO2,G1),into_monochrome(G1,G2).
+kaggle_arc_io_m(TestID,Type+D2,IO2,G2):- kaggle_arc_io(TestID,Type+D2,IO2,G2).
+  
+
+
 extra_tio_name(TestID,TIO):-
   kaggle_arc(TestID,(trn+0),In0,Out0),
   kaggle_arc(TestID,(trn+1),In1,Out1),
@@ -278,12 +300,7 @@ extra_tio_name(TestID,TIO):-
 
 make_comparison(DictIn,TestID,Prefix,In,Out,DictOut):-
   do_pair_dication(In,Out,Vs),!,
-  append(Vs,[shared=[],
-  refused=[],
-  patterns=[],
-  added=[],
-  removed=[],
-  refused=[]],Vs0),
+  append(Vs,[shared=[], refused=[], patterns=[], added=[], removed=[]],Vs0),
   atomic_list_concat(Prefix,PrefixA),
   maplist(precat_name(PrefixA),Vs0,VsT),
   vars_to_dictation(VsT,DictIn,DictOut).
