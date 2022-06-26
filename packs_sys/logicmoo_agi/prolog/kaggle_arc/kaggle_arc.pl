@@ -521,13 +521,14 @@ which_io(i,input). which_io(o,output).
 train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
  Desc = [_Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
  MonoDesc = ['monochrome','_',IsIO1,N1,'_',IsIO2,N2,'_'], 
-  into_monochrome(In,MonoIn), into_monochrome(Out,MonoOut),
+  (is_grid(In) -> into_monochrome(In,MonoIn) ; into_monochrome_fti(In,MonoIn)),
+  (is_grid(Out) -> into_monochrome(Out,MonoOut) ; into_monochrome_fti(Out,MonoOut)),
   train_for_objects_from_pair_1(Dict0,TestID,MonoDesc,MonoIn,MonoOut,Dict1),
   train_for_objects_from_pair_1(Dict1,TestID,Desc,In,Out,Dict9),
   !.
 
 into_monochrome_fti(FTI1,FTI2):-
-  into_fti(FTI1.id*mono,into_monochrome,FTI1.grid,FTI2).
+  into_fti(FTI1.id*mono,[into_monochrome|FTI1.roptions],FTI1.grid,FTI2).
 
 train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  must_det_ll((

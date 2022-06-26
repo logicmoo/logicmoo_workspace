@@ -262,10 +262,10 @@ individuate(ROptions,GridIn,IndvS):-
   
   must_be_free(IndvS),
   ((
+  trace,
   into_fti(ID,ROptions,GridIn,VM),
    my_assertion(is_dict(VM)),
    %addOptions(VM,ROptions),
-  
    individuate(VM),
    IndvS = VM.objs,
    once((delistify_single_element(ROptions,NamedOpts),
@@ -310,8 +310,8 @@ into_fti(ID,ROptions,GridIn0,VM):-
    h:H, v:V, id:ID},
    %ignore(VM>:<ArgVM),
    (var(VM) -> ArgVM=VM ; transfer_missing(ArgVM,VM)),
-   (var(VM) -> (fix_test_name(ID,TestID,_), make_training_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
-   (nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
+   %(var(VM) -> (fix_test_name(ID,TestID,_), make_training_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
+   %(nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
     true)),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
@@ -332,10 +332,6 @@ nb_link_pairs_if_missing(VM,K-NewV):- V = VM.K, ((var(V),\+ attvar(V))->nb_link_
   
 
 fti(VM):- fti(VM,VM.program).
-%fti(_,[]).
-%fti(VM,_):- VM.points=[], !.
-fti(_,[]):- !.
-fti(_,[done|_]):- !.
 fti(VM,_):-
   Objs = VM.objs,
   length(Objs,Count),
@@ -343,6 +339,10 @@ fti(VM,_):-
    as_debug(8,(mass(Objs,Mass),
        length(VM.points,PC),
       pt(t([found_mass=(Count,Mass+PC),fsi=VM.program])))),fail.
+%fti(_,[]).
+%fti(VM,_):- VM.points=[], !.
+fti(_,[]):- !.
+fti(_,[done|_]):- !.
 fti(VM,[recalc_sizes,After|TODO]):-
   (recalc_sizes(VM,[After|TODO])
      -> true; set(VM.program)= [After,recalc_sizes|TODO]).
