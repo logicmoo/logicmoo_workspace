@@ -59,24 +59,38 @@ computeMaxMass(VM,List,_Count,Max):- append(_,[A,B|_],List),A>B,max_min(VM.objs_
 computeMaxMass(VM,_List,_Count,Max):- max_min(VM.objs_max_mass,700,_,Max).
 
 
-proportional_objs_how(AG,BG,Set):- findall(DD,proportional_objs_how(AG,BG,DD),List),list_to_set(List,Set).
-proportionate(List1,List2):- proportionate(List1,List2,_),!.
+proportional_objs_how(AG,BG,Set):- into_list(AG,AGL),into_list(BG,BGL), proportional_objs_how_l(AGL,BGL,Set). %findall(DD,proportionate(AGL,BGL,DD),List),list_to_set(List,Set).
+
+proportional_objs_how_l(AG,BG,Set):-  my_permutation(AG,AGL), my_permutation(BG,BGL), proportionate(AGL,BGL,Set).
+
+my_permutation(BG,BG):-!.
+my_permutation(BG,BGL):- permutation(BG,BGL).
+%proportionate(List1,List2):- proportionate(List1,List2,_),!.
 proportionate([],[],_).
 proportionate([HV1|List1],[HV2|List2],N):-
    proportional(HV1,HV2,N),
-   proportionate(List1,List2,N2), 
-   N2=N.
+   \+ not_very_meaningfull(N),
+   proportionate(List1,List2,N).
+
+not_very_meaningfull(vis_hv_term(size(A,B))):- !, not_very_meaningfull_t(A),not_very_meaningfull_t(B).
+not_very_meaningfull(vis_hv_term(area(A))):-   !, not_very_meaningfull_t(A).
+not_very_meaningfull(loc_xy_term(loc(A,B))):-  !, not_very_meaningfull_t(A),not_very_meaningfull_t(B).
+not_very_meaningfull(center_term(loc(A,B))):-  !, not_very_meaningfull_t(A),not_very_meaningfull_t(B).
+
+not_very_meaningfull(mass(A)):- !, not_very_meaningfull_t(A).
+not_very_meaningfull_t(difference(0)). not_very_meaningfull_t(ratio(1)). not_very_meaningfull_t(moved(0)).
 
 proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
+proportional(size(V1,H1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
 proportional(size(H1,V1),size(H2,V2),area(HV)):- !, HV1 is H1*V1, HV2 is H2*V2, proportional_size(HV1,HV2,HV).
 proportional(loc(H1,V1),loc(H2,V2),loc(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
 proportional(N1,N2,N):- number(N1),number(N2),!,proportional_size(N1,N2,N).
 proportional(N1,N2,N):- is_object(N1),is_object(N2),!,proportional_objs(N1,N2,N).
 
-proportional_objs(Obj1,Obj2,vis_hv_term(N)):- vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2),proportional(N1,N2,N).
-proportional_objs(Obj1,Obj2,loc_xy_term(N)):- loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,loc_xy_term(N)):- once((loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
-proportional_objs(Obj1,Obj2,mass(N)):- mass(Obj1,N1),mass(Obj2,N2),proportional_size(N1,N2,N).
+proportional_objs(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
 
 proportional_loc(N1,N2,moved(N)):- N is N1-N2.
 proportional_size(N1,N2,difference(N)):- N is N1-N2.
