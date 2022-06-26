@@ -236,6 +236,7 @@ has_index(CI):-  nb_current(CI,List),List\==[],is_list(List),!.
 
 
 hv_cg_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_cg_value(ID,CC,H,V),CC=C.
+hv_cg_value(O,GN,H,V):- is_dict(O),append([O.objs],[O.grid],I),!,hv_cg_value(I,GN,H,V).
 hv_cg_value(O,Color-GN,H,V):- is_object(O),hv_c_value(O,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.
 hv_cg_value(Grid,Color,H,V):- is_grid(Grid),!,hv_c_value(Grid,Color,H,V).
 hv_cg_value([G|Points],CN,H,V):- quietly(( is_list(Points), is_object_or_grid(G))), 

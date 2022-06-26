@@ -347,6 +347,8 @@ contained_object(O1,O2):-
 % ==============================================
 % Contained
 % ==============================================
+find_contained(VM):-
+  show_vm_changes(VM,find_contained,find_contained(VM.h,VM.v,VM.id,VM.objs,set(VM.objs),VM.points,set(VM.points))),!.
 
 find_contained(_H,_V,_ID,Sofar,Sofar,[],[]).
 find_contained(_H,_V,_ID,[],[],NextScanPoints,NextScanPoints).
@@ -356,9 +358,9 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   ContainedPoints\==[],
   %grid_size(Found,H,V),
   must_det_ll((
-  points_to_grid(H,V,ContainedPoints,Grid),
+  % points_to_grid(H,V,ContainedPoints,Grid),
   %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
-  individuate(H,V,ID,[subshape_in_object],Grid,ContainedPoints,NewInside),
+  individuate([subshape_in_object],ContainedPoints,NewInside),
   mapgroup(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained",[Found|NewInsideM])))),
   find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),

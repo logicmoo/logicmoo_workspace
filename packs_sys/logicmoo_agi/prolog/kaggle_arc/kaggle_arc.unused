@@ -12,6 +12,44 @@ constrain_type(_CheckType,_Grid,G,G):- is_fg_color(G),!.
 constrain_type(CheckType,_Grid,G,GG):- constrain_type(CheckType,G=GG).
 
 
+
+/*
+find_one_in divi dual(VM.h,VM.v,Sofar,VM.id,solid(Option),Reserved,Points,Grid,[iz(solid(Option))|Indv],NextScanPoints):- fail, !,
+    select(C-HV,Points,Rest), non_free_fg(C), 
+    get_neighbors(Rest,non_free_fg,Found,HV),
+    format('~N~q~n',[Found]),
+    select(f(Dir,C-HV2),Found,Found1),    
+    allowed_dir(Option,Dir),
+    rot_right_45(Dir,NE), rot_left_45(Dir,NW), 
+    select(f(NE,C-_HV3),Found1,Found2),
+    select(f(NW,C-_HV4),Found2,Found3),
+    rot_right_45(NE,E), rot_left_45(NW,W),
+    select(f(E,C-HV5),Found3,Found4),
+    select(f(W,C-HV6),Found4,Found5),
+    subtract(Rest,[C-HV5,C-HV6],ScanPoints),
+    all_individuals_near(Dir,Option,C,[C-HV,C2-HV2,C-HV5,C-HV6],ScanPoints,NextScanPoints,Indv),
+    meets_indiv_criteria(Option,Indv).
+
+f si(_VM,Reserved,Grid,[Option|Options],H,V,Sofar,VM.id,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
+   
+   find_one_indiv idual(H,V,Sofar,VM.id,Option,Reserved,Points,Grid,IndvPoints,NextScanPoints),
+   make_indiv_object(VM.id,H,V,[birth(Option),iz(Option)|IndvPoints],Indv),!,
+   my_append(Sofar,[Indv],OUT).
+%f si(_VM,Reserved,Grid,[Option|Options],H,V,Sofar,VM.id,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints):- 
+%  nop(f si(_VM,Reserved,Grid,[Option|Options],H,V,Sofar,VM.id,[Option|Options],Reserved,Points,Grid,OUT,NextScanPoints)).
+*/
+
+
+%tiny_i_options([call(set_bgc(zero)),dots,line(_),all,into_single_hidden]).
+
+next_options([_|T],T).
+
+
+%select_default_i_options(_Grid,H,V,_Points,Options):- (H=<5;V=<5),!,tiny_i_options(Options).
+%select_default_i_options(_Grid,H,V,_Points,Options):- (H=<6;V=<6),!,tiny_i_options(Options).
+%select_default_i_options(_Grid,_H,_V,_Points,Options):-  default_i_options(Options).
+
+
 /*
 expand_color(FG,Was,C,CC):- FG== fg,!,expand_color(C,Was,C,CC).
 expand_color(FG,Was,C,CC):- var(C),is_color_no_bgc(FG),!,FG=C.
@@ -893,4 +931,165 @@ make_grid_indexer:-
 
 gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj),!.
 %gr2o(Grid,Obj):- Grid=Obj.
+
+
+
+single_point(C-Point,IndvS,Rest1):- maybe_multivar(C),
+  single_point0(C-Point,IndvS,Rest1).
+
+single_point(C-Point,IndvS,Rest1):- maybe_multivar(C),
+ fail, select(obj(I),IndvS,Rest1), fail, % round 2
+  globalpoints(obj(I),[C-Point]),
+  nonvar_or_ci(C).
+
+single_point(C-Point,IndvS,Rest1):- maybe_multivar(C),
+  select([C-Point],IndvS,Rest1),
+  nonvar_or_ci(C).
+
+single_point0(C-Point,IndvS,Rest1):- maybe_multivar(C),
+  select(C-Point,IndvS,Rest1),
+  nonvar_or_ci(C).
+
+
+/*
+unraw_inds2(VM,Options,IndvS,IndvO):- fail,
+   largest_first(IndvS,Indv),
+   reverse(Indv,IndvR), IndvR\=@=IndvS,
+   unraw_inds2(VM,Options,IndvR,IndvO).
+*/
+
+% Diag of 3 or more
+  /*
+unraw_inds2(VM,Options,IndvS,IndvO):-   
+  single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),\+ get_bgc(C),
+  is_diag(Dir),
+  is_adjacent_point(Point1,Dir,Point2),
+  single_point(C-Point2,Rest1,Rest2),
+  is_adjacent_point(Point2,Dir,Point3),
+  single_point(C-Point3,Rest2,Rest),
+  finish_grp(C,[C-Point3,C-Point2,iz(diagonal),C-Point1],Point3,Dir,Rest,NewGroup1,RRest),
+  reverse(NewGroup1,NewGroupR),
+  reverse_nav(Dir,RevDir),
+  finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
+  % minimum 4 findall(C-CP,member(C-CP,NewGroup),LL),LL=[_,_,_,_|_],
+  unraw_inds2(VM,Options,[NewGroup|RRestO],IndvO).
+*/
+
+% Diag of 2 or more
+unraw_inds2(VM,Options,IndvS,IndvO):-  % fail,
+  single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),\+ get_bgc(C),
+  is_diag(Dir),fail,
+  is_adjacent_point(Point1,Dir,Point2),
+  single_point(C-Point2,Rest1,Rest2),
+  finish_grp(C,[C-Point2,iz(diagonal),C-Point1],Point2,Dir,Rest2,NewGroup1,RRest),
+  reverse(NewGroup1,NewGroupR),
+  reverse_nav(Dir,RevDir),
+  finish_grp(C,NewGroupR,Point1,RevDir,RRest,NewGroup,RRestO),
+  unraw_inds2(VM,Options,[NewGroup|RRestO],IndvO).
+
+
+
+unraw_inds2(VM,Options,IndvS,IndvO):-  %fail,
+  single_point(C-Point1,IndvS,Rest1), nonvar_or_ci(C), non_free_fg(C),
+  single_point(C2-Point2,Rest1,Rest),fail,
+  findall(C3-Point3,member([C3-Point3],Rest),CRest),
+  subtract(Rest,CRest,IndvM),
+  unraw_inds2(VM,Options,IndvM,IndvMO),
+  Grp=[C-Point1,C2-Point2|CRest],
+  IndvO=[Grp|IndvMO].
+
+unraw_inds2(VM,Options,IndvS,IndvO):- fail,
+  single_point(C-Point1,IndvS,Rest1),
+  Grp=[_,C-_,_|_],
+  select(Grp,Rest1,Rest),
+  is_diag(Dir),
+  adjacent_groups(C,[C-Point1],Dir,Grp),
+  unraw_inds2(VM,Options,[[C-Point1|Grp]|Rest],IndvO).
+
+/*
+unraw_inds2(VM,Options,IndvS,IndvO):-   
+  select([C1-Point1],IndvS,Rest),
+  nearby_one(Dir,Options,C,C1-Point1,Rest),
+  select([C-Point2],Rest1,Rest),
+  findall(C-Point,member([C-Point],Rest),CRest),
+  subtract(Rest,CRest,IndvM),
+  unraw_inds2(VM,Options,IndvM,IndvMO),
+  Grp=[C-Point1,C-Point2|C-Rest],
+  IndvO=[Grp|IndvMO].
+*/
+unraw_inds2(_VM,_,IndvS,IndvS).
+
+
+
+one_fti(VM,retain_filter(Option)):-
+    globalpoints(VM.grid,NewGPoints),  H> 14, V> 14,
+    freeze(W,W>5),filter_indivs(VM.objs,[mass(W)];[iz(Option)],Retained1),
+    filter_indivs(Retained1, \+ iz(background),Retained),
+    as_debug(9,print_grid(H,V,'retained'+VM.id,Retained)),    
+    remove_global_points(Retained,NewGPoints,NextScanPoints),
+    points_to_grid(H,V,NextScanPoints,NNewGrid), 
+    %as_debug(9,print_grid(H,V,'newgrid'+VM.id,NNewGrid)),
+    !.
+
+
+
+
+disabled_one_fti(VM,solid(rectangle)):- !, fail,
+  globalpoints(VM.grid,NewGPoints),
+  grid_to_segs(Grid,Segs),
+  seg_squares(Segs,Squares),
+  segs_to_pointlists(Squares,Objs),  Objs\==[],
+  maplist(make_indiv_object_list(VM.id,H,V),Objs,OutInvdivS),
+  %maplist(print_grid,OutInvdivS),
+  as_debug(8,print_grid(H,V,'Solid-boxes'+VM.id,OutInvdivS)),!,
+  remove_global_points(OutInvdivS,NewGPoints,set(VM.points)),
+  Sofar = VM.objs,
+  my_append(V.objs,OutInvdivS,AllOUT).
+
+    grid_to_segs(Grid,Segs):- must_det_ll((grid_to_segs(1,Grid,SegsL),my_append(SegsL,Segs))).
+    
+    grid_to_segs(N,[Row|Grid],[SegRS|SegL]):- 
+      slice_up_row(N,1,Row,SegRS),
+      N2 is N +1, 
+      grid_to_segs(N2,Grid,SegL).
+    grid_to_segs(_,[],[]).
+    
+    slice_up_row(_,_,[],[]).
+    slice_up_row(R,N,[C|Rest],[slice(C,N,R,N2,R)|More]):-
+      get_until_not(C,1,Rest,Len,Right), N2 is N + Len -1, slice_up_row(R,N2,Right,More).
+    
+    get_until_not(C,N,[C2|Rest],NL,Right):- C==C2, N2 is N+1,!, 
+     get_until_not(C,N2,Rest,NL,Right).
+    get_until_not(_,N,Rest,N,Rest).
+    
+    nothing_in_range(C,Ch,Cv,CH,CV,Rest):- 
+      forall(member(slice(C,Ah,Av,AH,AV),Rest), 
+        \+ overlaps(Ch,Cv,CH,CV,Ah,Av,AH,AV)).
+    
+    overlaps(Ch,Cv,CH,CV,Ah,Av,AH,AV):- 
+       AH>=Ch,Ah=<CH,AV>=Cv,Av=<CV.
+    
+    seg_squares(Segs,Squares):- 
+        select(slice(C,Ah,Av,AH,AV),Segs,Rest),
+      Bv is AV + 1,
+        select(slice(C,Ah,Bv,AH,BV),Rest,Rest2),
+      Cv is Av - 1,
+      nothing_in_range(C,Ah,Cv,AH,Cv,Rest2),
+      seg_squares([slice(Ah,Av,AH,BV)|Rest2],Squares).
+    seg_squares(Segs,Segs).
+    
+        
+    make_points_list(C,MinH,MinV,MaxH,MaxV,PointsList):-
+       findall(C-HV,(between(MinV,MaxV,V),between(MinH,MaxH,H),hv_point(H,V,HV)),PointsList),!.
+    
+    segs_to_pointlists([],[]).
+    segs_to_pointlists([slice(C,Ah,Av,AH,AV)|Segs],[PointsList|Objs]):- % trace,
+      H is AH-Ah, V is AV-Av, H>=2,V>=2,
+      ( H==V -> Shape = square ; Shape = rectangle),
+      make_points_list(C,Ah,Av,AH,AV,PointsListH),
+      PointsList=[iz(Shape),iz(solid(Shape))|PointsListH],  !,
+      segs_to_pointlists(Segs,Objs).
+      
+    segs_to_pointlists([_|Segs],Objs):-   segs_to_pointlists(Segs,Objs).
+
 

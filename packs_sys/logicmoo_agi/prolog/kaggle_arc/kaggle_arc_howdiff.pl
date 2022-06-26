@@ -157,7 +157,7 @@ diff_groups(A0,B0,DD):-
   maplist(obj_grp_comparable,B1,B2),
   sort(A2,A3),
   sort(B2,B3),
-  diff_groups0(A3,B3,DD).
+  diff_groups1(A3,B3,DD).
 
 diff_groups2(AAR,BBR,proportional_objs(DD,Diffs)):- proportional_objs(AAR,BBR,DD),
   maplist(diff_objects,AAR,BBR,Diffs).

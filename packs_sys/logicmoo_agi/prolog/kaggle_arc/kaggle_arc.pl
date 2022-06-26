@@ -41,11 +41,25 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
   %:- multifile('$exported_op'/3).
   :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
   :- SL  is 2_147_483_648*8*4, set_prolog_flag(stack_limit, SL ).
-  % :- (getenv('DISPLAY',_) -> guitracer ; true).
+  :- (getenv('DISPLAY',_) -> guitracer ; true).
   :- set_prolog_flag(toplevel_print_anon,false).
-  :- set_prolog_flag(toplevel_print_factorized,true).
-    :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(4), attributes(dots)]).
-    :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(4), attributes(dots)]).
+    :- set_prolog_flag(toplevel_print_factorized,true).
+    :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
+    :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
+    :- set_prolog_flag(print_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
+      :- set_prolog_flag(verbose_load,true).
+   
+      :- set_prolog_flag(verbose_autoload,true).
+:- set_prolog_flag(debug_on_error,true).
+:- set_prolog_flag(report_error,true).
+:- set_prolog_flag(debug_on_error,true).
+:- set_prolog_flag(debugger_show_context,true).
+:- set_prolog_flag(last_call_optimisation,false).
+:- set_prolog_flag(trace_gc,false).
+:- set_prolog_flag(write_attributes,dots).
+:- set_prolog_flag(on_error,status).
+:- set_prolog_flag(backtrace_depth,100).
+:- noguitracer.
 
 
 clsmake:- cls1,!,update_changed_files,make,!.
@@ -69,16 +83,23 @@ my_append(A,B):- append(A,B).
 my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 check_len(_).
 
+%must_det_ll(G):- !, call(G).
 must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
-must_det_ll((A ->X;Y)):- !,(call(A)->must_det_ll(X);must_det_ll(Y)).
-must_det_ll((X;Y)):- !, ((call(X);call(Y))->true;must_det_ll_failed(X;Y)).
+must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
+must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
+must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
+must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
 must_det_ll(once(A)):- !, once(must_det_ll(A)).
-must_det_ll(X):- once(X),!.
+must_det_ll(X):- once(must_not_error(X)).
 must_det_ll(X):- must_det_ll_failed(X).
 
+must_not_error(X):- catch(X,E,(writeq(E=X),rrtrace(X))).
+
 must_det_ll_failed(X):- (wdmsg(failed(X)),dumpST)->trace,fail.
-must_det_ll_failed(X):- rtrace(X),!.
+must_det_ll_failed(X):- rrtrace(X),!.
 % must_det_ll(X):- must_det_ll(X),!.
+
+rrtrace(X):- \+ current_prolog_flag(gui_tracer,true) -> rtrace(X); (trace,call(X)).
 
 remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
 remove_must_dets(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
@@ -390,7 +411,7 @@ gather_more_task_info(TestID,S):-
 train_test:- notrace(get_current_test(TestID)), train_test(TestID).
 
 train_test(TestID):- 
-  locally(set_prolog_flag(gc,true),
+  locally(set_prolog_flag(gc,false),
  must_det_ll((
   print_testinfo(TestID),
   set_training(PrevPairEnv),
@@ -400,22 +421,89 @@ train_test(TestID):-
   get_training(Training),
   my_time(make_training_hints(TestID,Training,Dictation)),
   set_training(Dictation),
-  my_time(train_using_hints(TestID,Dictation,DictOut)),
-  set_training(DictOut),
+  my_time(train_for_objects_old(TestID,Dictation,Dict9)),
+  set_training(Dict9),
   garbage_collect))).
 
-my_time(Goal):- statistics:time(Goal).
+%my_time(Goal):- statistics:time(must_det_ll(Goal)).
+my_time(Goal):- must_det_ll(Goal).
 
-train_using_hints(TestID,DictIn,DictOut):- train_for_objects(TestID,trn,0,DictIn,DictOut).
-train_for_objects(TestID,Trn,N1,DictIn,DictOut):-
-  (kaggle_arc(TestID,(Trn+N1),In,Out),
+%train_using_hints(TestID,Dict0,Dict9):- train_for_objects_old(TestID,trn,0,Dict0,Dict9).
+
+/*
+
+train_for_objects_old(TestID,Trn,Dict0,Dict9):-
+  findall(pair(In,Out),kaggle_arc_fti(TestID,Trn,In,Out),InsOuts),
+  maplist(arg(1),InsOuts,Ins),
+  maplist(arg(2),InsOuts,Outs),
+  train_for_simularities(TestID,Trn,Dict0,Dict1,out,Outs),
+  train_for_simularities(TestID,Trn,Dict1,Dict2,in,Ins),
+  find_obvious_corisponding_properties(TestID,Trn,Dict2,Dict3,InsOuts),
+  verify_obvious_corisponding_properties(TestID,Trn,Dict3,Dict4,InsOuts),
+
+% The Training Order
+%  consider all the outs together, and form a theory of the way outs are allowed to change 
+%     erase the colors,  erase 
+%  all the ins together, it forms a theory of the way ins are allowed to vary 
+%  find at least one in/out pair that corispondances are obvious
+%  check remaining in/out pairs that the corispondance was true
+
+%grid(h,v,grid,objs,points,vmprops)
+
+train_for_objects_old(TestID,Trn,Dict0,Dict9):-
+  findall(In-Out,kaggle_arc_fti(TestID,Trn,In,Out),InsOuts),
+  maplist(arg(1),InsOuts,Ins),
+  maplist(arg(2),InsOuts,Outs),
+  into_program(Dict4,Dict9).
+
+into_program(Dict4,Dict9):- Dict4=Dict9.
+
+train_for_simularities(TestID,Trn,Dict0,Dict0,IO,Grids):-
+  maplist(individuate,Grids),
+
+
+  individuate([complete,grid_iz(IO)]),Grid),
+
+
+ 
+  findall(Out,kaggle_arc(TestID,(Trn+N1),In,Out),Outs),
   N2 is N1 + 1),
  (kaggle_arc(TestID,(Trn+N2),In2,Out2) -> 
     (train_for_objects_from_pair(Dict0,TestID,[Trn,'_','o',N1,'_','o',N2,'_'],Out,Out2,Dict1),
-     train_for_objects_from_pair(DictIn,TestID,[Trn,'_','i',N1,'_','i',N2,'_'],In,In2,Dict0),
-     train_for_objects(TestID,Trn,N2,Dict1,DictM));
-  (DictM = DictIn)),!,
-  train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,DictOut),!.
+     train_for_objects_from_pair(Dict0,TestID,[Trn,'_','i',N1,'_','i',N2,'_'],In,In2,Dict0),
+     train_for_objects_old(TestID,Trn,N2,Dict1,DictM));
+  (DictM = Dict0)),!,
+  train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,Dict9),!.
+
+train_for_objects_old(TestID,Trn,N1,Dict0,Dict9):-
+  (kaggle_arc(TestID,(Trn+N1),In,Out),
+  N2 is N1 + 1),
+ (kaggle_arc(TestID,(Trn+N2),In2,Out2) -> 
+    train_for_objects_from_pair(Dict0,TestID,[Trn,'_','o',N1,'_','o',N2,'_'],Out,Out2,Dict1),
+  (DictM = Dict0)),!,
+  train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,Dict9),!.
+
+
+*/
+
+kaggle_arc_fti(TestID,ExampleNum,In,Out):- !, kaggle_arc(TestID,ExampleNum,In,Out).
+kaggle_arc_fti(TestID,ExampleNum,InF,OutF):- 
+  kaggle_arc(TestID,ExampleNum,In,Out),
+  into_fti(TestID*ExampleNum*in,in,In,InF),
+  into_fti(TestID*ExampleNum*out,out,Out,OutF).
+
+train_for_objects_old(TestID,Dict0,Dict9):- train_for_objects_old(TestID,trn,0,Dict0,Dict9).
+
+train_for_objects_old(TestID,Trn,N1,Dict0,Dict9):-
+ must_det_l((
+ (kaggle_arc_fti(TestID,(Trn+N1),In,Out), N2 is N1 + 1),
+ (kaggle_arc(TestID,(Trn+N2),In2,Out2) -> 
+    (train_for_objects_from_pair(Dict0,TestID,[Trn,'_','o',N1,'_','o',N2,'_'],Out,Out2,Dict1),
+     train_for_objects_from_pair(Dict0,TestID,[Trn,'_','i',N1,'_','i',N2,'_'],In,In2,Dict0),
+     train_for_objects_old(TestID,Trn,N2,Dict1,DictM));
+  (DictM = Dict0)),!,
+  train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,Dict9))),!.
+
 
 which_io(i,input). which_io(o,output).
 
@@ -423,20 +511,20 @@ which_io(i,input). which_io(o,output).
 train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
  Desc = [_Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
  MonoDesc = ['Mono','_',IsIO1,N1,'_',IsIO2,N2,'_'], 
-  train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1),
-  into_monochrome(In,MonoIn),
-  into_monochrome(Out,MonoOut),
-  train_for_objects_from_pair_1(Dict1,TestID,MonoDesc,MonoIn,MonoOut,Dict9).
+  into_monochrome(In,MonoIn), into_monochrome(Out,MonoOut),
+  train_for_objects_from_pair_1(Dict0,TestID,MonoDesc,MonoIn,MonoOut,Dict1),
+  train_for_objects_from_pair_1(Dict1,TestID,Desc,In,Out,Dict9),
+  !.
 
 
 train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1):-
+ must_det_ll((
  Desc = [Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
  atom_concat(IO1,N1,ION1),
  atom_concat(IO2,N2,ION2),
  pt(train_for_objects_from_pair=ExampleNum:IO1:IO2:Desc),
- must_det_ll((
   atomic_list_concat([Trn,'_',ION1,'_',ION2,'_'],Prefix),
   ExampleNum = (Trn+Prefix),
   garbage_collect,
@@ -454,8 +542,9 @@ train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1):-
   show_pair_grid(yellow,IH,IV,OH,OV,original(ION1),original(ION2),PairName,In,Out),!,  
   %% % %  set(Training.pre_out) = PreOutC,
   %% % %  set(Training.pre_in) = PreInC,  
-  individuate(complete,In,InC),
-  individuate(complete,Out,OutC),
+
+  individuate(in,In,InC),
+  individuate(out,Out,OutC),
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   add_shape_lib(in,Removed),
   add_shape_lib(pair,RetainedIn),

@@ -55,7 +55,7 @@ interact:-
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ').
 do_menu_key('P'):- !, do_menu_key('p').
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
-  dmsg(calling(Goal)),!, ignore(once((Goal*->true;(fail,trace,dumpST,rtrace(Goal))))),!,read_pending_codes(user_input,_,[]),!,fail.
+  dmsg(calling(Goal)),!, ignore(once((Goal*->true;(fail,trace,dumpST,rrtrace(Goal))))),!,read_pending_codes(user_input,_,[]),!,fail.
 do_menu_key(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),once(mmake),menu,fail.
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
 interactive_test_menu:- 
@@ -258,7 +258,7 @@ hardness_of_name(TestID,Hard):-
    pair_dictation(TestID,ExampleNum,In,Out,T),
    maplist(negate_number,[T.in_specific_colors_len,T.out_specific_colors_len],[InOnlyC,OutOnlyC]),
    PHard = (TrnsL+ T.shared_colors_len + OutOnlyC + InOnlyC + T.ratio_area+ T.delta_density)),
-    %(catch(Code,_,rtrace(Code)))),
+    %(catch(Code,_,rrtrace(Code)))),
   All),
  sort(All,AllK),last(AllK,Hard).
 

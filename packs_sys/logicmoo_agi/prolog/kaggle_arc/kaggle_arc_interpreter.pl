@@ -84,7 +84,7 @@ test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 call_expanded(VM,G):-  exp_call(VM,G,GG),G\==GG,!,call_expanded(VM,GG).
-call_expanded(_VM,G):- catch(call(G),E,(dumpST,pt(E),rtrace(G))).
+call_expanded(_VM,G):- catch(call(G),E,(dumpST,pt(E),rrtrace(G))).
 
 exp_call(_,Var,Var):- var(Var),!.
 exp_call(_,Var,Var):- is_list(Var),!.
@@ -309,7 +309,7 @@ prim_ops([
 
 throw_missed(G):-  Info = missed(G),wdmsg(Info),break, dumpST,throw_missed_pt2(G,Info).
 throw_missed_pt2(_,Info):- tracing,!,throw(Info).
-throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rtrace(G),throw(Info).
+throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rrtrace(G),throw(Info).
 
 
 

@@ -155,6 +155,40 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   
 
 
+compute_unshared_indivs(In,Unshared):-
+   get_grid_and_name(In,Grid,GN),
+   compute_unshared_indivs(GN,Grid,Unshared).
+
+compute_unshared_indivs(_GN,Grid,Unshared):-
+   individuate(complete,Grid,Unshared).
+
+compute_shared_indivs(In,SharedIndvs):-
+   get_grid_and_name(In,Grid,GN),
+   compute_shared_indivs(GN,Grid,SharedIndvs).
+compute_shared_indivs(GN,Grid,SharedIndvs):-
+   grid_shared_with(GN,With),into_grid(With,OtherGrid),
+   compute_unshared_indivs(With,OtherGrid,Unshared),
+   individuate(Unshared,Grid,SharedIndvs).
+
+
+ensure_unshared_indivs(In,Unshared):-
+   get_grid_and_name(In,Grid,GN),
+   ensure_unshared_indivs(GN,Grid,Unshared).
+ensure_unshared_indivs(GN,Grid,Unshared):-
+   is_unshared_saved(GN,Unshared)-> true;
+   individuate(complete,Grid,Unshared),
+   assert(is_unshared_saved(GN,Unshared)).
+
+ensure_shared_indivs(In,SharedIndvs):-
+   get_grid_and_name(In,Grid,GN),
+   ensure_shared_indivs(GN,Grid,SharedIndvs).
+ensure_shared_indivs(GN,Grid,SharedIndvs):-
+   is_shared_saved(GN,SharedIndvs)-> true;
+   grid_shared_with(GN,With),into_grid(With,OtherGrid),
+   ensure_unshared_indivs(With,OtherGrid,Unshared),
+   individuate(Unshared,Grid,SharedIndvs),
+   assert(is_shared_saved(GN,SharedIndvs)).
+
 
 /*
 

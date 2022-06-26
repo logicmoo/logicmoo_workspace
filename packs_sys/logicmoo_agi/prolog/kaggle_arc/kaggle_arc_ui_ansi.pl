@@ -25,8 +25,40 @@ tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 %dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
 dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
 dumpst_hook:simple_rewrite(I,O):- is_dict(I),!, O='..vvmm..'.
-%dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
+dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
 dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,O='..points..'(N),!.
+
+arc_portray(G, _):- is_dict(G), !, write('..dict..').
+arc_portray(G, _):- is_grid(G), !, data_type(G,W),writeq(grid(W)).
+arc_portray(G, _):- is_grid(G), !, write('..grid..').
+arc_portray(G, _):- is_dict(G), !, write('..VM..').
+
+% Portray In Debugger
+arc_portray(G,false):- is_object(G),!,print_grid(G),nl,underline_print(debug_indiv(G)),ptt(G).
+arc_portray(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_grid(H,V,G).
+
+% Portray In tracer
+arc_portray(G,true):- is_object(G),underline_print((ptt(G))).
+arc_portray(G,true):- via_print_grid(G),write(' '),underline_print((ptt(G))),write(' ').
+arc_portray(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
+
+arc_portray(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1, 
+   dash_chars, 
+   print_grid(G),nl,
+   once((why_grouped(Why,WG),WG=@=G);Why = (size=L)),
+   underline_print(writeln(Why)),
+   maplist(print_info,G),
+   dash_chars.
+
+
+% arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
+arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,format(user_error,"~N~q~n",[E])).
+
+via_print_grid(G):- is_grid(G).
+via_print_grid(G):- is_object(G).
+via_print_grid(G):- is_group(G).
+via_print_grid(G):- is_points_list(G).
+via_print_grid(G):- is_gridoid(G).
 
 terseA(_,[],[]):- !.
 terseA(_,L,'... attrs ...'(N)):- is_list(L),length(L,N),N>10,!.
@@ -130,37 +162,6 @@ arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),
   wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
 
-
-
-via_print_grid(G):- is_grid(G).
-via_print_grid(G):- is_object(G).
-via_print_grid(G):- is_group(G).
-via_print_grid(G):- is_points_list(G).
-via_print_grid(G):- is_gridoid(G).
-
-% arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
-arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,format(user_error,"~N~q~n",[E])).
-
-arc_portray(G, _):- is_dict(G), !, write('..dict..').
-arc_portray(G, _):- is_grid(G), !, data_type(G,W),writeq(grid(W)).
-arc_portray(G, _):- is_dict(G), !, write('..VM..').
-
-arc_portray(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1, 
-   dash_chars, 
-   print_grid(G),nl,
-   once((why_grouped(Why,WG),WG=@=G);Why = (size=L)),
-   underline_print(writeln(Why)),
-   maplist(print_info,G),
-   dash_chars.
-
-% Portray In Debugger
-arc_portray(G,false):- is_object(G),!,print_grid(G),nl,underline_print(debug_indiv(G)),ptt(G).
-arc_portray(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_grid(H,V,G).
-
-% Portray In tracer
-arc_portray(G,true):- is_object(G),underline_print((ptt(G))).
-arc_portray(G,true):- via_print_grid(G),write(' '),underline_print((ptt(G))),write(' ').
-arc_portray(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
 
 user:portray(Grid):- arc_portray(Grid),!.
 
@@ -322,9 +323,9 @@ into_ss_string(S,SS):- string(S), !, atomics_to_string(L,'\n',S),!,into_ss_strin
 into_ss_string(uc(W),SS):- !,wots(SS,format_u(yellow,"\t~@",[wqs(W)])).
 into_ss_string(uc(C,W),SS):- !,wots(SS,color_print(C,call(underline_print(format("\t~@",[wqs(W)]))))).
 into_ss_string(call(C),SS):- wots(S,catch(C,E,true)), 
-  (((nonvar_or_ci(E),notrace,break,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
+  (((nonvar_or_ci(E),notrace,break,rrtrace(C))->throw(E);true)), into_ss_string(S,SS).
 into_ss_string(C,SS):- wots(S,catch(C,E,true)), 
-  (((nonvar_or_ci(E),notrace,break,rtrace(C))->throw(E);true)), into_ss_string(S,SS).
+  (((nonvar_or_ci(E),notrace,break,rrtrace(C))->throw(E);true)), into_ss_string(S,SS).
 
 find_longest_len(SL,L):- find_longest_len(SL,10,L),!.
 find_longest_len([],L,L).

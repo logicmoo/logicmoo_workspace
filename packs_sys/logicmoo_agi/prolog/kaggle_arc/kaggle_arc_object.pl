@@ -146,6 +146,7 @@ make_indiv_object(Points,Overrides,Obj):-
   as_obj(OUT,Obj).
 
 
+make_indiv_object(VM,Points,Overrides,Obj):- make_indiv_object(VM.id,VM.h,VM.v,Points,Overrides,Obj).
 
 make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):- 
  (Points==[]-> (dumpST,trace) ; true),
@@ -159,7 +160,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
  must_det_ll((
   my_assertion(is_list([overrides|Overrides])),
   my_assertion(maplist(is_cpoint,Points)),
-  colors(Points,CC),
+  %colors(Points,CC),
   %my_assertion(ground(Points)),
   flag(indiv,Fv,Fv+1),
   Iv is (Fv rem 3000) + 1,
@@ -172,6 +173,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
   make_grid(Width,Height,Grid),
   add_global_points(LPoints,Grid,Grid),
   make_grid(Width,Height,LocalGrid),
+  CX is LoH + floor(Width/2),CY is LoV + floor(Height/2),
   copy_term(Grid,GridInCopy),
   findall(Shape,
    (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
@@ -183,6 +185,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
      vis_hv(Width,Height),  rotation(same), loc_xy(LoH,LoV)],     
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|OShapes], % [grid(LocalGrid)],    
+    [center(CX,CY)],
     [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps))),  
   with_objprops(override,Overrides,Ps,OUT1),
   sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj).
@@ -190,6 +193,7 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
 top(7).
 
 
+make_point_object(VM,Overrides,Point,Obj):- make_point_object(VM.id,VM.h,VM.v,Overrides,Point,Obj).
 make_point_object(ID,H,V,Options,C-Point,Obj):-
   hv_point(X,Y,Point), flag(indiv,Fv,Fv+1),
    Iv is (Fv rem 3000) + 1,
@@ -404,6 +408,7 @@ isz(I,X):- var_check(I,iz(I,X))*->true;(indv_props(I,L),member(iz(X),L)).
 
 obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),member(X,L)).
 
+resolve_reference(R,Var):- is_dict(R),Var = R.grid.
 resolve_reference(R,Var):- compound(R),arc_expand_arg(R,Var,Goal),!,call(Goal).
 rotation(G,X):- is_group(G),!,mapgroup(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- var_check(I,rotation(I,X)).
@@ -557,12 +562,13 @@ vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V
 vis_hv(NT,H,V):-  trace, named_gridoid(NT,G),vis_hv(G,H,V).
 
 
-vis_hv(Obj,size(H,V)):- vis_hv(Obj,H,V).
-loc_xy(Obj,loc(H,V)):- loc_xy(Obj,H,V).
+%vis_hv(Obj,size(H,V)):- vis_hv(Obj,H,V).
+%loc_xy(Obj,loc(H,V)):- loc_xy(Obj,H,V).
 
 center_term(Obj,loc(H,V)):- center(Obj,H,V).
 
-center(Obj,CX,CY):- vis_hv(Obj,H,V), loc_xy(Obj,X,Y),CX is X + floor(H/2),CY is Y + floor(V/2).
+center(I,X,Y):- indv_props(I,L),member(center(X,Y),L),!.
+%center(Obj,CX,CY):- vis_hv(Obj,H,V), loc_xy(Obj,X,Y),CX is X + floor(H/2),CY is Y + floor(V/2).
 
 
 
