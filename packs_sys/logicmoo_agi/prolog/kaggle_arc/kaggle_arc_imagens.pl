@@ -181,6 +181,8 @@ shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot0(Key,KeyR).
 searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
+into_monochrome(VM):-
+  into_monochrome(VM.grid,set(VM.grid)).
 
 into_monochrome(NoBlack,Mono):- colors_count_black_first(NoBlack,CCBF),CCBF=[cc(black,0.0),cc(BGC,_)|_],!, grid_into_monochrome(BGC,NoBlack,Mono).
 into_monochrome(Color,Mono):- into_monochrome(black,Color,Mono).
