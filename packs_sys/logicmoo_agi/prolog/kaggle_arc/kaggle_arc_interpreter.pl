@@ -187,8 +187,7 @@ cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Tex
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
 
 cast_to_grid(Naming,Grid, Closure ):- 
-  (named_gridoid(Naming,NG),
-    cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure).
+  ((named_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure)).
   
 recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
@@ -207,18 +206,20 @@ named_gridoid(ID,G):- plain_var(ID),!,known_gridoid(ID,G).
 %named_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
 named_gridoid(ID,G):- known_gridoid(ID,G).
 
-known_gridoid(ID,GO):- known_gridoid0(ID,G),to_real_grid(G,GO).
-known_gridoid0(ID,_):- is_grid(ID),!,fail.
-known_gridoid0(ID,G):- is_grid_id(G,ID).
-known_gridoid0(ID,G):- is_shared_saved(ID,G).
-known_gridoid0(ID,G):- is_unshared_saved(ID,G).
-known_gridoid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
-known_gridoid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)),Term\==ID,!,known_gridoid0(Term,G).
-known_gridoid0(ID,G):- ID= TstName*ExampleNum*IO, fix_test_name(TstName,Name,_),kaggle_arc_io(Name,ExampleNum,IO,G).
-known_gridoid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),kaggle_arc_io(Name,ExampleNum,_IO,G).
-known_gridoid0(ID,G):- fix_test_name(ID,Name,ExampleNum),nop(ignore(ExampleNum=tst+0)),kaggle_arc_io(Name,ExampleNum,_IO,G).
+known_gridoid(ID,GO):- (known_gridoid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
-to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,GO))). % ,ignore([[BG|_]|_]=GO).
+known_gridoid0(ID,_):- is_grid(ID),!.
+known_gridoid0(ID,G):- is_grid_id(G,ID).
+known_gridoid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
+known_gridoid0(ID,G):- ID = TstName*ExampleNum*IO,!,fix_id(TstName,Name),(kaggle_arc_io(Name,ExampleNum,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_gridoid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_gridoid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+%known_gridoid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
+%known_gridoid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_gridoid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_gridoid0(Term,G).
+
+
+to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,GO))),!. % ,ignore([[BG|_]|_]=GO).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 
@@ -237,10 +238,12 @@ incomplete(X,X).
 into_obj(G,O):- no_repeats(O,into_obj0(G,O)).
 
 o2g(Obj,Glyph):- g2o(Glyph,Obj),!.
-o2g(Obj,Glyph):- object_glyph(Obj,Glyph),asserta(g2o(Glyph,Obj)),!.
+o2g(Obj,Glyph):- object_glyph(Obj,Glyph),nb_setval(Glyph,Obj),nop(asserta(g2o(Glyph,Obj))),!.
 o2c(Obj,Glyph):- color(Obj,Glyph).
 o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
 :- dynamic(g2o/2).
+
+g2o(G,O):- nb_current(G,O),is_object(O).
 into_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
 into_obj0(obj(O),obj(O)):- is_list(O),!.
 into_obj0(objFn(G),O):-!, into_obj(G,O),!.

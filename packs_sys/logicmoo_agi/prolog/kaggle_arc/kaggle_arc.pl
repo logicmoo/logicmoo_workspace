@@ -31,6 +31,13 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
 :- set_stream(current_output, tty(true)).
 :- stream_property(S,file_no(2)), set_stream(S,tty(true)).
 :- stream_property(S,file_no(1)), set_stream(S,tty(true)).
+:- multifile is_fti_step/1.
+:- multifile is_fti_stepr/1.
+:- discontiguous is_fti_step/1.
+:- discontiguous is_fti_stepr/1.
+
+:- discontiguous ping_indiv_grid/1.
+:- multifile ping_indiv_grid/1.
 
 % COMMAND LINE ARC
 :- if(\+ current_module(logicmoo_arc)).
@@ -58,10 +65,10 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
 %:- set_prolog_flag(write_attributes,dots).
 %:- set_prolog_flag(on_error,status).
 %:- set_prolog_flag(backtrace_depth,100).
-% :- noguitracer.
+:- noguitracer.
 
 
-clsmake:- cls1,!,update_changed_files,make,!.
+clsmake:- notrace((cls1,!,update_changed_files,make)),!.
 % SWISH ARC
 :- else.
 
@@ -83,24 +90,27 @@ my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 check_len(_).
 
 :- meta_predicate(must_det_ll(0)).
+:- meta_predicate(must_det_ll_failed(0)).
+:- meta_predicate(must_not_error(0)).
 %:- meta_predicate(must_det_l(0)).
 %must_det_ll(G):- !, call(G).
+
+must_det_ll(X):- tracing,!,call(X).
 must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
 must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
+%must_det_ll((M:Y)):- nonvar(M), !, M:must_det_ll(Y).
 must_det_ll(once(A)):- !, once(must_det_ll(A)).
-must_det_ll(X):- once(must_not_error(X)).
-must_det_ll(X):- must_det_ll_failed(X).
+must_det_ll(X):- once(must_not_error(X))->true;must_det_ll_failed(X).
 
 must_not_error(X):- catch(X,E,(dumpST,writeq(E=X),rrtrace(X))).
 
-must_det_ll_failed(X):- (wdmsg(failed(X)),dumpST)->trace,fail.
-must_det_ll_failed(X):- rrtrace(X),!.
+must_det_ll_failed(X):- (wdmsg(failed(X)),dumpST)->trace,rrtrace(X),!.
 % must_det_ll(X):- must_det_ll(X),!.
 
-rrtrace(X):- dumpST, sleep(0.5), trace, (\+ current_prolog_flag(gui_tracer,true) -> rtrace(X); (trace,call(X))).
+rrtrace(X):- notrace,nortrace, dumpST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> rtrace(X); (trace,call(X))).
 
 remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
 remove_must_dets(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
@@ -293,7 +303,7 @@ arc1(G,TName):-
 
 cls1:- nop(catch(cls,_,true)).
 
-arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc(TestID,_ExampleNum,In,Out),arg(_,v(In,Out),Grid).
+arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc_io(TestID,_ExampleNum,_,Grid).
 
 :- dynamic(is_buggy_pair/2).
 %is_buggy_pair(v(fd096ab6)*(trn+0), "BUG: System Crash").
@@ -390,8 +400,15 @@ set_training(Training):- nb_linkval('$training_vm',Training).
 make_training(TestID,VM):- 
  %make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
  must_det_ll((
-    make_training_hints(TestID,training{},VM0),
-    vars_to_dictation([test_id=TestID,test_id=TestID,mappings=[]],VM0,VM),
+    rb_new(RBTREE),
+    duplicate_term(RBTREE,DATA),
+    make_training_hints(TestID,
+     training{
+      pairs:_, %datatree:_, 
+      current:_,test_id:TestID,
+      mappings:[map],
+      storage:DATA},
+    VM))).
 
     /*
      test:ID,mappings:_,
@@ -399,8 +416,8 @@ make_training(TestID,VM):-
      inC:_InC,outC:_OutC,
      removed:_,added:_, kept:_,   
      grid_in:_,grid_out:_,
-  */
    set(VM.mappings) =[map])), !. % pt(VM),nl.
+  */
 
 
 gather_more_task_info(TestID,S):- 
@@ -439,8 +456,9 @@ train_for_objects(TestID,Trn,N1,DictIn,DictOut):-
   (DictM = DictIn)),!,
   train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,DictOut),!.
 
-which_io(i,input). which_io(o,output).
-
+which_io0(i,in). which_io0(o,out).
+which_io(I,In):- which_io0(I,In),!.
+which_io(In,In):- which_io0(_,In),!.
 
 train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
  Desc = [_Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
@@ -450,18 +468,26 @@ train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
   into_monochrome(Out,MonoOut),
   train_for_objects_from_pair_1(Dict1,TestID,MonoDesc,MonoIn,MonoOut,Dict9).
 
+individuate(VM):- 
+  individuate(VM.roptions, VM.grid, Objs), 
+  set(VM.objs) = Objs,
+  add_shape_lib(VM.roptions,Objs).
 
-train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1):-
+
+train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
+ must_det_ll((
  Desc = [Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
  atom_concat(IO1,N1,ION1),
  atom_concat(IO2,N2,ION2),
- pt(train_for_objects_from_pair=ExampleNum:IO1:IO2:Desc),
- must_det_ll((
-  atomic_list_concat([Trn,'_',ION1,'_',ION2,'_'],Prefix),
-  ExampleNum = (Trn+Prefix),
-  garbage_collect,
+ into_grid(InA,In), into_grid(OutA,Out),
+ into_fti(TestID*ION1,IO1,InA,InVM),
+ into_fti(TestID*ION2,IO2,OutA,OutVM),
+ atomic_list_concat([Trn,'_',ION1,'_',ION2,'_'],Prefix),
+ ExampleNum = Prefix,
+ pt([train_for_objects_from_pair=Prefix,left=ION1,right=ION2]),
+ garbage_collect,
   Dict0=Dict1,
   %must_be_nonvar(Training),
   %% % %  set(Training.grid_in) = In,
@@ -470,19 +496,26 @@ train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1):-
   %% % %  set(Training.test) = PairName,
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-  clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
+  % clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
   %print_collapsed
   % set_training(Training),!,
   show_pair_grid(yellow,IH,IV,OH,OV,original(ION1),original(ION2),PairName,In,Out),!,  
   %% % %  set(Training.pre_out) = PreOutC,
   %% % %  set(Training.pre_in) = PreInC,  
-  individuate(complete,In,InC),
-  individuate(complete,Out,OutC),
+  (((true == false)) ->
+  (
+  individuate(IO1,In,InC),
+  individuate(IO2,Out,OutC)) ; 
+  ((
+  ignore(individuate(InVM)),
+  InC = InVM.objs,
+  ignore(individuate(OutVM)),
+  OutC = OutVM.objs))),
+  
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
-  add_shape_lib(in,Removed),
   add_shape_lib(pair,RetainedIn),
   % add_shape_lib(pair,RetainedOut),
-  add_shape_lib(out,Added),
+  add_shape_lib(IO2,Added),
   dash_chars,dash_chars,dash_chars,dash_chars,
   show_pair_grid(cyan,IH,IV,   OH, OV,original(ION1),original(ION2),PairName,In,Out),
   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
@@ -497,7 +530,7 @@ train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1):-
 
 
 print_testinfo(TestID):-
-  ignore((forall(gather_more_task_info(TestID,F),forall(member(I,F),pt(test_info=I))))).
+  ignore(((gather_more_task_info(TestID,F),forall(member(I,F),pt(test_info=I))))).
 
 trials(learn). trials(clue). trials(human). trials(sol). trials(dsl). trials(runDSL).
 
@@ -517,14 +550,17 @@ solve_test(TestID,ExampleNum):-
 
 solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
    must_det_ll((    
-    name_the_pair(TestID,ExampleNum,TestIn,ExpectedOut,PairName),
+    name_the_pair(TestID,ExampleNum,TestIn,ExpectedOut,PairName))),
+   must_det_ll((    
     grid_size(TestIn,IH,IV), grid_size(ExpectedOut,OH,OV),
     ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-    print_testinfo(TestID), 
+    print_testinfo(TestID))), 
+  must_det_ll((    
     dash_chars, dash_chars,
     show_pair_grid(green,IH,IV,OH,OV,'Test TestIn','Solution ExpectedOut (Not computed by us)',PairName,TestIn,ExpectedOut),!,  
-    get_training(Training),
-    %flag(indiv,_,0),
+    get_training(Training))),
+    %sflag(indiv,_,0),
+    must_det_ll((    
     print(training(Training)),nl,
     dash_chars, dash_chars,    
     print_testinfo(TestID),
@@ -656,8 +692,8 @@ reuse_a_b(A,B,AA):-
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
     (pt(same_object(GlyphA,GlyphB,How))))).
 
-regression_tests:- make, forall((clause(regression_test,Body),ptt(Body)),must_det_ll(Body)).
-:- add_history1(regression_tests).
+test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_det_ll(Body)).
+:- add_history1(test_regressions).
 
 :- fixup_exports.
 %:- initialization(demo,program).
@@ -665,3 +701,6 @@ regression_tests:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 %:- initialization(demo,main).
 %:- initialization(demo,after_load).
 :- add_history1((cls,make,demo)).
+
+%:- find_tests.
+:- load_last_test_name.

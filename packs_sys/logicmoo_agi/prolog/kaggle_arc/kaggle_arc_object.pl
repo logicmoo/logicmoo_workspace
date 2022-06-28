@@ -116,10 +116,10 @@ as_obj(O,Obj):- compound(O), O = obj(_), Obj = O. % , register_obj(L).
 
 :- module_transparent register_obj/1.
 %register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(O,S)))),!.
-register_obj(L):- obj_cache(LL,_),LL=@=L,!.
-register_obj(L):- asserta(obj_cache(L,'')),
+register_obj(L):- notrace(o2g(L,_)).
+/*register_obj(L):- asserta(obj_cache(L,'')),
   ignore(( false, O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
-
+*/
 :- dynamic(obj_cache/2).
 :- module_transparent obj_cache/2.
 
@@ -128,7 +128,10 @@ enum_object(O):- ptt(enum_object(O)),!.
 
 enum_object0(Obj):- % listing(obj_cache/2),
        obj_cache(O,_S),as_obj(O,Obj).
-enum_object0(Obj):- why_grouped(_Why,GS),member(Obj,GS).
+enum_object0(Obj):- why_grouped(_Why,GS)*->member(Obj,GS);enum_object1(Obj).
+enum_object1(Obj):- g2o(_,Obj)*->true; enum_object2(Obj).
+enum_object2(_):- fail.
+%enum_object2(Obj):- get_current_test(_).
 /*
 enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
 enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
@@ -199,7 +202,7 @@ make_point_object(ID,H,V,Options,C-Point,Obj):-
    Iv is (Fv rem 3000) + 1,
     as_obj([mass(1),shape([point_01_01]),colors([cc(C,1.0)]),localpoints([C-point_01_01]),vis_hv(1,1),
     rotation(same),loc_xy(X,Y),
-    changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),
+    changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(X,Y),
     object_indv_id(ID,Iv),globalpoints([C-Point]),
     grid_size(H,V)|Options],Obj).
 
@@ -327,6 +330,15 @@ mass(Points,Count):- is_list(Points),length(Points,Count),!.
 mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
 mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
+
+
+
+color_mass(Color,Int):- var(Color),!,Int=13.
+color_mass(Color,Int):- atom(Color),color_int(Color,Int),!.
+color_mass(Color,Int):- number(Color),Color=Int,!.
+color_mass(Points,Count):- is_list(Points),!,maplist(color_mass,Points,MPoints),!,sum_list(MPoints,Count).
+color_mass(Obj,Count):- nonvar(Obj),localpoints(Obj,Points),!,color_mass(Points,Count),!.
+color_mass(_,0).
 
 remove_color(C-_,point_01_01):- is_bg_color(C),!.
 remove_color(_-P,P).
@@ -470,8 +482,10 @@ grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
           is_spec_fg_color(C2,C),
           hv_point(H,V,Point)))),Points),!.
 */
-point_corners(Obj,Dir,CPoint):-  globalpoints(Obj,Points),sort(Points,SPoints),
-  isz(Obj,Shape),
+point_corners(Obj,Dir,CPoint):- enum_object(Obj),  globalpoints(Obj,Points), gp_point_corners(Obj,Points,Dir,CPoint).
+
+
+gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints), isz(Obj,Shape),
   (points_corner_dir(Shape,Dir)*->(SPoints=[CPoint|_];last(SPoints,CPoint));fail).
    
 
@@ -489,7 +503,7 @@ globalpoints(I,X):- localpoints0(I,X),!.
 globalpoints(G,G):- mapgroup(is_point,G),!.
 globalpoints(I,X):- throw(unknown(globalpoints(I,X))).
 
-  globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L), my_assertion(mapgroup(is_cpoint,X)),!.
+  globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L), nop(my_assertion(maplist(is_cpoint,X))),!.
   %globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
 
 localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
@@ -506,7 +520,7 @@ localpoints(I,X):- globalpoints0(I,X),!.
 localpoints(G,G):- mapgroup(is_point,G),!.
 localpoints(I,X):- throw(unknown(localpoints(I,X))).
 
-  localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(mapgroup(is_cpoint,X)),!.
+  localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
   %localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
 
 localpoints_include_bg(Grid,Points):- is_grid(Grid),!, grid_to_points_include_bg(Grid,Points),!.
@@ -555,6 +569,7 @@ loc_xy(I,X,Y):- into_obj(I,O), indv_props(O,L),member(loc_xy(X,Y),L),!.
 
 vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y),!.
 
+vis_hv(Grid,H,V):- is_grid(Grid),!,grid_size(Grid,H,V).
 vis_hv(G,X,Y):- is_group(G),!,mapgroup(vis_hv_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
 vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L),!.
@@ -655,9 +670,10 @@ find_outline(X):-
    [green,black,black,green],
    [green,green,green,green]].
 
-:- add_history(find_outline).
-find_outline:- clsmake, forall(find_outline1,true).
-find_outline1:- arc_grid(Grid), dash_chars, find_outline_pred(find_outlines_fast(_),Grid).
+:- add_history(test_find_outline).
+test_find_outline:- clsmake, forall(find_outline1,true).
+find_outline1:- arc_grid(Grid), dash_chars, once(find_outline1(Grid)).
+find_outline1(Grid):- find_outline_pred(find_outlines_fast(_),Grid).
 
 
 
@@ -676,23 +692,24 @@ find_outline_pred(Find_OUTLINE,Grid):- is_grid(Grid),!,
    grid_to_id(Grid,ID),   
    grid_size(Grid,H,V),
    writeln(ID),
+   set_current_test(ID),
    fail_over_time(6,call(Find_OUTLINE,Grid,SOLS,LeftOver),
      (writeln("TOO SLOWWWW"=Find_OUTLINE),
       print_grid(H,V,Grid),
       writeln("TOO SLOWWWW"=Find_OUTLINE))),
    my_append(SOLS,[leftover(LeftOver)],SOLSL),
    dash_chars,
-   (SOLS==[]-> ((writeln("NOTHING FROM"=Find_OUTLINE),print_grid(H,V,Grid),writeln("NOTTAAA"=Find_OUTLINE),!,fail));true),
+   (SOLS==[]-> ((writeln("NOTHING FROM"=Find_OUTLINE),ignore((fail,catch((print_grid(H,V,ID,Grid),writeln("NOTTAAA"=Find_OUTLINE),!,fail),_,fail)))));
    member(OL,SOLSL),
    (OL=leftover(LeftOver)
     -> (nl,
       ignore((nonvar(LeftOver),nl,write(leftover=Find_OUTLINE),print_grid(H,V,LeftOver))),
       write('from '),write(Find_OUTLINE),print_grid(H,V,Grid))
     ;((grid_of(OL,O,Hits),once((mass(O,M))),
-     nl,write(solution(Hits,M)), print_grid(H,V,O)))).
+     nl,write(solution(Hits,M)), print_grid(H,V,O))))).
 find_outline_pred(ID):- into_grid(ID,Grid),find_outlines(Grid).
 
-arc_grid(Nth,X):- offset(Nth,arc_grid(X)).
+%arc_grid(Nth,X):- (var(Nth)->Nth=1;true), offset(Nth,arc_grid(X)).
 %find_outline(Grid,Result,Grid4):- is_grid(Grid),!,grid_to_points(Grid,Points),!,find_outline(Points,Result,Grid4).
 
 /*
@@ -711,7 +728,7 @@ fix_rest(_Options,Rest,Sols,Rest,Sols).
 
 find_outlines_fast(Options,Grid,Sols,Rest):-
  localpoints(Grid,Points),
- point_groups_by_color(colormass,Groups,Points,Rest2), 
+ point_groups_by_color(colormass,Groups,Points,Rest2), !,
 % mapgroup(print_grid(H,V),Groups),
  find_group_outlines(Options,Groups,Sols,Rest1),
  my_append(Rest1,Rest2,Rest).

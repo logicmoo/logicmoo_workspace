@@ -199,7 +199,7 @@ hv_cg_value_or(Grid,C,H,V,Else):- hv_cg_value(Grid,C,H,V)*->true;C=Else.
 hv_c_value_or(Grid,C,_H,_V,Else):- Grid==[],!,Else=C.
 hv_c_value_or(Grid,C,H,V,Else):- hv_c_value(Grid,C,H,V)*->true;C=Else.
 
-pgt:- mmake,!,pgt(Obj),once(print_grid(Obj)).
+pgt:- clsmake,!,pgt(Obj),once(print_grid(Obj)).
 
 pgt(Obj):- pgt1(Obj).
 pgt(Obj):- pgt2(Obj).

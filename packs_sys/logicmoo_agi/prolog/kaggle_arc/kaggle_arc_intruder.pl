@@ -59,7 +59,7 @@ individuals_from_pair(PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):-
 
 % intruder to Out
 individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intruder]):-
-  (IV > OV; IH> OH) , ogs(_,_,Out,In), 
+  (IV > OV; IH> OH) , find_ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
   add_shape_lib(intruder,Intruder),
   individuate(defaults,In,NoiseObjects),
@@ -67,7 +67,7 @@ individuals_from_pair(_PairName,In,Out,IH,IV,OH,OV,[Intruder|NoiseObjects],[Intr
 
 % intruder was in ./. now in a scene in out
 individuals_from_pair(_PairName,Out,In,OH,OV,IH,IV,[Intruder],[Intruder|NoiseObjects]):-
-  (IV > OV; IH> OH) , ogs(_,_,Out,In), 
+  (IV > OV; IH> OH) , find_ogs(_,_,Out,In), 
   grid_to_individual(Out,Intruder),
   add_shape_lib(intruder,Intruder),
   individuate(defaults,In,NoiseObjects),

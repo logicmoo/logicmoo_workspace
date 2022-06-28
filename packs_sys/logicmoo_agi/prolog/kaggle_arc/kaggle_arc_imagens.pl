@@ -175,7 +175,7 @@ frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),sing
 
 shape_key(Shape,Key):- into_grid(Shape,Key1),frozen_key(Key1,Key).
 
-shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot0(Key,KeyR).
+shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot(Key,KeyR).
 
 
 searchable(Group,List):- override_group(searchable(Group,List)),!.
@@ -192,10 +192,10 @@ into_monochrome(BGC,Color,Mono):- is_points_list(Color),!,maplist(points_into_mo
 
 points_into_monochrome(BGC,Color-Point,Mono-Point):- atom(Point),!,points_into_monochrome(BGC,Color,Mono).
 points_into_monochrome(BGC,Color,Mono):- is_list(Color) -> maplist(points_into_monochrome(BGC),Color,Mono) ;
-                              (Color\=BGC)-> Mono = silver ; Mono = black.
+                              (Color\=BGC)-> Mono = fg ; Mono = BGC.
 
 grid_into_monochrome(BGC,Color,Mono):- is_list(Color) -> maplist(grid_into_monochrome(BGC),Color,Mono) ;
-                              (Color\=BGC)-> Mono = silver ; Mono = black.
+                              (Color\=BGC)-> Mono = fg ; Mono = BGC.
    
 decolorize(Group,List):- override_group(decolorize(Group,List)),!.
 decolorize(Shape,ShapeO):- 

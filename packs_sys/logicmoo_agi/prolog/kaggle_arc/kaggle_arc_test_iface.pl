@@ -31,8 +31,9 @@ menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(fully
 menu_cmd(_,'a','     or (a)dvance to the next test and run',(cls,!,run_next_test)).
 menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
 menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
-menu_cmd(_,'l','     or (l)eap to next Suite',(restart_suite)).
-menu_cmd(_,'L','',(next_suite)).
+menu_cmd(_,'S','     or  back to begining of (S)uite',(restart_suite)).
+menu_cmd(_,'N','     or (N)ext Suite',(next_suite)).
+menu_cmd(_,'L','     or (L)ist feature tests and run',(find_tests)).
  
 menu_cmd(i,'R','(R)un the Suite noninteractively',(run_all_tests,menu)).
 menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).
@@ -41,11 +42,18 @@ menu_cmd1(_,'m','Recomple this progra(m),',(make,menu)).
 menu_cmd1(_,'c','(c)lear the scrollback buffer,',(cls)).
 menu_cmd1(_,'T','(T)est regressions,\n     ',(make,menu)).
 menu_cmd1(_,'Q','(Q)uit Menu,',true).
-menu_cmd1(_,'X','e(X)it to shell,',halt(4)).
+menu_cmd1(_,'X','e(X)it to shell,',halt(4)). 
 menu_cmd1(_,'B','or (B)reak to interpreter.',(break)).
 
 menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd(Mode,Key,Mesg,Goal).
 menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd1(Mode,Key,Mesg,Goal).
+
+find_tests(F):-
+   current_predicate(N),N=F/0, atom_concat(test_,_,F),\+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit)).
+find_tests:- make,
+   findall(F,find_tests(F),L),forall(nth0(N,L,E),format('~N~w: ~w  ',[N,E])),
+   write("\nYour selection: "), read_line_to_string(user_input,Sel),
+   ignore((atom_number(Sel,Num),nth0(Num,L,E),!,call(E))).
 
 clsR:- !. % once(cls).
 
@@ -109,17 +117,20 @@ get_previous_test(TestID,PrevID):-  get_current_suite_testnames(List), prev_in_l
 next_in_list(TestID,List,Next):- append(_,[TestID,Next|_],List)-> true; List=[Next|_].
 prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(List,PrevID)).
 
-set_current_test(TestID):-
-  ignore((is_valid_testname(TestID),nb_setval(last_test_name,TestID),nb_setval(test_name,TestID))),
+%v(f9d67f8b)
+load_last_test_name:- 
+  ignore(notrace((setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),nb_setval(test_name,TestID))),close(O))))).
+save_last_test_name:- 
+  ignore(notrace((nb_current(test_name,TestID), tell(current_test),format('~n~q.~n',[TestID]),told))).
+
+set_current_test(Name):-  
+  ignore((fix_test_name(Name,TestID,_),is_valid_testname(TestID),nb_setval(last_test_name,TestID),nb_setval(test_name,TestID),save_last_test_name)),!,
   set_bgc(_),
   set_flag(indiv,0),
   nb_delete(grid_bgc),
   nb_linkval(test_rules, [rules]),
-  clear_shape_lib(test),
-  clear_shape_lib(noise),
-  retractall(grid_nums(_,_)),
-  retractall(grid_nums(_)),
-  retractall(g2o(_,_)),!.
+  wots(_,(clear_shape_lib(test), clear_shape_lib(noise), retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
+  nop(retractall(g2o(_,_))),!.
 
 new_test_pair(PairName):-
   %nb_delete(grid_bgc),
@@ -417,8 +428,8 @@ macro(one_obj, must(len(objs)=1)).
 
 test_p2(P2):- clsmake,
   append_termlist(P2,[N1,'$VAR'('Result')],N2), 
-  time(forall(into_gridoid(N1,G1), 
-     forall(call(P2,G1,G2),
+  time(forall(into_gridoid(N1,G1),     
+     forall((set_current_test(G1),call(P2,G1,G2)),
        once(ignore((print_side_by_side4(red,G1,N1,_LW,G2,?-N2),dash_chars)))))).
 
 %:- style_check(-singleton).
@@ -538,13 +549,24 @@ kaggle_arc(v(Name), TypeI, In, Out):-
  member(ExampleNum, [trn, tst]), nth_fact(kaggle_arc_eval(Name, ExampleNum, In, Out), This), once((nth_fact(kaggle_arc_eval(Name, ExampleNum, _, _), Start), I is This - Start, TypeI=ExampleNum->I)).
 */
 
-fix_test_name(X,X,_):-  my_assertion( \+ is_list(X)), plain_var(X),!.
-fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):-!,fix_test_name(Tried,Fixed,_).
-fix_test_name(Tried*ExampleNum,Fixed,ExampleNum):-!,fix_test_name(Tried,Fixed,_).
-fix_test_name(Tried,Tried,ExampleNum):- \+ \+ kaggle_arc(Tried,_,_,_),!, kaggle_arc(Tried,ExampleNum,_,_),!.
-fix_test_name(Tried,Fixed,ExampleNum):- compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_test_name(E,Fixed,ExampleNum).
-fix_test_name(Tried,t(Tried),_):- kaggle_arc(t(Tried),_,_,_),!.
-fix_test_name(X,v(X),_):- kaggle_arc(v(X),_,_,_),!.
+fix_test_name(V,VV,_):- var(V),!,VV=V.
+fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=@=E,!.
+
+fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
+fix_test_name(Tried*ExampleNum,  Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
+fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
+
+
+fix_id(Tried,   Tried):- var(Tried),!.
+fix_id(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
+fix_id(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
+fix_id(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
+fix_id(t(Tried),v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
+fix_id(v(Tried),t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
+fix_id(Tried,Fixed):- compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_id(E,Fixed),!.
+
+
+
 
 print_trainer0:- arc(t('25d487eb')).
 print_eval0:- arc(v('009d5c81')).

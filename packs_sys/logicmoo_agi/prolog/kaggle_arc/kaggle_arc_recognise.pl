@@ -11,13 +11,20 @@
 :- discontiguous h666/2. 
 :- discontiguous f666/2. 
 
-test_ogs:- clsmake, mmake, time(forall(test_ogs(_,_),true)).
+test_ogs:- clsmake, mmake, time(forall(test_ogs(_,_,_),true)).
 
 :- add_history1(test_ogs).
+:- add_history1(test_ogs0).
 
-test_ogs0:- clsmake, time(forall(test_ogs0(_,_),true)).
-test_ogs1:- clsmake, time(forall(test_ogs1(_,_),true)).
-test_ogs2:- clsmake, time(forall(test_ogs2(_,_),true)).
+test_ogs0:- clsmake, time(forall(test_ogs0(_,_,_),true)).
+test_ogs1:- clsmake, time(forall(test_ogs1(_,_,_),true)).
+test_ogs2:- clsmake, time(forall(test_ogs2(_,_,_),true)).
+
+:- add_history1(test_ogs_m).
+:- add_history1(test_ogs_m0).
+
+test_ogs_m:- clsmake, time(forall(test_ogs(_,_,true),true)).
+test_ogs_m0:- clsmake, time(forall(test_ogs0(_,_,true),true)).
 
 
 :- dynamic(tr:existing_result/3).
@@ -27,17 +34,23 @@ save_tr:- cls1,
   format('~N~@.',[write_term(perfect_result(X,Y,Z),
     [quoted(true),quote_non_ascii(true),numbervars(false)])])).
 
-got_result(CSG,CFG,Match):-  
+got_result(SG,FG,Match):-  
+  copy_term(FG,CFG),copy_term(SG,CSG),
   numbervars(CSG+CFG,999,_,[attvar(bind)]),
   ignore((perfect_result(CSG,CFG,WMatch), 
     ((Match\==WMatch) -> (pt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); pt(green,same)))),
   retractall(tr:existing_result(CSG,CFG,_)),
   assert(tr:existing_result(CSG,CFG,Match)),!.
   
+was_result(SG,FG,WMatch):-  
+  copy_term(FG,CFG),copy_term(SG,CSG),
+  numbervars(CSG+CFG,999,_,[attvar(bind)]),
+  ignore((perfect_result(CSG,CFG,WMatch))).
+
 
 
 % hacking on this one
-test_ogs2(H,V):-
+test_ogs2(H,V,Match):-
   wqln("searching..."),
   ss666(T,SG),
   ff666(T,FG),
@@ -53,84 +66,72 @@ test_ogs2(H,V):-
   Match==true.
 
 % should still be the same
-test_ogs1(H,V):-
+test_ogs1(H,V,Match):-
+  Run = once(( print_side_by_side(FG,SG),nop(ptt(tf=T)))),
   wqln("searching..."),
-  ss666(T,SG),
-  ff666(T,FG),
-  copy_term(SG,CSG),copy_term(FG,CFG),
-  %copy_term(SG,XSG),copy_term(FG,XFG),
+    ff666(T,UFG),      ss666(T,USG),
+  copy_term(UFG,FG), copy_term(USG,SG),
 
-  once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
+  XSG = SG,
+  once((constrain_grid(f,CheckType,FG,XFG))),
+  
+  once((grid_detect_bg(SG,Background), maplist(never_fg,Background))),
 
-  ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> 
-   (show_match(H,V,XFG,XSG),Match=true);
-   (show_mismatch(XFG,XSG),Match=fail)),
-  got_result(CSG,CFG,Match),
+  ((ogs_11(H,V,XFG,XSG),CheckType=black) *-> Match=true; Match=false),
+
+  (Match==true->show_match(H,V,Run,XFG,FG);show_mismatch(XFG,Run,FG)),
+  ignore(got_result(SG,FG,Match)),
   Match==true.
-
-% should still be the same
-test_ogs0(H,V):- clsmake,
-  wqln("searching..."),
-  ff666(T,UFG),
-  copy_term(UFG,FG),
-  ss666(T,SG),
-
-  copy_term(SG,CSG),copy_term(FG,CFG),
-  %copy_term(SG,XSG),copy_term(FG,XFG),
-
-  constrain_grid(f,CheckType2,CFG,XFG2),
-  once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
-
-  copy_term(XSG,XSGC),
-
-  ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> Match=true; Match=false),
-
-  Run = once((
-    ptt(fg=FG),nl,
-    print_grid(FG),
-    (Match == true -> (ptt(xfg=XFG),nl) ; true),
-    ignore((CheckType=run)),
-    ignore((CheckType2=run)),
-    ptt(xfb=XFG2),nl,
-    ptt(xsg=XSGC),nl,
-    ptt(tf=T))),
-
-  (Match==true->show_match(H,V,Run,UFG,XSG);show_mismatch(XFG,Run,XSG)),
-
-  ignore(got_result(CSG,CFG,Match)),
-
-  Match==true.
-
 
 never_fg(Trig,Var):- freeze(Trig, \+ is_fg_color(Var)).
 never_fg(Var):- freeze(Var, \+ is_fg_color(Var)).
 
-test_ogs(H,V):- clsmake,
+
+% should still be the same
+test_ogs0(H,V,Match):-
+  Run = once(( print_side_by_side(FG,SG),print(test_ogs0(H,V,TMatch)),nop(ptt(tf=T)))),
   wqln("searching..."),
-  ff666(T,UFG),
-  copy_term(UFG,FG),
-  ss666(_,USG),
-  copy_term(UFG,SG),
+    ff666(T,UFG),      ss666(T,USG),
+  copy_term(UFG,FG), copy_term(USG,SG),
 
-  (ogs(H,V,FG,SG) *-> Match=true; Match=false),
+  ground(UFG),
 
-  Run = ((
-    %ptt(fg=FG),
-    print_grid(_,_,"search for",UFG),
-   % (Match == true -> ptt(xfg=FG) ; true),
-    %ptt(xfb=FG),
-    ptt(tf=T))),
+  once((constrain_grid(f,CheckType,FG,XFG), nop(constrain_grid(s,CheckType,SG,XSG)))),
+  once((grid_detect_bg(XSG,Background), maplist(never_fg,Background))),
+  
+  ((ogs_11(H,V,XFG,XSG),CheckType=black) *-> TMatch=true; TMatch=false),
 
-  ignore(((Match==true->show_match(H,V,Run,FG,USG);show_mismatch(FG,Run,SG)))),
+  was_result(SG,FG,WMatch), 
+  (WMatch\==TMatch ; TMatch == Match),
+  dash_chars,
+  ignore(got_result(SG,FG,TMatch)),
+  (TMatch==true->show_match(H,V,Run,XFG,FG);show_mismatch(XFG,Run,FG)),
+  ignore(got_result(SG,FG,TMatch)),
+  dash_chars,
+  Match==true.
 
-  ignore(got_result(SG,FG,Match)),
-  fail,
+
+test_ogs(H,V,Match):- 
+  Run = once(( print_side_by_side(FG,SG),nop(ptt(tf=T)))),
+  wqln("searching..."),
+    ff666(T,FG),      ss666(T,SG),
+  copy_term(FG,XFG), copy_term(SG,XSG),
+  ground(FG),
+  
+  ((find_ogs(H,V,XFG,XSG)) *-> TMatch=true; TMatch=false),
+
+  was_result(SG,FG,WMatch), (WMatch\==TMatch ; TMatch == Match),
+  dash_chars,
+  ignore(got_result(SG,FG,TMatch)),
+  (TMatch==true->show_match(H,V,Run,XFG,FG);show_mismatch(XFG,Run,FG)),
+  ignore(got_result(SG,FG,TMatch)),
+  dash_chars,
   Match==true.
 
 
 % get_prolog_backtrace(3,StackFrames,[]), nth0(2, StackFrames, SFrame) , prolog_stack_frame_property(SFrame, location(File:Line)),
 
-grid_minus_grid(B,A,OI):- grid_size(B,BH,BV),grid_size(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
+grid_minus_grid(B,A,OI):- vis_hv(B,BH,BV),vis_hv(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
 grid_minus_grid(B,A,OI):- remove_global_points(A,B,OI),!.
 %grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
 %grid_minus_grid(B,A,C):- ignore(grid_minus_grid0(B,A,C)).
@@ -177,8 +178,6 @@ show_match(H,V,C,F,G):-
   nl,dash_chars,!.
 
 show_m_pair(_TF,S,H,V,F,G):- 
-  %grid_size(G,GH,GV),
-  %make_grid(GH,GV,FDisp),
   H2 is H-3, V2 is V-3,
   offset_grid(H2,V2,F,OF),
   constrain_grid(f,_TrigF,OF,FF),!,
@@ -196,27 +195,33 @@ print_sgrid(F):- ((\+ \+ ((constrain_grid(s,_Trig,F,_FG),print_grid(F),nl)))),!.
 %constrain_type(Var,Cond):- nonvar(Var),!,call(Cond).
 %constrain_type(Var,Cond):- frozen(Var,Goals),sub_term(E,Goals),E=@=Cond,!. % wdmsg(skipping(Cond)),trace.
 constrain_type(Var,Cond):- freeze(Var,Cond).
-  
 
-ogs(H,V,FG,SG):-
+
+find_ogs(H,V,FG,SG):- 
+  %constrain_grid(f,CheckType,FG,_XFG2),
+  once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
+  ogs_1(H,V,XFG,XSG),CheckType=black.
+/*
+
+find_ogs(H,V,FG,SG):-
   %constrain_type(CheckType,FG,FG,XFG),!,
   ogs_0(CheckType,H,V,FG,SG),
   CheckType=run.
+*/
 
 ogs_0(CheckType,H,V,FG,SG):-
   %constrain_type(CheckType,Grid,FG,XFG),
   once((constrain_grid(f,CheckType,FG,XFG),
         constrain_grid(s,CheckType,SG,XSG))),
-  ogs_1(H,V,XFG,XSG),
-  CheckType=run.
+  ogs_1(H,V,XFG,XSG).
   %CheckType=run,
   %print_grid(XFG),nl,
   %wqnl(found_at(H,V)),
   %print_grid(XSG),nl,
   %true.
 
+ogs_1(H,V,FindI,Search):- (\+ number(H); \+ number(V)), !, ogs_11(H,V,FindI,Search).
 ogs_1(Hi,Vi,Find,Search):-
-  nonvar(Hi),nonvar(Vi), 
   H is Hi - 1, V is Vi - 1,  
   length(LPad,H),
   length(VPad,V),!,
@@ -226,16 +231,16 @@ ogs_1(Hi,Vi,Find,Search):-
   my_append(LPad,Rho,LPadAndRow),
   ogs_pt2(H,FGrid,Next),!.
 
-ogs_1(H,V,FindI,Search):-
-  grid_size(Search,SH,SV),
-  grid_size(FindI,FH,FV),
+
+ogs_11(H,V,FindI,Search):-
+  vis_hv(Search,SH,SV),
+  vis_hv(FindI,FH,FV),
   MH is SH - FH,MV is SV - FV,
   ogs_2(Hi,Vi,MH,MV,FindI,Search),
   H is Hi + 1,
   V is Vi + 1.
 
 ogs_2(H,V,MH,MV,[R1|FGrid],Search):-  
-  grid_detect_bg(Search,Background), my_assertion(Background\==[]), maplist(never_fg,Background),
   my_append(R1,_,Rho),!,
   my_append(VPad,[LPadAndRow|Next],Search),
   length(VPad,V),
@@ -327,7 +332,7 @@ offset_grid(H2,V2,FF,OF):-
   rot270(FF2,OF),!.
 
 offset_v_grid(V2,FF,OF):-  
-  grid_size(FF,GW,_), 
+  vis_hv(FF,GW,_), 
   offset_v_grid_row(GW,V2,FF,OF).
 
 offset_v_grid_row(_,V2,FF,FF):- V2<0,!.
@@ -338,12 +343,12 @@ offset_v_grid_row(GW,V2,FF,[Row|OF]):- V1 is V2-1,
 
 
 %pad_with_contraints_3(GridO,TODO):-
-%  grid_size(GridO,HH,VV),
+%  vis_hv(GridO,HH,VV),
 %  pad_with_contraints_3(GridO,HH,VV,TODO),!.
 fpad_grid(CT,Before,After):-  fpad_grid(CT,=(bg),Before,After).
 fpad_grid(CT,P1,O,GridO):- is_object(O),!,object_grid(O,GridIn),!,fpad_grid(CT,P1,GridIn,GridO).
 fpad_grid(_CT,P1,Grid,Grid2):-
-  grid_size(Grid,H,_), H2 is H +2,
+  vis_hv(Grid,H,_), H2 is H +2,
   length(T,H2),maplist(P1,T),
   length(B,H2),maplist(P1,B),
   maplist(pad_sides(P1),Grid,FillRows),
@@ -356,6 +361,27 @@ fpad_grid(_CT,P1,Grid,Grid2):-
 constrain_grid(CT,Trig,Obj,GridO):- \+ is_grid(Obj), object_grid(Obj,Grid),!,constrain_grid(CT,Trig,Grid,GridO),!.
 constrain_grid(CT,_Trig,Grid,GridO):- CT==same,!,Grid=GridO.
 constrain_grid(CT,_Trig,Grid,GridO):- CT==copy,!,copy_term(Grid,GridO).
+constrain_grid(CT,Trig,[[FC]], GridO):- CT==f, !,   
+  Grid1=[[NW,N0,NE],
+         [N1,FG,N3],
+         [SW,N2,SE]],
+ Grid2=[[NWL, _, _, _, NEL],
+         [_ , NW,N0,NE ,_ ],
+         [_ , N1,FG,N3 ,_ ],
+         [_ , SW,N2,SE ,_ ],
+        [SWL, _, _, _, SEL]],
+ maplist(dif(FG),[NE,NW,SW,SE]),
+/* freeze(Trig,\+ (NE==SW, dif(FG,NE))),
+ freeze(Trig,\+ (NW==SE, dif(FG,SE))),
+ freeze(Trig,\+ (NW==NWL,dif(FG,NW))),
+ freeze(Trig,\+ (SW==SWL,dif(FG,SW))),
+ freeze(Trig,\+ (NE==NEL,dif(FG,NE))),
+ freeze(Trig,\+ (SE==SEL,dif(FG,SE))),*/
+ freeze(GridO,(Grid2=GridO;GridO=Grid1)),
+ GridO = Grid2,
+ maplist(dif(FG),[N0,N1,N2,N3]),
+ freeze(Trig,FC=FG).
+
 constrain_grid(CT,Trig,Grid1,GridO):- 
   fpad_grid(CT,Grid1,Grid2),
   grid_label_bg(CT,Grid2,Grid3),
@@ -373,8 +399,9 @@ release_bg0(_CT,_Trig,C1I,C):- is_spec_fg_color(C1I,C),!.
 release_bg0(_CT,_Trig,C,C).
 
 %constrain_grid_now(CT,Trig,GridIn, GridO):- GridIn= GridO,!.
+
 constrain_grid_now(CT,Trig,GridIn, GridO):-
-  grid_size(GridIn,H,V), make_grid(H,V, GridO),
+  vis_hv(GridIn,H,V), make_grid(H,V, GridO),
   maybe_constrain_fg(Trig,GridIn),
   constrain_grid_now(CT,Trig,GridIn,H,V,H,V,GridO),!.
 
@@ -469,9 +496,9 @@ count_c_neighbors(C,H,V,N,GridIn):-
     Count),
   length(Count,N).
   
-%ci:attr_unify_hook(fg(_),Value):- !, is_fg_color(Value).
-%ci:attr_unify_hook(bg,Value):- !, is_bg_color(Value).
-ci:attr_unify_hook(_,_Value).
+ci:attr_unify_hook(fg(_),Value):- !, is_colorish(Value),!, \+ is_bg_color(Value).
+ci:attr_unify_hook(bg,Value):- !, is_colorish(Value).
+ci:attr_unify_hook(_,Value):- is_colorish(Value).
   
 %constrain_dir_ele(CT,Trig,[_|SEW],GridIn,H,V,GridO):- constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,GridO).
 
@@ -594,14 +621,15 @@ into_grid_color(L,O):- plain_var(L),!,L=O.
 into_grid_color(L,O):- color_code(L,O),!.
 into_grid_color(O,O).
 
-into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),!,into_g666(TG,G),!.
-into_g666(Grid,G):- is_grid(Grid),!,mapgroup(into_grid_color,Grid,G),!.
+into_g666(Grid,G):- is_grid(Grid),!,maplist(into_grid_color,Grid,G),!.
 into_g666(Obj,G):- is_object(Obj),!,must_det_ll(object_grid(Obj,OG)),!,into_g666(OG,G).
+into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),!,into_g666(TG,G),!.
+into_g666(Other,G):- wdmsg(failed(into_g666(Other,G))),fail.
 
 ss666(T,G):- h666(T,S),must_det_ll(into_g666(S,G)).
 sp666(T,Y):- ss666(T,X), fpad_grid(s,X,Y).
 
-ff666(T,G0):- no_repeats(F,((f666(T,F),into_g666(F,G),all_rotations(G,G0)))).
+ff666(T,G0):- no_repeats(G0,((f666(T,F),into_g666(F,G),all_rotations(G,G0)))).
 fp666(T,Y):- ff666(T,X), fpad_grid(f,X,Y).
 
 % ?- h666(X),text_to_grid(X,G).
@@ -819,6 +847,9 @@ h666(1,
  [2,1,1,1,1],
  [2,2,2,2,2]]).
 
+f666(1,[[1]]).
+f666(1,[[_]]).
+f666(1,[[3]]).
 
 %f666(1,[[1]]).
 

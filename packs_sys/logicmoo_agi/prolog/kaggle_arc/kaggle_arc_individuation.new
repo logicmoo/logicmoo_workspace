@@ -174,7 +174,7 @@ individuation_macros(reduce_population, [
 individuation_macros(altro, [
     reduce_population,
     remove_used_points,
-    when((len(points)=<30),remaining_points),    
+    when((len(points)=<30),dots),    
     when((len(points)>30),by_color)]).
 
 
@@ -188,9 +188,9 @@ individuation_macros(complete, [
     reduce_population, % @TODO DISABLED FOR TESTS    %altro,
     colormass_subshapes, % find subshapes of the altro
     find_touches,
-    %when((colors(i.points,Cs),len(Cs)<2),remaining_points), % any after this wont find individuals unless this is commented out
+    %when((colors(i.points,Cs),len(Cs)<2),dots), % any after this wont find individuals unless this is commented out
     colormass_merger(2),
-    when((len(points)=<30),remaining_points),
+    when((len(points)=<30),dots),
     dots,leftover_as_one, % any after this wont find individuals unless this is commented out
     find_touches,
    done % stop processing
@@ -405,8 +405,10 @@ fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_step(F), set(VM.program) = Pr
 fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_stepr(F), set(VM.program) = Program, Step=..[F|ARGS], apply(F,[VM|ARGS]).
 
 :- discontiguous is_fti_step/1.
+:- discontiguous is_fti_stepr/1.
 
 is_fti_step(release_objs_lighter).
+is_fti_stepr(_):-fail.
 
 release_objs_lighter(Two,VM):-
   my_partition(less_mass(Two),VM.objs,Smaller,set(VM.objs)),
@@ -430,7 +432,7 @@ mergable_objects_direct(O1,O2,PsA,PsB):- iz(O1,dg_line(_)), iz(O2,dg_line(_)), d
 mergable_objects_direct(O1,O2,PsA,PsB):- iz(O1,hv_line(_)), iz(O2,dg_line(_)), dir_mergeable_list(PsA,PsB,[n,s,e,w],[ne,se,sw,nw]),!.
 mergable_objects_direct(O1,O2,PsA,PsB):- iz(O1,dg_line(_)), iz(O2,hv_line(_)), dir_mergeable_list(PsA,PsB,[ne,se,sw,nw],[n,s,e,w]),!.
 %mergable_objects_direct(O1,O2,PsA,PsB):- iz(O1,hv_line(U)), iz(O2,hv_line(D)), u_d(U,D), adjacent_objs(PsA,PsB).
-mergable_objects_direct(O1,O2,PsA,PsB):- \+ iz(O1,remaining_points), mass(O2,1), dir_mergeable_list(PsA,PsB,[n,s,e,w,ne,se,sw,nw],[]),!.
+mergable_objects_direct(O1,O2,PsA,PsB):- \+ iz(O1,dots), mass(O2,1), dir_mergeable_list(PsA,PsB,[n,s,e,w,ne,se,sw,nw],[]),!.
 mergable_objects_direct(_O1,_O2,PsA,PsB):- double_touch(PsA,PsB).
 mergable_objects_direct(_O1,_O2,PsA,PsB):- double_touch(PsB,PsA).
 double_touch(PsA,PsB):- 
@@ -815,7 +817,7 @@ one_fti(VM,'fourway'):-
   %VM.id = VM.id,
   H > 13, V> 13,
   largest_first(VM.objs,Ordered),     
-  grid_to_3x3_objs(Ordered,VM.grid,FourWay1s,Keep),
+  grid_to_3x3_objs(Ordered,VM.grid,FourWay1s,Keep,_Repaired),
   must_det_ll((
   intersection(Ordered,Keep,_ReallyKeptO,TookbackO,GaveExtraBackO),
   remObjects(VM,TookbackO),
@@ -1147,7 +1149,6 @@ finish_grp(C,Grp,Point2,Dir,Rest,NewGroup,RRest):-
 finish_grp(_C,Grp,_From,_Dir,Rest,Grp,Rest).
 
 
-
 single_point(C-Point,IndvS,Rest1):- maybe_multivar(C),
   single_point0(C-Point,IndvS,Rest1).
 
@@ -1187,8 +1188,8 @@ merge_indivs_cleanup(A,B,C,A,B,C).
 %same_object(D)
 merge_a_b(A,B,AA):-
   findall(H,compare_objs1(H,A,B),How),
-  object_indv_id(B,VM.id,Iv),
-  setq(A,object_indv_id(VM.id,Iv),AA),
+  object_indv_id(B,ID,Iv),
+  setq(A,object_indv_id(ID,Iv),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 

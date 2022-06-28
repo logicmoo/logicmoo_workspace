@@ -709,6 +709,13 @@ echo_flush:- ttyflush.
 :- export(echo_format/1).
 echo_format(S):- echo_flush, echo_format(S, []),!.
 :- export(echo_format/2).
+
+
+:- thread_local(t_l:each_file_term/1).
+:- thread_local(t_l:quit_processing_stream/1).
+:- thread_local(t_l:block_comment_mode/1).
+:- thread_local(t_l:echo_mode/1).
+
 echo_format(_Fmt, _Args):- t_l:block_comment_mode(Was), Was==invisible, !.
 echo_format(Fmt, Args):- t_l:block_comment_mode(_), t_l:echo_mode(echo_file), !, real_format(Fmt, Args), ttyflush.
 echo_format(Fmt, Args):- t_l:echo_mode(echo_file), !, real_format(Fmt, Args), ttyflush.

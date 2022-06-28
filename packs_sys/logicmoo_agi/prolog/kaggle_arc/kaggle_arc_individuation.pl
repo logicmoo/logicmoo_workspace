@@ -13,6 +13,7 @@
 % =========================================================
  i:- fav_i(X),i(X).   i(GridIn):- i2([complete],GridIn).
 ig:- fav_i(X),ig(X). ig(GridIn):- i2(complete,GridIn).
+iq:- fav_i(X),ig(X). iq(GridIn):- iq(complete,GridIn).
 iL:- fav_i(X),iL(X). iL(GridIn):- i2([shape_lib(as_is),complete],GridIn).
 
 :- add_history1(ig).
@@ -45,6 +46,25 @@ ig(ROptions,Grid):-
   dash_chars.
 % =========================================================
 
+iq(ROptions,Grid):- 
+  make,
+  %fail,
+  %into_grid(Grid, GridIn), 
+  %make_fti(Grid,VM),
+  dash_chars,
+  %print_grid(GridIn), 
+  %grid_to_id(GridIn,VM.id),
+  %set_current_test(VM.id),
+  individuate(ROptions,Grid,IndvS),
+  %maplist(add_shape_lib(as_is),IndvS),
+  dash_chars,
+  print_grid(IndvS),
+  %format("~N~n% ?- ~q.~n~n",[ig(ROptions,VM.id)]),
+  length(IndvS,LenS),
+  print_list_of(individuate=LenS,IndvS),
+  dash_chars.
+% =========================================================
+
 :- use_module(library(multivar)).
 
 maybe_multivar(C):- nonvar(C),!.
@@ -55,9 +75,13 @@ maybe_multivar(_).
 
 :- discontiguous(fsi/14).
 :- discontiguous(fti/2).
+:- discontiguous(one_fti/2).
    
 :- dynamic(is_unshared_saved/2).
 :- dynamic(is_shared_saved/2).
+
+individuation_macros(out, complete).
+individuation_macros(in, complete).
 
 % if there are 3 or less of a color dont group the whole color (It/they must be special points)
 individuation_macros(by_color, X):-
@@ -77,7 +101,8 @@ individuation_macros(subshape_in_object, [
 % never add done to macros
 individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
-   rectangle, diamonds, 
+   rectangle, diamonds,
+   find_repetition,
    recalc_sizes,
    hv_line(h),  
    dg_line(d), 
@@ -89,7 +114,7 @@ individuation_macros(subshape_main, [
    jumps,% run the "jumps" macro
    point_corners,
    by_color,
-   single_dots,
+   standalone_dots,
    merges(Z,Z), % merge lines into square
    merges(hv_line(_),hv_line(_)),
    merges(dg_line(_),dg_line(_)),
@@ -358,6 +383,51 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    %set(VM.current_i) = VM
    !.
 
+into_fti(ID,ROptions,GridIn0,VM):-
+  %must_det_ll
+  ignore((ROptions \= Options,is_list(ROptions), sub_var(complete,ROptions),
+    (pt(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options))))),
+  statistics(cputime,X),Timeleft is X+30,
+  fix_indivs_options(ROptions,Options),
+  %rtrace,
+  %must_det_l
+  ((
+   %rtrace,
+  (is_dict(GridIn0)-> (VM = GridIn0, GridIn = GridIn0.grid) ; GridIn0 = GridIn),
+  
+  globalpoints(GridIn,Points),
+  into_grid(GridIn,Grid),
+  (var(ID)->grid_to_id(Grid,ID);true),
+  grid_size(Grid,H,V),
+  max_min(H,V,Max,_Min),
+  pt(yellow,ig(ROptions,ID)=(H,V)),
+  ArgVM = vm{
+   % parent VM
+    
+   % Options and TODO List (are actually same things)
+   program:Options, options:Options, roptions:ROptions, %todo_prev:[],
+   % how much time is left before we turn on debugger
+   timeleft:Timeleft, objs_max_len:Max, objs_min_mass:_, objs_max_mass:_,
+   % Grid and point representations
+   grid:Grid, points:Points,
+   % Original copies of Grid and point representations
+   % grid_o:Grid, 
+   points_o:Points, % points_repair:[],
+   % objects found in grid and object that are reserved to not be found
+   objs:[],  robjs:Reserved, % objs_prev:[],
+   % Notes and debug info
+   notes:_, debug:_,
+   % height width and lookup key for image
+   h:H, v:V, id:ID},
+   %ignore(VM>:<ArgVM),
+   (var(VM) -> ArgVM=VM ; transfer_missing(ArgVM,VM)),
+   %(var(VM) -> (fix_test_name(ID,TestID,_), make_training_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
+   %(nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
+    true)),
+   %b_set_dict(objs,VM,[]),
+   %set(VM.current_i) = VM
+   !.
+
 transfer_missing(ArgVM,VM):-
      dict_pairs(ArgVM,_,Pairs),
      maplist(nb_link_pairs_if_missing(VM),Pairs).
@@ -487,7 +557,16 @@ fti(VM,_):-
        length(VM.points,PC),
       pt(t([found_mass=(Count,Mass+PC),fsi=VM.program])))),fail.
 
-fti(VM,[release_objs_lighter(Two)|set(VM.program)]):-
+
+fti(VM,[Step|Program]):- set(VM.program) = Program, one_fti(VM,Step).
+
+fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_step(F), set(VM.program) = Program, call(Step,VM).
+fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_stepr(F), set(VM.program) = Program, Step=..[F|ARGS], apply(F,[VM|ARGS]).
+
+is_fti_step(release_objs_lighter).
+is_fti_stepr(_):-fail.
+
+release_objs_lighter(Two,VM):-
   my_partition(less_mass(Two),VM.objs,Smaller,set(VM.objs)),
   maplist(globalpoints,Smaller,Points),
   append_sets([VM.points|Points],set(VM.points)).
@@ -575,17 +654,17 @@ select_always(E,B,A):- select(E,B,A)*->true;B=A.
 standalone_point(C-P2,Points):- select_always(C-P2,Points,Points0), 
   \+ (is_adjacent_point(P2,Dir,P3), member(C-P3,Points0), \+ is_diag(Dir)),!.
 
-fti(VM,[single_dots|set(VM.program)]):-
-  single_dots(VM),!.
+fti(VM,[standalone_dots|set(VM.program)]):-
+  standalone_dots(VM),!.
 
-single_dots(VM):-
+standalone_dots(VM):-
    select(C-P1,VM.points,Rest),     
    standalone_point(C-P1,Rest),
    make_point_object(VM.id,VM.h,VM.v,[iz(important)],C-P1,Obj),
    addObjects(VM,Obj),
    remCPoints(VM,[C-P1]),
-   single_dots(VM).
-single_dots(_):-!.
+   standalone_dots(VM).
+standalone_dots(_):-!.
 
 
 
@@ -838,7 +917,7 @@ proccess_overlap_reserved(Name,GridO,Grid,ID,H,V,[Obj|RestReserved],Sofar,SofarO
    % Points\==[],
   \+ color(Obj,black),
    object_grid(Obj,OGrid),
-   ogs(OH,OV,OGrid,Grid),
+   find_ogs(OH,OV,OGrid,Grid),
    %must_det_ll
    ((
    localpoints(Obj,OPoints),
@@ -1033,13 +1112,13 @@ addGPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 :- style_check(+singleton).
 
 in_set(Set,I):- member(E,Set), E=@=I,!.
-fti(VM,['fourway'|TODO]):- !,
+one_fti(VM,'fourway'):-
   H = VM.h,
   V = VM.v,
-  %ID = VM.id,
+  %VM.id = VM.id,
   H > 13, V> 13,
   largest_first(VM.objs,Ordered),     
-  grid_to_3x3_objs(Ordered,VM.grid,FourWay1s,Keep),
+  grid_to_3x3_objs(VM,Ordered,VM.grid,FourWay1s,Keep,_Repaired),
   must_det_ll((
   intersection(Ordered,Keep,_ReallyKeptO,TookbackO,GaveExtraBackO),
   remObjects(VM,TookbackO),
@@ -1055,6 +1134,7 @@ fti(VM,['fourway'|TODO]):- !,
   as_debug(8,print_grid(VM.h,VM.v,"New Grid...",VM.grid)),
   % set_bgc(LargestColor),  
   %Restart = VM.roptions,!,
+  TODO = VM.program,
   set(VM.options) = [progress|VM.options],
   maybe_done(VM,FourWay1s,TODO,NEXT),
   set(VM.program) = NEXT)).

@@ -23,32 +23,39 @@ into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort
 %into_gridoid(N,G):- into_gridoid0(N,G).    
    
 
-grav_rot:- test_p2(grav_rot).
+test_grav_rot:- test_p2(grav_rot).
 grav_rot(Group,List):- override_group(grav_rot(Group,List)),!.
-grav_rot(Shape,KeyR):- into_grid(Shape,Key1), grav_rot0(Key1,KeyR).
+grav_rot(Shape,Final):- into_grid(Shape,Grid),grav_mass(Grid,RotG),!,call_rot(RotG,Shape,Final).
 
-grav_rot0(Shape,ShapeO):-
-  findall(GRot,all_rotations(Shape,GRot),List),
-  predsort(sort_on(grav_mass),List,[ShapeO|_]).
+call_rot([],I,I):- !.
+call_rot([H|T],I,O):- !,
+  call_rot(H,I,M),
+  call_rot(T,M,O).
+call_rot(T,I,O):- call(T,I,O).
 
-grav_mass(Grid,Mass):- grid_size(Grid,H,V), !, grav_mass(Grid,H,V,Mass),!.
-grav_mass(Grid,_,_,Grid):- iz(Grid,hv_symmetric),!.
+grav_mass(Grid,same):- iz(Grid,hv_symmetric),!.
+grav_mass(Grid,RotOut):- vis_hv(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut).
 % make things bottem heavy
-grav_mass(Grid,H,V,RotG):- H<V, !, rot90(Grid,Grid90),!,bottem_heavy(Grid90,RotG).
-grav_mass(Grid,_H,_V,RotG):- is_symmetric_h(Grid),!,bottem_heavy(Grid,RotG).
-grav_mass(Grid,_H,_V,RotG):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG).
+%tips_to_rot(Grid,H,V,[rot270|RotOut]):- H<V, !, rot90(Grid,Grid90),!,tips_to_rot(Grid90,V,H,RotOut).
+tips_to_rot(Grid,H,V,[rot90|RotOut]):- is_top_heavy(Grid), !, rot270(Grid,Grid90), !, tips_to_rot(Grid90,V,H,RotOut).
+%tips_to_rot(Grid,H,V,[rot180|RotOut]):- is_top_heavy(Grid), !, rot180(Grid,Grid90), !, tips_to_rot(Grid90,H,V,RotOut).
+tips_to_rot(Grid,_H,_V,RotOut):- is_left_heavy(Grid)-> RotOut=rot180; RotOut=same.
+is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,color_mass(Top,TopM),color_mass(Bottem,BottemM),!,BottemM<TopM.
+is_left_heavy(Grid0):- rot90(Grid0,Grid),is_top_heavy(Grid).
+split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
+    my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
 
-bottem_heavy(Grid,Grid180):-  (is_top_heavy(Grid)->rot180(Grid,Grid180);Grid=Grid180).
+/*
+  bottem_heavy(Grid90,RotG,Grid180).
+grav_mass(Grid,_H,_V,RotG,Grid90):- is_symmetric_h(Grid),!,bottem_heavy(Grid,RotG,Grid90).
+grav_mass(Grid,_H,_V,RotG,Grid90):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG,Grid90).
+
+bottem_heavy(Grid,Turn,Grid180):-  (is_top_heavy(Grid)->(rot180(Grid,Grid180),Turn=rot180);(Grid=Grid180;Turn=same)).*/
 /*
 grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
   findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
   length(CList,Mass).
 */
-is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),mass(Top,TopM),mass(Bottem,BottemM),BottemM<TopM.
-
-split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
-    my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
-
 
 gravity:- test_p2(gravity(4,w)).
 gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
@@ -105,8 +112,7 @@ grid_same(X,X).
 same_grid(X1,X2):- into_grid(X1,G1),into_grid(X2,G2),same(G1,G2).
 same(X,X).
 
-rot270:- test_p2(rot270).
-rot90:- test_p2(rot90).
+test_rot:- test_p2(rot270),test_p2(rot90).
 %srot90V,flipV
 rot90( Grid,NewAnyWUpdate):- any_xform(grid_rot90,Grid,NewAnyWUpdate).
 rot180( Grid,NewAnyWUpdate):- any_xform(grid_rot180,Grid,NewAnyWUpdate).

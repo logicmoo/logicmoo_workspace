@@ -19,6 +19,11 @@ is_keypad_test(TestID,IO):- forall(kaggle_arc_io(TestID,trn+_,IO,Grid), \+ \+ ma
 :- discontiguous fav/2.
 
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
+
+fav(t(ff805c23),[ sol(i(complete),complete_input,copy_intruder_grid),
+ -shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
+
+
 fav(t('6150a2bd'),[clue(in::mass==out::mass),sol(rot180),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(2, 1)']).
 fav(t('ed36ccf7'),[clue(in::mass==out::mass),sol(rot270),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(4, 1)']).
 fav(v('6ea4a07e'),[clue(in::mass+out::mass=9),sol(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
@@ -279,7 +284,6 @@ fav(v('50a16a69'),[clue(in::grid_size==out::grid_size),-rotation_match,-color_ma
 fav(v(f823c43c),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(2, 1) ']).
 fav(t('4093f84a'),[clue(in::grid_size==out::grid_size),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,recoloring,projection_unto_rectangle,gravity,'(3, 1)']).
 fav(v('2a5f8217'),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(3, 1) ']).
-fav(t(ff805c23),[sol(i(complete),resize_grid(5,5),incomplete),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
 fav(t(ce602527),[sol(i(complete),resize_grid(5,5),incomplete),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,size_guessing,shape_guessing,remove_intruder,find_the_intruder,crop,'(4, 1)']).
 fav(v('7bb29440'),[sol(i(complete),resize_grid(5,5),incomplete),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(5, 1) ']).
 fav(v('5833af48'),[sol(i(complete),resize_grid(16,8),incomplete),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).

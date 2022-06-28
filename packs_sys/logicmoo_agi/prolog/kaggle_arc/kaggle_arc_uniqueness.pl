@@ -33,8 +33,8 @@ select_group0(Group,How):-
   How = [How1,How2]))  *-> true ; why_grouped(How,Group).
 select_group0(Group,obj_cache):- findall(O,obj_cache(O,_),GroupJ),sort(GroupJ,Group).
 
-:- add_history(what_unique).
-what_unique:- what_unique(n=0,n>10).
+:- add_history(test_what_unique).
+test_what_unique:- what_unique(n=0,n>10).
 
 
 :- add_history(what_unique(n=0,n>10)).

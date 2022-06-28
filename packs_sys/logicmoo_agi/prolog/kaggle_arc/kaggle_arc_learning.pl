@@ -37,7 +37,7 @@ find_by_shape(Grid,Find,Founds):-
  Prog = 
   (all_rotations(F,F1),
    %print_grid(F1),!,
-   ogs(H,V,F1,Grid),% trace,
+   find_ogs(H,V,F1,Grid),% trace,
 
    grid_to_points(F1,GH,GV,Points),
    pt(Points),
