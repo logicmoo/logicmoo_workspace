@@ -560,6 +560,8 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     show_pair_grid(green,IH,IV,OH,OV,'Test TestIn','Solution ExpectedOut (Not computed by us)',PairName,TestIn,ExpectedOut),!,  
     get_training(Training))),
     %sflag(indiv,_,0),
+    into_fti(TestID*ExampleNum*in,in,TestIn,InVM),
+    dicts_join(Training,InVM,TrainingVM),
     must_det_ll((    
     print(training(Training)),nl,
     dash_chars, dash_chars,    
@@ -568,7 +570,7 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     forall(sols_for(TestID,Trial,SolutionProgram),
      ignore((pt(cyan,trial=Trial),
        ptt(cyan,run_dsl(TestID,Trial,SolutionProgram)),
-       (run_dsl(Training,SolutionProgram,TestIn,Grid)*->true;TestIn=Grid),
+       (run_dsl(TrainingVM,SolutionProgram,TestIn,Grid)*->true;TestIn=Grid),
        into_pipe(Grid,Solution))
        *->    
        ignore((count_difs(ExpectedOut,Solution,Errors),

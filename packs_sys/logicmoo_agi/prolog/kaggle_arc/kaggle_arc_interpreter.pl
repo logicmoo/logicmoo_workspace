@@ -132,9 +132,10 @@ run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((nb_current(dsl_pipe
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
 run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
 
-
 % prevents unneeded updates such as color/position settings
 run_dsl(VM,_Mode,Prog,In,In):- \+ missing_arity(Prog, 0), !, call_expanded(VM,Prog).
+run_dsl(VM,_Mode,Step,In,In):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, call(Step,VM).
+run_dsl(VM,_Mode,Step,In,In):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), !, Step=..[F|ARGS], apply(F,[VM|ARGS]).
 
 run_dsl(VM,enforce,color(Obj,Color),In,Out):-!, 
  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),

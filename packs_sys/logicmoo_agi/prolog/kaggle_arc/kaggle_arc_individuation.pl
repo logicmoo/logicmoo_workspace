@@ -340,18 +340,18 @@ individuate_whole(GH,GV,ID,PointsIn,IndvSO):-
 
 
 % Thunk(ArgList->VM)
-call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- !,
-  (var(VM)->(make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM));true),
-  clause(fti(VM,Options),Body),
+call_fsi(VM,NewReserved,NewGrid,NewProgramCode,GH,GV,Sofar,ID,ProgramCode,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- !,
+  (var(VM)->(make_fti(GH,GV,ID,Grid,Sofar,Reserved,ProgramCode,Points,VM));true),
+  clause(fti(VM,ProgramCode),Body),
   call((Body,deterministic(YN),true)),
   (YN == true -> ! ; true),
   NewReserved = VM.robjs,
-  NewOptions = VM.program,
+  NewProgramCode = VM.program,
   NewGrid = VM.grid,
   NextScanPoints = VM.points,
   SofarMaybeNew = VM.objs .
-call_fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- fail,
-  clause(fsi(VM,NewReserved,NewGrid,NewOptions,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints),Body),
+call_fsi(VM,NewReserved,NewGrid,NewProgramCode,GH,GV,Sofar,ID,ProgramCode,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- fail,
+  clause(fsi(VM,NewReserved,NewGrid,NewProgramCode,GH,GV,Sofar,ID,ProgramCode,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints),Body),
   call((Body,deterministic(YN),true)),
   (YN == true -> ! ; true).
 

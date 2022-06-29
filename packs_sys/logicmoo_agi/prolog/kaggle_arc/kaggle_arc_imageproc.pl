@@ -85,10 +85,10 @@ append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),m
 append_down(Grid1,Grid2,Grid):- my_append(Grid1,Grid2,Grid).
 
 grow_row([],_,[]).
-grow_row([C1],Grid,G1):- !, no_run_dsl(C1,Grid,G1).
-grow_row([C1|Row],Grid,GM):- !, no_run_dsl(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
-grow([],_,[]).
-grow([[Self]],Grid,GridO):- !, no_run_dsl(Self,Grid,GridO).
+grow_row([C1    ],Grid,G1):- !, call(C1,Grid,G1).
+grow_row([C1|Row],Grid,GM):- !, call(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+grow([],       _  ,[]).
+grow([[Self]],Grid,GridO):- !, call(Self,Grid,GridO).
 grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
 
 no_run_dsl(GridO,_Self,GridO).
