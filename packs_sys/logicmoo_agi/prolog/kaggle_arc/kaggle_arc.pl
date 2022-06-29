@@ -127,13 +127,13 @@ goal_expansion(Goal,Out):- compound(Goal), arg(N1,Goal,E),
    compound(E), E = set(Obj,Member), setarg(N1,Goal,Var),
    expand_goal((Goal,b_set_dict(Member,Obj,Var)),Out).
 */
-get_setarg_p1(E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(E,Cmpd,SA).
-get_setarg_p2(E,Cmpd,SA):- arg(N1,Cmpd,E), SA=setarg(N1,Cmpd).
-get_setarg_p2(E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(E,Arg,SA).
+get_setarg_p1(P3,E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(P3,E,Cmpd,SA).
+get_setarg_p2(P3,E,Cmpd,SA):- arg(N1,Cmpd,E), SA=call(P3,N1,Cmpd).
+get_setarg_p2(P3,E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(P3,E,Arg,SA).
 
 
 term_expansion_setter((Head:-Body),Out):- 
-   get_setarg_p1(I,Head,P1), is_setter_syntax(I,Obj,Member,Var,How),
+   get_setarg_p1(setarg,I,Head,P1), is_setter_syntax(I,Obj,Member,Var,How),
    call(P1,Var),
    BodyCode = (Body, set_omember(How,Member,Obj,Var)),
    % goal_expansion_setter(BodyCode,Goal),
@@ -172,7 +172,7 @@ goal_expansion_setter(Goal,Out):-
    setarg(N1,Goal,Var), !, expand_goal((Goal,set_omember(How,Member,Obj,Var)), Out).
 
 goal_expansion_setter(Goal,Out):-
-   get_setarg_p1(I,Goal,P1), is_setter_syntax(I,Obj,Member,Var,How),
+   get_setarg_p1(setarg,I,Goal,P1), is_setter_syntax(I,Obj,Member,Var,How),
    call(P1,Var),!,
    expand_goal((Goal,set_omember(How,Member,Obj,Var)),Out).
 
@@ -695,6 +695,7 @@ reuse_a_b(A,B,AA):-
 test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_det_ll(Body)).
 :- add_history1(test_regressions).
 
+%:- forall(ping_indiv_grid(X),atom_concat(X,Y
 :- fixup_exports.
 %:- initialization(demo,program).
 %:- initialization(demo,restore_state).
@@ -702,5 +703,5 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 %:- initialization(demo,after_load).
 :- add_history1((cls,make,demo)).
 
-%:- find_tests.
+:- show_tests.
 :- load_last_test_name.

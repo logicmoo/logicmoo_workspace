@@ -1295,7 +1295,7 @@ jumps(H,V,ID,Sofar,Option,TODO,OptionsOut,Grid,Points,NewSofar,RestPoints):-
   % skip over MP
   is_adjacent_point(P0,Dir,P1), is_adjacent_point(P1,Dir,MP), is_adjacent_point(MP,Dir,P2),is_adjacent_point(P2,Dir,P3),
   any_gpoint(HV1,_-P0), any_gpoint(HV2,_-P3),
-  ignore(once((get_color_at(Points,Grid,MC),is_color(MC));MC=C)),
+  ignore(once((get_color_at_point(Grid,MP,MC),is_color(MC));MC=C)),
   \+ (any_gpoint(HV1,C-P1C), any_gpoint(HV2,C-P2C),is_adjacent_point(P1C,_,P2C)),
   % TODO: HACK WE MIGHT NOT WANT TO STEAL THE POINT?   
   once(select(MC-MP,Points,RestPoints);Points=RestPoints),

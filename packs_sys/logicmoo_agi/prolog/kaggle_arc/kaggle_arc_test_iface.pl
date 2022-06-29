@@ -33,7 +33,7 @@ menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
 menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
 menu_cmd(_,'S','     or  back to begining of (S)uite',(restart_suite)).
 menu_cmd(_,'N','     or (N)ext Suite',(next_suite)).
-menu_cmd(_,'L','     or (L)ist feature tests and run',(find_tests)).
+menu_cmd(_,'L','     or (L)ist feature tests and run',(run_a_test)).
  
 menu_cmd(i,'R','(R)un the Suite noninteractively',(run_all_tests,menu)).
 menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).
@@ -50,9 +50,14 @@ menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd1(Mode,Key,Mesg,Goal).
 
 find_tests(F):-
    current_predicate(N),N=F/0, atom_concat(test_,_,F),\+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit)).
-find_tests:- make,
-   findall(F,find_tests(F),L),forall(nth0(N,L,E),format('~N~w: ~w  ',[N,E])),
+list_of_tests(L):- findall(F,find_tests(F),L).
+
+show_tests:- make, list_of_tests(L),forall(nth0(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
+
+run_a_test:- 
+   show_tests,
    write("\nYour selection: "), read_line_to_string(user_input,Sel),
+   list_of_tests(L),
    ignore((atom_number(Sel,Num),nth0(Num,L,E),!,call(E))).
 
 clsR:- !. % once(cls).
@@ -124,7 +129,19 @@ save_last_test_name:-
   ignore(notrace((nb_current(test_name,TestID), tell(current_test),format('~n~q.~n',[TestID]),told))).
 
 set_current_test(Name):-  
-  ignore((fix_test_name(Name,TestID,_),is_valid_testname(TestID),nb_setval(last_test_name,TestID),nb_setval(test_name,TestID),save_last_test_name)),!,
+  ignore((fix_test_name(Name,TestID,_),is_valid_testname(TestID),really_set_current_test(TestID))).
+
+really_set_current_test(TestID):-
+   nb_setval(test_name,TestID),
+  (nb_current(last_test_name,WasTestID);WasTestID=[]),
+  (WasTestID==TestID-> true ; new_current_test_info).
+
+new_current_test_info:- 
+  ignore((
+  nb_current(test_name,TestID),
+  dmsg(fav(TestID,[])),
+  nb_setval(last_test_name,TestID))),
+  save_last_test_name,
   set_bgc(_),
   set_flag(indiv,0),
   nb_delete(grid_bgc),
@@ -247,7 +264,7 @@ test_names_ord_hard(NamesByHard):- pt(recreating(test_names_ord_hard)),findall(H
   asserta(ord_hard(NamesByHard)).
 
 %:- use_module(library(pfc_lib)).
-%:- retractall(ord_favs(_)),retractall(ord_hard(_)).
+:- retractall(ord_favs(_)),retractall(ord_hard(_)).
 
 ascending_hard:-
   tell('arc_ascending.pl'),
@@ -550,7 +567,7 @@ kaggle_arc(v(Name), TypeI, In, Out):-
 */
 
 fix_test_name(V,VV,_):- var(V),!,VV=V.
-fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=@=E,!.
+fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=E.
 
 fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried*ExampleNum,  Fixed,ExampleNum):- !, fix_id(Tried,Fixed).

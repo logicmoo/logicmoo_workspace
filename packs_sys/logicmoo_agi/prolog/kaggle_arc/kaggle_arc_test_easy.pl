@@ -20,6 +20,9 @@ is_keypad_test(TestID,IO):- forall(kaggle_arc_io(TestID,trn+_,IO,Grid), \+ \+ ma
 
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
+fav(t('47c1f68c'),[hedra]).
+fav(v(be03b35f),[]).
+
 fav(t(ff805c23),[ sol(i(complete),complete_input,copy_intruder_grid),
  -shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
 

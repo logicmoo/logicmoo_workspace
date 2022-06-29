@@ -990,9 +990,6 @@ is_symmetric_h(G):- mirror_h(_,_,G),!.
 :- fixup_exports.
 
 
-h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
-h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).
-h_symmetric(Group):- into_grid(Group,Grid),!,h_symmetric(Grid).
 
 
 

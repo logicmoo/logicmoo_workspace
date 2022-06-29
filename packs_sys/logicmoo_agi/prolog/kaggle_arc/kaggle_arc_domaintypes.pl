@@ -170,7 +170,8 @@ is_colorish(C):- cant_be_color(C,_),!.
 is_colorish(C):- get_bgc(BG),BG==C,!.
 is_colorish(C):- bg_sym(BG),BG==C,!.
 is_colorish(C):- fg_sym(FG),FG==C,!.
-is_colorish(C):- compound_var(C,_).
+is_colorish(C):- compound_var(C,_),!.
+%is_colorish(C):- compound(C),!,arg(1,C,A),nonvar(A),is_colorish(A).
 
 is_grid_color(C):- plain_var(C),!,fail.
 % makes grid colors an integer.. 
@@ -239,8 +240,12 @@ slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
 is_grid_cell(C):- var(C),!.
 is_grid_cell(C):- is_colorish(C),!.
 is_grid_cell(C):- atomic(C),!.
+is_grid_cell(_-C):- is_colorish(C).
 
 
+h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
+h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).
+h_symmetric(Group):- into_grid(Group,Grid),!,h_symmetric(Grid).
 
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
 

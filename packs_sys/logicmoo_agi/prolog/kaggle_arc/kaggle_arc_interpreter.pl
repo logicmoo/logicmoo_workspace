@@ -180,6 +180,7 @@ print_grid_to_atom(G,S):- with_output_to(atom(S),print_grid(G)).
 % ?- print_grid(gridFn(X)).
 cast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
 cast_to_grid(Dict,Grid, (=) ):- is_dict(Dict), get_dict(grid,Dict,Grid),!.
+cast_to_grid(Obj,Grid,Closure):- resolve_reference(Obj,Var),!,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
@@ -187,7 +188,7 @@ cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Tex
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
 
 cast_to_grid(Naming,Grid, Closure ):- 
-  ((named_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure)).
+  ((known_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure)).
   
 recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
@@ -202,32 +203,34 @@ recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points
   Success = found_points(true).
 
 uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
-named_gridoid(ID,G):- plain_var(ID),!,known_gridoid(ID,G).
-%named_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
-named_gridoid(ID,G):- known_gridoid(ID,G).
+known_gridoid(ID,G):- plain_var(ID),!,(known_grid(ID,G);known_object(ID,G)).
+known_gridoid(ID,G):- known_grid(ID,G),!.
+known_gridoid(ID,G):- known_object(ID,G),!.
+known_gridoid(ID,G):- known_object(ID,G),!.
+%known_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
 
-known_gridoid(ID,GO):- (known_gridoid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
+known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
-known_gridoid0(ID,_):- is_grid(ID),!.
-known_gridoid0(ID,G):- is_grid_id(G,ID).
-known_gridoid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
-known_gridoid0(ID,G):- ID = TstName*ExampleNum*IO,!,fix_id(TstName,Name),(kaggle_arc_io(Name,ExampleNum,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_gridoid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_gridoid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
-%known_gridoid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
-%known_gridoid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_gridoid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_gridoid0(Term,G).
+known_grid0(ID,_):- is_grid(ID),!.
+known_grid0(ID,G):- is_grid_id(G,ID).
+known_grid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
+known_grid0(ID,G):- ID = TstName*ExampleNum*IO,!,fix_id(TstName,Name),(kaggle_arc_io(Name,ExampleNum,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_grid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+%known_grid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
+%known_grid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_grid0(Term,G).
 
 
 to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,GO))),!. % ,ignore([[BG|_]|_]=GO).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 
-into_gridnameA(G,TstName):- known_gridoid(TstName,G).
+into_gridnameA(G,TstName):- known_grid(TstName,G).
 
 grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
 %grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
-grid_to_id(Grid,ID):- known_gridoid0(ID,GVar),Grid=@=GVar,!.
+grid_to_id(Grid,ID):- known_grid0(ID,GVar),Grid=@=GVar,!.
 grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_),!,grid_to_id(GGrid,ID).
 grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(ID), set_grid_id(Grid,ID),!.
 
@@ -235,22 +238,33 @@ makeup_gridname(GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridNa
 
 incomplete(X,X).
 
-into_obj(G,O):- no_repeats(O,into_obj0(G,O)).
+into_obj(G,O):- no_repeats(O,known_obj0(G,O)).
 
 o2g(Obj,Glyph):- g2o(Glyph,Obj),!.
-o2g(Obj,Glyph):- object_glyph(Obj,Glyph),nb_setval(Glyph,Obj),nop(asserta(g2o(Glyph,Obj))),!.
+o2g(Obj,NewGlyph):- object_indv_id(Obj,ID,Old), int2glyph(Old,Glyph), 
+ (nb_current(Glyph,O2) ->
+(O2=@=Obj->NewGlyph=Glyph; 
+ ( flag(indiv,Iv,Iv+1),int2glyph(Iv,NewGlyph),
+  subst(Obj,object_indv_id(ID,Old),object_indv_id(ID,Iv),NewObj),
+  nb_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,nb_linkval(NewGlyph,Obj))).
+
 o2c(Obj,Glyph):- color(Obj,Glyph).
 o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
 :- dynamic(g2o/2).
 
+g2o(G,O):- (atom(G);string(G)),Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
+g2o(C,O):- compound(C), !, C= objFn(_), !, known_obj0(C,O),!.
 g2o(G,O):- nb_current(G,O),is_object(O).
-into_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
-into_obj0(obj(O),obj(O)):- is_list(O),!.
-into_obj0(objFn(G),O):-!, into_obj(G,O),!.
-into_obj0(G,O):- g2o(G,O),!.
-into_obj0(G,O):- (atom(G);string(G)),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
-into_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
-into_obj0(G,O):- into_group(G,OL),must([O]=OL).
+
+known_object(G,O):- known_obj0(G,O).
+
+known_obj0(G,_):- G==[],!.
+known_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
+known_obj0(obj(O),obj(O)):- is_list(O),!.
+known_obj0(G,O):- g2o(G,O),!.
+known_obj0(G,O):- (atom(G);string(G)),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
+known_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
+known_obj0(G,O):- into_group(G,OL),must([O]=OL).
 
 % this is bad  ?- into_grid('E',ID),grid_to_id(G,ID).  ?- into_grid('Z',ID),grid_to_id(G,ID).
 
@@ -263,7 +277,7 @@ into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
 
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G, into_obj):- is_object(P),!,G=[P].
-into_group(P,G, lambda_rev(why_grouped)):- named_gridoid(P,M),!,into_group(M,G).
+into_group(P,G, lambda_rev(why_grouped)):- known_gridoid(P,M),!,into_group(M,G).
 into_group(P,G, _):- dumpST,throw(into_group(P,G)).
 /*
 into_group(P,G):- is_object(P),points_to_grid(P,M),!,into_group(M,G).
@@ -354,8 +368,8 @@ one_change(resize(C1, C2), Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1
 
 */
 
-arc_expand_arg(objFn(X),Var,into_obj(X,Var)).
-arc_expand_arg(gridFn(X),Var,into_grid(X,Var)).
+arc_expand_arg(objFn(X),Var,known_object(X,Var)).
+arc_expand_arg(gridFn(X),Var,known_grid(X,Var)).
 arc_expand_arg(groupFn(X),Var,into_group(X,Var)).
 
 goal_expansion_query(Goal,Out):-
@@ -364,7 +378,7 @@ goal_expansion_query(Goal,Out):-
    MOut\=@=P, setarg(N,Goal,MOut), expand_goal(Goal, Out).
 
 goal_expansion_query(Goal,Out):- compound(Goal),
-   get_setarg_p1(I,Goal,P1), compound(I), arc_expand_arg(I,Var,Exp),
+   get_setarg_p1(setarg,I,Goal,P1), compound(I), arc_expand_arg(I,Var,Exp),
    call(P1,Var),expand_goal((Exp,Goal),Out).
 
 

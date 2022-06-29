@@ -316,8 +316,9 @@ transfer_props_l([_|L],Functors,List,NewList):-
 */
 
 object_indv_id(I,ID,Iv):- indv_props_old(I,L),member(object_indv_id(ID,Iv),L),!.
-object_indv_id(I,_ID,Fv):- is_grid(I), flag(indiv,Fv,Fv+1).
-object_indv_id(I,ID,Iv):- throw(missing(object_indv_id(I,ID,Iv))).
+object_indv_id(I,_ID,Fv):- is_grid(I),!, flag(indiv,Fv,Fv+1).
+object_indv_id(I,ID,Fv):- into_obj(I,O),!,object_indv_id(O,ID,Fv).
+object_indv_id(I,ID,Iv):- trace_or_throw(missing(object_indv_id(I,ID,Iv))).
 %object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
 
 mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
@@ -420,7 +421,7 @@ isz(I,X):- var_check(I,iz(I,X))*->true;(indv_props(I,L),member(iz(X),L)).
 
 obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),member(X,L)).
 
-resolve_reference(R,Var):- is_dict(R),Var = R.grid.
+resolve_reference(R,Var):- is_dict(R),Objs = R.objs,!, (Objs\==[] -> Var=Objs; Var = R.grid).
 resolve_reference(R,Var):- compound(R),arc_expand_arg(R,Var,Goal),!,call(Goal).
 rotation(G,X):- is_group(G),!,mapgroup(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- var_check(I,rotation(I,X)).
@@ -458,15 +459,15 @@ all_points_between_include_bg(Grid,LowH,LowV,GH,GV,Hi,Vi,Points,PointsO):-
 
 color_spec_or_fail_include_bg(Grid,C,Hi,Vi):-
   hv_c_value(Grid,C2,Hi,Vi),
-  (is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=C2)).
+  (is_spec_color(C2,C);(atomic(C2),C=C2);(attvar(C2),C=C2);(var(C2),C=C2)).
 
 color_spec_or_fail_include_bg_more(Grid,C,Hi,Vi):- 
   get_bgc(BGC),
   hv_c_value_or(Grid,C2,Hi,Vi,BGC),
-  (is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=BGC)).
+  (is_spec_color(C2,C);(atomic(C2),C=C2);(attvar(C2),C=C2);(var(C2),C=BGC)).
   
 grid_cpoint(Grid,C-Point,Hi,Vi):- hv_c_value(Grid,C2,Hi,Vi),
-(is_spec_color(C2,C);(attvar(C2),C=C2);(var(C2),C=C2)),
+(is_spec_color(C2,C);(atomic(C2),C=C2);(attvar(C2),C=C2);(var(C2),C=C2)),
   hv_point(Hi,Vi,Point).
 
 grid_to_points(Grid,Points):- grid_size(Grid,HH,HV),!, grid_to_points(Grid,HH,HV,Points).
@@ -475,7 +476,7 @@ grid_to_points(Grid,HH,HV,Points):- all_points_between(Grid,1,1,HH,HV,1,1,[],Poi
 % Is there an advantage to counting down?
 grid_to_points_include_bg(Grid,Points):- grid_size(Grid,HH,HV),!,all_points_between_include_bg(Grid,1,1,HH,HV,1,1,[],Points),!. 
 /*
-grid_to_points(Grid,HH,HV,Points):-  throw(all_points_between),
+grid_to_points(Grid,HH,HV,Points):-  trace_or_throw(all_points_between),
   findall(C-Point,(between(1,HV,V),between(1,HH,H),
     once((hv_cg_value(Grid,C2,H,V),
           %pt(hv_cg_value(C2,H,V)),
@@ -490,6 +491,7 @@ gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints), isz(Obj,Shape),
    
 
 globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
+globalpoints(Grid,Points):- is_grid(Grid),!, grid_to_points(Grid,Points).
 globalpoints(G,[G]):- is_point(G),!.
 globalpoints(C-P,[C-P]):-!.
 globalpoints(G,G):- maplist(is_point,G),!.
@@ -497,11 +499,10 @@ globalpoints([],[]):-!.
 globalpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(globalpoints(Atom)).
 globalpoints(options(X),_Points):- trace_or_throw(globalpoints(options(X))).
 globalpoints(I,X):- globalpoints0(I,X),!.
-globalpoints(Grid,Points):- is_grid(Grid),!, grid_to_points(Grid,Points).
 globalpoints(Grid,Points):- is_list(Grid),!,mapgroup(call(globalpoints),Grid,MPoints),append_sets(MPoints,Points).
 globalpoints(I,X):- localpoints0(I,X),!.
 globalpoints(G,G):- mapgroup(is_point,G),!.
-globalpoints(I,X):- throw(unknown(globalpoints(I,X))).
+globalpoints(I,X):- trace_or_throw(unknown(globalpoints(I,X))).
 
   globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L), nop(my_assertion(maplist(is_cpoint,X))),!.
   %globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
@@ -518,7 +519,7 @@ localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),app
 localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(localpoints(Atom)).
 localpoints(I,X):- globalpoints0(I,X),!.
 localpoints(G,G):- mapgroup(is_point,G),!.
-localpoints(I,X):- throw(unknown(localpoints(I,X))).
+localpoints(I,X):- trace_or_throw(unknown(localpoints(I,X))).
 
   localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
   %localpoints(I,X):- into_grid(I,G),!,grid_size(G,H,V),grid_to_points(G,H,V,X).
@@ -563,9 +564,10 @@ object_grid(I,G):- localpoints(I,LP),vis_hv(I,H,V),points_to_grid(H,V,LP,G),!.
 loc_xy_term(I,loc(X,Y)):- loc_xy(I,X,Y),!.
 
 loc_xy(G,X,Y):- is_group(G),!,mapgroup(loc_xy_term,G,Offsets),sort(Offsets,[loc(X,Y)|_]). % lowest loc
-loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
+loc_xy(Grid,H,V):- is_grid(Grid),!,H=1,V=1.
+%loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
 loc_xy(I,X,Y):- into_obj(I,O), indv_props(O,L),member(loc_xy(X,Y),L),!.
-%loc_xy(NT,H,V):- trace, named_gridoid(NT,G),loc_xy(G,H,V).
+%loc_xy(NT,H,V):- trace, known_gridoid(NT,G),loc_xy(G,H,V).
 
 vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y),!.
 
@@ -574,7 +576,7 @@ vis_hv(G,X,Y):- is_group(G),!,mapgroup(vis_hv_term,G,Offsets),sort(Offsets,HighT
 vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L),!.
 vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
-vis_hv(NT,H,V):-  trace, named_gridoid(NT,G),vis_hv(G,H,V).
+vis_hv(NT,H,V):-  trace, known_gridoid(NT,G),vis_hv(G,H,V).
 
 
 %vis_hv(Obj,size(H,V)):- vis_hv(Obj,H,V).
@@ -604,21 +606,48 @@ rebuild_from_localpoints(Obj,NewObj):-
 rebuild_from_localpoints(Obj,WithPoints,NewObj):-
  must_det_ll((
   localpoints(WithPoints,Points),
-  rotation(Obj,Rot),unrotate(Rot,UnRot),
-  loc_xy(Obj,X,Y),vis_hv(Obj,H,V),
+
+  localpoints(Obj,PrevPoints),
+
+  (Points=@=PrevPoints -> (NewObj=Obj) ;
+
+ (rotation(Obj,Rot),unrotate(Rot,UnRot),
+  loc_xy(Obj,X,Y),%vis_hv(Obj,H,V),
   grid_size(Obj,GH,GV),
-  object_indv_id(Obj,ID,_Iv),grid_size(Obj,GH,GV),
-  points_to_grid(H,V,Points,Grid),
+  object_indv_id(Obj,ID,_Iv),
+  %uncast_grid_to_object(Orig,Grid,NewObj),
+  points_to_grid(Points,Grid),
   call(UnRot,Grid,UnRotGrid),
   localpoints(UnRotGrid,LPoints),
   offset_points(X,Y,LPoints,GPoints),
   indv_props(Obj,Props),
   my_partition(lambda_rev(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
-    make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj))),
+    make_indiv_object(ID,GH,GV,Points,[loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj))))),
    verify_object(NewObj),
   !.
 
+blur_p2(P2,Obj,NewObj):-  
+  into_obj(Obj,X),
+  center(X,XCH,XCV),
+  
+  call(P2,X,Y),!,
+  globalpoints(X,XGP),
+  globalpoints(Y,YGP),
+  pct((
+  vis_hv(X,XH,XV),
+  vis_hv(Y,YH,YV),
+  grid_size(X,XGH,XGV),
+  grid_size(Y,YGH,YGV),
+  center(Y,YCH,YCV),
+  loc_xy(X,XX,XY),
+  loc_xy(Y,YX,YY))),
+  print_grid(XGH,XGV,XGP),
+  print_grid(YGH,YGV,YGP),
+  append(XGP,YGP,XYGP),
+  rebuild_from_globalpoints(Obj,XYGP,NewObj).
+
+pct(G):- call(G), ptt(G).
 
 rebuild_from_globalpoints(Obj,NewObj):-
   globalpoints(Obj,GPoints),

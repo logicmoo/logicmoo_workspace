@@ -44,7 +44,7 @@ assert_id_grid_cells2(ID,SH,SV,Grid):-
 
 get_color_at(H,V,Grid,C):-
   nth1(V,Grid,Row),nth1(H,Row,C).
-get_color_at(Point,Grid,C):-
+get_color_at_point(Grid,Point,C):-
   hv_point(H,V,Point),
   nth1(V,Grid,Row),nth1(H,Row,C).
 
@@ -182,13 +182,14 @@ from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
 
 %hv_c_value(O,_Color,_H,_V):- is_object(O), iz(O,combined), !, fail.
 hv_c_value(ID,C,H,V):- (var(H);var(V)),!,dumpST,trace, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
+hv_c_value(O,Color,H,V):- is_object(O),!,globalpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
 hv_c_value(O,Color,H,V):- is_list_of(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).
 hv_c_value(O,fg   ,H,V):- is_list_of(is_nc_point,O),!,hv_point(H,V,Point),member(Point,O).
 hv_c_value(O,Color,H,V):- is_cpoint(O),!,O=(Color-Point),hv_point(H,V,Point),!.
 hv_c_value(O,fg   ,H,V):- is_nc_point(O),!,O=Point,hv_point(H,V,Point),!.
-hv_c_value(O,Color,H,V):- is_object(O),!,globalpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 %hv_c_value(G,Color,H,V):- is_group(G),!,into_list(G,L),member(E,L),hv_c_value(E,Color,H,V),!.
+hv_c_value(O,Color,H,V):- known_gridoid(O,G),!,hv_c_value(G,Color,H,V).
 hv_c_value(G,Color,H,V):- my_assertion(into_list(G,L)),!,member(E,L),hv_c_value(E,Color,H,V),!.
 %hv_c_value(O,Color,H,V):- is_object(O),localpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 %hv_c_value(L,Color,H,V):- is_list(L), member(E,L),hv_c_value(E,Color,H,V),!.
@@ -238,7 +239,7 @@ has_index(CI):-  nb_current(CI,List),List\==[],is_list(List),!.
 hv_cg_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_cg_value(ID,CC,H,V),CC=C.
 hv_cg_value(O,GN,H,V):- is_dict(O),append([O.objs],[O.grid],I),!,hv_cg_value(I,GN,H,V).
 hv_cg_value(O,Color-GN,H,V):- is_object(O),hv_c_value(O,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.
-hv_cg_value(Grid,Color,H,V):- is_grid(Grid),!,hv_c_value(Grid,Color,H,V).
+hv_cg_value(Grid,Color,H,V):- is_grid(Grid),!,nth1(V,Grid,Row),nth1(H,Row,Color).
 hv_cg_value([G|Points],CN,H,V):- quietly(( is_list(Points), is_object_or_grid(G))), 
    grid_color_and_glyph([G|Points],C,N,H,V),CN=(C-N),!.
 %hv_cg_value(O,CN,H,V):- (has_index(color_index);has_index(glyph_index)),

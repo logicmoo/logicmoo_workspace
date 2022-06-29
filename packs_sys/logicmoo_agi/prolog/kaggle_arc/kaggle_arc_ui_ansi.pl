@@ -419,7 +419,7 @@ print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid), pt(GG),!,nop(trace_or_throw(GG)).
 
-print_grid0(H,V,D):- is_dict(D),ignore(H = G.h),ignore(V = G.v),!,append(G.objs,[G.grid],Grid),!, print_grid0(H,V,Grid).
+print_grid0(H,V,D):- is_dict(D),ignore(H = D.h),ignore(V = D.v),Objs = D.objs,!, (Objs\==[] -> print_grid0(H,V,Objs);print_grid0(H,V,D.grid)).
 print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
 print_grid0(H,V,Grid):- is_points_list(Grid), points_to_grid(H,V,Grid,PGrid),!,print_grid0(H,V,PGrid).
 print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,

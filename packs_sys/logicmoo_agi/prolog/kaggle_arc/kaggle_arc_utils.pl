@@ -15,6 +15,13 @@ my_len(X,Y):- functor([_|_],F,A),functor(X,F,A),!,length(X,Y).
 my_len(X,Y):- dumpST,!,break.
 */
 
+
+nb_subst(Obj,New,Old):-
+  get_setarg_p1(nb_setarg,Found,Obj,P1),Found=@=Old,!,
+  call(P1,New),!,nb_subst(Obj,New,Old).
+nb_subst(_Obj,_New,_Old).
+
+
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
 
@@ -139,6 +146,15 @@ map_pred(_Pred, P, _, _, P1) :- is_ftVar(P), !, must(P1=P), !.
 map_pred(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, map_pred(Pred, P, X, Sk, P1), !, must(map_pred(Pred, Args, X, Sk, ArgS)), !.
 map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
 map_pred(_Pred, P, _, _, P).
+
+mapgrid(P3,Grid,GridN,GridO):- is_list(Grid),!,maplist(mapgrid(P3),Grid,GridN,GridO).
+mapgrid(P3,Grid,GridN,GridO):- call(P3,Grid,GridN,GridO),!.
+
+mapgrid(P3,Grid,GridN):- is_list(Grid),!,maplist(mapgrid(P3),Grid,GridN).
+mapgrid(P3,Grid,GridN):- call(P3,Grid,GridN),!.
+
+mapgrid(P3,Grid):- is_list(Grid),!,maplist(mapgrid(P3),Grid).
+mapgrid(P3,Grid):- call(P3,Grid),!.
 
 
 subst001(I,F,R,O):- subst0011(F,R,I,O),!.
