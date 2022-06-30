@@ -421,6 +421,8 @@ isz(I,X):- var_check(I,iz(I,X))*->true;(indv_props(I,L),member(iz(X),L)).
 
 obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),member(X,L)).
 
+vm_to_printable(D,R) :- Objs = D.objs,!, (Objs\==[] -> R = Objs; R = D.grid ).
+
 resolve_reference(R,Var):- is_dict(R),Objs = R.objs,!, (Objs\==[] -> Var=Objs; Var = R.grid).
 resolve_reference(R,Var):- compound(R),arc_expand_arg(R,Var,Goal),!,call(Goal).
 rotation(G,X):- is_group(G),!,mapgroup(rotation,G,Points),append_sets(Points,X).

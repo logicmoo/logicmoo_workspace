@@ -244,8 +244,12 @@ add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
 
 
 %assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<4,!.
-assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(lambda_rev(assert_shape_lib(Obj)),Type).
-assert_shape_lib(Type,Obj):- nop(my_asserta_if_new(in_shape_lib(Type,Obj))).
+assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(lambda_rev(assert_shape_lib3(Type,Obj)),Type).
+assert_shape_lib(Type,Obj):- assert_shape_lib3(Type,[Type],Obj).
+assert_shape_lib3(Type,InfoIn,Obj):- 
+   get_training(Training),
+   Info = [Training.test_id|InfoIn],
+   nop(my_asserta_if_new(in_shape_lib(Type,Info,Obj))).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).
 

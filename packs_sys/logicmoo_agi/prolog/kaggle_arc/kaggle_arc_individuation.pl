@@ -83,6 +83,15 @@ maybe_multivar(_).
 individuation_macros(out, complete).
 individuation_macros(in, complete).
 
+individuation_macros(train_mono_in_in, complete).
+individuation_macros(train_mono_in_out, complete).
+individuation_macros(train_mono_out_out, complete).
+individuation_macros(trn_in_in, complete).
+individuation_macros(trn_in_out, complete).
+individuation_macros(trn_out_out, complete).
+
+
+
 % if there are 3 or less of a color dont group the whole color (It/they must be special points)
 individuation_macros(by_color, X):-
    findall(by_color(10,Color),enum_colors(Color),X).
@@ -102,7 +111,7 @@ individuation_macros(subshape_in_object, [
 individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
    rectangle, diamonds,
-   find_repetition,
+   indiv_grid_pings,
    recalc_sizes,
    hv_line(h),  
    dg_line(d), 
@@ -182,7 +191,7 @@ individuation_macros(altro, [
 % the typical toplevel indivduator
 individuation_macros(complete, [
     shape_lib(as_is),
-    find_colorfull_idioms,
+   % show_colorfull_idioms,
     shape_lib(as_is),
     rectangle,point_corners,
     standard,%colormass_merger(3), % call the standard things done in most indiviguators    
@@ -327,7 +336,7 @@ individuate_glyphic(GH,GV,ID,PointsIn,IndvSO):-
   my_append(IndvList,[Whole],IndvS),!,
   override_object(birth(glyphic),IndvS,IndvSO),
   save_grouped(individuate_glyphic(ID),IndvSO),
-  assert_shape_lib(pair,Whole))),!.
+  nop(assert_shape_lib(pair,Whole)))),!.
 
 individuate_whole(_GH,_GV,_ID,PointsIn,IndvS):- PointsIn==[],!,IndvS=[].
 individuate_whole(GH,GV,ID,PointsIn,IndvSO):-
@@ -336,7 +345,7 @@ individuate_whole(GH,GV,ID,PointsIn,IndvSO):-
   make_indiv_object(ID,GH,GV,Points,[mass(Len),vis_hv(GH,GV),iz(combined),iz(grid),birth(whole),iz(image)],Whole),
   IndvSO=[Whole],
   save_grouped(individuate_whole(ID),IndvSO),
-  assert_shape_lib(pair,Whole),!.
+  nop(assert_shape_lib(pair,Whole)),!.
 
 
 % Thunk(ArgList->VM)
@@ -378,7 +387,7 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    % height width and lookup key for image
    h:GH, v:GV, id:ID},
    (var(VM) -> (fix_test_name(ID,TestID,_), make_training_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
-   (nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
+   %(nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
    !.
@@ -558,13 +567,20 @@ fti(VM,_):-
       pt(t([found_mass=(Count,Mass+PC),fsi=VM.program])))),fail.
 
 
-fti(VM,[Step|Program]):- set(VM.program) = Program, one_fti(VM,Step).
-
-fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_step(F), set(VM.program) = Program, call(Step,VM).
-fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_stepr(F), set(VM.program) = Program, Step=..[F|ARGS], apply(F,[VM|ARGS]).
+fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_step(F), !, set(VM.program) = Program, ignore(call(Step,VM)).
+fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_stepr(F), !, set(VM.program) = Program, Step=..[F|ARGS], ignore(apply(F,[VM|ARGS])).
+fti(VM,[Step|Program]):- functor(Step,F,_), ping_indiv_grid(F), set(VM.program) = Program, call(F,VM.grid).
+fti(VM,[Step|Program]):- set(VM.program) = Program, one_fti(VM,Step),!.
 
 is_fti_step(release_objs_lighter).
 is_fti_stepr(_):-fail.
+
+is_fti_step(indiv_grid_pings).
+
+indiv_grid_pings(VM):-
+  Grid = VM.grid,
+  forall(ping_indiv_grid(P1),ignore(catch(call(P1,Grid),_,fail))),!.
+
 
 release_objs_lighter(Two,VM):-
   my_partition(less_mass(Two),VM.objs,Smaller,set(VM.objs)),
@@ -731,7 +747,7 @@ fti(VM,[call(G)|set(VM.program)]):- call_expanded(VM,G).
 fti(VM,[when(G,D)|TODO]):- ((call_expanded(VM,G),!,pt(using_when(G,D)))->R=D;R=call(pt(skipped(G,D)))),
   set(VM.program) = [R|TODO].
 
-fti(VM,[find_colorfull_idioms|set(VM.program)]):- ignore(find_colorfull_idioms(VM.grid)).
+%fti(VM,[show_colorfull_idioms|set(VM.program)]):- ignore(show_colorfull_idioms(VM.grid)).
 
 %fti(VM,[calc_largest_square_block|set(VM.program)]):-
 %  calc_largest_square_block(VM),VM.objs,set(VM.objs),VM.points,set(VM.points)),!.
@@ -807,10 +823,6 @@ fti(VM,[macro(AddTodo)|TODO]):-
   my_append([progress|TodoL],TODO,set(VM.program)).
 
 
-fti(VM,[DO|TODO]):- 
-  fsi(VM,set(VM.robjs),set(VM.grid),set(VM.program),
-    VM.h,VM.v,VM.objs,VM.id,[DO|TODO],VM.robjs, VM.points,VM.grid,set(VM.objs),set(VM.points)).
-
 % Thunk(VM -> ArgList)
 fsi(VM,ReservedIO,Grid,TODO,H,V,Sofar,ID,[retain_grid(Options)|TODO],ReservedIO,PointsIO,Grid,IndvList,PointsIO):-
   listify(Options,OptionsL),!,
@@ -829,6 +841,9 @@ fti(VM,[by_color(Min,C)|set(VM.program)]):-
    addObjects(VM,ColorObj)))).
 
 
+fti(VM,[DO|TODO]):- 
+  fsi(VM,set(VM.robjs),set(VM.grid),set(VM.program),
+    VM.h,VM.v,VM.objs,VM.id,[DO|TODO],VM.robjs, VM.points,VM.grid,set(VM.objs),set(VM.points)).
 
 /*
 fti(VM,[by_color(Min,[])|set(VM.program)]):-!.
@@ -974,13 +989,6 @@ fsi(_VM,Reserved,NewGrid,TODO,H,V,Sofar,ID,[release_points|TODO],Reserved,Points
 
 fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[retain(_)|TODO],Reserved,Points,Grid,Sofar,Points):-  
   Sofar = [], !.
-
-fsi(_VM,Reserved,GridO,TODO,_H,_V,Sofar,_ID,[with_grid(Call)|TODO],Reserved,Points,Grid,Sofar,Points):-
-    call(Call,Grid,GridO).
-fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[with_points(Call)|TODO],Reserved,Points,Grid,Sofar,PointsO):-
-    call(Call,Points,PointsO).
-fsi(_VM,Reserved,Grid,TODO,_H,_V,Sofar,_ID,[with_sofar(Call)|TODO],Reserved,Points,Grid,SofarO,Points):-
-    call(Call,Sofar,SofarO).
 
 fsi(_VM,Reserved,NNewGrid,TODO,H,V,Sofar,ID,[retain(Option)|TODO],Reserved,_Points,Grid,Retained,NextScanPoints):-
     globalpoints(Grid,NewGPoints),  H> 14, V> 14,

@@ -894,3 +894,155 @@ make_grid_indexer:-
 gr2o(Grid,Obj):- localpoints(Grid,NoisePoints), make_indiv_object(NoisePoints,[object_shape(noise)],Obj),!.
 %gr2o(Grid,Obj):- Grid=Obj.
 
+make_indivs(Pred,In,Out,InC,OutC):-
+ %locally(i_o_w(In,Out),
+  make_indivs1(Pred,In,Out,InC,OutC).
+
+make_indivs1(Pred,In,Out,InC,OutC):-
+  mass(Out,OMass), mass(In,IMass), OMass>IMass,
+  make_indivs_no_swap(Pred,Out,In,OutC,InC),
+  save_off(Pred,In,Out,InC,OutC).
+
+make_indivs1(Pred,In,Out,InC,OutC):- 
+  make_indivs_no_swap(Pred,In,Out,InC,OutC),
+  nop(save_off(Pred,In,Out,InC,OutC)).
+
+save_off(_Pred,_In,_Out,InC,OutC):-
+ ((
+  get_training(Training),!,
+  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),!,
+  add_shape_lib(pair,Removed),!,  
+  add_shape_lib(pair,Added),!,
+  add_shape_lib(pair,RetainedIn),!,
+  %rtrace,
+  % % %  set(Training.grid_in) = In,!,
+  %trace,
+
+  % % %  set(Training.grid_out) = Out,
+  % % %  set(Training.inC) = InC,
+  % % %  set(Training.outC) = OutC,
+  % % %  set(Training.added) = Added,
+  % % %  set(Training.removed) = Removed,
+  % % %  set(Training.kept) = RetainedIn,
+  %nortrace,
+  nop(set_training(Training)))),!.
+
+make_indivs_no_swap(Pred,In,Out,InC,OutC):-
+ must_det_ll((
+  writeln(inC(Pred)),
+  %rtrace,
+  call_indv(Pred,In,InC),
+  add_shape_lib(pair,InC),!,
+  writeln(outC(Pred)),
+  call_indv(Pred,Out,OutC),
+  %add_shape_lib(out,OutC),
+  writeln(inOutC(Pred)))),!.
+
+call_indv(Pred,Out,OutC):-
+ must_det_ll((
+  %get_training(Training),
+  % % %  set(Training.grid) = Out, % % %  set(Training.grid_o) = Out,
+  %% % %  set(Training.objs) = _, % % %  set(Training.points) = _,
+  %% % %  set(Training.robjs) = _, % % %  set(Training.points_o) = _,
+  %grid_size(Out,H,V), % % %  set(Training.h) = H, % % %  set(Training.v) = V,
+  %nortrace,
+  call(Pred,Out,OutC))),!.
+  %set_training(Training).
+
+
+/*
+show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-  
+  ignore(IH=1),
+  LW is (IH * 2 + 12),
+  append_term_safe(When,Pred+PairName+in,NameIn),
+  append_term_safe(When,Pred+PairName+out,NameOut),
+  wots(U1, print_grid(IH,IV,NameIn,In)),
+  wots(U2, print_grid(OH,OV,NameOut,Out)),
+  print_side_by_side(U1,LW,U2),
+  my_append(InC,OutC,InOutC),
+  smallest_first(InOutC,SF),
+  %largest_first(InOutC,LF),
+  %show_pair_no_i(IH,IV,OH,OV,smallest_first(When,Pred),PairName,InC-SF,OutC-SF),
+  %wots(U3, print_grid(IH,IV,NameIn,InC-SF)),wots(U4, print_grid(OH,OV,NameOut,OutC-SF)),print_side_by_side(U3,LW,U4),
+  %max_min(IH,OH,H,_),max_min(IV,OV,V,_),
+  show_pair_no_i(IH,IV,OH,OV,normal(When,Pred),PairName,InC,OutC),
+  INFO = [grid_dim,mass,colors_count_size,colors],
+  print_side_by_side(
+     describe_feature(InC,[call(writeln('IN'))|INFO]),LW,
+    describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
+  show_pair_I_info(NameIn,NameOut,InC,OutC).
+*/
+
+
+
+
+
+
+
+  /*
+
+  nop((
+       show_indivs(IH,IV,OH,OV,individuate_complete,early,PairName,In,Out,SF),
+       forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
+       add_shape_lib(pairs,SF),
+       show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
+       show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
+       with_named_pair(solve,TestID,PairName,In,Out),
+*/
+/*
+  remove_global_points(UnsharedIn,In,InForgotten),
+  remove_global_points(UnsharedOut,Out,OutForgottenM),
+  ((mass(OutForgottenM,OM),OM==0) -> OutForgotten=OutC; OutForgotten=OutForgottenM),
+  individuate(complete,InForgotten,ForgottenShapesIn),
+  individuate(complete,OutForgotten,ForgottenShapesOut),
+
+  % contains_points(InForgotten);contains_points(OutForgotten)
+  %show_pair_no_i(IH,IV,OH,OV,forgotten,PairName,ForgottenShapesIn,ForgottenShapesOut),
+
+  show_pair_no_i(IH,IV,IH,IV,forgotten_In,PairName,UnsharedIn,ForgottenShapesIn),
+  show_pair_no_i(OH,OV,OH,OV,forgotten_Out,PairName,ForgottenShapesOut,OutC),
+*//*
+       show_indivs(In,Out),
+       individuate(defaults,In,InC),
+       individuate(defaults,Out,OutC),  
+       writeln(outC),
+
+       clear_shape_lib(out),
+       clear_shape_lib(in),
+       add_shape_lib(out,OutC),
+       writeln(inOutC),
+       show_pair_i(IH,IV,OH,OV,early_test,PairName,InC,OutC),
+       writeln(inC),
+       individuate(defaults,In,UnsharedIn),
+       writeln(outC),
+       individuate(defaults,Out,UnsharedOut),
+       writeln(inUnsharedOut),
+       show_pair_i(IH,IV,OH,OV,late_test,PairName,UnsharedIn,UnsharedOut),
+       format('~N1-sofar~N1'),!,
+       %pt(yellow,in=UnsharedIn),
+       pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
+       format('~N1-pred_intersection~N1'),
+        individuate(UnsharedOut,Out,SharedInR),
+        individuate(UnsharedIn,In,SharedOutR),
+        show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))), !.*/
+  %format('~N1-Rule made from~N1'),
+  %show_rules,
+/*  RESS =.. [res,unsharedIn=UnsharedIn,
+             %onlyIn= IPCs,
+            commonIn=CommonCsIn,commonOut=CommonCsOut, %onlyOut=OPCs, 
+             unsharedOut=UnsharedOut],
+  tersify(RESS,ShortInfo),         
+  format('~N1-Stats:~N1'),
+  pt(yellow,sol=ShortInfo), !.
+  */
+	
+/*
+  
+  nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
+  ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
+    show_pair_i(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
+     writeln('nothing better')))),
+*/
+  
+
+

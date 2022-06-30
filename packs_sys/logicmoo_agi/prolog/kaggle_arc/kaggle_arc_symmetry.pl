@@ -257,7 +257,8 @@ nop((
 
 
 %rotation(obj(L),G):- member(rotation(G),L).
-
+% Hedra's t('47c1f68c')
+% v(be03b35f)*(trn+2),
 %detect_grid(Grid,E):- 
 
 grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):- 
@@ -270,15 +271,15 @@ grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):-
   include(nonvar_or_ci,Flat,Grids),
   maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,Keep,RepairedResult))).
 
-test_see_symmetry:- clsmake, time((findall(_,(arc_grid(G),see_symmetry(G)),L))),length(L,N),writeln(test_see_symmetry=N).
+test_see_symmetry:- clsmake, time((findall(_,(arc_grid(G),show_symmetry(G)),L))),length(L,N),writeln(test_see_symmetry=N).
 
  % time((forall(arc_grid(G),test_see_symmetry(G)))).
 
-test_see_symmetry(G):- see_symmetry(G),!.
+test_see_symmetry(G):- show_symmetry(G),!.
 
 % 6cdd2623
 
-% see_symmetry(VM):- Grid = VM.grid, see_symmetry(VM,vm.h,VM.v,Grid).
+% show_symmetry(VM):- Grid = VM.grid, show_symmetry(VM,vm.h,VM.v,Grid).
 append_nth1([], 0, L, L).
 append_nth1([H|T], N2, L, [H|R]) :-
     append_nth1(T, N, L, R),
@@ -405,16 +406,16 @@ roll_d(N,G,GG):- maplist_n(N,roll_h,G,GGR),!,reverse(GGR,GG).
 roll_h(N,G,GG):- length(LL,N),append(LL,RR,G),append(RR,LL,GG).
 
 
-ping_indiv_grid(see_symmetry).
+ping_indiv_grid(show_symmetry).
 
-see_symmetry(G):-
+show_symmetry(G):-
   see_symmetry0(How,G,GG),
   print_side_by_side(GG,G),!,
   writeln(How).
-%see_symmetry(G):- !, roll_d(G,GGG),!,roll_dr(GGG,GG),!,
+%show_symmetry(G):- !, roll_d(G,GGG),!,roll_dr(GGG,GG),!,
 %  print_side_by_side(GG,G),!.
 
-see_symmetry(G):-
+show_symmetry(G):-
   grid_size(G,GH,GV),
   list_to_set(G,UR),
   member(E,UR),
@@ -782,6 +783,8 @@ all_bg(Pattern):- get_bgc(BG),is_all_color(BG,Pattern).
 is_all_color(BG,Pattern):- is_list(Pattern),!,maplist(is_all_color(BG),Pattern).
 is_all_color(BG,Pattern):- Pattern=@=BG.
 
+
+show_colorfull_idioms(G):- find_colorfull_idioms(G).
 find_colorfull_idioms(G):- 
   set_current_test(G),
   h_pattern_length(G,_Type,PatWidth,_DivW,_StartV,PatV,Pattern,_Div),!,
@@ -794,19 +797,14 @@ find_colorfull_idioms(G):-
   writeln(find_colorfull_idioms),
   dash_chars.
 
-is_fti_step(find_repetition).
 
-find_repetition(VM):-
-  Grid = VM.grid,
-  forall(ping_indiv_grid(P1),call(P1,Grid)),!.
 
-ping_indiv_grid(find_colorfull_idioms).
-ping_indiv_grid(test_reps).
+ping_indiv_grid(show_colorfull_idioms).
+ping_indiv_grid(show_reps).
 
-test_reps:-  clsmake, 
-  forall(rp_test(G),ignore(test_reps(G))).
-:- add_history(test_reps).
-test_reps(G):-
+test_reps:-  clsmake, forall(rp_test(G),ignore(show_reps(G))).
+
+show_reps(G):-
   set_current_test(G),
   h_pattern_length(G,Type,PatWidth,DivW,StartV,PatV,Pattern,Div),!,
   PatV>1,
@@ -932,7 +930,7 @@ clip(SX,SY,EX,EY,G,GO):-
 
 copy_to_clip_r(AtX,AtY,ResetX,ResetSX,SX,SY,EX,EY,G,GO):-
 
-  ignore((hvc_value(SX,SY,C,G),nb_set_chv(C,AtX,AtY,GO))),
+  ignore((grid_hvc_value(SX,SY,C,G),nb_set_chv(C,AtX,AtY,GO))),
   incr(SX,SX2),
  ((SX2=<EX) -> 
     (incr(AtX,AtX2),copy_to_clip_r(AtX2,AtY,ResetX,ResetSX,SX2,SY,EX,EY,G,GO)) ;
@@ -945,7 +943,198 @@ nb_set_nth1_oob(1,Row,C):- !, nb_setarg(1,Row,C).
 nb_set_nth1_oob(N,[_|Row],C):- Nm1 is N -1, nb_set_nth1_oob(Nm1,Row,C).
 
 nb_set_chv(C,H,V,Grid):- nth1(V,Grid,Row),nb_set_nth1_oob(H,Row,C).
-hvc_value(H,V,C,Grid):-  nth1(V,Grid,Row),nth1(H,Row,C).
+grid_hvc_value(H,V,C,Grid):-  nth1(V,Grid,Row),nth1(H,Row,C).
+
+
+
+/*
+6=corners
+9=edges
+D=fill_area
+*/
+most_d_colors(Grid,ColorO):-
+  get_fill_points(Grid,Points),
+  maplist(get_color_at_point(Grid),Points,ColorL),
+  list_to_set(ColorL,Color),(Color==[]->ColorO=[black];ColorO=Color),!.
+
+ping_indiv_grid(show_neighbor_map).
+
+get_fill_points(Grid,Points):-
+ neighbor_map(Grid,GridO),
+ localpoints_include_bg(GridO,NPS),
+ sort(NPS,NPSS),
+ my_partition(=(13-_),NPSS,Has13,_),
+ maplist(arg(2),Has13,Points).
+ 
+ 
+ping_indiv_grid(show_make_symmetrical).
+
+test_make_symmetrical:-  clsmake, forall(arc_grid(G),ignore(show_make_symmetrical(G))). 
+show_make_symmetrical(G):-
+  set_current_test(G),
+  make_symmetrical(G,N),
+  print_side_by_side(G,N),
+  nl,
+  !.
+
+% by rotating the image 90 degrees.. filling in .. and again 2 more times
+is_able_v(Flip,Top):- 
+  call(Flip,Top,TopR),
+  TopR=Top.
+
+is_flippable_h(G):- rot90(G,R),is_able_v(flipSome,R).
+
+is_symmetrical(Grid):-  is_flippable_h(Grid),is_able_v(flipV,Grid).
+make_symmetrical(Grid0,Grid9):- into_grid(Grid0,G),make_symmetrical_grid(G,Grid9).
+make_symmetrical_grid(G,Grid9):- 
+ must_det_ll((
+  Flip=flipSome,
+  dash_chars,
+  neighbor_mapc(G,GC),nl,
+  most_d_colors(G,Colors),
+  g_or_gc(G,GC,GG00),
+  member(BGC,[bg|Colors]),
+  free_bg(BGC,GG00,GG),
+  make_flippable_h(BGC,GG,HS),
+  make_able_v(BGC,Flip,HS,Grid9))).
+
+g_or_gc(_,G,G).
+g_or_gc(G,_,G).
+
+flipSome(X,Y):- rot270(X,Y).
+flipSome(X,Y):-  flipV(X,Y).
+flipSome(X,Y):- rot180(X,Y).
+
+free_bg(BGC,S,FB):- is_list(S),!,mapgrid(free_bg(BGC),S,FB).
+free_bg(_,S,FB):- var(S),!,FB=S.
+free_bg(_,bg,_):-!.
+free_bg(BGC,Black,_):- Black == BGC,!.
+free_bg(BGC,_-Black,_):- Black == BGC,!.
+free_bg(BGC,Black-_,_):- Black == BGC,!.
+free_bg(_,X,X).
+
+unmapc(S,FB):- is_list(S),!,mapgrid(unmapc,S,FB).
+unmapc(S,FB):- \+ compound(S),!,FB=S.
+unmapc(_-Black,Black):-!.
+unmapc(X,X).
+
+unfree_bg(BGC,S,FB):- is_list(S),!,mapgrid(unfree_bg(BGC),S,FB).
+unfree_bg(BGC,S,FB):- var(S),!,ignore(FB=BGC).
+unfree_bg(_,X,X):-!. % ignore(numbervars(X,0,_)),!.
+
+make_flippable_h(_BG,G,HS):- is_flippable_h(G),!,HS=G.
+make_flippable_h(BGC,G,HS):- rot270(G,G90),make_able_v(BGC,flipSome,G90,VS),rot90(VS,HS),!.
+
+make_able_v(_BG,Flip,G,HS):- is_able_v(Flip,G),!,HS=G.
+make_able_v(BGC,Flip,G,HS):- make_able_v2(BGC,Flip,G,HS),!.
+
+make_able_v2(BGC,Flip,G,HS):-  
+  grid_size(G,_H,V),
+  Max is V+V, % max_min(H,V,Max,_),
+  between(V,Max,I), 
+  call(Flip,G,R),
+  make_able_v3(G,R,I,HSC),!,unfree_bg(BGC,HSC,HS).
+
+make_able_v3(G,R,I,HS):-  length(HS,I),append(G,_,HS),append(_,R,HS).
+
+show_call_tf(G):- functor(G,F,_),\+ \+ (call(G)->wdmsg(F=true);wdmsg(F=false)).
+
+ %color,neigbours,glyph
+test_neighbor_map:- clsmake, forall(arc_grid(G),show_neighbor_map(G)).
+show_neighbor_map(G):- 
+ grid_to_id(G,ID),
+ neighbor_mapc(G,N),print_side_by_side(G,N),most_d_colors(G,C),nl,writeln(ID=C).
+
+merge_nc(A,B,B):- var(A),!.
+merge_nc(A,B,A):- var(B),!.
+merge_nc(A,B,G-A):- e_int2glyph(B,G),!.
+
+/*
+e_int2glyph(7,'X').
+e_int2glyph(5,'-').
+e_int2glyph(9,'+').
+e_int2glyph(6,'c').
+
+ code=63 ?  code=183 · code=176 ° code=186 º 170 ª
+bg_dot(32).
+ 169	© 248	ø 216	Ø  215 ×  174	® 
+*/
+e_int2glyph(9,'®').
+e_int2glyph(8,'©').
+e_int2glyph(7,'Ø').
+e_int2glyph(6,'X').
+e_int2glyph(4,'ª').
+e_int2glyph(13,'º').
+e_int2glyph(2,'·').
+e_int2glyph(12,'~').
+e_int2glyph(1,'©').
+%e_int2glyph(5,'ø').
+%e_int2glyph(5,'°').
+%e_int2glyph(5,'®').
+%e_int2glyph(,'ø').
+e_int2glyph(N,G):- N>9, M is N+ 140,int2glyph(M,G).
+e_int2glyph(B,G):- atom_number(G,B).
+
+
+neighbor_mapc(Grid,GridO):- neighbor_map(Grid,GridN),mapgrid(merge_nc,Grid,GridN,GridO).
+neighbor_map(NonGrid,GridO):- \+ is_grid(NonGrid),!,into_grid(NonGrid,Grid),!,neighbor_map(Grid,GridO).
+neighbor_map(Grid,GridO):-
+ must_det_ll((
+  globalpoints(Grid,Points),
+  grid_size(Grid,H,V),
+  make_grid(H,V,GridM),
+  neighbor_map(Points,GridM,Points,GridS),
+  cull_smalls(Grid,GridS,GridO))).
+
+cull_smalls(Grid,GridS,GridO):- 
+ must_det_ll((
+  localpoints(Grid,LPS),
+  grid_size(GridS,H,V),
+  flatten([GridS],GridF),!,
+  include(number,GridF,GridN),
+  sort(GridN,GridSN),!,
+  reverse(GridSN,GridR),
+  at_least_4(GridR,Grid4),
+  append(Grid4,Rest,GridR),
+  cull_rest(Rest,GridS,GridSO),
+  localpoints_include_bg(GridS,SP),
+  localpoints_include_bg(GridSO,SOP),
+  include(was_adjacent(LPS,SOP),SP,NSP),
+  points_to_grid(H,V,NSP,GridO),
+  true)).
+
+was_adjacent(LPS,SOP,_-P1):- is_adjacent_point(P1,_,P2),member(_-P2,SOP),member(CCC-P1,LPS),member(CCC-P2,LPS),!.
+
+cull_rest(Rest,GridS,GridO):- is_list(GridS),!,maplist(cull_rest(Rest),GridS,GridO).
+cull_rest(Rest,GridS,0):- number(GridS),member(GridS,Rest),!.
+cull_rest(_Rest,GridS,GridS).
+
+at_least_4([A,B,C,D|_],[A,B,C,D]):-!.
+at_least_4(Grid4,Grid4).
+
+
+neighbor_map([],G,_,G):-!.
+neighbor_map([C-P1|Ps],Grid,Points,GridO):-
+  findall(N,(is_adjacent_point(P1,Dir,P2),member(C2-P2,Points),dir_num(C,C2,Dir,N)),L),
+  sumlist(L,N),
+  N2 is N -1,
+  max_min(N2,0,Color,_),
+  hv_point(H,V,P1),
+  replace_grid_point(H,V,Color,_,Grid,GridM),
+  neighbor_map(Ps,GridM,Points,GridO).
+  
+dir_num(_,_,c,0).
+dir_num(C,C,Diag,1):- is_diag(Diag),!.
+dir_num(_,black,Diag,0):- is_diag(Diag),!.
+dir_num(_,_,Diag,0):- is_diag(Diag),!.
+
+dir_num(C,C,_,2).
+dir_num(_,black,_,0).
+dir_num(_,_,_,0).
+
+%find_center(Grid,H,V):- chew_away_at_sides(Grid,GridO,TH,TV),grid_size(GridO,H,V),X is floor(H/2),Y is floor(V/2).
+%chew_away_at_sides(Grid,Grid):-!.
+%chew_away_at_sides(Grid,GridO):- append([Top|Middle],[Btm]),mass(Top,M1),mass(Btm,M2),M1==M2,!,chew_away_at_sides(,GridO).
 
 idealistic_symmetric_xy_3x3(
 [[Q2,         CN,        flipH(Q2)],
@@ -983,8 +1172,6 @@ assemble(
 
 is_empty_grid(Empty):- make_empty_grid(MG),MG=@=Empty,!.
 is_empty_grid(Empty):-  (Empty==[] ; Empty ==[[]]),!.
-
-is_symmetric_h(G):- mirror_h(_,_,G),!.
 
 
 :- fixup_exports.

@@ -24,10 +24,10 @@ print_menu_cmd1(_Key,Info,_Goal):- format(' ~w',[Info]).
 :- multifile(menu_cmd1/4).
 menu_cmd(i,'i','Examine (i)ndividuator,',(cls,!,ndividuator)).
 menu_cmd(_,'p','     or (p)rint training pairs (captial to reveal Solutions)',(print_test)).
-menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(cls,!,train_test)).
+menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(cls,!,print_test,train_test)).
 menu_cmd(_,'s','     or (s)olve the problem as learned.',(cls,print_test,!,solve_test)).
-menu_cmd(_,'h','     or (h)uman proposed solution.',human_test).
-menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(fully_test)).
+menu_cmd(_,'h','     or (h)uman proposed solution.',(human_test)).
+menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(cls,fully_test)).
 menu_cmd(_,'a','     or (a)dvance to the next test and run',(cls,!,run_next_test)).
 menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
 menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).

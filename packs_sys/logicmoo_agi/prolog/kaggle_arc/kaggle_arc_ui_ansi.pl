@@ -291,6 +291,7 @@ print_side_by_side4d(TitleColor,S1,F1,N1,_LW,S2,F2,N2):-
 
 toUpperC(A,AU):- A==[],!,AU='  []  '.
 toUpperC(A,AU):- string(A),!,AU=A.
+toUpperC(A,A):-!.
 toUpperC(A,AU):- atom(A),toPropercase(A,AU),!.
 toUpperC(A,AU):- atomic(A),upcase_atom(A,AU),!.
 toUpperC(A,AU):- is_list(A),maplist(toUpperC,A,AU),!.
@@ -419,7 +420,8 @@ print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid), pt(GG),!,nop(trace_or_throw(GG)).
 
-print_grid0(H,V,D):- is_dict(D),ignore(H = D.h),ignore(V = D.v),Objs = D.objs,!, (Objs\==[] -> print_grid0(H,V,Objs);print_grid0(H,V,D.grid)).
+print_grid0(H,V,D):- is_dict(D),ignore(H = D.h),ignore(V = D.v),vm_to_printable(D,R),R\==R,!,print_grid0(H,V,R).
+
 print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
 print_grid0(H,V,Grid):- is_points_list(Grid), points_to_grid(H,V,Grid,PGrid),!,print_grid0(H,V,PGrid).
 print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,

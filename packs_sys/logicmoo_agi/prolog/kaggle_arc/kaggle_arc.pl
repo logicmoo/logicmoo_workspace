@@ -39,6 +39,9 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
 :- discontiguous ping_indiv_grid/1.
 :- multifile ping_indiv_grid/1.
 
+:- meta_predicate(fif(0,0)).
+fif(IF, THEN) :- (   call(IF) ->  call(THEN) ;   true ).
+
 % COMMAND LINE ARC
 :- if(\+ current_module(logicmoo_arc)).
   muarc_mod(user).
@@ -292,8 +295,7 @@ arc1(G,TName):-
  retractall(why_grouped(individuate(_),_)),
  locally(set_prolog_flag(gc,true),
   (fix_test_name(TName,TestID,_UExampleNum),    
-   clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-   clear_shape_lib(intruder),!,
+   clear_shape_lib(TestID),
    % choice point created here purposely
   nb_delete('$training_vm'),
   forall(kaggle_arc(TestID,ExampleNum,_In,_Out),
@@ -315,84 +317,6 @@ run_arc_io(TestID,ExampleNum):-
   time(train_test(TestID)),
   time(solve_test(TestID,ExampleNum)).
 
-make_indivs(Pred,In,Out,InC,OutC):-
- %locally(i_o_w(In,Out),
-  make_indivs1(Pred,In,Out,InC,OutC).
-
-make_indivs1(Pred,In,Out,InC,OutC):-
-  mass(Out,OMass), mass(In,IMass), OMass>IMass,
-  make_indivs_no_swap(Pred,Out,In,OutC,InC),
-  save_off(Pred,In,Out,InC,OutC).
-
-make_indivs1(Pred,In,Out,InC,OutC):- 
-  make_indivs_no_swap(Pred,In,Out,InC,OutC),
-  nop(save_off(Pred,In,Out,InC,OutC)).
-
-save_off(_Pred,_In,_Out,InC,OutC):-
- ((
-  get_training(Training),!,
-  pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,_RetainedOut,Removed,Added),!,
-  add_shape_lib(pair,Removed),!,  
-  add_shape_lib(pair,Added),!,
-  add_shape_lib(pair,RetainedIn),!,
-  %rtrace,
-  % % %  set(Training.grid_in) = In,!,
-  %trace,
-
-  % % %  set(Training.grid_out) = Out,
-  % % %  set(Training.inC) = InC,
-  % % %  set(Training.outC) = OutC,
-  % % %  set(Training.added) = Added,
-  % % %  set(Training.removed) = Removed,
-  % % %  set(Training.kept) = RetainedIn,
-  %nortrace,
-  nop(set_training(Training)))),!.
-
-make_indivs_no_swap(Pred,In,Out,InC,OutC):-
- must_det_ll((
-  writeln(inC(Pred)),
-  %rtrace,
-  call_indv(Pred,In,InC),
-  add_shape_lib(pair,InC),!,
-  writeln(outC(Pred)),
-  call_indv(Pred,Out,OutC),
-  %add_shape_lib(out,OutC),
-  writeln(inOutC(Pred)))),!.
-
-call_indv(Pred,Out,OutC):-
- must_det_ll((
-  %get_training(Training),
-  % % %  set(Training.grid) = Out, % % %  set(Training.grid_o) = Out,
-  %% % %  set(Training.objs) = _, % % %  set(Training.points) = _,
-  %% % %  set(Training.robjs) = _, % % %  set(Training.points_o) = _,
-  %grid_size(Out,H,V), % % %  set(Training.h) = H, % % %  set(Training.v) = V,
-  %nortrace,
-  call(Pred,Out,OutC))),!.
-  %set_training(Training).
-
-
-/*
-show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-  
-  ignore(IH=1),
-  LW is (IH * 2 + 12),
-  append_term_safe(When,Pred+PairName+in,NameIn),
-  append_term_safe(When,Pred+PairName+out,NameOut),
-  wots(U1, print_grid(IH,IV,NameIn,In)),
-  wots(U2, print_grid(OH,OV,NameOut,Out)),
-  print_side_by_side(U1,LW,U2),
-  my_append(InC,OutC,InOutC),
-  smallest_first(InOutC,SF),
-  %largest_first(InOutC,LF),
-  %show_pair_no_i(IH,IV,OH,OV,smallest_first(When,Pred),PairName,InC-SF,OutC-SF),
-  %wots(U3, print_grid(IH,IV,NameIn,InC-SF)),wots(U4, print_grid(OH,OV,NameOut,OutC-SF)),print_side_by_side(U3,LW,U4),
-  %max_min(IH,OH,H,_),max_min(IV,OV,V,_),
-  show_pair_no_i(IH,IV,OH,OV,normal(When,Pred),PairName,InC,OutC),
-  INFO = [grid_dim,mass,colors_count_size,colors],
-  print_side_by_side(
-     describe_feature(InC,[call(writeln('IN'))|INFO]),LW,
-    describe_feature(OutC,[call(writeln('OUT'))|INFO])),!,
-  show_pair_I_info(NameIn,NameOut,InC,OutC).
-*/
 get_training(Training):- nb_current('$training_vm',Training),compound(Training),!.
 get_training(Training):- notrace(get_current_test(TestID)),make_training(TestID,Training), nb_linkval('$training_vm',Training),!.
 set_training(Training):- nb_linkval('$training_vm',Training).
@@ -450,19 +374,19 @@ train_for_objects(TestID,Trn,N1,DictIn,DictOut):-
   (kaggle_arc(TestID,(Trn+N1),In,Out),
   N2 is N1 + 1),
  (kaggle_arc(TestID,(Trn+N2),In2,Out2) -> 
-    (train_for_objects_from_pair(Dict0,TestID,[Trn,'_','o',N1,'_','o',N2,'_'],Out,Out2,Dict1),
-     train_for_objects_from_pair(DictIn,TestID,[Trn,'_','i',N1,'_','i',N2,'_'],In,In2,Dict0),
+    (train_for_objects_from_pair(Dict0,TestID,[Trn,'o',N1,'o',N2],Out,Out2,Dict1),
+     train_for_objects_from_pair(DictIn,TestID,[Trn,'i',N1,'i',N2],In,In2,Dict0),
      train_for_objects(TestID,Trn,N2,Dict1,DictM));
   (DictM = DictIn)),!,
-  train_for_objects_from_pair(DictM,TestID,[Trn,'_','i',N1,'_','o',N1,'_'],In,Out,DictOut),!.
+  train_for_objects_from_pair(DictM,TestID,[Trn,'i',N1,'o',N1],In,Out,DictOut),!.
 
 which_io0(i,in). which_io0(o,out).
 which_io(I,In):- which_io0(I,In),!.
 which_io(In,In):- which_io0(_,In),!.
 
 train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
- Desc = [_Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
- MonoDesc = ['Mono','_',IsIO1,N1,'_',IsIO2,N2,'_'], 
+ Desc = [_Trn,IsIO1,N1,IsIO2,N2], 
+ MonoDesc = ['train_mono',IsIO1,N1,IsIO2,N2], 
   train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1),
   into_monochrome(In,MonoIn),
   into_monochrome(Out,MonoOut),
@@ -470,60 +394,51 @@ train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
 
 individuate(VM):- 
   individuate(VM.roptions, VM.grid, Objs), 
+  %set(VM.objs) = Objs,
   set(VM.objs) = Objs,
-  add_shape_lib(VM.roptions,Objs).
+  RO = VM.roptions,
+  fif(\+ is_list(RO), add_shape_lib(RO,Objs)).
+  
 
 
 train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  must_det_ll((
- Desc = [Trn,'_',IsIO1,N1,'_',IsIO2,N2,'_'], 
+ Desc = [Trn,IsIO1,N1,IsIO2,N2], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
+ atomic_list_concat([Trn,IO1,IO2],'_',ModeIn),
+ atomic_list_concat([Trn,IO2,IO1],'_',ModeOut),
  atom_concat(IO1,N1,ION1),
  atom_concat(IO2,N2,ION2),
  into_grid(InA,In), into_grid(OutA,Out),
- into_fti(TestID*ION1,IO1,InA,InVM),
- into_fti(TestID*ION2,IO2,OutA,OutVM),
- atomic_list_concat([Trn,'_',ION1,'_',ION2,'_'],Prefix),
- ExampleNum = Prefix,
- pt([train_for_objects_from_pair=Prefix,left=ION1,right=ION2]),
+ into_fti(TestID*(Trn+N1)*IO1,ModeIn,InA,InVM),
+ into_fti(TestID*(Trn+N2)*IO2,ModeOut,OutA,OutVM),
+ atomic_list_concat([Trn,ION1,ION2],'_',ExampleNum),
+ pt([train_for_objects_from_pair=ExampleNum,left=ION1,right=ION2]),
  garbage_collect,
   Dict0=Dict1,
-  %must_be_nonvar(Training),
-  %% % %  set(Training.grid_in) = In,
-  %% % %  set(Training.grid_out) = Out,
 	name_the_pair(TestID,ExampleNum,In,Out,PairName),
-  %% % %  set(Training.test) = PairName,
 	grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
-  % clear_shape_lib(in),clear_shape_lib(out),clear_shape_lib(pair),clear_shape_lib(noise),  
-  %print_collapsed
-  % set_training(Training),!,
-  show_pair_grid(yellow,IH,IV,OH,OV,original(ION1),original(ION2),PairName,In,Out),!,  
-  %% % %  set(Training.pre_out) = PreOutC,
-  %% % %  set(Training.pre_in) = PreInC,  
-  (((true == false)) ->
-  (
-  individuate(IO1,In,InC),
-  individuate(IO2,Out,OutC)) ; 
-  ((
-  ignore(individuate(InVM)),
+  show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
+
+  individuate(InVM),!,
+  individuate(OutVM),!,
   InC = InVM.objs,
-  ignore(individuate(OutVM)),
-  OutC = OutVM.objs))),
-  
+  OutC = OutVM.objs,
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   add_shape_lib(pair,RetainedIn),
   % add_shape_lib(pair,RetainedOut),
-  add_shape_lib(IO2,Added),
+  add_shape_lib(removed(PairName),Removed),
+  add_shape_lib(added(PairName),Added),
   dash_chars,dash_chars,dash_chars,dash_chars,
-  show_pair_grid(cyan,IH,IV,   OH, OV,original(ION1),original(ION2),PairName,In,Out),
-  max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
-  ((Removed==Added, Removed==[]) -> pt(yellow,nothing_removed_added(ION1/ION2)) ;
-   show_pair_diff(IOH,IOV,IOH,IOV,removed(ION1/ION2),added(ION1/ION2),PairName,Removed,Added)),
-  ((RetainedIn==RetainedOut, RetainedIn==[]) -> pt(yellow,nothing_retained(ION1/ION2)) ;
+  show_pair_grid(cyan,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,
+   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
+  ((Removed==Added, Removed==[]) -> pt(yellow,nothing_removed_added(PairName)) ;
+   show_pair_diff(IOH,IOV,IOH,IOV,removed(PairName),added(PairName),PairName,Removed,Added)),
+  ((RetainedIn==RetainedOut, RetainedIn==[]) -> pt(yellow,nothing_retained(PairName)) ;
    show_pair_diff(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
-  ((InC==OutC, InC==[]) -> pt(yellow,nothing_individuated(ION1/ION2)) ;
+  ((InC==OutC, InC==[]) -> pt(yellow,nothing_individuated(PairName)) ;
    show_pair_diff(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!,
   dash_chars,dash_chars,dash_chars,dash_chars,
   print_testinfo(TestID))).
@@ -586,77 +501,6 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))),
     ptt("END!!!"+TestID+ExampleNum))).
    
-
-
-
-
-
-
-  /*
-
-  nop((
-       show_indivs(IH,IV,OH,OV,individuate_complete,early,PairName,In,Out,SF),
-       forall((rtrace_on_error(individualizer_heuristics(PairName,In,Out,IH,IV,OH,OV))),true), 
-       add_shape_lib(pairs,SF),
-       show_shape_lib(in),show_shape_lib(out),show_shape_lib(pair),show_shape_lib(noise),
-       show_indivs(IH,IV,OH,OV,individuate_default,later,PairName,In,Out,_))),!,
-       with_named_pair(solve,TestID,PairName,In,Out),
-*/
-/*
-  remove_global_points(UnsharedIn,In,InForgotten),
-  remove_global_points(UnsharedOut,Out,OutForgottenM),
-  ((mass(OutForgottenM,OM),OM==0) -> OutForgotten=OutC; OutForgotten=OutForgottenM),
-  individuate(complete,InForgotten,ForgottenShapesIn),
-  individuate(complete,OutForgotten,ForgottenShapesOut),
-
-  % contains_points(InForgotten);contains_points(OutForgotten)
-  %show_pair_no_i(IH,IV,OH,OV,forgotten,PairName,ForgottenShapesIn,ForgottenShapesOut),
-
-  show_pair_no_i(IH,IV,IH,IV,forgotten_In,PairName,UnsharedIn,ForgottenShapesIn),
-  show_pair_no_i(OH,OV,OH,OV,forgotten_Out,PairName,ForgottenShapesOut,OutC),
-*//*
-       show_indivs(In,Out),
-       individuate(defaults,In,InC),
-       individuate(defaults,Out,OutC),  
-       writeln(outC),
-
-       clear_shape_lib(out),
-       clear_shape_lib(in),
-       add_shape_lib(out,OutC),
-       writeln(inOutC),
-       show_pair_i(IH,IV,OH,OV,early_test,PairName,InC,OutC),
-       writeln(inC),
-       individuate(defaults,In,UnsharedIn),
-       writeln(outC),
-       individuate(defaults,Out,UnsharedOut),
-       writeln(inUnsharedOut),
-       show_pair_i(IH,IV,OH,OV,late_test,PairName,UnsharedIn,UnsharedOut),
-       format('~N1-sofar~N1'),!,
-       %pt(yellow,in=UnsharedIn),
-       pred_intersection(compare_objs1([same]),UnsharedIn,UnsharedOut,_CommonCsIn,_CommonCsOut,_IPCs,_OPCs),
-       format('~N1-pred_intersection~N1'),
-        individuate(UnsharedOut,Out,SharedInR),
-        individuate(UnsharedIn,In,SharedOutR),
-        show_pair_no_i(IH,IV,OH,OV,shared,PairName,SharedInR,SharedOutR))), !.*/
-  %format('~N1-Rule made from~N1'),
-  %show_rules,
-/*  RESS =.. [res,unsharedIn=UnsharedIn,
-             %onlyIn= IPCs,
-            commonIn=CommonCsIn,commonOut=CommonCsOut, %onlyOut=OPCs, 
-             unsharedOut=UnsharedOut],
-  tersify(RESS,ShortInfo),         
-  format('~N1-Stats:~N1'),
-  pt(yellow,sol=ShortInfo), !.
-  */
-	
-/*
-  
-  nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
-  ( (SharedOut\==BetterB ; SharedIn\== BetterA) ->
-    show_pair_i(IH,IV,OH,OV,better,PairName,BetterA,BetterB);
-     writeln('nothing better')))),
-*/
-  
 
 
 :- nb_linkval(test_rules,[rules]).
