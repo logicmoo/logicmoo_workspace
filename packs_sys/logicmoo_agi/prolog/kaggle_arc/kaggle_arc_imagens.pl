@@ -226,7 +226,7 @@ llamma(P,A):- \+ \+ call(P,A).
 % \+ is_points_list(Obj),
 
 %add_shape_lib(Type,Obj):- !, nop(pt(add_shape_lib(Type,Obj))).
-add_shape_lib(Type,Obj):- \+ ground(Obj),pt(add_shape_lib(Type,Obj)),fail.
+add_shape_lib(Type,Obj):- \+ ground(Obj), nop(pt(add_shape_lib(Type,Obj))),fail.
 add_shape_lib(Type,Obj):-  is_object(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 

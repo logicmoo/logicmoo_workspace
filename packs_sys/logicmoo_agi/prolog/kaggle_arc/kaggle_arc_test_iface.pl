@@ -105,7 +105,7 @@ test_suite_name(key_pad_tests).
 test_suite_name(test_names_by_fav). test_suite_name(test_names_by_hard). 
 test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
 
-:- nb_setval(test_order,test_names_by_hard).
+:- nb_setval(test_order,test_names_by_fav).
 get_current_suite_testnames(Set):-
   nb_current(test_order,X),
   findall(ID,call(X,ID),List),
@@ -191,7 +191,7 @@ print_test4(TestID):-
      forall(kaggle_arc(TestID,ExampleNum1,In,Out),
       ignore((
        once(in_out_name(ExampleNum1,NameIn,_NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side4(red,In,NameIn,_,Out,' ')]))))),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side4(cyan,In,NameIn,_,Out,' ')]))))),
        write('%= '), parcCmt(TestID),
   dash_chars,
     forall(arg(_,v((tst+_)),ExampleNum2),
@@ -201,7 +201,7 @@ print_test4(TestID):-
        grid_size(Out,OH,OV),make_grid(OH,OV,Blank),
        (nb_current(last_menu_key,'P')
          -> format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(red,In,NameIn,_,Out,NameOut)])
-         ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(red,In,NameIn,_,Blank,"Hidden Output")])))))),!.
+         ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(cyan,In,NameIn,_,Blank,"Hidden Output")])))))),!.
 
 %print_test(TName):- !, parcCmt(TName).
 print_qtest:- get_current_test(TestID),print_qtest(TestID).
@@ -211,7 +211,7 @@ print_qtest(TestID):-
      forall(kaggle_arc(TestID,ExampleNum,In,Out),
       ignore((
        once(in_out_name(ExampleNum,NameIn,NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(red,In,NameIn,_LW,Out,NameOut+TestID)]))))),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(cyan,In,NameIn,_LW,Out,NameOut+TestID)]))))),
        write('%= '), parcCmt(TestID).
 
 print_single_test(TName):-

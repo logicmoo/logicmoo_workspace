@@ -167,11 +167,11 @@ grid_color_and_glyph(Points,C,GN,H,V):- %is_object_group(Points),
   gridoid_glyph(Points,GN,H,V),!.
 
 gridoid_color(Points,C,H,V):-
- ((nb_current(color_index,ObjList),ObjList\==[e]) -> ObjList=List ; Points=List),
+ (((nb_current(color_index,ObjList),ObjList\==[e]),fail) -> ObjList=List ; Points=List),
   from_gridoid(List,C,_N,H,V,_G),!.
 
 gridoid_glyph(Points,GN,H,V):-
- ((nb_current(glyph_index,ObjList),ObjList\==[e]) -> ObjList=List ; Points=List),
+ (((nb_current(color_index,ObjList),ObjList\==[e]),fail) -> ObjList=List ; Points=List),
   from_gridoid(List,_,N,H,V,G), maybe_glyph(G,N,GN).
 
 %from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
@@ -189,7 +189,7 @@ hv_c_value(O,fg   ,H,V):- is_list_of(is_nc_point,O),!,hv_point(H,V,Point),member
 hv_c_value(O,Color,H,V):- is_cpoint(O),!,O=(Color-Point),hv_point(H,V,Point),!.
 hv_c_value(O,fg   ,H,V):- is_nc_point(O),!,O=Point,hv_point(H,V,Point),!.
 %hv_c_value(G,Color,H,V):- is_group(G),!,into_list(G,L),member(E,L),hv_c_value(E,Color,H,V),!.
-hv_c_value(O,Color,H,V):- known_gridoid(O,G),!,hv_c_value(G,Color,H,V).
+%hv_c_value(O,Color,H,V):- known_gridoid(O,G),!,hv_c_value(G,Color,H,V).
 hv_c_value(G,Color,H,V):- my_assertion(into_list(G,L)),!,member(E,L),hv_c_value(E,Color,H,V),!.
 %hv_c_value(O,Color,H,V):- is_object(O),localpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 %hv_c_value(L,Color,H,V):- is_list(L), member(E,L),hv_c_value(E,Color,H,V),!.

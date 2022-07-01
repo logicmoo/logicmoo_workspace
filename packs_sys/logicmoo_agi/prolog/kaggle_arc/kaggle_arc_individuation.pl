@@ -34,6 +34,7 @@ ig(ROptions,Grid):-
   into_grid(Grid, GridIn), 
   dash_chars,
   print_grid(GridIn), 
+  indiv_grid_pings(GridIn),
   grid_to_id(GridIn,ID),
   set_current_test(ID),
   individuate(ROptions,GridIn,IndvS),
@@ -61,7 +62,7 @@ iq(ROptions,Grid):-
   print_grid(IndvS),
   %format("~N~n% ?- ~q.~n~n",[ig(ROptions,VM.id)]),
   length(IndvS,LenS),
-  print_list_of(individuate=LenS,IndvS),
+  print_list_of(individuate=LenS,IndvS),  
   dash_chars.
 % =========================================================
 
@@ -75,7 +76,7 @@ maybe_multivar(_).
 
 :- discontiguous(fsi/14).
 :- discontiguous(fti/2).
-:- discontiguous(one_fti/2).
+%:- discontiguous(one_fti/2).
    
 :- dynamic(is_unshared_saved/2).
 :- dynamic(is_shared_saved/2).
@@ -111,7 +112,7 @@ individuation_macros(subshape_in_object, [
 individuation_macros(subshape_main, [
    shape_lib(hammer), % is a sanity test/hack
    rectangle, diamonds,
-   indiv_grid_pings,
+   %indiv_grid_pings,
    recalc_sizes,
    hv_line(h),  
    dg_line(d), 
@@ -386,10 +387,11 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    notes:_, debug:_,
    % height width and lookup key for image
    h:GH, v:GV, id:ID},
-   (var(VM) -> (fix_test_name(ID,TestID,_), make_training_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
+  % (var(VM) -> (fix_test_name(ID,TestID,_), make_training_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
    %(nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
+   (var(VM) ->ArgVM =VM ; ignore(ArgVM>:<VM)),
    !.
 
 into_fti(ID,ROptions,GridIn0,VM):-
@@ -453,6 +455,7 @@ individuals_raw(VM,GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_ll((
   must_be_free(IndvSRaw),
   make_fti(GH,GV,ID,Grid,[],Reserved,Options,Points,VM),
+  indiv_grid_pings(VM),
   individuals_list(VM,GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
   =(Indv_0,Indv_1),
   unraw_inds(VM,Indv_1,Indv_2),  
@@ -570,16 +573,17 @@ fti(VM,_):-
 fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_step(F), !, set(VM.program) = Program, ignore(call(Step,VM)).
 fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_stepr(F), !, set(VM.program) = Program, Step=..[F|ARGS], ignore(apply(F,[VM|ARGS])).
 fti(VM,[Step|Program]):- functor(Step,F,_), ping_indiv_grid(F), set(VM.program) = Program, call(F,VM.grid).
-fti(VM,[Step|Program]):- set(VM.program) = Program, one_fti(VM,Step),!.
+%fti(VM,[Step|Program]):- set(VM.program) = Program, one_fti(VM,Step),!.
 
 is_fti_step(release_objs_lighter).
 is_fti_stepr(_):-fail.
 
 is_fti_step(indiv_grid_pings).
 
-indiv_grid_pings(VM):-
-  Grid = VM.grid,
-  forall(ping_indiv_grid(P1),ignore(catch(call(P1,Grid),_,fail))),!.
+indiv_grid_pings(Grid):- is_grid(Grid),!,forall(ping_indiv_grid(P1),ignore(catch(call(P1,Grid),E, ((E == '$aborted')->throw(E);fail)))),!.
+indiv_grid_pings(VM):- get_dict(grid,VM,Grid),!, indiv_grid_pings(Grid).
+indiv_grid_pings(VM):- into_grid(VM,G),!,indiv_grid_pings(G).
+
 
 
 release_objs_lighter(Two,VM):-
@@ -1120,7 +1124,10 @@ addGPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 :- style_check(+singleton).
 
 in_set(Set,I):- member(E,Set), E=@=I,!.
-one_fti(VM,'fourway'):-
+
+is_fti_step(fourway).
+
+fourway(VM):-
   H = VM.h,
   V = VM.v,
   %VM.id = VM.id,

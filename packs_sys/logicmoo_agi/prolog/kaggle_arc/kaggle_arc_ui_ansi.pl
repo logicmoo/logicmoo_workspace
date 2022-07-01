@@ -81,11 +81,14 @@ tersifyC(groupFn(_)).
 
 tersify1(av(_,Blue), -(Blue)):-!.
 tersify1(I,O):- compound(I), tersifyC(I),!,I=O.
+tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
 tersify1(I,groupFn(O)):- is_group(I),why_grouped(O,II),!,I==II.
-tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
+tersify1(I,O):- is_dict(I), get_dict(objs,I,_),!, O='$VAR'('VM').
+tersify1(I,O):- is_dict(I), get_dict(pairs,I,_),!, O='$VAR'('Training').
 tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
+
 
 tersifyG(I,O):- tersifyL(I,O),numbervars(O,1,_,[attvar(bind),singletons(false)]),!.
 tersifyL(I,O):- is_list(I), maplist(tersifyL,I,O),!.
@@ -101,8 +104,9 @@ tersify2(I,I).
 
 tersify3(I,O):- compound(I),tersify1(I,O),!.
 tersify3(I,O):- tersify0(I,O),!.
-tersify3([H|I],O):- is_list(I), !, with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>170) -> 
+tersify3([H|I],O):- fail, is_list(I), !, with_output_to(string(S),display(I)),!, ((atom_length(S,N), N>170) -> 
   (length(I,LL),tersify(H,HH),(('...'(HH,LL,'...'(N)))=O)); I=O).
+tersify3(I,O):- is_list(I), !, maplist(tersify3,I,O).
 tersify3(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
 tersify3(I,I).
 
@@ -129,6 +133,7 @@ wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
 wqs(pt(C)):- !, pt(C).
 wqs(q(C)):- !, write(' '), writeq(C).
+wqs(uc(C,W)):- !, write(' '), color_print(C,call(underline_print(format("\t~@",[wqs(W)])))).
 wqs(cc(C,N)):- attvar(C), get_attrs(C,PC), !, wqs(ccc(PC,N)).
 wqs(cc(C,N)):- var(C), sformat(PC,"~p",[C]), !, wqs(ccc(PC,N)).
 wqs(cc(C,N)):- !, write(' cc('),color_print(C,C),write(','), writeq(N), write(')').
@@ -189,6 +194,10 @@ gridoid_size(G,H,V):- is_gridoid(G),!,grid_size(G,H,V).
 print_side_by_side(C1-wqs(S1),LW,C2-wqs(S2)):- nonvar(S1),!,
   print_side_by_side(C1,LW,C2),format('~N'),
   print_side_by_side(wqs(S1),LW,wqs(S2)).
+print_side_by_side(C1-A,LW,C2-B):- nonvar(A),!,
+  print_side_by_side(C1,LW1,C2),format('~N'),
+  print_side_by_side(A,LW2,B),
+  ignore(max_min(LW1,LW2,LW,_)).
 
 print_side_by_side(C1,LW,C2):- var(LW), gridoid_size(C1,H1,V1),gridoid_size(C2,H2,V2),!,    
     ((V2 > V1) -> LW is -(H2 * 2 + 12) ; LW is (H1 * 2 + 12)),!, print_side_by_side(C1,LW,C2).
@@ -196,7 +205,7 @@ print_side_by_side(C1,LW,C2):-  var(LW), LW=30,print_side_by_side(C1,LW,C2),!.
 
 print_side_by_side(C1,W0,C2):- number(W0), W0 < 0, LW is -W0, !, print_side_by_side(C2,LW,C1).
 
-print_side_by_side(C1,W0,C2):- LW is floor(abs(W0)),
+print_side_by_side(C1,W0,C2):- number(W0), LW is floor(abs(W0)),
   into_ss_string(C1,ss(W1,L1)),
   into_ss_string(C2,ss(_,L2)),!,
   print_side_by_side_lists_1st(L1,W1,L2,LW).
@@ -309,23 +318,29 @@ show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
 uses_space(C):- code_type(C,print).
 
 into_ss_string(Var,_):- plain_var(Var),!,throw(var_into_ss_string(Var)).
-into_ss_string(G,SS):- is_gridoid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+%into_ss_string(A-B,ss(LenAB,ABL)):- into_ss_string(A,ss(LenA,LA)), into_ss_string(B,ss(LenB,LB)), append(LA,LB,ABL), max_min(LenA,LenB,LenAB,_).
 into_ss_string(print_grid(G),SS):- into_ss_string(print_grid0(_,_,G),SS).
 into_ss_string(print_grid(X,Y,G),SS):- into_ss_string(print_grid0(X,Y,G),SS).
 into_ss_string(print_grid0(G),SS):- wots(S,print_grid0(G)),!,into_ss_string(S,SS).
 into_ss_string(print_grid0(X,Y,G),SS):- wots(S,print_grid0(X,Y,G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
 into_ss_string(wqs(W),SS):- !,wots(SS,format_u(yellow,"\t~@",[wqs(W)])).
-into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
-into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
 into_ss_string(ss(Len,L),ss(Len,L)):-!.
-into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
-into_ss_string(S,SS):- string(S), !, atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
 into_ss_string(uc(W),SS):- !,wots(SS,format_u(yellow,"\t~@",[wqs(W)])).
 into_ss_string(uc(C,W),SS):- !,wots(SS,color_print(C,call(underline_print(format("\t~@",[wqs(W)]))))).
 into_ss_string(call(C),SS):- wots(S,catch(C,E,true)), 
   (((nonvar_or_ci(E),notrace,break,rrtrace(C))->throw(E);true)), into_ss_string(S,SS).
+into_ss_string(A+B,SS):-!,into_ss_string(A,ss(LenA,LA)), into_ss_string(B,ss(LenB,LB)), append(LA,LB,ABL), max_min(LenA,LenB,LenAB,_),
+  ss(LenAB,ABL)=SS.
+into_ss_string(A-B,SS):-!,into_ss_string(A,ss(LenA,LA)), into_ss_string(B,ss(LenB,LB)), append(LA,LB,ABL), max_min(LenA,LenB,LenAB,_),
+  ss(LenAB,ABL)=SS.
+
+into_ss_string(G,SS):- is_gridoid(G),!,wots(S,print_grid(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_grid(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_object(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_points_list(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(G,SS):- is_group(G),!,wots(S,print_grid0(G)),!,into_ss_string(S,SS).
+into_ss_string(L,ss(Len,L)):- is_list(L), find_longest_len(L,Len),!.
+into_ss_string(S,SS):- string(S), !, atomics_to_string(L,'\n',S),!,into_ss_string(L,SS).
 into_ss_string(C,SS):-       wots(S,catch(C,E,true)), 
   (((nonvar_or_ci(E),notrace,break,rrtrace(C))->throw(E);true)), into_ss_string(S,SS).
 
@@ -422,7 +437,8 @@ print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
 
 print_grid0(H,V,D):- is_dict(D),ignore(H = D.h),ignore(V = D.v),vm_to_printable(D,R),R\==R,!,print_grid0(H,V,R).
 
-print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
+print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, 
+  with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
 print_grid0(H,V,Grid):- is_points_list(Grid), points_to_grid(H,V,Grid,PGrid),!,print_grid0(H,V,PGrid).
 print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,
  wdmsg(is_empty_grid(H,V)),!,
@@ -577,6 +593,7 @@ var_dot(63).
 bg_dot(32).
 /* 169	© 248	ø 216	Ø  215 ×  174	® */
 %fg_dot(C):- nb_current(fg_dot,C),integer(C),!.
+%fg_dot(_):- nb_current(no_rdot,true),nb_setval(no_rdot,false)-> break , fail.
 fg_dot(C):- nb_current(alt_grid_dot,C),C\==[],!.
 fg_dot(174).
 cant_be_dot(183).
@@ -605,8 +622,8 @@ int2glyph(GN2,Glyph):- quietly((i_sym(GN2,GN),!,i_glyph(GN,Glyph))).
 
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 
-print_gw1(N):- ignore((get_bgc(BG),is_color(BG), once((BG\==black-> color_print(BG,'.');write(' '));write(',')))),
-  must_det_ll(print_g1(N);write('?')),!.
+print_gw1(N):- ((get_bgc(BG),is_color(BG), once((BG\==black-> color_print(BG,'.');write(' '));write(',')));write(' ')),!,
+  (print_g1(N);write('?')),!.
 %print_gw1(N):- compound(N),N = C-W,!,color_print(C,W),!.
 
 regression_test:- G = [[1,2,3],[1,2,3],[1,2,3]], print_grid(G).

@@ -242,7 +242,6 @@ is_grid_cell(C):- is_colorish(C),!.
 is_grid_cell(C):- atomic(C),!.
 is_grid_cell(_-C):- is_colorish(C).
 
-
 h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
 h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).
 h_symmetric(Group):- into_grid(Group,Grid),!,h_symmetric(Grid).

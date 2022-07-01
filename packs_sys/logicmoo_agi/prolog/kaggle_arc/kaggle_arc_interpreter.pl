@@ -204,9 +204,8 @@ recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points
   Success = found_points(true).
 
 uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
-known_gridoid(ID,G):- plain_var(ID),!,(known_grid(ID,G);known_object(ID,G)).
+%known_gridoid(ID,G):- plain_var(ID),!,(known_grid(ID,G);known_object(ID,G)).
 known_gridoid(ID,G):- known_grid(ID,G),!.
-known_gridoid(ID,G):- known_object(ID,G),!.
 known_gridoid(ID,G):- known_object(ID,G),!.
 %known_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
 
