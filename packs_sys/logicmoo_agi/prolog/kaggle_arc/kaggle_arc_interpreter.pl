@@ -189,7 +189,8 @@ cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Tex
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
 
 cast_to_grid(Naming,Grid, Closure ):- 
-  ((known_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;recast_to_grid0(Naming,Grid, Closure)).
+  ((known_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;
+   (fail,recast_to_grid0(Naming,Grid, Closure))).
   
 recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
@@ -215,7 +216,7 @@ known_grid0(ID,_):- is_grid(ID),!.
 known_grid0(ID,G):- is_grid_id(G,ID).
 known_grid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
 known_grid0(ID,G):- ID = TstName*ExampleNum*IO,!,fix_id(TstName,Name),(kaggle_arc_io(Name,ExampleNum,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_grid0(ID,G):- nonvar(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_grid0(ID,G):- compound(ID),ID=(_*_),!,fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
@@ -253,18 +254,19 @@ o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sforma
 :- dynamic(g2o/2).
 
 g2o(G,O):- (atom(G);string(G)),Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
-g2o(C,O):- compound(C), !, C= objFn(_), !, known_obj0(C,O),!.
-g2o(G,O):- nb_current(G,O),is_object(O).
+g2o(G,O):- (var(G),atom(G)),!,nb_current(G,O),is_object(O).
+g2o(C,O):- compound(C), !, C= objFn(G), !, g2o(G,O).
+
 
 known_object(G,O):- known_obj0(G,O).
 
 known_obj0(G,_):- G==[],!.
 known_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
-known_obj0(obj(O),obj(O)):- is_list(O),!.
+known_obj0(G,O):- is_object(G),!,G=O.
+known_obj0(obj(O),obj(O)):- !, is_list(O),!.
 known_obj0(G,O):- g2o(G,O),!.
-known_obj0(G,O):- (atom(G);string(G)),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),into_obj(C,O).
 known_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
-known_obj0(G,O):- into_group(G,OL),must([O]=OL).
+known_obj0(G,O):- is_group(G),into_group(G,OL),must([O]=OL).
 
 % this is bad  ?- into_grid('E',ID),grid_to_id(G,ID).  ?- into_grid('Z',ID),grid_to_id(G,ID).
 

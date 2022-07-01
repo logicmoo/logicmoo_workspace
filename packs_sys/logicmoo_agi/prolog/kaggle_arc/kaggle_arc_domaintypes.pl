@@ -221,8 +221,16 @@ is_gridoid(G):- plain_var(G),!, fail.
 is_gridoid(G):- is_grid(G),!.
 is_gridoid(G):- is_object(G),!.
 is_gridoid(G):- is_points_list(G),!.
-%is_gridoid(G):- is_cpoint(G),!.
 is_gridoid(G):- is_list_of_gridoids(G).
+
+is_printable_gridoid(G):- plain_var(G),!, fail.
+is_printable_gridoid(G):- is_gridoid(G),!.
+is_printable_gridoid(G):- is_point(G),!.
+is_printable_gridoid(G):- is_cpoint(G),!.
+is_printable_gridoid(D):- is_dict(D),get_dict(grid,D,_).
+is_printable_gridoid(G):- is_list(G),!,maplist(is_printable_gridoid,G).
+is_printable_gridoid(G):- resolve_reference(G,R),!,nonvar(R),!.
+is_printable_gridoid(G):- known_gridoid(G,R),!,nonvar(R),!.
 
 vm_grid(VM,VM.grid).
 vm_obj(VM,O):- member(O,VM.objs).
@@ -240,7 +248,9 @@ slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
 is_grid_cell(C):- var(C),!.
 is_grid_cell(C):- is_colorish(C),!.
 is_grid_cell(C):- atomic(C),!.
-is_grid_cell(_-C):- is_colorish(C).
+is_grid_cell(_-_):-!.
+is_grid_cell(att(_,_)).
+is_grid_cell(cell(_)).
 
 h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
 h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).

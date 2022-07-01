@@ -481,7 +481,7 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
   length(Ns,I),P = I-HV.
 
 var_check(I,G):- var(I),!,var_check_throw(I,G).
-var_check(I,G):- resolve_reference(I,O),!,subst001(G,I,O,GG),!,call(GG).
+var_check(I,G):- resolve_reference(I,O),I\==O,!,subst001(G,I,O,GG),GG\==G,!,call(GG).
 var_check(I,G):- var(I),!,(enum_object(I)*->G;var_check_throw(I,G)).
 var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,dumpST,trace_or_throw(maybe_enum_i(I,G)),call(G).
 
@@ -496,6 +496,8 @@ vm_to_printable(D,R) :- Objs = D.objs,!, (Objs\==[] -> R = Objs; R = D.grid ).
 
 resolve_reference(R,Var):- is_dict(R),Objs = R.objs,!, (Objs\==[] -> Var=Objs; Var = R.grid).
 resolve_reference(R,Var):- compound(R),arc_expand_arg(R,Var,Goal),!,call(Goal).
+resolve_reference(R,Var):- nonvar(R),known_gridoid(R,Var),!.
+
 rotation(G,X):- is_group(G),!,mapgroup(rotation,G,Points),append_sets(Points,X).
 rotation(I,X):- var_check(I,rotation(I,X)).
 rotation(I,X):- indv_props(I,L),member(rotation(X),L).
@@ -519,7 +521,9 @@ all_points_between(Grid,LowH,LowV,GH,GV,Hi,Vi,Points,PointsO):-
    all_points_between(Grid,LowH,LowV,GH,GV,H,V,PointsT,PointsO).
 
 color_spec_or_fail(Grid,C,Hi,Vi):- hv_c_value(Grid,C2,Hi,Vi),
-  (is_spec_fg_color(C2,C);(attvar(C2),C=C2)).
+  get_bgc(BGC),
+  (is_spec_fg_color(C2,C);(attvar(C2),C=C2); (\+ plain_var(C2), C=C2)),
+  C\==BGC.
 
 % Is there an advantage to counting down?
 all_points_between_include_bg(_Grid,_LowH,_LowV,_GH,GV,_Hi,Vi,Points,Points):- Vi>GV,!.
@@ -540,7 +544,7 @@ color_spec_or_fail_include_bg_more(Grid,C,Hi,Vi):-
   (is_spec_color(C2,C);(atomic(C2),C=C2);(attvar(C2),C=C2);(var(C2),C=BGC)).
   
 grid_cpoint(Grid,C-Point,Hi,Vi):- hv_c_value(Grid,C2,Hi,Vi),
-(is_spec_color(C2,C);(atomic(C2),C=C2);(attvar(C2),C=C2);(var(C2),C=C2)),
+ (is_spec_color(C2,C);(atomic(C2),C=C2);(attvar(C2),C=C2);(var(C2),C=C2)),
   hv_point(Hi,Vi,Point).
 
 grid_to_points(Grid,Points):- grid_size(Grid,HH,HV),!, grid_to_points(Grid,HH,HV,Points).
@@ -563,8 +567,8 @@ gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints), isz(Obj,Shape),
   (points_corner_dir(Shape,Dir)*->(SPoints=[CPoint|_];last(SPoints,CPoint));fail).
    
 
-globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_to_points(Grid,Points).
+globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 globalpoints(G,[G]):- is_point(G),!.
 globalpoints(C-P,[C-P]):-!.
 globalpoints(G,G):- maplist(is_point,G),!.

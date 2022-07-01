@@ -47,7 +47,7 @@ split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),leng
 
 /*
   bottem_heavy(Grid90,RotG,Grid180).
-grav_mass(Grid,_H,_V,RotG,Grid90):- is_symmetric_h(Grid),!,bottem_heavy(Grid,RotG,Grid90).
+grav_mass(Grid,_H,_V,RotG,Grid90):- is_h_symmetric(Grid),!,bottem_heavy(Grid,RotG,Grid90).
 grav_mass(Grid,_H,_V,RotG,Grid90):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG,Grid90).
 
 bottem_heavy(Grid,Turn,Grid180):-  (is_top_heavy(Grid)->(rot180(Grid,Grid180),Turn=rot180);(Grid=Grid180;Turn=same)).*/
@@ -143,12 +143,16 @@ n_s_e_w(s).
 n_s_e_w(e).
 n_s_e_w(w).
 
+
 move_dir(N,OX,OY,Dir,SX,SY,NX,NY):- nav(Dir,X,Y), NX is OX + (X*SX*N), NY is OY + (Y*SY*N).
 
 reverse_nav(D,R):- nav(D,X,Y),RX is -X, RY is -Y,nav(R,RX,RY).
 
-is_non_diag(X):- nav(X,0,_);nav(X,_,0).
-is_diag(D):- nav(D,X,Y),X\==0,Y\==0. % \+ is_non_diag(X).
+is_non_diag(X):-n_s_e_w(X). 
+%is_non_diag(X):- nav(X,0,_);nav(X,_,0).
+%is_diag(D):- nav(D,X,Y),X\==0,Y\==0. % \+ is_non_diag(X).
+is_diag(ne). is_diag(sw). is_diag(se). is_diag(nw).
+
 
 rot_right_90(N,E):- rot_left_90(E,N).
 rot_left_90(N,W):- rot_left_45(N,NW), rot_left_45(NW,W).

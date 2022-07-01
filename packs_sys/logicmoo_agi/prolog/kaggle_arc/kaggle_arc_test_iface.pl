@@ -33,7 +33,7 @@ menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
 menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
 menu_cmd(_,'S','     or  back to begining of (S)uite',(restart_suite)).
 menu_cmd(_,'N','     or (N)ext Suite',(next_suite)).
-menu_cmd(_,'L','     or (L)ist feature tests and run',(run_a_test)).
+menu_cmd(_,'l','     or (l)ist feature tests and run',(run_a_test)).
  
 menu_cmd(i,'R','(R)un the Suite noninteractively',(run_all_tests,menu)).
 menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).

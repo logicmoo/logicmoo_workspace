@@ -985,23 +985,45 @@ grid_hvc_value(H,V,C,Grid):-  nth1(V,Grid,Row),nth1(H,Row,C).
 9=edges
 D=fill_area
 */
-most_d_colors(Grid,ColorO):-
-  get_fill_points(Grid,Points),
-  maplist(get_color_at_point(Grid),Points,ColorL),
-  list_to_set(ColorL,Color),(Color==[]->ColorO=[black];ColorO=Color),!.
+most_d_colors(Grid,ColorO,GridNM):-
+  %trace,
+  get_fill_points(Grid,Points,GridNM),
+  grid_size(GridNM,H,V),
+  uneib(Points,FPoints),
+  pt(fillPoints(H,V) = FPoints),
+  sort(FPoints,NPSS),
+  %trace,
+  % (N2-C)-P1
+  maplist(arg(1),NPSS,Colors),
+  clumped(Colors,CColors),
+  maplist(arg(2),CColors,Set),
+  (Set==[]->ColorO=[black];ColorO=Set),!.
 
 ping_indiv_grid(show_neighbor_map).
 
-get_fill_points(Grid,Points):-
+get_fill_points(Grid,FillPoints,RGridO):-
+ grid_size(Grid,H,V),
  neighbor_map(Grid,GridO),
- localpoints_include_bg(GridO,NPS),
- sort(NPS,NPSS),
- my_partition(=(13-_),NPSS,Has13,_),
- maplist(arg(2),Has13,Points).
+  globalpoints(GridO,NPS),
+  my_partition(is_point_type('~'),NPS,FillPoints,NFP),
+  %my_partition(is_point_type('.'),NFP,OuterEdges,NonFillPointNonOuterEdges),
+  uneib(NFP,UNFP),  
+  neighbor_map(H,V,UNFP,UNFP,BUNFP),
+  append(FillPoints,BUNFP,FGridO),
+  points_to_grid(H,V,FGridO,RGridO).
+   
+
+  
+
+
+is_sedge('.').
+
  
+is_point_type(T,V):- compound(V),arg(_,V,E), is_point_type(T,E).
+is_point_type(T,V):- V==T.
  
 
-nr_make_symmetrical_grid(G,Test,Symm,How):- 
+nr_make_symmetrical_grid(G,How,Symm,How):- 
   no_repeats(Symm,make_symmetrical_grid(G,How,Symm)).
 
 ping_indiv_grid(show_make_symmetrical).
@@ -1010,10 +1032,10 @@ test_make_symmetrical:-  clsmake, forall(arc_grid(G),ignore(show_make_symmetrica
 show_make_symmetrical(G):-
   set_current_test(G),
   dash_chars,
-  _ShowHow = wqs(uc(green,Test->How)),
-  findall(Symm,nr_make_symmetrical_grid(G,Test,Symm,How),List),
+  ShowHow = wqs(uc(green,How)),
+  findall(Symm-ShowHow,nr_make_symmetrical_grid(G,Test,Symm,How),List),
   list_to_set(List,Set),
-  print_side_by_side([G|Set]).
+  print_side_by_side([G,G|Set]).
 
 /*
 */
@@ -1021,32 +1043,65 @@ print_side_by_side([]):-!.
 print_side_by_side([A,B|Rest]):- !,print_side_by_side2(A,B),!,print_side_by_side(Rest).
 print_side_by_side([A]):- print_side_by_side2(A,A).
 
-print_side_by_side2(A-N1,B-N2):- !, print_side_by_side2(A,B),print_side_by_side2(N1,N2).
+print_side_by_side2(A-N1,B-N2):- !, print_side_by_side2(A,B),write(N1-N2).
 print_side_by_side2(A,B):- format('~N'),print_side_by_side(A,_,B).
 
 % by rotating the image 90 degrees.. filling in .. and again 2 more times
 is_able_v(Flip,Top):- call(Flip,Top,TopR), TopR=Top.
 
 is_flippable_h(Flip,G):- rot90(G,R),is_able_v(Flip,R).
-make_flippable_h(_BGC,Flip,G,HS):- is_flippable_h(Flip,G),HS=G.
-make_flippable_h(BGC,Flip,G,HS):- ((rot270(G,G90),make_flippable_v(BGC,Flip,G90,VS),rot90(VS,HS))*->true;make_flippable_h1(BGC,Flip,G,HS)).
-make_flippable_h1(BGC,Flip,G,HS):- rot90(G,G90),make_flippable_v(BGC,Flip,G90,VS),rot270(VS,HS).
+make_flippable_h(Flip,G,HS):- is_flippable_h(Flip,G),HS=G.
+make_flippable_h(Flip,G,HS):- ((rot270(G,G90),make_able_v(Flip,G90,VS),rot90(VS,HS))*->true;make_flippable_h1(Flip,G,HS)).
+make_flippable_h1(Flip,G,HS):- rot90(G,G90),make_able_v(Flip,G90,VS),rot270(VS,HS).
 
 
 is_symmetrical(Grid):-  is_flippable_h(flipH,Grid),is_able_v(flipV,Grid).
-make_symmetrical(Grid0,Grid9):- make_symmetrical(Grid0,flipSome,Grid9).
+make_symmetrical(Grid0,Grid9):- make_symmetrical(Grid0,_,Grid9).
 
 make_symmetrical(Grid0,Flip,Grid9):- into_grid(Grid0,Grid1),make_symmetrical_grid(Grid1,Flip,Grid9).
-make_symmetrical_grid(G,Flip,GridO):- 
- member(Flip,[rot270,rot90,rot180,flipV,flipH]),
-  neighbor_mapc(G,GC),
-  most_d_colors(G,Colors),
+make_symmetrical_grid(Grid,How,Grid9):- trim_to_rect(Grid,Grid1),Grid\==Grid1,!,make_symmetrical_grid(Grid1,How,Grid9).
+make_symmetrical_grid(G,[P,pull(BGC),Flip],GridO):- 
+  most_d_colors(G,Colors,GC),!,
   g_or_gc(G,GC,GG00),
-  member(BGC,[bg|Colors]),
+  %GG00 = GC,
+  member(BGC,Colors),
   free_bg(BGC,GG00,GG),
-  make_flippable_h(BGC,Flip,GG,HS),
-  make_flippable_v(BGC,Flip,HS,Grid9),
- unfree_bg(BGC,Grid9,GridO).
+  member(Flip,[rot270,rot90,rot180,flipV,flipH]),
+  make_flippable_h(flipSome(P),GG,HS),
+  make_able_v(Flip,HS,Grid9),
+    once((unfree_bg(BGC,Grid9,Grid99),
+    uneib(Grid99,GridO),
+    mapgrid(blackFree,GridO))).
+ 
+ 
+ %gncp(glyph-neighbors-color-point)
+
+make_able_v(Flip,G,HS):- nonvar(Flip),is_able_v(Flip,G),HS=G.
+make_able_v(Flip,G,HS):- 
+  suggest_i(G,I),
+  call(Flip,G,R),
+  length(HS,I),append(G,_,HS),append(_,R,HS).
+
+suggest_i(G,I):- grid_size(G,H,V),
+   max_min(H,V,Max,Min),suggest_i(V,Max,Min,I).
+
+suggest_i(V,Max,_Min,I):- !, %fail,!,
+  Max2 is V+V-1,
+  between(V,Max2,I).
+
+suggest_i(_V,Max,Min,Min,I):- 
+  maplist(is,[Min,Max, 
+              Min+Min-1, 
+              Max+Max-1, 
+              Max+Max,
+              Max+1, 
+              Max+2,
+              Max+3, 
+              Max+5, 
+              Max+7, 
+              Max-Min],Results), 
+  sort(Results,Set),member(I,Set).
+  
 
 
 blackFree(E):- ignore(black=E).
@@ -1054,48 +1109,31 @@ blackFree(E):- ignore(black=E).
 g_or_gc(_,G,G).
 g_or_gc(G,_,G).
 
-flipSome(X,Y):- rot90(X,Y).
-flipSome(X,Y):-  flipV(X,Y).
-flipSome(X,Y):- rot180(X,Y).
-flipSome(X,Y):-  flipH(X,Y).
+flipSome(rot90,X,Y):- rot90(X,Y).
+flipSome(flipV,X,Y):-  flipV(X,Y).
+flipSome(rot180,X,Y):- rot180(X,Y).
+flipSome(flipH,X,Y):-  flipH(X,Y).
 
 free_bg(BGC,S,FB):- is_list(S),!,mapgrid(free_bg(BGC),S,FB).
 free_bg(_,S,FB):- plain_var(S),!,FB=S.
-free_bg(_BGC,bg,X):- put_attr(X,ci,free(bg)).
-free_bg(BGC,Black,X):- Black =@= BGC,!, put_attr(X,ci,free(BGC)).
-free_bg(BGC,A-B,AA-BB):- free_bg(BGC,A,AA),free_bg(BGC,B,BB).
+free_bg(_BGC,BG,X):- BG==bg, put_attr(X,ci,free(bg)),!.
+free_bg(BGC,Black,X):- contains_var(BGC,Black),!, put_attr(X,ci,free(BGC)).
 free_bg(_,X,X).
 
-unmapc(S,FB):- is_list(S),!,mapgrid(unmapc,S,FB).
-unmapc(S,FB):- \+ compound(S),!,FB=S.
-unmapc(_-Black,Black):-!.
-unmapc(X,X).
+% (N2-C)-P1
+uneib(S,FB):- is_list(S),!,mapgrid(uneib,S,FB).
+uneib(S,FB):- \+ compound(S),!,FB=S.
+uneib(U-P1,E-P1):- hv_point(_,_,P1),!,uneib(U,E).
+uneib(U-Black,Black):- \+ compound(U),!.
+uneib(X,X).
 
 unfree_bg(BGC,S,FB):- is_list(S),!,mapgrid(unfree_bg(BGC),S,FB).
-unfree_bg(BGC,S,FB):- is_list(S),!,mapgrid(unfree_bg(BGC),S,FB).
 unfree_bg(_,S,BGW):- var(S),!,((get_attr(S,ci,free(BGW)))->true;S=BGW).
-unfree_bg(BGC,A-B,AABB):- !,unfree_bg(BGC,A,B,AABB).
+unfree_bg(BGC,A-B,AABB):- unfree_bg(BGC,A,B,AABB),!.
 unfree_bg(_,X,X).
 
 unfree_bg(_,S,T,FB):- plain_var(S),plain_var(T),!,FB=T.
 unfree_bg(BGC,A,B,AA-BB):- unfree_bg(BGC,A,AA),unfree_bg(BGC,B,BB).
-
-unfree_bg(_,X,X).
-
-%gncp(glyph-neighbors-color-point)
-
-make_flippable_v(_BG,Flip,G,HS):- nonvar(Flip),is_able_v(Flip,G),HS=G.
-make_flippable_v(BGC,Flip,G,HS):- make_flippable_v2(BGC,Flip,G,HS),!.
-
-make_flippable_v2(BGC,Flip,G,HS):-  
-  grid_size(G,H,V), 
-  max_min(H,V,Max,_),
-  Max2 is V+V,
-  between(Max,Max2,I), 
-  call(Flip,G,R),
-  make_flippable_v3(G,R,I,HSC),!,unfree_bg(BGC,HSC,HS).
-
-make_flippable_v3(G,R,I,HS):-  length(HS,I),append(G,_,HS),append(_,R,HS).
 
 show_call_tf(G):- functor(G,F,_),\+ \+ (call(G)->wdmsg(F=true);wdmsg(F=false)).
 
@@ -1103,7 +1141,7 @@ show_call_tf(G):- functor(G,F,_),\+ \+ (call(G)->wdmsg(F=true);wdmsg(F=false)).
 test_neighbor_map:- clsmake, forall(arc_grid(G),show_neighbor_map(G)).
 show_neighbor_map(G):- 
  grid_to_id(G,ID),
- neighbor_mapc(G,N),print_side_by_side(G,N),most_d_colors(G,C),nl,writeln(ID=C).
+ most_d_colors(G,C,N),!,print_side_by_side(G,N),nl,writeln(ID=C).
 
 merge_nc(A,B,B):- var(A),!.
 merge_nc(A,B,A):- var(B),!.
@@ -1118,7 +1156,7 @@ e_int2glyph(6,'c').
  code=63 ?  code=183 · code=176 ° code=186 º 170 ª
 bg_dot(32).
  169	© 248	ø 216	Ø  215 ×  174	® 
-*/
+*//*
 e_int2glyph(1,'©').
 e_int2glyph(2,'·').
 e_int2glyph(3,'º').
@@ -1127,42 +1165,16 @@ e_int2glyph(6,'X').
 e_int2glyph(7,'Ø').
 e_int2glyph(8,'©').
 e_int2glyph(9,'®').
-e_int2glyph(12,'~').
-e_int2glyph(13,'.').
+e_int2glyph(10,'~').
+e_int2glyph(11,'.').
+e_int2glyph(12,',').
 %e_int2glyph(5,'ø').
 %e_int2glyph(5,'°').
 %e_int2glyph(5,'®').
 %e_int2glyph(,'ø').
-e_int2glyph(N,G):- N>9, M is N+ 140,int2glyph(M,G).
+e_int2glyph(N,G):- N>9, M is N+ 140,int2glyph(M,G).*/
 e_int2glyph(B,G):- atom_number(G,B).
 
-
-neighbor_mapc(Grid,GridO):- neighbor_map(Grid,GridN),mapgrid(merge_nc,Grid,GridN,GridO).
-neighbor_map(NonGrid,GridO):- \+ is_grid(NonGrid),!,into_grid(NonGrid,Grid),!,neighbor_map(Grid,GridO).
-neighbor_map(Grid,GridO):-
- ((
-  globalpoints(Grid,Points),
-  grid_size(Grid,H,V),
-  make_grid(H,V,GridM),
-  neighbor_map(Points,GridM,Points,GridS),
-  cull_smalls(Grid,GridS,GridO))).
-
-cull_smalls(Grid,GridS,GridO):- 
- must_det_ll((
-  localpoints(Grid,LPS),
-  grid_size(GridS,H,V),
-  flatten([GridS],GridF),!,
-  include(number,GridF,GridN),
-  sort(GridN,GridSN),!,
-  reverse(GridSN,GridR),
-  at_least_4(GridR,Grid4),
-  append(Grid4,Rest,GridR),
-  cull_rest(Rest,GridS,GridSO),
-  localpoints_include_bg(GridS,SP),
-  localpoints_include_bg(GridSO,SOP),
-  include(was_adjacent(LPS,SOP),SP,NSP),
-  points_to_grid(H,V,NSP,GridO),
-  true)).
 
 was_adjacent(LPS,SOP,_-P1):- is_adjacent_point(P1,_,P2),member(_-P2,SOP),member(CCC-P1,LPS),member(CCC-P2,LPS),!.
 
@@ -1173,22 +1185,88 @@ cull_rest(_Rest,GridS,GridS).
 at_least_4([A,B,C,D|_],[A,B,C,D]):-!.
 at_least_4(Grid4,Grid4).
 
+edge_of_grid(H,V,_,_):- (H=<10 ; V=<10),!.
+edge_of_grid(_,_,_,1).
+edge_of_grid(_,_,1,_).
+edge_of_grid(H,_,H,_).
+edge_of_grid(_,V,_,V).
 
-neighbor_map([],G,_,G):-!.
-neighbor_map([C-P1|Ps],Grid,Points,GridO):-
-  findall(N,(is_adjacent_point(P1,Dir,P2),member(C2-P2,Points),dir_num(C,C2,Dir,N)),L),
-  sumlist(L,N),
-  N2 is N -1,
-  max_min(N2,0,Color,_),
-  hv_point(H,V,P1),
-  replace_grid_point(H,V,Color,_,Grid,GridM),
-  neighbor_map(Ps,GridM,Points,GridO).
-  
+neighbor_map(Grid,GridO):-
+  globalpoints(Grid,Points),
+  grid_size(Grid,H,V),
+  neighbor_map(H,V,Points,Points,CountedPoints),!,
+  points_to_grid(H,V,CountedPoints,GridO).
+
+neighbor_map(_,_,[],_,[]):-!.
+neighbor_map(H,V,[NC-P1|Ps],Points,[(N-C)-P1|Ps2]):-
+  only_color_data(NC,C),
+  ((hv_point(X,Y,P1),edge_of_grid(H,V,X,Y)) ->  N = _ ;
+  nei_map(C,P1,Points,N)),
+  neighbor_map(H,V,Ps,Points,Ps2).
+
+only_color_data(NC,NC):- \+ compound(NC),!.
+only_color_data(_-C,NC):- only_color_data(C,NC).
+
+nei_map(C,P1,Points,N):- 
+ findall(Dir,(n_s_e_w(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsC),
+ findall(Dir,(is_diag(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsD),
+ nei_map(DirsC,DirsD,N).
+ 
+
+nei_map([n,s],[],'|').
+nei_map([e,w],[],'-').
+nei_map([n,e],[],'C').
+nei_map([n,w],[],'C').
+nei_map([s,e],[],'C').
+nei_map([s,w],[],'C').
+nei_map([_,_,_,_],[_,_,_],'C').
+nei_map([_,_,_],[],'T').
+nei_map([_,_,_,_],[_,_,_,_],'~').
+nei_map([_,_,_,_],[],'+').
+% is_diag(ne). is_diag(sw). is_diag(se). is_diag(nw).
+nei_map([],[se,nw],'\\').
+nei_map([],[ne,sw],'/').
+nei_map([],[ne,se],'<').
+nei_map([],[sw,nw],'>').
+nei_map([],[ne,nw],'V').
+nei_map([],[se,sw],'A').
+nei_map([],[_,_,_],'%').
+nei_map([_,_,_],[_,_,_,_],7).
+nei_map([],[_,_,_,_],'X').
+
+nei_map([e],[ne,se],'2').
+nei_map([w],[sw,nw],'2').
+nei_map([n],[ne,nw],'2').
+nei_map([s],[se,sw],'2').
+
+nei_map([n,e],[ne],'C').
+nei_map([n,w],[nw],'C').
+nei_map([s,e],[se],'C').
+nei_map([s,w],[sw],'C').
+
+nei_map([n,e],[sw],'j').
+nei_map([n,w],[se],'j').
+nei_map([s,e],[nw],'j').
+nei_map([s,w],[ne],'j').
+
+nei_map([n,e],[sw],'J').
+nei_map([n,w],[se],'J').
+nei_map([s,e],[nw],'J').
+nei_map([s,w],[ne],'J').
+
+
+nei_map([_,_,_,_],[_],5).
+nei_map([_],[_,_,_,_],4).
+nei_map([],[],0).
+nei_map([_],[],2).
+nei_map([],[_],1).
+nei_map(_,_,'.').
+
+
 dir_num(_,_,c,0).
 dir_num(C,C,Diag,1):- is_diag(Diag),!.
 dir_num(_,black,Diag,0):- is_diag(Diag),!.
 dir_num(_,_,Diag,0):- is_diag(Diag),!.
-
 dir_num(C,C,_,2).
 dir_num(_,black,_,0).
 dir_num(_,_,_,0).
