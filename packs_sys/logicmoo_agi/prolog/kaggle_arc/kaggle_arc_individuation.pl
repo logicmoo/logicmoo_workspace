@@ -1079,19 +1079,23 @@ remObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List),
   remGPoints(VM, ReallyRemove),
   set(VM.objs) = Keep.
 
+addCPoints(_VM,Obj):- Obj==[],!.
 addCPoints(VM, Obj):- assume_vm(VM),!,globalpoints(Obj,List), 
   intersection(VM.points,CPoints,PretendToAdd,Prev,ReallyAdd),
   my_append(VM.points,ReallyAdd,set(VM.points)).
 
+remCPoints(_VM,Obj):- Obj==[],!.
 remCPoints(VM,Obj):- is_group(Obj),!,mapgroup(remCPoints(VM),Obj).
 remCPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List), 
   intersection(VM.points,List,ReallyRemove,Keep,PretendToRemove),
   set(VM.points) = Keep.
 
+addPoints(_VM,Obj):- Obj==[],!.
 addRPoints(VM, Obj):- assume_vm(VM),!,globalpoints(Obj,List),
    intersection(VM.points_repair,CPoints,PretendToAdd,Prev,ReallyAdd),
    my_append(VM.points_repair,ReallyAdd,set(VM.points_repair)).
 
+remRPoints(_VM,Obj):- Obj==[],!.
 remRPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List), 
   intersection(VM.points_repair,List,ReallyRemove,Keep,PretendToRemove),
   set(VM.points_repair) = Keep.

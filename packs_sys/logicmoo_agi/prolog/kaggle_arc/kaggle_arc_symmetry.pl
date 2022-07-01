@@ -987,10 +987,9 @@ D=fill_area
 */
 most_d_colors(Grid,ColorO,GridNM):-
   %trace,
-  get_fill_points(Grid,Points,GridNM),
-  grid_size(GridNM,H,V),
+  get_fill_points(Grid,Points,GridNM),  
   uneib(Points,FPoints),
-  pt(fillPoints(H,V) = FPoints),
+  % grid_size(GridNM,H,V), pt(fillPoints(H,V) = FPoints),
   sort(FPoints,NPSS),
   %trace,
   % (N2-C)-P1
@@ -1086,7 +1085,7 @@ suggest_i(G,I):- grid_size(G,H,V),
    max_min(H,V,Max,Min),suggest_i(V,Max,Min,I).
 
 suggest_i(V,Max,_Min,I):- !, %fail,!,
-  Max2 is V+V-1,
+  Max2 is V+V-3,
   between(V,Max2,I).
 
 suggest_i(_V,Max,Min,Min,I):- 
@@ -1185,7 +1184,8 @@ cull_rest(_Rest,GridS,GridS).
 at_least_4([A,B,C,D|_],[A,B,C,D]):-!.
 at_least_4(Grid4,Grid4).
 
-edge_of_grid(H,V,_,_):- (H=<10 ; V=<10),!.
+edge_of_grid(_,_,_,_):- !, fail.
+edge_of_grid(H,V,_,_):- (H=<15 ; V=<15),!,fail.
 edge_of_grid(_,_,_,1).
 edge_of_grid(_,_,1,_).
 edge_of_grid(H,_,H,_).
@@ -1210,57 +1210,58 @@ only_color_data(_-C,NC):- only_color_data(C,NC).
 nei_map(C,P1,Points,N):- 
  findall(Dir,(n_s_e_w(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsC),
  findall(Dir,(is_diag(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsD),
- nei_map(DirsC,DirsD,N).
- 
+ map_neib(DirsC,DirsD,_,N).
 
-nei_map([n,s],[],'|').
-nei_map([e,w],[],'-').
-nei_map([n,e],[],'C').
-nei_map([n,w],[],'C').
-nei_map([s,e],[],'C').
-nei_map([s,w],[],'C').
-nei_map([_,_,_,_],[_,_,_],'C').
-nei_map([_,_,_],[],'T').
-nei_map([_,_,_,_],[_,_,_,_],'~').
-nei_map([_,_,_,_],[],'+').
+
+
+map_neib([n,s],[],'|','.').
+map_neib([e,w],[],'-','.').
+map_neib([n,e],[],'C','+').
+map_neib([n,w],[],'C','+').
+map_neib([s,e],[],'C','+').
+map_neib([s,w],[],'C','+').
+map_neib([_,_,_,_],[_,_,_],'C','+').
+map_neib([_,_,_],[],'T','+').
+map_neib([_,_,_,_],[_,_,_,_],'~','~').
+map_neib([_,_,_,_],[],'+','+').
 % is_diag(ne). is_diag(sw). is_diag(se). is_diag(nw).
-nei_map([],[se,nw],'\\').
-nei_map([],[ne,sw],'/').
-nei_map([],[ne,se],'<').
-nei_map([],[sw,nw],'>').
-nei_map([],[ne,nw],'V').
-nei_map([],[se,sw],'A').
-nei_map([],[_,_,_],'%').
-nei_map([_,_,_],[_,_,_,_],7).
-nei_map([],[_,_,_,_],'X').
+map_neib([],[se,nw],'\\','v').
+map_neib([],[ne,sw],'/','v').
+map_neib([],[ne,se],'<','v').
+map_neib([],[sw,nw],'>','v').
+map_neib([],[ne,nw],'V','v').
+map_neib([],[se,sw],'A','v').
+map_neib([],[_,_,_],'%','v').
+map_neib([_,_,_],[_,_,_,_],7,'X').
+map_neib([],[_,_,_,_],'X','X').
 
-nei_map([e],[ne,se],'2').
-nei_map([w],[sw,nw],'2').
-nei_map([n],[ne,nw],'2').
-nei_map([s],[se,sw],'2').
+map_neib([e],[ne,se],'2','X').
+map_neib([w],[sw,nw],'2','X').
+map_neib([n],[ne,nw],'2','X').
+map_neib([s],[se,sw],'2','X').
 
-nei_map([n,e],[ne],'C').
-nei_map([n,w],[nw],'C').
-nei_map([s,e],[se],'C').
-nei_map([s,w],[sw],'C').
+map_neib([n,e],[ne],'C','+').
+map_neib([n,w],[nw],'C','+').
+map_neib([s,e],[se],'C','+').
+map_neib([s,w],[sw],'C','+').
 
-nei_map([n,e],[sw],'j').
-nei_map([n,w],[se],'j').
-nei_map([s,e],[nw],'j').
-nei_map([s,w],[ne],'j').
+map_neib([n,e],[sw],'j','j').
+map_neib([n,w],[se],'j','j').
+map_neib([s,e],[nw],'j','j').
+map_neib([s,w],[ne],'j','j').
 
-nei_map([n,e],[sw],'J').
-nei_map([n,w],[se],'J').
-nei_map([s,e],[nw],'J').
-nei_map([s,w],[ne],'J').
+map_neib([n,e],[sw],'J','j').
+map_neib([n,w],[se],'J','j').
+map_neib([s,e],[nw],'J','j').
+map_neib([s,w],[ne],'J','j').
 
 
-nei_map([_,_,_,_],[_],5).
-nei_map([_],[_,_,_,_],4).
-nei_map([],[],0).
-nei_map([_],[],2).
-nei_map([],[_],1).
-nei_map(_,_,'.').
+map_neib([_,_,_,_],[_],5,'.').
+map_neib([_],[_,_,_,_],4,'X').
+map_neib([],[],0,0).
+map_neib([_],[],2,'*').
+map_neib([],[_],1,'*').
+map_neib(_,_,'.','.').
 
 
 dir_num(_,_,c,0).

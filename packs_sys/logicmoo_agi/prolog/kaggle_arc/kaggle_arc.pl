@@ -571,3 +571,6 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 
 :- show_tests.
 :- load_last_test_name.
+
+user:portray(Grid):- quietly(arc_portray(Grid)),!.
+

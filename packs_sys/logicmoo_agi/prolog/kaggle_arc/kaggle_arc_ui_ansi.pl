@@ -168,9 +168,6 @@ arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),
 arcdbg(G):- wdmsg(G).
 
 
-
-user:portray(Grid):- quietly(arc_portray(Grid)),!.
-
 %user:portray(Grid):- ((\+ tracing, is_group(Grid),print_grid(Grid))).
 %user:portray(Grid):- quietlyd((is_object(Grid),print_grid(Grid))).
 
@@ -637,7 +634,7 @@ print_gw1(N):-
   (print_g1(N);write('?')))),!,
  gws(S).
 gws(S):- write(S),!.
-gws(S):- atom_length(S,L),(L=28->(write(L),atom_codes(S,Codes),assert(ac(S)));write(S)).
+%gws(S):- atom_length(S,L),(L=28->(write(L),atom_codes(S,Codes),assert(ac(S)));write(S)).
 %print_gw1(N):- compound(N),N = C-W,!,color_print(C,W),!.
 
 regression_test:- G = [[1,2,3],[1,2,3],[1,2,3]], print_grid(G).

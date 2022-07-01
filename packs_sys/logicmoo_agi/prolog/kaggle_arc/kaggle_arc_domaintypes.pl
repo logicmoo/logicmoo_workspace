@@ -82,6 +82,7 @@ sameOrSubClass(Y,Y).
 sameOrSubClass(X,Y):- subClassOf(X,Y).
 
 :- dynamic(iz/2).
+iz(X,_):- is_grid(X),!,fail.
 iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
 iz(X,Y):- nonvar(X),(isz(X,XY),sameOrSubClass(XY,Y),deterministic(YN)), (YN==true->!;true).
 iz(X,Y):- (var(X)->enum_object(X);true),isz(X,Y).

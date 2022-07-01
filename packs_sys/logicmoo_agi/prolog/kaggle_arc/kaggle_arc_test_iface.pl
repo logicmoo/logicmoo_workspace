@@ -530,6 +530,10 @@ load_json_file(F, BaseName, FullName):- Testname=..[F,BaseName],
   load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
 
 
+%ma:attr_unify_hook(
+
+%cell(color,type,objects,
+
 json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.
 json_to_colors(Out,Color):- is_list(Out),!,maplist(json_to_colors,Out,Color).
 json_to_colors(Out,Color):- grid_color_code(Out,Color).

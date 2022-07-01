@@ -102,6 +102,8 @@ exp_call(_,E,E).
 
 run_dsl(VM,Prog,In,Out):- ((var(VM)->get_training(VM);true)), nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
 
+:- meta_predicate(run_dsl(+,+,+,+,-)).
+
 run_dsl(VM,Mode,AttVar,In,Out):- attvar(AttVar),get_attr(AttVar,prog,Prog),!,run_dsl(VM,Mode,Prog,In,Out).
 run_dsl(VM,Mode,Prog,_In,_Out):- var(Prog),!,term_hash(VM,Hash),throw(var_solving_progs(vm(Hash),Mode,Prog,in,out)).
 run_dsl(VM,Mode,lmDSL(Prog),In,Out):- !, run_dsl(VM,Mode,Prog,In,Out).
