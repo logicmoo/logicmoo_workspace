@@ -307,8 +307,6 @@ pad_right(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (rot270(Grid,GridM), pad_top(N
 pad_top(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (grid_size(Grid,H,_V),make_grid(H,N,Top),append(Top,Grid,GridO))).
 pad_bottem(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (grid_size(Grid,H,_V),make_grid(H,N,Bot),append(Grid,Bot,GridO))).
 
-
-
 clip_rot_patterns(flipV,flipHV,flipH,same,kaleidoscope_four).
 clip_rot_patterns(same,same,same,same,four_the_same).
 clip_rot_patterns(flipH,flipH,same,same,four_way_h_flip).
