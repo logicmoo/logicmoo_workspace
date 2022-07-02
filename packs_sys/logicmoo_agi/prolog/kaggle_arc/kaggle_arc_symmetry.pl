@@ -272,7 +272,7 @@ find_mid_slice(Grid,H,V,LB,Left,Mid,RB):-
   Rows>4,
   last(Rows,left(LB,Left,Mid,RB)).
 
-grid_to _3x3_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):- 
+grid_to _3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):- 
   grid_size(Grid,H,V),
   find_mid_slice
 
@@ -288,7 +288,7 @@ grid_to _3x3_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):-
   must_det_ll((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
-  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,Keep,RepairedResult))).
+  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
 */
 
 clip_and_rot(SX,SY,EX,EY,G,Rot,GO):- 
@@ -311,7 +311,17 @@ clip_rot_patterns(flipV,flipHV,flipH,same,kaleidoscope_four).
 clip_rot_patterns(same,same,same,same,four_the_same).
 clip_rot_patterns(flipH,flipH,same,same,four_way_h_flip).
 
-grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):-
+% symmetric_xform(VM,VM.objs,VM.grid,VM.target,KeepNewState,Repaired)
+symmetric_xform(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired):-
+  grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired).
+
+symmetric_xform(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired):-
+  glean_patterns(How,Grid,Repaired),
+  addProgramStep(VM,How),
+  grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired).
+
+
+grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
   member(CXL,[0,1]),member(CYL,[0,1]),
   mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,Grid),
   writeln(mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4)),
@@ -365,11 +375,11 @@ grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):-
   append(CCs,RemoveObjs,RemovalTrials))),
   trial_removal([same|RemovalTrials],G3,RemovalTrialUsed,GridO),
   %trial_removal([unbind_color(brown)],G3,RemovalTrialUsed,GridO))),
-  Keep=Ordered,NewIndiv4s=[], 
+  KeepNewState=Ordered,NewIndiv4s=[], 
   try_pattern_xforms(GridO),
   verify_symmetry(GridO),
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
-  nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
+  nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
   clip(Q2XPad,Q2YPad,EXQ4,EYQ4,GridO,RepairedResultM),
   print_grid(clip_to_previous_area((Q2XPad,Q2YPad)-(EXQ4,EYQ4)),RepairedResultM),
   % [NewQ1,NewQ2,NewQ3,NewQ4],
@@ -388,8 +398,8 @@ try_pattern_xforms(GridO):-
 /*
 */
 
-grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):- !, grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult).
-grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):-
+grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):- !, grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult).
+grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
   notrace(catch(call_with_time_limit(4,find_and_use_pattern_gen(Grid,Image9x9)),time_limit_exceeded, 
    (wdmsg(time_limit_exceeded),fail))),
   %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
@@ -397,7 +407,7 @@ grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,Keep,RepairedResult):-
   must_det_ll((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
-  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,Keep,RepairedResult))).
+  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
 
 sometimes_assume(P2,X,Y):- ignore(call(P2,X,Y)).
 sometimes_assume(P1,X):- ignore(call(P1,X)).
@@ -417,7 +427,7 @@ append_nth1([H|T], N2, L, [H|R]) :-
     N2 is N+1.
 
 
-show_patterns3(GH,_GV,How,G,GG):- 
+glean_patterns_hook(GH,_GV,How,G,GG):- 
   numlist(3,GH,Row),
   D = [Row],
   dif(Same,black),
@@ -430,7 +440,7 @@ show_patterns3(GH,_GV,How,G,GG):-
   length(Stuff2,L3),
   How = first(1,Same,L1,L2,L3).
 
-show_patterns3(GH,_GV,How,G,GG):- 
+glean_patterns_hook(GH,_GV,How,G,GG):- 
   numlist(2,GH,Row),
   D = [Row],
   dif(Same,black),
@@ -443,20 +453,20 @@ show_patterns3(GH,_GV,How,G,GG):-
   length(Stuff2,L3),
   How = first(2,Same,L1,L2,L3).
 
-show_patterns3(GH,GV,How,G,GG):- 
+glean_patterns_hook(GH,GV,How,G,GG):- 
   bg_last(Same),
   make_list(Same,GH,ColorLine),
   Start = [ColorLine,ColorLine|_],
   append(RL,Start,G),
   show_patterns4(GH,GV,How,RL,Start,GG),!.
-show_patterns3(GH,GV,How,G,GG):- 
+glean_patterns_hook(GH,GV,How,G,GG):- 
   bg_last(Same),
   make_list(Same,GH,ColorLine),
   Start = [ColorLine|_],
   append(RL,Start,G),
   show_patterns4(GH,GV,How,RL,Start,GG),!.
 
-show_patterns3(GH,GV,How,G,GG):-
+glean_patterns_hook(GH,GV,How,G,GG):-
   grid_size(G,GH,GV),
   numlist(1,GH,Row),
   D = [Row],
@@ -482,7 +492,7 @@ show_patterns3(GH,GV,How,G,GG):-
   
   How = [repeats(V,LL,1,CL)].
 
-show_patterns3(GH,GV,How,G,GG):- fail,
+glean_patterns_hook(GH,GV,How,G,GG):- fail,
   grid_size(G,GH,GV),
   RL = [_|_],
   append(RL,Start,G),
@@ -518,19 +528,19 @@ show_patterns4(GH,GV,How,L,G,GG):-
   How = [repeats(V,LL,1,CL)].
 
 
-show_patterns3_HV(How,G,GG):- grid_size(G,GH,GV),show_patterns3(GH,GV,How,G,GG).
+glean_patterns3_HV(How,G,GG):- grid_size(G,GH,GV),glean_patterns_hook(GH,GV,How,G,GG).
 
-show_patterns2(How,G,GG):- show_patterns3_HV(How,G,GG),!.
-show_patterns2([rot90|How],G,GG):- rot90(G,G90),show_patterns3_HV(How,G90,GG90),rot270(GG90,GG),!.
+glean_patterns2(How,G,GG):- glean_patterns3_HV(How,G,GG),!.
+glean_patterns2([rot90|How],G,GG):- rot90(G,G90),glean_patterns3_HV(How,G90,GG90),rot270(GG90,GG),!.
 
-show_patterns1(How,G,GG):- show_patterns2(How,G,GG),!.
-show_patterns1([flipH|How],G,GG):- flipH(G,G90),show_patterns2(How,G90,GG90),flipH(GG90,GG),!.
-show_patterns1([diaroll(2)|How],G,GG):- roll_d(2,G,G90),show_patterns2(How,G90,GG90),roll_d(2,GG90,GG),!.
+glean_patterns1(How,G,GG):- glean_patterns2(How,G,GG),!.
+glean_patterns1([flipH|How],G,GG):- flipH(G,G90),glean_patterns2(How,G90,GG90),flipH(GG90,GG),!.
+glean_patterns1([diaroll(2)|How],G,GG):- roll_d(2,G,G90),glean_patterns2(How,G90,GG90),roll_d(2,GG90,GG),!.
 
-show_patterns0([diaroll(1)|How],G,GG):- roll_d(1,G,G90),show_patterns1(How,G90,GG90),roll_d(1,GG90,GG),!.
-show_patterns0([rot90|How],G,GG):- rot90(G,G90),show_patterns1(How,G90,GG90),rot270(GG90,GG),!.
-show_patterns0([flipV|How],G,GG):- flipV(G,G90),show_patterns1(How,G90,GG90),flipV(GG90,GG),!.
-show_patterns0(How,G,GG):- show_patterns1(How,G,GG),!.
+glean_patterns([diaroll(1)|How],G,GG):- roll_d(1,G,G90),glean_patterns1(How,G90,GG90),roll_d(1,GG90,GG),!.
+glean_patterns([rot90|How],G,GG):- rot90(G,G90),glean_patterns1(How,G90,GG90),rot270(GG90,GG),!.
+glean_patterns([flipV|How],G,GG):- flipV(G,G90),glean_patterns1(How,G90,GG90),flipV(GG90,GG),!.
+glean_patterns(How,G,GG):- glean_patterns1(How,G,GG),!.
 
 
 roll_d(N,G,GG):- maplist_n(N,roll_h,G,GGR),!,reverse(GGR,GG).
@@ -540,7 +550,7 @@ roll_h(N,G,GG):- length(LL,N),append(LL,RR,G),append(RR,LL,GG).
 ping_indiv_grid(show_patterns).
 
 show_patterns(G):-
-  show_patterns0(How,G,GG),
+  glean_patterns(How,G,GG),
   print_side_by_side(GG,G),!,
   writeln(How).
 %show_patterns(G):- !, roll_d(G,GGG),!,roll_dr(GGG,GG),!,
@@ -587,7 +597,7 @@ show_patterns(G):-
   must_det_ll((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
-  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,Keep,RepairedResult))).
+  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
 */
 
 consensus(ColorAdvice,GridS,H,V,VGrid):-
@@ -640,12 +650,12 @@ consensus2(How,Vars,[C|BG],Blk,Color,Other,C).
 print_grid_i(O):- print_grid(O),!.
 print_grid_i(O):- dumpST,trace,print_grid(O),!.
 
-maybe_repair_image(VM,Ordered,Objects,CorrectObjects,Keep,RepairedResult):- 
+maybe_repair_image(VM,Ordered,Objects,CorrectObjects,KeepNewState,RepairedResult):- 
   maplist(object_grid,Objects,AllGrids),
   AllGrids=Grids , %once(predsort(sort_on(colored_pixel_count),AllGrids,Grids);sort(AllGrids,Grids)),
   (all_rows_can_align(Grids)
-    -> (Keep=[], format('~N'),dmsg('Must already be perfect...'),CorrectObjects = Objects);
-    repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,Keep,RepairedResult)).
+    -> (KeepNewState=[], format('~N'),dmsg('Must already be perfect...'),CorrectObjects = Objects);
+    repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,KeepNewState,RepairedResult)).
 
 all_rows_can_align([Big|Rest]):- maplist(rows_can_align(Big),Rest).
 rows_can_align(A,B):- \+ A\=B.
@@ -698,7 +708,7 @@ prefect_result(_VM,H,V,Ordered,Grids,RepairedResult,ColorAdvice):-
 
 open_grids(UGrids,OUGrids):- maplist(append,UGrids,_,ORows),append(ORows,_,OUGrids).
 
-repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,Keep,RepairedResult):-
+repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,KeepNewState,RepairedResult):-
  %must_det_ll
  ((
   max_hv(Objects,H,V),
@@ -713,7 +723,7 @@ repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,Keep,RepairedRes
  %           maplist(check_my_local_points(LPoints),CorrectGrids),
  %   all_rows_can_align(CorrectGrids))),
   maplist(replace_diffs(LPoints),Objects,CorrectObjects),!,
-  my_partition(same_lcolor(ColorAdvice),Ordered,Keep,_))),!.
+  my_partition(same_lcolor(ColorAdvice),Ordered,KeepNewState,_))),!.
 
 together(Goal):- call(Goal),!.
 
@@ -1137,8 +1147,8 @@ is_point_type(T,V):- compound(V),arg(_,V,E), is_point_type(T,E).
 is_point_type(T,V):- V==T.
  
 
-nr_make_symmetrical_grid(G,How,Symm,How):- 
-  no_repeats(Symm,make_symmetrical_grid(G,How,Symm)).
+nr_make_symmetrical_grid(G,Test,Symm,How):- 
+  no_repeats(Symm,make_symmetrical_grid(G,Test,Symm,How)).
   
 ping_indiv_grid(show_make_symmetrical).
 
@@ -1147,7 +1157,7 @@ show_make_symmetrical(G):-
   set_current_test(G),
   dash_chars,
   format('~N'),
-  ShowHow = wqs(uc(green,How)),
+  ShowHow = wqs(uc(green,How,Test)),
   findall(Symm-ShowHow,nr_make_symmetrical_grid(G,Test,Symm,How),List),
   list_to_set(List,Set),
   print_side_by_side([G,G|Set]).
@@ -1171,11 +1181,16 @@ make_flippable_h1(Flip,G,HS):- rot90(G,G90),make_able_v(Flip,G90,VS),rot270(VS,H
 
 
 is_symmetrical(Grid):-  is_flippable_h(flipH,Grid),is_able_v(flipV,Grid).
-make_symmetrical(Grid0,Grid9):- make_symmetrical(Grid0,_,Grid9).
+make_symmetrical(Grid0,Grid9):- make_symmetrical(Grid0,_,Grid9,How),
+  addProgramStep(_,How).
 
-make_symmetrical(Grid0,Flip,Grid9):- into_grid(Grid0,Grid1),make_symmetrical_grid(Grid1,Flip,Grid9).
-make_symmetrical_grid(Grid,How,Grid9):- trim_to_rect(Grid,Grid1),Grid\==Grid1,!,make_symmetrical_grid(Grid1,How,Grid9).
-make_symmetrical_grid(G,[P,pull(BGC),Flip],GridO):- 
+%Grid0,Flip,Grid9
+make_symmetrical(G0,Test,Symm,How):- into_grid(G0,G1),make_symmetrical_grid(G1,Test,Symm,How).
+% G,Test,Symm,How
+make_symmetrical_grid(G,Test,Symm,How):- trim_to_rect(G,Grid1),G\==Grid1,!,make_symmetrical_grid(Grid1,Test,Symm,How).
+make_symmetrical_grid(G,Test,GridO,[P,pull(BGC),Flip]):- 
+  mass(G,OrignalMass),
+  MaxMass is OrignalMass * 4,
   most_d_colors(G,Colors,GC),!,
   g_or_gc(G,GC,GG00),
   %GG00 = GC,
@@ -1187,8 +1202,8 @@ make_symmetrical_grid(G,[P,pull(BGC),Flip],GridO):-
     once((unfree_bg(BGC,Grid9,Grid99),
     uneib(Grid99,GridO),
     mapgrid(blackFree,GridO))),
-    
-    verify_symmetry(GridO).
+    (var(Test)-> verify_symmetry(GridO) ; is_able_v(Test,GridO)),
+    mass(GridO,NewMass),NewMass =< MaxMass.
 
 verify_symmetry(GridO):-
  once((is_able_v(rot90,GridO)
@@ -1206,9 +1221,8 @@ make_able_v(Flip,G,HS):-
 suggest_i(G,I):- grid_size(G,H,V),
    max_min(H,V,Max,Min),suggest_i(V,Max,Min,I).
 
-suggest_i(V,Max,_Min,I):- !, %fail,!,
-  Max2 is V+V-3,
-  between(V,Max2,I).
+suggest_i(V,_Max,_Min,I):- !, %fail,!,
+  Max2 is V+V-3, between(V,Max2,I).
 
 suggest_i(_V,Max,Min,Min,I):- 
   maplist(is,[Min,Max, 
@@ -1228,7 +1242,7 @@ suggest_i(_V,Max,Min,Min,I):-
 blackFree(E):- ignore(black=E).
 
 g_or_gc(_,G,G).
-g_or_gc(G,_,G).
+%g_or_gc(G,_,G).
 
 flipSome(rot90,X,Y):- rot90(X,Y).
 flipSome(flipV,X,Y):-  flipV(X,Y).

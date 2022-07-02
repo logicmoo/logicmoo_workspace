@@ -424,6 +424,7 @@ train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
 
    into_fti(TestID*(Trn+N1)*IO1,ModeIn,In,InVM),!,
    into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM),!,
+   InVM.compare=OutVM, InVM.target=Out, OutVM.compare=InVM, OutVM.target=In,
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
 
   individuate(InVM),!,

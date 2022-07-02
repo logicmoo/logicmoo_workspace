@@ -52,7 +52,7 @@ iq(ROptions,Grid):-
   make,
   %fail,
   %into_grid(Grid, GridIn), 
-  %make_fti(Grid,VM),
+  %ensure_fti(Grid,VM),
   dash_chars,
   %print_grid(GridIn), 
   %grid_to_id(GridIn,VM.id),
@@ -89,6 +89,7 @@ individuation_macros(train_mono_in_in, complete).
 individuation_macros(train_mono_in_out, complete).
 individuation_macros(train_mono_out_out, complete).
 individuation_macros(trn_in_in, complete).
+individuation_macros(trn_out_in, complete).
 individuation_macros(trn_in_out, complete).
 individuation_macros(trn_out_out, complete).
 
@@ -111,6 +112,7 @@ individuation_macros(subshape_in_object, [
 
 % never add done to macros
 individuation_macros(subshape_main, [
+   make_symmetric_indiv,
    shape_lib(hammer), % is a sanity test/hack
    rectangle, diamonds,
    %indiv_grid_pings,
@@ -311,7 +313,7 @@ individuate(H,V,ID,ROptions,Grid,Points,IndvSS):-
    must_det_ll((
    individuation_reserved_options(ROptions,Reserved,NewOptions),
    %trace,
-   make_fti(H,V,ID,Grid,[],Reserved,NewOptions,Points,VM),
+   ensure_fti(H,V,ID,Grid,[],Reserved,NewOptions,Points,VM),   
    individuals_raw(VM,H,V,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
    %as_debug(9,ptt((individuate=IndvSRaw))),
    make_indiv_object_list(ID,H,V,IndvSRaw,IndvS1),
@@ -321,12 +323,15 @@ individuate(H,V,ID,ROptions,Grid,Points,IndvSS):-
          save_grouped(individuate(ID,NamedOpts),IndvSS))))),!.
 
 
-individuate(VM):- 
+individuate(VM):- fail,
   individuate(VM.roptions, VM.grid, Objs), 
   %set(VM.objs) = Objs,
   set(VM.objs) = Objs,
   RO = VM.roptions,
   nop(fif(\+ is_list(RO), add_shape_lib(RO,Objs))).
+
+individuate(VM):- 
+  individuate(VM.roptions, VM),!.
 
 individuate(ROptions,VM):-
    must_det_ll((
@@ -381,7 +386,7 @@ individuate_whole(GH,GV,ID,PointsIn,IndvSO):-
 
 % Thunk(ArgList->VM)
 call_fsi(VM,NewReserved,NewGrid,NewProgramCode,GH,GV,Sofar,ID,ProgramCode,Reserved,Points,Grid,SofarMaybeNew,NextScanPoints):- !,
-  (var(VM)->(make_fti(GH,GV,ID,Grid,Sofar,Reserved,ProgramCode,Points,VM));true),
+  (var(VM)->(ensure_fti(GH,GV,ID,Grid,Sofar,Reserved,ProgramCode,Points,VM));true),
   clause(fti(VM,ProgramCode),Body),
   call((Body,deterministic(YN),true)),
   (YN == true -> ! ; true),
@@ -395,7 +400,7 @@ call_fsi(VM,NewReserved,NewGrid,NewProgramCode,GH,GV,Sofar,ID,ProgramCode,Reserv
   call((Body,deterministic(YN),true)),
   (YN == true -> ! ; true).
 
-make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-  
+ensure_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-  
   statistics(cputime,X),Timeleft is X+30,
   max_min(GH,GV,Max,_Min),
   ArgVM = vm{
@@ -405,6 +410,7 @@ make_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    program_i:Options, options:Options, roptions:Options, %todo_prev:[],
    % how much time is left before we turn on debugger
    timeleft:Timeleft, objs_max_len:Max, objs_min_mass:_, objs_max_mass:_,
+     compare:_, target:_,
    % Grid and point representations
    grid:Grid, points:Points,
    % Original copies of Grid and point representations
@@ -434,7 +440,6 @@ into_fti(ID,ROptions,GridIn0,VM):-
   ((
    %rtrace,
   (is_dict(GridIn0)-> (VM = GridIn0, GridIn = GridIn0.grid) ; GridIn0 = GridIn),
-  
   globalpoints(GridIn,Points),
   into_grid(GridIn,Grid),
   (var(ID)->grid_to_id(Grid,ID);true),
@@ -444,6 +449,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
   ArgVM = vm{
    % parent VM
    training:_,
+     compare:_, target:_,  
    % Options and TODO List (are actually same things)
    program_i:Options, options:Options, roptions:ROptions, %todo_prev:[],
    % how much time is left before we turn on debugger
@@ -483,8 +489,9 @@ nb_link_pairs_if_missing(VM,K-NewV):- V = VM.K, ((var(V),\+ attvar(V))->nb_link_
 individuals_raw(VM,GH,GV,ID,Options,Reserved,Points,Grid,IndvSRaw):-
  must_det_ll((
   must_be_free(IndvSRaw),
-  make_fti(GH,GV,ID,Grid,[],Reserved,Options,Points,VM),
-  indiv_grid_pings(VM.grid),
+  must_be_nonvar(VM),
+  %ensure_fti(GH,GV,ID,Grid,[],Reserved,Options,Points,VM),
+  %indiv_grid_pings(VM.grid),  
   individuals_list(VM,GH,GV,[],ID,Options,Reserved,Points,Grid,Indv_0,_LeftOverPoints),
   =(Indv_0,Indv_1),
   unraw_inds(VM,Indv_1,Indv_2),  
@@ -1160,6 +1167,16 @@ addGPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 
 in_set(Set,I):- member(E,Set), E=@=I,!.
 
+is_fti_step(make_symmetric_indiv).
+
+make_symmetric_indiv(VM):-
+  symmetric_xform(VM,VM.objs,VM.grid,VM.target,NewState,Repaired),
+  localpoints_include_bg(Repaired,GPoints),
+  object_grid(NewState,NewGrid),
+  set(VM.grid) = NewGrid,
+  make_indiv_object(VM.id,VM.h,VM.v,GPoints,[iz(symmetric_indiv)],ColorObj),!,
+  addObjects(VM,ColorObj).
+
 is_fti_step(fourway).
 
 fourway(VM):-
@@ -1168,16 +1185,16 @@ fourway(VM):-
   %VM.id = VM.id,
   H > 13, V> 13,
   largest_first(VM.objs,Ordered),     
-  grid_to_3x3_objs(VM,Ordered,VM.grid,FourWay1s,Keep,_Repaired),
+  grid_to_3x3_objs(VM,Ordered,VM.grid,NewIndiv4s,Keep,_Repaired),
   must_det_ll((
   intersection(Ordered,Keep,_ReallyKeptO,TookbackO,GaveExtraBackO),
   remObjects(VM,TookbackO),
   addCPoints(VM,TookbackO),
   addObjects(VM,GaveExtraBackO),
   remCPoints(VM,GaveExtraBackO),
-  addObjects(VM,FourWay1s),
-  remCPoints(VM,FourWay1s),
-  addGPoints(VM,FourWay1s),
+  addObjects(VM,NewIndiv4s),
+  remCPoints(VM,NewIndiv4s),
+  addGPoints(VM,NewIndiv4s),
   %remRPoints(VM,Keep),
   remCPoints(VM,Keep),
   as_debug(8,VM.points\==[],print_grid(VM.h,VM.v,"Leftover Points...",VM.points)),
@@ -1186,7 +1203,7 @@ fourway(VM):-
   %Restart = VM.roptions,!,
   TODO = VM.program_i,
   set(VM.options) = [progress|VM.options],
-  maybe_done(VM,FourWay1s,TODO,NEXT),
+  maybe_done(VM,NewIndiv4s,TODO,NEXT),
   set(VM.program_i) = NEXT)).
 
 
@@ -1220,8 +1237,8 @@ remove_from_image(VM,Data):-
     
 
 
-overwrite_use_so_far(FourWay1s,Sofar,UseSofar):-
-  must_det_ll((remove_global_points(FourWay1s,Sofar,Sofar1),add_global_points(FourWay1s,Sofar1,UseSofar))),!.
+overwrite_use_so_far(NewIndiv4s,Sofar,UseSofar):-
+  must_det_ll((remove_global_points(NewIndiv4s,Sofar,Sofar1),add_global_points(NewIndiv4s,Sofar1,UseSofar))),!.
 overwrite_use_so_far(_FourWay1s,Sofar,Sofar).
 
 fsi(_VM,Reserved,NewGrid,TODO,H,V,Sofar,_ID,['regroup'|TODO],Reserved,Points,Grid,OutInvdivS,Points):- 
