@@ -41,6 +41,9 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
 
 :- meta_predicate(fif(0,0)).
 fif(IF, THEN) :- (   call(IF) ->  call(THEN) ;   true ).
+:- meta_predicate(quietlyd(0)).
+quietlyd(G):- quietly(G),!.
+
 
 % COMMAND LINE ARC
 :- if(\+ current_module(logicmoo_arc)).
@@ -329,8 +332,10 @@ make_training(TestID,VM):-
     duplicate_term(RBTREE,DATA),
     make_training_hints(TestID,
      training{
+      program:[],
       pairs:_, %datatree:_, 
-      current:_,test_id:TestID,
+      current:_,
+      test_id:TestID,
       mappings:[map],
       storage:DATA},
     VM))).
@@ -347,7 +352,9 @@ make_training(TestID,VM):-
 
 gather_more_task_info(TestID,S):- 
   findall(III,more_task_info(TestID,III);fav(TestID,III),L),
-  flatten([L],LF),list_to_set(LF,S).
+  flatten([L],LF),
+  maplist(repair_info,LF,LFL),
+  list_to_set(LFL,S).
   
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
@@ -394,14 +401,6 @@ train_for_objects_from_pair(Dict0,TestID,Desc,In,Out,Dict9):-
   train_for_objects_from_pair_1(Dict0,TestID,Desc,In,Out,Dict1),!,
   nop(train_for_objects_from_pair_1(Dict1,TestID,MonoDesc,MonoIn,MonoOut,Dict9)),!,
    ignore(Dict1=Dict9).
-
-individuate(VM):- 
-  individuate(VM.roptions, VM.grid, Objs), 
-  %set(VM.objs) = Objs,
-  set(VM.objs) = Objs,
-  RO = VM.roptions,
-  nop(fif(\+ is_list(RO), add_shape_lib(RO,Objs))).
-  
 
 
 train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
@@ -473,7 +472,9 @@ sols_for(Name,Trial,Sol):- trials(Trial),Entry=..[Trial,Sol],
   gather_more_task_info(Name,Sols),member(Entry,Sols).
 
 
-solve_test:- get_current_test(TestID), catch(solve_test(TestID,(tst+_)),E,wdmsg(E=solve_test(TestID,(tst+_)))),!.
+solve_test:- 
+ make,
+ my_menu_call((get_current_test(TestID), catch(solve_test(TestID,(tst+_)),E,wdmsg(E=solve_test(TestID,(tst+_)))))),!.
 
 solve_test(Name):- 
   fix_test_name(Name,TestID,ExampleNum),!,
@@ -496,16 +497,20 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     get_training(Training))),
     %sflag(indiv,_,0),
     into_fti(TestID*ExampleNum*in,in,TestIn,InVM),
-    dicts_join(Training,InVM,TrainingVM),
-    must_det_ll((    
-    print(training(Training)),nl,
+    set(InVM.objs) = [],
+    %set(InVM.points) = [],
+    set(InVM.training) = Training,
+    TrainingVM = InVM,
+    must_det_ll((
+    %print(training(Training)),nl,
+    %ptt(TrainingVM),
     dash_chars, dash_chars,    
     print_testinfo(TestID),
     ptt("BEGIN!!!"+TestID+ExampleNum),
     forall(sols_for(TestID,Trial,SolutionProgram),
      ignore((pt(cyan,trial=Trial),
        ptt(cyan,run_dsl(TestID,Trial,SolutionProgram)),
-       (run_dsl(TrainingVM,SolutionProgram,TestIn,Grid)*->true;TestIn=Grid),
+       (run_dsl(TrainingVM,SolutionProgram,InVM,Grid)*->true;TestIn=Grid),
        into_pipe(Grid,Solution))
        *->    
        ignore((count_difs(ExpectedOut,Solution,Errors),
@@ -519,6 +524,8 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
                test_info(TestID,InfoF),wqnl(fav(TestID*ExampleNum,InfoF)),
                banner_lines(red)))))
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))),
+    print_grid(TrainingVM.grid),
+    print_list_of("objs",TrainingVM.objs),
     ptt("END!!!"+TestID+ExampleNum))).
    
 

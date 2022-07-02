@@ -23,7 +23,7 @@ recalc_sizes(VM,[After|TODO]):-
    set(VM.objs_min_mass) = Min,
    set(VM.objs_max_mass) = Max,
    show_vm_changes(VM,cullObjectsOutsideOf(Min,Max),cullObjectsOutsideOf(VM,Min,Max)),
-   set(VM.program) = [After,recalc_sizes|TODO].
+   set(VM.program_i) = [After,recalc_sizes|TODO].
 
 cullObjectsOutsideOfRanges(VM):- length(VM.objs,N),N< floor(VM.objs_max_len/2),!.
 cullObjectsOutsideOfRanges(VM):-cullObjectsOutsideOf(VM,VM.objs_min_mass,VM.objs_max_mass). 

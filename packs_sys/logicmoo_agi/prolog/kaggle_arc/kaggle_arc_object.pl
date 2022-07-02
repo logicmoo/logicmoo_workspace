@@ -482,6 +482,7 @@ counted_neighbours(C-HV,List,CountIn,[P|CountIn]):-
 
 var_check(I,_):- is_grid(I),!,fail.
 var_check(I,G):- var(I),!,var_check_throw(I,G).
+var_check(I,_):- I==[],!,fail.
 var_check(I,G):- resolve_reference(I,O),I\==O,!,subst001(G,I,O,GG),GG\==G,!,call(GG).
 var_check(I,G):- var(I),!,(enum_object(I)*->G;var_check_throw(I,G)).
 var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,dumpST,trace_or_throw(maybe_enum_i(I,G)),call(G).
@@ -564,7 +565,8 @@ grid_to_points(Grid,HH,HV,Points):-  trace_or_throw(all_points_between),
 point_corners(Obj,Dir,CPoint):- enum_object(Obj),  globalpoints(Obj,Points), gp_point_corners(Obj,Points,Dir,CPoint).
 
 
-gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints), isz(Obj,Shape),
+gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints), 
+   isz(Obj,Shape),
   (points_corner_dir(Shape,Dir)*->(SPoints=[CPoint|_];last(SPoints,CPoint));fail).
    
 

@@ -188,21 +188,23 @@ gridoid_size(print_grid0(H,V,_,_),H,V):- nonvar(H),nonvar(V),!.
 gridoid_size(G,H,V):- compound_name_arity(G,print_grid,A),arg(A,G,GG),gridoid_size(GG,H,V).
 gridoid_size(G,H,V):- is_gridoid(G),!,grid_size(G,H,V).
 
-print_side_by_side(C1-wqs(S1),LW,C2-wqs(S2)):- nonvar(S1),!,
-  print_side_by_side(C1,LW,C2),format('~N'),
-  print_side_by_side(wqs(S1),LW,wqs(S2)).
-print_side_by_side(C1-A,LW,C2-B):- nonvar(A),!,
-  print_side_by_side(C1,LW1,C2),format('~N'),
-  print_side_by_side(A,LW2,B),
+print_side_by_side(X,Y,Z):- quietlyd(print_side_by_side0(X,Y,Z)).
+
+print_side_by_side0(C1-wqs(S1),LW,C2-wqs(S2)):- nonvar(S1),!,
+  print_side_by_side0(C1,LW,C2),format('~N'),
+  print_side_by_side0(wqs(S1),LW,wqs(S2)).
+print_side_by_side0(C1-A,LW,C2-B):- nonvar(A),!,
+  print_side_by_side0(C1,LW1,C2),format('~N'),
+  print_side_by_side0(A,LW2,B),
   ignore(max_min(LW1,LW2,LW,_)).
 
-print_side_by_side(C1,LW,C2):- var(LW), gridoid_size(C1,H1,V1),gridoid_size(C2,H2,V2),!,    
-    ((V2 > V1) -> LW is -(H2 * 2 + 12) ; LW is (H1 * 2 + 12)),!, print_side_by_side(C1,LW,C2).
-print_side_by_side(C1,LW,C2):-  var(LW), LW=30,print_side_by_side(C1,LW,C2),!.
+print_side_by_side0(C1,LW,C2):- var(LW), gridoid_size(C1,H1,V1),gridoid_size(C2,H2,V2),!,    
+    ((V2 > V1) -> LW is -(H2 * 2 + 12) ; LW is (H1 * 2 + 12)),!, print_side_by_side0(C1,LW,C2).
+print_side_by_side0(C1,LW,C2):-  var(LW), LW=30,print_side_by_side0(C1,LW,C2),!.
 
-print_side_by_side(C1,W0,C2):- number(W0), W0 < 0, LW is -W0, !, print_side_by_side(C2,LW,C1).
+print_side_by_side0(C1,W0,C2):- number(W0), W0 < 0, LW is -W0, !, print_side_by_side0(C2,LW,C1).
 
-print_side_by_side(C1,W0,C2):- number(W0), LW is floor(abs(W0)),
+print_side_by_side0(C1,W0,C2):- number(W0), LW is floor(abs(W0)),
   into_ss_string(C1,ss(W1,L1)),
   into_ss_string(C2,ss(_,L2)),!,
   print_side_by_side_lists_1st(L1,W1,L2,LW).
@@ -414,7 +416,7 @@ print_grid0(Grid):-  ignore(print_grid0(_,_,Grid)),!.
 
 %print_grid0(Grid):- plain_var(Grid),!, throw(var_print_grid(Grid)).
 
-format_u(TitleColor,Format,Args):- ignore((underline_print(color_print(TitleColor,call(format(Format,Args)))))).
+format_u(TitleColor,Format,Args):- quietlyd( ignore((underline_print(color_print(TitleColor,call(format(Format,Args))))))).
 
 print_grid(OH,OV,Name,Out):- 
  quietly((
@@ -429,10 +431,13 @@ print_grid(H,V,Grid):- ignore(quietly(print_grid0(H,V,Grid))).
 print_grid0(_,_,_):- is_print_collapsed,!.
 print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
 % print_grid0(_H,_V,G):- G==[],!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
+
+print_grid0(H,V,D):- is_dict(D),ignore(H = D.h),ignore(V = D.v),
+  vm_to_printable(D,R),D\==R,!,print_grid0(H,V,R).
+
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
   GG= nc_print_grid(H,V,Grid), pt(GG),!,nop(trace_or_throw(GG)).
 
-print_grid0(H,V,D):- is_dict(D),ignore(H = D.h),ignore(V = D.v),vm_to_printable(D,R),R\==R,!,print_grid0(H,V,R).
 
 print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, 
   with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
@@ -445,9 +450,9 @@ print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,
 print_grid0(H,V,Grid):- \+ is_gridoid(Grid), into_grid(Grid,G),!,print_grid0(H,V,G).
 print_grid0(H,V,Grid):- print_grid0(1,1,H,V,Grid),!.
 
-print_grid0(SH,SV,EH,EV,Grid):- print_grid0(SH,SV,SH,SV,EH,EV,EH,EV,Grid).
+print_grid0(SH,SV,EH,EV,Grid):- quietlyd(print_grid0(SH,SV,SH,SV,EH,EV,EH,EV,Grid)).
 %print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- nop(print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),!.
-print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid),!.
+print_grid(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- quietlyd(print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),!.
 
 
 print_grid0(_SH,_SV,_LoH,_LoV,_HiH,_HiV,_EH,_EV,Grid):- \+ is_printable_gridoid(Grid), !, writeln(\+ is_printable_gridoid(Grid)).
@@ -463,8 +468,6 @@ print_grid0(SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):-
  wots(S, \+ \+ print_grid0(true,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid)),
  print_w_pad(O1,S),format('~N').
 
-
-quietlyd(G):-quietly(G),!.
 /*
 print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- 
   is_grid(Grid), Grid=[[AShape|_]|_], nonvar_or_ci(AShape),(AShape=A-Shape),plain_var(A),nonvar_or_ci(Shape),

@@ -25,12 +25,13 @@ print_menu_cmd1(_Key,Info,_Goal):- format(' ~w',[Info]).
 menu_cmd(i,'i','Examine (i)ndividuator,',(cls,!,ndividuator)).
 menu_cmd(_,'p','     or (p)rint training pairs (captial to reveal Solutions)',(print_test)).
 menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(cls,!,print_test,train_test)).
-menu_cmd(_,'s','     or (s)olve the problem as learned.',(cls,print_test,!,solve_test)).
+menu_cmd(_,'e','     or (e)xecute the program as learned.',(cls,print_test,!,solve_test)).
 menu_cmd(_,'h','     or (h)uman proposed solution.',(human_test)).
-menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Solve.',(cls,fully_test)).
+menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Evalute.',(cls,fully_test)).
 menu_cmd(_,'a','     or (a)dvance to the next test and run',(cls,!,run_next_test)).
 menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
 menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
+menu_cmd(_,'f','     or (f)orce a favorite test.',(enter_test)).
 menu_cmd(_,'S','     or  back to begining of (S)uite',(restart_suite)).
 menu_cmd(_,'N','     or (N)ext Suite',(next_suite)).
 menu_cmd(_,'l','     or (l)ist feature tests and run',(run_a_test)).
@@ -52,15 +53,39 @@ find_tests(F):-
    current_predicate(N),N=F/0, atom_concat(test_,_,F),\+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit)).
 list_of_tests(L):- findall(F,find_tests(F),L).
 
-show_tests:- make, list_of_tests(L),forall(nth0(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
+show_tests:- make, list_of_tests(L),forall(nth1(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
 
 run_a_test:- 
    show_tests,
-   write("\nYour selection: "), read_line_to_string(user_input,Sel),
    list_of_tests(L),
-   ignore((atom_number(Sel,Num),nth0(Num,L,E),!,call(E))).
+   length(L,SelMax),
+   write("\nTest selection: "), 
+   read_number_chars('',SelMax,Sel),
+  % ignore((read_line_to_string(user_input,Sel),atom_number(Sel,Num))),
+   atom_number(Sel,Num),
+   nth1(Num,L,E),!,my_menu_call(E),!.
+  
+my_menu_call(E):- locally(set_prolog_flag(gc,false),E).
+   
+
+read_number_chars(Start,SelMax,Out):-
+  get_single_char(Code),  char_code(Key,Code),
+  append_num_code(Start,SelMax,Key,Out).
+  
+append_num_code(Start,_SelMax,Key,Start):-char_type(Key,end_of_line),!.
+append_num_code(Start,SelMax,Digit,Out):- char_type(Digit,digit),put_char(Digit),atom_concat(Start,Digit,NStart), 
+ ((atom_number(NStart,Num),Num*10>SelMax) -> Out = NStart ; read_number_chars(NStart,SelMax,Out)).
+append_num_code(Start,SelMax,_,Out):- read_number_chars(Start,SelMax,Out).
 
 clsR:- !. % once(cls).
+
+enter_test:- repeat, write("\nYour favorite: "), read_line_to_string(user_input,Sel),
+     (Sel=="" -> (wqnl("resuming menu"), menu);
+      (catch(read_term_from_atom(Sel,Name,[module(user),double_quotes(string),variable_names(Vs),singletons(Singles)]),_,
+        (wqnl(['failed to read: ',Sel]),fail)),
+        maplist(ignore,Vs),maplist(ignore,Singles),
+       (fix_test_name(Name,TestID,_) -> true ; (wqnl(['could not read a test from: ',Sel,nl,'try again']),fail)),
+       wqnl(['Swithing to test: ',TestID]),set_current_test(TestID),print_test)).
 
 interact:- 
   repeat, format('~N Your selection: '), get_single_char(Code), 
@@ -68,13 +93,14 @@ interact:-
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ').
 do_menu_key('P'):- !, do_menu_key('p').
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
-  dmsg(calling(Goal)),!, ignore(once((Goal*->true;(fail,trace,dumpST,rrtrace(Goal))))),!,read_pending_codes(user_input,_,[]),!,fail.
+  dmsg(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->true;(fail,trace,dumpST,rrtrace(Goal))))),!,
+   read_pending_codes(user_input,_,[]),!,fail.
 do_menu_key(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),once(mmake),menu,fail.
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
 interactive_test_menu:- 
-  repeat, 
-   write_menu('i'), 
-   interact,!.
+ my_menu_call((
+  repeat, write_menu('i'), 
+   catch((interact),'$aborted',fail))),!.
 run_all_tests:- 
   repeat,
    run_next_test,
@@ -85,7 +111,7 @@ run_all_tests:-
 
 ndividuator:- get_current_test(TestID),with_test_grids(TestID,G,ig(complete,G)).
 test_grids(TestID,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
-with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),call(P)).
+with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
 
 bad:- ig([complete],v(aa4ec2a5)*(trn+0)*in).
 
@@ -577,8 +603,8 @@ fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried*ExampleNum,  Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
 
-
 fix_id(Tried,   Tried):- var(Tried),!.
+fix_id(object_indv_id(X,_),Fixed):-  !, fix_id(X,Fixed).
 fix_id(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
 fix_id(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
 fix_id(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.

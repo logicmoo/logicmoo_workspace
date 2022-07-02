@@ -86,9 +86,15 @@ test_cond_or(This, That):- term_variables(This,[That|_]),!.
 call_expanded(VM,G):-  exp_call(VM,G,GG),G\==GG,!,call_expanded(VM,GG).
 call_expanded(_VM,G):- catch(call(G),E,(dumpST,pt(E),rrtrace(G))).
 
-exp_call(_,Var,Var):- var(Var),!.
-exp_call(_,Var,Var):- is_list(Var),!.
-exp_call(_,Var,Var):- number(Var),!.
+quinish(Var):- var(Var),!.
+quinish(Var):- is_grid(Var),!.
+quinish(Var):- is_dict(Var),!.
+quinish(Var):- is_object(Var),!.
+quinish(Var):- is_group(Var),!.
+quinish(Var):- is_list(Var),!.
+quinish(Var):- number(Var),!.
+
+exp_call(_,Var,Var):- quinish(Var),!.
 exp_call(VM,length(G1,G2),length(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
 exp_call(VM,(G1,G2),(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
 exp_call(VM,(G1;G2),(GG1;GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
@@ -100,7 +106,9 @@ exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X).
 exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)).
 exp_call(_,E,E).
 
-run_dsl(VM,Prog,In,Out):- ((var(VM)->get_training(VM);true)), nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
+run_dsl(VM,Prog,In,Out):- 
+ ((var(VM)->get_training(VM);true)), 
+   nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
 
 :- meta_predicate(run_dsl(+,+,+,+,-)).
 
@@ -214,7 +222,8 @@ known_gridoid(ID,G):- known_object(ID,G),!.
 
 known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
-known_grid0(ID,_):- is_grid(ID),!.
+known_grid0(ID,G):- is_grid(ID),!,G=ID.
+known_grid0(ID,_):- is_object(ID),!,fail.
 known_grid0(ID,G):- is_grid_id(G,ID).
 known_grid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
 known_grid0(ID,G):- ID = TstName*ExampleNum*IO,!,fix_id(TstName,Name),(kaggle_arc_io(Name,ExampleNum,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
