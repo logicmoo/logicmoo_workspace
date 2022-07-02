@@ -65,7 +65,7 @@ run_a_test:-
    atom_number(Sel,Num),
    nth1(Num,L,E),!,my_menu_call(E),!.
   
-my_menu_call(E):- locally(set_prolog_flag(gc,false),E).
+my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
    
 
 read_number_chars(Start,SelMax,Out):-
@@ -217,7 +217,7 @@ print_test4(TestID):-
      forall(kaggle_arc(TestID,ExampleNum1,In,Out),
       ignore((
        once(in_out_name(ExampleNum1,NameIn,_NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side4(cyan,In,NameIn,_,Out,' ')]))))),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side(cyan,In,NameIn,_,Out,' ')]))))),
        write('%= '), parcCmt(TestID),
   dash_chars,
     forall(arg(_,v((tst+_)),ExampleNum2),
@@ -226,8 +226,8 @@ print_test4(TestID):-
        once(in_out_name(ExampleNum2,NameIn,NameOut)),
        grid_size(Out,OH,OV),make_grid(OH,OV,Blank),
        (nb_current(last_menu_key,'P')
-         -> format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(red,In,NameIn,_,Out,NameOut)])
-         ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side4(cyan,In,NameIn,_,Blank,"Hidden Output")])))))),!.
+         -> format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side(red,In,NameIn,_,Out,NameOut)])
+         ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side(cyan,In,NameIn,_,Blank,"Hidden Output")])))))),!.
 
 %print_test(TName):- !, parcCmt(TName).
 print_qtest:- get_current_test(TestID),print_qtest(TestID).
@@ -237,7 +237,7 @@ print_qtest(TestID):-
      forall(kaggle_arc(TestID,ExampleNum,In,Out),
       ignore((
        once(in_out_name(ExampleNum,NameIn,NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(cyan,In,NameIn,_LW,Out,NameOut+TestID)]))))),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side(cyan,In,NameIn,_LW,Out,NameOut+TestID)]))))),
        write('%= '), parcCmt(TestID).
 
 print_single_test(TName):-
@@ -245,7 +245,7 @@ print_single_test(TName):-
   kaggle_arc(TestID,ExampleNum,In,Out),
   nb_current(test_name,WasTestID),
   once(in_out_name(ExampleNum,NameIn,NameOut)),
-  format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side4(red,In,NameIn,_LW,Out,NameOut)]),
+  format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side(red,In,NameIn,_LW,Out,NameOut)]),
   ignore((WasTestID\==TestID, write('%= '), parcCmt(TName), nl)).
 
 in_out_name(trn+NN,SI,SO):- N is NN+1, format(atom(SI),'Training Pair #~w Input',[N]),format(atom(SO),'Output',[]).
@@ -473,7 +473,7 @@ test_p2(P2):- clsmake,
   append_termlist(P2,[N1,'$VAR'('Result')],N2), 
   time(forall(into_gridoid(N1,G1),     
      forall((set_current_test(G1),call(P2,G1,G2)),
-       once(ignore((print_side_by_side4(red,G1,N1,_LW,G2,?-N2),dash_chars)))))).
+       once(ignore((print_side_by_side(red,G1,N1,_LW,G2,?-N2),dash_chars)))))).
 
 %:- style_check(-singleton).
 whole(I,O):- is_group(I),length(I,1),I=O,!.

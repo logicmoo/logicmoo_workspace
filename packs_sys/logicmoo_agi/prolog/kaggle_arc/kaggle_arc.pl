@@ -74,7 +74,7 @@ quietlyd(G):- quietly(G),!.
 :- noguitracer.
 
 
-clsmake:- notrace((cls1,!,update_changed_files,make)),!.
+clsmake:- notrace((cls,!,update_changed_files,make)),!.
 % SWISH ARC
 :- else.
 

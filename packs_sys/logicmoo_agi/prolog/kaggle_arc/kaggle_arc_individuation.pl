@@ -535,7 +535,7 @@ individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,Points,Grid,IndvList,LeftOve
           nop(ignore((GoneMissing\==[],ptt(goneMissing=GoneMissing)))),
           once( 
                 (SofarMaybeNew\== Sofar;NextScanPoints\== Points, %append(SofarMaybeNew,NextScanPoints,DG),
-                              format('~N'), print_side_by_side4(silver,print_grid(GH,GV,SofarMaybeNew),objs+Head,_,
+                              format('~N'), print_side_by_side(silver,print_grid(GH,GV,SofarMaybeNew),objs+Head,_,
                                                                 print_grid(GH,GV,Second),second));
 
                      

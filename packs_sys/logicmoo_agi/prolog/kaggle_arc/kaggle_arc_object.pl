@@ -319,9 +319,9 @@ with_object(Op,E,I,O):- is_group(I), mapgroup(with_object(Op,E),I,O).
 % with_object(Op,E,I,O):- is_list(I), !, with_objprops(Op,E,I,O).
 with_object(Op,E,     I,     O):- with_objprops(Op,E,I,O).
 
-with_objprops(Op,obj(E),List,MidList):- !, with_objprops(Op,E,List,MidList).
-with_objprops(Op,E,obj(List),obj(MidList)):- !, with_objprops(Op,E,List,MidList).
-with_objprops(_Op,[],List,List):-!.
+with_objprops(Op,obj(E),List,MidList):- my_assertion(is_list(List)),my_assertion(is_list(E)), !, with_objprops(Op,E,List,MidList).
+with_objprops(Op,E,obj(List),obj(MidList)):- my_assertion(is_list(List)), !, with_objprops(Op,E,List,MidList).
+with_objprops(_Op,Nil,List,ListO):- my_assertion(is_list(List)),[]==Nil,!,ListO=List.
 with_objprops(Op,[E|Props],List,NewList):-!,
   with_objprops(Op,E,List,MidList),
   with_objprops(Op,Props,MidList,NewList).

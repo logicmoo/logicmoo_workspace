@@ -1071,7 +1071,13 @@ make_symmetrical_grid(G,[P,pull(BGC),Flip],GridO):-
   make_able_v(Flip,HS,Grid9),
     once((unfree_bg(BGC,Grid9,Grid99),
     uneib(Grid99,GridO),
-    mapgrid(blackFree,GridO))).
+    mapgrid(blackFree,GridO))),
+
+    verify_symmetry(GridO).
+
+verify_symmetry(GridO):-
+ once((is_able_v(rot90,GridO)
+ ;(is_able_v(flipV,GridO),is_able_v(flipH,GridO)))).
 
 
  %gncp(glyph-neighbors-color-point)

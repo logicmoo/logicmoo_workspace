@@ -282,13 +282,13 @@ show_pair_grid(TitleColor,IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
 %  wots(U2, print_grid(OH,OV,Out)),
   INFO = [grid_dim,mass,length,colors_count_size,colors],
 %  print_side_by_side(U1,LW,U2),
-  print_side_by_side4(TitleColor,print_grid(IH,IV,In),NameInU,LW,print_grid(OH,OV,Out),NameOutU),
+  print_side_by_side(TitleColor,print_grid(IH,IV,In),NameInU,LW,print_grid(OH,OV,Out),NameOutU),
   print_side_by_side(
      describe_feature(In,[call(wqnl(NameInU+fav(PairName)))|INFO]),LW,
     describe_feature(Out,[call(wqnl(NameOutU+fav(PairName)))|INFO])),!.
 
-%print_side_by_side4(TitleColor,G1,N1,G2,N2):- print_side_by_side(G1-wqs(N1),G2-wqs(N2)). 
-print_side_by_side4(TitleColor,G1,N1,LW,G2,N2):- 
+%print_side_by_side(TitleColor,G1,N1,G2,N2):- print_side_by_side(G1-wqs(N1),G2-wqs(N2)). 
+print_side_by_side(TitleColor,G1,N1,LW,G2,N2):- 
    print_side_by_side(G1,LW,G2), 
    data_type(G1,S1), data_type(G2,S2),
    print_side_by_side4d(TitleColor,S1," ~w   (~w)",N1,LW,S2," ~w  (~w)", N2).

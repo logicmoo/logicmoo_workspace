@@ -1049,11 +1049,16 @@ make_symmetrical_grid(G,[P,Flip],GridO):-
   call(flipSome(P),GG,HS),
   make_flippable_v(Flip,HS,Grid9),
     once((unfree_bg(BGC,Grid9,Grid99),
-    unmapc(Grid99,GridO),
+    uneib(Grid99,GridO),
     mapgrid(blackFree,GridO))),
-    once((is_able_v(rot90,GridO);(is_able_v(flipV,GridO),is_able_v(flipH,GridO)))).
+    
+    verify_symmetry(GridO).
 
- 
+verify_symmetry(GridO):-
+ once((is_able_v(rot90,GridO)
+ ;(is_able_v(flipV,GridO),is_able_v(flipH,GridO)))).
+
+
  %gncp(glyph-neighbors-color-point)
 
 make_flippable_v(Flip,G,HS):- nonvar(Flip),is_able_v(Flip,G),HS=G.
