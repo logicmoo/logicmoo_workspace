@@ -11,71 +11,91 @@
 
 menu :- write_menu('i').
 write_menu(Mode):-
-  format('~N'),
   get_current_test(TestID),
-  format(' Current Test: ~q ~n~n',[TestID]),
-  forall(menu_cmd(Mode,Key,Info,Goal),print_menu_cmd(Key,Info,Goal)),format('~N  '),
-  forall(menu_cmd1(Mode,Key,Info,Goal),print_menu_cmd1(Key,Info,Goal)),format('~N').
-print_menu_cmd(Key):- ignore((menu_cmd(_,Key,Info,Goal),print_menu_cmd(Key,Info,Goal))).
-print_menu_cmd(Key,Info,_Goal):- format('~N   ~w: ~w \t\t ~n',[Key,Info]).
-print_menu_cmd1(_Key,Info,_Goal):- format(' ~w',[Info]).
+  print_single_test(TestID),
+  format('~N\n    With selected test: ~q ~n~n',[TestID]),
+  menu_options(Mode).
 
-:- multifile(menu_cmd/4).
+menu_options(Mode):- 
+  forall(menu_cmd1(Mode,Key,Info,Goal),print_menu_cmd(Key,Info,Goal)),
+  forall(menu_cmd9(Mode,Key,Info,Goal),print_menu_cmd9(Key,Info,Goal)),
+  !.
+print_menu_cmd(Key):- ignore((menu_cmd1(_,Key,Info,Goal),print_menu_cmd(Key,Info,Goal))).
+print_menu_cmd(_Key,Info,_Goal):- format('~N ~w ',[Info]).
+print_menu_cmd9(_Key,Info,_Goal):- format(' ~w',[Info]).
+
 :- multifile(menu_cmd1/4).
-menu_cmd(i,'i','Examine (i)ndividuator,',(cls,!,ndividuator)).
-menu_cmd(_,'p','     or (p)rint training pairs (captial to reveal Solutions)',(print_test)).
-menu_cmd(_,'t','See the (t)raining happen on this (t)est,',(cls,!,print_test,train_test)).
-menu_cmd(_,'e','     or (e)xecute the program as learned.',(cls,print_test,!,solve_test)).
-menu_cmd(_,'h','     or (h)uman proposed solution.',(human_test)).
-menu_cmd(_,'r','  Maybe (r)un All of the above: Print, Train, and Evalute.',(cls,fully_test)).
-menu_cmd(_,'a','     or (a)dvance to the next test and run',(cls,!,run_next_test)).
-menu_cmd(_,'n','  Go to (n)ext test',(next_test)).
-menu_cmd(_,'b','     or (b)ack to previous.',(previous_test)).
-menu_cmd(_,'f','     or (f)orce a favorite test.',(enter_test)).
-menu_cmd(_,'S','     or  back to begining of (S)uite',(restart_suite)).
-menu_cmd(_,'N','     or (N)ext Suite',(next_suite)).
-menu_cmd(_,'l','     or (l)ist feature tests and run',(run_a_test)).
- 
-menu_cmd(i,'R','(R)un the Suite noninteractively',(run_all_tests,menu)).
-menu_cmd(r,'i','Re-enter(i)nteractve mode.',(interactive_test_menu)).
+:- multifile(menu_cmd9/4).
+menu_cmd1(_,'t','       You may fully (t)rain from examples considering all the test pairs (this is the default)',(cls,!,print_test,train_test)).
+menu_cmd1(_,'T','                  or (T)rain from only understanding single pairs (not considering the test as a whole)',(cls,train_only_from_pairs)).
+menu_cmd1(i,'i','             See the (i)ndividuation of the input/outputs',(cls,!,ndividuator)).
+menu_cmd1(_,'p','                  or (p)rint the test (captial to reveal Solutions)',(print_test)).
+menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls,print_test,!,solve_test)).
+menu_cmd1(_,'L','                  or (L)earn from a human proposed program?',(human_test)).
+menu_cmd1(_,'s','              Try to (s)olve based on training',(cls,print_test,!,solve_test)).
+menu_cmd1(_,'h','                  or (h)uman proposed solution',(human_test)).
+menu_cmd1(_,'r','               Maybe (r)un some of the above: (p)rint, (t)rain, (e)xamine and (s)olve !',(cls,fully_test)).
+menu_cmd1(_,'a','                  or (a)dvance to the next test and (r)un it',(cls,!,run_next_test)).
+menu_cmd1(_,'n','               Go to (n)ext test (skipping this one)',(next_test,print_qtest)).
+menu_cmd1(_,'N','                  or (N)ext suite',(next_suite)).
+menu_cmd1(_,'b','                  or (b)ack to previous test.',(previous_test,print_qtest)).
+menu_cmd1(_,'f','                  or (f)orce a favorite test.',(enter_test)).
+menu_cmd1(_,'~','                  or (PageUp) to begining of suite',(restart_suite)).
+menu_cmd1(i,'R','             Menu to (R)un all tests noninteractively',(run_all_tests,menu)).
+menu_cmd1(_,'l','                  or (l)ist special tests to run,',(show_tests)).
+menu_cmd1(r,'i','             Re-enter(i)nteractve mode.',(interactive_test_menu)).
 
-menu_cmd1(_,'m','Recomple this progra(m),',(make,menu)).
-menu_cmd1(_,'c','(c)lear the scrollback buffer,',(cls)).
-menu_cmd1(_,'T','(T)est regressions,\n     ',(make,menu)).
-menu_cmd1(_,'Q','(Q)uit Menu,',true).
-menu_cmd1(_,'X','e(X)it to shell,',halt(4)). 
-menu_cmd1(_,'B','or (B)reak to interpreter.',(break)).
+menu_cmd9(_,'m','recomple this progra(m),',(make,menu)).
+menu_cmd9(_,'c','(c)lear the scrollback buffer,',(cls)).
+menu_cmd9(_,'Q','(Q)uit Menu,',true).
+menu_cmd9(_,'X','e(X)it to shell,',halt(4)). 
+menu_cmd9(_,'B','or (B)reak to interpreter.',(break)).
 
-menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd(Mode,Key,Mesg,Goal).
 menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd1(Mode,Key,Mesg,Goal).
+menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd9(Mode,Key,Mesg,Goal).
 
 find_tests(F):-
    current_predicate(N),N=F/0, atom_concat(test_,_,F),\+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit)).
-list_of_tests(L):- findall(F,find_tests(F),L).
+find_tests(F):- ping_indiv_grid(F).
+find_tests(F):- is_fti_stepr(F).
+find_tests(F):- is_fti_step(F).
 
-show_tests:- make, list_of_tests(L),forall(nth1(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
+list_of_tests(S):- findall(F,find_tests(F),L),sort(L,S).
 
-run_a_test:- 
-   show_tests,
-   list_of_tests(L),
-   length(L,SelMax),
-   write("\nTest selection: "), 
-   read_number_chars('',SelMax,Sel),
+show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
+
   % ignore((read_line_to_string(user_input,Sel),atom_number(Sel,Num))),
-   atom_number(Sel,Num),
-   nth1(Num,L,E),!,my_menu_call(E),!.
+
   
 my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
+my_submenu_call(E):- locally(set_prolog_flag(gc,false),E).
    
 
-read_number_chars(Start,SelMax,Out):-
-  get_single_char(Code),  char_code(Key,Code),
+read_menu_chars(Start,SelMax,Out):-
+  get_single_key_code(Codes), atom_codes(Key,Codes),
   append_num_code(Start,SelMax,Key,Out).
-  
-append_num_code(Start,_SelMax,Key,Start):-char_type(Key,end_of_line),!.
-append_num_code(Start,SelMax,Digit,Out):- char_type(Digit,digit),put_char(Digit),atom_concat(Start,Digit,NStart), 
- ((atom_number(NStart,Num),Num*10>SelMax) -> Out = NStart ; read_number_chars(NStart,SelMax,Out)).
-append_num_code(Start,SelMax,_,Out):- read_number_chars(Start,SelMax,Out).
+
+get_single_key_code([C|Codes]):- get_single_char(C), read_pending_codes(user_input,Codes, []).
+
+/*
+get_single_key_code(Code):- get_single_char(C), into_key_codes([C],Code).
+
+
+into_key_codes([27],Codes):- get_single_char(C1),into_key_codes([27,C1],Codes).
+into_key_codes([27,27],[27|Codes]):- get_single_char(C1),into_key_codes([27,C1],Codes).
+
+into_key_codes([27,91],Codes):- get_single_char(C1),into_key_codes([27,91,C1],Codes).
+into_key_codes([27,79],Codes):- get_single_char(C1),into_key_codes([27,79,C1],Codes).
+into_key_codes([27,N1,54],Codes):- get_single_char(C1),into_key_codes([27,N1,54,C1],Codes).
+into_key_codes([27,N1,53],Codes):- get_single_char(C1),into_key_codes([27,N1,53,C1],Codes).
+into_key_codes(C,C).
+*/
+
+append_num_code(Start,_SelMax,Key,Start):- atom_codes(Key,[C|_]), char_type(C,end_of_line),!.
+append_num_code(Start,SelMax,Digit,Out):- atom_codes(Digit,[C|_]),char_type(C,digit),write(Digit),atom_concat(Start,Digit,NStart), 
+ ((atom_number(NStart,Num),Num>9) -> Out = NStart ; read_menu_chars(NStart,SelMax,Out)).
+append_num_code(Start,_SelMax,Key,Sel):- atom_concat(Start,Key,Sel).
+
 
 clsR:- !. % once(cls).
 
@@ -87,15 +107,50 @@ enter_test:- repeat, write("\nYour favorite: "), read_line_to_string(user_input,
        (fix_test_name(Name,TestID,_) -> true ; (wqnl(['could not read a test from: ',Sel,nl,'try again']),fail)),
        wqnl(['Swithing to test: ',TestID]),set_current_test(TestID),print_test)).
 
-interact:- 
-  repeat, format('~N Your selection: '), get_single_char(Code), 
-  char_code(Key,Code),  put_char(Key), nb_setval(last_menu_key,Key), do_menu_key(Key),!.
-do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ').
-do_menu_key('P'):- !, do_menu_key('p').
+:- dynamic(wants_exit_menu/0).
+interact:- list_of_tests(L), length(L,SelMax),
+  repeat, format('~N Your menu(?) selection: '), 
+  %get_single_char(Code), wdmsg(code=Code), char_code(Key,Code),  put_char(Key), 
+   % with_tty_raw
+   (once(read_menu_chars('',SelMax,Key))),
+   once(do_menu_key(Key)), retract(wants_exit).
+
+do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), assert(wants_exit_menu).
+do_menu_key('?'):- !, menu_options('i').
+do_menu_key('P'):- !, locally(nb_setval(last_menu_key,'P'), do_menu_key('p')).
+do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
+do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
   dmsg(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->true;(fail,trace,dumpST,rrtrace(Goal))))),!,
-   read_pending_codes(user_input,_,[]),!,fail.
-do_menu_key(Key):- format("~N % Menu: didn't understand: '~w'~n",[Key]),once(mmake),menu,fail.
+   read_pending_codes(user_input,_,[]),!.
+do_menu_key(Key):- atom_codes(Key,Codes), format("~N % Menu: didn't understand: '~w' ~q ~n",[Key,Codes]),once(mmake).
+
+% nth that starts counting at three
+nth10(X,Y,Z):- var(X),!,nth0(N,Y,Z), X is N + 10 .
+nth10(X,Y,Z):- N is X -10, nth0(N,Y,Z).
+
+do_test_number(Num):- list_of_tests(L), nth10(Num,L,E),!, cls, get_current_grid(G), my_submenu_call(ig(E,G)),!.
+
+get_current_grid(G):- get_current_test(T),kaggle_arc_io(T,_,_,G).
+
+% crl left arrow
+do_menu_codes([27,79,68]):- !, previous_test, print_test.
+% ctrl right arrow
+do_menu_codes([27,79,67]):- !, next_test, print_test.
+% alt left arrow
+do_menu_codes([27,27,91,68]):- !, previous_test, print_test.
+% alt right arrow
+do_menu_codes([27,27,91,67]):- !, next_test, print_test.
+% left arrow
+do_menu_codes([27,91,68]):- !, cls, previous_test, print_test.
+% right arrow
+do_menu_codes([27,91,67]):- !, cls,  next_test, print_test.
+% page up
+do_menu_codes([27,91,53,126]):- !, restart_suite.
+% page down
+do_menu_codes([27,91,54,126]):- !, next_suite.
+
+
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
 interactive_test_menu:- 
  my_menu_call((
@@ -108,6 +163,11 @@ run_all_tests:-
    wait_for_input([user_input],F,2),
    F \== [], !,
    interact,!.
+
+rtty:- with_tty_raw(rtty1).
+rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
+
+
 
 ndividuator:- get_current_test(TestID),with_test_grids(TestID,G,ig(complete,G)).
 test_grids(TestID,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
@@ -137,8 +197,8 @@ get_current_suite_testnames(Set):-
   findall(ID,call(X,ID),List),
   my_list_to_set_variant(List,Set),!.
 
-previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID),print_qtest(NextID).
-next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID),print_qtest(NextID))),!.
+previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID).
+next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
 is_valid_testname(TestID):- kaggle_arc(TestID,_,_,_).
 get_current_test(TestID):- nb_current(test_name,TestID),is_valid_testname(TestID),!.
 get_current_test(TestID):- get_next_test(TestID,_),!.
@@ -231,6 +291,8 @@ print_test4(TestID):-
 
 %print_test(TName):- !, parcCmt(TName).
 print_qtest:- get_current_test(TestID),print_qtest(TestID).
+
+print_qtest(TestID):- !, print_single_test(TestID),!.
 print_qtest(TestID):-
     dash_chars,nl,nl,nl,dash_chars,
     forall(arg(_,v((trn+_)),ExampleNum),
@@ -242,11 +304,10 @@ print_qtest(TestID):-
 
 print_single_test(TName):-
   fix_test_name(TName,TestID,ExampleNum),
+    ignore(ExampleNum=(tst+0)),
   kaggle_arc(TestID,ExampleNum,In,Out),
-  nb_current(test_name,WasTestID),
   once(in_out_name(ExampleNum,NameIn,NameOut)),
-  format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side(red,In,NameIn,_LW,Out,NameOut)]),
-  ignore((WasTestID\==TestID, write('%= '), parcCmt(TName), nl)).
+  print_side_by_side(green,In,NameIn,_LW,Out,NameOut),!.
 
 in_out_name(trn+NN,SI,SO):- N is NN+1, format(atom(SI),'Training Pair #~w Input',[N]),format(atom(SO),'Output',[]).
 in_out_name(tst+NN,SI,SO):- N is NN+1, format(atom(SI),'EVALUATION TEST #~w',[N]),format(atom(SO),'Output<(REVEALED)>',[]).

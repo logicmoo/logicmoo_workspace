@@ -35,7 +35,7 @@ ig(ROptions,Grid):-
   into_grid(Grid, GridIn), 
   dash_chars,
   print_grid(GridIn), 
-  indiv_grid_pings(GridIn),
+  %indiv_grid_pings(GridIn),
   grid_to_id(GridIn,ID),
   set_current_test(ID),
   individuate(ROptions,GridIn,IndvS),
@@ -112,7 +112,7 @@ individuation_macros(subshape_in_object, [
 
 % never add done to macros
 individuation_macros(subshape_main, [
-   make_symmetric_indiv,
+   glean_grid_patterns,
    shape_lib(hammer), % is a sanity test/hack
    rectangle, diamonds,
    %indiv_grid_pings,
@@ -194,9 +194,9 @@ individuation_macros(altro, [
 
 % the typical toplevel indivduator
 individuation_macros(complete, [
-    shape_lib(as_is),
    % show_colorfull_idioms,
     shape_lib(as_is),
+    fourway,
     rectangle,point_corners,
     standard,%colormass_merger(3), % call the standard things done in most indiviguators    
     reduce_population, % @TODO DISABLED FOR TESTS    %altro,
@@ -401,7 +401,7 @@ call_fsi(VM,NewReserved,NewGrid,NewProgramCode,GH,GV,Sofar,ID,ProgramCode,Reserv
   (YN == true -> ! ; true).
 
 ensure_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-  
-  statistics(cputime,X),Timeleft is X+30,
+  statistics(cputime,X),Timeleft is X+60,
   max_min(GH,GV,Max,_Min),
   ArgVM = vm{
    % parent VM
@@ -600,15 +600,15 @@ fti(_,[done|_]):- !.
 fti(VM,_):-
   Objs = VM.objs,
   length(Objs,Count),
-  (member(progress,VM.options); Count > VM.objs_max_len; (statistics(cputime,X), X > VM.timeleft)) -> 
+  (member(progress,VM.options); Count > VM.objs_max_len; (statistics(cputime,X), X > (VM.timeleft))) -> 
    as_debug(8,(mass(Objs,Mass),
        length(VM.points,PC),
-      pt(t([found_mass=(Count,Mass+PC),fsi=VM.program_i])))),fail.
+      pt(t([obj/obj_mass=(Count/Mass),unprocessed_points=PC,fsi=VM.program_i])))),fail.
 
 
 fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_step(F), !, set(VM.program_i) = Program, ignore(call(Step,VM)).
 fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_stepr(F), !, set(VM.program_i) = Program, Step=..[F|ARGS], ignore(apply(F,[VM|ARGS])).
-fti(VM,[Step|Program]):- functor(Step,F,_), ping_indiv_grid(F), set(VM.program_i) = Program, call(F,VM.grid).
+fti(VM,[Step|Program]):- functor(Step,F,_), ping_indiv_grid(F), !, set(VM.program_i) = Program, ignore(call(Step, VM.grid)).
 %fti(VM,[Step|Program]):- set(VM.program_i) = Program, one_fti(VM,Step),!.
 
 is_fti_step(release_objs_lighter).
@@ -1167,79 +1167,16 @@ addGPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 
 in_set(Set,I):- member(E,Set), E=@=I,!.
 
-is_fti_step(make_symmetric_indiv).
-
-make_symmetric_indiv(VM):-
-  symmetric_xform(VM,VM.objs,VM.grid,VM.target,NewState,Repaired),
-  localpoints_include_bg(Repaired,GPoints),
-  object_grid(NewState,NewGrid),
-  set(VM.grid) = NewGrid,
-  make_indiv_object(VM.id,VM.h,VM.v,GPoints,[iz(symmetric_indiv)],ColorObj),!,
-  addObjects(VM,ColorObj).
-
-is_fti_step(fourway).
-
-fourway(VM):-
-  H = VM.h,
-  V = VM.v,
-  %VM.id = VM.id,
-  H > 13, V> 13,
-  largest_first(VM.objs,Ordered),     
-  grid_to_3x3_objs(VM,Ordered,VM.grid,NewIndiv4s,Keep,_Repaired),
-  must_det_ll((
-  intersection(Ordered,Keep,_ReallyKeptO,TookbackO,GaveExtraBackO),
-  remObjects(VM,TookbackO),
-  addCPoints(VM,TookbackO),
-  addObjects(VM,GaveExtraBackO),
-  remCPoints(VM,GaveExtraBackO),
-  addObjects(VM,NewIndiv4s),
-  remCPoints(VM,NewIndiv4s),
-  addGPoints(VM,NewIndiv4s),
-  %remRPoints(VM,Keep),
-  remCPoints(VM,Keep),
-  as_debug(8,VM.points\==[],print_grid(VM.h,VM.v,"Leftover Points...",VM.points)),
-  as_debug(8,print_grid(VM.h,VM.v,"New Grid...",VM.grid)),
-  % set_bgc(LargestColor),  
-  %Restart = VM.roptions,!,
-  TODO = VM.program_i,
-  set(VM.options) = [progress|VM.options],
-  maybe_done(VM,NewIndiv4s,TODO,NEXT),
-  set(VM.program_i) = NEXT)).
-
-
-maybe_done(VM,_FourWay1s,_TODO,[done]):- VM.points==[],!. %,make_grid(H,V,set(VM.grid)).
-maybe_done(VM,_FourWay1s, TODO,[done|TODO]):-
-    points_to_grid(VM.h,VM.v,VM.points,Grid),
-    duplicate_term(VM,Dupe),
-    individuate([-fourway,complete],Grid,Keep),
-  %remRPoints(VM,Keep),
-  remCPoints(VM,Keep),
-    transfer_onto_dict(Dupe,VM), !,
-    maplist(recolor_based_on_grid(VM.grid),Keep,NewKeep),!,
-  remObjects(VM,Keep),
-  addObjects(VM,NewKeep).
-
-recolor_based_on_grid(Grid,Keep,NewKeep):-
-   globalpoints(Grid,GPoints),
-   globalpoints(Keep,CPoints),
-   freeze(OldC,(OldC = noexisting(Point,_NewC), \+ \+ member(_-Point,CPoints))),
-   replace_local_points(GPoints,OldC,CPoints,NewCGPoints),
-   rebuild_from_globalpoints(Keep,NewCGPoints,NewKeep),
-   grid_size(Grid,H,V),
-  print_grid(H,V,recolor_based_on_grid,NewKeep).
-
-
-
 remove_from_image(VM,Data):-    
     must_det_ll((remove_global_points(Data,VM.points,Points),
     pt(Points),
     set(VM.points) = Points)),!.
-    
+   
 
-
-overwrite_use_so_far(NewIndiv4s,Sofar,UseSofar):-
-  must_det_ll((remove_global_points(NewIndiv4s,Sofar,Sofar1),add_global_points(NewIndiv4s,Sofar1,UseSofar))),!.
+overwrite_use_so_far(NewIndiv4s,Sofar,UseSofar):- 
+   must_det_ll((remove_global_points(NewIndiv4s,Sofar,Sofar1),add_global_points(NewIndiv4s,Sofar1,UseSofar))),!.
 overwrite_use_so_far(_FourWay1s,Sofar,Sofar).
+
 
 fsi(_VM,Reserved,NewGrid,TODO,H,V,Sofar,_ID,['regroup'|TODO],Reserved,Points,Grid,OutInvdivS,Points):- 
   make_indiv_object_list(Grid,H,V,Sofar,OutInvdivS), 

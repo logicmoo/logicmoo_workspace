@@ -311,26 +311,100 @@ clip_rot_patterns(flipV,flipHV,flipH,same,kaleidoscope_four).
 clip_rot_patterns(same,same,same,same,four_the_same).
 clip_rot_patterns(flipH,flipH,same,same,four_way_h_flip).
 
-% symmetric_xform(VM,VM.objs,VM.grid,VM.target,KeepNewState,Repaired)
-symmetric_xform(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired):-
-  grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired).
+is_fti_step(glean_grid_patterns).
 
-symmetric_xform(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired):-
+glean_grid_patterns(VM):-
+  Grid = VM.grid,
   glean_patterns(How,Grid,Repaired),
-  addProgramStep(VM,How),
-  grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,Repaired).
+  localpoints_include_bg(Repaired,RepairedPoints),
+  localpoints_include_bg(Grid,OriginalPoints),
+  intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,_Changes),
+  % QueuedPoints = VM.points,
+  % points that NeededChanged must be processed as if something special occluded it
+  set(VM.points) = NeededChanged,
+  set(VM.grid) = Repaired,
+%  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
+%  addObjects(VM,ColorObj).
+  addProgramStep(VM,How).
 
 
 grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
+  repair_2x2(Grid,Ordered,How,_GridO,RepairedResultM), 
+  KeepNewState=Ordered, 
+  NewIndiv4s=[], 
+  must_det_ll(RepairedResultM=RepairedResult),
+  addProgramStep(VM,How),!.
+
+
+
+try_whole_grid_xforms(GridO):- 
+  flipV(GridO,FlipV),
+  mapgrid(sometimes_assume(=),GridO,FlipV),
+  flipH(GridO,FlipH),
+  mapgrid(sometimes_assume(=),GridO,FlipH),
+  rot90(GridO,Rot90),
+  mapgrid(sometimes_assume(=),GridO,Rot90).
+
+remObjects(_Objs,Before,After):- Before=After,!.
+
+sometimes_assume(P2,X,Y):- ignore(call(P2,X,Y)).
+sometimes_assume(P1,X):- ignore(call(P1,X)).
+
+
+
+
+
+grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):- !, grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult).
+grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
+  notrace(catch(call_with_time_limit(4,find_and_use_pattern_gen(Grid,Image9x9)),time_limit_exceeded, 
+   (wdmsg(time_limit_exceeded),fail))),
+  %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
+  %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
+  must_det_ll((
+  flatten(Image9x9,Flat),
+  include(nonvar_or_ci,Flat,Grids),
+  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
+
+/*
+*/
+is_fti_step(fourway).
+fourway(VM):-
+  H = VM.h,
+  V = VM.v,
+  %VM.id = VM.id,
+  H > 13, V> 13,
+  largest_first(VM.objs,Ordered),  
+  Grid = VM.grid,
+  repair_2x2(Grid,Ordered,How,FullGridO,RepairedResult),
+  localpoints_include_bg(Grid,OriginalPoints),
+  localpoints_include_bg(RepairedResult,RepairedPoints),
+  intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changes),
+  % QueuedPoints = VM.points,
+  % points that NeededChanged must need be processed on their own 
+  gset(VM.points) = NeededChanged,
+  print_grid(H,V,neededChanged,NeededChanged),
+  print_grid(H,V,changed,Changes),
+  points_to_grid(H,V,NeededChanged,LeftOverGrid),
+  print_grid(leftOverGrid,LeftOverGrid),
+  gset(VM.grid) = LeftOverGrid,
+  print_grid(vm_grid,VM.grid),
+  print_grid(H,V,vm_points,VM.points),
+%  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
+%  addObjects(VM,ColorObj).
+  addProgramStep(VM,How).
+
+
+repair_2x2(Grid,Ordered,How,GridO,RepairedResult):-
   member(CXL,[0,1]),member(CYL,[0,1]),
   mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,Grid),
   writeln(mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4)),
+
   clip_rot_patterns(Q1R,Q2R,Q3R,Q4R,PatternName),
+
   clip_and_rot(SXQ2,SYQ2,EXQ2,EYQ2,Grid,Q2R,Q2),
   clip_and_rot(SXQ4,SYQ4,EXQ4,EYQ4,Grid,Q4R,Q4),
   clip_and_rot(SXQ4,SYQ2,EXQ4,EYQ2,Grid,Q1R,Q1),
   clip_and_rot(SXQ2,SYQ4,EXQ2,EYQ4,Grid,Q3R,Q3),
-
   print_quadrants(orange,Q1,Q2,Q3,Q4),
 
   XLQ2 is EXQ2-SXQ2, YLQ2 is EYQ2-SYQ2,
@@ -347,70 +421,58 @@ grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
   pad_right(Q4XPad,Grid0,Grid1),!,
   pad_top(Q2YPad,Grid1,Grid2),!,
   pad_bottem(Q4YPad,Grid2,Grid3),!,
-  must_det_l((
+
+  H = EXQ4, V = EYQ4,
+  NewSX is 1 + Q2XPad,
+  NewSY is 1 + Q2YPad,
+  NewEX is H + Q2XPad,
+  NewEY is V + Q2YPad,
+
+  Grid3 = Grid4,
+  G3 = Grid4, 
+  
+  % Q1SE = [SXQ4,SYQ2,EXQ4,EYQ2], Q2SE = [SXQ2,SYQ2,EXQ2,EYQ2], Q3SE = [SXQ2,SYQ4,EXQ2,EYQ4], Q4SE = [SXQ4,SYQ4,EXQ4,EYQ4],
+ % unbind_color(brown,Grid3,Grid4),
+ /*
   NewSYQ2 is SYQ2,
-  NewEYQ2 is EYQ2+Q2YPad,
   NewSYQ4 is SYQ4+Q2YPad,
   NewEYQ4 is EYQ4+Q2YPad+Q4YPad,
   NewSXQ2 is SXQ2,
-  NewEXQ2 is EXQ2+Q2XPad,
   NewSXQ4 is SXQ4+Q2XPad,
   NewEXQ4 is EXQ4+Q2XPad+Q4XPad,
-  % Q1SE = [SXQ4,SYQ2,EXQ4,EYQ2], Q2SE = [SXQ2,SYQ2,EXQ2,EYQ2], Q3SE = [SXQ2,SYQ4,EXQ2,EYQ4], Q4SE = [SXQ4,SYQ4,EXQ4,EYQ4],
- % unbind_color(brown,Grid3,Grid4),
-  Grid3 = Grid4,
-  G3 = Grid4, 
- /*
+  NewEXQ2 is EXQ2+Q2XPad,
+  NewEYQ2 is EYQ2+Q2YPad,
   clip_and_rot(NewSXQ2,NewSYQ2,NewEXQ2,NewEYQ2,G3,Q2R,NewQ2),
   clip_and_rot(NewSXQ4,NewSYQ4,NewEXQ4,NewEYQ4,G3,Q4R,NewQ4),
   clip_and_rot(NewSXQ4,NewSYQ2,NewEXQ4,NewEYQ2,G3,Q1R,NewQ1),
   clip_and_rot(NewSXQ2,NewSYQ4,NewEXQ2,NewEYQ4,G3,Q3R,NewQ3),
   print_quadrants(yellow,NewQ1,NewQ2,NewQ3,NewQ4),
+
+  maplist(mapgrid(sometimes_assume(=)),[NewQ1,NewQ2,NewQ3],[NewQ4,NewQ3,NewQ2]),
+  % has now been updated by assumptions
   print_quadrants(blue,NewQ1,NewQ2,NewQ3,NewQ4),
+
   */
-  print_grid(full_grid,Grid4),
-  %mapgrid(sometimes_assume(=),[NewQ1,NewQ2,NewQ4],[NewQ2,NewQ3,NewQ3]),
+  print_grid(full_grid(H,V),Grid4),
+  
+
   findall(unbind_color(Cs),enum_colors(Cs),CCs),
-  maplist(append_term(remObject),Ordered,RemoveObjs),
-  append(CCs,RemoveObjs,RemovalTrials))),
+  maplist(append_term(remObjects),Ordered,RemoveObjs),
+  append(CCs,RemoveObjs,RemovalTrials),
   trial_removal([same|RemovalTrials],G3,RemovalTrialUsed,GridO),
   %trial_removal([unbind_color(brown)],G3,RemovalTrialUsed,GridO))),
-  KeepNewState=Ordered,NewIndiv4s=[], 
-  try_pattern_xforms(GridO),
+  try_whole_grid_xforms(GridO),
+
   verify_symmetry(GridO),
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
-  nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
-  clip(Q2XPad,Q2YPad,EXQ4,EYQ4,GridO,RepairedResultM),
-  print_grid(clip_to_previous_area((Q2XPad,Q2YPad)-(EXQ4,EYQ4)),RepairedResultM),
-  % [NewQ1,NewQ2,NewQ3,NewQ4],
-  addProgramStep(VM,clip_pattern([PatternName,trial_removal_used(RemovalTrialUsed),try_pattern_xforms,clip_to_previous_area])),
-
+  %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
+  clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
+  print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
+  must_det_ll((RepairedResultM = RepairedResult;
+  How = clip_pattern([PatternName,trial_removal_used(RemovalTrialUsed),try_whole_grid_xforms,clip_to_previous_area]))),
   !.
 
-try_pattern_xforms(GridO):- 
-  flipV(GridO,FlipV),
-  mapgrid(sometimes_assume(=),GridO,FlipV),
-  flipH(GridO,FlipH),
-  mapgrid(sometimes_assume(=),GridO,FlipH),
-  rot90(GridO,Rot90),
-  mapgrid(sometimes_assume(=),GridO,Rot90).
 
-/*
-*/
-
-grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):- !, grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult).
-grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
-  notrace(catch(call_with_time_limit(4,find_and_use_pattern_gen(Grid,Image9x9)),time_limit_exceeded, 
-   (wdmsg(time_limit_exceeded),fail))),
-  %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
-  %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
-  must_det_ll((
-  flatten(Image9x9,Flat),
-  include(nonvar_or_ci,Flat,Grids),
-  maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
-
-sometimes_assume(P2,X,Y):- ignore(call(P2,X,Y)).
-sometimes_assume(P1,X):- ignore(call(P1,X)).
 
 test_show_patterns:- clsmake, time((findall(_,(arc_grid(G),show_patterns(G)),L))),length(L,N),writeln(test_show_patterns=N).
 
@@ -1073,8 +1135,8 @@ print_symmetry(How,Q2,Q1,Q3,Q4):-
 
 make_empty_grid(GO):- GO=_.
 
-clip(0,0,0,0,_,GO):-  !, make_empty_grid(GO).
-clip(0,_,_,_,_,GO):-  !, make_empty_grid(GO).
+clip(_,_,0,0,_,GO):-  !, make_empty_grid(GO).
+%clip(0,_,_,_,_,GO):-  !, make_empty_grid(GO).
 clip(SX,SY,EX,EY,_,GO):- (EY<SY ; EX<SX) , !, make_empty_grid(GO).
 %clip(SX,SY,EX,EY,G,GO):- G==[[]],!,GO=[[]].
 clip(SX,SY,EX,EY,G,GO):-

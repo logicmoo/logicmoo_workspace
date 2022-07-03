@@ -358,9 +358,9 @@ gather_more_task_info(TestID,S):-
   
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
-train_test:- notrace(get_current_test(TestID)), train_test(TestID).
-
-train_test(TestID):- 
+train_test:- notrace(get_current_test(TestID)), once(train_test(TestID)).
+train_test(TestID):- train_test(TestID,train_using_oo_ii_io).
+train_test(TestID,P2):- 
   locally(set_prolog_flag(gc,true),
  must_det_ll((
   print_testinfo(TestID),
@@ -369,25 +369,36 @@ train_test(TestID):-
   nb_setval(prev_pairEnv,PrevPairEnv),
   nb_delete('$training_vm'),
   get_training(Training),
-  my_time(make_training_hints(TestID,Training,Dictation)),
+  %my_time(make_training_hints(TestID,Training,_HIDE_Dictation)),
+  Dictation = Training,
   set_training(Dictation),
-  my_time(train_using_hints(TestID,Dictation,DictOut)),
+  my_time(call(P2,TestID,Dictation,DictOut)),
   set_training(DictOut),
   garbage_collect))).
 
 my_time(Goal):- !,call(Goal).
 my_time(Goal):- statistics:time(Goal).
 
-train_using_hints(TestID,DictIn,DictOut):- train_for_objects(TestID,trn,0,DictIn,DictOut).
-train_for_objects(TestID,Trn,N1,DictIn,DictOut):-
+train_using_oo_ii_io(TestID,_DictIn,DictOut):- 
+  train_using_oo_ii_io(TestID,trn,0,_{},DictOut).
+train_using_oo_ii_io(TestID,Trn,N1,DictIn,DictOut):-
   (kaggle_arc(TestID,(Trn+N1),In,Out),
   N2 is N1 + 1),
- (kaggle_arc(TestID,(Trn+N2),In2,Out2) -> 
-    (train_for_objects_from_pair(Dict0,TestID,[Trn,'o',N1,'o',N2],Out,Out2,Dict1),
-     train_for_objects_from_pair(DictIn,TestID,[Trn,'i',N1,'i',N2],In,In2,Dict0),
-    train_for_objects(TestID,Trn,N2,Dict1,DictM));
+ (kaggle_arc(TestID,(Trn+N2),_In2,Out2) -> 
+    (train_for_objects_from_pair(DictIn,TestID,[Trn,'o',N1,'o',N2],Out,Out2,Dict1),
+     %nop((train_for_objects_from_pair(Dict0,TestID,[Trn,'i',N1,'i',N2],In,In2,Dict1))),
+    train_using_oo_ii_io(TestID,Trn,N2,Dict1,DictM));
   (DictM = DictIn)),!,
   train_for_objects_from_pair(DictM,TestID,[Trn,'i',N1,'o',N1],In,Out,DictOut),!.
+
+
+train_only_from_pairs:- notrace(get_current_test(TestID)), train_only_from_pairs(TestID).
+train_only_from_pairs(TestID):- train_test(TestID,train_using_io).
+train_using_io(TestID,_DictIn,DictOut):- 
+  ((Trn+N1) = (trn+0)),
+  kaggle_arc(TestID,(Trn+N1),In,Out),
+  train_for_objects_from_pair(_{},TestID,[Trn,'i',N1,'o',N1],In,Out,DictOut),!.
+
 
 which_io0(i,in). which_io0(o,out).
 which_io(I,In):- which_io0(I,In),!.
@@ -420,7 +431,7 @@ train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    into_grid(InA,In), into_grid(OutA,Out),!,
    name_the_pair(TestID,ExampleNum,In,Out,PairName),
  	 grid_size(In,IH,IV), grid_size(Out,OH,OV),
-	 ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
+	 ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
 
    into_fti(TestID*(Trn+N1)*IO1,ModeIn,In,InVM),!,
    into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM),!,
@@ -456,12 +467,13 @@ train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
 show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),
   dash_chars,dash_chars,
+  nop((
   pt(purple,show_objs_as_code),
   dash_chars,
   show_objs_as_code(In),
   dash_chars,
   show_objs_as_code(Out),
-  dash_chars,dash_chars.
+  dash_chars,dash_chars)).
 
 
 print_testinfo(TestID):-
@@ -478,19 +490,19 @@ solve_test:-
  my_menu_call((get_current_test(TestID), catch(solve_test(TestID,(tst+_)),E,wdmsg(E=solve_test(TestID,(tst+_)))))),!.
 
 solve_test(Name):- 
-  fix_test_name(Name,TestID,ExampleNum),!,
+  fix_test_name(Name,TestID,ExampleNum),!, 
   solve_test(TestID,ExampleNum).
 
 solve_test(TestID,ExampleNum):-
  forall(kaggle_arc(TestID,ExampleNum,TestIn,ExpectedOut),
-        ignore(solve_test(TestID,ExampleNum,TestIn,ExpectedOut))).
+   ignore(solve_test(TestID,ExampleNum,TestIn,ExpectedOut))).
 
 solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
    must_det_ll((    
     name_the_pair(TestID,ExampleNum,TestIn,ExpectedOut,PairName))),
    must_det_ll((    
     grid_size(TestIn,IH,IV), grid_size(ExpectedOut,OH,OV),
-    ignore((IH+IV \== OH+OV , writeln(oi(size(IH,IV)->size(OH,OV))))),
+    ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
     print_testinfo(TestID))), 
   must_det_ll((    
     dash_chars, dash_chars,
