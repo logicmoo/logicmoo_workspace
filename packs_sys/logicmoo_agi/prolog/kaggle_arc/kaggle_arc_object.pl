@@ -573,6 +573,7 @@ gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints),
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_to_points(Grid,Points).
 globalpoints(I,X):-  var(I),!, (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 globalpoints([],[]):-!.
+globalpoints(G,Ps):- is_dict(G),vm_to_printable(G,R),!,globalpoints(R,Ps).
 globalpoints(G,[G]):- is_point(G),!.
 globalpoints(C-P,[C-P]):-!.
 globalpoints(G,G):- maplist(is_point,G),!.
@@ -591,6 +592,7 @@ localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF), true), (TF
 
 localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 localpoints(G,[G]):- is_point(G),!.
+localpoints(G,Ps):- is_dict(G),vm_to_printable(G,R),!,localpoints(R,Ps).
 localpoints(I,X):- localpoints0(I,X),!.
 localpoints(Grid,Points):- is_group(Grid),!,mapgroup(localpoints,Grid,MPoints),append_sets(MPoints,Points).
 localpoints(G,G):- maplist(is_point,G),!.
@@ -1026,10 +1028,11 @@ guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
 
 %guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
-guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
+%guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>2,N>4,
   (find_outlines(Points,Sol,Rest)->(length(Sol,SN),SN>0,length(Rest,RN))),!.
-%guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,symmetry(SN)):-  H>2,V>2,N>4, flipSome(SN,LocalGrid,LocalGridM),LocalGrid==LocalGridM.
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,symmetry(SN)):- N>4, 
+  ((flipSome(SN,GridIn,LocalGridM),GridIn=@=LocalGridM)*->true;SN=none).
 
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outl):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
 
