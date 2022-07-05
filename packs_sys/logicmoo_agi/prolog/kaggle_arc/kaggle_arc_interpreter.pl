@@ -144,6 +144,7 @@ run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In
 
 
 run_dsl(VM,_Mode,get(Name,Val),Pass,Pass):- get_dict(Name,VM,Val).
+run_dsl(VM,_Mode,get(Name),_Pass,Val):- get_dict(Name,VM,Val).
 run_dsl(VM,_Mode,SET_NV,Pass,Pass):- compound(SET_NV), SET_NV=..[set,Name,Val], my_b_set_dict(Name,VM,Val).
 run_dsl(VM,_Mode,b_set(Name,Val),Pass,Pass):- b_set_dict(Name,VM,Val).
 run_dsl(VM,_Mode,nb_set(Name,Val),Pass,Pass):- nb_set_dict(Name,VM,Val).
@@ -161,6 +162,9 @@ run_dsl(VM,_Mode,Prog,In,Out):- \+ missing_arity(Prog, 0), !, vm_grid(VM, call_e
 run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, vm_grid(VM, call(Step,VM),In,Out).
 run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), Step=..[F|ARGS], !, vm_grid(VM, apply(F,[VM|ARGS]),In,Out).
 run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), ping_indiv_grid(F), !, vm_grid(VM, call(Step,VM.grid),In,Out).
+
+run_dsl(VM,_Mode,Step,In,Out):-  i_step(Step), !, vm_grid(VM,fti(VM,Step),In,Out).
+
 
 run_dsl(VM,enforce,color(Obj,Color),In,Out):-!, 
  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),

@@ -240,7 +240,7 @@ oo_get_dict(M,Key,Self, Value):- oo_call(M,Self,Key,Value).
 
 m_put_dict(Key,Map,Value):- ((get_dict(Key,Map,_),b_set_dict(Key,Map,Value))->true;
  (oo_put_extender(Map,Ext),oo_put_attr(Ext,Key,Value))).
-
+:- export(m_put_dict/3).
 
 oo_jpl_call(A,B,C):- (integer(B);B==length; B= (_-_)),!,fail_on_missing(jpl_get(A,B,C)).
 oo_jpl_call(A,B,C):- (compound(B)->compound_name_arguments(B,H,L);(H=B,L=[])),fail_on_missing(jpl_call(A,H,L,C)),!.

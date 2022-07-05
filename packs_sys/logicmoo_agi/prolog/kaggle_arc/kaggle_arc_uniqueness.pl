@@ -41,9 +41,18 @@ test_what_unique:- what_unique(n=0,n>10).
 get_new_uniq_dict(Dict):- 
     ArgDict = _{sharedWith:_SharedWith,object:_Obj,trait:_Trait,groupSizeMask:_GroupSizeMask,
   actualGroupSize:_ActualGroupSize,countMask:_CountMask,
-  actualCount:_ActualCount,otherL:_OtherL,listL:_ListL,
+  actualCount:_ActualCount,otherL:_OtherL,slistL:_ListL,
   setL:_SetL,others:_TraitCountSets,how:_How,group:_Group},
   (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict).
+
+is_fti_stepr(most_unique).
+most_unique(VM,symmetry):-
+  List = VM.objs,
+  last(List,Obj),
+  set(VM.solution)= Obj.
+
+
+  
 
 what_unique(Dict):- is_dict(Dict),!,what_unique_dict(Dict).
 what_unique(Obj):- select_group(Group,_How), member(Obj,Group), what_unique(Obj,Group).

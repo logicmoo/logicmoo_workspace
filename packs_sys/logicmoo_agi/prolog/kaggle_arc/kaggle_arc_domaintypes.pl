@@ -43,6 +43,7 @@ subtypes(C,C).
 subtypes(C,S):- subClassOf(S,C).
 
 
+
 allow_dir_list(colormass,[n,s,e,w]). 
 allow_dir_list(rectangle,[n,s,e,w]). 
 allow_dir_list(diamonds,[nw,sw,se,ne]).

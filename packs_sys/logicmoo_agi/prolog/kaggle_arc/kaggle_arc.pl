@@ -99,6 +99,9 @@ clsmake:- update_changed_files,!.
 :- use_module(library(logicmoo_common)).
 :- autoload_all.
 :- use_module(library(gvar_globals_api)).
+:- use_module(library(dictoo_lib)).
+
+:- listing((.)/3).
 
 % we alias these so we can catch out of control list growth
 my_append(A,B):- append(A,B).
@@ -111,16 +114,16 @@ check_len(_).
 %:- meta_predicate(must_det_l(0)).
 
 
-%must_det_ll(G):- !, call(G).
+must_det_ll(G):- !, call(G).
 must_det_ll(X):- tracing,!,call(X).
-must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
+must_det_ll((X,Y)):- !, must_det_ll(X),must_det_ll(Y).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
 must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
 %must_det_ll((M:Y)):- nonvar(M), !, M:must_det_ll(Y).
 must_det_ll(once(A)):- !, once(must_det_ll(A)).
-must_det_ll(X):- once(must_not_error(X))->true;must_det_ll_failed(X).
+must_det_ll(X):- must_not_error(X)*->true;must_det_ll_failed(X).
 
 must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);dumpST,writeq(E=X),rrtrace(X))).
 
@@ -197,11 +200,11 @@ goal_expansion_setter(Goal,Out):-
 
 my_b_set_dict(Member,Obj,Var):- set_omemberh(b,Member,Obj,Var).
 %nb_set_dict(Member,Obj,Var),
-set_omemberh(b,Member,Obj,Var):- !, b_set_dict(Member,Obj,Var).
+set_omemberh(_,Member,Obj,Var):- !, m_put_dict(Member,Obj,Var).
 %nb_link_dict(Member,Obj,Var),
-set_omemberh(nb,Member,Obj,Var):- !, nb_set_dict(Member,Obj,Var).
-set_omemberh(link,Member,Obj,Var):- !, nb_link_dict(Member,Obj,Var).
-set_omemberh(How,Member,Obj,Var):- call(call,How,Member,Obj,Var),!.
+%set_omemberh(nb,Member,Obj,Var):- !, nb_set_dict(Member,Obj,Var).
+%set_omemberh(link,Member,Obj,Var):- !, nb_link_dict(Member,Obj,Var).
+%set_omemberh(How,Member,Obj,Var):- call(call,How,Member,Obj,Var),!.
 
 set_omember(Member,Obj,Var):-  set_omember(b,Member,Obj,Var).
 
@@ -337,11 +340,15 @@ get_training(Training):- notrace(get_current_test(TestID)),make_training(TestID,
 set_training(Training):- nb_linkval('$training_vm',Training).
 get_training(Prop,Value):- get_training(Training), gset(Training.Prop)=Value.
 set_training(Prop,Value):- get_training(Training), Value = Training.Prop.
-set_vm(VM):- set_training(current,VM).
-get_vm(VM):- get_training(current,VM).
-set_vm(Prop,Value):-  get_vm(VM),   
+set_vm(VM):- nb_linkval('$grid_vm',VM).
+get_vm(VM):- nb_current('$grid_vm',VM).
+set_vm(Prop,Value):-  
+  get_vm(VM),
+  globalpoints(Value,IndvPoints),
+  fif(IndvPoints\==[],(make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
+  addObjects(VM,Obj))),
   print_grid(VM.h,VM.v,Prop,Value),
-  nb_set_dict(VM,Prop,Value).
+  set(VM.Prop) = Value.
 
 get_vm(Prop,Value):-  get_vm(Training), Value = Training.Prop.
 
@@ -354,11 +361,11 @@ make_training(TestID,WAZ):-
     WAZ = training{
       program:[],
       pairs:_, %datatree:_, 
-      current:_,
+      %current:_,
       test_id:TestID,
       mappings:[map],
       storage:DATA},
-    make_training_hints(TestID,WAZ,VM))).
+    make_training_hints(TestID,WAZ,_VM))).
 
     /*
      test:ID,mappings:_,
@@ -455,7 +462,10 @@ train_for_objects_from_pair_1(Dict0,TestID,Desc,InA,OutA,Dict1):-
 
    into_fti(TestID*(Trn+N1)*IO1,ModeIn,In,InVM),!,
    into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM),!,
-   InVM.compare=OutVM, InVM.target=Out, OutVM.compare=InVM, OutVM.target=In,
+   %InVM.compare=OutVM, 
+   InVM.target=Out,
+   %OutVM.compare=InVM, 
+   OutVM.target=In,
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
 
   individuate(InVM),!,
@@ -536,8 +546,10 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     into_fti(TestID*ExampleNum*in,in,TestIn,InVM),
     set(InVM.objs) = [],
     %set(InVM.points) = [],
-    set(InVM.training) = Training,
+    %set(InVM.training) = Training,
     TrainingVM = InVM,
+    set_training(Training),
+    set_vm(InVM),
     must_det_ll((
     %print(training(Training)),nl,
     %ptt(TrainingVM),

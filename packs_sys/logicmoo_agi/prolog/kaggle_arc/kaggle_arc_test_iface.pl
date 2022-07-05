@@ -69,7 +69,7 @@ show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E
 
   
 my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
-my_submenu_call(E):- ignore(locally(set_prolog_flag(gc,false),E)).
+my_submenu_call(E):- catch(ignore(locally(set_prolog_flag(gc,false),E)),_,true).
    
 
 read_menu_chars(Start,SelMax,Out):-
@@ -172,7 +172,7 @@ rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
 
 
 
-ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,ig(complete,G)).
+ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,ig([complete],G)).
 test_grids(TestID,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
 

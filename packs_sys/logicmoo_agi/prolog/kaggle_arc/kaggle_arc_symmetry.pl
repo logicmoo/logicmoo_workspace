@@ -394,20 +394,20 @@ fourway(VM):-
   H > 13, V> 13,
   largest_first(VM.objs,Ordered),  
   Grid = VM.grid,
-  %repair_2x2(Ordered,Steps,Grid,RepairedResult),
-  glean_patterns_hook(Steps,Grid,RepairedResult),
+  repair_2x2(Ordered,Steps,Grid,RepairedResult),
+  %$glean_patterns_hook(Steps,Grid,RepairedResult),
   localpoints_include_bg(Grid,OriginalPoints),
   localpoints_include_bg(RepairedResult,RepairedPoints),
   intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changes),
   % QueuedPoints = VM.points,
   % points that NeededChanged must need be processed on their own 
   set_vm(points,NeededChanged),
-  set_vm(changed,Changes),
   points_to_grid(H,V,NeededChanged,LeftOverGrid),
-  print_grid(leftOverGrid,LeftOverGrid),
+  % set_vm(leftOverGrid,LeftOverGrid),
   gset(VM.grid) = LeftOverGrid,
-  set_vm(grid,VM.grid),
-  set_vm(points,VM.points),
+
+  set_vm(solution,Changes),
+  set_vm(changed,Changes),
 %  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
 %  addObjects(VM,ColorObj).
   addProgramStep(VM,Steps),!.
@@ -421,7 +421,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   writeln(mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4)),
 
   clip_rot_patterns(Q1R,Q2R,Q3R,Q4R,PatternName),
-
+  must_det_ll((
   clip_and_rot(SXQ2,SYQ2,EXQ2,EYQ2,Grid,Q2R,Q2),
   clip_and_rot(SXQ4,SYQ4,EXQ4,EYQ4,Grid,Q4R,Q4),
   clip_and_rot(SXQ4,SYQ2,EXQ4,EYQ2,Grid,Q1R,Q1),
@@ -450,7 +450,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   NewEY is V + Q2YPad,
 
   Grid3 = Grid4,
-  G3 = Grid4, 
+  G3 = Grid4)), 
   
   % Q1SE = [SXQ4,SYQ2,EXQ4,EYQ2], Q2SE = [SXQ2,SYQ2,EXQ2,EYQ2], Q3SE = [SXQ2,SYQ4,EXQ2,EYQ4], Q4SE = [SXQ4,SYQ4,EXQ4,EYQ4],
  % unbind_color(brown,Grid3,Grid4),
@@ -474,12 +474,13 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   print_quadrants(blue,NewQ1,NewQ2,NewQ3,NewQ4),
 
   */
+
   print_grid(full_grid(H,V),Grid4),
   
 
   findall(unbind_color(Cs),enum_colors(Cs),CCs),
   maplist(append_term(remObjects),Ordered,RemoveObjs),
-  append(CCs,RemoveObjs,RemovalTrials),
+  append(CCs,RemoveObjs,RemovalTrials),!,
 
   trial_removal([same|RemovalTrials],G3,RemovalTrialUsed,GridO),
   %trial_removal([unbind_color(brown)],G3,RemovalTrialUsed,GridO))),
@@ -490,7 +491,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
   clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
-  must_det_ll((RepairedResultM = RepairedResult;
+  must_det_ll((RepairedResultM = RepairedResult,
   Steps = clip_pattern([PatternName,trial_removal_used(RemovalTrialUsed),try_whole_grid_xforms,verify_symmetry(Test),clip_to_previous_area]))),
   !.
 

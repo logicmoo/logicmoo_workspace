@@ -30,7 +30,7 @@ fav(t('47c1f68c'),
   blur(flipH),blur(flipV))]).
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,recolor,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
 
-fav(t(ff805c23),[ sol(fourway,trim_to_rect)]).
+fav(t(ff805c23),[ sol(fourway,get(changed),trim_to_rect)]).
 fav(t(ff805c23),[ oldsol(complete,complete_input,copy_intruder_grid)]).
 fav(t(ff805c23),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
 
@@ -44,7 +44,7 @@ fav(v(be03b35f),[human(
   )]).
 fav(v(be03b35f),[-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
 
-fav(v('73ccf9c2'),[sol(i(complete),resize_grid(4,4),incomplete),human([last_indiv,trim_to_rect]),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(3, 1) ']).
+fav(v('73ccf9c2'),[sol(colormass,most_unique(symmetry),get(solution),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(3, 1) ']).
 
 
 

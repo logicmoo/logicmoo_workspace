@@ -571,7 +571,7 @@ gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints),
    
 
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_to_points(Grid,Points).
-globalpoints(I,X):-  (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
+globalpoints(I,X):-  var(I),!, (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 globalpoints([],[]):-!.
 globalpoints(G,[G]):- is_point(G),!.
 globalpoints(C-P,[C-P]):-!.
@@ -1029,6 +1029,8 @@ guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>2,N>4,
   (find_outlines(Points,Sol,Rest)->(length(Sol,SN),SN>0,length(Rest,RN))),!.
+%guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,symmetry(SN)):-  H>2,V>2,N>4, flipSome(SN,LocalGrid,LocalGridM),LocalGrid==LocalGridM.
+
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outl):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
 
 

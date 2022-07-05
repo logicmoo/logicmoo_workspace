@@ -274,6 +274,7 @@ parse_expansions(FF, Vs0, Vs, Cmpd0, Cmpd):-
 dont_include_var(Vs0,Vs,Var):- select(_=VV,Vs0,Vs),VV==Var,!.
 dont_include_var(Vs,Vs,_).
   
+append_sets(Sets,Set):- my_append(Sets,List),list_to_set(List,Set).
 
 print_prop_val(N=V):- to_prop_name(N,P),format('~N\t\t'),print(P=V),nl.
 
