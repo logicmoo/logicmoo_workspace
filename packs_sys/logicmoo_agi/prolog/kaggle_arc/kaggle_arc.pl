@@ -101,7 +101,7 @@ check_len(_).
 %:- meta_predicate(must_det_l(0)).
 
 
-must_det_ll(G):- !, call(G).
+%must_det_ll(G):- !, call(G).
 must_det_ll(X):- tracing,!,call(X).
 must_det_ll((X,Y)):- !, must_det_ll(X),!,must_det_ll(Y).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
@@ -324,6 +324,13 @@ run_arc_io(TestID,ExampleNum):-
 get_training(Training):- nb_current('$training_vm',Training),compound(Training),!.
 get_training(Training):- notrace(get_current_test(TestID)),make_training(TestID,Training), nb_linkval('$training_vm',Training),!.
 set_training(Training):- nb_linkval('$training_vm',Training).
+get_training(Prop,Value):- get_training(Training), gset(Training.Prop)=Value.
+set_training(Prop,Value):- get_training(Training), Value = Training.Prop.
+set_vm(VM):- set_training(current,VM).
+get_vm(VM):- get_training(current,VM).
+set_vm(Prop,Value):-  get_vm(VM), nb_set_dict(VM,Prop,Value). 
+get_vm(Prop,Value):-  get_vm(Training), Value = Training.Prop.
+
 
 make_training(TestID,VM):- 
  %make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
@@ -488,6 +495,10 @@ sols_for(Name,Trial,Sol):- trials(Trial),Entry=..[Trial,Sol],
 solve_test:- 
  make,
  my_menu_call((get_current_test(TestID), catch(solve_test(TestID,(tst+_)),E,wdmsg(E=solve_test(TestID,(tst+_)))))),!.
+
+solve_test_training_too:- 
+ solve_test,
+ my_menu_call((get_current_test(TestID), catch(solve_test(TestID,(trn+A)),E,wdmsg(E=solve_test(TestID,(trn+A)))))),!.
 
 solve_test(Name):- 
   fix_test_name(Name,TestID,ExampleNum),!, 

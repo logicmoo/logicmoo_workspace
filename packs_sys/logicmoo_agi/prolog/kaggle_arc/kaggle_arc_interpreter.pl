@@ -110,6 +110,20 @@ run_dsl(VM,Prog,In,Out):-
  ((var(VM)->get_training(VM);true)), 
    nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
 
+
+vm_grid(VM,Goal,In,Out):- In==VM,!,vm_grid(VM,Goal,VM.grid,Out).
+vm_grid(VM,Goal,In,Out):-
+ must_det_ll((
+  gset(VM.grid)=In, 
+  grid_size(In,H,V),
+  gset(VM.h)=H, set(VM.v)=V, 
+  gset(VM.points_o) = VM.points,
+  localpoints_include_bg(In, Points),
+  gset(VM.points)=Points,
+  my_submenu_call(Goal), 
+  points_to_grid(H,V,VM.points,Out))).
+
+
 :- meta_predicate(run_dsl(+,+,+,+,-)).
 
 run_dsl(VM,Mode,AttVar,In,Out):- attvar(AttVar),get_attr(AttVar,prog,Prog),!,run_dsl(VM,Mode,Prog,In,Out).
@@ -143,9 +157,10 @@ run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut)
 run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
 
 % prevents unneeded updates such as color/position settings
-run_dsl(VM,_Mode,Prog,In,In):- \+ missing_arity(Prog, 0), !, my_submenu_call(call_expanded(VM,Prog)).
-run_dsl(VM,_Mode,Step,In,In):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, my_submenu_call(call(Step,VM)).
-run_dsl(VM,_Mode,Step,In,In):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), !, Step=..[F|ARGS], my_submenu_call(apply(F,[VM|ARGS])).
+run_dsl(VM,_Mode,Prog,In,Out):- \+ missing_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, vm_grid(VM, call(Step,VM),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), Step=..[F|ARGS], !, vm_grid(VM, apply(F,[VM|ARGS]),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), ping_indiv_grid(F), !, vm_grid(VM, call(Step,VM.grid),In,Out).
 
 run_dsl(VM,enforce,color(Obj,Color),In,Out):-!, 
  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),

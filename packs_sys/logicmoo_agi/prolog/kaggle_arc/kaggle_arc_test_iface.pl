@@ -33,6 +33,7 @@ menu_cmd1(_,'p','                  or (p)rint the test (captial to reveal Soluti
 menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls,print_test,!,solve_test)).
 menu_cmd1(_,'L','                  or (L)earn from a human proposed program?',(human_test)).
 menu_cmd1(_,'s','              Try to (s)olve based on training',(cls,print_test,!,solve_test)).
+menu_cmd1(_,'S','                  or (S)olve confirming it works on training',(cls,print_test,!,solve_test_training_too)).
 menu_cmd1(_,'h','                  or (h)uman proposed solution',(human_test)).
 menu_cmd1(_,'r','               Maybe (r)un some of the above: (p)rint, (t)rain, (e)xamine and (s)olve !',(cls,fully_test)).
 menu_cmd1(_,'a','                  or (a)dvance to the next test and (r)un it',(cls,!,run_next_test)).
@@ -68,7 +69,7 @@ show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E
 
   
 my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
-my_submenu_call(E):- locally(set_prolog_flag(gc,false),E).
+my_submenu_call(E):- ignore(locally(set_prolog_flag(gc,false),E)).
    
 
 read_menu_chars(Start,SelMax,Out):-
@@ -123,13 +124,15 @@ do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
   dmsg(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->true;(fail,trace,dumpST,rrtrace(Goal))))),!,
    read_pending_codes(user_input,_,[]),!.
+
+do_menu_key(Key):- atom_length(Key,Len),Len>2,current_predicate(Key/0),!,my_submenu_call(Key).
 do_menu_key(Key):- atom_codes(Key,Codes), format("~N % Menu: didn't understand: '~w' ~q ~n",[Key,Codes]),once(mmake).
 
 % nth that starts counting at three
 nth10(X,Y,Z):- var(X),!,nth0(N,Y,Z), X is N + 10 .
 nth10(X,Y,Z):- N is X -10, nth0(N,Y,Z).
 
-do_test_number(Num):- list_of_tests(L), nth10(Num,L,E),!, cls, get_current_grid(G), my_submenu_call(ig(E,G)),!.
+do_test_number(Num):- list_of_tests(L), nth10(Num,L,E),!, cls, get_current_grid(G), set_flag(indiv,0), my_submenu_call(ig(E,G)),!.
 
 get_current_grid(G):- get_current_test(T),kaggle_arc_io(T,_,_,G).
 
@@ -169,7 +172,7 @@ rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
 
 
 
-ndividuator:- get_current_test(TestID),with_test_grids(TestID,G,ig(complete,G)).
+ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,ig(complete,G)).
 test_grids(TestID,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
 
@@ -187,15 +190,18 @@ next_suite:-
    wdmsg(switched(X-->N)),
    restart_suite.
 
-test_suite_name(key_pad_tests).
+test_suite_name(key_pad_tests). test_suite_name(alphabetical_v). test_suite_name(alphabetical_t).
 test_suite_name(test_names_by_fav). test_suite_name(test_names_by_hard). 
 test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
 
+:- dynamic(cached_tests/2).
 :- nb_setval(test_order,test_names_by_fav).
 get_current_suite_testnames(Set):-
   nb_current(test_order,X),
-  findall(ID,call(X,ID),List),
-  my_list_to_set_variant(List,Set),!.
+  current_suite_testnames(X,Set).
+
+current_suite_testnames(X,Set):- cached_tests(X,Set),!.  
+current_suite_testnames(X,Set):- findall(ID,call(X,ID),List), my_list_to_set_variant(List,Set),!,asserta(cached_tests(X,Set)).
 
 previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID).
 next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
@@ -257,7 +263,6 @@ rat:- info("Run all tests"), run_all_tests.
 noninteractive_test(X):- time(ignore(forall(arc1(true,X),true))).
 
 
-
 cmt_border:- format('~N% '), dash_chars(120,"="), !, nl.
 
 test_id_border(TestID):-
@@ -269,7 +274,7 @@ print_test(TName):-
   cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
   ignore(print_test_hints(TName)),
   parcCmt(TName),nl,
-  dash_chars,
+   format('~N% '),dash_chars,
   print_test4(TestID))),!.
 
 print_test4(TestID):-
@@ -279,13 +284,13 @@ print_test4(TestID):-
        once(in_out_name(ExampleNum1,NameIn,_NameOut)),
        format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side(cyan,In,NameIn,_,Out,' ')]))))),
        write('%= '), parcCmt(TestID),
-  dash_chars,
+   format('~N% '), dash_chars,
     forall(arg(_,v((tst+_)),ExampleNum2),
      forall(kaggle_arc(TestID,ExampleNum2,In,Out),
       ignore((
        once(in_out_name(ExampleNum2,NameIn,NameOut)),
        grid_size(Out,OH,OV),make_grid(OH,OV,Blank),
-       (nb_current(last_menu_key,'P')
+       ((true;nb_current(last_menu_key,'P'))
          -> format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side(red,In,NameIn,_,Out,NameOut)])
          ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side(cyan,In,NameIn,_,Blank,"Hidden Output")])))))),!.
 
@@ -342,6 +347,19 @@ test_names_by_fav_rev(Name):- test_names_ord_favs(AllS),reverse(AllS,AllR),membe
 :- dynamic(ord_favs/1).
 test_names_ord_favs(FavListS):- ord_favs(FavListS),!.
 test_names_ord_favs(FavListS):- pt(recreating(test_names_ord_favs)), findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),  asserta(ord_favs(FavListS)).
+
+alphabetical_v(Set):- findall(v(Name),arc_test_name(v(Name)),List),sort(List,Set).
+alphabetical_t(Set):- findall(t(Name),arc_test_name(t(Name)),List),sort(List,Set).
+
+alphabetical_t:- clsmake, write_ansi_file(alphabetical_t).
+alphabetical_v:- clsmake, write_ansi_file(alphabetical_v).
+
+write_ansi_file(F):- call(F,Set),
+  atom_concat(F,'.vt100',FN),
+  setup_call_cleanup(open(FN,write,O,[create([default]),encoding(iso_latin_1)]),
+  forall(member(T,Set), 
+    (wots(S,print_test(T)), write(O,S),write(S))),close(O)).
+
 
 :- dynamic(ord_hard/1).
 test_names_ord_hard(NamesByHard):- ord_hard(NamesByHard),!.

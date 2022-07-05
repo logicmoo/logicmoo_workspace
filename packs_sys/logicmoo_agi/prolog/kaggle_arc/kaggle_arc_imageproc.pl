@@ -277,7 +277,19 @@ subst_color(Color1,Color2,Grid,NewGrid):-
    color_code(Color2,Num2),
    subst001(Grid,Num1,Num2,NewGrid))).
 
-blacken_color(Color1,Grid,NewGrid):- black_cell(Cell), subst_color(Color1,Cell,Grid,NewGrid).
+remove_color(Color,Grid,NewGrid):-
+   nth1(_,Grid,Row,MidGrid),maplist(=(Color),Row),!,
+   remove_color(Color,MidGrid,NewGrid).
+remove_color(Color,G0,NewGrid):-
+   rot90(G0,Grid),
+   nth1(_,Grid,Row,Rest),maplist(=(Color),Row),
+   rot270(Rest,MidGrid),!,
+   remove_color(Color,MidGrid,NewGrid).
+remove_color(Color,Grid,NewGrid):-
+   get_bgc(Cell), subst_color(Color,Cell,Grid,NewGrid).
+
+
+blank_color(Color1,Grid,NewGrid):- get_bgc(Cell), subst_color(Color1,Cell,Grid,NewGrid).
 swap_colors(Color1,Color2,Grid,NewGrid):- subst_color(Color1,Swap1,Grid,MGrid),
                                           subst_color(Color2,Color1,MGrid,NewGrid),
                                           color_code(Color2,Swap1).
@@ -294,6 +306,7 @@ grid_set_all_bg_colors(Color,I,O):- is_bg_color(I),O=Color.
 
 %do_set_all_fg_colors(Color,CPoint,NewCPoint):- is_cpoint(CPoint),CPoint=C-Point,hv_point(_,_,Point),is_fg_color(C),NewCPoint=Color-Point.
 
+blur(Op,G0,GG):- into_grid(G0,G),call(Op,G,GGG),replace_local_points(GGG,black,G,GG).
 
 backfill_vars(GridO):- clause(backfill(GridO),true).
 
@@ -359,8 +372,6 @@ get_colum(G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,get_colum(Grid,GridNew).
 get_colum(N,Grid,Col):- maplist(nth1(N),Grid,Col).
 
 make_var_grid(H,V,G):- make_grid(H,V,G),numbervars(G,0,_N).
-
-black_cell(Cell):- is_black(Black),grid_color_code(Black,Cell).
 
 replace_row(N,Row,Grid,NewGrid):- grid_size(Grid,H,V), replace_row(N,Row,Grid,H,V,NewGrid).
 replace_row(N,Row,Grid,H,V,NewGrid):- N<0, NewN is V + N+1,!,replace_row(NewN,Row,Grid,H,V,NewGrid).

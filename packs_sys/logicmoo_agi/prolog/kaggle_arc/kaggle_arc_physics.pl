@@ -67,7 +67,7 @@ gravity(N,e,Grid,GridNew):-!,rot270(Grid,GridRot),gravity(N,n,GridRot,GridM),rot
 
 gravity_1_n_0([],[]).
 gravity_1_n_0([Row1,Row2|Grid],GridNew):- nth1(Col,Row1,E1),nth1(Col,Row2,E2),
-  black_cell(E1), \+ black_cell(E2),
+  get_bgc(E1), \+ get_bgc(E2),
   set_nth1(Col,Row1,E2,Row1Mod),set_nth1(Col,Row2,E1,Row2Mod),
   gravity_1_n_0([Row1Mod,Row2Mod|Grid],GridNew).
 gravity_1_n_0([Row1|Grid],[Row1|GridNew]):- gravity_1_n_0(Grid,GridNew).

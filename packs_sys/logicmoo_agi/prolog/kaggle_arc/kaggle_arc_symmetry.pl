@@ -9,6 +9,8 @@
 :- endif.
 
 :- use_module(library(lists)).
+:- discontiguous(glean_patterns_hook/3).
+:- discontiguous(gph/5).
 
 
 is_symgrid(v(f9d67f8b)*_*in).
@@ -313,9 +315,10 @@ clip_rot_patterns(flipH,flipH,same,same,four_way_h_flip).
 
 is_fti_step(glean_grid_patterns).
 
+
 glean_grid_patterns(VM):-
   Grid = VM.grid,
-  glean_patterns(How,Grid,Repaired),
+  glean_patterns_hook(Steps,Grid,Repaired),
   localpoints_include_bg(Repaired,RepairedPoints),
   localpoints_include_bg(Grid,OriginalPoints),
   intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,_Changes),
@@ -325,15 +328,15 @@ glean_grid_patterns(VM):-
   set(VM.grid) = Repaired,
 %  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
 %  addObjects(VM,ColorObj).
-  addProgramStep(VM,How).
+  addProgramStep(VM,Steps).
 
 
 grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
-  repair_2x2(Grid,Ordered,How,_GridO,RepairedResultM), 
+  repair_2x2(Ordered,Steps,Grid,RepairedResultM), 
   KeepNewState=Ordered, 
   NewIndiv4s=[], 
   must_det_ll(RepairedResultM=RepairedResult),
-  addProgramStep(VM,How),!.
+  addProgramStep(VM,Steps),!.
 
 
 
@@ -341,9 +344,24 @@ try_whole_grid_xforms(GridO):-
   flipV(GridO,FlipV),
   mapgrid(sometimes_assume(=),GridO,FlipV),
   flipH(GridO,FlipH),
-  mapgrid(sometimes_assume(=),GridO,FlipH),
+  mapgrid(sometimes_assume(=),GridO,FlipH).
+
+try_whole_grid_xforms(GridO):- 
   rot90(GridO,Rot90),
   mapgrid(sometimes_assume(=),GridO,Rot90).
+
+try_whole_grid_xforms(GridO):- 
+  grid_size(GridO,H,V),
+  Vh is floor(V/2),
+  Hh is floor(H/2),
+  SXQ2 is 1,SYQ2 is 1,EXQ2 is Hh, EYQ2 is Vh,
+  SXQ4 is H-1-Hh, SYQ4 is V-1-Vh, SYQ4 is V,EXQ4 is H,EYQ4 is V,
+  clip_rot_patterns(Q1R,Q2R,Q3R,Q4R,_PatternName),
+  clip_and_rot(SXQ2,SYQ2,EXQ2,EYQ2,Grid,Q2R,Q2),
+  clip_and_rot(SXQ4,SYQ4,EXQ4,EYQ4,Grid,Q4R,Q4),
+  clip_and_rot(SXQ4,SYQ2,EXQ4,EYQ2,Grid,Q1R,Q1),
+  clip_and_rot(SXQ2,SYQ4,EXQ2,EYQ4,Grid,Q3R,Q3),
+  maplist(mapgrid(sometimes_assume(=)),[Q1,Q2,Q3],[Q4,Q3,Q2]).
 
 remObjects(_Objs,Before,After):- Before=After,!.
 
@@ -375,26 +393,28 @@ fourway(VM):-
   H > 13, V> 13,
   largest_first(VM.objs,Ordered),  
   Grid = VM.grid,
-  repair_2x2(Grid,Ordered,How,FullGridO,RepairedResult),
+  %repair_2x2(Ordered,Steps,Grid,RepairedResult),
+  glean_patterns_hook(Steps,Grid,RepairedResult),
   localpoints_include_bg(Grid,OriginalPoints),
   localpoints_include_bg(RepairedResult,RepairedPoints),
   intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changes),
   % QueuedPoints = VM.points,
   % points that NeededChanged must need be processed on their own 
-  gset(VM.points) = NeededChanged,
-  print_grid(H,V,neededChanged,NeededChanged),
-  print_grid(H,V,changed,Changes),
+  set_vm(points,NeededChanged),
+  set_vm(changed,Changes),
   points_to_grid(H,V,NeededChanged,LeftOverGrid),
   print_grid(leftOverGrid,LeftOverGrid),
   gset(VM.grid) = LeftOverGrid,
-  print_grid(vm_grid,VM.grid),
-  print_grid(H,V,vm_points,VM.points),
+  set_vm(grid,VM.grid),
+  set_vm(points,VM.points),
 %  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
 %  addObjects(VM,ColorObj).
-  addProgramStep(VM,How).
+  addProgramStep(VM,Steps),!.
 
 
-repair_2x2(Grid,Ordered,How,GridO,RepairedResult):-
+gph(_GH,_GV,Steps,G,GG):- repair_2x2([],Steps,G,GG),!.
+
+repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   member(CXL,[0,1]),member(CYL,[0,1]),
   mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,Grid),
   writeln(mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4)),
@@ -459,19 +479,43 @@ repair_2x2(Grid,Ordered,How,GridO,RepairedResult):-
   findall(unbind_color(Cs),enum_colors(Cs),CCs),
   maplist(append_term(remObjects),Ordered,RemoveObjs),
   append(CCs,RemoveObjs,RemovalTrials),
+
   trial_removal([same|RemovalTrials],G3,RemovalTrialUsed,GridO),
   %trial_removal([unbind_color(brown)],G3,RemovalTrialUsed,GridO))),
   try_whole_grid_xforms(GridO),
 
-  verify_symmetry(GridO),
+  verify_symmetry(Test,GridO),
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
   clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
   must_det_ll((RepairedResultM = RepairedResult;
-  How = clip_pattern([PatternName,trial_removal_used(RemovalTrialUsed),try_whole_grid_xforms,clip_to_previous_area]))),
+  Steps = clip_pattern([PatternName,trial_removal_used(RemovalTrialUsed),try_whole_grid_xforms,verify_symmetry(Test),clip_to_previous_area]))),
   !.
 
+glean_patterns_hook(Steps,G,GridO):- make_symmetrical_grid(Steps,G,GridO).
+
+
+make_symmetrical_grid(G,GridO):- make_symmetrical_grid(_,G,GridO).
+
+make_symmetrical_grid(Steps,G,GridO):- trim_to_rect(G,Grid1),G\==Grid1,make_symmetrical_grid(Steps,Grid1,GridO).
+make_symmetrical_grid(Steps,G,GridO):- 
+  Steps = [P,pull(BGC),Flip,test_used(Test)],
+  mass(G,OrignalMass),
+  MaxMass is OrignalMass * 4,
+  most_d_colors(G,Colors,GC),!,
+  g_or_gc(G,GC,GG00),
+  %GG00 = GC,
+    member(BGC,Colors),  
+  free_bg(BGC,GG00,GG),
+  member(Flip,[rot270,rot90,rot180,flipV,flipH]),
+  make_flippable_h(flipSome(P),GG,HS),
+  make_able_v(Flip,HS,Grid9),
+    once((unfree_bg(BGC,Grid9,Grid99),
+    uneib(Grid99,GridO),
+    mapgrid(blackFree,GridO))),
+    is_able_v(Test,GridO),
+    mass(GridO,NewMass),NewMass =< MaxMass.
 
 
 test_show_patterns:- clsmake, time((findall(_,(arc_grid(G),show_patterns(G)),L))),length(L,N),writeln(test_show_patterns=N).
@@ -488,8 +532,7 @@ append_nth1([H|T], N2, L, [H|R]) :-
     append_nth1(T, N, L, R),
     N2 is N+1.
 
-
-glean_patterns_hook(GH,_GV,How,G,GG):- 
+gph(GH,_GV,Steps,G,GG):- 
   numlist(3,GH,Row),
   D = [Row],
   dif(Same,black),
@@ -500,9 +543,9 @@ glean_patterns_hook(GH,_GV,How,G,GG):-
   length(L,L1),
   length(Stuff1,L2),
   length(Stuff2,L3),
-  How = first(1,Same,L1,L2,L3).
+  Steps = first(1,Same,L1,L2,L3).
 
-glean_patterns_hook(GH,_GV,How,G,GG):- 
+gph(GH,_GV,Steps,G,GG):- 
   numlist(2,GH,Row),
   D = [Row],
   dif(Same,black),
@@ -513,22 +556,22 @@ glean_patterns_hook(GH,_GV,How,G,GG):-
   length(L,L1),
   length(Stuff1,L2),
   length(Stuff2,L3),
-  How = first(2,Same,L1,L2,L3).
+  Steps = first(2,Same,L1,L2,L3).
 
-glean_patterns_hook(GH,GV,How,G,GG):- 
+gph(GH,GV,Steps,G,GG):- 
   bg_last(Same),
   make_list(Same,GH,ColorLine),
   Start = [ColorLine,ColorLine|_],
   append(RL,Start,G),
-  show_patterns4(GH,GV,How,RL,Start,GG),!.
-glean_patterns_hook(GH,GV,How,G,GG):- 
+  show_patterns4(GH,GV,Steps,RL,Start,GG),!.
+gph(GH,GV,Steps,G,GG):- 
   bg_last(Same),
   make_list(Same,GH,ColorLine),
   Start = [ColorLine|_],
   append(RL,Start,G),
-  show_patterns4(GH,GV,How,RL,Start,GG),!.
+  show_patterns4(GH,GV,Steps,RL,Start,GG),!.
 
-glean_patterns_hook(GH,GV,How,G,GG):-
+gph(GH,GV,Steps,G,GG):-
   grid_size(G,GH,GV),
   numlist(1,GH,Row),
   D = [Row],
@@ -552,19 +595,19 @@ glean_patterns_hook(GH,GV,How,G,GG):-
   length(C,CL), CL<Vh,
   append([L,D,A,D,B,D,C,D,A,D,B,D,R],GG),!,
   
-  How = [repeats(V,LL,1,CL)].
+  Steps = [repeats(V,LL,1,CL)].
 
-glean_patterns_hook(GH,GV,How,G,GG):- fail,
+gph(GH,GV,Steps,G,GG):- fail,
   grid_size(G,GH,GV),
   RL = [_|_],
   append(RL,Start,G),
   %V is floor(GV/7), 
   %length(RL,V),!,
-  show_patterns4(GH,GV,How,RL,Start,GG).
+  show_patterns4(GH,GV,Steps,RL,Start,GG).
 
 bg_last(Same):- (dif(Same,black);Same=black).
 
-show_patterns4(GH,GV,How,L,G,GG):- 
+show_patterns4(GH,GV,Steps,L,G,GG):- 
   grid_size(G,GH,GV),
   D = [Row],
   bg_last(Same),
@@ -587,34 +630,36 @@ show_patterns4(GH,GV,How,L,G,GG):-
   length(C,CL), CL<Vh,
   append([L,D,A,D,B,D,C,D,A,D,B,D,R],GG),!,
   
-  How = [repeats(V,LL,1,CL)].
+  Steps = [repeats(V,LL,1,CL)].
 
 
-glean_patterns3_HV(How,G,GG):- grid_size(G,GH,GV),glean_patterns_hook(GH,GV,How,G,GG).
+glean_patterns3_HV(Steps,G,GG):- grid_size(G,GH,GV),gph(GH,GV,Steps,G,GG).
 
-glean_patterns2(How,G,GG):- glean_patterns3_HV(How,G,GG),!.
-glean_patterns2([rot90|How],G,GG):- rot90(G,G90),glean_patterns3_HV(How,G90,GG90),rot270(GG90,GG),!.
+glean_patterns2(Steps,G,GG):- glean_patterns3_HV(Steps,G,GG),!.
+glean_patterns2([rot90|Steps],G,GG):- rot90(G,G90),glean_patterns3_HV(Steps,G90,GG90),rot270(GG90,GG),!.
 
-glean_patterns1(How,G,GG):- glean_patterns2(How,G,GG),!.
-glean_patterns1([flipH|How],G,GG):- flipH(G,G90),glean_patterns2(How,G90,GG90),flipH(GG90,GG),!.
-glean_patterns1([diaroll(2)|How],G,GG):- roll_d(2,G,G90),glean_patterns2(How,G90,GG90),roll_d(2,GG90,GG),!.
+glean_patterns1(Steps,G,GG):- glean_patterns2(Steps,G,GG),!.
+glean_patterns1([flipH|Steps],G,GG):- flipH(G,G90),glean_patterns2(Steps,G90,GG90),flipH(GG90,GG),!.
+glean_patterns1([diaroll(2)|Steps],G,GG):- roll_d(2,G,G90),glean_patterns2(Steps,G90,GG90),roll_d(2,GG90,GG),!.
 
-glean_patterns([diaroll(1)|How],G,GG):- roll_d(1,G,G90),glean_patterns1(How,G90,GG90),roll_d(1,GG90,GG),!.
-glean_patterns([rot90|How],G,GG):- rot90(G,G90),glean_patterns1(How,G90,GG90),rot270(GG90,GG),!.
-glean_patterns([flipV|How],G,GG):- flipV(G,G90),glean_patterns1(How,G90,GG90),flipV(GG90,GG),!.
-glean_patterns(How,G,GG):- glean_patterns1(How,G,GG),!.
+gph(Steps,G,GG):- glean_patterns1(Steps,G,GG),!.
+gph([diaroll(1)|Steps],G,GG):- roll_d(1,G,G90),glean_patterns1(Steps,G90,GG90),roll_d(1,GG90,GG).
+gph([rot90|Steps],G,GG):- rot90(G,G90),glean_patterns1(Steps,G90,GG90),rot270(GG90,GG),!.
+gph([flipV|Steps],G,GG):- flipV(G,G90),glean_patterns1(Steps,G90,GG90),flipV(GG90,GG),!.
 
+whole_row(N,Color,Grid):- nth1(N,Grid,Row),maplist(=(Color),Row).
 
 roll_d(N,G,GG):- maplist_n(N,roll_h,G,GGR),!,reverse(GGR,GG).
 roll_h(N,G,GG):- length(LL,N),append(LL,RR,G),append(RR,LL,GG).
 
+glean_patterns_hook(Steps,G,GG):- gph(Steps,G,GG).
 
 ping_indiv_grid(show_patterns).
 
 show_patterns(G):-
-  glean_patterns(How,G,GG),
-  print_side_by_side(GG,G),!,
-  writeln(How).
+  gph(Steps,G,GG),
+  print_side_by_side(G,GG),!,
+  addProgramStep(_,Steps).
 %show_patterns(G):- !, roll_d(G,GGG),!,roll_dr(GGG,GG),!,
 %  print_side_by_side(GG,G),!.
 
@@ -684,29 +729,29 @@ my_partition(P1,[H|L],I,[H|E]):-
 my_partition(P1,H,I,HE):- dumpST,break,
   my_partition(P1,[H],I,HE).
 
-consensus22(How,ColorAdvice,L,C):- 
+consensus22(Steps,ColorAdvice,L,C):- 
   my_partition(plain_var,L,Vars,Rest0),
   my_partition(=@=(ColorAdvice),Rest0,_,Rest),
   my_partition(is_bg_color,Rest,BGC,Rest1),
   my_partition(is_black,Rest1,Blk,Rest2),
   my_partition(is_fg_color,Rest2,Color,Other),!,
-  consensus2(How,Vars,BGC,Blk,Color,Other,C),!.
+  consensus2(Steps,Vars,BGC,Blk,Color,Other,C),!.
 
-%consensus2(How,Vars,BG,Blk,Color,Other,C).
+%consensus2(Steps,Vars,BG,Blk,Color,Other,C).
 
 is_four([A,B,C,D],A):- A=@=B,A=@=C,A=@=D,!.
 is_four([A,B,C],A):- A=@=B,A=@=C,!.
 %is_four([A,B,C,D],A):- A=@=B,C\=@=D,!.
 %is_four([C,C],C).
 :- style_check(-singleton).
-consensus2(How,Vars,BG,Blk,Color,Other,C):- is_four(Color,C),!.
-consensus2(How,Vars,BG,Blk,Color,Other,C):- is_four(BG,C),!.
-consensus2(How,Vars,BG,Blk,Color,Other,C):- is_four(Other,C),!.
-consensus2(How,Vars,BG,Blk,Color,Other,C):- is_four(Blk,C),!.
-consensus2(How,Vars,BG,Blk,Color,Other,C):- is_four(Vars,C),!.
-consensus2(How,Vars,BG,Blk,[C|Color],Other,C).
-consensus2(How,Vars,BG,[C|Blk],Color,Other,C).
-consensus2(How,Vars,[C|BG],Blk,Color,Other,C).
+consensus2(Steps,Vars,BG,Blk,Color,Other,C):- is_four(Color,C),!.
+consensus2(Steps,Vars,BG,Blk,Color,Other,C):- is_four(BG,C),!.
+consensus2(Steps,Vars,BG,Blk,Color,Other,C):- is_four(Other,C),!.
+consensus2(Steps,Vars,BG,Blk,Color,Other,C):- is_four(Blk,C),!.
+consensus2(Steps,Vars,BG,Blk,Color,Other,C):- is_four(Vars,C),!.
+consensus2(Steps,Vars,BG,Blk,[C|Color],Other,C).
+consensus2(Steps,Vars,BG,[C|Blk],Color,Other,C).
+consensus2(Steps,Vars,[C|BG],Blk,Color,Other,C).
 :- style_check(+singleton).
 
 print_grid_i(O):- print_grid(O),!.
@@ -1023,7 +1068,14 @@ ping_indiv_grid(show_reps).
 
 test_reps:-  clsmake, forall(rp_test(G),ignore(show_reps(G))).
 
-show_reps(G):-
+show_reps(G):- 
+  glean_pattern_reps(Steps,G,GG),
+  print_side_by_side(G,GG),!,
+  addProgramStep(_,Steps).
+
+glean_patterns_hook(Steps,G,NewGrid):- glean_pattern_reps(Steps,G,NewGrid).
+
+glean_pattern_reps(Steps,G,NewGrid):-
   set_current_test(G),
   h_pattern_length(G,Type,PatWidth,DivW,StartV,PatV,Pattern,Div),!,
   PatV>1,
@@ -1035,7 +1087,8 @@ show_reps(G):-
   %grid_to_id(G,ID),
   print_grid(G),
   writeln(repired_result),
-  pt(rp(patW=PatWidth,type=Type,divW=DivW,startV=StartV,patV=PatV)),
+  Steps = rp(patW=PatWidth,type=Type,divW=DivW,startV=StartV,patV=PatV),
+  pt(Steps),
   %pt(Grid9x9),
   print_grid(Pattern),!,
   ignore(((Div\==[]),print_grid([Div]))),!,
@@ -1123,8 +1176,8 @@ find_and_use_pattern_gen(G,Grid9x9):-
   nop(print_symmetry(localpoints,Q2,Q1,Q3,Q4)),!.
 
 
-print_symmetry(How,Q2,Q1,Q3,Q4):-  
-  call(How,Q1,QL1), call(How,Q2,QL2),call(How,Q3,QL3),call(How,Q4,QL4),
+print_symmetry(Steps,Q2,Q1,Q3,Q4):-  
+  call(Steps,Q1,QL1), call(Steps,Q2,QL2),call(Steps,Q3,QL3),call(Steps,Q4,QL4),
   wdmsg("printed_pie II   I"),
   print_side_by_side(QL2,QL1),
   print_side_by_side(QL3,QL4),
@@ -1209,8 +1262,8 @@ is_point_type(T,V):- compound(V),arg(_,V,E), is_point_type(T,E).
 is_point_type(T,V):- V==T.
  
 
-nr_make_symmetrical_grid(G,Test,Symm,How):- 
-  no_repeats(Symm,make_symmetrical_grid(G,Test,Symm,How)).
+nr_make_symmetrical_grid(Steps,G,GridO):- 
+  no_repeats(GridO,make_symmetrical_grid(Steps,G,GridO)).
   
 ping_indiv_grid(show_make_symmetrical).
 
@@ -1219,8 +1272,8 @@ show_make_symmetrical(G):-
   set_current_test(G),
   dash_chars,
   format('~N'),
-  ShowHow = wqs(uc(green,How,Test)),
-  findall(Symm-ShowHow,nr_make_symmetrical_grid(G,Test,Symm,How),List),
+  ShowHow = wqs(uc(green,Steps)),
+  findall(GridO-ShowHow,nr_make_symmetrical_grid(Steps,G,GridO),List),
   list_to_set(List,Set),
   print_side_by_side([G,G|Set]).
 
@@ -1234,7 +1287,10 @@ print_side_by_side2(A-N1,B-N2):- !, print_side_by_side2(A,B),write(N1-N2).
 print_side_by_side2(A,B):- format('~N'),print_side_by_side(A,_,B).
 
 % by rotating the image 90 degrees.. filling in .. and again 2 more times
+is_able_v(Flip,Top):- var(Flip),!,verify_symmetry(Flip,Top).
 is_able_v(Flip,Top):- call(Flip,Top,TopR), TopR=Top.
+verify_symmetry(rot90,GridO):- is_able_v(rot90,GridO).
+verify_symmetry((flipH,flipV),GridO):- is_able_v(flipV,GridO),is_able_v(flipH,GridO).
 
 is_flippable_h(Flip,G):- rot90(G,R),is_able_v(Flip,R).
 make_flippable_h(Flip,G,HS):- is_flippable_h(Flip,G),HS=G.
@@ -1243,33 +1299,15 @@ make_flippable_h1(Flip,G,HS):- rot90(G,G90),make_able_v(Flip,G90,VS),rot270(VS,H
 
 
 is_symmetrical(Grid):-  is_flippable_h(flipH,Grid),is_able_v(flipV,Grid).
-make_symmetrical(Grid0,Grid9):- make_symmetrical(Grid0,_,Grid9,How),
-  addProgramStep(_,How).
+
+make_symmetrical(Grid0,Grid9):- 
+  make_symmetrical(Steps,Grid0,Grid9),
+  addProgramStep(_,Steps).
 
 %Grid0,Flip,Grid9
-make_symmetrical(G0,Test,Symm,How):- into_grid(G0,G1),make_symmetrical_grid(G1,Test,Symm,How).
-% G,Test,Symm,How
-make_symmetrical_grid(G,Test,Symm,How):- trim_to_rect(G,Grid1),G\==Grid1,!,make_symmetrical_grid(Grid1,Test,Symm,How).
-make_symmetrical_grid(G,Test,GridO,[P,pull(BGC),Flip]):- 
-  mass(G,OrignalMass),
-  MaxMass is OrignalMass * 4,
-  most_d_colors(G,Colors,GC),!,
-  g_or_gc(G,GC,GG00),
-  %GG00 = GC,
-    member(BGC,Colors),  
-  free_bg(BGC,GG00,GG),
-  member(Flip,[rot270,rot90,rot180,flipV,flipH]),
-  make_flippable_h(flipSome(P),GG,HS),
-  make_able_v(Flip,HS,Grid9),
-    once((unfree_bg(BGC,Grid9,Grid99),
-    uneib(Grid99,GridO),
-    mapgrid(blackFree,GridO))),
-    (var(Test)-> verify_symmetry(GridO) ; is_able_v(Test,GridO)),
-    mass(GridO,NewMass),NewMass =< MaxMass.
+make_symmetrical(Steps,G0,GridO):- into_grid(G0,G1),make_symmetrical_grid(Steps,G1,GridO).
+% G,Test,GridO,Steps
 
-verify_symmetry(GridO):-
- once((is_able_v(rot90,GridO)
- ;(is_able_v(flipV,GridO),is_able_v(flipH,GridO)))).
 
 
  %gncp(glyph-neighbors-color-point)
