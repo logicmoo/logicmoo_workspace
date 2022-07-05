@@ -345,12 +345,12 @@ lco_goal_expansion(B,A):-
 lco_goal_expansion(A,A).
 
 :- if(current_predicate(fixup_exports/0)).
-%:- fixup_exports.
+:- fixup_exports.
 :- endif.
 
 :- multifile system:goal_expansion/4.
 :- dynamic system:goal_expansion/4.
-system:goal_expansion(LC,Pos,LCO,Pos):- notrace((compound(LC),lco_goal_expansion(LC,LCO),LC\=@=LCO)).
+% system:goal_expansion(LC,Pos,LCO,Pos):- notrace((compound(LC),lco_goal_expansion(LC,LCO),LC\=@=LCO)).
 
 
 end_of_file.

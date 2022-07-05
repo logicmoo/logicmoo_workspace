@@ -28,7 +28,7 @@ This module includes predicate utilities that allows program to detect unwanted 
 @license LGPL
 */
 
-
+:- discontiguous '$exported_op'/3.
 :- meta_predicate
         must(:),
         must_once(:),

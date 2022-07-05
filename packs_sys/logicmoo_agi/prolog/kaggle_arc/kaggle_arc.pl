@@ -87,8 +87,18 @@ clsmake:- update_changed_files,!.
   :- endif.
 :- endif.
 
+:- use_module(library(quasi_quotations)).
+:- use_module(library(hashtable)).
+:- use_module(library(gensym)).
+:- use_module(library(sort)).
+:- use_module(library(writef)).
+:- use_module(library(rbtrees)).
+:- use_module(library(dicts)).
+:- use_module(library(edinburgh)).
+:- use_module(library(statistics)).
 :- use_module(library(logicmoo_common)).
-
+:- autoload_all.
+:- use_module(library(gvar_globals_api)).
 
 % we alias these so we can catch out of control list growth
 my_append(A,B):- append(A,B).
@@ -182,6 +192,7 @@ goal_expansion_setter(Goal,Out):-
    get_setarg_p1(setarg,I,Goal,P1), is_setter_syntax(I,Obj,Member,Var,How),
    call(P1,Var),!,
    expand_goal((Goal,set_omember(How,Member,Obj,Var)),Out).
+
 
 
 my_b_set_dict(Member,Obj,Var):- set_omemberh(b,Member,Obj,Var).
@@ -328,24 +339,26 @@ get_training(Prop,Value):- get_training(Training), gset(Training.Prop)=Value.
 set_training(Prop,Value):- get_training(Training), Value = Training.Prop.
 set_vm(VM):- set_training(current,VM).
 get_vm(VM):- get_training(current,VM).
-set_vm(Prop,Value):-  get_vm(VM), nb_set_dict(VM,Prop,Value). 
+set_vm(Prop,Value):-  get_vm(VM),   
+  print_grid(VM.h,VM.v,Prop,Value),
+  nb_set_dict(VM,Prop,Value).
+
 get_vm(Prop,Value):-  get_vm(Training), Value = Training.Prop.
 
 
-make_training(TestID,VM):- 
+make_training(TestID,WAZ):- 
  %make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
  must_det_ll((
     rb_new(RBTREE),
     duplicate_term(RBTREE,DATA),
-    make_training_hints(TestID,
-     training{
+    WAZ = training{
       program:[],
       pairs:_, %datatree:_, 
       current:_,
       test_id:TestID,
       mappings:[map],
       storage:DATA},
-    VM))).
+    make_training_hints(TestID,WAZ,VM))).
 
     /*
      test:ID,mappings:_,

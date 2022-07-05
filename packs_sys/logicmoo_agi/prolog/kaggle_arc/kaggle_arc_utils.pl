@@ -276,6 +276,7 @@ dont_include_var(Vs,Vs,_).
   
 
 print_prop_val(N=V):- to_prop_name(N,P),format('~N\t\t'),print(P=V),nl.
+
 :- quasi_quotation_syntax(dictate_sourcecode).
 
 ignore_numvars(Name='$VAR'(Name)).

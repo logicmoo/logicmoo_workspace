@@ -417,7 +417,7 @@ show_gvar(Name):-
 
 :- multifile(dot_cfg:dictoo_decl/8).
 :- dynamic(dot_cfg:dictoo_decl/8).
-:- discontiguous(dot_cfg:dictoo_decl/8).
+%:- discontiguous(dot_cfg:dictoo_decl/8).
 
 simpl_dot_eval(IO,IO):- nc_arg(IO),!.
 simpl_dot_eval((A,B),O):- 
@@ -533,9 +533,9 @@ expand_functions(MBody, ExpandedBody):-
   strip_module(MBody,M,Body),
   expand_functions(M, Body, ExpandedBody).
 
-:- 
-   gvar_file_predicates_are_exported,
-   gvar_file_predicates_are_transparent.
+
+:- include(gvar_fixup_exports).
+
 
 :- install_dot_intercept.
 
@@ -628,7 +628,6 @@ toplevel_variables_expand_query(Goal, Expanded, Bindings, ExpandedBindings):-
 
 toplevel_variables_expand_query(Goal, Expanded, Bindings, ExpandedBindings):-
   toplevel_variables:expand_query(Goal, Expanded, Bindings, ExpandedBindings).
-
 
 
 /*

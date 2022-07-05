@@ -147,11 +147,7 @@ safe(V, _, Parents, _, _) :-
     nb_setval(sandbox_last_error, Error),
     throw(Error).
 
-<<<<<<<
 safe(_,_,_Parents,_Safe0,true):-current_prolog_flag(no_sandbox,true),!.
-=======
-safe(_, _, _Parents, _Safe0, true):- current_prolog_flag(no_sandbox, true), !.
->>>>>>>
 
 safe(M:G, _, Parents, Safe0, Safe) :-
     !,
@@ -459,11 +455,6 @@ verify_safe_declaration(Var) :-
     var(Var),
     !,
     instantiation_error(Var).
-<<<<<<<
-=======
-
-
->>>>>>>
 verify_safe_declaration(_):- current_prolog_flag(no_sandbox, true), !.
 verify_safe_declaration(Module:Goal) :-
     !,

@@ -31,7 +31,7 @@
 :- reexport(library(dictoo_lib)).
 :- multifile(dot_cfg:dictoo_decl/8).
 :- dynamic(dot_cfg:dictoo_decl/8).
-:- discontiguous(dot_cfg:dictoo_decl/8).
+%:- discontiguous(dot_cfg:dictoo_decl/8).
 
 :- module_transparent(expand_dictoo_decl/5).
 

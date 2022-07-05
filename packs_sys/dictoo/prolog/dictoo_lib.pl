@@ -136,6 +136,8 @@ oo_get_extender(_,_):-fail.
 
 oo_put_extender(_,_):-fail.
 
+
+:- export(new_oo/3).
 new_oo(_M,Self,NewSelf):- oo(Self)->NewSelf=Self.
 
 logtalk_ready :- current_predicate(logtalk:current_logtalk_flag/2).
@@ -464,7 +466,7 @@ get_oo_path(M,Key,UDT,_{}, NewUDT,New) :-
 :- dynamic(is_oo_class_field/2).
 :- multifile(dot_cfg:dictoo_decl/8).
 :- dynamic(dot_cfg:dictoo_decl/8).
-:- discontiguous(dot_cfg:dictoo_decl/8).
+%:- discontiguous(dot_cfg:dictoo_decl/8).
 
 % is_oo_hooked(M,Self,_Func,_Value):- M:is_oo(M,Self),!.
 is_oo_hooked(M,Self,_Func,_Value):- M:is_oo_invokable(Self,_),!.
@@ -502,9 +504,6 @@ gvs:dot_overload_hook(M,NewName, Memb, Value):- dot_cfg:using_dot_type(_,M)
 gvs:is_dot_hook(M,Self,Func,Value):- dot_cfg:using_dot_type(_,M) 
   -> is_oo_hooked(M,Self,Func,Value),!.
 
-
-:- 
-   gvar_file_predicates_are_exported,
-   gvar_file_predicates_are_transparent.
+:- include(gvar_fixup_exports).
 
 

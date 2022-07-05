@@ -387,6 +387,7 @@ grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
 */
 is_fti_step(fourway).
 fourway(VM):-
+  set_vm(VM),
   H = VM.h,
   V = VM.v,
   %VM.id = VM.id,
