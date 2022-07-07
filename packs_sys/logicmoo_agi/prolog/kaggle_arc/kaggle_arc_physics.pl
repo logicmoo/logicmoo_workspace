@@ -254,19 +254,19 @@ show_vm_changes(VM,S,Goal):-
 show_object_changes(VM,S,Goal):-
        setup_call_cleanup(duplicate_term(VM.objs,Was),
                      Goal,
-        ignore((VM.objs\==Was,
+        ignore((VM.objs\=@=Was,
           print_side_by_side(silver,print_grid(VM.h,VM.v,Was),objs>was:S,_,print_grid(VM.h,VM.v,VM.objs),objs>new:S)))).
 
 show_point_changes(VM,S,Goal):-
    setup_call_cleanup(duplicate_term(VM.points,Was),
       Goal,
-     ignore((VM.points\==Was,
+     ignore((VM.points\=@=Was,
         print_side_by_side(silver,print_grid(VM.h,VM.v,Was),points>was:S,_,print_grid(VM.h,VM.v,VM.points),points>new:S)))).
 
 show_grid_changes(VM,S,Goal):-
    setup_call_cleanup(duplicate_term(VM.grid,Was),
                      Goal,
-     ignore((VM.grid\==Was,
+     ignore((VM.grid\=@=Was,
         print_side_by_side(silver,print_grid(VM.h,VM.v,Was),grid>was:S,_,print_grid(VM.h,VM.v,VM.grid),grid>new:S)))).
 
 

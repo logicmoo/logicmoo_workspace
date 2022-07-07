@@ -34,7 +34,9 @@ arc_portray(G, _):- is_grid(G), !, write('..grid..').
 arc_portray(G, _):- is_dict(G), !, write('..VM..').
 
 % Portray In Debugger
-arc_portray(G,false):- is_object(G),!,print_grid(G),nl,underline_print(debug_indiv(G)),ptt(G).
+arc_portray(G,false):- is_object(G),!,object_grid(G,OG), 
+  neighbor_map(OG,NG), 
+  print_grid(NG),nl,underline_print(debug_indiv(G)),ptt(G).
 arc_portray(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_grid(H,V,G).
 
 % Portray In tracer

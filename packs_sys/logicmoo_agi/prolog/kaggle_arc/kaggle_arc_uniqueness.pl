@@ -12,7 +12,7 @@
 save_grouped(H,G):-
   sort(G,GS),
   nop(my_asserta_if_new(why_grouped(H,GS))),
-  nop(mapgroup(register_obj,GS)).
+  (mapgroup(register_obj,GS)).
 
 
 normal_group_form(Group,Group):-!.
@@ -53,6 +53,13 @@ most_unique(VM,symmetry):-
 
 
   
+
+what_unique:- get_current_test(TestID),what_unique(TestID).
+
+what_unique(TestID):- get_vm(VM),
+   fif((VM.id \= (TestID * _ * _)), ndividuator1),
+   get_vm(VM2),
+   what_unique_obj(_Obj,VM2.objs).
 
 what_unique(Dict):- is_dict(Dict),!,what_unique_dict(Dict).
 what_unique(Obj):- select_group(Group,_How), member(Obj,Group), what_unique(Obj,Group).

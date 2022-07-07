@@ -30,7 +30,17 @@ fav(t('47c1f68c'),
   blur(flipH),blur(flipV))]).
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,recolor,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
 
-fav(t(ff805c23),[ sol(fourway,get(changed),trim_to_rect)]).
+fav(t(ff805c23),[ human(fourway,get(changed),trim_to_rect)]).
+fav(t('3631a71a'),[ human(fourway,get(repaired),original_size)]).
+
+fav(t('3631a71a'),[sol(i(complete),copy_grid(in)),alt_sol(i([colormass,retain([iz(solid),iz(rectangle)]),fourway]),copy_grid(in),incomplete),
+  learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
+  human([overlay_each_pattern]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
+
+
+
+
+
 fav(t(ff805c23),[ oldsol(complete,complete_input,copy_intruder_grid)]).
 fav(t(ff805c23),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
 
@@ -44,9 +54,13 @@ fav(v(be03b35f),[human(
   )]).
 fav(v(be03b35f),[-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
 
+fav(t('4347f46a'),[sol(i(complete),each_obj(fill=false))]).
+
 fav(v('73ccf9c2'),[sol(colormass,most_unique(symmetry),get(solution),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(3, 1) ']).
 
+fav(v(a8610ef7),[clue(in::grid_size==out::grid_size),find_symmetry,-rotation_match,-color_match,+shape_match,+mask_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',evaluation,'(4, 1)']).
 
+fav(v('6ea4a07e'),[clue(in::mass+out::mass=9),sol(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
 
 fav(t('23b5c85d'),[human([smallest_indiv,trim_to_rect])]).
 fav(t('1cf80156'),[human([trim_to_rect])]).
@@ -57,12 +71,10 @@ fav(t('8d5021e8'),[human([grow([[rot180, flipV],[flipH, same],[rot180, flipV]])]
 
 fav(t('6150a2bd'),[clue(in::mass==out::mass),sol(rot180),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(2, 1)']).
 fav(t('ed36ccf7'),[clue(in::mass==out::mass),sol(rot270),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(4, 1)']).
-fav(v('6ea4a07e'),[clue(in::mass+out::mass=9),sol(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
 fav(t(b230c067),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,find_the_intruder,associate_colors_to_bools,'(2, 1)']).
 fav(t(d2abd087),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
 fav(v('0a2355a6'),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(4, 1) ']).
 fav(v('37d3e8b2'),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(3, 1) ']).
-fav(v(a8610ef7),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',evaluation,'(4, 1)']).
 fav(t('6e82a1ae'),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
 fav(t(b6afb2da),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,replace_pattern,rectangle_guessing,recoloring,'(2, 1)']).
 fav(t(e509e548),[clue(in::grid_size==out::grid_size),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,homeomorphism,associate_colors_to_shapes,'(3, 1)']).
@@ -96,9 +108,6 @@ fav(t('1b60fb0c'),[
 %fav(t(_),[human([fillFromBorder(none,yellow)])]).
 
 %fav(t('44f52bb0'),[lmDSL(uncolorize,grid_to_individual(whole),one_obj,resize_grid(1,1,Color),db(largest:h_symmetric,Color)), -shape_match,-rotation_match,-mask_match,-color_match,tt,training,detect_symmetry,associate_images_to_bools,'(6, 2)']).
-fav(t('3631a71a'),[sol(i(complete),copy_grid(in)),alt_sol(i([colormass,retain([iz(solid),iz(rectangle)]),fourway]),copy_grid(in),incomplete),
-  learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),
-  human([overlay_each_pattern]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
 
 fav(v(d304284e),[clue(in::grid_size==out::grid_size),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(2, 1) ']).
 

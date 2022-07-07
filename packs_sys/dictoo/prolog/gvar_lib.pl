@@ -351,6 +351,7 @@ system:term_expansion(M:FDecl, QClause) :-
 
 */
 
+:- export(is_dvar/1).
 
 is_dvar(Var):- \+ compound(Var),!,fail.
 is_dvar($(_)):- !, use_dot(_).

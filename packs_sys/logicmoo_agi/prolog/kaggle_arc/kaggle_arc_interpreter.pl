@@ -143,12 +143,12 @@ run_dsl(VM,Mode,forall(All,Exec),In,OutO):-!,
 run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In; true).
 
 
-run_dsl(VM,_Mode,get(Name,Val),Pass,Pass):- get_dict(Name,VM,Val).
-run_dsl(VM,_Mode,get(Name),_Pass,Val):- get_dict(Name,VM,Val).
+run_dsl(VM,_Mode,get(Name,Val),In,Out):- vm_grid(VM,get_vm(Name,Val),In,Out).
+run_dsl(VM,_Mode,get(Name),In,Val):- vm_grid(VM,get_vm(Name,Val),In,_Out).
 run_dsl(VM,_Mode,SET_NV,Pass,Pass):- compound(SET_NV), SET_NV=..[set,Name,Val], my_b_set_dict(Name,VM,Val).
-run_dsl(VM,_Mode,b_set(Name,Val),Pass,Pass):- b_set_dict(Name,VM,Val).
-run_dsl(VM,_Mode,nb_set(Name,Val),Pass,Pass):- nb_set_dict(Name,VM,Val).
-run_dsl(VM,_Mode,nb_link(Name,Val),Pass,Pass):- nb_link_dict(Name,VM,Val).
+run_dsl(VM,_Mode,b_set(Name,Val),In,Out):- vm_grid(VM,set_vm(Name,Val),In, Out).
+run_dsl(VM,_Mode,nb_set(Name,Val),In,Out):- vm_grid(VM,set_vm(Name,Val),In, Out).
+run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- vm_grid(VM,set_vm(Name,Val),In, Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
@@ -279,7 +279,8 @@ o2g(Obj,NewGlyph):- object_indv_id(Obj,ID,Old), int2glyph(Old,Glyph),
 (O2=@=Obj->NewGlyph=Glyph; 
  ( flag(indiv,Iv,Iv+1),int2glyph(Iv,NewGlyph),
   subst(Obj,object_indv_id(ID,Old),object_indv_id(ID,Iv),NewObj),
-  nb_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,nb_linkval(NewGlyph,Obj))).
+  nb_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,nb_linkval(NewGlyph,Obj))),
+ my_asserta_if_new(g2o(NewGlyph,Obj)).
 
 o2c(Obj,Glyph):- color(Obj,Glyph).
 o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).

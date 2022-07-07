@@ -248,7 +248,8 @@ assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(lambda_rev(assert_shape_li
 assert_shape_lib(Type,Obj):- assert_shape_lib3(Type,[Type],Obj).
 assert_shape_lib3(Type,InfoIn,Obj):- 
    get_training(Training),
-   Info = [Training.test_id|InfoIn],
+   once(get_current_test(TestID);TestID=Training.test_id),
+   Info = [TestID|InfoIn],
    nop(my_asserta_if_new(in_shape_lib(Type,Info,Obj))).
 
 in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==true -> !; true).

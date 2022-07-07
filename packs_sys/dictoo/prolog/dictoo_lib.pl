@@ -159,7 +159,7 @@ oo_set(UDT,Key,Value):- var(UDT),!,do_but_warn(put_attr(UDT,Key,Value)),!.
 oo_set(UDT,Key,Value):- oo_derefed(UDT,DREF),!,oo_set(DREF,Key,Value).
 oo_set(UDT,Key,Value):- is_dict(UDT),!,nb_set_dict(Key,UDT,Value).
 %oo_set(UDT,Key,Value):- is_rbtree(UDT),!,nb_rb_insert(UDT, Key, Value),!.
-oo_set(UDT,Key,Value):- is_rbtree(UDT),!,rb_insert(UDT,Key,Value,NewUDT),nb_copy(2,NewUDT,UDT).
+oo_set(UDT,Key,Value):- is_rbtree(UDT),!,nb_rb_insert(UDT,Key,Value,NewUDT),nb_copy(2,NewUDT,UDT).
 oo_set(UDT,Key,Value):- is_assoc(UDT),!, put_assoc(Key,UDT,Value,NewUDT),nb_copy(NewUDT,UDT).
 oo_set(UDT,Key,Value):- UDT=..[U,D|T], oo_nb_set_varholder(U,D,T,UDT,Key,Value).
 oo_set(UDT,Key,Value):- is_list(UDT),!,((member(KV,UDT),get_kv(KV,K,_),Key==K,nb_set_kv(KV,K,Value))->true;(nb_copy([Key-Value|UDT],UDT))).
@@ -222,7 +222,7 @@ oo_put_dict( M,Key,UDT,Value):- var(UDT),!,(attvar(UDT)-> M:put_attr(UDT,Key,Val
 oo_put_dict( M,Key,UDT,Value):- \+ compound(UDT),!,oo_derefed(M,UDT,DREF),!,oo_put_dict(M,DREF,Key,Value).
 oo_put_dict(_M,Key,UDT,Value):- compound_name_arity(UDT,att,3),nb_setattr(UDT,Key,Value).
 oo_put_dict( M,Key,UDT,Value):- is_dict(UDT),!,M:m_put_dict(Key,UDT,Value).
-oo_put_dict(_M,Key,UDT,Value):- is_rbtree(UDT),!,rb_insert(UDT,Key,Value,NewUDT),arg(1,NewUDT,Arg1),setarg(1,UDT,Arg1),arg(2,NewUDT,Arg2),setarg(2,UDT,Arg2).
+oo_put_dict(_M,Key,UDT,Value):- is_rbtree(UDT),!,nb_rb_insert(UDT,Key,Value,NewUDT),arg(1,NewUDT,Arg1),setarg(1,UDT,Arg1),arg(2,NewUDT,Arg2),setarg(2,UDT,Arg2).
 oo_put_dict(_M,Key,UDT,Value):- is_assoc(UDT),!,put_assoc(Key,UDT,Value,NewUDT),b_copy(NewUDT,UDT).
 oo_put_dict(_M,Key,UDT,Value):- is_list(UDT),!,((member(KV,UDT),get_kv(KV,K,_),Key==K,set_kv(KV,K,Value))->true;(b_copy([Key-Value|UDT],UDT))).
 % todo index these by sending in the UDT on two args

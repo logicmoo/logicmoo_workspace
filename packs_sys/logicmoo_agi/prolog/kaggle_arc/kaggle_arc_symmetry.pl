@@ -287,7 +287,7 @@ grid_to _3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
    (wdmsg(time_limit_exceeded),fail))),
   %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
-  must_det_ll((
+  must_not_error((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
   maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
@@ -335,7 +335,7 @@ grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
   repair_2x2(Ordered,Steps,Grid,RepairedResultM), 
   KeepNewState=Ordered, 
   NewIndiv4s=[], 
-  must_det_ll(RepairedResultM=RepairedResult),
+  must_not_error(RepairedResultM=RepairedResult),
   addProgramStep(VM,Steps),!.
 
 
@@ -378,7 +378,7 @@ grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
    (wdmsg(time_limit_exceeded),fail))),
   %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
-  must_det_ll((
+  must_not_error((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
   maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
@@ -401,19 +401,18 @@ fourway(VM):-
   intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changes),
   % QueuedPoints = VM.points,
   % points that NeededChanged must need be processed on their own 
-  set_vm(points,NeededChanged),
-  points_to_grid(H,V,NeededChanged,LeftOverGrid),
+ % points_to_grid(H,V,NeededChanged,LeftOverGrid),
   % set_vm(leftOverGrid,LeftOverGrid),
-  gset(VM.grid) = LeftOverGrid,
-
-  set_vm(solution,Changes),
+%  gset(VM.grid) = LeftOverGrid,
+  set_vm(neededChanged,NeededChanged),
+  set_vm(repaired,RepairedPoints),
   set_vm(changed,Changes),
+ 
 %  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
 %  addObjects(VM,ColorObj).
   addProgramStep(VM,Steps),!.
 
 
-gph(_GH,_GV,Steps,G,GG):- repair_2x2([],Steps,G,GG),!.
 
 repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   member(CXL,[0,1]),member(CYL,[0,1]),
@@ -421,7 +420,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   writeln(mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4)),
 
   clip_rot_patterns(Q1R,Q2R,Q3R,Q4R,PatternName),
-  must_det_ll((
+  must_not_error((
   clip_and_rot(SXQ2,SYQ2,EXQ2,EYQ2,Grid,Q2R,Q2),
   clip_and_rot(SXQ4,SYQ4,EXQ4,EYQ4,Grid,Q4R,Q4),
   clip_and_rot(SXQ4,SYQ2,EXQ4,EYQ2,Grid,Q1R,Q1),
@@ -475,8 +474,8 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
 
   */
 
-  print_grid(full_grid(H,V),Grid4),
-  
+  %print_grid(full_grid(H,V),Grid4),
+  set_vm(full_grid,Grid4),  
 
   findall(unbind_color(Cs),enum_colors(Cs),CCs),
   maplist(append_term(remObjects),Ordered,RemoveObjs),
@@ -491,7 +490,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
   clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
-  must_det_ll((RepairedResultM = RepairedResult,
+  must_not_error((RepairedResultM = RepairedResult,
   Steps = clip_pattern([PatternName,trial_removal_used(RemovalTrialUsed),try_whole_grid_xforms,verify_symmetry(Test),clip_to_previous_area]))),
   !.
 
@@ -518,9 +517,30 @@ make_symmetrical_grid(Steps,G,GridO):-
     mapgrid(blackFree,GridO))),
     is_able_v(Test,GridO),
     mass(GridO,NewMass),NewMass =< MaxMass.
+/*
+% detect_supergrid(Grid,SGrid):- ...
+line Separated
+Symmetry sorta happening
+Individuals by colormass % t(b230c067)
+all_is_one
+supergrid_is_point_dotted % '94133066'
+supergrid_is_output_size % t('8d5021e8') 
+supergrid_is_all % t('6150a2bd')
+suprgrid_is_dots_same_count % t(ff28f65a)
+supergrid_input_1 % v(cad67732)*  
+supergrid_input_1 output=1x1
+superinput_keypad= souput=kewypad
+superinput_columns 
+superinput_rows
+superinput_swashica
+superinput_starts_at_input_loc
+superinput_blob
+*/
 
 
-test_show_patterns:- clsmake, time((findall(_,(arc_grid(G),show_patterns(G)),L))),length(L,N),writeln(test_show_patterns=N).
+
+test_show_patterns:- clsmake, ((findall(_,(arc_grid(G),must_not_error(show_patterns(G))),L))),
+  length(L,N),writeln(test_show_patterns=N).
 
  % time((forall(arc_grid(G),test_show_patterns(G)))).
 
@@ -648,6 +668,7 @@ gph(Steps,G,GG):- glean_patterns1(Steps,G,GG),!.
 gph([diaroll(1)|Steps],G,GG):- roll_d(1,G,G90),glean_patterns1(Steps,G90,GG90),roll_d(1,GG90,GG).
 gph([rot90|Steps],G,GG):- rot90(G,G90),glean_patterns1(Steps,G90,GG90),rot270(GG90,GG),!.
 gph([flipV|Steps],G,GG):- flipV(G,G90),glean_patterns1(Steps,G90,GG90),flipV(GG90,GG),!.
+gph(_GH,_GV,Steps,G,GG):- repair_2x2([],Steps,G,GG),!.
 
 whole_row(N,Color,Grid):- nth1(N,Grid,Row),maplist(=(Color),Row).
 
@@ -703,7 +724,7 @@ show_patterns(G):-
    (wdmsg(time_limit_exceeded),fail))),
   %catch(find_and_use_pattern_gen(Grid,Image9x9),E, (wdmsg(E),fail)),
   %rtrace(find_and_use_pattern_gen(Grid,Image9x9)),
-  must_det_ll((
+  must_not_error((
   flatten(Image9x9,Flat),
   include(nonvar_or_ci,Flat,Grids),
   maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
@@ -818,7 +839,7 @@ prefect_result(_VM,H,V,Ordered,Grids,RepairedResult,ColorAdvice):-
 open_grids(UGrids,OUGrids):- maplist(append,UGrids,_,ORows),append(ORows,_,OUGrids).
 
 repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,KeepNewState,RepairedResult):-
- %must_det_ll
+ %must_not_error
  ((
   max_hv(Objects,H,V),
   writeln('Training hard...'),
@@ -838,7 +859,7 @@ together(Goal):- call(Goal),!.
 
 check_my_local_points([],_Grid):- !.
 check_my_local_points([Point|List],Correct):- 
- must_det_ll(together((point_to_hvc(Point,H,V,Expected),
+ must_not_error(together((point_to_hvc(Point,H,V,Expected),
  (\+ (hv_c_value_or(Correct,Found,H,V,Expected),Found==Expected) -> set_local_points(Point,Correct,Correct) ; true),
  (hv_c_value_or(Correct,Found,H,V,Expected),Found==Expected)))),
  check_my_local_points(List,Correct).
@@ -850,7 +871,7 @@ advise_color(ColorAdvice,Ordered):- member_color(Ordered,ColorAdvice).
 member_color(Ordered,ColorAdvice):- member(Obj,Ordered),color(Obj,ColorAdvice).
 
 replace_diffs(LPoints,Obj,NewObj):- 
- must_det_ll((
+ must_not_error((
   vis_hv(Obj,H,V),
   my_partition(point_between(1,1,H,V),LPoints,Points,_),
   localpoints(Obj,LP),
@@ -869,7 +890,7 @@ point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
   
 
 sort_on(C,R,A,B):- (A==B-> R=0 ; (call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B))).
-using_compare(C,R,A,B):- (A==B-> R=0 ; ( (must_det_ll((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))))).
+using_compare(C,R,A,B):- (A==B-> R=0 ; ( (must_not_error((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))))).
 colored_pixel_count(A,Count):- is_points_list(A),fg_color_count(A,Count),!.
 colored_pixel_count(G,Count):- is_grid(G), fg_color_count(G,Count),!.
 colored_pixel_count(A,Count):- is_object(A),localpoints(A,G), fg_color_count(G,Count),!.
@@ -877,7 +898,7 @@ colored_pixel_count(A,Count):- is_list(A),!,maplist(colored_pixel_count,A,Summe)
 colored_pixel_count(A,1):- atomic(A),is_fg_color(A),!.
 colored_pixel_count(_,0).
 
-fg_color_count(G,AA):- must_det_ll((findall(E,(sub_term(E,G),\+ plain_var(E),is_fg_color(E)),L),length(L,AA))).
+fg_color_count(G,AA):- must_not_error((findall(E,(sub_term(E,G),\+ plain_var(E),is_fg_color(E)),L),length(L,AA))).
 
 /*
 4-Way Symmetry
@@ -910,6 +931,7 @@ mirror_xy(CXL,CYL,CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,E
    mirror_hv(EXQ2,CX,EYQ2,CY,EXQ4,EYQ4,G),
    %sort_row_by_num_colors(G,Rows),
    %print_grid(Rows),
+   nonvar(EXQ2),nonvar(EYQ2),
    %wqnl(cx=CX+EXQ2),print_grid(EXQ2,EYQ2,G),wqnl(cy=CY+EYQ2),
    check_mirror_xy(CX,CY,SXQ2,SYQ2,EXQ2,EYQ2,SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4).
 
@@ -1078,6 +1100,8 @@ show_reps(G):-
 glean_patterns_hook(Steps,G,NewGrid):- glean_pattern_reps(Steps,G,NewGrid).
 
 glean_pattern_reps(Steps,G,NewGrid):-
+ %must_det_ll
+ ((
   set_current_test(G),
   h_pattern_length(G,Type,PatWidth,DivW,StartV,PatV,Pattern,Div),!,
   PatV>1,
@@ -1095,9 +1119,9 @@ glean_pattern_reps(Steps,G,NewGrid):-
   print_grid(Pattern),!,
   ignore(((Div\==[]),print_grid([Div]))),!,
   StartH=0,
-  nop(must_det_ll((gen_pattern(H,V,StartH,StartV,Pattern,Div,same,NewGrid),
+  (must_not_error((gen_pattern(H,V,StartH,StartV,Pattern,Div,same,NewGrid),
   print_grid(NewGrid)))),  
-  dash_chars,!.
+  dash_chars)),!.
 
 gen_pattern(H,V,StartH,StartV,Pattern,Div,NextP2,NewGridO):-
   GH is H - StartH,
@@ -1108,6 +1132,7 @@ gen_pattern(H,V,StartH,StartV,Pattern,Div,NextP2,NewGridO):-
   % crop(H,V,NewGridO,NewGrid).
   
 gen_pattern(GH,GV,Pattern,Div,_NextP2,NewGrid):-
+ must_det_ll((
   length(Div,DivW),
   grid_size(Pattern,PH,PV),PDW is PH+DivW,PDV is PV,
   make_list_inited(PDV,Div,DivA),
@@ -1124,7 +1149,7 @@ gen_pattern(GH,GV,Pattern,Div,_NextP2,NewGrid):-
   append([RowSep,CropPatterns],SepCropPatterns),
   %print_grid(SepCropPatterns),
   TimesV is GV div PDV -1,
-  append_n_times(SepCropPatterns,TimesV,NewGrid).
+  append_n_times(SepCropPatterns,TimesV,NewGrid))).
   %make_list_inited(TimesV,CropPatterns,CropPatterns,NewGrid).
 
 gen_w_pattern(0,Pattern,_DivAPattern,Pattern):-!.
@@ -1449,30 +1474,47 @@ only_color_data(_-C,NC):- only_color_data(C,NC).
 nei_map(C,P1,Points,N):- 
  findall(Dir,(n_s_e_w(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsC),
  findall(Dir,(is_diag(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsD),
- map_neib(DirsC,DirsD,_,N).
+ map_neib(DirsC,DirsD,NS,PS), ((PS=='+')-> N=PS; N=NS).
 
 
+only_neib_data(NC,NC):- \+ compound(NC),!.
+only_neib_data(C-_,NC):- only_neib_data(C,NC).
 
-map_neib([n,s],[],'|','.').
-map_neib([e,w],[],'-','.').
+map_neib([n],[],'!','2').
+map_neib([s],[],'!','2').
+map_neib([e],[],'=','2').
+map_neib([w],[],'=','2').
+map_neib([n,s],_,'|','.').
+map_neib([e,w],_,'-','.').
 map_neib([n,e],[],'C','+').
 map_neib([n,w],[],'C','+').
 map_neib([s,e],[],'C','+').
 map_neib([s,w],[],'C','+').
 map_neib([_,_,_,_],[_,_,_],'C','+').
 map_neib([_,_,_],[],'T','+').
+map_neib([_,_,_],[_],'t','+').
 map_neib([_,_,_,_],[_,_,_,_],'~','~').
 map_neib([_,_,_,_],[],'+','+').
 % is_diag(ne). is_diag(sw). is_diag(se). is_diag(nw).
-map_neib([],[se,nw],'\\','v').
-map_neib([],[ne,sw],'/','v').
-map_neib([],[ne,se],'<','v').
-map_neib([],[sw,nw],'>','v').
 map_neib([],[ne,nw],'V','v').
-map_neib([],[se,sw],'A','v').
-map_neib([],[_,_,_],'%','v').
+map_neib(_,[ne,nw],'v','v').
+map_neib([],[se,nw],'\\','v').
+map_neib(_,[se,nw],'\\','v').
+map_neib([],[ne,sw],'/','v').
+map_neib(_,[ne,sw],'/','v').
+map_neib([],[ne,se],'<','v').
+map_neib(_,[ne,se],'<','v').
+map_neib([],[sw,nw],'>','v').
+map_neib(_,[sw,nw],'>','v').
+map_neib([],[se,sw],'^','v').
+map_neib(_,[se,sw],'^','v').
+map_neib([],[_,_,_],'Y','v').
+map_neib(_,[_,_,_],'y','v').
+
+
 map_neib([_,_,_],[_,_,_,_],7,'X').
 map_neib([],[_,_,_,_],'X','X').
+map_neib([],[_],'x','v').
 
 map_neib([e],[ne,se],'2','X').
 map_neib([w],[sw,nw],'2','X').
@@ -1500,6 +1542,8 @@ map_neib([_],[_,_,_,_],4,'X').
 map_neib([],[],0,0).
 map_neib([_],[],2,'*').
 map_neib([],[_],1,'*').
+map_neib(_,NonNil,'A','.'):- NonNil\==[],!.
+map_neib(NonNil,_,'%','.'):- NonNil\==[],!.
 map_neib(_,_,'.','.').
 
 

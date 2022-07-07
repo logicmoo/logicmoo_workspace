@@ -95,6 +95,7 @@ clsmake:- update_changed_files,!.
 :- use_module(library(rbtrees)).
 :- use_module(library(dicts)).
 :- use_module(library(edinburgh)).
+:- use_module(library(lists)).
 :- use_module(library(statistics)).
 :- use_module(library(logicmoo_common)).
 :- autoload_all.
@@ -114,7 +115,7 @@ check_len(_).
 %:- meta_predicate(must_det_l(0)).
 
 
-must_det_ll(G):- !, call(G).
+%must_det_ll(G):- !, call(G).
 must_det_ll(X):- tracing,!,call(X).
 must_det_ll((X,Y)):- !, must_det_ll(X),must_det_ll(Y).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
@@ -261,6 +262,7 @@ doit(set(E.v)):- that.
 :- ensure_loaded(kaggle_arc_individuation).
 :- ensure_loaded(kaggle_arc_interpreter).
 :- ensure_loaded(kaggle_arc_object).
+:- ensure_loaded(kaggle_arc_boards).
 :- ensure_loaded(kaggle_arc_learning).
 :- ensure_loaded(kaggle_arc_imagens).
 :- ensure_loaded(kaggle_arc_recognise).
@@ -345,12 +347,16 @@ get_vm(VM):- nb_current('$grid_vm',VM).
 set_vm(Prop,Value):-  
   get_vm(VM),
   globalpoints(Value,IndvPoints),
-  fif(IndvPoints\==[],(make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
-  addObjects(VM,Obj))),
-  print_grid(VM.h,VM.v,Prop,Value),
-  set(VM.Prop) = Value.
+  fif(IndvPoints\==[],
+    (make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
+          addObjects(VM,Obj),
+          print_grid(VM.h,VM.v,Prop,Value))),
+  (get_dict(Prop,VM,_) -> set(VM.Prop) = Value ; 
+  (get_dict(props,VM,Hashmap), (var(Hashmap)->(rb_new(Hashmap),gset(VM.props)=Hashmap); true),
+     must_not_error(nb_set_value(Hashmap,Prop,Value)))).
 
-get_vm(Prop,Value):-  get_vm(Training), Value = Training.Prop.
+get_vm(Prop,Value):-  get_vm(VM), 
+  (get_dict(Prop,VM,Value) -> true ; (get_dict(props,VM,Hashmap),nonvar(Hashmap),must_not_error(nb_get_value(Hashmap,Prop,Value)))).
 
 
 make_training(TestID,WAZ):- 
@@ -420,10 +426,14 @@ train_using_oo_ii_io(TestID,Trn,N1,DictIn,DictOut):-
 
 
 train_only_from_pairs:- notrace(get_current_test(TestID)), train_only_from_pairs(TestID).
+
 train_only_from_pairs(TestID):- train_test(TestID,train_using_io).
+
 train_using_io(TestID,_DictIn,DictOut):- 
-  ((Trn+N1) = (trn+0)),
+  ignore(nb_current(example,ExampleNum)),
+  ignore((Trn+N1) = ExampleNum),
   kaggle_arc(TestID,(Trn+N1),In,Out),
+  detect_supergrid(TestID,(Trn+N1),In,Out),
   train_for_objects_from_pair(_{},TestID,[Trn,'i',N1,'o',N1],In,Out,DictOut),!.
 
 

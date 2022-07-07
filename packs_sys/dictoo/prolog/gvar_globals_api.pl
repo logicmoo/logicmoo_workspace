@@ -105,7 +105,7 @@ nb_set_value(gvar(v),N,V):- !, nb_setval(N,V).
 nb_set_value(gvar(_),N,D):- !, nb_current(N,Was),!,(((compound(Was),Was=oov(_)))->(duplicate_term(D,V),nb_setarg(1,Was,V));nb_setval(N,D)).
 nb_set_value([E|List],N,V):- !, member(Ctx,[E|List]),nb_set_value(Ctx,N,V),!.
 nb_set_value(Ctx,N,D):- get_current_tracker(Ctx,Tracker),!,mcopy_term(D,V),nb_oo_link(Tracker,N,V),!.
-mcopy_term(X,X).
+mcopy_term(X,Y):- duplicate_term(X,Y).
 
 b_set_value(N,V):- quietly((context_default(Ctx), b_set_value(Ctx,N,V))),!.
 
@@ -128,6 +128,7 @@ maybe_deref(RBV,O):- (compound(RBV),RBV=oov(O))->true;O=RBV.
 
 nb_get_value(N,V):- context_default(Ctx), nb_get_value(Ctx,N,V),!.
 
+:- export(nb_get_value/3).
 nb_get_value(Ctx,N,V):- b_get_value(Ctx,N,V).
 
 reset_oo_tree(Tracker):- oo_empty(X),arg(1,X,L),arg(2,X,R),nb_setarg(1,Tracker,L),nb_setarg(2,Tracker,R).
@@ -180,13 +181,14 @@ nb_get_oo_value(Ctx,N,V):- b_get_value(Ctx,N,V).
 reset_oo(Tree):- oo_empty(X),functor(Tree,_,A), forall(between(1,A,N),(arg(N,X,R),nb_setarg(N,Tree,R))).
 oo_put_value(Tree,N,V):- % as_ref(Tree0,Tree),
   (oo_lookup(N,RBV,Tree)-> setarg(1,RBV,V) ; (RBV=oov([]),nb_oo_insert(Tree,N,RBV),setarg(1,RBV,V))).
+
 nb_oo_link(Tree,N,V):- 
   (nb_oo_get_node(Tree,N,Node)
     -> (dupe_same(oov(V),D),nb_oo_set_node_value(Node,D))
     ;  nb_oo_insert(Tree,N,oov(V))).
 
 
-is_ootree(Tree):- compound(Tree),t(_, _)=Tree,is_rbtree(Tree),!.
+is_ootree(Tree):- compound(Tree),is_rbtree(Tree),!.
 is_ootree(Tree):- is_dict(Tree),!.
 is_ootree(Tree):- fail_if_undefined(is_oo(Tree)).
 

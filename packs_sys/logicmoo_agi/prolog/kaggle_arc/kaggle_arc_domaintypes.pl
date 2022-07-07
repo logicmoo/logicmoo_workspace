@@ -44,8 +44,8 @@ subtypes(C,S):- subClassOf(S,C).
 
 
 
+allow_dir_list(non_diag,[n,s,e,w]). 
 allow_dir_list(colormass,[n,s,e,w,nw,ne,se,sw]). 
-allow_dir_list(rectangle,[n,s,e,w,nw,ne]). 
 allow_dir_list(diamonds,[nw,sw,se,ne]).
 allow_dir_list(polygs,[n,s,e,w,nw,sw,se,ne]).
 allow_dir_list(all,   [nw,sw,se,ne,n,w,s,e]).

@@ -236,5 +236,8 @@ debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
 
 debug_indiv(_,P,_,_):- pt(P).
 
+
+
+
 :- fixup_exports.
 

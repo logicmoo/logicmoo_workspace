@@ -186,13 +186,14 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
   maplist(arg(1),LPointsS,BPenColors),
   clumped(BPenColors,CPenColors),
   reclumped(CPenColors,PenColors),
-  remove_color(LPoints,UColorlessPoints),
-  sort(UColorlessPoints,ColorlessPoints),
+  %remove_color(LPoints,UColorlessPoints),
   make_grid(Width,Height,Grid),
   add_global_points(LPoints,Grid,Grid),
   make_grid(Width,Height,LocalGrid),
   CX is LoH + floor(Width/2),CY is LoV + floor(Height/2),
   copy_term(Grid,GridInCopy),
+  grid_to_special_points(Grid,UColorlessPoints),
+  sort(UColorlessPoints,ColorlessPoints),
   findall(Shape,
    (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
      close_enough_grid(Grid,GridInCopy,LocalGrid)),ShapesUF),
@@ -410,9 +411,9 @@ color_mass(Points,Count):- is_list(Points),!,maplist(color_mass,Points,MPoints),
 color_mass(Obj,Count):- nonvar(Obj),localpoints(Obj,Points),!,color_mass(Points,Count),!.
 color_mass(_,0).
 
-remove_color(C-_,point_01_01):- is_bg_color(C),!.
-remove_color(_-P,P).
-remove_color(LPoints,ColorlessPoints):- mapgroup(remove_color,LPoints,ColorlessPoints).
+%remove_color(C-_,point_01_01):- is_bg_color(C),!.
+%remove_color(_-P,P).
+%remove_color(LPoints,ColorlessPoints):- mapgroup(remove_color,LPoints,ColorlessPoints).
 
 decl_pt(setq(object,any,object)).
 
@@ -565,8 +566,11 @@ grid_to_points(Grid,HH,HV,Points):-  trace_or_throw(all_points_between),
 point_corners(Obj,Dir,CPoint):- enum_object(Obj),  globalpoints(Obj,Points), gp_point_corners(Obj,Points,Dir,CPoint).
 
 
-gp_point_corners(Obj,Points,Dir,CPoint):-  sort(Points,SPoints), 
-   isz(Obj,Shape),
+gp_point_corners(Obj,_Points0,Dir,CPoint):-  %sort(Points,SPoints), 
+   isz(Obj,Shape),SPoints=Points,
+   shape(Obj,Points),member('+'-P1,Points),localpoints(Obj,CPoints),member(C-P1,CPoints),
+   C-P1 = CPoint,
+
   (points_corner_dir(Shape,Dir)*->(SPoints=[CPoint|_];last(SPoints,CPoint));fail).
    
 
@@ -859,7 +863,7 @@ find_group_outlines_fix_rest(Options,G,Sols,Rest):-
 
 
 find_outlines(Grid,Solutions,Rest):- 
-  fail_over_time(2,find_outlines([perfect],Grid,Solutions,Rest)).
+  fail_over_time(4,find_outlines([perfect],Grid,Solutions,Rest)).
 
 find_outlines(Options,Grid,[Sol|Solutions],Rest):-
   find_outlinez(Options,Grid,Sol,More),!,
@@ -1004,7 +1008,22 @@ find_outline_path2(C,L,Grid,sol(ResultO,[]),LeftOverO):-
   my_append(Others,LeftOver,LeftOverO).
 
 
+object_to_nm_grid(Obj,SSP):-
+  vis_hv(Obj,H,V),
+  localpoints(Obj,LPoints),
+  points_to_grid(H,V,LPoints,GridIn),
+  grid_to_special_points(GridIn,SSP),
+  print_grid(SSP).
 
+grid_to_special_points(GridIn,GridON):- 
+  neighbor_map(GridIn,GridO),
+  mapgrid(only_neib_data,GridO,GridON),
+  %subst_1L(['*'-'.','~'-'red','+'-'blue','.'-'yellow'],GridON,SSP),
+  nop((subst_1L(['*'-'.'],GridON,_SSP))).
+
+object_to_nm_points(Obj,NPoints):-
+  object_to_nm_grid(Obj,SSP),
+  localpoints(SSP,NPoints),!.
 
 
 :- style_check(-singleton).
@@ -1014,27 +1033,46 @@ guess_shape(GridIn,LocalGrid,I,Empty,N,H,V,[cc(Zero,_)],Points,background):- is_
 %guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,view_sq):- H == V.%guess_shape(GridIn,LocalGrid,I,I,N,H,V,Colors,Points,rectangle):- H>1, V>1.
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,multicolored(Len)):- Colors=[_,_|_],length(Colors,Len).
 guess_shape(GridIn,LocalGrid,I,0,9,3,3,Colors,Points,keypad).
-guess_shape_poly(I,0,N,H,V,Colors,Points,solid):- N > 1.
+
+guess_shape(I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
+guess_shape(I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
+
 
 guess_shape(GridIn,LocalGrid,I,E,N,H,V,Colors,Points,Keypad):- 
   once(guess_shape_poly(I,E,N,H,V,Colors,Points,Keypad)).
 
 guess_shape_poly(I,0,1,1,1,Colors,Points,dot):-!.
 guess_shape_poly(I,_,_,_,_,Colors,[Point],dot):-!.
-guess_shape_poly(I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
-guess_shape_poly(I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
-guess_shape_poly(I,0,N,H,V,Colors,Points,rectangle):- N>1, H\==V,!.
+guess_shape_poly(I,0,N,H,V,Colors,Points,rectangulator):- N>1, H\==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
+guess_shape_poly(I,0,N,H,V,Colors,Points,solid):- N > 1.
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
+
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>2, 
+  (flipSym(SN,GridIn)*->R=symmetry(SN);R=no_symmetry).
 
 %guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
 %guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outl2):- H>2,V>2,N>4,
+  once((grid_to_special_points(GridIn,GridON), \+ member('*',GridON), member('.',GridON))).
+  
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>2,N>4,
   (find_outlines(Points,Sol,Rest)->(length(Sol,SN),SN>0,length(Rest,RN))),!.
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,symmetry(SN)):- N>4, 
-  ((flipSome(SN,GridIn,LocalGridM),GridIn=@=LocalGridM)*->true;SN=none).
 
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outl):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
+
+guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- fail,
+  grid_to_special_points(GridIn,GridON),
+  subst_1L(['~'-'red','+'-'blue','.'-'yellow'],GridON,SSP),
+  localpoints(SSP,NPoints),!.
+  %clumped(ON,COO),!,maplist(arg(1),COO,PAT).
+  %points_to_grid(H,V,FGridO,RGridO).
+   
+
+flipSym( full,GridIn):- flipHV(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym(sym_v,GridIn):- flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym(sym_h,GridIn):- flipV(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+
 
 
 :- fixup_exports.

@@ -156,6 +156,11 @@ mapgrid(P3,Grid,GridN):- call(P3,Grid,GridN),!.
 mapgrid(P3,Grid):- is_list(Grid),!,maplist(mapgrid(P3),Grid).
 mapgrid(P3,Grid):- call(P3,Grid),!.
 
+subst_1L([],Term,Term):-!.
+subst_1L([X-Y|List], Term, NewTerm ) :-
+  subst0011(X, Y, Term, MTerm ),
+  subst_1L(List, MTerm, NewTerm ).
+
 
 subst001(I,F,R,O):- subst0011(F,R,I,O),!.
 
