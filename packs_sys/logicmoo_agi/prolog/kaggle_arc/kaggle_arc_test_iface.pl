@@ -30,6 +30,7 @@ menu_cmd1(_,'t','       You may fully (t)rain from examples considering all the 
 menu_cmd1(_,'T','                  or (T)rain from only understanding single pairs (not considering the test as a whole)',(cls,train_only_from_pairs)).
 menu_cmd1(i,'i','             See the (i)ndividuation of the input/outputs',(cls,!,ndividuator)).
 menu_cmd1(_,'u','                  or (u)niqueness between objects in the input/outputs',(cls,!,what_unique)).
+menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls,!,detect_supergrid)).
 menu_cmd1(_,'p','                  or (p)rint the test (captial to reveal Solutions)',(print_test)).
 menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls,print_test,!,solve_test)).
 menu_cmd1(_,'L','                  or (L)earn from a human proposed program?',(human_test)).
@@ -121,6 +122,7 @@ do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ')
 do_menu_key('?'):- !, menu_options('i').
 do_menu_key('P'):- !, locally(nb_setval(last_menu_key,'P'), do_menu_key('p')).
 do_menu_key('I'):- !, cls,!,ndividuator1.
+do_menu_key('G'):- !, cls,!,detect_supergrid1.
 do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
 do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
@@ -354,14 +356,22 @@ in_out_name(X,'Input'(X),'Output'(X)).
 arc_test_name(TestID):- 
   findall(TestID,kaggle_arc(TestID,_,_,_),All),
   list_to_set(All,AllS),member(TestID,AllS).
-test_info(TestID,InfoS):- fix_test_name(TestID,CTestID,_),
- findall([Inf],(user:fav(CTestID,Inf0),repair_info(Inf0,Inf)),Info),
-  flatten(Info,InfoF),list_to_set(InfoF,InfoS).
 
-repair_info(Inf0,Inf):- is_list(Inf0),!,maplist(repair_info,Inf0,Inf).
-repair_info(Inf,InfO):- compound(Inf),functor(Inf,F,1),!,arg(1,Inf,A),listify(A,ArgsL),InfO=..[F,ArgsL].
-repair_info(Inf,InfO):- compound(Inf),!,compound_name_arguments(Inf,F,ArgsL),InfO=..[F,ArgsL].
-repair_info(Inf,Inf).
+some_task_info(TestID,III):- more_task_info(TestID,III).
+some_task_info(TestID,III):- user:fav(TestID,III);fav(TestID,III).
+
+task_info(TestID,InfoS):- fix_test_name(TestID,FTestID,_),TestID\=@=FTestID,!,task_info(FTestID,InfoS).
+task_info(TestID,InfoS):- arc_test_name(TestID),
+ findall(Inf,
+  (some_task_info(CTestID,Inf0),once((fix_test_name(CTestID,CFTestID,_),CFTestID=TestID)),
+  repair_info(Inf0,Inf)),Info),
+  flatten([Info],InfoFF),repair_info(InfoFF,InfoF),list_to_set(InfoF,InfoS).
+
+repair_info(Inf,InfO):- listify(Inf,Inf1),maplist(repair_info0,Inf1,InfO).
+repair_info0(Inf0,Inf):- is_list(Inf0),!,maplist(repair_info0,Inf0,Inf).
+repair_info0(Inf,InfO):- compound(Inf),functor(Inf,F,1),!,arg(1,Inf,A),listify(A,ArgsL),InfO=..[F,ArgsL].
+repair_info0(Inf,InfO):- compound(Inf),!,compound_name_arguments(Inf,F,ArgsL),InfO=..[F,ArgsL].
+repair_info0(Inf,Inf).% listify(Inf,InfM),maplist(repair_info,InfM,Info).
 
 was_fav(X):- nonvar_or_ci(X), clause(fav(XX,_),true),nonvar_or_ci(XX),X==XX.
 
@@ -477,7 +487,8 @@ extra_tio_name(TestID,TIO):-
 
 make_comparison(DictIn,TestID,Prefix,In,Out,DictOut):-
   do_pair_dication(In,Out,Vs),!,
-  append(Vs,[shared=[], refused=[], patterns=[], added=[], removed=[]],Vs0),
+ % append(Vs,[shared=[], refused=[], patterns=[], added=[], removed=[]],Vs0),
+  Vs=Vs0,
   atomic_list_concat(Prefix,PrefixA),
   maplist(precat_name(PrefixA),Vs0,VsT),
   vars_to_dictation(VsT,DictIn,DictOut).
@@ -588,7 +599,6 @@ sort_univ(R,A,B):- compare(R,A,B).
 
 :- style_check(+singleton).
 
-:- dynamic(fav/2).
 
 macro(one_obj, must(len(objs)=1)).
 
@@ -757,7 +767,7 @@ parcCmt(TName):-
   IHV = IH*IV, OHV = OH*OV,
   BGColor = '$VAR'('Color'),
   (IHV\==OHV -> CG = resize_grid(OH,OV,BGColor); CG = copy_grid(in)),
-  findall(III,gather_more_task_info(TestID,III),InfoUF),
+  findall(III,task_info(TestID,III),InfoUF),
   flatten(InfoUF,InfoF),
   DSL = sol(i(complete),CG,incomplete),
   predsort(sort_univ,[DSL|InfoF],InfoFS), %44f52bb0

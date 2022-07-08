@@ -78,7 +78,7 @@ vert_pos(Class,Y):- into_singles(Class,Obj),loc_xy(Obj,_X,Y).
 horiz_pos(Class,X):- into_singles(Class,Obj),loc_xy(Obj,X,_Y).
 
 when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
-test_config(This):- get_current_test(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
+test_config(This):- get_current_test(Name),task_info(Name,InfoL),!,contains_nonvar(This,InfoL).
 
 test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
@@ -88,7 +88,7 @@ call_expanded(_VM,G):- catch(call(G),E,(dumpST,pt(E),rrtrace(G))).
 
 quinish(Var):- var(Var),!.
 quinish(Var):- is_grid(Var),!.
-quinish(Var):- is_dict(Var),!.
+quinish(Var):- is_map(Var),!.
 quinish(Var):- is_object(Var),!.
 quinish(Var):- is_group(Var),!.
 quinish(Var):- is_list(Var),!.
@@ -99,7 +99,7 @@ exp_call(VM,length(G1,G2),length(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G
 exp_call(VM,(G1,G2),(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
 exp_call(VM,(G1;G2),(GG1;GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
 exp_call(VM,(G1->G2),(GG1->GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
-exp_call(VM,K,Value):- atom(K),get_dict(K,VM,Value),!.
+exp_call(VM,K,Value):- atom(K),get_kov(K,VM,Value),!.
 %  len(points(i))>6
 exp_call(VM,G,GG):- compound(G),arg(N,G,A),nonvar(A),exp_call(VM,A,AA),A\==AA,!,setarg(N,G,AA),exp_call(VM,G,GG).
 exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X).
@@ -123,6 +123,9 @@ vm_grid(VM,Goal,In,Out):-
   my_submenu_call(Goal), 
   points_to_grid(H,V,VM.points,Out))).
 
+expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
+expand_dsl_value(VM, Mode,In,Val,OutValue):-
+  run_dsl(VM, Mode,Val,In,OutValue).
 
 :- meta_predicate(run_dsl(+,+,+,+,-)).
 
@@ -142,13 +145,17 @@ run_dsl(VM,Mode,forall(All,Exec),In,OutO):-!,
 
 run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In; true).
 
+%run_dsl(VM, Mode,[N|V],In,OutValue):-!, vm_grid(VM, maplist(expand_dsl_value(VM, Mode,In),[N|V],OutValue),In,_Out).
 
+run_dsl(VM, Mode,Name=Val,In,Out):- nonvar(Name),run_dsl(VM, Mode,nb_set(Name,Val),In,Out).
 run_dsl(VM,_Mode,get(Name,Val),In,Out):- vm_grid(VM,get_vm(Name,Val),In,Out).
 run_dsl(VM,_Mode,get(Name),In,Val):- vm_grid(VM,get_vm(Name,Val),In,_Out).
-run_dsl(VM,_Mode,SET_NV,Pass,Pass):- compound(SET_NV), SET_NV=..[set,Name,Val], my_b_set_dict(Name,VM,Val).
-run_dsl(VM,_Mode,b_set(Name,Val),In,Out):- vm_grid(VM,set_vm(Name,Val),In, Out).
-run_dsl(VM,_Mode,nb_set(Name,Val),In,Out):- vm_grid(VM,set_vm(Name,Val),In, Out).
-run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- vm_grid(VM,set_vm(Name,Val),In, Out).
+%run_dsl(VM, Mode,(Name),In,Val):- atom(Name), vm_grid(VM,get_vm(Name,Val),In,_Out). %%atom(Name),run_dsl(VM,Mode, nb_get_value(VM,Name,Val),In,_),!.
+run_dsl(VM, Mode,SET_NV,In,Out):- compound(SET_NV), SET_NV=..[set,Name,Val], !, expand_dsl_value(VM, Mode,In,Val,OutValue), run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
+run_dsl(VM,_Mode,b_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
+run_dsl(VM,_Mode,nb_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
+run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
+run_dsl(VM,_Mode,vm_set(Name,Val),In,Out):- !, vm_grid(VM,set_vm(Name,Val),In, Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
@@ -209,7 +216,7 @@ print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).
 print_grid_to_atom(G,S):- with_output_to(atom(S),print_grid(G)).
 % ?- print_grid(gridFn(X)).
 cast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
-cast_to_grid(Dict,Grid, (=) ):- is_dict(Dict), get_dict(grid,Dict,Grid),!.
+cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
 cast_to_grid(Obj,Grid,Closure):- resolve_reference(Obj,Var),!,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_grid(Grp,Grid),!.
@@ -308,7 +315,7 @@ into_group(GI,G):- into_group(GI,G, _ ).
 into_group(P,G,(=)):- is_group(P),!,G=P.
 into_group(G,G,(=)) :- G==[],!.
 into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
- why_grouped(G, _Why).
+ get_current_test(TestID),why_grouped(TestID,G, _Why).
 
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G, into_obj):- is_object(P),!,G=[P].

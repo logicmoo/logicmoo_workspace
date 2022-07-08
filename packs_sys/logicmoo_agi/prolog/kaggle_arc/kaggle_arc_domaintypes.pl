@@ -140,7 +140,7 @@ data_type(O,T):- nonvar(T),data_type(O,C),T=@=C,!.
 data_type(O,plain_var):- plain_var(O),!.
 data_type([],nil):-!.
 data_type(O,object):- is_object(O),!.
-data_type(O,dict(L)):- is_dict(O),get_dict(objs,O,Value),!,data_type(Value,L).
+data_type(O,dict(L)):- is_map(O),get_kov(objs,O,Value),!,data_type(Value,L).
 data_type(O,group(N)):- is_group(O),into_list(O,L),!,length(L,N).
 data_type(O,cpoint):- is_cpoint(O),!.
 data_type(O,nc_point):- is_nc_point(O),!.
@@ -216,7 +216,6 @@ is_gpoint(_-G):-!,is_gpoint(G).
 is_gpoint(G):- hv_point(H,_,G),!,nonvar_or_ci(H).
 
 % Grid-oids
-
 is_list_of_gridoids([G|V]):- \+ is_grid([G|V]), is_gridoid(G), is_list(V), maplist(is_gridoid,V).
 
 is_gridoid(G):- plain_var(G),!, fail.
@@ -229,7 +228,7 @@ is_printable_gridoid(G):- plain_var(G),!, fail.
 is_printable_gridoid(G):- is_gridoid(G),!.
 is_printable_gridoid(G):- is_point(G),!.
 is_printable_gridoid(G):- is_cpoint(G),!.
-is_printable_gridoid(D):- is_dict(D),get_dict(grid,D,_).
+is_printable_gridoid(D):- is_map(D),get_kov(grid,D,_).
 is_printable_gridoid(G):- is_list(G),!,maplist(is_printable_gridoid,G).
 is_printable_gridoid(G):- resolve_reference(G,R),!,nonvar(R),!.
 is_printable_gridoid(G):- known_gridoid(G,R),!,nonvar(R),!.
@@ -261,7 +260,7 @@ h_symmetric(Group):- into_grid(Group,Grid),!,h_symmetric(Grid).
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
 
 %is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
-is_group(Dict):- is_dict(Dict),!,get_dict(obj,Dict,_).
+is_group(Dict):- is_map(Dict),!,get_kov(objs,Dict,_).
 is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 
 is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V),!.

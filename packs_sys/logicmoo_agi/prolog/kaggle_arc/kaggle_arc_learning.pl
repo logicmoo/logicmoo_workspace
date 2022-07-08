@@ -151,7 +151,7 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   GridNameOut= PairName*out,
   set_grid_id(In,GridNameIn),
   set_grid_id(Out,GridNameOut),  
-  test_info(TestID,Info), pt(fav(TestID,Info)),nl)).
+  task_info(TestID,Info), pt(fav(TestID,Info)),nl)).
   
 
 

@@ -302,7 +302,7 @@ grid_label_fg(CT,GridIn,Foreground1):-
   maplist(to_grid_fg(CT,GridIn),Foreground1,ForegroundCopy),!.
 
 %maybe_grid_numbervars(GridIn,GridIn):-!.
-%maybe_grid_numbervars(O,I):- is_dict(O),append(O.objs,[O.grid],I),!.
+%maybe_grid_numbervars(O,I):- is_map(O),append(O.objs,[O.grid],I),!.
 maybe_grid_numbervars(GridIn,GridIn):- \+ is_grid(GridIn),!.
 maybe_grid_numbervars(GridI,GridIn):- grid_numbervars(GridI,GridIn),!.
 maybe_grid_numbervars(GridIn,GridIn):-!.

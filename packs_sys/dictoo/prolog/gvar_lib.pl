@@ -113,9 +113,11 @@ dot_call(A,B):-dot_eval(A,B,_).
 :- 'system':import(dot_eval/3).
 :- module_transparent(dot_eval/3).
 dot_eval( Self,Func,Value):- is_dict(Self),!,dot_dict(Self, Func, Value).
+dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_visit(Self,Pairs),strip_module(Func,_,Key),member(Key-Value,Pairs),!.
+dot_eval( Self,Func,Value):- is_assoc(Self),!,get_assoc(Func,Self,Value),!.
 dot_eval(MSelf,Func,Value):- dot_eval,!,strip_module(MSelf,M,_Self),dot_intercept(M,MSelf,Func,Value).
 
-dot_eval:- fail.
+dot_eval:- true.
 
 :- module_transparent(dot_intercept/4).
 % dot_intercept(M,Self,Func,Value):- quietly((use_dot(_,M),nonvar(Value), \+ current_prolog_flag(gvar_lazy,false))),!,Value =.. ['.',Self,Func].

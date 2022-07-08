@@ -22,16 +22,23 @@ tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 
 :- multifile(dumpst_hook:simple_rewrite/2).
 :- dynamic(dumpst_hook:simple_rewrite/2).
+
+:- discontiguous arc_portray/2. 
+
 %dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
 dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
-dumpst_hook:simple_rewrite(I,O):- is_dict(I),!, O='..vvmm..'.
+dumpst_hook:simple_rewrite(I,O):- is_map(I),!, O='..vvmm..'.
 %dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
 dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,O='..points..'(N),!.
 
-arc_portray(G, _):- is_dict(G), !, write('..dict..').
-arc_portray(G, _):- is_grid(G), !, data_type(G,W),writeq(grid(W)).
-arc_portray(G, _):- is_grid(G), !, write('..grid..').
-arc_portray(G, _):- is_dict(G), !, write('..VM..').
+portray_terse:- fail.
+
+arc_portray(Map,TF):- get_map_pairs(Map,Type,Pairs),!, arc_portray_pairs(Type,TF,Pairs). 
+
+arc_portray(G, _):- is_map(G), portray_terse, !, write('..VM..').
+arc_portray(G, _):- is_dict(G), portray_terse, !, write('..dict..').
+arc_portray(G, _):- is_grid(G), portray_terse, !, data_type(G,W),writeq(grid(W)).
+arc_portray(G, _):- is_grid(G), portray_terse, !, write('..grid..').
 
 % Portray In Debugger
 arc_portray(G,false):- is_object(G),!,object_grid(G,OG), 
@@ -46,20 +53,36 @@ arc_portray(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
 
 arc_portray(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1, 
    dash_chars, 
-   print_grid(G),nl,
-   once((why_grouped(Why,WG),WG=@=G);Why = (size=L)),
-   underline_print(writeln(Why)),
+   once((why_grouped(_TestID,Why,WG),WG=@=G);Why = (size=L)),
+   print_grid(Why,G),nl,
+   %underline_print(writeln(Why)),
    maplist(print_info,G),
    dash_chars.
 
+arc_portray_pairs(Type,TF,Pairs):- 
+  length(Pairs,N),
+  writeln(arc_portray_pairs(Type,TF,len(N))),
+  forall(member(K-V,Pairs),arc_portray_pair(Pairs,K-V,TF)).
+
+arc_portray_pair(Ps,KV,TF):- \+ compound(KV), arc_portray_pair(Ps,KV,KV,TF).
+arc_portray_pair(Ps,K=Val,TF):- !,arc_portray_pair(Ps,K,Val,TF).
+arc_portray_pair(Ps,K:Val,TF):- !,arc_portray_pair(Ps,K,Val,TF).
+arc_portray_pair(Ps,K-Val,TF):- !,arc_portray_pair(Ps,K,Val,TF).
+arc_portray_pair(Ps,KV,TF):- arc_portray_pair(Ps,KV,KV,TF).
+
+arc_portray_pair(_Ps,K,Val,_TF):- via_print_grid(Val), print_grid(K,Val),!,format('~N').
+arc_portray_pair(_Ps,K,Val,TF):- format('~N '),print(K),write('= '),once(arc_portray(Val,TF);print(Val)).
+
 
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
-arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,format(user_error,"~N~q~n",[E])).
+arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,(format(user_error,"~N~q~n",[E]),fail)).
 
+  
+
+via_print_grid(G):- is_points_list(G),!,fail,grid_size(G,H,V),number(H),number(V),H>1,V>1.
 via_print_grid(G):- is_grid(G).
 via_print_grid(G):- is_object(G).
 via_print_grid(G):- is_group(G).
-via_print_grid(G):- is_points_list(G).
 via_print_grid(G):- is_gridoid(G).
 
 terseA(_,[],[]):- !.
@@ -76,7 +99,7 @@ tersify0(I,av(I,Others)):- attvar(I),copy_term(I,C,Attrs),C=I,terseA(I,Attrs,Oth
 tersify0(I,I):- var(I),!.
 
 
-%tersifyC(D):- is_dict(D),!.
+%tersifyC(D):- is_map(D),!.
 tersifyC(av(_,_)).
 tersifyC(objFn(_)).
 tersifyC(groupFn(_)).
@@ -86,9 +109,9 @@ tersify1(I,O):- compound(I), tersifyC(I),!,I=O.
 tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
-tersify1(I,groupFn(O)):- is_group(I),why_grouped(O,II),!,I==II.
-tersify1(I,O):- is_dict(I), get_dict(objs,I,_),!, O='$VAR'('VM').
-tersify1(I,O):- is_dict(I), get_dict(pairs,I,_),!, O='$VAR'('Training').
+tersify1(I,groupFn(O)):- is_group(I),  why_grouped(Why,II),I==II,!,O=Why.
+tersify1(I,O):- is_map(I), get_kov(objs,I,_),!, O='$VAR'('VM').
+tersify1(I,O):- is_map(I), get_kov(pairs,I,_),!, O='$VAR'('Training').
 tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
 
 
@@ -118,9 +141,13 @@ ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 pt(P):- var(P),!,pt(var(P)).
 pt(_):- is_print_collapsed,!.
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
-pt(P):- format('~N'), quietlyd(print_tree_nl(P)),!.
+pt(_):- format('~N'), fail.
+pt(P):- arc_portray(P),!.
+pt(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
+pt(P):- quietlyd(print_tree_nl(P)),!.
 pt(Color,P):- quietlyd((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
 
+print_ansi_tree(P,_OL):- print_tree_nl(P).
 
 wqs(X):- is_grid(X), !, print_grid(X).
 wqs(X):- is_object(X), !, show_shape(X).
@@ -434,7 +461,7 @@ print_grid0(_,_,_):- is_print_collapsed,!.
 print_grid0(H,V,G):- G==[],number(H),number(V),!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
 % print_grid0(_H,_V,G):- G==[],!,make_grid(H,V,GG),!,print_grid0(H,V,GG).
 
-print_grid0(H,V,D):- is_dict(D),ignore(H = D.h),ignore(V = D.v),
+print_grid0(H,V,D):- is_map(D),ignore(H = D.h),ignore(V = D.v),
   vm_to_printable(D,R),D\==R,!,print_grid0(H,V,R).
 
 print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
@@ -507,8 +534,8 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
 %print_rows(List):- maplist(print_g,List),nl.
 %block_colors([(black),(blue),(red),(green),(yellow),'#c0c0c0',(magenta),'#ff8c00',(cyan),'#8b4513']).
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,('#966cb8'),'#ff8c00',(cyan),'#8b4513']):- silver(Silver),!.
-block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#8b45ff','#5a6a5a']):- silver(Silver),!.
-named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),bg,fg]).
+block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#3a5a3a']):- silver(Silver),!.
+named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),wbg,fg]).
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
 named_colors([(black),(blue),(red),(green),(yellow),(grey),(pink),(orange),(cyan),(maroon)]).
 

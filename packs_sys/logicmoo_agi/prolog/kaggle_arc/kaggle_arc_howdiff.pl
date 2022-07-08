@@ -432,7 +432,7 @@ diff_terms(I,O,DD):-  is_group(I), is_group(O), !, diff_groups(I,O,DD).
 diff_terms(obj(I),obj(O),OUT):- !, diff_objects(I,O,OUT).
 diff_terms([IH,IV],[OH,OV],D):- maplist(number,[IH,IV,OH,OV]),!,maplist(diff_numbers,[IH,IV],[OH,OV],D).
 diff_terms(I,O, (diff_lists=@= D)):- is_list(I),is_list(O),!,diff_lists(I,O,D).
-diff_terms(I,O,D):- is_dict(I),!,findall(D1,(get_dict(K, I, V),diff_terms(K=V,O,D1)),D).
+diff_terms(I,O,D):- is_map(I),!,findall(D1,(get_kov(K, I, V),diff_terms(K=V,O,D1)),D).
 diff_terms(Grid,Other,OUT):- needs_indivs(Grid,I),!,diff_terms(I,Other,OUT).
 diff_terms(Other,Grid,OUT):- needs_indivs(Grid,I),!,diff_terms(Other,I,OUT).
 diff_terms(IF=IA,O,IF=D):- find_kv(O,IF,OA),!,diff_terms(IA,OA,D).
@@ -470,7 +470,7 @@ list_diff_recurse([CE|I],[CE2|O],D1D):- diff_terms(CE,CE2,D1),!, list_diff_recur
 
 find_kv(OF=OA,OF,OA):- !.
 find_kv(List,OF,OA):- is_list(List),member(E,List),nonvar_or_ci(E),find_kv(E,OF,OA).
-find_kv(Dict,OF,OA):- is_dict(Dict),get_dict(OF,Dict,OA).
+find_kv(Dict,OF,OA):- is_map(Dict),get_kov(OF,Dict,OA).
 find_kv(O,OF,OA):- compound(O),compound_name_arguments(O,OF,[OA]).
 find_kv(obj(O),OF,OA):- !, find_kv(O,OF,OA).
 find_kv(O,OF,OA):- compound(O),compound_name_arguments(O,OF,OA).

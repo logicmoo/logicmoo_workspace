@@ -16,7 +16,7 @@ density(Obj,Density):- area(Obj,Area),mass(Obj,Mass), Density is Mass/Area.
 
 into_gridoid0(obj(N),O):- enum_object(O),o2g(O,G),sformat(N," ~w ",[G]).
 into_gridoid0(shape_lib(N:Lib),O):- shape_lib_expanded(Lib,Grids),nth1(N,Grids,O).
-into_gridoid0(N,G):- why_grouped(N,UG), UG\==[],UG\=[_],smallest_first(UG,G).
+into_gridoid0(N,G):- get_current_test(TestID),why_grouped(TestID,N,UG), UG\==[],UG\=[_],smallest_first(UG,G).
 into_gridoid0(N,G):- into_grids(N,G).
 
 into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort(P,S))).
@@ -240,9 +240,13 @@ is_input(VM):- VM.id = _ * _ * in.
 % TOUCHES
 % ==============================================
 
-find_touches(VM):- Objs = VM.objs,
+find_touches(VM):-
+ ignore((
+  fail,
+  Objs = VM.objs,
+  length(Objs,N),N>2,
   show_vm_changes(VM,find_touches,
-     find_touches(VM,Objs,Objs,set(VM.objs))),!.
+       find_touches(VM,Objs,Objs,set(VM.objs))))),!.
 
 %ignore(((NewOptions\==Options;(GoneMissing\==[];SofarMaybeNewL\==SofarL)),
 

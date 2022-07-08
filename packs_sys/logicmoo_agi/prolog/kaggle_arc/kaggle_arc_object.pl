@@ -118,25 +118,25 @@ as_obj(L,Obj):- is_list(L),!,Obj = obj(L), !. % , register_obj(L).
 as_obj(O,Obj):- compound(O), O = obj(_), Obj = O. % , register_obj(L).
 
 :- module_transparent register_obj/1.
-%register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(O,S)))),!.
+%register_obj(O):- quietly((wots(S,weto(dumpST)), asserta(obj_cache(TestID,O,S)))),!.
 register_obj(L):- notrace(o2g(L,_)).
-/*register_obj(L):- asserta(obj_cache(L,'')),
+/*register_obj(L):- asserta(obj_cache(TestID,L,'')),
   ignore(( false, O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
 */
-:- dynamic(obj_cache/2).
+:- dynamic(obj_cache/3).
 :- module_transparent obj_cache/2.
 
 enum_object(O):- var(O),!,no_repeats_cmp(compare_objs1([same]),O,enum_object0(O)).
 enum_object(O):- ptt(enum_object(O)),!.
 
 enum_object0(Obj):- % listing(obj_cache/2),
-       obj_cache(O,_S),as_obj(O,Obj).
-enum_object0(Obj):- why_grouped(_Why,GS)*->member(Obj,GS);enum_object1(Obj).
+      get_current_test(TestID), obj_cache(TestID,O,_S),as_obj(O,Obj).
+enum_object0(Obj):- get_current_test(TestID), why_grouped(TestID,_Why,GS)*->member(Obj,GS);enum_object1(Obj).
 enum_object1(Obj):- g2o(_,Obj)*->true; enum_object2(Obj).
 enum_object2(_):- fail.
 %enum_object2(Obj):- get_current_test(_).
 /*
-enum_object0(S):- why_grouped(_,IndvS),member(S,IndvS).
+enum_object0(S):- why_grouped(TestID,_,IndvS),member(S,IndvS).
 enum_object0(S):- clause(in_shape_lib(_,S),Body),catch(Body,_,fail).
 enum_object0(S):- g2o(_,S).
 enum_object0(S):- is_unshared_saved(_,IndvS),member(S,IndvS).
@@ -395,7 +395,7 @@ mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
 mass(I,X):- var_check(I,mass(I,X)).
 mass([G|Grid],Points):- (is_group(Grid);(is_list(Grid),is_group(G))),!,mapgroup(mass,[G|Grid],MPoints),sum_list(MPoints,Points).
 mass(I,X):- indv_props(I,L),member(mass(X),L),!.
-mass(I,X):- is_object(I),!,must_det_ll((localpoints(I,L), length(L,X))).
+mass(I,XX):- is_object(I),!,must_det_ll((localpoints(I,L), length(L,X))),!,XX=X.
 %mass(I,X):- is_object(I),!,must_det_ll((indv_props(I,L), member(mass(X),L))).
 mass(Points,Count):- is_list(Points),length(Points,Count),!.
 mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
@@ -444,7 +444,7 @@ indv_props_old(obj(L),L):- nonvar(L), is_list(L).
 
 pmember(E,X):- X=obj(L),!,indv_props(X,L),member(E,L).
 pmember(E,X):- sub_term(EE,X),nonvar_or_ci(EE),EE=E,ground(E).
-/*pmember(E,L):- is_dict(Points),!,E=grid_size(H,V),!,Points.grid_size=grid_size(H,V).
+/*pmember(E,L):- is_map(Points),!,E=grid_size(H,V),!,Points.grid_size=grid_size(H,V).
 pmember(E,L):- member(EE,L),(EE=E;(is_list(EE),pmember(E,EE))).
 pmember(E,L):- member(obj(EE),L),pmember(E,EE).
 */
@@ -497,7 +497,7 @@ obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),membe
 
 vm_to_printable(D,R) :- Objs = D.objs,!, (Objs\==[] -> R = Objs; R = D.grid ).
 
-resolve_reference(R,Var):- is_dict(R),Objs = R.objs,!, (Objs\==[] -> Var=Objs; Var = R.grid).
+resolve_reference(R,Var):- is_map(R),Objs = R.objs,!, (Objs\==[] -> Var=Objs; Var = R.grid).
 resolve_reference(R,Var):- compound(R),arc_expand_arg(R,Var,Goal),!,call(Goal).
 resolve_reference(R,Var):- nonvar(R),known_gridoid(R,Var),!.
 
@@ -577,7 +577,7 @@ gp_point_corners(Obj,_Points0,Dir,CPoint):-  %sort(Points,SPoints),
 globalpoints(Grid,Points):- is_grid(Grid),!, grid_to_points(Grid,Points).
 globalpoints(I,X):-  var(I),!, (var_check(I,globalpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 globalpoints([],[]):-!.
-globalpoints(G,Ps):- is_dict(G),vm_to_printable(G,R),!,globalpoints(R,Ps).
+globalpoints(G,Ps):- is_map(G),vm_to_printable(G,R),!,globalpoints(R,Ps).
 globalpoints(G,[G]):- is_point(G),!.
 globalpoints(C-P,[C-P]):-!.
 globalpoints(G,G):- maplist(is_point,G),!.
@@ -596,7 +596,7 @@ localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF), true), (TF
 
 localpoints(Grid,Points):- is_grid(Grid),!, grid_size(Grid,HH,VV), grid_to_points(Grid,HH,VV,Points).
 localpoints(G,[G]):- is_point(G),!.
-localpoints(G,Ps):- is_dict(G),vm_to_printable(G,R),!,localpoints(R,Ps).
+localpoints(G,Ps):- is_map(G),vm_to_printable(G,R),!,localpoints(R,Ps).
 localpoints(I,X):- localpoints0(I,X),!.
 localpoints(Grid,Points):- is_group(Grid),!,mapgroup(localpoints,Grid,MPoints),append_sets(MPoints,Points).
 localpoints(G,G):- maplist(is_point,G),!.

@@ -223,14 +223,24 @@ run_source_code(ShareVars, Vs, QQ):-
     ; maplist(mort,SourceCode)).
 
 
-%vars_to_dictation([_=Value|Gotten],TIn,TOut):- is_dict(Value),!, vars_to_dictation(Gotten,TIn,TOut).
-  
-vars_to_dictation([Name=Value|Gotten],TIn,TOut):- 
+%vars_to_dictation([_=Value|Gotten],TIn,TOut):- is_map(Value),!, vars_to_dictation(Gotten,TIn,TOut).
+
+vars_to_dictation([Name=Value|Gotten],TIn,TOut):- !,
   my_assertion(atom(Name)),
   vars_to_dictation(Gotten,TIn,TMid), 
   to_prop_name(Name,UName),
   tio_tersify(Value,ValueT),!,
   put_dict(UName,TMid,ValueT,TOut).
+
+vars_to_dictation([NameValue|Gotten],TIn,TOut):- !,
+  vars_to_dictation(Gotten,TIn,TMid), 
+  to_prop_name(NameValue,UName),
+  tio_tersify(NameValue,ValueT),!,
+  put_dict(UName,TMid,ValueT,TOut).
+
+vars_to_dictation([NameValue|Gotten],TIn,TOut):- compound(NameValue),compound_name_arguments(NameValue,Name,Value),!, 
+  vars_to_dictation([Name=Value|Gotten],TIn,TOut).
+  
 vars_to_dictation([],T,T).
 
 tio_tersify(Value,ValueT):- is_grid(Value),!,ValueT=_.
@@ -239,6 +249,8 @@ copy_qq_([]) --> [].
 copy_qq_([C|Cs]) --> [C], copy_qq_(Cs).
 copy_qq(A) --> copy_qq_(Cs), {atom_codes(A, Cs)}.
 
+to_prop_name(Name=_,UName):- nonvar(Name),!,to_prop_name(Name,UName).
+to_prop_name(Name,UName):- compound(Name),compound_name_arity(Name,F,_),!,to_prop_name(F,UName).
 to_prop_name(Name,UName):- to_case_breaks(Name,Breaks),xtis_to_atomic(Breaks,UName).
 
 xtis_to_atomic([xti(Str,upper),xti(StrL,lower)|Breaks],StrO):- string_upper(Str,Str),

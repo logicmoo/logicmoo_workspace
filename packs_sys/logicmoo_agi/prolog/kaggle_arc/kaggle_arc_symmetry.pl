@@ -392,8 +392,9 @@ fourway(VM):-
   V = VM.v,
   %VM.id = VM.id,
   H > 13, V> 13,
-  largest_first(VM.objs,Ordered),  
   Grid = VM.grid,
+  colors(Grid,Colors),!,length(Colors,CL),!,CL>3,
+  largest_first(VM.objs,Ordered),  
   repair_2x2(Ordered,Steps,Grid,RepairedResult),
   %$glean_patterns_hook(Steps,Grid,RepairedResult),
   localpoints_include_bg(Grid,OriginalPoints),
@@ -1455,8 +1456,11 @@ edge_of_grid(_,_,1,_).
 edge_of_grid(H,_,H,_).
 edge_of_grid(_,V,_,V).
 
+globalpoints_maybe_bg(G,P):- globalpoints(G,P).
+globalpoints_include_bg(G,P):- localpoints_include_bg(G,P).
+
 neighbor_map(Grid,GridO):-
-  globalpoints(Grid,Points),
+  globalpoints_maybe_bg(Grid,Points),
   grid_size(Grid,H,V),
   neighbor_map(H,V,Points,Points,CountedPoints),!,
   points_to_grid(H,V,CountedPoints,GridO).
@@ -1480,6 +1484,8 @@ nei_map(C,P1,Points,N):-
 only_neib_data(NC,NC):- \+ compound(NC),!.
 only_neib_data(C-_,NC):- only_neib_data(C,NC).
 
+map_neib([n,s,e,w],[_,_,_],'*','7').
+
 map_neib([n],[],'!','2').
 map_neib([s],[],'!','2').
 map_neib([e],[],'=','2').
@@ -1493,7 +1499,18 @@ map_neib([s,w],[],'C','+').
 map_neib([_,_,_,_],[_,_,_],'C','+').
 map_neib([_,_,_],[],'T','+').
 map_neib([_,_,_],[_],'t','+').
-map_neib([_,_,_,_],[_,_,_,_],'~','~').
+
+map_neib([s,e,w],[sw,se],'-','.').
+map_neib([n,e,w],[ne,nw],'-','.').
+map_neib([n,s,w],[sw,nw],'|','.').
+map_neib([n,s,e],[ne,se],'|','.').
+map_neib([s,e,w],[ne,sw,se,nw],'-','.').
+map_neib([n,e,w],[ne,sw,se,nw],'-','.').
+map_neib([n,s,w],[ne,sw,se,nw],'|','.').
+map_neib([n,s,e],[ne,sw,se,nw],'|','.').
+
+
+map_neib([n,s,e,w],[ne,sw,se,nw],'~','~').
 map_neib([_,_,_,_],[],'+','+').
 % is_diag(ne). is_diag(sw). is_diag(se). is_diag(nw).
 map_neib([],[ne,nw],'V','v').
