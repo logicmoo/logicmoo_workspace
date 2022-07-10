@@ -190,7 +190,7 @@ into_monochrome(Color,Mono):- into_monochrome(black,Color,Mono).
 into_monochrome(BGC,Color,Mono):- is_grid(Color),!,grid_into_monochrome(BGC,Color,Mono).
 into_monochrome(BGC,Color,Mono):- is_points_list(Color),!,maplist(points_into_monochrome(BGC),Color,Mono).
 
-points_into_monochrome(BGC,Color-Point,Mono-Point):- atom(Point),!,points_into_monochrome(BGC,Color,Mono).
+points_into_monochrome(BGC,Color-Point,Mono-Point):- is_nc_point(Point),!,points_into_monochrome(BGC,Color,Mono).
 points_into_monochrome(BGC,Color,Mono):- is_list(Color) -> maplist(points_into_monochrome(BGC),Color,Mono) ;
                               (Color\=BGC)-> Mono = fg ; Mono = BGC.
 

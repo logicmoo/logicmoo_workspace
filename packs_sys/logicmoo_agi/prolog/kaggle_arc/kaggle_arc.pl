@@ -40,9 +40,13 @@ decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
 :- multifile is_fti_stepr/1.
 :- discontiguous is_fti_step/1.
 :- discontiguous is_fti_stepr/1.
-
 :- discontiguous ping_indiv_grid/1.
 :- multifile ping_indiv_grid/1.
+
+:- discontiguous is_changeable_param/1.
+:- multifile is_changeable_param/1.
+:- dynamic is_changeable_param/1.
+
 
 :- meta_predicate(fif(0,0)).
 fif(IF, THEN) :- (   call(IF) ->  call(THEN) ;   true ).
@@ -227,6 +231,8 @@ get_map_pairs(Map,is_assoc,Pairs):- is_assoc(Map), assoc_to_list(Map, Pairs).
 get_map_pairs(Map,is_rbtree,Pairs):- is_rbtree(Map), rb_visit(Map, Pairs).
 get_map_pairs(Map,is_dict(T),Pairs):- is_dict(Map), dict_pairs(Map,T,Pairs).
 
+is_vm(Tree):- is_map(Tree), once(get_kov(program,Tree,_);get_kov(program_i,Tree,_)).
+
 is_map(Tree):- is_rbtree(Tree),!.
 is_map(Dict):- is_dict(Dict),!.
 
@@ -299,6 +305,7 @@ doit(set(E.v)):- that.
 :- ensure_loaded(kaggle_arc_ui_html).
 :- ensure_loaded(kaggle_arc_test_easy).
 :- ensure_loaded(kaggle_arc_test_old).
+:- ensure_loaded(kaggle_arc_simple).
 
 
 

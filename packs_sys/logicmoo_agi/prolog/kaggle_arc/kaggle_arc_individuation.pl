@@ -213,7 +213,7 @@ individuation_macros(altro, [
 individuation_macros(complete, [
     shape_lib(as_is),
     fourway,
-    %find_colorfull_idioms,
+    find_colorfull_idioms,
     %shape_lib(as_is),    
     %non_diag,
     %colormass,    

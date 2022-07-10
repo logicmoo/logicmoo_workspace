@@ -138,7 +138,12 @@ get_black(black).
 
 data_type(O,T):- nonvar(T),data_type(O,C),T=@=C,!.
 data_type(O,plain_var):- plain_var(O),!.
-data_type([],nil):-!.
+data_type([],length(_)=0):-!.
+data_type(O,int):- integer(O),!.
+data_type(O,float):- float(O),!.
+data_type(O,rational):- rational(O),!.
+data_type(O,string):- string(O),!.
+data_type(_=O,ratio):- (rational(O);number(O)),!.
 data_type(O,object):- is_object(O),!.
 data_type(O,dict(L)):- is_map(O),get_kov(objs,O,Value),!,data_type(Value,L).
 data_type(O,group(N)):- is_group(O),into_list(O,L),!,length(L,N).
@@ -152,7 +157,7 @@ data_type(O,unknown_color):- is_colorish(O),!.
 data_type(Out,S):- \+ compound(Out),!,Out = S.
 data_type(Out,S):- compound_name_arity(Out,print_grid,A),arg(A,Out,P),data_type(P,S),!.
 data_type(Out,size(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
-data_type(Out,length=H):- is_list(Out),!,length(Out,H).
+data_type(Out,length(DT)=H):- is_list(Out),!,length(Out,H), last(Out,Last),data_type(Last,DT).
 data_type(Out,F/A):- compound_name_arity(Out,F,A),!.
 
 
@@ -205,11 +210,11 @@ is_not_gpoint(I):- \+ is_gpoint(I).
 
 is_cpoint(C):- \+ compound(C),!,fail.
 %is_cpoint(C-P):- (nonvar_or_ci(C);cant_be_color(C)),!,is_nc_point(P).
-is_cpoint(_-P):-  is_nc_point(P).
+is_cpoint(_-P):- !, nonvar(P), is_nc_point(P).
 
 is_list_of(P1,List):- is_list(List),maplist(P1,List).
 
-is_nc_point(P):- atom(P), hv_point(H,_,P),!,number(H).
+is_nc_point(P):- hv_point(H,_,P),!,number(H).
 
 is_gpoint(G):- plain_var(G),!,fail.
 is_gpoint(_-G):-!,is_gpoint(G).

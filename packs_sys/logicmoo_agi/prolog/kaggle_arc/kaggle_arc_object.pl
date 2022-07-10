@@ -18,13 +18,13 @@
 
 deoffset_points(1,1,Points,Points):-!.
 deoffset_points(OH,OV,Point,LPoint):- map_pred(if_point_de_offset(OH,OV),Point,LPoint).
-if_point_de_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H -OH +1, VV is V - OV +1,hv_point(HH,VV,LPoint).
+if_point_de_offset(OH,OV,Point,LPoint):- is_nc_point(Point), hv_point(H,V,Point),HH is H -OH +1, VV is V - OV +1,hv_point(HH,VV,LPoint).
 
 offset_points(OH,OV,Point,LPoint):- map_pred(if_point_offset(OH,OV),Point,LPoint).
-if_point_offset(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
+if_point_offset(OH,OV,Point,LPoint):- is_nc_point(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
-offset_point(OH,OV,Point,LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
-offset_point(OH,OV,C-Point,C-LPoint):- atom(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
+offset_point(OH,OV,Point,LPoint):- is_nc_point(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
+offset_point(OH,OV,C-Point,C-LPoint):- is_nc_point(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
 
 grid_to_individual(Grid,Obj):- 
@@ -213,10 +213,10 @@ top(7).
 
 
 make_point_object(VM,Overrides,Point,Obj):- make_point_object(VM.id,VM.h,VM.v,Overrides,Point,Obj).
-make_point_object(ID,H,V,Options,C-Point,Obj):-
+make_point_object(ID,H,V,Options,C-Point,Obj):- hv_point(1,1,HV11),
   hv_point(X,Y,Point), flag(indiv,Fv,Fv+1),
    Iv is (Fv rem 3000) + 1,
-    as_obj([mass(1),shape([point_01_01]),colors([cc(C,1.0)]),localpoints([C-point_01_01]),vis_hv(1,1),
+    as_obj([mass(1),shape([['0'-C]]),colors([cc(C,1.0)]),localpoints([C-HV11]),vis_hv(1,1),
     rotation(same),loc_xy(X,Y),
     changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(X,Y),
     object_indv_id(ID,Iv),globalpoints([C-Point]),
@@ -405,7 +405,7 @@ mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
 
 
 color_mass(Color,Int):- var(Color),!,Int=13.
-color_mass(Color,Int):- atom(Color),color_int(Color,Int),!.
+color_mass(Color,Int):- ground(Color),color_int(Color,Int),!.
 color_mass(Color,Int):- number(Color),Color=Int,!.
 color_mass(Points,Count):- is_list(Points),!,maplist(color_mass,Points,MPoints),!,sum_list(MPoints,Count).
 color_mass(Obj,Count):- nonvar(Obj),localpoints(Obj,Points),!,color_mass(Points,Count),!.
@@ -438,6 +438,13 @@ enum_group(S):- is_unshared_saved(_,S).
 
 %indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
 indv_props(obj(L),L):- my_assertion(nonvar(L)),!, is_list(L).
+
+indv_props_for_noteablity(obj(L),Notes):- my_assertion(nonvar(L)),!, include(is_prop_for_noteablity,L,Notes).
+
+%is_not_prop_for_noteablity(globalpoints).
+%is_not_prop_for_noteablity(grid_size).
+%is_not_prop_for_noteablity(object_indv_id).
+
 %indv_props(G,L):- dumpST,trace,into_obj(G,O),is_object(O),indv_props(O,L).
 
 indv_props_old(obj(L),L):- nonvar(L), is_list(L).
@@ -643,7 +650,7 @@ object_grid(I,G):- is_grid(I),!,G=I.
 object_grid(Group,List):- is_group(Group),!,override_group(object_grid(Group,List)),!.
 %object_grid(I,G):- indv_props(I,L),member(global_points(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
 %object_grid(I,G):- indv_props(I,L),member(localpoints(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
-%%object_grid(I,G):- vis_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
+%object_grid(I,G):- vis_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
 object_grid(I,G):- localpoints(I,LP),vis_hv(I,H,V),points_to_grid(H,V,LP,G),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G),!.
 
@@ -1069,9 +1076,11 @@ guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- fail,
   %points_to_grid(H,V,FGridO,RGridO).
    
 
-flipSym( full,GridIn):- flipHV(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
-flipSym(sym_v,GridIn):- flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
-flipSym(sym_h,GridIn):- flipV(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym( full,GridIn):- rot90(GridIn,LocalGridR),GridIn=@=LocalGridR,flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,flipV(GridIn,LocalGridN),GridIn=@=LocalGridN.
+flipSym(sym_hv,GridIn):- flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,flipV(GridIn,LocalGridN),GridIn=@=LocalGridN,!.
+flipSym(sym_rot,GridIn):- rot90(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym(sym_h,GridIn):- flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym(sym_v,GridIn):- flipV(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
 
 
 

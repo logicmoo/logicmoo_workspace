@@ -70,11 +70,16 @@ detect_supergrid(TestID,ExampleNum,In0,Out0,TT):-
   dict_pairs(T,_,Pairs),
   list_to_rbtree_safe(Pairs,TT),!,
   arc_setval(TT,out_color_remap, O2I),
+
+  show_colorfull_idioms(In0),
+  show_colorfull_idioms(Out0),
+
   maplist(must_det_ll,[
   (most_d_colors(Out,CO,NO),arc_setval(TT,out_d_colors,CO),arc_setval(TT,out_map,NO)),  
   (most_d_colors(In,CI,NI),arc_setval(TT,in_d_colors,CI),arc_setval(TT,in_map,NI)),
   fif(find_ogs(HOI,VOI,In0,OutF),arc_setval(TT,z_in_contains_out,(HOI,VOI))),
   fif(find_ogs(HIO,VIO,OutF,In0),arc_setval(TT,z_out_contains_in,(HIO,VIO))),
+  %@TODO record in the input _may_ hold the output 
   dash_chars,
   dash_chars,
   dmsg(detect_supergrid(TestID,ExampleNum)),
@@ -104,7 +109,65 @@ show_found2(HO,VO,H,V,Info,F):-
   constrain_grid(f,_TrigF,OF,FF),!,
   print_grid(H,V,Info,FF),!.
 
+test_grid_hint:- clsmake, get_current_test(TestID),test_grid_hint(TestID).
+test_grid_hint(TestID):- grid_hint(TestID).
 
+grid_hint(TestID):- format('~N'),
+  kaggle_arc(TestID,(trn+0),In,Out),!,
+  findall(Hint,(grid_hint(In,Out,Hint),
+   (  %write('testing... '),print(Hint),write(' '),
+       forall((kaggle_arc(TestID,(trn+N),In1,Out1),N>0),
+                (grid_hint(In1,Out1,Hint1),
+                  % print(Hint1),write(' '),
+                  Hint1==Hint)))), Confirmed),
+      format('~Nconfirmed... ~w~n',[Confirmed]).
+
+grid_hint(In,Out,color_change_only):- once((into_monochrome(In,In0),into_monochrome(Out,Out0),Out0=@=In0)).
+grid_hint(In,Out, input(Hint)):- grid_hint_io(i,Out,In,Hint).
+grid_hint(In,Out,output(Hint)):- grid_hint_io(o,In,Out,Hint).
+
+%maybe_fail_over_time(Time,Goal):- fail_over_time(Time,Goal).
+maybe_fail_over_time(_Time,Goal):- once(Goal).
+
+col_color(CC,CC).
+col_color(black,bg):-!.
+col_color(_,fg).
+
+grid_hint_io(IO,_In,Out,has_x_columns(CC)):- maybe_fail_over_time(1.2,has_x_columns(Out,_,Color)),col_color(Color,CC).
+grid_hint_io(IO,_In,Out,has_y_columns(CC)):- maybe_fail_over_time(1.2,has_y_columns(Out,_,Color)),col_color(Color,CC).
+%grid_hint_io(IO,In,Out,find_ogs):- maybe_fail_over_time(1.2,find_ogs(_,_,In,Out)).
+grid_hint_io(IO,In,Out,find_ogs_no_pad):- maybe_fail_over_time(1.2,((ogs_11(_,_,In,Out)))).
+%grid_hint_iso(IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,OH,OV,_Color)).
+grid_hint_io(IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),grid_hint_iso(IO,In,Out,IH,IV,OH,OV,Hint).
+
+grid_hint_iso(IO,In,Out,IH,IV,OH,OV,grid_size(IO,OH,OV)).
+grid_hint_iso(IO,In,Out,GH,GV,GH,GV,containsAll(LeftOver)):- mapgrid(remove_color_if_same,Out,In,NewIn),
+   mass(NewIn,Mass), (Mass==0 -> LeftOver=[] ; ignore(unique_colors(NewIn,LeftOver))).
+grid_hint_iso(o,_In,_Out,IH,IV,OH,OV,purportional(H,V)):- once(IH\==OH ; IV\==OV), V is rationalize(IV/OV), H is rationalize(IH/OH).
+grid_hint_iso(o,In,Out,IH,IV,OH,OV,purportional_mass(Mass)):- mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
+grid_hint_iso(IO,In,Out,IH,IV,OH,OV,color_spread(IO,OU,Shared,UI)):- unique_colors(In,IMass),unique_colors(Out,OMass),intersection(IMass,OMass,Shared,UI,UO).
+
+entire_row(Color,Row):- maplist(==(Color),Row).
+
+remove_color_if_same(X,Y,_):- X==Y,!.
+remove_color_if_same(_X,Y,Y).
+has_xy_columns(In,X,Y,Color):-  has_x_columns(In,X,Color),has_y_columns(In,Y,Color).
+
+has_x_columns(In,X,Color):- rot90(In,In90), !, has_y_columns(In90,X,Color).
+
+has_y_columns(In,Y,Color):- var(Color), unique_colors(In,Colors),!,reverse(Colors,ColorsR),
+  member(Color,ColorsR),nonvar(Color),
+  has_y_columns(In,Y,Color).
+has_y_columns(In,Y,Color):-  
+  append([First|_],[Last],In),
+  (entire_row(Color,First) -> entire_row(Color,Last) ; \+ entire_row(Color,Last)),
+  findall(Row,(append(_,[NotRow1,Row,NotRow2|_],In),
+    once((entire_row(Color,Row))),
+     (entire_row(Color,NotRow1)->(!,fail);true),
+     (entire_row(Color,NotRow2)->(!,fail);true)
+     ), Rows),
+  Rows\==[],
+  length(Rows,Y1), Y is Y1+1.
 
 
 

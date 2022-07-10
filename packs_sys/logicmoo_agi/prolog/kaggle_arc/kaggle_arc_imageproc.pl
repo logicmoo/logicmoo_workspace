@@ -420,6 +420,7 @@ grid_size_term(I,size(X,Y)):- grid_size(I,X,Y),!.
 %grid_size(Points,H,V):- is_map(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(NIL,1,1):- NIL==[],!.
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
+grid_size(G,H,V):- is_graid(G,GG),!, grid_size(GG,H,V).
 grid_size(G,H,V):- is_map(G),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
 grid_size(G,H,V):- is_grid(G),!,grid_size_nd(G,H,V),!.
 grid_size(G,X,Y):- is_group(G),!,mapgroup(grid_size_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).

@@ -19,7 +19,10 @@ recalc_sizes(VM,[After|TODO]):-
    computeMassIndex(VM,Sizes),
    computeMinMass(VM,Sizes,Count,Min),
    computeMaxMass(VM,Sizes,Count,Max),
-   pt(yellow,decide_min_max_size(Sizes,Max,Min)),
+   fif(
+     (VM.objs_min_mass \== Min ; VM.objs_max_mass \== Max),
+      pt(yellow,decide_min_max_size(Sizes,Max,Min))),
+
    set(VM.objs_min_mass) = Min,
    set(VM.objs_max_mass) = Max,
    show_vm_changes(VM,cullObjectsOutsideOf(Min,Max),cullObjectsOutsideOf(VM,Min,Max)),

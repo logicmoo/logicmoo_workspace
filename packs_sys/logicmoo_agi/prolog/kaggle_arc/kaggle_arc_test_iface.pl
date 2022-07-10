@@ -31,7 +31,7 @@ menu_cmd1(_,'T','                  or (T)rain from only understanding single pai
 menu_cmd1(i,'i','             See the (i)ndividuation of the input/outputs',(cls,!,ndividuator)).
 menu_cmd1(_,'u','                  or (u)niqueness between objects in the input/outputs',(cls,!,what_unique)).
 menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls,!,detect_supergrid)).
-menu_cmd1(_,'p','                  or (p)rint the test (captial to reveal Solutions)',(print_test)).
+menu_cmd1(_,'p','                  or (p)rint the test (textured grid)',(print_test)).
 menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls,print_test,!,solve_test)).
 menu_cmd1(_,'L','                  or (L)earn from a human proposed program?',(human_test)).
 menu_cmd1(_,'s','              Try to (s)olve based on training',(cls,print_test,!,solve_test)).
@@ -120,7 +120,7 @@ interact:- list_of_tests(L), length(L,SelMax),
 
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), assert(wants_exit_menu).
 do_menu_key('?'):- !, menu_options('i').
-do_menu_key('P'):- !, locally(nb_setval(last_menu_key,'P'), do_menu_key('p')).
+do_menu_key('P'):- !, switch_grid_mode,print_test.
 do_menu_key('I'):- !, cls,!,ndividuator1.
 do_menu_key('G'):- !, cls,!,detect_supergrid1.
 do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
@@ -301,31 +301,28 @@ cmt_border:- format('~N% '), dash_chars(120,"="), !, nl.
 test_id_border(TestID):-
     get_current_test(WasTestID),
     ignore((WasTestID\==TestID,set_current_test(TestID), cmt_border)).
+
+
 print_test:- get_current_test(TestID),print_test(TestID).
 print_test(TName):- 
-  notrace((once(fix_test_name(TName,TestID,_)),
-  cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
-  ignore(print_test_hints(TName)),
-  parcCmt(TName),nl,
+  fix_test_name(TName,TestID,ExampleNum1),
+   cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
+   ignore(print_test_hints(TestID)),
    format('~N% '),dash_chars,
-  print_test4(TestID))),!.
-
-print_test4(TestID):-
-    forall(arg(_,v((trn+_)),ExampleNum1),
+    forall(arg(_,v((trn+_),(tst+_)),ExampleNum1),
      forall(kaggle_arc(TestID,ExampleNum1,In,Out),
       ignore((
-       once(in_out_name(ExampleNum1,NameIn,_NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,print_side_by_side(cyan,In,NameIn,_,Out,' ')]))))),
-       write('%= '), parcCmt(TestID),
-   format('~N% '), dash_chars,
-    forall(arg(_,v((tst+_)),ExampleNum2),
-     forall(kaggle_arc(TestID,ExampleNum2,In,Out),
-      ignore((
-       once(in_out_name(ExampleNum2,NameIn,NameOut)),
-       grid_size(Out,OH,OV),make_grid(OH,OV,Blank),
-       ((true;nb_current(last_menu_key,'P'))
-         -> format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side(red,In,NameIn,_,Out,NameOut)])
-         ; format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum2,print_side_by_side(cyan,In,NameIn,_,Blank,"Hidden Output")])))))),!.
+       once(in_out_name(ExampleNum1,NameIn,NameOut)),
+         as_d_grid(In,In1),as_d_grid(Out,Out1),
+       format('~Ngridcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,
+         print_side_by_side(cyan,In1,NameIn,_,Out1,NameOut)]))))),
+       write('%= '), parcCmt(TestID),!.
+
+next_grid_mode(dots,dashes):-!.
+next_grid_mode(_,dots).
+switch_grid_mode:- (nb_current('$grid_mode',Dots);Dots=dots),next_grid_mode(Dots,Dashes),nb_setval('$grid_mode',Dashes).
+as_d_grid(In,In):- \+ nb_current('$grid_mode',dashes),!.
+as_d_grid(In,In1):- must_det_ll((subst001(In,black,wbg,In0), most_d_colors(In0,_CI,In1))),!.
 
 %print_test(TName):- !, parcCmt(TName).
 print_qtest:- get_current_test(TestID),print_qtest(TestID).
@@ -336,8 +333,9 @@ print_qtest(TestID):-
      ignore(nb_current(example,ExampleNum)),
      forall(kaggle_arc(TestID,ExampleNum,In,Out),
       ignore((
+       as_d_grid(In,In1),as_d_grid(Out,Out1),
        once(in_out_name(ExampleNum,NameIn,NameOut)),
-       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side(cyan,In,NameIn,_LW,Out,NameOut+TestID)])))),
+       format('~Ntestcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum,print_side_by_side(cyan,In1,NameIn,_LW,Out1,NameOut+TestID)])))),
        write('%= '), parcCmt(TestID).
 
 print_single_test(TName):-
@@ -345,7 +343,9 @@ print_single_test(TName):-
   ignore(nb_current(example,ExampleNum)),
   kaggle_arc(TestID,ExampleNum,In,Out),
   once(in_out_name(ExampleNum,NameIn,NameOut)),
-  print_side_by_side(green,In,NameIn,_LW,Out,NameOut),!.
+  as_d_grid(In,In1),as_d_grid(Out,Out1),
+  print_side_by_side(green,In1,NameIn,_LW,Out1,NameOut),!,
+  parcCmt(TestID).
 
 in_out_name(trn+NN,SI,SO):- N is NN+1, format(atom(SI),'Training Pair #~w Input',[N]),format(atom(SO),'Output',[]).
 in_out_name(tst+NN,SI,SO):- N is NN+1, format(atom(SI),'EVALUATION TEST #~w',[N]),format(atom(SO),'Output<(REVEALED)>',[]).
@@ -759,7 +759,11 @@ parc1(OS):- clsmake,   nb_setval(test_name,[]),
 parc0(OS):-
  locally(set_prolog_flag(gc,true),forall(parc11(OS,_),true)).
 
-parcCmt(TName):-
+parcCmt(TName):- 
+  fix_test_name(TName,TestID,_),
+  color_print(magenta,call(((grid_hint(TestID))))),
+  parcCmt1(TestID).
+parcCmt1(TName):-
   ignore((
   fix_test_name(TName,TestID,_),
   kaggle_arc(TestID,(trn+0),In,Out),

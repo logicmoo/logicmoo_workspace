@@ -891,7 +891,9 @@ point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
   
 
 sort_on(C,R,A,B):- (A==B-> R=0 ; (call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B))).
-using_compare(C,R,A,B):- (A==B-> R=0 ; ( (must_not_error((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))))).
+
+using_compare(C,R,A,B):- (A==B-> R=(=) ; ( (must_not_error((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))))).
+
 colored_pixel_count(A,Count):- is_points_list(A),fg_color_count(A,Count),!.
 colored_pixel_count(G,Count):- is_grid(G), fg_color_count(G,Count),!.
 colored_pixel_count(A,Count):- is_object(A),localpoints(A,G), fg_color_count(G,Count),!.
@@ -1072,8 +1074,10 @@ all_bg(Pattern):- get_bgc(BG),is_all_color(BG,Pattern).
 is_all_color(BG,Pattern):- is_list(Pattern),!,maplist(is_all_color(BG),Pattern).
 is_all_color(BG,Pattern):- Pattern=@=BG.
 
+show_colorfull_idioms(G):- ignore(find_colorfull_idioms(G)).
 
-show_colorfull_idioms(G):- find_colorfull_idioms(G).
+is_fti_step(find_colorfull_idioms).
+find_colorfull_idioms(VM):- is_vm(VM), get_kov(grid,VM,Grid),!,find_colorfull_idioms(Grid).
 find_colorfull_idioms(G):- 
   set_current_test(G),
   h_pattern_length(G,_Type,PatWidth,_DivW,_StartV,PatV,Pattern,_Div),!,
@@ -1082,8 +1086,7 @@ find_colorfull_idioms(G):-
   dash_chars,
   add_shape_lib(as_is,Pattern),
   add_shape_lib(pair,Pattern),
-  print_grid(Pattern),!,
-  writeln(find_colorfull_idioms),
+  print_side_by_side(green,G,'colorfull',_,Pattern,'idioms'),!,
   dash_chars.
 
 
@@ -1449,12 +1452,13 @@ cull_rest(_Rest,GridS,GridS).
 at_least_4([A,B,C,D|_],[A,B,C,D]):-!.
 at_least_4(Grid4,Grid4).
 
-edge_of_grid(_,_,_,_):- !, fail.
-edge_of_grid(H,V,_,_):- (H=<15 ; V=<15),!,fail.
-edge_of_grid(_,_,_,1).
-edge_of_grid(_,_,1,_).
-edge_of_grid(H,_,H,_).
-edge_of_grid(_,V,_,V).
+%edge_of_grid(_,_,_,_):- !, fail.
+%edge_of_grid(H,V,_,_):- (H=<15 ; V=<15),!,fail.
+edge_of_grid(_,_,_,1,n).
+edge_of_grid(_,_,1,_,w).
+edge_of_grid(H,_,H,_,e).
+edge_of_grid(_,V,_,V,s).
+edge_of_grid(_,_,_,_,c).
 
 globalpoints_maybe_bg(G,P):- globalpoints(G,P).
 globalpoints_include_bg(G,P):- localpoints_include_bg(G,P).
@@ -1467,101 +1471,145 @@ neighbor_map(Grid,GridO):-
 
 neighbor_map(_,_,[],_,[]):-!.
 neighbor_map(H,V,[NC-P1|Ps],Points,[(N-C)-P1|Ps2]):-
-  only_color_data(NC,C),
-  ((hv_point(X,Y,P1),edge_of_grid(H,V,X,Y)) ->  N = _ ;
-  nei_map(C,P1,Points,N)),
+  only_color_data(NC,C),  
+  nei_map(H,V,C,P1,Points,N),
   neighbor_map(H,V,Ps,Points,Ps2).
 
 only_color_data(NC,NC):- \+ compound(NC),!.
 only_color_data(_-C,NC):- only_color_data(C,NC).
 
-nei_map(C,P1,Points,N):- 
- findall(Dir,(n_s_e_w(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsC),
- findall(Dir,(is_diag(Dir),is_adjacent_point(P1,Dir,P2),once((member(C-P2,Points);(member(NC-P2,Points),only_color_data(NC,CD),CD==C)))),DirsD),
- map_neib(DirsC,DirsD,NS,PS), ((PS=='+')-> N=PS; N=NS).
+o_c_d(C,CD):- C==bgw,!,CD\==bgw.
+o_c_d(C,CD):- C\==bgw,CD==bgw,!,fail.
+o_c_d(C,CD):- C\==CD.
+
+is_adjacent_point_m2(P1,Dir,P2):- is_adjacent_point(P1,Dir,P2).
+is_adjacent_point_m2(P1,Dir,P2):- is_adjacent_point(P1,Dir,P3),is_adjacent_point(P3,Dir,P2).
+
+nei_map(H,V,C,P1,Points,N):- 
+ findall(Dir,(n_s_e_w(Dir),once((is_adjacent_point_m2(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD)))),DirsC),
+ findall(Dir,(is_diag(Dir),once((is_adjacent_point_m2(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD)))),DirsD),
+ findall(Dir,(is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),o_c_d(C,CD)),DirsE),
+ hv_point(X,Y,P1), 
+ edge_of_grid(H,V,X,Y,Edge),
+ map_neib1(C,DirsE,Edge,DirsC,DirsD,N).
 
 
 only_neib_data(NC,NC):- \+ compound(NC),!.
 only_neib_data(C-_,NC):- only_neib_data(C,NC).
 
-map_neib([n,s,e,w],[_,_,_],'*','7').
+map_neib1(C,DirsE,Edge,DirsC,DirsD,N):- map_neib(C,DirsE,Edge,DirsC,DirsD,NSM,PS),map_ns(NSM,NS), ((PS=='+')-> N=PS; N=NS).
 
-map_neib([n],[],'!','2').
-map_neib([s],[],'!','2').
-map_neib([e],[],'=','2').
-map_neib([w],[],'=','2').
-map_neib([n,s],_,'|','.').
-map_neib([e,w],_,'-','.').
-map_neib([n,e],[],'C','+').
-map_neib([n,w],[],'C','+').
-map_neib([s,e],[],'C','+').
-map_neib([s,w],[],'C','+').
-map_neib([_,_,_,_],[_,_,_],'C','+').
-map_neib([_,_,_],[],'T','+').
-map_neib([_,_,_],[_],'t','+').
+map_ns('j','+').
+map_ns(NS,NS).
 
-map_neib([s,e,w],[sw,se],'-','.').
-map_neib([n,e,w],[ne,nw],'-','.').
-map_neib([n,s,w],[sw,nw],'|','.').
-map_neib([n,s,e],[ne,se],'|','.').
-map_neib([s,e,w],[ne,sw,se,nw],'-','.').
-map_neib([n,e,w],[ne,sw,se,nw],'-','.').
-map_neib([n,s,w],[ne,sw,se,nw],'|','.').
-map_neib([n,s,e],[ne,sw,se,nw],'|','.').
+map_neib(C,[O],E,[],[],NS,PS):- map_neib(C,[],E,[],[O],NS,PS),!.
+map_neib(_,_,_,[],[],0,0).
+map_neib(_,_,_,[n,s,e,w],[_,_,_],'+','7').
+
+map_neib(_,_,_,[n,s,e,w],[_,_,_],'*','7').
+
+map_neib(_,_,c,[n],[],'!','2').
+map_neib(_,_,c,[s],[],'!','2').
+map_neib(_,_,c,[e],[],'=','2').
+map_neib(_,_,c,[w],[],'=','2').
+
+map_neib(_,_,_,[n],[],'|','2').
+map_neib(_,_,_,[s],[],'|','2').
+map_neib(_,_,_,[e],[],'-','2').
+map_neib(_,_,_,[w],[],'-','2').
+
+map_neib(_,_,_,[n,s],_,'|','.').
+map_neib(_,_,_,[e,w],_,'-','.').
+map_neib(_,_,_,[n,e],[],'C','+').
+map_neib(_,_,_,[n,w],[],'C','+').
+map_neib(_,_,_,[s,e],[],'C','+').
+map_neib(_,_,_,[s,w],[],'C','+').
+map_neib(_,_,_,[_,_,_,_],[_,_,_],'C','+').
+map_neib(_,_,_,[_,_,_],[],'T','+').
+map_neib(_,_,_,[_,_,_],[_],'t','+').
+
+map_neib(_,_,_,[s,e,w],[sw,se],'-','.').
+map_neib(_,_,_,[n,e,w],[ne,nw],'-','.').
+map_neib(_,_,_,[n,s,w],[sw,nw],'|','.').
+map_neib(_,_,_,[n,s,e],[ne,se],'|','.').
+map_neib(_,_,_,[s,e,w],[ne,sw,se,nw],'-','.').
+map_neib(_,_,_,[n,e,w],[ne,sw,se,nw],'-','.').
+map_neib(_,_,_,[n,s,w],[ne,sw,se,nw],'|','.').
+map_neib(_,_,_,[n,s,e],[ne,sw,se,nw],'|','.').
+
+map_neib(_,_,_,[n,s,w],_,'|','.').
+map_neib(_,_,_,[n,s,e],_,'|','.').
+
+map_neib(_,_,_,[s,e,w],_,'-','.').
+map_neib(_,_,_,[n,e,w],_,'-','.').
 
 
-map_neib([n,s,e,w],[ne,sw,se,nw],'~','~').
-map_neib([_,_,_,_],[],'+','+').
+map_neib(_,_,_,[n,s,e,w],[ne,sw,se,nw],'~','~').
+map_neib(_,_,_,[_,_,_,_],[],'+','+').
 % is_diag(ne). is_diag(sw). is_diag(se). is_diag(nw).
-map_neib([],[ne,nw],'V','v').
-map_neib(_,[ne,nw],'v','v').
-map_neib([],[se,nw],'\\','v').
-map_neib(_,[se,nw],'\\','v').
-map_neib([],[ne,sw],'/','v').
-map_neib(_,[ne,sw],'/','v').
-map_neib([],[ne,se],'<','v').
-map_neib(_,[ne,se],'<','v').
-map_neib([],[sw,nw],'>','v').
-map_neib(_,[sw,nw],'>','v').
-map_neib([],[se,sw],'^','v').
-map_neib(_,[se,sw],'^','v').
-map_neib([],[_,_,_],'Y','v').
-map_neib(_,[_,_,_],'y','v').
+map_neib(_,_,_,[],[ne,nw],'V','v').
+map_neib(_,_,_,_,[ne,nw],'v','v').
+map_neib(_,_,_,[],[se,nw],'\\','v').
+map_neib(_,_,_,_,[se,nw],'\\','v').
+
+map_neib(_,_,_,[],[_,se,nw],'\\','v').
+%map_neib(_,_,_,_,[_,se,nw],'\\','v').
+
+map_neib(_,_,_,[],[ne,sw],'/','v').
+map_neib(_,_,_,_,[ne,sw],'/','v').
+
+map_neib(_,_,_,[],[ne,sw,_],'/','v').
+%map_neib(_,_,_,_,[ne,sw,_],'/','v').
+
+map_neib(_,_,_,[],[ne,se],'<','v').
+map_neib(_,_,_,_,[ne,se],'<','v').
+map_neib(_,_,_,[],[sw,nw],'>','v').
+map_neib(_,_,_,_,[sw,nw],'>','v').
+map_neib(_,_,_,[],[se,sw],'^','v').
+map_neib(_,_,_,_,[se,sw],'^','v').
+map_neib(_,_,_,[],[_,_,_],'Y','v').
+map_neib(_,_,_,_,[_,_,_],'y','v').
 
 
-map_neib([_,_,_],[_,_,_,_],7,'X').
-map_neib([],[_,_,_,_],'X','X').
-map_neib([],[_],'x','v').
+map_neib(_,_,_,[_,_,_],[_,_,_,_],7,'X').
+map_neib(_,_,_,[],[_,_,_,_],'X','X').
 
-map_neib([e],[ne,se],'2','X').
-map_neib([w],[sw,nw],'2','X').
-map_neib([n],[ne,nw],'2','X').
-map_neib([s],[se,sw],'2','X').
+%map_neib(_,_,c,[],[_],'x','v').
 
-map_neib([n,e],[ne],'C','+').
-map_neib([n,w],[nw],'C','+').
-map_neib([s,e],[se],'C','+').
-map_neib([s,w],[sw],'C','+').
+map_neib(_,_,_,[],[ne],'/','v').
+map_neib(_,_,_,[],[nw],'\\','v').
+map_neib(_,_,_,[],[se],'\\','v').
+map_neib(_,_,_,[],[sw],'/','v').
 
-map_neib([n,e],[sw],'j','j').
-map_neib([n,w],[se],'j','j').
-map_neib([s,e],[nw],'j','j').
-map_neib([s,w],[ne],'j','j').
+map_neib(_,_,_,[e],[ne,se],'2','X').
+map_neib(_,_,_,[w],[sw,nw],'2','X').
+map_neib(_,_,_,[n],[ne,nw],'2','X').
+map_neib(_,_,_,[s],[se,sw],'2','X').
 
-map_neib([n,e],[sw],'J','j').
-map_neib([n,w],[se],'J','j').
-map_neib([s,e],[nw],'J','j').
-map_neib([s,w],[ne],'J','j').
+map_neib(_,_,_,[n,e],[ne],'C','+').
+map_neib(_,_,_,[n,w],[nw],'C','+').
+map_neib(_,_,_,[s,e],[se],'C','+').
+map_neib(_,_,_,[s,w],[sw],'C','+').
+
+map_neib(_,_,_,[n,e],[sw],'j','j').
+map_neib(_,_,_,[n,w],[se],'j','j').
+map_neib(_,_,_,[s,e],[nw],'j','j').
+map_neib(_,_,_,[s,w],[ne],'j','j').
+
+map_neib(_,_,_,[n,e],[sw],'J','j').
+map_neib(_,_,_,[n,w],[se],'J','j').
+map_neib(_,_,_,[s,e],[nw],'J','j').
+map_neib(_,_,_,[s,w],[ne],'J','j').
 
 
-map_neib([_,_,_,_],[_],5,'.').
-map_neib([_],[_,_,_,_],4,'X').
-map_neib([],[],0,0).
-map_neib([_],[],2,'*').
-map_neib([],[_],1,'*').
-map_neib(_,NonNil,'A','.'):- NonNil\==[],!.
-map_neib(NonNil,_,'%','.'):- NonNil\==[],!.
-map_neib(_,_,'.','.').
+map_neib(_,_,_,[_,_,_,_],[_],5,'.').
+map_neib(_,_,_,[_],[_,_,_,_],'X','X').
+map_neib(_,_,_,[_],[_,_,_,_],4,'X').
+map_neib(_,_,_,[_],[],2,'*').
+map_neib(_,_,_,[],[_],1,'*').
+map_neib(_,_,_,_,NonNil,'A','.'):- NonNil\==[],!.
+map_neib(_,_,_,NonNil,_,'%','.'):- NonNil\==[],!.
+map_neib(_,_,_,_,_,'.','.').
 
 
 dir_num(_,_,c,0).

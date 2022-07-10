@@ -9,6 +9,9 @@
 :- endif.
 
 
+
+
+
 save_grouped(H,G):-
   sort(G,GS),
   get_current_test(TestID),
@@ -153,6 +156,64 @@ filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,Cou
 filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How):-
  ListL=SetL, SetL>1.
 
+
+/*
+
+With each type of example we can have...
+
+values_all_same|values_all_dif
+values_where_1_stand_otherwise
+values_where_2_stand_otherwise
+
+*/
+
+
+
+compare_objects([],[]):-!.
+compare_objects(Objs,Interesting):- 
+  maplist(indv_props_for_noteablity,Objs,ObjProps),
+  flatten(ObjProps,FlatProps),
+  maplist(functorize_props,FlatProps,Functors),
+  sort(Functors,SortedFunctors),
+  gather_props(SortedFunctors,FlatProps,ListOfLists),
+  maplist(compare_values,ListOfLists,Diffs),
+  include(\=([]),Diffs,Interesting).
+  
+functorize_props(iz(Prop),FA):- !, functorize_props(Prop,FA).
+functorize_props(Prop,F/A):- functor(Prop,F,A).
+gather_props([F/A|SortedFunctors],FlatProps,[(F-Candidates)|ListOfLists]):- 
+  functor(Match,F,A), findall(Match,(member(Match,FlatProps);member(iz(Match),FlatProps)),Candidates),
+  gather_props(SortedFunctors,FlatProps,ListOfLists).
+gather_props([],_,[]).
+
+
+compare_values(F-X,Notable):- predsort(using_compare(number_varz),X,S),length(X,N),length(S,NS),
+  is_notable(F-NS/N,Notable).
+
+:- dynamic(repress_non_notables/0).
+is_changeable_param(repress_non_notables/0).
+repress_non_notables.
+
+:- dynamic(never_noteable/1).
+is_changeable_param(never_noteable/1).
+never_noteable(colors).
+never_noteable(globalpoints).
+never_noteable(P):- compound(P),functor(P,F,_),never_noteable(F).
+
+
+is_prop_for_noteablity(P):- compound(P),functor(P,F,_),is_prop_for_noteablity(F),!.
+is_prop_for_noteablity(X):- \+ never_noteable(X),!.
+
+is_notable(_F-N/N,[]):- repress_non_notables, !.  
+is_notable(_F-1/_,[]):- repress_non_notables, !.
+is_notable(F-_,[]):- never_noteable(F),!.
+is_notable(F-N/N,all_diff(F)):-!.
+is_notable(F-1/_,all_same(F)):-!.
+is_notable(F-S/N,notable(F,S/N)):-!.
+%is_notable(F-S/N,Notable):- F-S/N = Notable.
+
+   number_varz(I,C):- copy_term(I,C),numbervars(C,0,_,[attvar(skip)]).
+
 :- style_check(+singleton).
 
 found_in_w(Trait,List,L):- 
@@ -195,4 +256,14 @@ length_criteria(List,P):- compound(P), P=..[F,L], C=..[F,I,L],length(List,I),!,c
 length_criteria(List,P):- compound(P), length(List,I), !, call(call,P,I).
 length_criteria(List,N):- length(List,N).
 
-
+tesT_compare_objects:- compare_objects([
+    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),
+      vis_hv(1,1),rotation(same),loc_xy(4,9),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,9),object_indv_id(t(af902bf9)*(tst+0)*in,37),globalpoints([yellow-point_04_09]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis_hv(1,1),rotation(same),loc_xy(4,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,6),object_indv_id(t(af902bf9)*(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis_hv(1,1),rotation(same),loc_xy(1,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(1,6),object_indv_id(t(af902bf9)*(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis_hv(1,1),rotation(same),loc_xy(10,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,5),object_indv_id(t(af902bf9)*(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis_hv(1,1),rotation(same),loc_xy(6,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,5),object_indv_id(t(af902bf9)*(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis_hv(1,1),rotation(same),loc_xy(10,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,1),object_indv_id(t(af902bf9)*(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis_hv(1,1),rotation(same),loc_xy(6,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,1),object_indv_id(t(af902bf9)*(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
+    OUTPUT),
+  print(OUTPUT).

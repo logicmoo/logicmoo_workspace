@@ -62,16 +62,41 @@ arc_portray(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1,
 arc_portray_pairs(Type,TF,Pairs):- 
   length(Pairs,N),
   writeln(arc_portray_pairs(Type,TF,len(N))),
-  forall(member(K-V,Pairs),arc_portray_pair(Pairs,K-V,TF)).
+  swap_kv(Pairs,VKPairs),
+  keysort(VKPairs,SVKPairs),
+  maplist(arg(2),SVKPairs,SVKPairs2),
+  arc_portray_type_pairs(TF,SVKPairs2).
 
-arc_portray_pair(Ps,KV,TF):- \+ compound(KV), arc_portray_pair(Ps,KV,KV,TF).
-arc_portray_pair(Ps,K=Val,TF):- !,arc_portray_pair(Ps,K,Val,TF).
-arc_portray_pair(Ps,K:Val,TF):- !,arc_portray_pair(Ps,K,Val,TF).
-arc_portray_pair(Ps,K-Val,TF):- !,arc_portray_pair(Ps,K,Val,TF).
-arc_portray_pair(Ps,KV,TF):- arc_portray_pair(Ps,KV,KV,TF).
+arc_portray_type_pairs(TF,Pairs):- append(Left,[K1-V1,K2-V2|Right],Pairs),is_grid(V1),is_grid(V2),!,
+  append(Left,[call-print_side_by_side(yellow,V1,K1,_,V2,K2)|Right],PairsM),
+  arc_portray_type_pairs(TF,PairsM).
+arc_portray_type_pairs(TF,Pairs):- 
+  forall(member(K-V,Pairs),arc_portray_pair(Pairs,K,V,TF)).
 
-arc_portray_pair(_Ps,K,Val,_TF):- via_print_grid(Val), print_grid(K,Val),!,format('~N').
-arc_portray_pair(_Ps,K,Val,TF):- format('~N '),print(K),write('= '),once(arc_portray(Val,TF);print(Val)).
+swap_kv([_-V|Pairs],VKPairs):- plain_var(V),!, swap_kv(Pairs,VKPairs). 
+swap_kv([K-V|Pairs],['-'(Type,K-V)|VKPairs]):- 
+  data_type(V,Type),
+  swap_kv(Pairs,VKPairs). 
+swap_kv([],[]).
+
+
+arc_portray_pair(Ps,K,Val,TF):- 
+ format('~N'),
+ arc_portray_1_pair(Ps,K,Val,TF),
+ format('~N').
+
+arc_portray_1_pair(_Ps,call,Val,_TF):- !, call(Val).
+arc_portray_1_pair(Ps,K,Val,TF):- 
+ (via_print_grid(Val) -> print_grid(K,Val) 
+   ;  (print(K),write('= '),once(arc_portray(Val,TF);print(Val)))),
+ ignore(arc_portray_pair_optional(Ps,K,Val,TF)),!.
+
+arc_portray_pair_optional(Ps,K,Val,TF):-
+ once(( Val\==[], is_list(Val),maplist(is_object,Val),
+  print_info(Val),
+  Val \= [_], 
+  compare_objects(Val,Diffs),  
+  color_print(cyan,call(arc_portray_pair(Ps,diffs(K),Diffs,TF))))).
 
 
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
