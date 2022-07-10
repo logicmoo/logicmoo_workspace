@@ -210,11 +210,11 @@ is_not_gpoint(I):- \+ is_gpoint(I).
 
 is_cpoint(C):- \+ compound(C),!,fail.
 %is_cpoint(C-P):- (nonvar_or_ci(C);cant_be_color(C)),!,is_nc_point(P).
-is_cpoint(_-P):- !, nonvar(P), is_nc_point(P).
+is_cpoint(_-P):- is_nc_point(P).
 
 is_list_of(P1,List):- is_list(List),maplist(P1,List).
 
-is_nc_point(P):- hv_point(H,_,P),!,number(H).
+is_nc_point(P):- nonvar(P),hv_point(_,_,P).
 
 is_gpoint(G):- plain_var(G),!,fail.
 is_gpoint(_-G):-!,is_gpoint(G).
