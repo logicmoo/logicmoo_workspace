@@ -109,7 +109,12 @@ show_found2(HO,VO,H,V,Info,F):-
   constrain_grid(f,_TrigF,OF,FF),!,
   print_grid(H,V,Info,FF),!.
 
-test_grid_hint:- clsmake, get_current_test(TestID),test_grid_hint(TestID).
+test_grid_hint:- clsmake, forall(arc_test_name(TestID),test_grid_hint(TestID)).
+
+save_grid_hints:-  forall(arc_test_name(TestID),test_grid_hint(TestID)),
+  listing(arc_test_property/3).
+
+%test_grid_hint:- get_current_test(TestID),test_grid_hint(TestID).
 test_grid_hint(TestID):- grid_hint(TestID).
 
 grid_hint(TestID):- format('~N'),
@@ -120,7 +125,11 @@ grid_hint(TestID):- format('~N'),
                 (grid_hint(In1,Out1,Hint1),
                   % print(Hint1),write(' '),
                   Hint1==Hint)))), Confirmed),
-      format('~Nconfirmed... ~w~n',[Confirmed]).
+      format('~Nconfirmed... ~w~n',[Confirmed]),
+      maplist(assert_test_property(TestID,grid_hint),Confirmed).
+
+assert_test_property(TestID,Prop,Data):-
+  my_asserta_if_new(arc_test_property(TestID,Prop,Data)).
 
 grid_hint(In,Out,color_change_only):- once((into_monochrome(In,In0),into_monochrome(Out,Out0),Out0=@=In0)).
 grid_hint(In,Out, input(Hint)):- grid_hint_io(i,Out,In,Hint).
@@ -133,8 +142,8 @@ col_color(CC,CC).
 col_color(black,bg):-!.
 col_color(_,fg).
 
-grid_hint_io(IO,_In,Out,has_x_columns(CC)):- maybe_fail_over_time(1.2,has_x_columns(Out,_,Color)),col_color(Color,CC).
-grid_hint_io(IO,_In,Out,has_y_columns(CC)):- maybe_fail_over_time(1.2,has_y_columns(Out,_,Color)),col_color(Color,CC).
+grid_hint_io(IO,_In,Out,has_x_columns(CC)):- maybe_fail_over_time(1.2,has_x_columns(Out,_,Color,_)),col_color(Color,CC).
+grid_hint_io(IO,_In,Out,has_y_columns(CC)):- maybe_fail_over_time(1.2,has_y_columns(Out,_,Color,_)),col_color(Color,CC).
 %grid_hint_io(IO,In,Out,find_ogs):- maybe_fail_over_time(1.2,find_ogs(_,_,In,Out)).
 grid_hint_io(IO,In,Out,find_ogs_no_pad):- maybe_fail_over_time(1.2,((ogs_11(_,_,In,Out)))).
 %grid_hint_iso(IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,OH,OV,_Color)).
@@ -149,26 +158,92 @@ grid_hint_iso(IO,In,Out,IH,IV,OH,OV,color_spread(IO,OU,Shared,UI)):- unique_colo
 
 entire_row(Color,Row):- maplist(==(Color),Row).
 
+mentire_row(black,Row):- !, maplist(=(black),Row).
+mentire_row(C2,OtherRow):- include(\==(C2),OtherRow,Missing),
+  once(maplist(=(C2),Missing);(length(Missing,L),L=<1)).
+
+grid_area(In,Area):- grid_size(In,H,V), Area is H*V.
+
 remove_color_if_same(X,Y,_):- X==Y,!.
 remove_color_if_same(_X,Y,Y).
-has_xy_columns(In,X,Y,Color):-  has_x_columns(In,X,Color),has_y_columns(In,Y,Color).
 
-has_x_columns(In,X,Color):- rot90(In,In90), !, has_y_columns(In90,X,Color).
+has_xy_columns(In,X,Y,Color,Chunks):- 
+  grid_area(In,HV), HV > 18,
+  grid_size(In,GH,GV), 
+  has_x_columns(In,X,Color,BorderNumsX),
+  has_y_columns(In,Y,Color,BorderNumsY),!,
+  (X>1 ; Y>1),
+  make_grid(X,Y,Chunks),
+  %pt(slicing(BorderNumsX,BorderNumsY,onto(X,Y))),
+  gather_chunks(Color,In,Chunks,1,1,X,Y,BorderNumsX,BorderNumsY).
 
-has_y_columns(In,Y,Color):- var(Color), unique_colors(In,Colors),!,reverse(Colors,ColorsR),
-  member(Color,ColorsR),nonvar(Color),
-  has_y_columns(In,Y,Color).
-has_y_columns(In,Y,Color):-  
+gather_chunks(_Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):- Y>GY,!.
+gather_chunks(Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):-
+  nth1(Y,Chunks,Row),nth1(X,Row,Cell),
+  nth1(X,BorderNumsX,SX,RX),nth1(X,RX,EX),
+  nth1(Y,BorderNumsY,SY,RY),nth1(Y,RY,EY),
+  SX1 is SX + 1, 
+  SY1 is SY + 1,
+  EX1 is EX - 1,
+  EY1 is EY - 1,
+  clip(SX1,SY1,EX1,EY1,In,Clip),
+  % print_grid((X,Y),Clip), pt(clipped(SX,SY,EX,EY,into(X,Y))),
+  % once(Clip = [_,[_,Cell|_]|_];Clip = [[Cell|_]|_]),  
+  once(((Clip = [_,[_,C|_]|_];Clip = [[C|_]|_];(member(CR,Clip),member(C,CR))),C\==Color,C\==black,Cell=C)),
+  (GX =< X -> (Yi is Y + 1, Xi is 1) ; (Xi is X+1, Yi is Y)),
+  gather_chunks(Color,In,Chunks,Xi,Yi,GX,GY,BorderNumsX,BorderNumsY).
+
+
+  
+
+
+
+has_x_columns(In,X,Color,BorderNums):- rot90(In,In90), !, has_y_columns(In90,X,Color,BorderNums).
+
+has_y_columns(In,Y,Color,BorderNums):- var(Color), unique_colors(In,Colors),reverse(Colors,ColorsR),!,
+  member(Color,ColorsR),nonvar(Color), 
+  has_y_columns(In,Y,Color,BorderNums).
+has_y_columns(In,_Y,Color,_):- (append(_,[RowBefore,RowNext|_],In), entire_row(Color,RowBefore), entire_row(Color,RowNext)),!,fail.
+
+has_y_columns(In,Y,Color,BorderNums):- 
+  has_y_columns1(In,Y,Color,BorderNums),
+  (\+ illegal_column_data1(In,Color,BorderNums)).
+
+% bleeding of this color
+illegal_column_data1(In,Color,BorderNums):- 
+  nth1(Nth,In,OtherRow),\+ member(Nth,BorderNums),
+  append(_,[C1,C2|_],OtherRow),C1 == C2, C1 == Color,!.
+
+% completely differnt colored border
+illegal_column_data1(In,Color,BorderNums):- 
+  nth1(Nth,In,OtherRow),\+ member(Nth,BorderNums),
+  enum_colors(C2),C2\==Color,entire_row(C2,OtherRow),!.
+
+illegal_column_data(In,Color,BorderNums):- 
+  member(Nth,BorderNums),
+  NthLess is Nth+1 , NthMore is Nth+2,
+  \+ member(NthLess,BorderNums),
+  \+ member(NthMore,BorderNums),
+  nth1(NthLess,In,Row1),
+  nth1(NthMore,In,Row2),
+  (member(C1,Row2),member(C2,Row1)),
+  C1 == C2, C1 == Color,!.
+
+
+
+has_y_columns1(In,Y,Color,BorderNums):-
   append([First|_],[Last],In),
-  (entire_row(Color,First) -> entire_row(Color,Last) ; \+ entire_row(Color,Last)),
-  findall(Row,(append(_,[NotRow1,Row,NotRow2|_],In),
-    once((entire_row(Color,Row))),
-     (entire_row(Color,NotRow1)->(!,fail);true),
-     (entire_row(Color,NotRow2)->(!,fail);true)
-     ), Rows),
-  Rows\==[],
-  length(Rows,Y1), Y is Y1+1.
+  mentire_row(Color,First),mentire_row(Color,Last),!,
+  findall(Nth,(nth1(Nth,In,Row),mentire_row(Color,Row)),BorderNums),
+  length(BorderNums,YM1),Y is YM1 - 1.
 
-
+has_y_columns1(In,Y,Color,Out):-  
+  length(In,GY1),GY is GY1 + 1,
+  append([First|_],[Last],In),
+  \+ mentire_row(Color,Last), \+ mentire_row(Color,First),!,
+  Color = C2,
+  findall(Nth,(nth1(Nth,In,Row),enum_colors(C2),maplist(==(C2),Row)),BorderNums),
+  length(BorderNums,YM1),Y is YM1 + 1,
+  append([0|BorderNums],[GY],Out).
 
 %globalpoints(grid,points)

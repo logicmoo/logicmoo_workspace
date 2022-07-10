@@ -437,6 +437,7 @@ ensure_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
   (var(VM) -> list_to_rbtree_safe([type-fti],VM); true),
 
   statistics(cputime,X),Timeleft is X+60,
+  into_grid_d(Grid,Grid_D),
   max_min(GH,GV,Max,_Min),
  % rb_new(HM),duplicate_term(HM,Hashmap),
   ArgVM = vm{
@@ -446,7 +447,7 @@ ensure_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    program_i:Options, options:[], roptions:_, %todo_prev:[],
    % how much time is left before we turn on debugger
    timeleft:Timeleft, objs_max_len:Max, objs_min_mass:_, objs_max_mass:_,
-     
+     grid_d:Grid_D,
    % Grid and point representations
    grid:Grid, points:Points, points_o:Points, % points_repair:[],
 
@@ -457,13 +458,14 @@ ensure_fti(GH,GV,ID,Grid,Sofar,Reserved,Options,Points,VM):-
    objs:Sofar,  robjs:Reserved, %objs_prev:[],
    % Notes and debug info
    notes:_, debug:_,
+   
    % height width and lookup key for image
    h:GH, v:GV, id:ID},
   % (var(VM) -> (fix_test_name(ID,TestID,_), make_training_hints(TestID,ArgVM,HintedVM), HintedVM = VM) ; true),
    %(nb_current('$vm_pair',Shared)-> transfer_missing(Shared,VM) ; true),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
-   %(var(VM) ->ArgVM =VM ; ignore(ArgVM>:<VM)),
+   %(var(VM) ->ArgVM =VM ; ignore(ArgVM>:<VM)),   
    arc_setval(VM,ArgVM),
    set_vm(VM),
    !.
@@ -490,10 +492,12 @@ into_fti(ID,ROptions,GridIn0,VM):-
  % rb_new(HM),duplicate_term(HM,Hashmap),
   max_min(H,V,Max,_Min),
   pt(yellow,ig(ROptions,ID)=(H,V)),
+  into_grid_d(Grid,Grid_D),
+  %arc_setval(grid_d,Grid_D),
   ArgVM = vm{
    % parent VM
    %training:_,
-
+   grid_d:Grid_D,
    % Options and TODO List (are actually same things)
    program_i:Options, options:[], roptions:ROptions, %todo_prev:[],
    % how much time is left before we turn on debugger
@@ -521,8 +525,11 @@ into_fti(ID,ROptions,GridIn0,VM):-
     true)),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
-   
    !.
+
+
+into_grid_d(Grid,Grid_D):- most_d_colors(Grid,_CI,Grid_D),!.
+%must_det_ll((subst001(Grid,black,wbg,In0), most_d_colors(In0,_CI,Grid_D))),
 
 transfer_missing(ArgVM,VM):-
      dict_pairs(ArgVM,_,Pairs),

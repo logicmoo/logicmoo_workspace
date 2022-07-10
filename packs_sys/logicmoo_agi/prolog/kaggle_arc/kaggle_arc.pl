@@ -306,6 +306,7 @@ doit(set(E.v)):- that.
 :- ensure_loaded(kaggle_arc_test_easy).
 :- ensure_loaded(kaggle_arc_test_old).
 :- ensure_loaded(kaggle_arc_simple).
+:- ensure_loaded(kaggle_arc_test_cache).
 
 
 

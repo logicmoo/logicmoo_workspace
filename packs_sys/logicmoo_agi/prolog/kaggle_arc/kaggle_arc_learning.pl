@@ -72,7 +72,7 @@ test_arc(TestID):- with_arc(solve,TestID).
 with_arc(Action,TestID):- plain_var(TestID),!, findall(Name,fav(Name),L),
   list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
-with_arc(Action,arc):- !, findall(Name,kaggle_arc_db(Name,_,_,_,_),L),
+with_arc(Action,arc):- !, findall(Name,kaggle_arc_io(Name,_+_,_,_),L),
   list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
 with_arc(Action,TestName):-
@@ -97,8 +97,8 @@ with_arc(Action,TestID):-
   forall(between(0,6,Num),with_pair(Action,TestID,trn,Num)).
 
 with_pair(Action,TestID,Type,Num):-
-  kaggle_arc_db(TestID,Type,Num,in,In),
-  kaggle_arc_db(TestID,Type,Num,out,Out),
+  kaggle_arc_io(TestID,Type+Num,in,In),
+  kaggle_arc_io(TestID,Type+Num,out,Out),
   with_pair(Action,TestID,Type,Num,In,Out),!.
 
 with_pair(Action,TestID,Type,Num,In,Out):- !,

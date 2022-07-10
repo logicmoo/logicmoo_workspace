@@ -25,10 +25,6 @@ set_grid_id(Grid,ID):-
 
 
 
-kaggle_arc_db(Name,Example,Num,out,G):- kaggle_arc(Name,Example+Num,_,G).
-kaggle_arc_db(Name,Example,Num,in,G):- kaggle_arc(Name,Example+Num,G,_).
-
-
 into_pipe(Grid,Grid):- !. % into_group
 into_pipe(Grid,Solution):- into_grid(Grid,Solution).
 
