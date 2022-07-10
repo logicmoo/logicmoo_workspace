@@ -142,19 +142,21 @@ col_color(CC,CC).
 col_color(black,bg):-!.
 col_color(_,fg).
 
-grid_hint_io(IO,_In,Out,has_x_columns(CC)):- maybe_fail_over_time(1.2,has_x_columns(Out,_,Color,_)),col_color(Color,CC).
-grid_hint_io(IO,_In,Out,has_y_columns(CC)):- maybe_fail_over_time(1.2,has_y_columns(Out,_,Color,_)),col_color(Color,CC).
+grid_hint_io(_IO,_In,Out,has_x_columns(CC)):- maybe_fail_over_time(1.2,has_x_columns(Out,_,Color,_)),col_color(Color,CC).
+grid_hint_io(_IO,_In,Out,has_y_columns(CC)):- maybe_fail_over_time(1.2,has_y_columns(Out,_,Color,_)),col_color(Color,CC).
 %grid_hint_io(IO,In,Out,find_ogs):- maybe_fail_over_time(1.2,find_ogs(_,_,In,Out)).
-grid_hint_io(IO,In,Out,find_ogs_no_pad):- maybe_fail_over_time(1.2,((ogs_11(_,_,In,Out)))).
+grid_hint_io(_IO,In,Out,ogs_11):- maybe_fail_over_time(1.2,((ogs_11(_,_,In,Out)))).
 %grid_hint_iso(IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,OH,OV,_Color)).
-grid_hint_io(IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),grid_hint_iso(IO,In,Out,IH,IV,OH,OV,Hint).
+grid_hint_io(IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),!,grid_hint_iso(IO,In,Out,IH,IV,OH,OV,Hint).
 
-grid_hint_iso(IO,In,Out,IH,IV,OH,OV,grid_size(IO,OH,OV)).
-grid_hint_iso(IO,In,Out,GH,GV,GH,GV,containsAll(LeftOver)):- mapgrid(remove_color_if_same,Out,In,NewIn),
+%grid_hint_iso(IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
+grid_hint_iso(o,_In,_Out,IH,IV,OH,OV,proportional(size(H,V))):- once(IH\==OH ; IV\==OV), V is rationalize(IV/OV), H is rationalize(IH/OH).
+grid_hint_iso(o,In,Out,_IH,_IV,_OH,_OV,proportional(mass(Mass))):- mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
+grid_hint_iso(_IO,In,Out,_IH,_IV,_OH,_OV,intersect(unique_colors,IOnlyC,Shared,OOnlyC)):- 
+                                       once((unique_colors(In,IColor),unique_colors(Out,OColor),
+                                       intersection(IColor,OColor,Shared,IOnlyC,OOnlyC))).
+grid_hint_iso(_IO,In,Out,GH,GV,GH,GV,containsAll(LeftOver)):- mapgrid(remove_color_if_same,Out,In,NewIn),
    mass(NewIn,Mass), (Mass==0 -> LeftOver=[] ; ignore(unique_colors(NewIn,LeftOver))).
-grid_hint_iso(o,_In,_Out,IH,IV,OH,OV,purportional(H,V)):- once(IH\==OH ; IV\==OV), V is rationalize(IV/OV), H is rationalize(IH/OH).
-grid_hint_iso(o,In,Out,IH,IV,OH,OV,purportional_mass(Mass)):- mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
-grid_hint_iso(IO,In,Out,IH,IV,OH,OV,color_spread(IO,OU,Shared,UI)):- unique_colors(In,IMass),unique_colors(Out,OMass),intersection(IMass,OMass,Shared,UI,UO).
 
 entire_row(Color,Row):- maplist(==(Color),Row).
 
@@ -169,15 +171,15 @@ remove_color_if_same(_X,Y,Y).
 
 has_xy_columns(In,X,Y,Color,Chunks):- 
   grid_area(In,HV), HV > 18,
-  grid_size(In,GH,GV), 
+  %grid_size(In,GH,GV), 
   has_x_columns(In,X,Color,BorderNumsX),
-  has_y_columns(In,Y,Color,BorderNumsY),!,
-  (X>1 ; Y>1),
+  has_y_columns(In,Y,Color,BorderNumsY),
+  once(X>1 ; Y>1),
   make_grid(X,Y,Chunks),
   %pt(slicing(BorderNumsX,BorderNumsY,onto(X,Y))),
   gather_chunks(Color,In,Chunks,1,1,X,Y,BorderNumsX,BorderNumsY).
 
-gather_chunks(_Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):- Y>GY,!.
+gather_chunks(_Color,_In,_Chunks,_X,Y,_GX,GY,_BorderNumsX,_BorderNumsY):- Y>GY,!.
 gather_chunks(Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):-
   nth1(Y,Chunks,Row),nth1(X,Row,Cell),
   nth1(X,BorderNumsX,SX,RX),nth1(X,RX,EX),
