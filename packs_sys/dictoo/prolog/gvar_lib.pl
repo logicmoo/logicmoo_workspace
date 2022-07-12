@@ -113,7 +113,10 @@ dot_call(A,B):-dot_eval(A,B,_).
 :- 'system':import(dot_eval/3).
 :- module_transparent(dot_eval/3).
 dot_eval( Self,Func,Value):- is_dict(Self),!,dot_dict(Self, Func, Value).
-dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_visit(Self,Pairs),strip_module(Func,_,Key),member(Key-Value,Pairs),!.
+dot_eval( Self,Func,Value):- nonvar(Func),compound(Self),Self=t(_,_,_,_),!,rb_lookup(Func,Value,Self),!.
+dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_lookup(Key,Value,Self),!.
+%dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_visit(Self,Pairs),strip_module(Func,_,Key),member(Key-Value,Pairs),!.
+
 dot_eval( Self,Func,Value):- is_assoc(Self),!,get_assoc(Func,Self,Value),!.
 dot_eval(MSelf,Func,Value):- dot_eval,!,strip_module(MSelf,M,_Self),dot_intercept(M,MSelf,Func,Value).
 
@@ -122,6 +125,8 @@ dot_eval:- true.
 :- module_transparent(dot_intercept/4).
 % dot_intercept(M,Self,Func,Value):- quietly((use_dot(_,M),nonvar(Value), \+ current_prolog_flag(gvar_lazy,false))),!,Value =.. ['.',Self,Func].
 
+
+dot_intercept(_M,Self,Func,Value):-  compound(Self),Self=t(_,_,_,_), trace,!,rb_lookup(Func,Value,Self).
 dot_intercept(M,Self,Func,Value):- 
    ((once((show_failure(gvs:is_dot_hook(M,Self,Func,Value))->show_failure(use_dot(_,M)))) 
       -> gvs:dot_overload_hook(M,Self,Func,Value)) *-> true ;
@@ -132,6 +137,7 @@ dot_intercept(M,Self,Func,Value):-
 
 % '__index_wiki_pages'
 gvs:never_dot_intercept(pldoc_wiki).
+dot_intercept_lazy(_M,Self,Func,Value):-  compound(Self),Self=t(_,_,_,_),!,notrace(rb_lookup(Func,Value,Self)).
 dot_intercept_lazy(M,_Self,_Func,_Value):- gvs:never_dot_intercept(M),!, fail.
 dot_intercept_lazy(M,Self,Func,Value):- \+ is_dict(Self), 
   \+ current_prolog_flag(gvar_lazy, false),!,

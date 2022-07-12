@@ -315,7 +315,8 @@ print_test(TName):-
        once(in_out_name(ExampleNum1,NameIn,NameOut)),
          as_d_grid(In,In1),as_d_grid(Out,Out1),
        format('~Ngridcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,
-         print_side_by_side(cyan,In1,NameIn,_,Out1,NameOut)]))))),
+         print_side_by_side(cyan,In1,NameIn,_,Out1,NameOut)]),
+       grid_hint_swap(i-o,In1,Out1))))),format('~N'),
        write('%= '), parcCmt(TestID),!.
 
 next_grid_mode(dots,dashes):-!.
@@ -647,80 +648,11 @@ db_u(P1L,P1,P2L,P2,In,Out):- is_eval(P2,Prev,P2A),!,db_u(P1L,P1,[Prev|P2L],P2A,I
 db(P1,P2,In,Out):- db_u([],P1,[],P2,In,Out).
 db(X,Y,I,I):- pt(db(X,Y)),pt(I).
 
+
+
 copy_grid(In,G,G):- In == in,!.
-copy_grid(Name,_,G):- get_training(VM), G=VM.Name .
+copy_grid(Name,_,G):- get_training(VM),get_kov(Name,VM,G).
 
-
-/*  
-
-%fav(v('20818e16'),[guess_bg,indiv(min(2))]).
-
-%(fav(_,P)/(flatten([P],Flat),member(E,Flat))) ==> fav_trait(E).
-
-*/
-:- dynamic(muarc:kaggle_arc_json/4).
-
-
-load_json_files(F,Mask):- 
-  arc_sub_path('.',ARC_DIR),
-  absolute_file_name(Mask,AbsMask,[relative_to(ARC_DIR)]),
-  expand_file_name(AbsMask,FullNames),
-  maplist(file_base_name,FullNames,BaseNames),
-  maplist(file_name_extension,Names,_,BaseNames),
-  maplist(load_json_file(F),Names,FullNames),!.
-
-load_json_file(F, BaseName, FullName):- Testname=..[F,BaseName], 
-  % dmsg(load_json_file=FullName),
-  setup_call_cleanup(open(FullName,read,In),
-   json_read(In,Term,[]),
-   close(In)),
-  load_json_of_file(Testname,file,Term),!.
-
-  load_json_of_file(Name,Type,json(Term)):-! , load_json_of_file(Name,Type,Term).
-  load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
-  load_json_of_file(Name,train,T):-!,load_json_of_file(Name,trn,T).
-  load_json_of_file(Name,test,T):-!,load_json_of_file(Name,tst,T).
-    load_json_of_file(Testname,ExampleNum,[input=In,output=Out]):-
-       json_to_colors(In,InColor),
-       json_to_colors(Out,OutColor),
-       assert_if_new(muarc:kaggle_arc_json(Testname,ExampleNum,InColor,OutColor)),!.
-  load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(muarc:kaggle_arc_json(Name,Type,In,Out)),!.
-  load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
-  load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
-
-
-%ma:attr_unify_hook(
-
-%cell(color,type,objects,
-
-json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.
-json_to_colors(Out,Color):- is_list(Out),!,maplist(json_to_colors,Out,Color).
-json_to_colors(Out,Color):- grid_color_code(Out,Color).
-
-
-:- dynamic(muarc_tmp:arc_directory/1).
-muarc_tmp:arc_directory(ARC_DIR):- getenv('ARC_DIR',ARC_DIR), exists_directory(ARC_DIR),!.
-
-:- multifile (user:file_search_path/2).
-user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
-
-:- prolog_load_context(directory,ARC_DIR), asserta(muarc_tmp:arc_directory(ARC_DIR)).
-
-absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
-  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
-absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
-  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(regular),solutions(first),file_errors(error),access(read)]).
-
-arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath),!.
-
-:- export(arc_sub_path/2).
-
-:- load_json_files(t,'./data/training/*.json').
-:- load_json_files(v,'./data/evaluation/*.json').
-%:- load_json_files(v,'./data/test/*.json').
-kaggle_arc(TName,ExampleNum,In,Out):- muarc:kaggle_arc_json(TName,ExampleNum,In,Out).
 % ExampleNum is tst or trn
 /*
 kaggle_arc(t(Name), TypeI, In, Out):- 

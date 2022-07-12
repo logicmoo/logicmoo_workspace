@@ -70,16 +70,16 @@ quietlyd(G):- quietly(G),!.
     :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
     :- set_prolog_flag(print_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
 
-%:- set_prolog_flag(verbose_load,true).  
-%:- set_prolog_flag(verbose_autoload,true).
-%:- set_prolog_flag(debug_on_error,true).
-%:- set_prolog_flag(report_error,true).
-%:- set_prolog_flag(debugger_show_context,true).
-%:- set_prolog_flag(last_call_optimisation,false).
+:- set_prolog_flag(verbose_load,true).  
+:- set_prolog_flag(verbose_autoload,true).
+:- set_prolog_flag(debug_on_error,true).
+:- set_prolog_flag(report_error,true).
+:- set_prolog_flag(debugger_show_context,true).
+:- set_prolog_flag(last_call_optimisation,false).
 %:- set_prolog_flag(trace_gc,false).
-%:- set_prolog_flag(write_attributes,dots).
-%:- set_prolog_flag(on_error,status).
-%:- set_prolog_flag(backtrace_depth,100).
+:- set_prolog_flag(write_attributes,dots).
+:- set_prolog_flag(on_error,status).
+:- set_prolog_flag(backtrace_depth,1000).
 :- noguitracer.
 
 
@@ -115,6 +115,8 @@ clsmake:- update_changed_files,!.
 :- use_module(library(dictoo_lib)).
 
 :- listing((.)/3).
+:- autoload_all.
+
 
 % we alias these so we can catch out of control list growth
 my_append(A,B):- append(A,B).
@@ -190,21 +192,37 @@ is_setter_syntax(set(ObjMember),Obj,Member,_Var,b):- obj_member_syntax(ObjMember
 is_setter_syntax(gset(ObjMember),Obj,Member,_Var,nb):- obj_member_syntax(ObjMember,Obj,Member).
 is_setter_syntax(hset(How,ObjMember),Obj,Member,_Var,How):- obj_member_syntax(ObjMember,Obj,Member).
 
-
 obj_member_syntax(ObjMember,Obj,Member):-compound(ObjMember), ObjMember =.. ['.',Obj,Member],!.
 
 
+goal_expansion_getter(Goal,O):- \+ compound(Goal), !,O = Goal.
+goal_expansion_getter(Goal,get_kov(Func,Self,Value)):-
+  compound_name_arguments(Goal,'.', [Self, Func, Value]),!.
+goal_expansion_getter(Goal,Out):- 
+ compound_name_arguments(Goal,F,Args),
+ maplist(goal_expansion_getter,Args,ArgsOut),
+ compound_name_arguments(Out,F,ArgsOut).
+
 goal_expansion_setter(Goal,_):- \+ compound(Goal), !, fail.
+%goal_expansion_setter((G1,G2),(O1,O2)):- !, expand_goal(G1,O1), expand_goal(G2,O2),!.
 goal_expansion_setter(set_omember(A,B,C,D),set_omember(A,B,C,D)):-!.
 goal_expansion_setter(set_omember(A,B,C),set_omember(b,A,B,C)):-!.
+goal_expansion_setter(Goal,get_kov(Func,Self,Value)):- compound(Goal), Goal =.. ['.', Self, Func, Value],!.
+
 goal_expansion_setter(Goal,Out):- 
-   predicate_property(Goal,meta_predicate(_)),!, fail,
+   predicate_property(Goal,meta_predicate(_)),!,fail,
    arg(N1,Goal,P), goal_expansion_setter(P,MOut),
    setarg(N1,Goal,MOut), !, expand_goal(Goal, Out).
+
 
 goal_expansion_setter(Goal,Out):-
    arg(N1,Goal,P),  is_setter_syntax(P,Obj,Member,Var,How),
    setarg(N1,Goal,Var), !, expand_goal((Goal,set_omember(How,Member,Obj,Var)), Out).
+
+goal_expansion_setter(Goal,Out):-
+   get_setarg_p1(setarg,I,Goal,P1), compound(I), I=.. ['.', Self, Func, Value],
+   call(P1,get_kov(Func,Self,Value)),!,
+   expand_goal(Goal,Out).
 
 goal_expansion_setter(Goal,Out):-
    get_setarg_p1(setarg,I,Goal,P1), is_setter_syntax(I,Obj,Member,Var,How),
@@ -243,8 +261,8 @@ get_kov(K,O,V):- is_rbtree(O),!,rb_in(K,V,O).
 
 arc_setval(TT,List):- is_list(List),!,maplist(arc_setval(TT),List).
 arc_setval(TT,Map):- get_map_pairs(Map,_Type,Pairs),!,maplist(arc_setval(TT),Pairs).
-arc_setval(TT,N=V):- arc_setval(TT,N,V).
-arc_setval(TT,N-V):- arc_setval(TT,N,V).
+arc_setval(TT,N=V):- !, arc_setval(TT,N,V).
+arc_setval(TT,N-V):- !, arc_setval(TT,N,V).
 arc_setval(TT,NV):- arc_setval(TT,NV,t).
 arc_setval(TT,N,V):- is_dict(TT),!, nb_set_dict(N,TT,V).
 arc_setval(TT,N,V):- (nb_rb_get_node(TT,N,Node)->nb_rb_set_node_value(Node,V);nb_rb_insert(TT,N,V)).
@@ -252,6 +270,19 @@ arc_setval(TT,N,V):- (nb_rb_get_node(TT,N,Node)->nb_rb_set_node_value(Node,V);nb
 
 system:term_expansion((Head:-Body),I,Out,O):- nonvar(I),  compound(Head), term_expansion_setter((Head:-Body),Out),(Head:-Body)=In,In\==Out,I=O,!,
  nop((print(term_expansion_setter(In-->Out)),nl)).
+
+/*
+system:term_expansion((Head:-Goal),I,(Head:-Out),O):- nonvar(I),  compound(Goal), 
+ goal_expansion_setter(Goal,Out),Goal\=@=Out,I=O,!,
+ nop((print(goal_expansion_getter(Goal-->Out)),nl)).
+*/
+
+%system:goal_expansion(Goal,I,Out,O):- compound(Goal),goal_expansion_getter(Goal,Out),Goal\==Out,I=O,!, 
+%  ((print(goal_expansion_getter(Goal-->Out)),nl)).
+
+%user:goal_expansion(Goal,I,Out,O):- compound(Goal),goal_expansion_getter(Goal,Out),Goal\==Out,I=O,!, 
+%  ((print(goal_expansion_getter(Goal-->Out)),nl)).
+
 goal_expansion(Goal,I,Out,O):- compound(Goal),goal_expansion_setter(Goal,Out),Goal\==Out,I=O,!, 
   nop((print(goal_expansion_setter(Goal-->Out)),nl)).
 
@@ -285,6 +316,7 @@ doit(set(E.v)):- that.
 %:- learn_shapes.
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).
+:- ensure_loaded(kaggle_arc_test_loader).
 :- ensure_loaded(kaggle_arc_domaintypes).
 :- ensure_loaded(kaggle_arc_test_iface).
 :- ensure_loaded(kaggle_arc_explaination).
@@ -294,6 +326,7 @@ doit(set(E.v)):- that.
 :- ensure_loaded(kaggle_arc_db).
 :- ensure_loaded(kaggle_arc_heuristics).
 :- ensure_loaded(kaggle_arc_intruder).
+:- ensure_loaded(kaggle_arc_test_cache).
 :- ensure_loaded(kaggle_arc_individuation).
 :- ensure_loaded(kaggle_arc_interpreter).
 :- ensure_loaded(kaggle_arc_object).
@@ -306,7 +339,6 @@ doit(set(E.v)):- that.
 :- ensure_loaded(kaggle_arc_test_easy).
 :- ensure_loaded(kaggle_arc_test_old).
 :- ensure_loaded(kaggle_arc_simple).
-:- ensure_loaded(kaggle_arc_test_cache).
 
 
 
@@ -381,8 +413,8 @@ get_training(Training):- must_det_ll(((
   get_current_test(TestID), make_training(TestID,Training), !,
   nb_linkval('$training_vm',Training)))),!.
 set_training(Training):- nb_linkval('$training_vm',Training).
-get_training(Prop,Value):- get_training(Training), gset(Training.Prop)=Value.
-set_training(Prop,Value):- get_training(Training), Value = Training.Prop.
+set_training(Prop,Value):- get_training(Training), gset(Training.Prop)=Value.
+get_training(Prop,Value):- get_training(Training), get_kov(Prop,Training,Value).
 set_vm(VM):- nb_linkval('$grid_vm',VM).
 get_vm(VM):- nb_current('$grid_vm',VM),!.
 get_vm(VM):- ndividuator,!,nb_current('$grid_vm',VM),!.
@@ -676,4 +708,7 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 :- load_last_test_name.
 
 user:portray(Grid):- quietly(arc_portray(Grid)),!.
+:- listing((addOptions)/2).
+:- xlisting((.)/3).
+:- xlisting(user:'.'(_, _, _)).
 

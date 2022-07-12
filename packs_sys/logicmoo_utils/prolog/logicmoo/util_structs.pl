@@ -361,7 +361,7 @@ prop_get_try(Name, STRUCT,  Value, Ref):- STRUCT = mutable(Struct), !, prop_get_
 prop_get_map(_,    Dict,       _ ):- ( \+ \+ Dict=[] ),!, fail.
 prop_get_map(Name, Struct,  Value):- is_list(Struct),memberchk(Name=Value,Struct).
 prop_get_map(Name, Dict,    Value):- is_dict(Dict),!,get_dict(Name,Dict,Value).
-prop_get_map(Name, Dict,    Value):- is_rbtree(Dict),!,nb_rb_get_node(Dict,Name,Value).
+prop_get_map(Name, Dict,    Value):- is_rbtree_t4(Dict),!,nb_rb_get_node(Dict,Name,Value).
 prop_get_map(Name, Dict,    Value):- is_assoc(Dict),!,get_assoc(Dict,Name,Value).
 
 prop_get_map(Name, Struct,  Value):- Name==sclass, compound(Struct),functor(Struct,Value,_),!.
@@ -450,7 +450,7 @@ prop_set_map(Name,HDict,Value):- compound(HDict), HDict = mutable(Dict),
     must_det_l((prop_set_try(Name,Dict,Value,NewDict),(Dict == NewDict -> true ; 
      (must(nonvar(NewDict)),nb_setarg_ex(1,HDict,NewDict)))))).
 
-prop_set_map(Name,Dict,Value):- is_rbtree(Dict),!,nb_rb_insert(Name,Dict,Value).
+prop_set_map(Name,Dict,Value):- is_rbtree_t4(Dict),!,nb_rb_insert(Name,Dict,Value).
 prop_set_map(Name,List,Value):- is_list(List), !, nb_set_pairlist(Name,List,Value).
 prop_set_map(Index,Dict,Value):- integer(Index),!, nb_setarg_ex(Index,Dict,Value).
 prop_set_map(Name,Dict,Value):- functor(Dict,StructName,_),

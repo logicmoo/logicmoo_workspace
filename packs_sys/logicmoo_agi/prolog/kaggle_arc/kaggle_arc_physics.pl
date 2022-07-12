@@ -273,6 +273,7 @@ show_grid_changes(VM,S,Goal):-
      ignore((VM.grid\=@=Was,
         print_side_by_side(silver,print_grid(VM.h,VM.v,Was),grid>was:S,_,print_grid(VM.h,VM.v,VM.grid),grid>new:S)))).
 
+print_side_by_side_d(C,A,AN,W,B,BN):- nop(print_side_by_side(C,A,AN,W,B,BN)).
 
 %find_touches(VM,ScanNext,SofarInsteadO):- find_touches(VM,ScanNext,ScanNext,SofarInsteadO).
 

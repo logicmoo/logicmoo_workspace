@@ -166,6 +166,9 @@ ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 pt(P):- var(P),!,pt(var(P)).
 pt(_):- is_print_collapsed,!.
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
+
+%pt(P):-!,writeq(P).
+
 pt(_):- format('~N'), fail.
 pt(P):- arc_portray(P),!.
 pt(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.

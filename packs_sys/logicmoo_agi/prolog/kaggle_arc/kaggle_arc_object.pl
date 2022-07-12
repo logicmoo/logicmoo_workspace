@@ -675,6 +675,7 @@ vis_hv(NT,H,V):-  known_gridoid(NT,G),G\==NT, vis_hv(G,H,V).
 %vis_hv(Obj,size(H,V)):- vis_hv(Obj,H,V).
 %loc_xy(Obj,loc(H,V)):- loc_xy(Obj,H,V).
 
+center_term(Obj,loc(1,1)):- is_grid(Obj),!.
 center_term(Obj,loc(H,V)):- center(Obj,H,V).
 
 center(I,X,Y):- indv_props(I,L),member(center(X,Y),L),!.

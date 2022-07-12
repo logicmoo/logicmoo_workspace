@@ -177,7 +177,7 @@ plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
 my_assertion(G):- call(G),!.
 my_assertion(G):- dumpST,!,trace,wdmsg(my_assertion(G)),break,!.
-must_be_free(AllNew):- var(AllNew),!.
+must_be_free(AllNew):- plain_var(AllNew),!.
 must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
 must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.
 must_be_nonvar(AllNew):- dumpST,wdmsg(must_be_nonvar(AllNew)),break,fail.

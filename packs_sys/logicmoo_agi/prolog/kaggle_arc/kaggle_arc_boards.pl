@@ -69,7 +69,7 @@ detect_supergrid(TestID,ExampleNum,In0,Out0,TT):-
   subst_1L(O2I,Out0,OutF),
   dict_pairs(T,_,Pairs),
   list_to_rbtree_safe(Pairs,TT),!,
-  arc_setval(TT,out_color_remap, O2I),
+  arc_setval(TT,rhs_color_remap, O2I),
 
   show_colorfull_idioms(In0),
   show_colorfull_idioms(Out0),
@@ -136,15 +136,23 @@ relax_arg(E,len(L)):- is_list(E),length(E,L).
 relax_arg(_,_).
 
 
-grid_hint(TestID):- format('~N'),
-  findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),HintsIO),
-  findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),in,In1),  N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),in,In2)->true;kaggle_arc_io(TestID,(trn+0),in,In2)), grid_hint_recolor(i-i,In1,In2,Hint)),HintsII),
-  findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),out,Out1),N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)), grid_hint_recolor(o-o,Out1,Out2,Hint)),HintsOO),
-  append([HintsOO,HintsII,HintsIO],Hints),
+grid_hint_lt(TestID):- format('~N'),
+  findall(Hint-N-io,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),Hints),
+  %findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),in,In1),  N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),in,In2)->true;kaggle_arc_io(TestID,(trn+0),in,In2)), grid_hint_recolor(i-i,In1,In2,Hint)),HintsII),
+  %findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),out,Out1),N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)), grid_hint_recolor(o-o,Out1,Out2,Hint)),HintsOO),
+  %append([HintsOO,HintsII,HintsIO],Hints),
   keysort(Hints,SHints),
   maplist(aquire_hints(SHints),SHints).
+grid_hint(TestID):- format('~N'),
+  %findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),HintsIO),
+  findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),in,In1),  N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),in,In2)->true;kaggle_arc_io(TestID,(trn+0),in,In2)), grid_hint_recolor(i-i,In1,In2,Hint)),HintsII),
+  findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),out,Out1),N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)), grid_hint_recolor(o-o,Out1,Out2,Hint)),HintsOO),
+  append([HintsOO,HintsII],Hints),
+  keysort(Hints,SHints),
+  maplist(aquire_hints(SHints),SHints),
+  format('~N').
   
-aquire_hints(_AllHints,HintN):- format('~N~q.~n',[HintN]).
+aquire_hints(_AllHints,HintN):- format(' ~q ',[HintN]).
 /*            (  %write('testing... '),print(Hint),write(' '),
             relax_hint(Hint,Hint0),
        findall((kaggle_arc(TestID,(trn+N),In1,Out1),N>0),
@@ -159,12 +167,15 @@ aquire_hints(_AllHints,HintN):- format('~N~q.~n',[HintN]).
 assert_test_property(TestID,Prop,Data):-
   my_asserta_if_new(arc_test_property(TestID,Prop,Data)).
 
+grid_hint_swap(IO,In,Out):-
+ color_print(magenta,call((format('~N % ~w: ',[IO]),
+ forall(grid_hint_swap(IO,In,Out,Hint),format(' ~q ',[Hint]))))).
 
 grid_hint_swap(IO,In,Out,Hint):-  grid_hint_recolor(IO,In,Out,Hint).
-grid_hint_swap(I-O,In,Out,Hint):- grid_hint_recolor(O-I,Out,In,Hint).
+grid_hint_swap(I-O,In,Out,r(Hint)):- grid_hint_recolor(O-I,Out,In,Hint).
 
-grid_hint_recolor(IO,In,Out,hint(IO,mono(Hint))):-  once((into_monochrome(In,In0),into_monochrome(Out,Out0))), grid_hint_io(m,IO,In0,Out0,Hint).
-grid_hint_recolor(IO,In,Out,hint(IO,Hint)):-  grid_hint_io(c,IO,In,Out,Hint).
+grid_hint_recolor(IO,In,Out,mono(Hint)):-  once((into_monochrome(In,In0),into_monochrome(Out,Out0))), grid_hint_io(m,IO,In0,Out0,Hint).
+grid_hint_recolor(IO,In,Out,Hint):-  grid_hint_io(c,IO,In,Out,Hint).
 
 %maybe_fail_over_time(Time,Goal):- fail_over_time(Time,Goal).
 maybe_fail_over_time(_Time,Goal):- once(Goal).
@@ -185,7 +196,7 @@ grid_hint_iso(c,_-o,In,Out,_IH,_IV,_OH,_OV,proportional(mass(Mass))):- mass(In,I
 grid_hint_iso(c,_-o,In,Out,_IH,_IV,_OH,_OV,Hint):- 
                                        once((unique_colors(In,IColor),unique_colors(Out,OColor),
                                        intersection(IColor,OColor,Shared,IOnlyC,OOnlyC))),
-                                       member(Hint,[shared_color(Shared),in_color(IOnlyC),out_color(OOnlyC)]).
+                                       member(Hint,[shared_color(Shared),lhs_color(IOnlyC),rhs_color(OOnlyC)]).
 
 grid_hint_iso(c,_IO,In,Out,GH,GV,GH,GV,containsAll(LeftOver)):- mapgrid(remove_color_if_same,Out,In,NewIn),
    mass(NewIn,Mass), (Mass==0 -> LeftOver=[] ; (unique_colors(NewIn,Colors),include(nonvar,Colors,LeftOver))).
