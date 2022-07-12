@@ -214,6 +214,7 @@ individuation_macros(complete, [
     shape_lib(as_is),
     fourway,
     find_colorfull_idioms,
+    complete_broken_lines,
     %shape_lib(as_is),    
     %non_diag,
     %colormass,    
@@ -544,6 +545,45 @@ nb_link_pairs(VM,K-V):- (nonvar(V),V\==[])->set_omemberh(link,K,VM,V);true.
 nb_link_pairs_if_missing(VM,K-NewV):- V = VM.K, ((var(V),\+ attvar(V))->set_omemberh(link,K,VM,NewV);true).
 
 
+is_fti_step(complete_broken_lines).
+
+row_of_5(P1,P2,P3,P4,P5):- 
+  n_s_e_w(Dir),
+  is_adjacent_point(P1,Dir,P2),
+  is_adjacent_point(P2,Dir,P3),
+  is_adjacent_point(P3,Dir,P4),
+  is_adjacent_point(P4,Dir,P5).
+
+complete_broken_lines(VM):- complete_broken_lines(VM.points,set(VM.points)).
+complete_broken_lines(Ps,Done):-    
+   select(C-P1,Ps,G1), row_of_5(P1,P2,P3,P4,P5),
+   select(C-P2,G1,G2),
+  \+ member(C-P3,G2), 
+  select(M-P3,G2,G3), M\==C, 
+   select(C-P4,G3,G4), 
+   member(C-P5,G4),!,
+   %write(C-P3),
+  complete_broken_lines([C-P3|Ps],Done).
+complete_broken_lines(Ps,Done):-    
+   select(C-P1,Ps,G1), row_of_5(P1,P2,P3,P4,P5),
+   select(C-P2,G1,G2),
+   select(C-P3,G2,G3),
+  \+ member(C-P4,G2), select(N-P4,G3,G4), N\==C, 
+   member(C-P5,G4),!,
+   %write(C-P3),
+  complete_broken_lines([C-P4|Ps],Done).
+
+complete_broken_lines(Ps,Done):-
+   select(C-P1,Ps,G1), row_of_5(P1,P2,P3,P4,P5),
+   select(C-P2,G1,G2),
+  \+ member(C-P3,G2), select(M-P3,G2,G3), M\==C, 
+  \+ member(C-P4,G2), select(N-P4,G3,G4), N\==C, 
+   member(C-P5,G4),!,
+   %write(C-P3),
+  complete_broken_lines([C-P3,C-P4|Ps],Done).
+
+complete_broken_lines(Done,Done).
+
 %unraw_inds(_VM,I,O):- I=O,!.
 
 unraw_inds(VM,IndvS,IndvOO):-   
@@ -654,7 +694,7 @@ run_fti(VM,[F|_]):-
 
 maybe_four_terse(L,F=N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
 maybe_four_terse(L,L):-!.
-%fti(VM,_):- VM.points=[], !.
+fti(VM,_):- VM.points=[], !.
 fti(_,[]):- !.
 fti(_,[Done|OUT]):-  ( \+ done \= Done ), !, wdmsg(done_fti(_,[Done|OUT])),!.
 

@@ -64,24 +64,26 @@ computeMaxMass(VM,_List,_Count,Max):- max_min(VM.objs_max_mass,700,_,Max).
 
 proportional_objs_how(AG,BG,Set):- into_list(AG,AGL),into_list(BG,BGL), proportional_objs_how_l(AGL,BGL,Set). %findall(DD,proportionate(AGL,BGL,DD),List),list_to_set(List,Set).
 
-proportional_objs_how_l(AG,BG,Set):-  my_permutation(AG,AGL), my_permutation(BG,BGL), proportionate(AGL,BGL,Set).
+proportional_objs_how_l(AG,BG,Set):-  my_permutation(AG,AGL), my_permutation(BG,BGL), proportionate(not_very_simular,AGL,BGL,Set).
 
 my_permutation(BG,BG):-!.
 my_permutation(BG,BGL):- permutation(BG,BGL).
 %proportionate(List1,List2):- proportionate(List1,List2,_),!.
-proportionate([],[],_).
-proportionate([HV1|List1],[HV2|List2],N):-
+proportionate(_Nvm,[],[],_).
+proportionate(NVM,[HV1|List1],[HV2|List2],N):-
    proportional(HV1,HV2,N),
-   \+ not_very_meaningfull(N),
-   proportionate(List1,List2,N).
+   call(NVM, N),
+   proportionate(NVM,List1,List2,N).
 
-not_very_meaningfull(vis_hv_term(size(A,B))):- !, not_very_meaningfull_t(A),not_very_meaningfull_t(B).
-not_very_meaningfull(vis_hv_term(area(A))):-   !, not_very_meaningfull_t(A).
-not_very_meaningfull(loc_xy_term(loc(A,B))):-  !, not_very_meaningfull_t(A),not_very_meaningfull_t(B).
-not_very_meaningfull(center_term(loc(A,B))):-  !, not_very_meaningfull_t(A),not_very_meaningfull_t(B).
+not_very_simular(X):- \+ not_very_different(X).
 
-not_very_meaningfull(mass(A)):- !, not_very_meaningfull_t(A).
-not_very_meaningfull_t(difference(0)). not_very_meaningfull_t(ratio(1)). not_very_meaningfull_t(moved(0)).
+not_very_different(vis_hv_term(size(A,B))):- !, not_very_different_t(A),not_very_different_t(B).
+not_very_different(vis_hv_term(area(A))):-   !, not_very_different_t(A).
+not_very_different(loc_xy_term(loc(A,B))):-  !, not_very_different_t(A),not_very_different_t(B).
+not_very_different(center_term(loc(A,B))):-  !, not_very_different_t(A),not_very_different_t(B).
+
+not_very_different(mass(A)):- !, not_very_different_t(A).
+not_very_different_t(difference(0)). not_very_different_t(ratio(1)). not_very_different_t(moved(0)).
 
 proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
 proportional(size(V1,H1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).

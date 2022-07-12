@@ -179,7 +179,7 @@ rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
 
 ndividuator1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids1(TestID,G,ig([complete],G)).
 ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,ig([complete],G)).
-test_grids(TestID,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
+test_grids(TestID,G):- ignore(get_current_test(TestID)), kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
 with_test_grids1(TestID,G,P):- ignore(nb_current(example,ExampleNum)),
   kaggle_arc_io(TestID,ExampleNum,IO,G),((ExampleNum*IO) \= ((tst+_)*out)),

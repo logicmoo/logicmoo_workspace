@@ -148,8 +148,8 @@ run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In
 %run_dsl(VM, Mode,[N|V],In,OutValue):-!, vm_grid(VM, maplist(expand_dsl_value(VM, Mode,In),[N|V],OutValue),In,_Out).
 
 run_dsl(VM, Mode,Name=Val,In,Out):- nonvar(Name),run_dsl(VM, Mode,nb_set(Name,Val),In,Out).
-run_dsl(VM,_Mode,get(Name,Val),In,Out):- vm_grid(VM,get_vm(Name,Val),In,Out).
-run_dsl(VM,_Mode,get(Name),In,Val):- vm_grid(VM,get_vm(Name,Val),In,_Out).
+run_dsl(VM,_Mode,get(Name,Val),In,Out):- !, vm_grid(VM,get_vm(Name,Val),In,Out).
+run_dsl(VM,_Mode,get(Name),In,Val):- !, vm_grid(VM,get_vm(Name,Val),In,_Out).
 %run_dsl(VM, Mode,(Name),In,Val):- atom(Name), vm_grid(VM,get_vm(Name,Val),In,_Out). %%atom(Name),run_dsl(VM,Mode, nb_get_value(VM,Name,Val),In,_),!.
 run_dsl(VM, Mode,SET_NV,In,Out):- compound(SET_NV), SET_NV=..[set,Name,Val], !, expand_dsl_value(VM, Mode,In,Val,OutValue), run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
 run_dsl(VM,_Mode,b_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
@@ -210,6 +210,7 @@ closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(any),-grid)).
+into_grid(P,G):- var(P),!,P=G,get_current_test(TestID),test_grids(TestID,G).
 into_grid(P,G):- quietly(cast_to_grid(P,G, _)).
 
 print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).

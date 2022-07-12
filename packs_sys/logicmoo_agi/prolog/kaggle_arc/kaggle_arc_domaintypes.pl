@@ -243,7 +243,7 @@ vm_obj(VM,O):- member(O,VM.objs).
 
 is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
 
-fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), is_grid_cell(C).
+fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C), !, is_grid_cell(C).
 
 slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
   length([C|H],L),

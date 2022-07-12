@@ -22,7 +22,7 @@ supergrid_is_output_size % t('8d5021e8')
 supergrid_is_all % t('6150a2bd')
 suprgrid_is_dots_same_count % t(ff28f65a)
 supergrid_input_1 % v(cad67732)*  
-supergrid_input_1 output=1x1
+supergrid_input_1 in_out=1x1
 superinput_keypad= souput=kewypad
 superinput_columns 
 superinput_rows
@@ -79,7 +79,7 @@ detect_supergrid(TestID,ExampleNum,In0,Out0,TT):-
   (most_d_colors(In,CI,NI),arc_setval(TT,in_d_colors,CI),arc_setval(TT,in_map,NI)),
   fif(find_ogs(HOI,VOI,In0,OutF),arc_setval(TT,z_in_contains_out,(HOI,VOI))),
   fif(find_ogs(HIO,VIO,OutF,In0),arc_setval(TT,z_out_contains_in,(HIO,VIO))),
-  %@TODO record in the input _may_ hold the output 
+  %@TODO record in the out_in _may_ hold the in_out 
   dash_chars,
   dash_chars,
   dmsg(detect_supergrid(TestID,ExampleNum)),
@@ -117,46 +117,78 @@ save_grid_hints:-  forall(arc_test_name(TestID),test_grid_hint(TestID)),
 %test_grid_hint:- get_current_test(TestID),test_grid_hint(TestID).
 test_grid_hint(TestID):- grid_hint(TestID).
 
+
+
+
+relax_hint(G,G):- (\+ compound(G)) -> !; true.
+relax_hint(out_in(G),out_in(GG)):- !, relax_hint(G,GG).
+relax_hint(in_out(G),in_out(GG)):- !, relax_hint(G,GG).
+relax_hint(mono(G),mono(GG)):- !, relax_hint(G,GG).
+relax_hint(proportional(G),proportional(GG)):- !, relax_hint(G,GG).
+relax_hint(G,GG):- duplicate_term(G,GG),arg(N,G,E),relax_arg(E,EE),nb_setarg(N,GG,EE).
+%relax_hint(G,GG):- functor(G,F,A),functor(GG,F,A).
+
+relax_arg(E,_):- var(E),!,fail.
+relax_arg(E,E):- var(E) -> !; true.
+relax_arg(black,bg):-!.
+relax_arg(E,fg):- is_color(E),!.
+relax_arg(E,len(L)):- is_list(E),length(E,L).
+relax_arg(_,_).
+
+
 grid_hint(TestID):- format('~N'),
-  kaggle_arc(TestID,(trn+0),In,Out),!,
-  findall(Hint,(grid_hint(In,Out,Hint),
-   (  %write('testing... '),print(Hint),write(' '),
-       forall((kaggle_arc(TestID,(trn+N),In1,Out1),N>0),
+  findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),HintsIO),
+  findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),in,In1),  N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),in,In2)->true;kaggle_arc_io(TestID,(trn+0),in,In2)), grid_hint_recolor(i-i,In1,In2,Hint)),HintsII),
+  findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),out,Out1),N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)), grid_hint_recolor(o-o,Out1,Out2,Hint)),HintsOO),
+  append([HintsOO,HintsII,HintsIO],Hints),
+  keysort(Hints,SHints),
+  maplist(aquire_hints(SHints),SHints).
+  
+aquire_hints(_AllHints,HintN):- format('~N~q.~n',[HintN]).
+/*            (  %write('testing... '),print(Hint),write(' '),
+            relax_hint(Hint,Hint0),
+       findall((kaggle_arc(TestID,(trn+N),In1,Out1),N>0),
                 (grid_hint(In1,Out1,Hint1),
+                 relax_hint(Hint1,Hint2),                 
                   % print(Hint1),write(' '),
-                  Hint1==Hint)))), Confirmed),
+                  \+ Hint2 \= Hint0)))), ConfirmedL),
+   list_to_set(ConfirmedL,Confirmed),
       format('~Nconfirmed... ~w~n',[Confirmed]),
       maplist(assert_test_property(TestID,grid_hint),Confirmed).
-
+*/
 assert_test_property(TestID,Prop,Data):-
   my_asserta_if_new(arc_test_property(TestID,Prop,Data)).
 
-grid_hint(In,Out,color_change_only):- once((into_monochrome(In,In0),into_monochrome(Out,Out0),Out0=@=In0)).
-grid_hint(In,Out, input(Hint)):- grid_hint_io(i,Out,In,Hint).
-grid_hint(In,Out,output(Hint)):- grid_hint_io(o,In,Out,Hint).
+
+grid_hint_swap(IO,In,Out,Hint):-  grid_hint_recolor(IO,In,Out,Hint).
+grid_hint_swap(I-O,In,Out,Hint):- grid_hint_recolor(O-I,Out,In,Hint).
+
+grid_hint_recolor(IO,In,Out,hint(IO,mono(Hint))):-  once((into_monochrome(In,In0),into_monochrome(Out,Out0))), grid_hint_io(m,IO,In0,Out0,Hint).
+grid_hint_recolor(IO,In,Out,hint(IO,Hint)):-  grid_hint_io(c,IO,In,Out,Hint).
 
 %maybe_fail_over_time(Time,Goal):- fail_over_time(Time,Goal).
 maybe_fail_over_time(_Time,Goal):- once(Goal).
 
-col_color(CC,CC).
-col_color(black,bg):-!.
-col_color(_,fg).
+%grid_hint_io(MC,IO,In,Out,find_ogs):- maybe_fail_over_time(1.2,find_ogs(_,_,In,Out)).
+grid_hint_io(_MC,_IO,In,Out,ogs_11(X,Y)):- maybe_fail_over_time(1.2,((ogs_11(X,Y,In,Out)))).
+grid_hint_io(_MC,_-o,In,Out,(=@=)):- In=@=Out.
+%grid_hint_iso(MC,IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,_Color,OH,OV,)).
+grid_hint_io(MC,IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),!,grid_hint_iso(MC,IO,In,Out,IH,IV,OH,OV,Hint).
 
-grid_hint_io(_IO,_In,Out,has_x_columns(CC)):- maybe_fail_over_time(1.2,has_x_columns(Out,_,Color,_)),col_color(Color,CC).
-grid_hint_io(_IO,_In,Out,has_y_columns(CC)):- maybe_fail_over_time(1.2,has_y_columns(Out,_,Color,_)),col_color(Color,CC).
-%grid_hint_io(IO,In,Out,find_ogs):- maybe_fail_over_time(1.2,find_ogs(_,_,In,Out)).
-grid_hint_io(_IO,In,Out,ogs_11):- maybe_fail_over_time(1.2,((ogs_11(_,_,In,Out)))).
-%grid_hint_iso(IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,OH,OV,_Color)).
-grid_hint_io(IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),!,grid_hint_iso(IO,In,Out,IH,IV,OH,OV,Hint).
 
-%grid_hint_iso(IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
-grid_hint_iso(o,_In,_Out,IH,IV,OH,OV,proportional(size(H,V))):- once(IH\==OH ; IV\==OV), V is rationalize(IV/OV), H is rationalize(IH/OH).
-grid_hint_iso(o,In,Out,_IH,_IV,_OH,_OV,proportional(mass(Mass))):- mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
-grid_hint_iso(_IO,In,Out,_IH,_IV,_OH,_OV,intersect(unique_colors,IOnlyC,Shared,OOnlyC)):- 
+
+%grid_hint_iso(MC,IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
+grid_hint_iso(c,_IO,_In,Out,_IH,_IV,OH,OV,has_x_columns(Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_x_columns(Out,_,Color,_)).
+grid_hint_iso(c,_IO,_In,Out,_IH,_IV,OH,OV,has_y_columns(Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_y_columns(Out,_,Color,_)).
+grid_hint_iso(c,_-o,_In,_Out,IH,IV,OH,OV,proportional(size(H,V))):- once(IH\==OH ; IV\==OV), V is rationalize(IV/OV), H is rationalize(IH/OH).
+grid_hint_iso(c,_-o,In,Out,_IH,_IV,_OH,_OV,proportional(mass(Mass))):- mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
+grid_hint_iso(c,_-o,In,Out,_IH,_IV,_OH,_OV,Hint):- 
                                        once((unique_colors(In,IColor),unique_colors(Out,OColor),
-                                       intersection(IColor,OColor,Shared,IOnlyC,OOnlyC))).
-grid_hint_iso(_IO,In,Out,GH,GV,GH,GV,containsAll(LeftOver)):- mapgrid(remove_color_if_same,Out,In,NewIn),
-   mass(NewIn,Mass), (Mass==0 -> LeftOver=[] ; ignore(unique_colors(NewIn,LeftOver))).
+                                       intersection(IColor,OColor,Shared,IOnlyC,OOnlyC))),
+                                       member(Hint,[shared_color(Shared),in_color(IOnlyC),out_color(OOnlyC)]).
+
+grid_hint_iso(c,_IO,In,Out,GH,GV,GH,GV,containsAll(LeftOver)):- mapgrid(remove_color_if_same,Out,In,NewIn),
+   mass(NewIn,Mass), (Mass==0 -> LeftOver=[] ; (unique_colors(NewIn,Colors),include(nonvar,Colors,LeftOver))).
 
 entire_row(Color,Row):- maplist(==(Color),Row).
 
@@ -169,15 +201,24 @@ grid_area(In,Area):- grid_size(In,H,V), Area is H*V.
 remove_color_if_same(X,Y,_):- X==Y,!.
 remove_color_if_same(_X,Y,Y).
 
-has_xy_columns(In,X,Y,Color,Chunks):- 
-  grid_area(In,HV), HV > 18,
+
+has_xy_columns(In,Color,X,Y,BorderNumsX,BorderNumsY):- 
+  grid_area(In,HV), HV > 24,
   %grid_size(In,GH,GV), 
   has_x_columns(In,X,Color,BorderNumsX),
   has_y_columns(In,Y,Color,BorderNumsY),
-  once(X>1 ; Y>1),
+  once(X>1 ; Y>1),!.
+
+has_xy_chunks(In,Color,Chunks):-
+  has_xy_columns(In,Color,X,Y,BorderNumsX,BorderNumsY),
   make_grid(X,Y,Chunks),
   %pt(slicing(BorderNumsX,BorderNumsY,onto(X,Y))),
   gather_chunks(Color,In,Chunks,1,1,X,Y,BorderNumsX,BorderNumsY).
+
+grid_x_y_area(In,X,Y,Color,Cells):- 
+  has_xy_chunks(In,Color,Chunks),
+  nth1(Y,Chunks,Row),nth1(X,Row,Cells).
+
 
 gather_chunks(_Color,_In,_Chunks,_X,Y,_GX,GY,_BorderNumsX,_BorderNumsY):- Y>GY,!.
 gather_chunks(Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):-
@@ -191,7 +232,7 @@ gather_chunks(Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):-
   clip(SX1,SY1,EX1,EY1,In,Clip),
   % print_grid((X,Y),Clip), pt(clipped(SX,SY,EX,EY,into(X,Y))),
   % once(Clip = [_,[_,Cell|_]|_];Clip = [[Cell|_]|_]),  
-  once(((Clip = [_,[_,C|_]|_];Clip = [[C|_]|_];(member(CR,Clip),member(C,CR))),C\==Color,C\==black,Cell=C)),
+  once(((Clip = [_,[_,C|_]|_];Clip = [[C|_]|_];(member(CR,Clip),member(C,CR))),C\==Color,C\==black,Cell=C);Cell=Clip),
   (GX =< X -> (Yi is Y + 1, Xi is 1) ; (Xi is X+1, Yi is Y)),
   gather_chunks(Color,In,Chunks,Xi,Yi,GX,GY,BorderNumsX,BorderNumsY).
 

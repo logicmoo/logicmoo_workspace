@@ -555,11 +555,26 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
   format('~N'),!,
   once((user:dash_uborder_no_nl(Width+1))))).
 
+ /*
+         "#000000",  # 0: black
+        "#0074D9",  # 1: blue
+        "#FF2222",  # 2: red
+        "#2ECC40",  # 3: green
+        "#FFDC00",  # 4: yellow
+        "#AAAAAA",  # 5: gray
+        "#F012BE",  # 6: magenta
+        "#FF8C00",  # 7: orange
+        "#7FDBFF",  # 8: sky
+        "#870C25",  # 9: brown
+        "#444444",  # 10: dark grey, (for Transparency)
+        "#888888",  # 11: light grey, (for Cutout)
+ */
 %print_grid(Grid):- is_grid(Grid),!, maplist(print_rows,Grid),nl.
 %print_rows(List):- maplist(print_g,List),nl.
 %block_colors([(black),(blue),(red),(green),(yellow),'#c0c0c0',(magenta),'#ff8c00',(cyan),'#8b4513']).
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,('#966cb8'),'#ff8c00',(cyan),'#8b4513']):- silver(Silver),!.
-block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#3a5a3a']):- silver(Silver),!.
+block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#444444','#3a5a3a']):- silver(Silver),!.
+%block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#3a5a3a']):- silver(Silver),!.
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),wbg,fg]).
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
 named_colors([(black),(blue),(red),(green),(yellow),(grey),(pink),(orange),(cyan),(maroon)]).
@@ -685,6 +700,7 @@ int2glyph(GN2,Glyph):- quietly((i_sym(GN2,GN),!,i_glyph(GN,Glyph))).
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
 
 %print_gw1(C):- plain_var(C), write('  '),!.
+
 print_gw1(N):- 
 
  wots(S,(((get_bgc(BG),is_color(BG), once((BG\==black-> color_print(BG,'.');write(' '));write(',')));write(' ')),!,
@@ -709,6 +725,7 @@ regression_test:- print_grid([[_17910,_17922-green,_17934-green,_17946-green,_17
 %print_g1(C):- compound_var(C,N),underline_print(print_g1(N)),!.
 
 print_g1(C):- plain_var(C), write(' '),!, nop(( nobject_glyph(C,G),underline_print(print_g1(G-G)))),!.
+print_g1(N):- is_grid(N),write('G'),!.
 print_g1(N-C):- plain_var(N),is_color(C),!,print_g1(C).
 print_g1(C-N):- plain_var(N),is_color(C),!,print_g1(C).
 print_g1(N-C):- integer(N),is_color(C),!,e_int2glyph(N,G),color_print(C,G).
