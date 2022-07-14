@@ -15,6 +15,11 @@
 :- discontiguous individuals_from_pair/9.
 
 recalc_sizes(VM,[After|TODO]):-
+   recalc_sizes(VM),
+   set(VM.program_i) = [After,recalc_sizes|TODO].
+
+
+recalc_sizes(VM):- 
    length(VM.objs,Count), Count>3,
    computeMassIndex(VM,Sizes),
    computeMinMass(VM,Sizes,Count,Min),
@@ -25,8 +30,7 @@ recalc_sizes(VM,[After|TODO]):-
 
    set(VM.objs_min_mass) = Min,
    set(VM.objs_max_mass) = Max,
-   show_vm_changes(VM,cullObjectsOutsideOf(Min,Max),cullObjectsOutsideOf(VM,Min,Max)),
-   set(VM.program_i) = [After,recalc_sizes|TODO].
+   show_vm_changes(VM,cullObjectsOutsideOf(Min,Max),cullObjectsOutsideOf(VM,Min,Max)).
 
 cullObjectsOutsideOfRanges(VM):- length(VM.objs,N),N< floor(VM.objs_max_len/2),!.
 cullObjectsOutsideOfRanges(VM):-cullObjectsOutsideOf(VM,VM.objs_min_mass,VM.objs_max_mass). 

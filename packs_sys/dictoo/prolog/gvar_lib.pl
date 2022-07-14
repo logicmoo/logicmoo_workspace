@@ -114,7 +114,7 @@ dot_call(A,B):-dot_eval(A,B,_).
 :- module_transparent(dot_eval/3).
 dot_eval( Self,Func,Value):- is_dict(Self),!,dot_dict(Self, Func, Value).
 dot_eval( Self,Func,Value):- nonvar(Func),compound(Self),Self=t(_,_,_,_),!,rb_lookup(Func,Value,Self),!.
-dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_lookup(Key,Value,Self),!.
+dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_lookup(Func,Value,Self),!.
 %dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_visit(Self,Pairs),strip_module(Func,_,Key),member(Key-Value,Pairs),!.
 
 dot_eval( Self,Func,Value):- is_assoc(Self),!,get_assoc(Func,Self,Value),!.

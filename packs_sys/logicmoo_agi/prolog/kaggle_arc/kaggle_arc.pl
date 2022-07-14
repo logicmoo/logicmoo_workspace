@@ -559,6 +559,8 @@ train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
   individuate(OutVM)]),!,
   InC = InVM.objs,
   OutC = OutVM.objs,
+  %print_info(InC),
+  %print_info(OutC),
   %wdmsg(InC=OutC),
   maplist(must_det_ll,[
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
