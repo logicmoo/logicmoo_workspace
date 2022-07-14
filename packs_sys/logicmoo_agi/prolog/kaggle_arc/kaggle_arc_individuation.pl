@@ -211,6 +211,7 @@ individuation_macros(altro, [
 
 % the typical toplevel indivduator
 individuation_macros(complete, [
+    maybe_glyphic,
     shape_lib(as_is),
     fourway,
     find_colorfull_idioms,
@@ -671,14 +672,16 @@ individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
 next_options([_|Rest],Rest).
 
 run_fti(VM):- 
- TODO = VM.program_i,
- run_fti(VM,TODO).
+  %is_rbtree(VM),
+  %guitracer,!,
+  get_kov(program_i,VM,Code),!,
+  run_fti(VM,Code).
 
 run_fti(_,[]):- !.
 run_fti(_,[Done|OUT]):- ( \+ done \= Done ), !, wdmsg(done_run_fti(_,[Done|OUT])),!.
 run_fti(VM,[F|TODO]):- 
-  fti(VM,[F|TODO]), %show_vm_changes(VM,F, fti(VM,VM.program_i)),
-  run_fti(VM).
+  fti(VM,[F|TODO]),!, %show_vm_changes(VM,F, fti(VM,VM.program_i)),
+  run_fti(VM),!.
 
 
 maybe_four_terse(L,F=N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
@@ -927,6 +930,7 @@ is_fti_step(find_touches).
 % tiny grid becomes a series of points
 one_fti(VM,maybe_glyphic):-
   Points = VM.points,
+  is_glyphic(Points,VM.h,VM.v),
   length(Points,Len),
   maplist(make_point_object(VM,[iz(abstract),birth(glyphic),iz(colorlink)]),Points,IndvList),
   make_indiv_object(VM,Points,[mass(Len),vis_hv(VM.h,VM.v),iz(combined),iz(grid),iz(image)],Whole),
@@ -936,7 +940,7 @@ one_fti(VM,maybe_glyphic):-
   assert_shape_lib(pair,Whole).
 
 is_glyphic(Points,_GH,_GV):- length(Points,Len), Len < 5.
-is_glyphic(Points,VM.h,VM.v):- ( VM.h=<5 ; VM.v=<5 ), length(Points,Len), Len is VM.h * VM.v.
+is_glyphic(Points,GH,GV):- ( GH=<5 ; GV=<5 ), length(Points,Len), Len is GH * GV.
 
 one_fti(VM,glyphic):-
   Points = VM.points, length(Points,Len),

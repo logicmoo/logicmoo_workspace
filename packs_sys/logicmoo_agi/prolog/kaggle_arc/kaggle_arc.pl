@@ -15,6 +15,10 @@
 :- discontiguous(fav/2).
 :- multifile(fav/2).
 
+:- dynamic(grid_hint_pred/1).
+:- discontiguous(grid_hint_pred/1).
+:- multifile(grid_hint_pred/1).
+
 
 my_is_clause(H,B):- clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB.
 my_asserta_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; asserta(H:-B)).
@@ -27,10 +31,14 @@ my_assertz_if_new(HB):- my_assertz_if_new(HB:-true).
 :- discontiguous(decl_sf/1).
 :- dynamic(decl_sf/1).
 decl_sf(G):- ground(G), !, my_assertz_if_new(decl_sf(G)).
+:- multifile(decl_pt/2).
+:- discontiguous(decl_pt/2).
+:- dynamic(decl_pt/2).
 :- multifile(decl_pt/1).
 :- discontiguous(decl_pt/1).
 :- dynamic(decl_pt/1).
-decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(G)).
+decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(plain,G)).
+decl_pt(How,G):- ground(G), !, my_assertz_if_new(decl_pt(How,G)).
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(color_term,true).
 :- set_stream(current_output, tty(true)).
@@ -517,7 +525,7 @@ train_for_objects_from_pair_with_mono(Dict0,TestID,Desc,In,Out,Dict9):-
 
 
 train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
- %maplist(must_det_ll,[
+ maplist(must_det_ll,[
  Desc = [Trn,IsIO1,N1,IsIO2,N2], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
@@ -539,18 +547,20 @@ train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
 	 ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
    
    into_fti(TestID*(Trn+N1)*IO1,ModeIn,In,InVM),!,
-   into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM),!,
-   %InVM.compare=OutVM, 
-   InVM.target=Out,
-   %OutVM.compare=InVM, 
-   OutVM.target=In,
-   show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
+   into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM)]),!,
 
+   %InVM.compare=OutVM, 
+   set(InVM.target)=Out,
+   %OutVM.compare=InVM, 
+   set(OutVM.target)=In,
+  maplist(must_det_ll,[
+   show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
   individuate(InVM),!,
-  individuate(OutVM),!,
+  individuate(OutVM)]),!,
   InC = InVM.objs,
   OutC = OutVM.objs,
   %wdmsg(InC=OutC),
+  maplist(must_det_ll,[
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   /*add_shape_lib(pair,RetainedIn),
   % add_shape_lib(pair,RetainedOut),
@@ -570,8 +580,7 @@ train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
    % pt(OutC=InC),
   dash_chars,dash_chars,dash_chars,dash_chars,
   print_testinfo(TestID)
-  .
-  %]).
+  ]).
 
 show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),

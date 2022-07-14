@@ -62,9 +62,9 @@ computeMaxMass(VM,List,_Count,Max):- append(_,[A,B|_],List),A>B,max_min(VM.objs_
 computeMaxMass(VM,_List,_Count,Max):- max_min(VM.objs_max_mass,700,_,Max).
 
 
-proportional_objs_how(AG,BG,Set):- into_list(AG,AGL),into_list(BG,BGL), proportional_objs_how_l(AGL,BGL,Set). %findall(DD,proportionate(AGL,BGL,DD),List),list_to_set(List,Set).
+proportional_how(AG,BG,Set):- into_list(AG,AGL),into_list(BG,BGL), proportional_how_l(AGL,BGL,Set). %findall(DD,proportionate(AGL,BGL,DD),List),list_to_set(List,Set).
 
-proportional_objs_how_l(AG,BG,Set):-  my_permutation(AG,AGL), my_permutation(BG,BGL), proportionate(not_very_simular,AGL,BGL,Set).
+proportional_how_l(AG,BG,Set):-  my_permutation(AG,AGL), my_permutation(BG,BGL), proportionate(not_very_simular,AGL,BGL,Set).
 
 my_permutation(BG,BG):-!.
 my_permutation(BG,BGL):- permutation(BG,BGL).
@@ -89,22 +89,40 @@ proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),pro
 proportional(size(V1,H1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
 proportional(size(H1,V1),size(H2,V2),area(HV)):- !, HV1 is H1*V1, HV2 is H2*V2, proportional_size(HV1,HV2,HV).
 proportional(loc(H1,V1),loc(H2,V2),loc(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
+proportional(colors(H1),colors(H2),color_changes(H)):- !, proportional_colors(H1,H2,H).
 proportional(N1,N2,N):- number(N1),number(N2),!,proportional_size(N1,N2,N).
 % proportional(N1,N2,N):- list(N1),list(N2),!,proportional_size(N1,N2,N).
 
-proportional(N1,N2,N):- is_object(N1),is_object(N2),!,proportional_objs(N1,N2,N).
-proportional(N1,N2,N):- is_grid(N1),is_grid(N2),!,proportional_grids(N1,N2,N).
+proportional(Obj1,Obj2,Out):- 
+  decl_pt(prop_h,P1P2), P1P2=..[P2,P1,_],
+  once((call(P1,Obj1),call(P1,Obj2),call(P2,Obj1,A1),call(P2,Obj2,A2))),
+  proportional(A1,A2,N), Out =.. [P2,N].
+
+%proportional(N1,N2,N):- is_object(N1),is_object(N2),!,proportional_objs(N1,N2,N).
+%proportional(N1,N2,N):- is_grid(N1),is_grid(N2),!,proportional_grids(N1,N2,N).
+
+proportional_colors(H1,H2,H1-H2).
+
+%proportional_grids(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
+%proportional_grids(Obj1,Obj2,loc_xy_term(N)):- once((loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2))),proportional(N1,N2,N).
+%proportional_grids(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
+%proportional_grids(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
+
+:- decl_pt(prop_h,center_term(is_object,loc)).
+:- decl_pt(prop_h,vis_hv_term(is_object,size)).
+:- decl_pt(prop_h,loc_xy_term(is_object,loc)).
+:- decl_pt(prop_h,colors(is_object, list)).
+:- decl_pt(prop_h,mass(is_object,number)).
+:- decl_pt(prop_h,(has_y_columns(is_grid,colcount,color,list(rownums)))).
+:- decl_pt(prop_h,(has_x_columns(is_grid,rowcount,color,list(colnums)))).
 
 
-proportional_grids(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
-proportional_grids(Obj1,Obj2,loc_xy_term(N)):- once((loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2))),proportional(N1,N2,N).
-proportional_grids(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
-proportional_grids(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
-
-proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
+/*proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,loc_xy_term(N)):- once((loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,color_diff(N)):- colors(Obj1,N1),colors(Obj2,N2),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
+*/
 
 proportional_loc(N1,N2,moved(N)):- N is N1-N2.
 proportional_size(N1,N2,difference(N)):- N is N1-N2.

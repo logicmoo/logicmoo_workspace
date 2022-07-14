@@ -136,23 +136,26 @@ relax_arg(E,len(L)):- is_list(E),length(E,L).
 relax_arg(_,_).
 
 
-grid_hint_lt(TestID):- format('~N'),
-  findall(Hint-N-io,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),Hints),
+grid_hint(TestID):- fail, format('~N'),
+  findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),Hints),
   %findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),in,In1),  N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),in,In2)->true;kaggle_arc_io(TestID,(trn+0),in,In2)), grid_hint_recolor(i-i,In1,In2,Hint)),HintsII),
   %findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),out,Out1),N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)), grid_hint_recolor(o-o,Out1,Out2,Hint)),HintsOO),
   %append([HintsOO,HintsII,HintsIO],Hints),
   keysort(Hints,SHints),
-  maplist(aquire_hints(SHints),SHints).
+  maplist(aquire_hints(TestID,SHints),SHints).
+
 grid_hint(TestID):- format('~N'),
-  %findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),HintsIO),
+  findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),HintsIO),
   findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),in,In1),  N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),in,In2)->true;kaggle_arc_io(TestID,(trn+0),in,In2)), grid_hint_recolor(i-i,In1,In2,Hint)),HintsII),
   findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),out,Out1),N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)), grid_hint_recolor(o-o,Out1,Out2,Hint)),HintsOO),
-  append([HintsOO,HintsII],Hints),
-  keysort(Hints,SHints),
-  maplist(aquire_hints(SHints),SHints),
-  format('~N').
+  append([HintsIO,HintsOO,HintsII],Hints),
+  keysort(Hints,SHints),  
+  maplist(aquire_hints(TestID,SHints),SHints),
+  format('~N'),
+  listing(arc_test_property(TestID,_Prop,_Data)).
   
-aquire_hints(_AllHints,HintN):- format(' ~q ',[HintN]).
+aquire_hints(TestID,_AllHints,HintN):- nop(format(' ~q ',[HintN])),
+  assert_test_property(TestID,grid_hint,HintN).
 /*            (  %write('testing... '),print(Hint),write(' '),
             relax_hint(Hint,Hint0),
        findall((kaggle_arc(TestID,(trn+N),In1,Out1),N>0),
@@ -188,6 +191,8 @@ grid_hint_io(MC,IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),!,gri
 
 
 
+
+
 %grid_hint_iso(MC,IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
 grid_hint_iso(c,_IO,_In,Out,_IH,_IV,OH,OV,has_x_columns(Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_x_columns(Out,_,Color,_)).
 grid_hint_iso(c,_IO,_In,Out,_IH,_IV,OH,OV,has_y_columns(Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_y_columns(Out,_,Color,_)).
@@ -207,6 +212,7 @@ mentire_row(black,Row):- !, maplist(=(black),Row).
 mentire_row(C2,OtherRow):- include(\==(C2),OtherRow,Missing),
   once(maplist(=(C2),Missing);(length(Missing,L),L=<1)).
 
+type_hint_pred(grid_area/1).
 grid_area(In,Area):- grid_size(In,H,V), Area is H*V.
 
 remove_color_if_same(X,Y,_):- X==Y,!.
@@ -246,10 +252,6 @@ gather_chunks(Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):-
   once(((Clip = [_,[_,C|_]|_];Clip = [[C|_]|_];(member(CR,Clip),member(C,CR))),C\==Color,C\==black,Cell=C);Cell=Clip),
   (GX =< X -> (Yi is Y + 1, Xi is 1) ; (Xi is X+1, Yi is Y)),
   gather_chunks(Color,In,Chunks,Xi,Yi,GX,GY,BorderNumsX,BorderNumsY).
-
-
-  
-
 
 
 has_x_columns(In,X,Color,BorderNums):- rot90(In,In90), !, has_y_columns(In90,X,Color,BorderNums).

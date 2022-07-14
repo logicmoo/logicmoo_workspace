@@ -8,7 +8,20 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+
 :- expects_dialect(pfc).
+
+grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(nb_current(example,ExampleNum)),!,
+  kaggle_arc_io(TestID,ExampleNum,_,Grid),
+  grid_part(Grid,Info).
+
+grid_part(Grid,obj(N,P)):- !,trace,individuate(complete,Grid,Objs),nth1(N,Objs,P).
+grid_part(Grid,row(Y,Info)):- nth1(Y,Grid,Info).
+grid_part(Grid,col(X,Info)):- rot90(Grid,Grid90),nth1(X,Grid90,Info).
+grid_part(Grid,P):- globalpoints(Grid,Points),member(P,Points).
+%object_info(obj(List)
+
+%grid(Type,ConstructorData,[rot270]),CacheOfCalls).
 
 %is_graid(T*E*IO,T,E,IO).
 is_graid(T*E*IO,G):- kaggle_arc_io(T,E,IO,G).
@@ -34,8 +47,6 @@ grid_object(Grid,mass(N),object(Points,Color)):-
   is_adjacent_point(HV1,_Dir1,HV2),is_adjacent_point(HV2,_Dir2,HV3),
   ColorHV4 = Color-HV4,
   findall(HV4,(member(ColorHV4,Rest),is_adjacent_point(HV1,_,HV5),is_adjacent_point(HV5,_,HV4)),AdjRest).
-
-  
 
 
 :- fixup_exports.

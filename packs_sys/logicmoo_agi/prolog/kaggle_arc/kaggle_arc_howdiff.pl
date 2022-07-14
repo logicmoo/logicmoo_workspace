@@ -121,7 +121,7 @@ combine_diffs(D1,D2,L12):- listify(D1,L1),listify(D2,L2),!,my_append(L1,L2,L12).
 
 showdiff_groups(AG,BG):- not_list(AG),into_list(AG,AGL),!,showdiff_groups(AGL,BG).
 showdiff_groups(AG,BG):- not_list(BG),into_list(BG,BGL),!,showdiff_groups(AG,BGL).
-showdiff_groups(AG,BG):- once((proportional_objs_how(AG,BG,DD), pt(cyan,proportional_objs(DD)),
+showdiff_groups(AG,BG):- once((proportional_how(AG,BG,DD), pt(cyan,proportional(DD)),
   maplist(showdiff_objects,AG,BG))),fail.
   
 showdiff_groups(AG,BG):-
@@ -159,7 +159,7 @@ diff_groups(A0,B0,DD):-
   sort(B2,B3),
   diff_groups1(A3,B3,DD).
 
-diff_groups2(AAR,BBR,proportional_objs(DD,Diffs)):- proportional_objs(AAR,BBR,DD),
+diff_groups2(AAR,BBR,proportional(DD,Diffs)):- proportional(AAR,BBR,DD),
   maplist(diff_objects,AAR,BBR,Diffs).
 diff_groups0(A3,B3,DD):- diff_groups2(A3,B3,DD).
 diff_groups0(A3,B3,DD):- diff_groups1(A3,B3,DD).
