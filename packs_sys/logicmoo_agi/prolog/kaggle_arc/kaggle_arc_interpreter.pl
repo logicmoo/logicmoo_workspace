@@ -112,16 +112,16 @@ run_dsl(VM,Prog,In,Out):-
 
 
 vm_grid(VM,Goal,In,Out):- In==VM,!,vm_grid(VM,Goal,VM.grid,Out).
-vm_grid(VM,Goal,In,Out):-
- must_det_ll((
+vm_grid(VM,Goal,In,Out):- 
+ (var(VM) -> get_vm(VM) ; true),
   gset(VM.grid)=In, 
   grid_size(In,H,V),
   gset(VM.h)=H, set(VM.v)=V, 
   gset(VM.points_o) = VM.points,
   localpoints_include_bg(In, Points),
   gset(VM.points)=Points,
-  my_submenu_call(Goal), 
-  points_to_grid(H,V,VM.points,Out))).
+  my_submenu_call(Goal),!,
+  points_to_grid(H,V,VM.points,Out).
 
 expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
 expand_dsl_value(VM, Mode,In,Val,OutValue):-
@@ -174,17 +174,19 @@ run_dsl(VM,_Mode,Step,In,Out):-  i_step(Step), !, vm_grid(VM,fti(VM,Step),In,Out
 
 
 run_dsl(VM,enforce,color(Obj,Color),In,Out):-!, 
- color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
+    color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
     override_object_io(VM,color(Color),Obj,In,Out).
 
-run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, 
-  loc_xy(Obj,X,_Old),
-    override_object_io(VM,loc_xy(X,New),Obj,In,Out).
+run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc_xy(Obj,X,_Old), override_object_io(VM,loc_xy(X,New),Obj,In,Out).
 
-run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
- (call_expanded(VM,call(Prog,In,M))*-> 
-    =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
+run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !, vm_grid(VM, run_dsl_call(VM,Mode,Prog,In,Out), In, Out).
+
 run_dsl(_VM,Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
+
+
+run_dsl_call(VM,Mode,Prog,In,Out):- ( (call_expanded(VM,call(Prog,In,M))) 
+  *->  M=Out ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
+run_dsl_call(_VM,_Mode,_Prog,InOut,InOut).
 
 override_object_io(_VM,Update,Obj,In,Out):- 
   remove_global_points(Obj,In,Mid), 
@@ -210,7 +212,7 @@ closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(any),-grid)).
-into_grid(P,G):- var(P),!,P=G,get_current_test(TestID),test_grids(TestID,G).
+into_grid(P,G):- var(P),!,ignore(get_current_test(TestID)),test_grids(TestID,G),grid_to_id(G,P).
 into_grid(P,G):- quietly(cast_to_grid(P,G, _)).
 
 print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).
@@ -415,7 +417,7 @@ arc_expand_arg(objFn(X),Var,known_object(X,Var)).
 arc_expand_arg(gridFn(X),Var,known_grid(X,Var)).
 arc_expand_arg(groupFn(X),Var,into_group(X,Var)).
 
-goal_expansion_query(Goal,Out):-
+goal_expansion_query(Goal,Out):- fail,
    compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
    arg(N,Goal,P), compound(P), goal_expansion_query(P,MOut), 
    MOut\=@=P, setarg(N,Goal,MOut), expand_goal(Goal, Out).

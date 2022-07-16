@@ -419,6 +419,7 @@ grid_size_term(I,size(X,Y)):- grid_size(I,X,Y),!.
 
 %grid_size(Points,H,V):- is_map(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(NIL,1,1):- NIL==[],!.
+grid_size(Points,H,V):- is_points_list(Points),!,points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
 grid_size(G,H,V):- is_graid(G,GG),!, grid_size(GG,H,V).
 grid_size(G,H,V):- is_map(G),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
@@ -430,7 +431,6 @@ grid_size(I,X,Y):- is_object(I),indv_props(I,L),(member(grid_size(X,Y),L);member
 %grid_size([G|G],H,V):- is_list(G), length(G,H),length([G|G],V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 %grid_size([G|G],H,V):- is_list(G),is_list(G), grid_size_nd([G|G],H,V),!.
-grid_size(Points,H,V):- is_points_list(Points),points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
 %grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
 grid_size(_,30,30).
 
@@ -468,9 +468,12 @@ grid_size_nd([L],H,(1)):- (plain_var(L)->between(1,32,H);true), length(L,H).
 %points_to_grid(Points,Grid):- is_grid(Points),Points=Grid,!.
 points_to_grid([Points|More],Grid):- is_grid(Points),Points=Grid,grid_size(Points,H,V),calc_add_points(H,V,Grid,More),!.
 
+points_to_grid(Points,Grid):- quietly(grid_size(Points,H,V)), !, points_to_grid(H,V,Points,Grid).
 points_to_grid(Points,Grid):- is_grid(Points),!,grid_size(Points,H,V), points_to_grid(H,V,Points,Grid).
-points_to_grid(Points,Grid):- quietly(grid_size(Points,H,V)), points_to_grid(H,V,Points,Grid).
+%points_to_grid(Points,Grid):- is_points_list(Points),!,points_to_grid(30,30,Points,Grid).
 
+
+points_to_grid(H,V,Points,Grid):- var(H),var(V),!,points_to_grid(Points,Grid).
 points_to_grid(H,V,Points,GridO):- make_grid(H,V,Grid), set_local_points(Points,Grid,GridO).
 
 calc_add_points(OH,OV,_,Obj):- plain_var(Obj),dumpST,trace_or_throw(var_calc_add_points(OH,OV,Obj)).

@@ -76,7 +76,7 @@ my_permutation(BG,BGL):- permutation(BG,BGL).
 proportionate(_Nvm,[],[],_).
 proportionate(NVM,[HV1|List1],[HV2|List2],N):-
    proportional(HV1,HV2,N),
-   call(NVM, N),
+   nop(call(NVM, N)),
    proportionate(NVM,List1,List2,N).
 
 not_very_simular(X):- \+ not_very_different(X).
@@ -89,36 +89,53 @@ not_very_different(center_term(loc(A,B))):-  !, not_very_different_t(A),not_very
 not_very_different(mass(A)):- !, not_very_different_t(A).
 not_very_different_t(difference(0)). not_very_different_t(ratio(1)). not_very_different_t(moved(0)).
 
-proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
-proportional(size(V1,H1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
-proportional(size(H1,V1),size(H2,V2),area(HV)):- !, HV1 is H1*V1, HV2 is H2*V2, proportional_size(HV1,HV2,HV).
-proportional(loc(H1,V1),loc(H2,V2),loc(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
-proportional(colors(H1),colors(H2),color_changes(H)):- !, proportional_colors(H1,H2,H).
-proportional(N1,N2,N):- number(N1),number(N2),!,proportional_size(N1,N2,N).
-% proportional(N1,N2,N):- list(N1),list(N2),!,proportional_size(N1,N2,N).
+
+proportional_types(list,A,B,D):- !, proportional_lists(A,B,D).
+proportional_types(_How,A,B,D):- proportional(A,B,D).
 
 proportional(Obj1,Obj2,Out):- 
-  decl_pt(prop_h,P1P2), P1P2=..[P2,P1,_],
-  once((call(P1,Obj1),call(P1,Obj2),call(P2,Obj1,A1),call(P2,Obj2,A2))),
-  proportional(A1,A2,N), Out =.. [P2,N].
+  decl_pt(prop_h,P1P2), P1P2=..[P2,P1|Lst],
+  once((once((on_x_log_and_fail(call(P1,Obj1)),on_x_log_and_fail(call(P1,Obj2)))),
+  length(Lst,Len), length(NewLst1,Len),length(NewLst2,Len),
+  once((on_x_log_and_fail(apply(P2,[Obj1|NewLst1])),on_x_log_and_fail(apply(P2,[Obj2|NewLst2])))))),
+  maplist(proportional_types,Lst,NewLst1,NewLst1,OutL), Out =.. [P2|OutL].
+
+proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
+proportional(size(V1,H1),size(H2,V2),size_inv(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
+proportional(size(H1,V1),size(H2,V2),area(HV)):- !, HV1 is H1*V1, HV2 is H2*V2, proportional_size(HV1,HV2,HV).
+proportional(loc(H1,V1),loc(H2,V2),loc(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
+proportional(colors(H1),colors(H2),color_changes(H)):- !, proportional_lists(H1,H2,H).
+proportional(N1,N2,N):- number(N1),number(N2),!,proportional_size(N1,N2,N).
+proportional(L1,L2,N):- is_list(L1),is_list(L2),length(L1,N1),length(L2,N2),!,proportional_lists(N1,N2,N).
+
+on_x_log_and_fail(G):- catch(G,E,(wdmsg(red((E -> G))),trace,G,fail)).
 
 %proportional(N1,N2,N):- is_object(N1),is_object(N2),!,proportional_objs(N1,N2,N).
 %proportional(N1,N2,N):- is_grid(N1),is_grid(N2),!,proportional_grids(N1,N2,N).
 
-proportional_colors(H1,H2,H1-H2).
+proportional_loc(N1,N2,moved(N1,N,N2)):- N is N1-N2.
+proportional_size(N1,N2,n(N1,N2,d(N),a(NA),r(R))):- N is N1-N2,NA is abs(N1-N2), catch(R is rationalize(N1/N2),_,true).
+proportional_lists(IColor,OColor,OUT):- 
+  intersection(IColor,OColor,Shared,IOnlyC,OOnlyC),
+  sort(Shared,SharedS),
+  maplist(length,[IColor,OColor,IOnlyC,Shared,OOnlyC],Lens),
+  OUT=..[lst,l(IOnlyC),s(SharedS),r(OOnlyC)|Lens].
+
 
 %proportional_grids(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
 %proportional_grids(Obj1,Obj2,loc_xy_term(N)):- once((loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2))),proportional(N1,N2,N).
 %proportional_grids(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
 %proportional_grids(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
 
+
+:- decl_pt(prop_h,unique_colors(is_object_or_grid, list)).
+:- decl_pt(prop_h,mass(is_object_or_grid,number)).
+
 :- decl_pt(prop_h,center_term(is_object,loc)).
-:- decl_pt(prop_h,vis_hv_term(is_object,size)).
 :- decl_pt(prop_h,loc_xy_term(is_object,loc)).
-:- decl_pt(prop_h,colors(is_object, list)).
-:- decl_pt(prop_h,mass(is_object,number)).
-:- decl_pt(prop_h,(has_y_columns(is_grid,colcount,color,list(rownums)))).
-:- decl_pt(prop_h,(has_x_columns(is_grid,rowcount,color,list(colnums)))).
+
+:- decl_pt(prop_h,has_y_columns(is_grid,colcount,color,list(rownums))).
+:- decl_pt(prop_h,has_x_columns(is_grid,rowcount,color,list(colnums))).
 
 
 /*proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
@@ -127,10 +144,6 @@ proportional_objs(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(O
 proportional_objs(Obj1,Obj2,color_diff(N)):- colors(Obj1,N1),colors(Obj2,N2),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
 */
-
-proportional_loc(N1,N2,moved(N)):- N is N1-N2.
-proportional_size(N1,N2,difference(N)):- N is N1-N2.
-proportional_size(N1,N2,ratio(N)):- N is N1/N2.
 
 
 :- discontiguous learn_color_individuals_lib_one_way/17.

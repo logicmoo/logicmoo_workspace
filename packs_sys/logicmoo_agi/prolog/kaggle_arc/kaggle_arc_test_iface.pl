@@ -43,7 +43,7 @@ menu_cmd1(_,'n','               Go to (n)ext test (skipping this one)',(next_tes
 menu_cmd1(_,'N','                  or (N)ext suite',(next_suite)).
 menu_cmd1(_,'b','                  or (b)ack to previous test.',(previous_test,print_qtest)).
 menu_cmd1(_,'f','                  or (f)orce a favorite test.',(enter_test)).
-menu_cmd1(_,'~','                  or (PageUp) to begining of suite',(restart_suite)).
+menu_cmd1(_,'~','                  or (PageUp) to begining of suite',(prev_suite)).
 menu_cmd1(i,'R','             Menu to (R)un all tests noninteractively',(run_all_tests,menu)).
 menu_cmd1(_,'l','                  or (l)ist special tests to run,',(show_tests)).
 menu_cmd1(r,'i','             Re-enter(i)nteractve mode.',(interactive_test_menu)).
@@ -153,7 +153,7 @@ do_menu_codes([27,91,68]):- !, cls, previous_test, print_test.
 % right arrow
 do_menu_codes([27,91,67]):- !, cls,  next_test, print_test.
 % page up
-do_menu_codes([27,91,53,126]):- !, restart_suite.
+do_menu_codes([27,91,53,126]):- !, prev_suite.
 % page down
 do_menu_codes([27,91,54,126]):- !, next_suite.
 do_menu_codes([27,91,65]):- prev_pair.
@@ -191,6 +191,15 @@ bad:- ig([complete],v(aa4ec2a5)*(trn+0)*in).
 restart_suite:- 
    get_current_suite_testnames([First|_]),
    set_current_test(First),!.
+
+prev_suite:- once((get_current_test(TestID),get_current_suite_testnames([First|_]))),TestID\==First,!,restart_suite.
+prev_suite:- 
+   findall(SN,test_suite_name(SN),List),
+   nb_current(test_order,X),
+   prev_in_list(X,List,N),
+   nb_setval(test_order,N),!,
+   wdmsg(switched(X-->N)),
+   restart_suite.
 next_suite:- 
    findall(SN,test_suite_name(SN),List),
    nb_current(test_order,X),
@@ -199,13 +208,15 @@ next_suite:-
    wdmsg(switched(X-->N)),
    restart_suite.
 
+test_suite_name(human_t).
+test_suite_name(sol_t).
 test_suite_name(hard_t). test_suite_name(test_names_by_fav). 
 test_suite_name(key_pad_tests). test_suite_name(alphabetical_v). test_suite_name(alphabetical_t).
 test_suite_name(test_names_by_hard). 
 test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
 
 :- dynamic(cached_tests/2).
-:- nb_setval(test_order,hard_t).
+:- nb_setval(test_order,human_t).
 get_current_suite_testnames(Set):-
   nb_current(test_order,X),
   current_suite_testnames(X,Set).
@@ -392,6 +403,20 @@ test_names_ord_favs(FavListS):- pt(recreating(test_names_ord_favs)), findall(Nam
 
 alphabetical_v(Set):- findall(v(Name),arc_test_name(v(Name)),List),sort(List,Set).
 alphabetical_t(Set):- findall(t(Name),arc_test_name(t(Name)),List),sort(List,Set).
+
+
+human_t(T):- human_t_set(Set),member(T,Set).
+human_t_set(NamesByHardUR):- % Name=t(_),
+  findall(Name,arc_test_name(Name),List),sort(List,Sorted),
+  findall(Name,(member(Name,Sorted),task_info(Name,Sol),member(human(_),Sol)),All),
+  list_to_set(All,NamesByHardUR).
+
+sol_t(T):- sol_t_set(Set),member(T,Set).
+sol_t_set(NamesByHardUR):- % Name=t(_),
+  findall(Name,arc_test_name(Name),List),sort(List,Sorted),
+  findall(Name,(member(Name,Sorted),task_info(Name,Sol),member(sol(_),Sol)),All),
+  list_to_set(All,NamesByHardUR).
+
 
 
 hard_t(T):- hard_t_set(Set),member(T,Set).
@@ -693,7 +718,7 @@ parc0(OS):-
 
 parcCmt(TName):- 
   fix_test_name(TName,TestID,_),
-  color_print(magenta,call(((grid_hint(TestID))))),
+  %color_print(magenta,call(((grid_hint(TestID))))),
   parcCmt1(TestID).
 parcCmt1(TName):-
   ignore((

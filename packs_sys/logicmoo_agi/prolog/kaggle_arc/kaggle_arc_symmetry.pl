@@ -370,8 +370,6 @@ sometimes_assume(P1,X):- ignore(call(P1,X)).
 
 
 
-
-
 grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):- !, grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult).
 grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
   notrace(catch(call_with_time_limit(4,find_and_use_pattern_gen(Grid,Image9x9)),time_limit_exceeded, 
@@ -383,37 +381,52 @@ grid_to_3x3_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
   include(nonvar_or_ci,Flat,Grids),
   maybe_repair_image(VM,Ordered,Grids,NewIndiv4s,KeepNewState,RepairedResult))).
 
-/*
-*/
-is_fti_step(fourway).
-fourway(VM):-
-  set_vm(VM),
-  H = VM.h,
-  V = VM.v,
-  %VM.id = VM.id,
-  H > 13, V> 13,
-  Grid = VM.grid,
-  colors(Grid,Colors),!,length(Colors,CL),!,CL>3,
-  largest_first(VM.objs,Ordered),  
-  repair_2x2(Ordered,Steps,Grid,RepairedResult),
-  %$glean_patterns_hook(Steps,Grid,RepairedResult),
+maybe_set_vm(VM):- nonvar(VM),!,set_vm(VM).
+maybe_set_vm(VM):- get_vm(VM).
+
+
+
+is_fti_step(repair_in_vm).
+repair_in_vm(P4,VM):-
+  maybe_set_vm(VM),
+  Grid=VM.grid,
+  call(P4,VM,Grid,RepairedResult,Steps),
+  % RepairedResult \=@= Grid,
   localpoints_include_bg(Grid,OriginalPoints),
   localpoints_include_bg(RepairedResult,RepairedPoints),
   intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changes),
-  % QueuedPoints = VM.points,
-  % points that NeededChanged must need be processed on their own 
- % points_to_grid(H,V,NeededChanged,LeftOverGrid),
-  % set_vm(leftOverGrid,LeftOverGrid),
-%  gset(VM.grid) = LeftOverGrid,
   set_vm(neededChanged,NeededChanged),
   set_vm(repaired,RepairedPoints),
   set_vm(changed,Changes),
- 
-%  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
-%  addObjects(VM,ColorObj).
-  addProgramStep(VM,Steps),!.
+  addProgramStep(VM,[repair_in_vm(P4)|Steps]),!.
+
+repair_repeats(_VM,Grid,RepairedResult,[]):- 
+  unbind_color(black,Grid,RepairedResult),
+  repair_grid_repeats(RepairedResult).
+repair_grid_repeats(RepairedResult):- ground(RepairedResult),!.
+repair_grid_repeats(RepairedResult):-
+  member(Row1,RepairedResult),
+  member(Row2,RepairedResult),
+  Row1\==Row2,
+  Row1=Row2,!,
+  repair_grid_repeats(RepairedResult).
+repair_grid_repeats(RepairedResult):- 
+  rot90(RepairedResult,RepairedResult2),
+  repair_grid_repeats(RepairedResult2).  
+repair_grid_repeats(_).
 
 
+is_fti_step(fourway).
+fourway(VM):-
+  maybe_set_vm(VM),
+  VM.h > 12, VM.v > 12,
+  repair_in_vm(repair_fourway,VM).
+
+repair_fourway(VM,Grid,RepairedResult,Steps):- 
+  colors(Grid,Colors),!,length(Colors,CL),!,CL>3,
+  maybe_set_vm(VM),
+  largest_first(VM.objs,Ordered),  
+  repair_2x2(Ordered,Steps,Grid,RepairedResult).
 
 repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   member(CXL,[0,1]),member(CYL,[0,1]),
@@ -1250,6 +1263,7 @@ nb_set_chv(C,H,V,Grid):- nth1(V,Grid,Row),nb_set_nth1_oob(H,Row,C).
 grid_hvc_value(H,V,C,Grid):-  nth1(V,Grid,Row),nth1(H,Row,C).
 
 
+guess_bgc(Grid,BGC):- most_d_colors(Grid,[BGC|_],_).
 
 /*
 6=corners
@@ -1271,24 +1285,43 @@ most_d_colors(Grid,ColorO,GridNM):-
 
 ping_indiv_grid(show_neighbor_map).
 
-get_fill_points(Grid,FillPoints,RGridO):-
- grid_size(Grid,H,V),
- neighbor_map(Grid,GridO),
-  globalpoints(GridO,NPS),
-  my_partition(is_point_type('~'),NPS,FillPoints,NFP),
+
+get_fill_points2(Grid,FillPoints):-
+  findall(C-Point,would_fill(Grid,C,Point),FillPoints).
+
+get_fill_points(In,UNFP,GridO):-
+ %grid_size(Grid,H,V),
+ subst001(In,black,wbg,Grid),
+ neighbor_map(Grid,GridO), 
+ localpoints(GridO,NPS),  
+ include(p1_or(is_point_type('~'),is_fill_point(NPS)),NPS,FillPoints),
+ include(is_point_type('wbg'),NPS,NotFillPoints),
+ subtract(FillPoints,NotFillPoints,RFillPoints),
   %my_partition(is_point_type('.'),NFP,OuterEdges,NonFillPointNonOuterEdges),
-  uneib(NFP,UNFP),  
+ uneib(RFillPoints,UNFP).
+/*
+  once(get_fill_points2(Grid,FillPoints2)),
+  append([FillPoints2,UNFP],TheFilPoints),
   neighbor_map(H,V,UNFP,UNFP,BUNFP),
-  append(FillPoints,BUNFP,FGridO),
-  points_to_grid(H,V,FGridO,RGridO).
+  append([FillPoints,BUNFP],FGridO),
+  points_to_grid(H,V,FGridO,RGridO),!.
+*/
+recolor_points(G,Color,Ps):- map_pred(is_color_into(Color),G,Ps).
    
-
+is_color_into(Color,B,Color):- is_color(B).
   
-
+is_fill_point(GridO,Type-Color-Point):- is_fill_point(GridO,Type,Color,Point),!.
+is_fill_point(GridO,Type,C,P1):- is_adjacent_point(P1,Dir,P2),select('~'-C-P2,GridO,Rest),
+  reverse_nav(Dir,Rev),is_adjacent_point(P1,Rev,PRev),member(Type-C2-PRev,Rest),C2\==C.
+is_fill_point(_GridO,5,_C,_P1).
+is_fill_point(GridO,Type,C,P1):- 
+  findall(P2,(is_adjacent_point(P1,_Dir,P2),member(Type-C-P2,GridO)),IdentGuys),
+  length(IdentGuys,N),N=4,!.
+is_fill_point(GridO,_,C,P1):- would_fill(GridO,C,P1).
  
 is_sedge('.').
  
-
+p1_or(P1A,P1B,X):- call(P1A,X)->true;call(P1B,X).
 is_point_type(T,V):- compound(V),arg(_,V,E), is_point_type(T,E).
 is_point_type(T,V):- V==T.
  
@@ -1478,17 +1511,40 @@ neighbor_map(H,V,[NC-P1|Ps],Points,[(N-C)-P1|Ps2]):-
 only_color_data(NC,NC):- \+ compound(NC),!.
 only_color_data(_-C,NC):- only_color_data(C,NC).
 
-o_c_d(C,CD):- C==bgw,!,CD\==bgw.
-o_c_d(C,CD):- C\==bgw,CD==bgw,!,fail.
-o_c_d(C,CD):- C\==CD.
+only_point_data(NC,NC):- \+ compound(NC),!.
+only_point_data(_-C,NC):- only_point_data(C,NC).
+
+dif_color(C,CD):- C==CD,!,fail.
+dif_color(C,CD):- C==bgw,!,CD\==bgw.
+dif_color(C,CD):- C==bg,!,CD\==bg.
+dif_color(_,_).
 
 is_adjacent_point_m2(P1,Dir,P2):- is_adjacent_point(P1,Dir,P2).
 is_adjacent_point_m2(P1,Dir,P2):- is_adjacent_point(P1,Dir,P3),is_adjacent_point(P3,Dir,P2).
 
+would_fill(In,C,P1):-
+  localpoints_include_bg(In,Points),
+  member(C-P1,Points),
+  findall(Dir,(n_s_e_w(Dir),is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),dif_color(C,CD),CD\==black),DirsE),
+  findall(Dir,(is_diag(Dir),is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),dif_color(C,CD),CD\==black),DirsF),
+  findall(Dir,(n_s_e_w(Dir),once((is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD),C\==black))),DirsC),
+  findall(Dir,(is_diag(Dir),once((is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD),C\==black))),DirsD),
+  once(would_fill_color(DirsC,DirsD,DirsE,DirsF)).
+
+would_fill_color([_,_,_,_],_,_,_).
+would_fill_color(_,[_,_,_,_],_,_).
+would_fill_color(_,_,[_,_,_,_],_).
+would_fill_color(_,_,_,[_,_,_,_]).
+would_fill_color(A,_,C,_):- append([A,C],Len),length(Len,L),L>3.
+%would_fill_color(A,B,C,D):- append([B,D],Len),length(Len,L),L>3.
+would_fill_color(A,B,C,D):- append([A,B,C,D],Len),length(Len,L),L>7.
+
+
+
 nei_map(H,V,C,P1,Points,N):- 
  findall(Dir,(n_s_e_w(Dir),once((is_adjacent_point_m2(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD)))),DirsC),
- findall(Dir,(is_diag(Dir),once((is_adjacent_point_m2(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD)))),DirsD),
- findall(Dir,(is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),o_c_d(C,CD)),DirsE),
+ findall(Dir,(is_diag(Dir),once((is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD)))),DirsD),
+ findall(Dir,(is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),dif_color(C,CD)),DirsE),
  hv_point(X,Y,P1), 
  edge_of_grid(H,V,X,Y,Edge),
  map_neib1(C,DirsE,Edge,DirsC,DirsD,N).
@@ -1507,6 +1563,9 @@ map_neib(_,_,_,[],[],0,0).
 map_neib(_,_,_,[n,s,e,w],[_,_,_],'+','7').
 
 map_neib(_,_,_,[n,s,e,w],[_,_,_],'*','7').
+
+%map_neib(_,[ne,sw,se,nw],[],_,_,'~','~').
+%map_neib(_,[n,s,e,w],_,_,_,'~','~').
 
 map_neib(_,_,c,[n],[],'!','2').
 map_neib(_,_,c,[s],[],'!','2').
@@ -1607,6 +1666,7 @@ map_neib(_,_,_,[_],[_,_,_,_],'X','X').
 map_neib(_,_,_,[_],[_,_,_,_],4,'X').
 map_neib(_,_,_,[_],[],2,'*').
 map_neib(_,_,_,[],[_],1,'*').
+%map_neib(_,_,_,NonNil1,NonNil2,'a','.'):- NonNil1\==[],NonNil2\==[],!.
 map_neib(_,_,_,_,NonNil,'A','.'):- NonNil\==[],!.
 map_neib(_,_,_,NonNil,_,'%','.'):- NonNil\==[],!.
 map_neib(_,_,_,_,_,'.','.').

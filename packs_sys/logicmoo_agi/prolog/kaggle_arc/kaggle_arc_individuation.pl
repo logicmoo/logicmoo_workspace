@@ -351,7 +351,7 @@ individuate7(VM,GH,GV,ID,ROptions,GridIn,IndvS):-
       
       once((delistify_single_element(ROptions,NamedOpts),
        save_grouped(individuate(ID,NamedOpts),IndvS))),!,
-      print_info(IndvS).
+      nop(print_info(IndvS)).
       
 
 into_points_grid(GridIn,Points,Grid):- 
@@ -647,7 +647,7 @@ run_fti(VM):-
   must_det_ll(run_fti(VM,Code)).
 
 run_fti(_,[]):- !.
-run_fti(_,[Done|OUT]):- ( \+ done \= Done ), !, wdmsg(done_run_fti(_,[Done|OUT])),!.
+run_fti(_,[Done|OUT]):- ( \+ done \= Done ), !, wdmsg(done_run_fti([Done|OUT])),!.
 run_fti(VM,[F|TODO]):- 
   %must_det_ll(fti(VM,[F|TODO])),!, 
   show_vm_changes(VM,F, must_det_ll(fti(VM,[F|TODO]))),
@@ -662,8 +662,8 @@ maybe_four_terse(L,F=N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
 maybe_four_terse(L,L):-!.
 %fti(VM,_):- VM.points=[], !.
 fti(_,[]):- !.
-fti(_,[Done|OUT]):-  ( \+ done \= Done ), !, wdmsg(done_fti(_,[Done|OUT])),!.
-fti(VM,_):- VM.points==[], !.
+fti(_,[Done|OUT]):-  ( \+ done \= Done ), !, wdmsg(done_fti([Done|OUT])),!.
+%fti(VM,_):- VM.points==[], !.
 
 fti(VM,_):-
   Objs = VM.objs,  
@@ -674,7 +674,7 @@ fti(VM,_):-
       pt(t([obj/obj_mass=(Count/Mass),unprocessed_points=PC,fsi=Four])))),fail.
 
 
-fti(VM,_):- member(recalc_sizes,VM.options), recalc_sizes(VM), fail.
+fti(VM,_):- fail, member(recalc_sizes,VM.options), once(recalc_sizes(VM)), fail.
 
 /*
 

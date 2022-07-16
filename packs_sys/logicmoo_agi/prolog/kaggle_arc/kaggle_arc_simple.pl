@@ -15,7 +15,7 @@ grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(nb_current(ex
   kaggle_arc_io(TestID,ExampleNum,_,Grid),
   grid_part(Grid,Info).
 
-grid_part(Grid,obj(N,P)):- !,trace,individuate(complete,Grid,Objs),nth1(N,Objs,P).
+grid_part(Grid,Objs):- !,individuate(complete,Grid,Objs).
 grid_part(Grid,row(Y,Info)):- nth1(Y,Grid,Info).
 grid_part(Grid,col(X,Info)):- rot90(Grid,Grid90),nth1(X,Grid90,Info).
 grid_part(Grid,P):- globalpoints(Grid,Points),member(P,Points).

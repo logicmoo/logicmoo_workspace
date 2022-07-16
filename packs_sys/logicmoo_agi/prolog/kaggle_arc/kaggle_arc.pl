@@ -15,9 +15,12 @@
 :- discontiguous(fav/2).
 :- multifile(fav/2).
 
-:- dynamic(grid_hint_pred/1).
-:- discontiguous(grid_hint_pred/1).
-:- multifile(grid_hint_pred/1).
+
+:- dynamic(arc_test_property/3).
+:- discontiguous(arc_test_property/3).
+:- multifile(arc_test_property/3).
+
+% :- dynamic(grid_hint_pred/1). :- discontiguous(grid_hint_pred/1). :- multifile(grid_hint_pred/1).
 
 
 my_is_clause(H,B):- clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB.
@@ -38,7 +41,7 @@ decl_sf(G):- ground(G), !, my_assertz_if_new(decl_sf(G)).
 :- discontiguous(decl_pt/1).
 :- dynamic(decl_pt/1).
 decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(plain,G)).
-decl_pt(How,G):- ground(G), !, my_assertz_if_new(decl_pt(How,G)).
+decl_pt(How,G):- nonvar(How),ground(G), !, my_assertz_if_new(decl_pt(How,G)).
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(color_term,true).
 :- set_stream(current_output, tty(true)).
@@ -523,8 +526,10 @@ train_for_objects_from_pair_with_mono(Dict0,TestID,Desc,In,Out,Dict9):-
   nop(train_for_objects_from_1pair(Dict1,TestID,MonoDesc,MonoIn,MonoOut,Dict9)),!,
    ignore(Dict1=Dict9))),!.
 
-
 train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
+  locally(set_prolog_flag(gc,false),train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1)).
+
+train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  maplist(must_det_ll,[
  Desc = [Trn,IsIO1,N1,IsIO2,N2], 
  which_io(IsIO1,IO1),
@@ -557,6 +562,7 @@ train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
   individuate(InVM),!,
   individuate(OutVM)]),!,
+
   InC = InVM.objs,
   OutC = OutVM.objs,
   %print_info(InC),
@@ -600,7 +606,9 @@ show_pair_code(In,Out):-
 print_testinfo(TestID):-
   ignore(((task_info(TestID,F),forall(member(I,F),pt(task_info=I))))).
 
-trials(learn). trials(clue). trials(human). trials(sol). trials(dsl). trials(runDSL).
+% trials(learn). trials(clue).   
+trials(human). trials(sol).
+trials(dsl). trials(runDSL).
 
 sols_for(Name,Trial,Sol):- trials(Trial),Entry=..[Trial,Sol], task_info(Name,Sols),member(Entry,Sols).
 
@@ -628,13 +636,13 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     grid_size(TestIn,IH,IV), grid_size(ExpectedOut,OH,OV),
     ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
     print_testinfo(TestID))), 
-  must_det_ll((    
+   must_det_ll((
     dash_chars, dash_chars,
     show_pair_grid(green,IH,IV,OH,OV,'Test TestIn','Solution ExpectedOut (Not computed by us)',PairName,TestIn,ExpectedOut),!,  
     get_training(Training))),
     %sflag(indiv,_,0),    
     into_fti(TestID*ExampleNum*in,in,TestIn,InVM),!,
-    set(InVM.objs) = [],
+    %set(InVM.objs) = [],
     %set(InVM.points) = [],
     %set(InVM.training) = Training,
     TrainingVM = InVM,
