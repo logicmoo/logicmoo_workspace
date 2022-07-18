@@ -96,10 +96,10 @@ detect_supergrid(TestID,ExampleNum,In0,Out0,TT):-
   
   %gset(TT.z_contains_out)=in(HIO,VIO),
   %gset(TT.z_contains_in)=out(HOI,VOI),
-
+  
 arc_test_property(g,b,d):-fail.
 
-
+  
 is_fti_step(obj_into_cells).
 is_fti_step(print_grid).
 obj_into_cells(VM):- 
@@ -195,7 +195,7 @@ compute_grid_hints(TestID):-
       forall(grid_hint_recolor(o-o,Out1,Out2,Hint),add_hint(TestID,Hint,N)))),!.
 
   % forall((kaggle_arc_io(TestID,(trn+N),in,Out1),N2 is N+1,  (kaggle_arc_io(TestID,(trn+N2),in,Out2)->true;kaggle_arc_io(TestID,(trn+0),in,Out2)),  grid_hint_recolor(i-i,Out1,Out2,Hint)),add_hint(TestID,Hint,N)).
-  
+
 /*
 grid_hint(TestID):- format('~N'),
   findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),HintsIO),
@@ -405,7 +405,6 @@ has_y_columns1(In,Y,Color,Out):-
   findall(Nth,(nth1(Nth,In,Row),entire_row(Color,Row)),BorderNums),
   length(BorderNums,YM1),Y is YM1 + 1,
   append([0|BorderNums],[GY],Out).
-
 % bleeding of this color
 illegal_column_data1(In,Color,BorderNums):- 
   nth1(Nth,In,OtherRow),\+ member(Nth,BorderNums),
@@ -428,6 +427,8 @@ illegal_column_data(In,Color,BorderNums):-
   nth1(NthMore,In,Row2),
   (member(C1,Row2),member(C2,Row1)),
   C1 == C2, C1 == Color,!.
+
+
 
 
 %globalpoints(grid,points)

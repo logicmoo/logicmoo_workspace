@@ -280,16 +280,28 @@ subst_color(Color1,Color2,Grid,NewGrid):-
 
 equal_color(Color,Color).
 
-remove_color(Color,Grid,NewGrid):-
-   nth1(_,Grid,Row,MidGrid),maplist(equal_color(Color),Row),!,
-   remove_color(Color,MidGrid,NewGrid).
-remove_color(Color,G0,NewGrid):-
+remove_color(Color,In0,Out):-
+ duplicate_term(In0,In),
+ copy_term(In0,In),
+ remove_color0(Color,In,Out0),!,
+  duplicate_term(Out0,Out),
+  copy_term(Out0,Out),
+ nop((print_side_by_side(silver,In,remove_color,_,Out,c(Color)))),!.
+
+
+remove_color0(Color,Grid,NewGrid):-
+   nth1(_,Grid,Row,MidGrid),maplist(=(Color),Row),!,
+   remove_color0(Color,MidGrid,NewGrid).
+remove_color0(Color,G,NewGrid):-
+   duplicate_term(G,G0),
    rot90(G0,Grid),
-   nth1(_,Grid,Row,Rest),maplist(equal_color(Color),Row),
-   rot270(Rest,MidGrid),!,
-   remove_color(Color,MidGrid,NewGrid).
-remove_color(Color,Grid,NewGrid):-
-   get_bgc(Cell), subst_color(Color,Cell,Grid,NewGrid).
+   nth1(_,Grid,Row,Rest),maplist(=(Color),Row),
+   duplicate_term(Rest,Rest0),
+   rot270(Rest0,MidGrid),!,
+   remove_color0(Color,MidGrid,NewGrid).
+remove_color0(Color,Grid,NewGrid):-
+   get_bgc(Cell), subst_color(Color,Cell,Grid,NewGrid),
+   set_vm(grid,NewGrid).
 
 
 blank_color(Color1,Grid,NewGrid):- get_bgc(Cell), subst_color(Color1,Cell,Grid,NewGrid).
@@ -492,7 +504,7 @@ calc_add_points(OH,OV,Grid,Point):- point_to_hvc(Point,H,V,C),!, HH is H -OH +1,
 calc_add_points(OH,OV,Grid,_-Point):- point_to_hvc(Point,H,V,C),!, HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,C).
 calc_add_points(OH,OV,Grid,Obj):- globalpoints(Obj,Points),!,maplist(calc_add_points(OH,OV,Grid),Points).
 %calc_add_points(_OH,_OV,_,obj(_)):-
-  
+
 %add_h_v_c(Grid,H,V,C):- plain_var(C),!,nop(add_h_v_c(Grid,H,V,C)).
 add_h_v_c(Grid,H,V,C):- hv_c_value(Grid,Was,H,V),
  (Was=C->true;(nth1(V,Grid,Row),nb_set_nth1(H,Row,C),!,nb_set_nth1(V,Grid,Row))).
