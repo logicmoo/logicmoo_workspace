@@ -278,6 +278,7 @@ cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), object_grid(
 cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj=@=Var, !,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
+% TODO Comment out next line to prefer the line after
 cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
 cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
 cast_to_grid(Naming,Grid, Closure ):- 
