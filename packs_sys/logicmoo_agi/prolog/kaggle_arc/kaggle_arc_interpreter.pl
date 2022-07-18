@@ -203,6 +203,7 @@ run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
 run_dsl(_VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
+
 run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
 run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
@@ -220,14 +221,16 @@ run_dsl(VM,enforce,color(Obj,Color),In,Out):-!,
  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
     override_object_io(VM,color(Color),Obj,In,Out).
 
-run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, 
-  loc_xy(Obj,X,_Old),
-    override_object_io(VM,loc_xy(X,New),Obj,In,Out).
+run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc_xy(Obj,X,_Old), override_object_io(VM,loc_xy(X,New),Obj,In,Out).
 
-run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !,
- (call_expanded(VM,call(Prog,In,M))*-> 
-    =(M,Out) ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
+run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !, vm_grid(VM, run_dsl_call_io(VM,Mode,Prog,In,Out), In, Out).
+
 run_dsl(_VM,Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
+
+
+run_dsl_call_io(VM,Mode,Prog,In,Out):- ( (call_expanded(VM,call(Prog,In,M))) 
+  *->  M=Out ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
+run_dsl_call_io(_VM,_Mode,_Prog,InOut,InOut).
 
 override_object_io(_VM,Update,Obj,In,Out):- 
   remove_global_points(Obj,In,Mid), 
@@ -270,10 +273,10 @@ print_grid_to_atom(G,S):- with_output_to(atom(S),print_grid(G)).
 % ?- print_grid(gridFn(X)).
 cast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
 cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
-cast_to_grid(Obj,Grid,Closure):- resolve_reference(Obj,Var),!,cast_to_grid(Var,Grid,Closure).
+cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj=@=Var, !,cast_to_grid(Var,Grid,Closure).
+%cast_to_grid(Obj,Grid,Closure):- resolve_reference(Obj,Var),!,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), object_grid(Grp,Grid),!.
-cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj=@=Var, !,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
