@@ -113,15 +113,49 @@ run_dsl(VM,Prog,In,Out):-
 
 vm_grid(VM,Goal,In,Out):- In==VM,!,vm_grid(VM,Goal,VM.grid,Out).
 vm_grid(VM,Goal,In,Out):-
- must_det_ll((
-  gset(VM.grid)=In, 
-  grid_size(In,H,V),
-  gset(VM.h)=H, set(VM.v)=V, 
+  maybe_set_vm(VM),
+  set_vm_grid(VM,In),
+  my_submenu_call(Goal),!,
+  (var(Out) -> Out = VM.grid ; set_vm_grid(VM,Out)).  
+
+set_vm_grid(VM,In):- In == VM,!.
+set_vm_grid(VM,In):- var(In),!, In = VM.grid . 
+set_vm_grid(VM,In):- is_grid(In), !, set_vm_grid_now(VM,In).
+set_vm_grid(VM,In):- into_grid(In,Grid), set_vm_grid_now(VM,Grid),!.
+set_vm_grid(VM,In):- is_map(In), map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
+set_vm_grid(VM,In):- set_vm_grid_now(VM,In).
+
+set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
+set_vm_grid_now(VM,Grp):- 
+  data_type(Grp,Type),
+  gset(VM.notes) = data_type(Type),
+  pt(yellow,set_vm_grid_now),pt(cyan,Type),fail.
+set_vm_grid_now(VM,In):- VM==In,!.
+set_vm_grid_now(VM,In):- is_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
+set_vm_grid_now(VM,Grp):- is_group(Grp), !,
   gset(VM.points_o) = VM.points,
-  localpoints_include_bg(In, Points),
+  gset(VM.objs)=Grp,
+  globalpoints(Grp, Points),
   gset(VM.points)=Points,
-  my_submenu_call(Goal), 
-  points_to_grid(H,V,VM.points,Out))).
+  grid_size(Grp,H,V), gset(VM.h)=H, gset(VM.v)=V, 
+  points_to_grid(H,V,Points,Grid),
+  gset(VM.grid)=Grid,!.
+
+set_vm_grid_now(VM,Obj):- is_object(Obj), !,
+  gset(VM.objs)=[Obj],
+  object_grid(Obj,Grid),
+  gset(VM.grid)=Grid,
+  vis_hv(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
+  gset(VM.points_o) = VM.points,
+  localpoints_include_bg(Obj, Points),
+  gset(VM.points)=Points .
+
+set_vm_grid_now(VM,Grid):- is_grid(Grid), !,
+  gset(VM.grid)=Grid, 
+  grid_size(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
+  gset(VM.points_o) = VM.points,
+  localpoints_include_bg(Grid, Points),
+  gset(VM.points)=Points.
 
 expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
 expand_dsl_value(VM, Mode,In,Val,OutValue):-
@@ -214,13 +248,22 @@ uncast_grid_to_object(Orig,Grid,NewObj):-
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
+back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
+  ptt(back_to_map(Was,Dict,Prev,Grid,Closure,New)),
+  call(Closure,New,NewPrev),
+  gset(Dict.Was) = NewPrev ,
+  Ret = Dict.
 
 :- decl_pt(into_grid(+(any),-mv(grid))).
 into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(any),-grid)).
-into_grid(P,G):- var(P),!,P=G,get_current_test(TestID),test_grids(TestID,G).
-into_grid(P,G):- quietly(cast_to_grid(P,G, _)).
+into_grid(P,G):- var(P),!,ignore(get_current_test(TestID)),test_grids(TestID,G),grid_to_id(G,P).
+into_grid(P,G):- cast_to_grid(P,G, _).
+
+map_to_grid(objs,Dict,Obj,Grid,Closure):- get_kov(objs,Dict,Obj), Obj\=[], cast_to_grid(Obj,Grid,Closure),!.
+map_to_grid(grid,Dict,Grid,Obj,Closure):- get_kov(grid,Dict,Obj), Obj\=[], cast_to_grid(Obj,Grid,Closure),!.
+map_to_grid(points,Dict,Obj,Grid,Closure):- get_kov(points,Dict,Obj), Obj\=[], cast_to_grid(Obj,Grid,Closure),!.
 
 print_grid_to_string(G,S):- with_output_to(string(S),print_grid(G)).
 print_grid_to_atom(G,S):- with_output_to(atom(S),print_grid(G)).
@@ -233,7 +276,7 @@ cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), !, object_gr
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
-
+cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
 cast_to_grid(Naming,Grid, Closure ):- 
   ((known_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;
    (fail,recast_to_grid0(Naming,Grid, Closure))).
@@ -424,7 +467,7 @@ arc_expand_arg(objFn(X),Var,known_object(X,Var)).
 arc_expand_arg(gridFn(X),Var,known_grid(X,Var)).
 arc_expand_arg(groupFn(X),Var,into_group(X,Var)).
 
-goal_expansion_query(Goal,Out):-
+goal_expansion_query(Goal,Out):- fail,
    compound(Goal), predicate_property(Goal,meta_predicate(_)),!,
    arg(N,Goal,P), compound(P), goal_expansion_query(P,MOut), 
    MOut\=@=P, setarg(N,Goal,MOut), expand_goal(Goal, Out).
