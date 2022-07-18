@@ -27,8 +27,9 @@ offset_point(OH,OV,Point,LPoint):- is_nc_point(Point), hv_point(H,V,Point),HH is
 offset_point(OH,OV,C-Point,C-LPoint):- is_nc_point(Point), hv_point(H,V,Point),HH is H +OH -1, VV is V + OV -1,hv_point(HH,VV,LPoint).
 
 
-grid_to_individual(Grid,Obj):- 
-  my_assertion(is_grid(Grid)),!,
+grid_to_individual(GridIn,Obj):- 
+  %my_assertion(is_grid(Grid)),!,
+  into_grid(GridIn,Grid),
   grid_size(Grid,H,V),
   grid_to_points(Grid,H,V,Points),
   (Points==[]-> empty_grid_to_individual(H,V,Obj); 
@@ -218,7 +219,7 @@ make_point_object(ID,H,V,Options,C-Point,Obj):- hv_point(1,1,HV11),
    Iv is (Fv rem 3000) + 1,
     as_obj([mass(1),shape([['0'-C]]),colors([cc(C,1.0)]),localpoints([C-HV11]),vis_hv(1,1),
     rotation(same),loc_xy(X,Y),
-    changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(X,Y),
+    changes([]),iz(dots),iz(shape(dot)),iz(solid),center(X,Y),
     object_indv_id(ID,Iv),globalpoints([C-Point]),
     grid_size(H,V)|Options],Obj).
 

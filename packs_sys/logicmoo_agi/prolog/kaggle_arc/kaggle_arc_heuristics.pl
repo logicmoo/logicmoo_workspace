@@ -16,10 +16,10 @@
 
 recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
-   set(VM.program_i) = [After,recalc_sizes|TODO].
+   nop((set(VM.program_i) = [After,recalc_sizes|TODO])).
 
 
-recalc_sizes(VM):- 
+recalc_sizes(VM):- is_map(VM),
    length(VM.objs,Count), Count>3,
    computeMassIndex(VM,Sizes),
    computeMinMass(VM,Sizes,Count,Min),
@@ -32,8 +32,8 @@ recalc_sizes(VM):-
    set(VM.objs_max_mass) = Max,
    show_vm_changes(VM,cullObjectsOutsideOf(Min,Max),cullObjectsOutsideOf(VM,Min,Max)).
 
-cullObjectsOutsideOfRanges(VM):- length(VM.objs,N),N< floor(VM.objs_max_len/2),!.
-cullObjectsOutsideOfRanges(VM):-cullObjectsOutsideOf(VM,VM.objs_min_mass,VM.objs_max_mass). 
+cullObjectsOutsideOfRanges(VM):- is_map(VM), length(VM.objs,N),N< floor(VM.objs_max_len/2),!.
+cullObjectsOutsideOfRanges(VM):- is_map(VM), cullObjectsOutsideOf(VM,VM.objs_min_mass,VM.objs_max_mass). 
 cullObjectsOutsideOf(VM,Min,Max):- 
   (var(Min)->computeMinMass(VM,Min);true),
   (var(Max)->computeMaxMass(VM,Max);true),

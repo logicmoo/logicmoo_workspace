@@ -477,6 +477,8 @@ expand_shape_directives(A,Opts,B):- show_workflow(A,Opts,B),!.
 
 :- dynamic(is_shapelib_opt/2).
 
+
+
 %in_shape_lib(Name):- the_hammer1(RedComplex),all_rotations(RedComplex,Name).
 
 in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).

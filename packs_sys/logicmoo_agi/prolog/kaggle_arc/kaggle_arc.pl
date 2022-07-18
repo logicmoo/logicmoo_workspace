@@ -265,9 +265,6 @@ is_vm(Tree):- is_map(Tree), once(get_kov(program,Tree,_);get_kov(program_i,Tree,
 is_map(Tree):- is_rbtree(Tree),!.
 is_map(Dict):- is_dict(Dict),!.
 
-get_kov(K,O,V):- is_dict(O),!,get_dict(K,O,V).
-get_kov(K,O,V):- is_rbtree(O),!,rb_in(K,V,O).
-%get_kov(K,O,V):- is_rbtree(O),!,nb_rb_get_node(K,O,Node),nb_rb_node_value(Node,V).
 
 
 arc_setval(TT,List):- is_list(List),!,maplist(arc_setval(TT),List).
@@ -430,20 +427,32 @@ set_vm(VM):- nb_linkval('$grid_vm',VM).
 get_vm(VM):- nb_current('$grid_vm',VM),!.
 get_vm(VM):- ndividuator,!,nb_current('$grid_vm',VM),!.
 
-set_vm(Prop,Value):-  
-  get_vm(VM),
+set_vm(Prop,Value):- get_vm(VM),
+ (get_kov(Prop,VM,_) -> set(VM.Prop) = Value ; 
+  (get_kov(props,VM,Hashmap), (var(Hashmap)->(rb_new(Hashmap),gset(VM.props)=Hashmap); true),
+     must_not_error(nb_set_value(Hashmap,Prop,Value)))),
+ nop(set_vm_obj(Prop,Value)).
+
+set_vm_obj(Prop,Value):- 
   globalpoints(Value,IndvPoints),
   fif(IndvPoints\==[],
     (make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
           addObjects(VM,Obj),
-          print_grid(VM.h,VM.v,Prop,Value))),
-  (get_kov(Prop,VM,_) -> set(VM.Prop) = Value ; 
-  (get_kov(props,VM,Hashmap), (var(Hashmap)->(rb_new(Hashmap),gset(VM.props)=Hashmap); true),
-     must_not_error(nb_set_value(Hashmap,Prop,Value)))).
+          print_grid(VM.h,VM.v,Prop,Value))),!.
 
-get_vm(Prop,Value):-  get_vm(VM), 
-  (get_kov(Prop,VM,Value) -> true ; (get_kov(props,VM,Hashmap),nonvar(Hashmap),must_not_error(nb_get_value(Hashmap,Prop,Value)))).
 
+
+get_vm(Key,Value):-  get_vm(VM), get_kov(Key,VM,Value).
+  
+get_kov(K,O,V):- get_kov1(K,O,V),!.
+get_kov(K,O,V):- get_kov1(props,O,VV),!,get_kov1(K,VV,V).
+% (get_kov(Prop,VM,Value) -> true ; (get_kov(props,VM,Hashmap),nonvar(Hashmap),must_not_error(nb_get_value(Hashmap,Prop,ValueOOV)),get_oov_value(ValueOOV,Value))).
+get_kov1(K,O,V):- is_dict(O),!,get_dict(K,O,OOV),get_oov_value(OOV,V).
+get_kov1(K,O,V):- is_rbtree(O),!,rb_in(K,V,OOV),get_oov_value(OOV,V).
+%get_kov(K,O,V):- is_rbtree(O),!,nb_rb_get_node(K,O,Node),nb_rb_node_value(Node,V).
+
+get_oov_value(ValueOOV,Value):- compound(ValueOOV),ValueOOV=oov(Value),!.
+get_oov_value(Value,Value).
 
 make_training(TestID,VMO):- 
  %make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
@@ -654,11 +663,12 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     dash_chars, dash_chars,    
     print_testinfo(TestID),
     ptt("BEGIN!!!"+TestID+ExampleNum),
-    forall(sols_for(TestID,Trial,SolutionProgram),
-     ignore((pt(cyan,trial=Trial),
-       ptt(cyan,run_dsl(TestID,Trial,SolutionProgram)),
-       (run_dsl(TrainingVM,SolutionProgram,InVM,Grid)*->true;TestIn=Grid),
-       into_pipe(Grid,Solution))
+    forall(once(sols_for(TestID,Trial,SolutionProgram)),
+     ignore(
+      once((pt(cyan,trial=Trial),
+       ptt(cyan,run_dsl(TestID,Trial,SolutionProgram)),!,
+       (run_dsl(TrainingVM,SolutionProgram,InVM,Grid)*->!;TestIn=Grid),
+       into_pipe(Grid,Solution)))
        *->    
        ignore((count_difs(ExpectedOut,Solution,Errors),
         print_side_by_side(print_grid(_,_,"Our Solution",Solution),print_grid(_,_,"Expected Solution",ExpectedOut)),
@@ -671,9 +681,9 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
                task_info(TestID,InfoF),wqnl(fav(TestID*ExampleNum,InfoF)),
                banner_lines(red)))))
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))),
-    print_grid(TrainingVM.grid),
+    print_grid(TrainingVM.grid),!,
     print_list_of("objs",TrainingVM.objs),
-    ptt("END!!!"+TestID+ExampleNum))).
+    ptt("END!!!"+TestID+ExampleNum))),!.
    
 
 

@@ -74,10 +74,6 @@ print_info([]):-!.
 print_info(A):- pt(A).
 
 
-:- discontiguous debug_indiv/1. 
-
-debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
-
 debug_as_grid(Grid):-
   grid_size(Grid,H,V),
   dash_chars(H),
@@ -85,10 +81,16 @@ debug_as_grid(Grid):-
   print_grid(Grid),
   dash_chars(H),!.
 
+:- discontiguous debug_indiv/1. 
+
 debug_indiv(_):- is_print_collapsed,!.
+debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
 debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(Grid).
 debug_indiv(Grid):- maplist(is_cpoint,Grid),!,debug_as_grid(Grid).
 debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(Grid).
+
+
+
 
 
 debug_indiv(List):- is_list(List),length(List,Len),!,
@@ -117,11 +119,12 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   sort_obj_props(A,AS),
  % will_show_grid(Obj,TF),
   TF = false,
-  remove_too_verbose(AS,TV0), include(not_too_verbose,TV0,TV),
+  object_indv_id(Obj,_,MyID),
+  remove_too_verbose(MyID,AS,TV0), include(not_too_verbose,TV0,TV),
   flatten(TV,F),predsort(longer_strings,F,[Caps|_]),
   toPropercase(Caps,PC),
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
-  object_glyph(Obj,Glyph),  
+  object_glyph(Obj,Glyph),    
   ignore((TF==true,dash_chars)),
   ignore((is_colorish(FC) -> wqnl([format("%  ~w:\t",[PC]), color_print(FC,Glyph) | TV ]);
                              wqnl([format("%  ~w:\t",[PC]), color_print(Glyph) | TV ]))),
@@ -178,26 +181,28 @@ priority(_,2).
 longer_strings(R,A,B):- string(A),string(B),priority(A,PA),priority(B,PB),atom_length(A,AL),atom_length(B,BL),compare(R,PA+AL+A,PB+BL+B).
 longer_strings(R,A,B):- obj_prop_sort_compare(R,A,B).
 
-remove_too_verbose(Var,plain_var(Var)):- plain_var(Var),!.
-remove_too_verbose(H,''):- too_verbose(H),!.
+alt_id(MyID,ID,Alt):- Alt is abs(MyID-ID).
+remove_too_verbose(_MyID,Var,plain_var(Var)):- plain_var(Var),!.
+remove_too_verbose(_MyID,H,''):- too_verbose(H),!.
+remove_too_verbose(MyID,List,ListO):- is_list(List),!,maplist(remove_too_verbose(MyID),List,ListO),!.
 
-% @TODO UNCOMMENT THIS remove_too_verbose(dot,"point"):- !.
-%remove_too_verbose(line(HV),S):- sformat(S,'~w-Line',[HV]).
-%remove_too_verbose(square,S):- sformat(S,'square',[]).
-% @TODO UNCOMMENT THIS remove_too_verbose(background,S):- sformat(S,'bckgrnd',[]).
-%remove_too_verbose(iz(H),S):- !, remove_too_verbose(H,HH),sformat(S,'~q',[s(HH)]).
+% @TODO UNCOMMENT THIS remove_too_verbose(MyID,dot,"point"):- !.
+%remove_too_verbose(MyID,line(HV),S):- sformat(S,'~w-Line',[HV]).
+%remove_too_verbose(MyID,square,S):- sformat(S,'square',[]).
+% @TODO UNCOMMENT THIS remove_too_verbose(MyID,background,S):- sformat(S,'bckgrnd',[]).
+%remove_too_verbose(MyID,iz(H),S):- !, remove_too_verbose(MyID,H,HH),sformat(S,'~q',[s(HH)]).
 
-remove_too_verbose(touches(Dir,ID),HH):- integer(ID),int2glyph(ID,Glyph),remove_too_verbose(touches(Dir,Glyph),HH).
+remove_too_verbose(MyID,link(Touches,Dir,ID),HH):- integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),remove_too_verbose(MyID,link(Touches,Dir,Alt,Glyph),HH).
 
-remove_too_verbose(colors(H),HH):- !, remove_too_verbose(H,HH).
-remove_too_verbose(object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
-remove_too_verbose(object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
-%remove_too_verbose(loc_xy(X,Y),loc_xy(X,Y)).
-%remove_too_verbose(vis_hv(X,Y),size(X,Y)).
-remove_too_verbose(changes([]),'').
-remove_too_verbose(rotation(same),'').
-remove_too_verbose(L,LL):- is_list(L),!, maplist(remove_too_verbose,L,LL).
-remove_too_verbose(H,H).
+remove_too_verbose(MyID,colors(H),HH):- !, remove_too_verbose(MyID,H,HH).
+remove_too_verbose(_MyID,object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
+remove_too_verbose(_MyID,object_indv_id(_ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).
+%remove_too_verbose(MyID,loc_xy(X,Y),loc_xy(X,Y)).
+%remove_too_verbose(MyID,vis_hv(X,Y),size(X,Y)).
+remove_too_verbose(_MyID,changes([]),'').
+remove_too_verbose(_MyID,rotation(same),'').
+remove_too_verbose(MyID,L,LL):- is_list(L),!, maplist(remove_too_verbose(MyID),L,LL).
+remove_too_verbose(_MyID,H,H).
 
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
 too_verbose(globalpoints).

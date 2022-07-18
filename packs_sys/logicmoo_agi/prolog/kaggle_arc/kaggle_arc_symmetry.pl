@@ -398,18 +398,34 @@ repair_in_vm(P4,VM):-
   set_vm(neededChanged,NeededChanged),
   set_vm(repaired,RepairedPoints),
   set_vm(changed,Changes),
+  (Grid\=@=RepairedResult -> (set(VM.points) = []) ; fail),
   addProgramStep(VM,[repair_in_vm(P4)|Steps]),!.
 
-repair_repeats(_VM,Grid,RepairedResult,[]):- 
-  unbind_color(black,Grid,RepairedResult),
-  repair_grid_repeats(RepairedResult).
+guess_to_unbind(Grid,Color):- guess_to_unbind1(Grid,Color),!.
+guess_to_unbind1(_Grid,Color):- Color = black.
+guess_to_unbind1(Grid,Color):- !, fail, select(Row1,Grid,Rows),member(Row2,Rows),
+  append(_,[C1,C2],Row1),C1==C2,
+  append(_,[C3,C4],Row2),C3==C4,
+  C1=C4,C1\==black,Color=C1.
+
+repair_repeats(VM,Grid,RepairedResult,[guess_to_unbind(Black)]):- 
+  guess_to_unbind(Grid,Black),!,
+  repair_color_grid_repeats(Black,Grid,RepairedResult),!,
+  (Grid\=@=RepairedResult -> (set(VM.points) = []) ; fail).
+ 
+repair_color_grid_repeats(Black,Grid,RepairedResult):- ground(Grid),!,
+  unbind_color(Black,Grid,RepairedResult),!,
+  repair_grid_repeats(RepairedResult),
+  ground(Grid),!.
+repair_color_grid_repeats(Black,Grid,RepairedResult):- 
+  unbind_color(Black,Grid,RepairedResult),
+  repair_grid_repeats(RepairedResult),!.
+ 
 repair_grid_repeats(RepairedResult):- ground(RepairedResult),!.
 repair_grid_repeats(RepairedResult):-
-  member(Row1,RepairedResult),
-  member(Row2,RepairedResult),
-  Row1\==Row2,
-  Row1=Row2,!,
-  repair_grid_repeats(RepairedResult).
+  select(Row1,RepairedResult,More), \+ ground(Row1),
+  member(Row2,More), Row1\=@=Row2, Row1=Row2,
+  repair_grid_repeats(RepairedResult),!.
 repair_grid_repeats(RepairedResult):- 
   rot90(RepairedResult,RepairedResult2),
   repair_grid_repeats(RepairedResult2).  
@@ -423,10 +439,14 @@ fourway(VM):-
   repair_in_vm(repair_fourway,VM).
 
 repair_fourway(VM,Grid,RepairedResult,Steps):- 
-  colors(Grid,Colors),!,length(Colors,CL),!,CL>3,
   maybe_set_vm(VM),
+  once((colors(Grid,Colors),length(Colors,CL),CL>3)),
   largest_first(VM.objs,Ordered),  
-  repair_2x2(Ordered,Steps,Grid,RepairedResult).
+  repair_2x2(Ordered,Steps,Grid,RepairedResult),!.
+repair_fourway(VM,Grid,RepairedResult,repair_color_grid_repeats(Color)):- fail,
+  maybe_set_vm(VM), unique_colors(Grid,Colors),
+  member(Color,[blue,brown|Colors]),
+  repair_color_grid_repeats(Color,Grid,RepairedResult),!.
 
 repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   member(CXL,[0,1]),member(CYL,[0,1]),
@@ -1509,7 +1529,9 @@ neighbor_map(H,V,[NC-P1|Ps],Points,[(N-C)-P1|Ps2]):-
   neighbor_map(H,V,Ps,Points,Ps2).
 
 only_color_data(NC,NC):- \+ compound(NC),!.
-only_color_data(_-C,NC):- only_color_data(C,NC).
+only_color_data(NC-P,C):- is_nc_point(P), only_color_data(NC,C).
+only_color_data(C-_,C):- \+ is_color(C),!.
+only_color_data(_-C,C):- \+ is_color(C),!.
 
 only_point_data(NC,NC):- \+ compound(NC),!.
 only_point_data(_-C,NC):- only_point_data(C,NC).

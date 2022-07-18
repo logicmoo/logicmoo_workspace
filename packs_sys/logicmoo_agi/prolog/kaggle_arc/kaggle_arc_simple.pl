@@ -15,10 +15,25 @@ grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(nb_current(ex
   kaggle_arc_io(TestID,ExampleNum,_,Grid),
   grid_part(Grid,Info).
 
-grid_part(Grid,Objs):- !,individuate(complete,Grid,Objs).
-grid_part(Grid,row(Y,Info)):- nth1(Y,Grid,Info).
-grid_part(Grid,col(X,Info)):- rot90(Grid,Grid90),nth1(X,Grid90,Info).
-grid_part(Grid,P):- globalpoints(Grid,Points),member(P,Points).
+grid_part(Grid,InfoR):- nth1(X,Grid,Info),VInfo=..[v|Info],InfoR=..[row,X,VInfo].
+grid_part(Grid,InfoR):- rot90(Grid,Grid90),nth1(X,Grid90,Info),VInfo=..[v|Info],InfoR=..[col,X,VInfo].
+%grid_part(Grid,NObjs):- wno(individuate(complete,Grid,Objs)), maplist_n(1,number_obj,Objs,NObjs).
+
+number_obj(N,obj(List),obj([ord(N)|List])).
+/*
+  Obj = obj(List),
+  loc_xy(Obj,X,Y),object_indv_id(Obj,_,MyID),
+ % atomic_list_concat([obj,X,Y],'_',Key),
+  localpoints_include_bg(Obj,LocalPoints),
+  points_to_grid(X,Y,LocalPoints,Grid),mapgrid(sometimes_assume(=,bg),Grid),
+  select(shape(Shape),List,Rest2),mapgrid(sometimes_assume(=,bg),Shape),
+  Rest3 = Rest2,
+  must_det_ll((remove_too_verbose(MyID,Rest3,TV00))),flatten([TV00],TV0),
+  must_det_ll((include(not_too_verbose,TV0,TV1),maplist(fix_iz,TV1,TV))),!,
+  member(MrT,[oform(Shape),ogrid(Grid)|TV])*/
+
+%grid_part(Grid,P):- globalpoints(Grid,Points),member(P,Points).
+
 %object_info(obj(List)
 
 %grid(Type,ConstructorData,[rot270]),CacheOfCalls).

@@ -117,44 +117,37 @@ kaggle_arc_train('00d62c1b', trn, [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0
 kaggle_arc_train('00d62c1b', tst, [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0, 3,0, 3, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3, 3, 3, 3, 3,0, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0, 3,0,0,0,0, 3,0,0, 3,0,0,0,0,0,0,0], [0,0,0,0, 3, 3, 3, 3, 3,0, 3, 3, 3,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0,0, 3,0,0,0, 3,0,0,0, 3,0,0], [0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3, 3,0,0,0, 3,0,0], [0,0,0,0,0,0, 3, 3,0, 3,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0, 3,0,0,0,0,0, 3, 3,0,0,0,0,0,0,0,0,0,0], [0, 3,0, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3,0, 3, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3,0,0,0, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3,0,0,0, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0, 3, 4, 3, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3, 3, 3, 3, 3,0, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0, 3, 4, 4, 4, 4, 3, 4, 4, 3,0,0,0,0,0,0,0], [0,0,0,0, 3, 3, 3, 3, 3,0, 3, 3, 3,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0,0, 3, 4, 4, 4, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0,0,0, 3, 3, 3, 3, 3, 3, 4, 4, 4, 3,0,0], [0,0,0,0,0,0, 3, 3, 4, 3,0,0,0, 3, 3, 3, 3, 3,0,0], [0,0, 3,0,0,0,0,0, 3, 3,0,0,0,0,0,0,0,0,0,0], [0, 3, 4, 3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0,0, 3,0, 3,0, 3, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 4, 4, 4, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0, 3, 3, 3, 3, 3,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]).
 */
 %tell(s), ignore((nl, nl, test_pairs(Name, ExampleNum, In, Out), format('~N~q.~n', [test_pairs_cache(Name, ExampleNum, In, Out)]), fail)), told.
-map_pred(Pred, P, X) :- call(Pred, P, X)*->true;map_pred0([],Pred, P, X).
-map_pred(NoCycles,_Pred, P, X) :- member(E,NoCycles), E==P,!, X = P.
+map_pred(Pred, P, X) :- map_pred([],Pred, P, X).
+%map_pred(NoCycles,_Pred, P, X) :- member(E,NoCycles), E==P,!, X = P.
 map_pred(NoCycles,Pred, P, X) :- call(Pred, P, X)*->true;map_pred0(NoCycles,Pred, P, X).
 
 map_pred0(_NoCycles,_Pred, Args, ArgSO) :- Args==[],!, ArgSO=[].
-map_pred0(NoCycles,Pred, P, X) :- fail,  attvar(P), !, %duplicate_term(P,X),P=X,
-  get_attrs(P,VS), 
-  map_pred([P|NoCycles],Pred, VS, VSX),
-  P=X, 
-  put_attrs(X,VSX),!.
-map_pred0(_NoCycles,_Pred, P, P1) :- (is_ftVar(P); \+ compound(P)), !, must(P1=P), !.
+map_pred0(_NoCycles, Pred, P, P1) :-  call(Pred, P, P1),!. % *->true;fail.
+map_pred0(NoCycles,Pred, P, X) :- fail,  attvar(P), !, %duplicate_term(P,X),P=X, 
+  get_attrs(P,VS),  map_pred([P|NoCycles],Pred, VS, VSX), P=X,  put_attrs(X,VSX),!.
+map_pred0(_NoCycles,_Pred, P, P1) :- ( \+ compound(P) ; is_ftVar(P)), !, must(P1=P), !.
 % map_pred0(NoCycles,Pred, Args, ArgSO) :- is_list(Args), !,  maplist(map_pred([Args|NoCycles],Pred), Args, ArgS), ArgS=ArgSO.
-map_pred0(NoCycles,Pred, IO, [O|ArgS]) :- 
-  IO= [I|Args], !, 
-  map_pred([IO,ArgS|NoCycles],Pred, I, O), 
-  map_pred0([IO,I|NoCycles],Pred, Args, ArgS).
+map_pred0(NoCycles,Pred, IO, OO) :- is_list(IO),!, maplist(map_pred(NoCycles,Pred), IO, OO).
+map_pred0(NoCycles,Pred, IO, [O|ArgS]) :-  IO= [I|Args], !, 
+  map_pred([IO,ArgS|NoCycles],Pred, I, O),  map_pred0([IO,I|NoCycles],Pred, Args, ArgS).
 map_pred0(NoCycles,Pred, P, P1) :-  
-  compound_name_arguments(P, F, Args),  
-  maplist(map_pred([P|NoCycles],Pred),Args,ArgS), 
-  compound_name_arguments(P1, F, ArgS).
+  compound_name_arguments(P, F, Args),  maplist(map_pred([P|NoCycles],Pred),Args,ArgS),  compound_name_arguments(P1, F, ArgS).
 %map_pred(_Pred, P, P).
-
-
+/*
 :- meta_predicate map_pred(2, ?, ?, ?, ?).
 map_pred(Pred, P, X, Sk, P1) :- must_be_free(X), call(Pred, P, X), !, must(Sk=P1), !.
 map_pred(_Pred, P, _, _, P1) :- is_ftVar(P), !, must(P1=P), !.
 map_pred(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, map_pred(Pred, P, X, Sk, P1), !, must(map_pred(Pred, Args, X, Sk, ArgS)), !.
 map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
 map_pred(_Pred, P, _, _, P).
+*/
 
 mapgrid(P3,Grid,GridN,GridO):- is_list(Grid),!,maplist(mapgrid(P3),Grid,GridN,GridO).
 mapgrid(P3,Grid,GridN,GridO):- call(P3,Grid,GridN,GridO),!.
-
-mapgrid(P3,Grid,GridN):- is_list(Grid),!,maplist(mapgrid(P3),Grid,GridN).
-mapgrid(P3,Grid,GridN):- call(P3,Grid,GridN),!.
-
-mapgrid(P3,Grid):- is_list(Grid),!,maplist(mapgrid(P3),Grid).
-mapgrid(P3,Grid):- call(P3,Grid),!.
+mapgrid(P2,Grid,GridN):- is_list(Grid),!,maplist(mapgrid(P2),Grid,GridN).
+mapgrid(P2,Grid,GridN):- call(P2,Grid,GridN),!.
+mapgrid(P1,Grid):- is_list(Grid),!,maplist(mapgrid(P1),Grid).
+mapgrid(P1,Grid):- call(P1,Grid),!.
 
 subst_1L([],Term,Term):-!.
 subst_1L([X-Y|List], Term, NewTerm ) :-

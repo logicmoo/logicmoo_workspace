@@ -119,8 +119,8 @@ meets_indiv_criteria(_,_).
 % =============================
 % Color types
 % =============================
-is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
 is_fg_color(C):- is_bg_color(C),!,fail.
+is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
 is_fg_color(C):- is_color(C),!.
 %is_fg_color(C):- C == fg.
 
@@ -265,7 +265,7 @@ h_symmetric(Group):- into_grid(Group,Grid),!,h_symmetric(Grid).
 is_object(O):- compound(O), O = obj(Props), is_list(Props).
 
 %is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
-is_group(Dict):- is_map(Dict),!,get_kov(objs,Dict,_).
+%is_group(Dict):- is_map(Dict),!,get_kov(objs,Dict,_).
 is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 
 is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V),!.

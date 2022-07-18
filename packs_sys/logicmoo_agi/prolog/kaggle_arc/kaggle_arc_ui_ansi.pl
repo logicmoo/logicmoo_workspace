@@ -8,6 +8,9 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+wno(G):-
+ locally(b_setval(print_collapsed,10), G).
+
 print_collapsed(Size,G):- 
  locally(b_setval(print_collapsed,Size), print_collapsed0(Size,G)).
 
@@ -100,6 +103,8 @@ arc_portray_pair_optional(Ps,K,Val,TF):-
 
 
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
+
+arc_portray(G):- is_print_collapsed,!, locally(nb_setval(arc_portray,t),arc_portray(G)).
 arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,(format(user_error,"~N~q~n",[E]),fail)).
 
   
@@ -135,9 +140,9 @@ tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
 tersify1(I,groupFn(O)):- is_group(I),  why_grouped(Why,II),I==II,!,O=Why.
+tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
 tersify1(I,O):- is_map(I), get_kov(objs,I,_),!, O='$VAR'('VM').
 tersify1(I,O):- is_map(I), get_kov(pairs,I,_),!, O='$VAR'('Training').
-tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
 
 
 tersifyG(I,O):- tersifyL(I,O),numbervars(O,1,_,[attvar(bind),singletons(false)]),!.
@@ -160,11 +165,12 @@ tersify3(I,O):- is_list(I), !, maplist(tersify3,I,O).
 tersify3(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
 tersify3(I,I).
 
+ptt(_):- is_print_collapsed,!.
 ptt(P):- \+ \+ ((tersify(P,Q),!,pt(Q))).
 ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 
-pt(P):- var(P),!,pt(var(P)).
 pt(_):- is_print_collapsed,!.
+pt(P):- var(P),!,pt(var(P)).
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
 
 %pt(P):-!,writeq(P).
@@ -461,7 +467,8 @@ with_color_index(Print,Goal):- Print==[],!,with_color_index([e],Goal).
 with_color_index(Print,Goal):- listify(Print,PrintL),
   locally(b_setval(color_index,PrintL),Goal).
 use_row_db :- fail.
-is_print_collapsed:- nb_current(print_collapsed,true).
+
+is_print_collapsed:- \+ nb_current(arc_portray,t), nb_current(print_collapsed,N),N\==[].
 
 print_grid(_):- is_print_collapsed,!.
 print_grid(Grid):- use_row_db, is_grid(Grid),!, grid_to_id(Grid,ID),print_grid(ID).
@@ -475,6 +482,7 @@ print_grid0(Grid):-  ignore(print_grid0(_,_,Grid)),!.
 
 format_u(TitleColor,Format,Args):- quietlyd( ignore((underline_print(color_print(TitleColor,call(format(Format,Args))))))).
 
+print_grid(_,_,_,_):- is_print_collapsed,!.
 print_grid(OH,OV,Name,Out):- 
  quietly((
   ignore((print_grid0(OH,OV,Out))),!,format('~N  '),
@@ -483,6 +491,7 @@ print_grid(OH,OV,Name,Out):-
   format_u(TitleColor,"~w  (~w)",[NameU, SS]))))),!.
 %print_grid(H,V,Grid):- use_row_db, grid_to_id(Grid,ID),!,print_grid0(H,V,ID).
 
+print_grid(_,_,_):- is_print_collapsed,!.
 print_grid(H,V,Grid):- ignore(quietly(print_grid0(H,V,Grid))).
 
 print_grid0(_,_,_):- is_print_collapsed,!.

@@ -156,8 +156,8 @@ do_menu_codes([27,91,67]):- !, cls,  next_test, print_test.
 do_menu_codes([27,91,53,126]):- !, prev_suite.
 % page down
 do_menu_codes([27,91,54,126]):- !, next_suite.
-do_menu_codes([27,91,65]):- prev_pair.
-do_menu_codes([27,91,66]):- next_pair.
+do_menu_codes([27,91,65]):- !, prev_pair.
+do_menu_codes([27,91,66]):- !, next_pair.
 
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
 interactive_test_menu:- 
@@ -249,9 +249,12 @@ really_set_current_test(TestID):-
   (nb_current(last_test_name,WasTestID);WasTestID=[]),
   (WasTestID==TestID-> true ; new_current_test_info).
 
+some_current_example_num(TrnN):- nb_current(example,TrnN),!.
+some_current_example_num(trn+1).
+
 next_pair:- 
   get_current_test(TestID),
-  nb_current(example,Trn+N),
+  some_current_example_num(Trn+N),
   N2 is N+1,
   trn_tst(Trn,Tst),
   (kaggle_arc(TestID,Trn+N2,_,_)-> ExampleNum=Trn+N2 ; ExampleNum=Tst+0),
@@ -260,7 +263,7 @@ next_pair:-
 
 prev_pair:- 
   get_current_test(TestID),
-  nb_current(example,Trn+N),
+  some_current_example_num(Trn+N),
   N2 is N-1,
   trn_tst(Trn,Tst),
   (kaggle_arc(TestID,Trn+N2,_,_)-> ExampleNum=Trn+N2 ; ExampleNum=Tst+0),
@@ -282,7 +285,7 @@ new_current_test_info:-
   set_flag(indiv,0),
   nb_delete(grid_bgc),
   nb_linkval(test_rules, [rules]),
-  wots(_,(clear_shape_lib(test), clear_shape_lib(noise), retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
+  wno((clear_shape_lib(test), clear_shape_lib(noise), retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
   nop(retractall(g2o(_,_))),!.
 
 new_test_pair(PairName):-
@@ -640,11 +643,15 @@ whole(I,O):- print_grid(I),pt(I),into_obj(I,O).
 one_obj(I,I):- is_group(I),length(I,1),!.
 one_obj(I,I):- is_group(I),!.
 one_obj(I,I).
-uncolorize(I,O):- set_all_fg_colors(grey,I,O).
-resize_grid(_H,_V,List,_,List):- is_list(List).
-resize_grid(H,V,Color,_,NewGrid):- make_grid(H,V,Grid),replace_grid_point(1,1,Color,_,Grid,NewGrid),nop(set_bgc(Color)).
 
-resize_grid(H,V,_,NewGrid):- make_grid(H,V,NewGrid).
+is_fti_step(uncolorize).
+uncolorize(VM):- put_attr(FG,ci,fg(_)),set_all_fg_colors(FG,VM.grid,UCGRID),set_vm_grid(VM,UCGRID),set_all_fg_colors(FG,VM.objs,UCOBJS),set(VM.objs)=UCOBJS.
+uncolorize(I,O):- set_all_fg_colors(fg,I,O).
+%resize_grid(_H,_V,List,_,List):- is_list(List).
+%resize_grid(H,V,Color,_,NewGrid):- make_grid(H,V,Grid),replace_grid_point(1,1,Color,_,Grid,NewGrid),nop(set_bgc(Color)).
+
+resize_grid(H,V,Grid,NewGrid):- crop(H,V,Grid,NewGrid).
+%resize_grid(H,V,_,NewGrid):- make_grid(H,V,NewGrid).
 
 h_symmetric(Group,TF):- call_bool(h_symmetric(Group),TF).
 

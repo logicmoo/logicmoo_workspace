@@ -293,7 +293,7 @@ find_touches(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
 
 mention_touches(Found,Dir-NewInside,NewInsideO):-
   must_det_ll((object_indv_id(Found,_Where,Iv),
-  override_object(touches(Dir,Iv),NewInside,NewInsideO))),!.
+  override_object(link(touches,Dir,Iv),NewInside,NewInsideO))),!.
 
 find_touches_objects(_VM,_,[],[],[]).
 find_touches_objects(VM,Found,[Next|ScanPoints],[Next|TouchMore],[Dir-Next|Engulfed]):-    
@@ -375,7 +375,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   must_det_ll((
   % points_to_grid(H,V,ContainedPoints,Grid),
   %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
-  individuate([subshape_in_object],ContainedPoints,NewInside),
+  individuate(subshape_in_object,ContainedPoints,NewInside),
   mapgroup(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained",[Found|NewInsideM])))),
   find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
@@ -386,7 +386,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScan
 
 mention_inside(Found,NewInside,NewInsideO):-
   object_indv_id(Found,_Where,Iv),
-  add_shape_info(insideOf(Iv),NewInside,NewInsideO).
+  add_shape_info(link(insideOf,Iv),NewInside,NewInsideO).
 
 find_contained_points(_,[],[],[]).
 find_contained_points(Found,[Next|ScanPoints],ScanPointsInstead,[Next|Contained]):-

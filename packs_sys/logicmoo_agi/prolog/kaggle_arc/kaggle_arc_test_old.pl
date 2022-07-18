@@ -152,7 +152,6 @@ more_task_info(t('06df4c85'),[+shape_match,+color_match,-mask_match,-rotation_ma
 more_task_info(t('1190e5a7'),[-mask_match,-shape_match,-rotation_match,-color_match,detect_grid,count_hor_lines,count_ver_lines,detect_background_color,color_guessing,create_image_from_info],['(3, 1)'],[tt]).
 more_task_info(t('5daaa586'),[+color_match,-mask_match,-shape_match,-rotation_match,detect_grid,crop,draw_line_from_point,direction_guessing],['(3, 1)'],[tt]).
 more_task_info(t('83302e8f'),[+shape_match,-mask_match,-rotation_match,-color_match,detect_grid,detect_closed_curves,rectangle_guessing,associate_colors_to_bools,loop_filling],['(3, 1)'],[tt]).
-more_task_info(t('47c1f68c'),[-mask_match,-shape_match,-rotation_match,-color_match,detect_grid,find_the_intruder,crop,recolor,color_guessing,image_repetition,image_reflection],['(3, 1)'],[tt]).
 more_task_info(t('2dc579da'),[-mask_match,-shape_match,-rotation_match,-color_match,detect_grid,find_the_intruder,crop],['(3, 1)'],[tt]).
 more_task_info(t(f8b3ba0a),[-mask_match,-shape_match,-rotation_match,-color_match,detect_grid,find_the_intruder,dominant_color,count_tiles,summarize,order_numbers],['(4, 1)'],[tt]).
 more_task_info(t('941d9a10'),[+shape_match,-mask_match,-rotation_match,-color_match,detect_grid,loop_filling,pairwise_analogy],['(3, 1)'],[tt]).

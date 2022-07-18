@@ -96,13 +96,19 @@ detect_supergrid(TestID,ExampleNum,In0,Out0,TT):-
   
   %gset(TT.z_contains_out)=in(HIO,VIO),
   %gset(TT.z_contains_in)=out(HOI,VOI),
-  
-%fav(t(d631b094),human(globalpoints,target=[get(points)],maplist(arg(1)))).
-fav(t(d631b094),human(i(remaining_points),obj_into_cells,print_grid,get(full_grid))).
-  
+
+arc_test_property(g,b,d):-fail.
+
+
 is_fti_step(obj_into_cells).
 is_fti_step(print_grid).
-obj_into_cells(VM):- maplist(color,VM.grid,Row1),set_vm(full_grid,[Row1]).
+obj_into_cells(VM):- 
+  vm_to_printable(VM,GridObj),
+  globalpoints(GridObj,Row1),
+  flatten([Row1],Row1F),list_to_set(Row1F,Row1S),
+  maplist(only_color_data,Row1S,ColorRow),
+  set_vm(grid,[ColorRow]).
+
 
 show_found(HOI,VOI,H,V,Info,F):-
   HO is HOI-3, VO is VOI-3, 
@@ -158,19 +164,37 @@ relax_arg(_,_).
 
 grid_hint(TestID):- format('~N'),
   compute_grid_hints(TestID),
-  % (listing(arc_test_property(TestID,_,_))),
+   (listing(arc_test_property(TestID,_,_))),
+   (listing(io_xform(TestID,_,_))),
   ignore(list_common_props(TestID)),!,
   format('~N').
 
+:- dynamic(io_xform/3).
+add_xform(In1,Out1):- ignore(get_current_test(TestID)),
+                    ThisXForm=io_xform(TestID,In1,Out1),
+                    ThatXForm=io_xform(TestID,_In2,_Out2),                     
+                    (call(ThatXForm) 
+                      -> (min_unifier(ThisXForm,ThatXForm,NewXForm),
+                                        retractall(ThatXForm),retractall(NewXForm),asserta(NewXForm))
+                     ; asserta(ThisXForm)),!.
+                    
+add_hint(TestID,Hint,N):- 
+  hint_functor(Hint,F),hint_data(Hint,D), assert_test_property(TestID,grid_fhint(F),D-N).
+assert_test_property(TestID,Prop,Data):-
+  my_asserta_if_new(arc_test_property(TestID,Prop,Data)).
+
 compute_grid_hints(TestID):- 
   retractall(arc_test_property(TestID,_,_)),
-  findall(Hint-N,(kaggle_arc(TestID,(trn+N),In,Out), grid_hint_swap(i-o,In,Out,Hint)),HintsIO),
-  %findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),in,In1),  N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),in,In2)->true;kaggle_arc_io(TestID,(trn+0),in,In2)), grid_hint_recolor(i-i,In1,In2,Hint)),HintsII),
-  findall(Hint-N,(kaggle_arc_io(TestID,(trn+N),out,Out1),N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)), grid_hint_recolor(o-o,Out1,Out2,Hint)),HintsOO),
-  include(nonvar,[HintsOO,HintsII,HintsIO],These),
-  append(These,Hints),
-  keysort(Hints,SHints),  
-  maplist(aquire_hints(TestID,SHints),SHints).
+  forall(
+    kaggle_arc(TestID,(trn+N),In,Out), 
+     (ignore(add_xform(In,Out)),
+      forall(grid_hint_swap(i-o,In,Out,Hint),add_hint(TestID,Hint,N)))),  
+  forall(
+    kaggle_arc_io(TestID,(trn+N),out,Out1), 
+     (N2 is N+1, (kaggle_arc_io(TestID,(trn+N2),out,Out2)->true;kaggle_arc_io(TestID,(trn+0),out,Out2)),
+      forall(grid_hint_recolor(o-o,Out1,Out2,Hint),add_hint(TestID,Hint,N)))),!.
+
+  % forall((kaggle_arc_io(TestID,(trn+N),in,Out1),N2 is N+1,  (kaggle_arc_io(TestID,(trn+N2),in,Out2)->true;kaggle_arc_io(TestID,(trn+0),in,Out2)),  grid_hint_recolor(i-i,Out1,Out2,Hint)),add_hint(TestID,Hint,N)).
   
 /*
 grid_hint(TestID):- format('~N'),
@@ -190,7 +214,7 @@ list_common_props(TestID):-
 
 list_common_props(TestID):-
  findall(F=Common,
-  (arc_test_property(TestID,grid_fhint(F),_-0),
+  (arc_test_property(TestID, grid_fhint(F),_-0),
     (( findall(Data,arc_test_property(TestID,grid_fhint(F),Data-_),Commons),
       once((min_unifier(Commons,Common),nonvar(Common)))))),FComs),
   sort(FComs,SComs),
@@ -205,32 +229,19 @@ min_unifier3(A,List,A):- maplist('=@='(A),List),!.
 min_unifier3(A,[B|List],O):- min_unifier(A,B,C), min_unifier3(C,List,O).
 
 min_unifier(A,B,C):- A=@=B,!,C=A.
-min_unifier(A,B,[E1|C]):- is_list(A),is_list(B),select(E1,A,AA),select(E2,B,BB),E1==E2,!,min_unifier(AA,BB,C).
-min_unifier(len(A),B,len(A)):- !, is_list(B), length(B,A).
-min_unifier(A,B,len(L)):- is_list(A),is_list(B),length(A,L),length(B,L),!.
+min_unifier(_,B,B):- var(B),!.
+min_unifier(A,_,A):- var(A),!.
+min_unifier(A,B,[E1|C]):- is_list(A),is_list(B),select(E1,A,AA),select(E2,B,BB), \+ is_color(E1), \+ is_color(E2), E1=@=E2,!,min_unifier(AA,BB,C).
+min_unifier([_|A],[_|B],[_|C]):- !,min_unifier(A,B,C).
+min_unifier([_],[_|B],[_|B]):-!.
+min_unifier([_|B],[_],[_|B]):-!.
+%min_unifier(A,B,C):- is_list(B), is_list(A), length(B,L), length(A,L), length(C,L).
+
 %min_unifier(A,B,C):- is_list(A),sort(A,AA),A\==AA,!,min_unifier(B,AA,C).
 min_unifier(A,B,R):- compound(A),compound(B),compound_name_arguments(A,F,AA),compound_name_arguments(B,F,BB),
  maplist(min_unifier,AA,BB,RR),compound_name_arguments(R,F,RR).
-min_unifier(_,B,B):- var(B),!.
-min_unifier(A,_,A):- var(A),!.
 min_unifier(A,B,_):- (\+ compound(A);\+ compound(B)),!.
 min_unifier(A,B,R):- relax_hint(A,R),\+ (B \= R),!.
-
-aquire_hints(TestID,_AllHints,Hint-N):- nop(format(' ~q ',[Hint-N])),
-  hint_functor(Hint,F),hint_data(Hint,D), assert_test_property(TestID,grid_fhint(F),D-N).
-/*            (  %write('testing... '),print(Hint),write(' '),
-            relax_hint(Hint,Hint0),
-       findall((kaggle_arc(TestID,(trn+N),In1,Out1),N>0),
-                (grid_hint(In1,Out1,Hint1),
-                 relax_hint(Hint1,Hint2),                 
-                  % print(Hint1),write(' '),
-                  \+ Hint2 \= Hint0)))), ConfirmedL),
-   list_to_set(ConfirmedL,Confirmed),
-      format('~Nconfirmed... ~w~n',[Confirmed]),
-      maplist(assert_test_property(TestID,grid_hint),Confirmed).
-*/
-assert_test_property(TestID,Prop,Data):-
-  my_asserta_if_new(arc_test_property(TestID,Prop,Data)).
 
 grid_hint_swap(IO,In,Out):-
  findall(Data,(grid_hint_swap(IO,In,Out,Hint),hint_data(Hint,Data)),Hints),
@@ -260,6 +271,7 @@ grid_hint_io(MC,IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),!,gri
 grid_hint_iso(c(_BGC),_-o,_In,Out,_IH,_IV,OH,OV,has_x_columns(Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_x_columns(Out,Y,Color,_)),Y>1.
 grid_hint_iso(c(_BGC),_-o,_In,Out,_IH,_IV,OH,OV,has_y_columns(Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_y_columns(Out,Y,Color,_)),Y>1.
 
+
 %grid_hint_iso(c(BGC),IO,_In,_Out,IH,IV,  OH,OV,cg(IO,size_r(H,V))):- comp_o(IO), V is rationalize(IV/OV), H is rationalize(IH/OH).
 %grid_hint_iso(c(BGC),IO,In,Out,_IH,_IV,_OH,_OV,cg(IO,mass_r(Mass))):- comp_o(IO), mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
 grid_hint_iso(c(BGC),IO,In,Out,GH,GV,GH,GV,Hint):- mapgrid(remove_color_if_same(BGC),Out,In,NewIn),
@@ -267,6 +279,46 @@ grid_hint_iso(c(BGC),IO,In,Out,GH,GV,GH,GV,Hint):- mapgrid(remove_color_if_same(
     (unique_colors(NewIn,LeftOver),maplist(is_color,LeftOver), Hint=containsAllExceptFor(IO,LeftOver))). 
    % NewIn\=@=In,print_grid('leftover',NewIn).
 %grid_hint_iso(c(BGC),IO,In,Out,_IH,_IV,_OH,_OV,cg(IO,Hint)):- comp_o(IO), grid_color_hint(In,Out,Hint).
+grid_hint_iso(c(_BGC),i-o,Out,_,_IH,_IV,_OH,_OV,rev(RInfo)):- 
+ setup_call_cleanup(flag(indv,Was,0),
+  ((findall(Info,grid_part(Out,Info),List)),flatten([List],FList),member(Info,FList), rinfo(Info,RInfo)),
+                    flag(indv,_,Was)).
+grid_hint_iso(c(_BGC),i-o,_In,Out,_IH,_IV,_OH,_OV,RInfo):- !,
+ setup_call_cleanup(flag(indv,Was,0),
+  ((findall(Info,grid_part(Out,Info),List)),flatten([List],FList),member(Info,FList), rinfo(Info,RInfo)),
+                    flag(indv,_,Was)).
+/*grid_hint_iso(c(_BGC),i-o,_In,Out,_IH,_IV,_OH,_OV,RInfo):- 
+ setup_call_cleanup(flag(indv,Was,0),
+  ((wno( findall(Info,grid_part(Out,Info),List)),flatten([List],FList),member(Info,FList), rinfo(Info,RInfo))),
+                    flag(indv,_,Was)).
+*/
+termsub_to_atom(List,OO):- is_list(List),!,maplist(termsub_to_atom,List,LL),
+ atomic_list_concat(LL,'_',O),atomic_list_concat(['[',O,']'],OO).
+termsub_to_atom(T,O):- sformat(O,'~w',[T]).
+
+fix_iz(Z,ZZ):- atom(Z),!,ZZ=..[Z,true].
+fix_iz(nth(_),'').
+fix_iz(Z,ZZ):- is_list(Z),last(Z,ZZ),!.
+fix_iz(iz(Z),ZZ):- nonvar(Z), !, fix_iz(Z,ZZ).
+fix_iz(Z,ZZ):- compound(Z),arg(1,Z,A),is_list(A),last(A,ZZ),!.
+fix_iz(Z,Z):-!.
+
+rinfo(obj(List0),RInfo):- 
+  maplist(must_det_ll,
+  [select(ord(N),List0,List),
+  atomic_list_concat([obj,N],'_',Key),
+  Obj = obj(List0),
+  localpoints_include_bg(Obj,LocalPoints),
+  %loc_xy(Obj,X,Y),
+  points_to_grid(LocalPoints,Grid),mapgrid(sometimes_assume(=,bg),Grid),
+  select(shape(Shape),List,Rest2),mapgrid(sometimes_assume(=,bg),Shape),
+  Rest3 = Rest2,
+  object_indv_id(Obj,_,MyID),
+  must_det_ll((remove_too_verbose(MyID,Rest3,TV00))),flatten([TV00],TV0),
+  must_det_ll((include(not_too_verbose,TV0,TV1),maplist(fix_iz,TV1,TV)))]),!,
+  member(MrT,[oform(Shape),ogrid(Grid)|TV]),once((MrT=..MrTL, RInfoM=..[Key|MrTL],rinfo(RInfoM,RInfo))).
+rinfo(Info,RInfo):- Info=..[P,N,A|InfoL], atomic_list_concat([P,N],'_',PN),!, RInfo=..[PN,A|InfoL].
+rinfo(Info,Info):-!.
 
 
 grid_color_hint(In,Out,Hint):-
