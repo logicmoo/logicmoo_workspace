@@ -213,8 +213,9 @@ individuation_macros(altro, [
 
 % the typical toplevel indivduator
 individuation_macros(complete, [
-    repair_in_vm(repair_repeats),
+    % repair_in_vm(repair_repeats),
     maybe_glyphic,
+    if_done,
     shape_lib(as_is),
     fourway,
     find_colorfull_idioms,
@@ -350,18 +351,20 @@ individuate([ROption],GridIn,IndvS):- !, individuate(ROption,GridIn,IndvS).
 individuate(ROptions,GridIn,IndvS):- individuation_macros(ROptions,R), individuated_cache(R,GridIn,IndvS),!.
 individuate(ROptions,GridIn,IndvS):- individuated_cache(ROptions,GridIn,IndvS),!.
 individuate(ROptions,GridIn,IndvS):- 
-  do_individuate(ROptions,GridIn,IndvS),!,
+  do_individuate(ROptions,GridIn,IndvS),!,  
   asserta(individuated_cache(ROptions,GridIn,IndvS)),!.
 
-do_individuate(ROptions,GridIn,IndvS):-
+do_individuate(ROptions,GridInIn,IndvS):-
    must_be_free(IndvS),
-   (is_map(GridIn) -> VM = GridIn ; true),
+   (is_map(GridInIn) -> (VM = GridInIn, GridIn=VM.grid ) ; GridInIn=GridIn),
    into_points_grid(GridIn,_Points,Grid),
    grid_to_id(Grid,ID),
   my_assertion(\+ is_grid(ID)),
    quietly(grid_size(Grid,GH,GV)), 
    pt(yellow,ig(ROptions,ID)=(GH,GV)),
-   individuate7(VM,GH,GV,ID,ROptions,Grid,IndvS),!.
+   individuate7(VM,GH,GV,ID,ROptions,Grid,IndvS),
+   !.
+   %VM.target
 
 % tiny grid becomes a series of points
 %individuate(GH,GV,ID,ROptions,_Grid,Points,IndvS):- \+ is_list(ROptions), is_glyphic(Points,GH,GV), individuate_glyphic(GH,GV,ID,Points,IndvS),!.
@@ -388,7 +391,8 @@ individuate7(VM,GH,GV,ID,ROptions,GridIn,IndvS):-
       nop(print_info(IndvS)).
       
 
-into_points_grid(GridIn,Points,Grid):- 
+into_points_grid(GridIn,Points,Grid):-
+   (var(GridIn)-> trace ; true),
    globalpoints(GridIn,Points),
    into_grid(GridIn,Grid),!.
 
@@ -416,7 +420,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
    % parent VM
    %training:_,
      %compare:_, 
-     target:_,  
+     target:_,  last_key:_,  
    % Options and TODO List (are actually same things)
    program_i:Options, options:OOptions, roptions:ROptions, %todo_prev:[],
    % how much time is left before we turn on debugger
@@ -424,8 +428,9 @@ into_fti(ID,ROptions,GridIn0,VM):-
    % Grid and point representations
    grid:Grid, 
    points:Points,
-       % changed:_, solution:_,
+       changed:_,% solution:_,
    props:_,
+   %is_repair:false,
    full_grid:_,
    % Original copies of Grid and point representations
    % grid_o:Grid, 
@@ -527,6 +532,7 @@ run_fti(VM):-
 
 run_fti(_,[]):- !.
 run_fti(_,[Done|TODO]):- ( \+ done \= Done ), !, wdmsg(done_run_fti([Done|TODO])),!.
+run_fti(VM,[if_done|TODO]):- !, (VM.points==[] -> wdmsg(if_done) ; run_fti(VM,TODO)).
 run_fti(VM,[not_done|TODO]):- !, run_fti(VM,TODO).
 run_fti(VM,[recalc_sizes|TODO]):- !, run_fti(VM,TODO).
 
@@ -825,9 +831,12 @@ one_fti(VM,glyphic):-
 
 one_fti(VM,whole):-
   %localpoints_include_bg(VM.grid,Points),
-  localpoints_include_bg(VM.grid,Points),
+  Grid = VM.grid,
+  localpoints_include_bg(Grid,Points),
+  grid_size(Grid,H,V),
   length(Points,Len),
-  make_indiv_object(VM,Points,[mass(Len),vis_hv(VM.h,VM.v),iz(combined),birth(whole)],Whole),
+  make_indiv_object(VM.id,H,V,Points,[mass(Len),vis_hv(H,V),iz(combined),birth(whole)],Whole),
+  set(VM.points)=[],
   addObjects(VM,Whole),
   save_grouped(individuate_whole(VM.id),[Whole]),
   assert_shape_lib(pair,Whole),!.

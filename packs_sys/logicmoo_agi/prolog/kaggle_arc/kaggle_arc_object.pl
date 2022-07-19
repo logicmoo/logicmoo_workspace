@@ -159,7 +159,8 @@ reclumped([A,B|Rest],[A,B]):- reclumped(Rest,[A,B]),!.
 reclumped(Rest,Seq):- append(Seq,_,Rest),!.
 reclumped(PenColors,PenColors).
 
-
+fg_points(Points,FgPoints):- include(is_fg_point,Points,FgPoints).
+is_fg_point(CPoint):- \+ (only_color_data(CPoint,Color),is_bg_color(Color)).
 
 make_indiv_object(VM,Points,Overrides,Obj):- make_indiv_object(VM.id,VM.h,VM.v,Points,Overrides,Obj).
 
@@ -180,7 +181,8 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
   flag(indiv,Fv,Fv+1),
   Iv is (Fv rem 3000) + 1,
   once(colors_via_pixels(Points,CC)),
-  length(Points,Len),
+  fg_points(Points,FgPoints),
+  length(FgPoints,Len),
   Empty is Area - Len,
   deoffset_points(LoH,LoV,Points,LPoints),
   sort(LPoints,LPointsS),
@@ -312,7 +314,9 @@ add_shape_info(Info,I,O):- override_object(iz(Info),I,O).
 
 verify_object(Obj):-
   localpoints(Obj,_LP),
-  globalpoints(Obj,_GP).
+  globalpoints(Obj,_GP),
+  iz(Obj,symmetry(What)),
+  nonvar(What).
 
 override_object(E,I,O):- with_object(override,E,I,O).
 
@@ -499,6 +503,7 @@ var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,dumpST,trace_or_throw(maybe
 object_shapeW(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(iz(X),L).
 object_shapeW(I,X):- indv_props(I,L),!,member(iz(X),L).
 
+isz(I,X):- is_list(I),I=[O],!,isz(O,X).
 isz(I,X):- var_check(I,iz(I,X))*->true;(indv_props(I,L),member(iz(X),L)).
 
 obj_prop_val(I,X):- var_check(I,obj_prop_val(I,X))*->true;(indv_props(I,L),member(X,L)).
@@ -631,7 +636,9 @@ globalpoints(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Po
 
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
 colors(G,[cc(black,0.0)]):- G==[],!.
+
 colors(I,X):- is_object(I),indv_props(I,L),member(colors(X),L),!.
+colors(I,X):- is_map(I),into_grid(I,G),!,colors(G,X).
 colors(G,BFO):- colors_via_pixels(G,BFO),!.
 colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),list_to_set(GF,GS),
   count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,
@@ -1064,8 +1071,8 @@ guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,solid):- N > 1.
 guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
 
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>2, 
-  (flipSym(SN,GridIn)*->R=symmetry(SN);R=no_symmetry).
+guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2, 
+  (flipSym(SN,GridIn)*->R=symmetry(SN);R=symmetry(none)).
 
 %guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
 %guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).

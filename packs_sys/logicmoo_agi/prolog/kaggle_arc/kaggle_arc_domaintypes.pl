@@ -84,6 +84,7 @@ sameOrSubClass(X,Y):- subClassOf(X,Y).
 
 :- dynamic(iz/2).
 iz(X,_):- is_grid(X),!,fail.
+iz(X,Y):- nonvar(X),var(Y),!,(isz(X,XY),sameOrSubClass(XY,Y),deterministic(YN)), (YN==true->!;true).
 iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),subClassOf(P,Y)).
 iz(X,Y):- nonvar(X),(isz(X,XY),sameOrSubClass(XY,Y),deterministic(YN)), (YN==true->!;true).
 iz(X,Y):- (var(X)->enum_object(X);true),isz(X,Y).
@@ -104,8 +105,10 @@ subClassOf(square,hv_symmetric).
 subClassOf(diamond,hv_symmetric).
 subClassOf(circle,hv_symmetric).
 subClassOf(round,hv_symmetric).
-subClassOf(h_symmetric,hv_symmetric).
-subClassOf(v_symmetric,hv_symmetric).
+subClassOf(hv_symmetric,h_symmetric).
+subClassOf(hv_symmetric,v_symmetric).
+subClassOf(symmetry(sym_hv),hv_symmetric).
+
 
 subClassOf(triangle,h_symmetric).
 subClassOf(hv_line(v),h_symmetric).

@@ -428,17 +428,37 @@ get_vm(VM):- nb_current('$grid_vm',VM),!.
 get_vm(VM):- ndividuator,!,nb_current('$grid_vm',VM),!.
 
 set_vm(Prop,Value):- get_vm(VM),
- (get_kov(Prop,VM,_) -> set(VM.Prop) = Value ; 
-  (get_kov(props,VM,Hashmap), (var(Hashmap)->(rb_new(Hashmap),gset(VM.props)=Hashmap); true),
-     must_not_error(nb_set_value(Hashmap,Prop,Value)))),
- nop(set_vm_obj(Prop,Value)).
+ (get_kov1(Prop,VM,_) -> gset(VM.Prop) = Value ; 
+  (get_kov1(props,VM,Hashmap) -> 
+    (var(Hashmap)->(list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap); must_not_error( gset(Hashmap.Prop)=Value));
+      (list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap))),
+ ignore(set_vm_obj(Prop,Value)).
 
-set_vm_obj(Prop,Value):- 
+set_vm_obj(Prop,Value):- is_grid(Value),!,
+  localpoints_include_bg(Value,IndvPoints),
+  grid_size(Value,H,V),
+  fif(IndvPoints\==[],
+    (get_vm(VM),
+          make_indiv_object(VM,IndvPoints,[iz(Prop),vis_hv(H,V),birth(set_vm(Prop))],Obj),
+          addObjects(VM,Obj),
+          print_grid(H,V,Prop,Value))),!.
+
+set_vm_obj(Prop,IndvPoints):- is_points_list(IndvPoints),!,
+  fif(IndvPoints\==[],
+    (get_vm(VM),          
+          make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
+          addObjects(VM,Obj),
+          print_grid(VM.h,VM.v,Prop,IndvPoints))),!.
+
+
+set_vm_obj(Prop,Value):- is_object(Value),!,
+ ignore(((fail,
   globalpoints(Value,IndvPoints),
   fif(IndvPoints\==[],
-    (make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
+    (get_vm(VM),
+          make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
           addObjects(VM,Obj),
-          print_grid(VM.h,VM.v,Prop,Value))),!.
+          print_grid(VM.h,VM.v,Prop,Value)))))),!.
 
 
 
@@ -477,8 +497,8 @@ make_training(TestID,VMO):-
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
 train_test:- notrace(get_current_test(TestID)), once(train_test(TestID)).
-train_test(TestID):- train_test(TestID,train_using_oo_ii_io).
-train_test(TestID,P2):- 
+train_test(TestID):- clear_training(TestID),train_test(TestID,train_using_oo_ii_io).
+train_test(TestID,P2):-   
   print_testinfo(TestID),
   flag(indiv,_,0),
   %get_training(PrevPairEnv),
@@ -497,6 +517,7 @@ my_time(Goal):- statistics:time(Goal).
 
 train_using_oo_ii_io(TestID,DictIn,DictOut):- 
   train_using_oo_ii_io(TestID,trn,0,DictIn,DictOut).
+
 train_using_oo_ii_io(TestID,Trn,N1,DictIn,DictOut):-
  (kaggle_arc(TestID,(Trn+N1),In1,Out1), N2 is N1 + 1),
 
@@ -583,6 +604,7 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   % add_shape_lib(pair,RetainedOut),
   add_shape_lib(removed(PairName),Removed),
   add_shape_lib(added(PairName),Added),*/
+  
   dash_chars,dash_chars,dash_chars,dash_chars,
   show_pair_grid(cyan,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,
   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
@@ -595,9 +617,32 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    show_pair_diff_code(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!, 
   nb_setval(no_rdot,false),
    % pt(OutC=InC),
+   ignore(( ModeIn == trn_in_out,  
+            train_io_from_hint(TestID,Trn+N1,InVM))),
   dash_chars,dash_chars,dash_chars,dash_chars,
-  print_testinfo(TestID)
-  ]).
+  print_testinfo(TestID)]).
+
+
+train_io_from_hint(TestID,ExampleNum,InVM):-
+  ignore((          
+    kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
+    kaggle_arc_io(TestID,ExampleNum,in,InGrid),
+   (var(InVM) -> into_fti(TestID*ExampleNum*in,trn_in_out,InGrid,InVM) ; true),
+    gset(InVM.grid) = InGrid,
+    gset(InVM.target) = ExpectedOut,
+    do_sols_for("Do Training",InVM,TestID,ExampleNum))),
+  confirm_train_io_from_hint(TestID,ExampleNum).
+
+confirm_train_io_from_hint(TestID,ExampleNum):-
+  InVM = _,
+  ignore((          
+   %kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
+    kaggle_arc_io(TestID,ExampleNum,in,InGrid),
+   (var(InVM) -> into_fti(TestID*ExampleNum*in,trn_in_out,InGrid,InVM) ; true),
+    gset(InVM.grid) = InGrid,
+   % gset(InVM.target) = ExpectedOut,
+    do_sols_for("Confirm Trained",InVM,TestID,ExampleNum))).
+
 
 show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),
@@ -649,41 +694,47 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     dash_chars, dash_chars,
     show_pair_grid(green,IH,IV,OH,OV,'Test TestIn','Solution ExpectedOut (Not computed by us)',PairName,TestIn,ExpectedOut),!,  
     get_training(Training))),
-    %sflag(indiv,_,0),    
+    flag(indiv,_,0),    
     into_fti(TestID*ExampleNum*in,in,TestIn,InVM),!,
-    %set(InVM.objs) = [],
+    set(InVM.objs) = [],
     %set(InVM.points) = [],
     %set(InVM.training) = Training,
-    TrainingVM = InVM,
     set_training(Training),
-    set_vm(InVM),
+    maybe_set_vm(InVM),    
+    gset(InVM.target) = _,
     must_det_ll((
     %print(training(Training)),nl,
-    %ptt(TrainingVM),
+    %ptt(InVM),
     dash_chars, dash_chars,    
-    print_testinfo(TestID),
-    ptt("BEGIN!!!"+TestID+ExampleNum),
-    forall(once(sols_for(TestID,Trial,SolutionProgram)),
-     ignore(
+    %print_testinfo(TestID),
+    do_sols_for("Taking Test",InVM,TestID,ExampleNum))).
+    
+do_sols_for(Why,InVM,TestID,ExampleNum) :-
+ must_det_ll(( ptt("BEGIN!!!"+Why+TestID*ExampleNum), 
+    kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
+    forall(sols_for(TestID,Trial,SolutionProgram),
+     ignore(((
       once((pt(cyan,trial=Trial),
-       ptt(cyan,run_dsl(TestID,Trial,SolutionProgram)),!,
-       (run_dsl(TrainingVM,SolutionProgram,InVM,Grid)*->!;TestIn=Grid),
-       into_pipe(Grid,Solution)))
+       ptt(cyan,run_dsl(TestID*ExampleNum,Trial,SolutionProgram)),!,
+       (time((
+              maybe_set_vm(InVM),
+              kaggle_arc_io(TestID,ExampleNum,in,TestIn),
+              gset(InVM.grid) = TestIn,
+              maybe_set_vm(InVM),
+              run_dsl(InVM,SolutionProgram,InVM,GridOut)))*->!;GridOut=InVM.grid),
+       into_pipe(GridOut,Solution)))
        *->    
        ignore((count_difs(ExpectedOut,Solution,Errors),
-        print_side_by_side(print_grid(_,_,"Our Solution",Solution),print_grid(_,_,"Expected Solution",ExpectedOut)),
+        print_side_by_side(blue,Solution,"Our Solution",_,ExpectedOut,"Expected Solution"),
            (Errors==0 -> 
-              (banner_lines(green),
-               arcdbg(pass(TestID,ExampleNum,SolutionProgram)),
-               banner_lines(green))
-            ; (banner_lines(red),
-             arcdbg(fail(Errors,TestID,ExampleNum,SolutionProgram)),
+              (banner_lines(green),arcdbg(pass(Why,TestID,ExampleNum,SolutionProgram)),banner_lines(green))
+              ; (banner_lines(red), arcdbg(fail(Why,Errors,TestID,ExampleNum,SolutionProgram)),
                task_info(TestID,InfoF),wqnl(fav(TestID*ExampleNum,InfoF)),
                banner_lines(red)))))
-       ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))),
-    print_grid(TrainingVM.grid),!,
-    print_list_of("objs",TrainingVM.objs),
-    ptt("END!!!"+TestID+ExampleNum))),!.
+       ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))))),
+    print_grid("our grid", InVM.grid),!,
+    print_list_of("our objs",InVM.objs),
+    ptt("END!!!"+Why+TestID+ExampleNum))),!.
    
 
 

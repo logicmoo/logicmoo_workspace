@@ -157,6 +157,8 @@ set_vm_grid_now(VM,Grid):- is_grid(Grid), !,
   localpoints_include_bg(Grid, Points),
   gset(VM.points)=Points.
 
+set_vm_grid_now(VM,In):- gset(VM.last_key) = In,!.
+
 expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
 expand_dsl_value(VM, Mode,In,Val,OutValue):-
   run_dsl(VM, Mode,Val,In,OutValue).
@@ -198,7 +200,7 @@ run_dsl(VM,_Mode,b_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,O
 run_dsl(VM,_Mode,nb_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
 run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
 run_dsl(VM,_Mode,vm_set(Name,Val),In,Out):- !, vm_grid(VM,set_vm(Name,Val),In, Out).
-run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,run_fti(VM,Indiv),In,Out).
+run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,In,Objs),set_vm_grid(VM,Objs)),In,Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
@@ -223,14 +225,15 @@ run_dsl(VM,enforce,color(Obj,Color),In,Out):-!,
 
 run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc_xy(Obj,X,_Old), override_object_io(VM,loc_xy(X,New),Obj,In,Out).
 
-run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !, vm_grid(VM, run_dsl_call_io(VM,Mode,Prog,In,Out), In, Out).
+run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !, 
+  vm_grid(VM, run_dsl_call_io(VM,Mode,Prog,In,Out), In, Out).
 
 run_dsl(_VM,Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
 
 run_dsl_call_io(VM,Mode,Prog,In,Out):- ( (call_expanded(VM,call(Prog,In,M))) 
   *->  M=Out ; (arcdbg(warn(nonworking(run_dsl(Mode,Prog)))),fail)).
-run_dsl_call_io(_VM,_Mode,_Prog,InOut,InOut).
+%run_dsl_call_io(_VM,_Mode,_Prog,InOut,InOut).
 
 override_object_io(_VM,Update,Obj,In,Out):- 
   remove_global_points(Obj,In,Mid), 
@@ -297,6 +300,76 @@ recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points
          (arg(1,Success,false)->nb_setarg(1,Success,true);true))))))),!,
   Success = found_points(true).
 
+
+vm_objs(O,VM):- largest_first(VM.objs,List),!, member(O,List).
+% vm_objs(O):- get_vm(VM), vm_objs(O,VM).
+%first_object_grid.
+first_object_term(Prop,_In,At):- get_vm(VM), vm_objs(O,VM), call(Prop,O,Ret), make_key(Ret,At),!, gset(VM.last_key) = At.
+first_object_grid(Prop,_In,At):- get_vm(VM), vm_objs(O,VM), call(Prop,O,Ret), make_key(Ret,At),!, gset(VM.last_key) = At.
+first_object_bool(Prop,_In,At):- get_vm(VM), vm_objs(O,VM), call_bool(iz(O,Prop),Ret),!, make_key(iz(Ret),At),!, gset(VM.last_key) = At.
+%first_object_grid(Prop,_In,Ret):- get_vm(VM), member(O,VM.objs), call(Prop,O,Ret).
+
+make_key(Ret,Ret):-!.
+make_key(Ret,At):-
+  copy_term(Ret,Copy),numbervars(Copy,0,_,[attvar(bind)]),
+  with_output_to(atom(At),
+  write_term(Copy,[attributes(ignore),ignore_ops(true),numbervars(true)])).
+monogrid(X,Y):- object_grid(X,M),into_monochrome(M,Y).                                                   
+
+:- dynamic(learnt_rule/4).
+:- dynamic(print_rule/4).
+
+learn_rule(In,Out):- get_vm(VM), Target=VM.target, 
+ is_grid(Target), Out = Target,
+ get_current_test(TestID), 
+ get_vm(last_key,Key),
+%  nonvar(Key),     
+ save_learnt_rule(TestID,In,Key,Out),!.
+learn_rule(In,Out):- get_vm(VM), Target=VM.target, 
+ get_current_test(TestID),
+  get_vm(last_key,Key),   
+  ignore((learnt_rule(TestID,In,Key,Out);learnt_rule(TestID,_,Key,Out))),
+  pt(orange,using_learnt_rule(In,Key,Out)),!,
+  ignore(Out = Target).
+
+save_learnt_rule(TestID,In,Key,Out):-
+ Rule=learnt_rule(TestID,In,Key,Out),
+ Goal = In+Key+Out,
+ labels_for(Goal,Set),
+ length(Set,Len),length(Vars,Len),
+ subst_rvars(Set,Vars,Rule,NewRule),
+ maplist(upcase_atom_var,Set,Names),
+ subst_rvars(Vars,Names,NewRule:-was_once(Set,Vars),PrintRule),
+ pt(yellow,Rule),
+ pt(orange,PrintRule),
+ my_asserta_if_new(print_rule(TestID,Rule,PrintRule,NewRule)),
+ my_asserta_if_new(NewRule:-was_once(Set,Vars)).
+
+was_once(_,_).
+
+upcase_atom_var(Int,'$VAR'(Name)):- integer(Int),atom_concat('INT_',Int,Name).
+upcase_atom_var(Num,'$VAR'(Name)):- number(Num),atom_concat('FLOAT_',Num,DotName),replace_in_string(['.'-'_dot_'],DotName,Name).
+upcase_atom_var(Atom,'$VAR'(Name)):- upcase_atom(Atom,Name).
+labels_for(Goal,Labels):- 
+  findall(Atom,(sub_term(Atom,Goal),maybe_unbind_label(Atom)),Atoms), 
+  sort(Atoms,Set),
+  include(two_or_more(Atoms),Set,Labels).
+
+two_or_more(Atoms,Label):- select(Label,Atoms,Rest),member(Label,Rest).
+
+never_unbind_label(Int):- integer(Int), Int < 7.
+never_unbind_label(true).
+never_unbind_label(false).
+
+maybe_unbind_label(G):- var(G),!,fail.
+maybe_unbind_label(G):- nonvar(G), never_unbind_label(G),!,fail.
+maybe_unbind_label(G):- integer(G),!.
+maybe_unbind_label(G):- \+ atom(G),!,fail.
+maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
+
+subst_rvars([],[],A,A):-!. 
+subst_rvars([F|FF],[R|RR],S,D):- debug_var(F,R),subst001(S,F,R,M), subst_rvars(FF,RR,M,D).
+
 uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
 %known_gridoid(ID,G):- plain_var(ID),!,(known_grid(ID,G);known_object(ID,G)).
 known_gridoid(ID,G):- known_grid(ID,G),!.
@@ -305,13 +378,15 @@ known_gridoid(ID,G):- known_object(ID,G),!.
 
 known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
+
+test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*Example+Num*IO,fix_id(TstName,Name),!.
 known_grid0(ID,G):- is_grid(ID),!,G=ID.
 known_grid0(ID,_):- is_object(ID),!,fail.
+known_grid0(ID,G):- test_id_num_io(ID,TestID,Example,Num,IO),!,ExampleNum=Example+Num,!,(kaggle_arc_io(TestID,ExampleNum,IO,G),deterministic(YN),true),(YN==true-> ! ; true).
+known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- is_grid_id(G,ID).
 known_grid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
-known_grid0(ID,G):- ID = TstName*ExampleNum*IO,!,fix_id(TstName,Name),(kaggle_arc_io(Name,ExampleNum,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- compound(ID),ID=(_*_),!,fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_grid0(Term,G).

@@ -44,6 +44,7 @@ no_black(BF,BF).
 
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors0(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
+pixel_colors0(GH,CC):- is_grid(GH),!,flatten(GH,CC).
 pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),my_append(PG,CC).
 pixel_colors0(C,[Color]):- color_name(C,Color),!.
 pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
@@ -144,7 +145,8 @@ trim_to_square(G0,G9):- get_bgc(BG),
 trim_to_rect(G0,G9):- into_grid(G0,G),trim_grid_to_rect(G,G9).
 trim_grid_to_rect(G,G9):-
  get_bgc(BG),
- trim_unused_vert(BG,G,G1),rot90(G1,G2),trim_unused_vert(BG,G2,G3),rot270(G3,G9).
+ trim_unused_vert(BG,G,G1),rot90(G1,G2),trim_unused_vert(BG,G2,G3),rot270(G3,G8),
+ remove_color(BG,G8,G9).
 
   trim_unused_vert(_,[],[]):-!.
   trim_unused_vert(BG,[Row|Grid],GridO):- maplist(is_bg_or_var(BG),Row),!,trim_unused_vert(BG,Grid,GridO).
@@ -290,12 +292,12 @@ remove_color(Color,In0,Out):-
 
 
 remove_color0(Color,Grid,NewGrid):-
-   nth1(_,Grid,Row,MidGrid),maplist(=(Color),Row),!,
+   nth1(_,Grid,Row,MidGrid),maplist(==(Color),Row),!,
    remove_color0(Color,MidGrid,NewGrid).
 remove_color0(Color,G,NewGrid):-
    duplicate_term(G,G0),
    rot90(G0,Grid),
-   nth1(_,Grid,Row,Rest),maplist(=(Color),Row),
+   nth1(_,Grid,Row,Rest),maplist(==(Color),Row),
    duplicate_term(Rest,Rest0),
    rot270(Rest0,MidGrid),!,
    remove_color0(Color,MidGrid,NewGrid).

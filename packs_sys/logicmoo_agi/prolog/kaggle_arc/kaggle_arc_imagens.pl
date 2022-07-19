@@ -181,14 +181,19 @@ shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot(Key,KeyR).
 searchable(Group,List):- override_group(searchable(Group,List)),!.
 searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckType,Grid,Searchable).
 
-into_monochrome(VM):-
-  into_monochrome(VM.grid,set(VM.grid)).
+into_monochrome(VM):- Grid = VM.grid,
+  into_monochrome(Grid,NewGrid),!,
+  set(VM.grid) = NewGrid,  
+  print_side_by_side(silver,Grid,into,_,NewGrid,monochrome).
 
-into_monochrome(NoBlack,Mono):- colors_count_black_first(NoBlack,CCBF),CCBF=[cc(black,0.0),cc(BGC,_)|_],!, grid_into_monochrome(BGC,NoBlack,Mono).
+into_monochrome(NoBlack,Mono):- 
+  colors_count_black_first(NoBlack,CCBF), CCBF=[cc(black,0.0),cc(BGC,_)|_],!, 
+  grid_into_monochrome(BGC,NoBlack,Mono).
 into_monochrome(Color,Mono):- into_monochrome(black,Color,Mono).
 
-into_monochrome(BGC,Color,Mono):- is_grid(Color),!,grid_into_monochrome(BGC,Color,Mono).
 into_monochrome(BGC,Color,Mono):- is_points_list(Color),!,maplist(points_into_monochrome(BGC),Color,Mono).
+%into_monochrome(BGC,Color,Mono):- is_grid(Color),!,grid_into_monochrome(BGC,Color,Mono).
+into_monochrome(BGC,Grid,Mono):- into_grid(Grid,Color),!,grid_into_monochrome(BGC,Color,Mono).
 
 points_into_monochrome(BGC,Color-Point,Mono-Point):- is_nc_point(Point),!,points_into_monochrome(BGC,Color,Mono).
 points_into_monochrome(BGC,Color,Mono):- is_list(Color) -> maplist(points_into_monochrome(BGC),Color,Mono) ;

@@ -102,13 +102,20 @@ append_num_code(Start,_SelMax,Key,Sel):- atom_concat(Start,Key,Sel).
 
 clsR:- !. % once(cls).
 
-enter_test:- repeat, write("\nYour favorite: "), read_line_to_string(user_input,Sel),
-     (Sel=="" -> (wqnl("resuming menu"), menu);
-      (catch(read_term_from_atom(Sel,Name,[module(user),double_quotes(string),variable_names(Vs),singletons(Singles)]),_,
+
+enter_test:- repeat, write("\nYour favorite: "), read_line_to_string(user_input,Sel),enter_test(Sel),!.
+enter_test(""):- wqnl("resuming menu"), menu,!.
+enter_test(Sel):- atom_string(Name,Sel), fix_test_name(Name,TestID,_),switch_test(TestID).
+enter_test(Sel):- 
+   catch(read_term_from_atom(Sel,Name,[module(user),double_quotes(string),variable_names(Vs),singletons(Singles)]),_,
         (wqnl(['failed to read: ',Sel]),fail)),
         maplist(ignore,Vs),maplist(ignore,Singles),
        (fix_test_name(Name,TestID,_) -> true ; (wqnl(['could not read a test from: ',Sel,nl,'try again']),fail)),
-       wqnl(['Swithing to test: ',TestID]),set_current_test(TestID),print_test)).
+       switch_test(TestID).
+       
+switch_test(TestID):- wqnl(['Swithing to test: ',TestID]),set_current_test(TestID),print_test.
+
+
 
 :- dynamic(wants_exit_menu/0).
 interact:- list_of_tests(L), length(L,SelMax),
@@ -274,6 +281,17 @@ prev_pair:-
 trn_tst(trn,tst).
 trn_tst(tst,trn).
 
+clear_training(TestID):-
+  set_bgc(_),
+  set_flag(indiv,0),
+  retractall(learnt_rule(TestID,_,_,_)),
+  retractall(print_rule(TestID,_,_,_)),
+  nb_delete(grid_bgc),
+  nb_linkval(test_rules, [rules]),
+  wno((clear_shape_lib(test), clear_shape_lib(noise), 
+   retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
+  nop(retractall(g2o(_,_))),!.
+ 
 new_current_test_info:- 
   ignore((
   nb_current(test_name,TestID),
@@ -281,12 +299,7 @@ new_current_test_info:-
   nb_setval(example,tst+0),
   nb_setval(last_test_name,TestID))),
   save_last_test_name,
-  set_bgc(_),
-  set_flag(indiv,0),
-  nb_delete(grid_bgc),
-  nb_linkval(test_rules, [rules]),
-  wno((clear_shape_lib(test), clear_shape_lib(noise), retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
-  nop(retractall(g2o(_,_))),!.
+  clear_training(TestID).
 
 new_test_pair(PairName):-
   %nb_delete(grid_bgc),
@@ -317,7 +330,7 @@ test_id_border(TestID):-
     ignore((WasTestID\==TestID,set_current_test(TestID), cmt_border)).
 
 
-print_test:- get_current_test(TestID),print_test(TestID).
+print_test:- notrace((get_current_test(TestID),print_test(TestID))).
 print_test(TName):- 
   fix_test_name(TName,TestID,ExampleNum1),
    cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
@@ -638,8 +651,8 @@ test_p2(P2):- clsmake,
        once(ignore((print_side_by_side(red,G1,N1,_LW,G2,?-N2),dash_chars)))))).
 
 %:- style_check(-singleton).
-whole(I,O):- is_group(I),length(I,1),I=O,!.
-whole(I,O):- print_grid(I),pt(I),into_obj(I,O).
+%whole(I,O):- is_group(I),length(I,1),I=O,!.
+%whole(I,O):- print_grid(I),pt(I),into_obj(I,O).
 one_obj(I,I):- is_group(I),length(I,1),!.
 one_obj(I,I):- is_group(I),!.
 one_obj(I,I).
@@ -737,7 +750,7 @@ parcCmt1(TName):-
   (IHV\==OHV -> CG = resize_grid(OH,OV,BGColor); CG = copy_grid(in)),
   findall(III,task_info(TestID,III),InfoUF),
   flatten(InfoUF,InfoF),
-  DSL = sol(i(complete),CG,incomplete),
+  DSL = no_sol(i(complete),CG,incomplete),
   predsort(sort_univ,[DSL|InfoF],InfoFS), %44f52bb0
   reverse(InfoFS,InfoSR),
   P = fav(TestID,InfoSR),

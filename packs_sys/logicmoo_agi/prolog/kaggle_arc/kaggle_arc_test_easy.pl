@@ -33,21 +33,23 @@ fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),copy_grid(in)),-
 fav(t('a85d4709'),[human(i([rows,done]),   db(objs:shape,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
 
 fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,pattern_repetition,pattern_expansion,pattern_completion,'(3, 1)']).
+%fav(t('ff805c23'),[human(repair_in_vm(repair_repeats(blue)),get(changed),trim_to_rect)]).
 fav(t('ff805c23'),[human(repair_in_vm(repair_fourway),get(changed),trim_to_rect)]).
 fav(t('ff805c23'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
 fav(t('3631a71a'),[human(repair_in_vm(repair_fourway),get(repaired))]).
 fav(t('3631a71a'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
-fav(t('29ec7d0e'),[human(repair_in_vm(repair_repeats),get(repaired))]).
+fav(t('29ec7d0e'),[human(repair_in_vm(repair_repeats(black)),get(repaired))]).
 fav(t('29ec7d0e'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_repetition,pattern_expansion,image_filling,detect_grid,'(4, 1)']).
 fav(t('47c1f68c'),[hedra,human(compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1),blur(flipH),blur(flipV))]).
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,recolor,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
-fav(v('cad67732'),[human(i(whole),find_direction(Dir),copy_self(Dir)),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(3, 1) ']).
-fav(t('27a28665'),[human(into_monochrome,i([whole]),db(shape,color))]).
+fav(v('cad67732'),[human(i(whole),first_object_term(rotated),learn_rule),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(3, 1) ']).
+fav(t('27a28665'),[human(i(whole),first_object_grid(monogrid),learn_rule)]).
 %fav(t('27a28665'),[human(i([glyphic]),one_obj,into_monochrome,db(largest:shape,out:grid:p(1,1):color),resize_grid(1,1))]).
 %fav(t('27a28665'),[human(i(whole),one_obj,into_monochrome,db(largest:shape,out:grid:p(1,1):color),resize_grid(1,1))]).
 fav(t('27a28665'),[learn([shape_to_color]),no_sol([make_box(1),shape_to_color(C),cls_with(C)])]).
 fav(t('27a28665'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,take_negative,associate_images_to_patterns,associate_colors_to_patterns,'(7, 3)']).
-fav(t('44f52bb0'),[human(grid_to_individual,get_vm(objs,[Obj|_]),(iz(Obj,h_symmetric)->set_out([[blue]]);set_out([[orange]])))]).
+%fav(t('44f52bb0'),[human(i(whole),print_grid,get_vm(objs,[Obj|_]),print_grid,(call(iz(Obj,h_symmetric))->(print_grid,set_out([[blue]]));(print_grid,set_out([[orange]]))))]).
+fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
 /*
 fav(t('44f52bb0'),[human(i(whole),call((
   get_vm(objs,[Obj|_]),(iz(Obj,h_symmetric)->set_vm(grid,[[blue]]);set_vm(grid,[[orange]])),set_vm(grid,[[orange]]))))]).
@@ -116,6 +118,7 @@ fav(t('1b60fb0c'),[
 %fav(t('db3e9e38'),[sol([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[sol([fillFromBorder(none,yellow)])]).
 
+fav(t('8d510a79'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,draw_line_from_point,direction_guessing,detect_wall,associate_colors_to_bools,'(2, 1)']).
 
 fav(v(d304284e),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(2, 1) ']).
 
@@ -711,7 +714,6 @@ fav(t('57aa92db'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+colo
 fav(v('94414823'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,evaluation,'(3, 1) ']).
 fav(v('99306f82'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,evaluation,'(3, 1) ']).
 fav(v('12422b43'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,test,evaluation,'(5, 1) ']).
-fav(t('8d510a79'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,draw_line_from_point,direction_guessing,detect_wall,associate_colors_to_bools,'(2, 1)']).
 fav(v('96a8c0cd'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,evaluation,'(4, 1) ']).
 fav(t('39e1d7f9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,pattern_repetition,grid_coloring,detect_grid,'(3, 1)']).
 fav(t(e21d9049),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,pattern_expansion,draw_line_from_point,color_palette,'(2, 1)']).
