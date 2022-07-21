@@ -132,6 +132,7 @@ training_info(TestID,Info):-
        nop(erase(Ref))))))),Info).
 
 clear_training(TestID):-
+  retractall(individuated_cache(_,_,_)),
   set_bgc(_),
   set_flag(indiv,0),
   forall(test_local_dyn(F),
@@ -196,7 +197,7 @@ learn_rule(_In00,RuleDir,Out):- get_vm(VM), % Target=VM.grid_out,
    must_det_ll(Last = Rule),
    ignore(In=In0),
    ignore(Out = Out0),
-   \+ \+ maplist(print_rule(sort),Matches),
+   %\+ \+ maplist(print_rule(sort),Matches),
    \+ \+ print_rule(using_learnt_rule=Len,ref(Ref)),!.
 
 

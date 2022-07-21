@@ -83,6 +83,10 @@ maybe_multivar(_).
 :- dynamic(is_unshared_saved/2).
 :- dynamic(is_shared_saved/2).
 
+the_big_three_oh(300).
+
+
+
 individuation_macros(out, complete).
 individuation_macros(in, complete).
 
@@ -111,23 +115,23 @@ individuation_macros(subshape_in_object, [
    %progress,
    non_diag, % like colormass but guarenteed it wont link diagonals but most ikmportant ti doesnt look for subshapes
    by_color, % any after this wont find individuals unless this is commented out
-   not_done % hopefully is never ran outside subshape_in_object !
-   ]).
+   end_of_macro]).
 
 individuation_macros(subshape_main, [
+   maybe_glyphic,
    subshape_both,   
+   by_color,
+   standalone_dots,
    %progress,
-   non_diag % like colormass but guarenteed it wont link diagonals but most ikmportant ti doesnt look for subshapes
+   %non_diag % like colormass but guarenteed it wont link diagonals but most ikmportant ti doesnt look for subshapes
    %by_color % any after this wont find individuals unless this is commented out
-   %not_done % hopefully is never ran outside subshape_in_object !
-   ]).
+   end_of_macro]).
 
 % never add done to macros
 individuation_macros(subshape_both, [
   % glean_grid_patterns,
    shape_lib(hammer), % is a sanity test/hack
    non_diag,
-   maybe_glyphic,
    hv_line(h),  
    dg_line(d), dg_line(u), 
    hv_line(v),  
@@ -140,15 +144,12 @@ individuation_macros(subshape_both, [
    connects(hv_line(_),dg_line(_)),
    connects(hv_line(_),hv_line(_)),
    jumps,% run the "jumps" macro
-   %merges(Z,Z), % merge lines into square
-   merges(hv_line(_),hv_line(_)),
-   merges(dg_line(_),dg_line(_)),
-
+   %merge_shapes(Z,Z), % merge lines into square
+   merge_shapes(hv_line(_),hv_line(_)),
+   merge_shapes(dg_line(_),dg_line(_)),
    point_corners,
-   by_color,
-   standalone_dots
    %connects(X,X)
-   ]).
+   end_of_macro]).
 
 individuation_macros(jumps,
   [ %progress, 
@@ -205,12 +206,36 @@ individuation_macros(reduce_population, [
 individuation_macros(altro, [
     reduce_population,
     remove_used_points,
-    when((len(points)=<30),standalone_dots),    
-    when((len(points)>30),by_color)]).
+    when((len(points)=<ThreeO),standalone_dots),    
+    when((len(points)>ThreeO),by_color)]):- the_big_three_oh(ThreeO).
 
 
-% the typical toplevel indivduator
+individuation_macros(do_ending, [
+  find_touches,    
+  find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
+  find_contained, % mark any "completely contained points"
+  combine_same_globalpoints, % make sure any objects are perfectly the same part of the image are combined       
+  %combine_objects,
+  end_of_macro]).
+
 individuation_macros(complete, [
+    keep_points(non_diag),
+    keep_points(subshape_both),
+    keep_points(colormass),
+    keep_points(fourway),
+    keep_points(maybe_repair_in_vm(repair_repeats)),
+    keep_points(force_by_color),
+    %keep_points(remaining_dots),
+    keep_points(shape_lib(as_is)),
+   when(len(objs)>=100,keep_points(whole)),
+   when(len(objs)<100,keep_points(glyphic)),
+    do_ending,
+    done]).
+
+%individuation_macros(complete, [parallel]).
+%individuation_macros(complete, [complete2]).
+% the typical toplevel indivduator
+individuation_macros(complete2, [
     %maybe_repair_in_vm(repair_repeats),
     shape_lib(as_is),
     fourway,
@@ -229,34 +254,29 @@ individuation_macros(complete, [
     colormass_subshapes, % find subshapes of the altro
     %when((colors(i.points,Cs),len(Cs)<2),standalone_dots), % any after this wont find individuals unless this is commented out
     colormass_merger(2),
-    when((len(points)=<30),standalone_dots),
+    when((len(points)=<ThreeO),standalone_dots),
     standalone_dots,
     leftover_as_one, % any after this wont find individuals unless this is commented out    
    done % stop processing
- ]).
+ ]):- the_big_three_oh(ThreeO).
 
 % the standard things done in most indiviguators
 individuation_macros(standard, [
     %fourway, % find fold patterns 
     %recalc_sizes,
     std_shape_lib, % stuff that was learned/shown previously
-   +max_learn_objects(colormass,30),
-   +max_learn_objects(non_diag,30),
-   +max_learn_objects(hv_line(_),30),
-   +max_learn_objects(dg_line(_),30),
+   +max_learn_objects(colormass,ThreeO),
+   +max_learn_objects(non_diag,ThreeO),
+   +max_learn_objects(hv_line(_),ThreeO),
+   +max_learn_objects(dg_line(_),ThreeO),
     %non_diag,
     %+recalc_sizes, % blobs of any shape that are the same color  
     % @TODO DISABLED FOR TESTS   colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
     subshape_main, % macro for sharing code with "subshape_in_object"
     connects(jumps(X),jumps(X)), % connected jumps    
-    merges(Z,Z), % merge objects of identical types (horizontal lines become solid squares)   
-    find_touches,
-    find_contained, % mark any "completely contained points"
-    % call(trace),
-    find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
-    combine_duplicates, % make sure any objects are perfectly the same part of the image are combined       
-    
-    not_done]).
+    % merge_shapes(Z,Z), % merge objects of identical types (horizontal lines become solid squares)   
+    do_ending,    
+    end_of_macro]):- the_big_three_oh(ThreeO).
 
 individuation_macros(defaults, [ complete ]).
 
@@ -290,6 +310,26 @@ fix_indivs_options(detect(O),[detect(O)]):-!.
 fix_indivs_options(O,[detect(O)]):- is_gridoid(O),!.
 fix_indivs_options(I,O):-listify(I,O),!.
 
+is_fti_step(keep_points).
+keep_points(While,VM):- 
+  assertion(is_map(VM)),
+  %set_vm(VM),
+  Points  = VM.points,
+  Program = VM.program_i,
+  %OldObjs = VM.objs,
+  %set(VM.grid) = VM.grid_o,
+  set(VM.points) = VM.points_o,
+  %set(VM.objs) = [],  
+  ignore(fti(VM,While)),
+  %NewObjs = VM.objs,
+  %append(NewObjs,OldObjs,Objs),
+  
+  %must_det_ll(combine_duplicates(Objs,NewObjs)),
+  %list_to_set(Objs, NewObjs),
+  %set_vm(VM,objs,NewObjs),
+  set_vm(points,Points),
+  set_vm(program_i,Program).
+  
 
 is_fti_step(maybe_1_3rd_mass).
 
@@ -538,7 +578,7 @@ run_fti(VM):-
 run_fti(_,[]):- !.
 run_fti(_,[Done|TODO]):- ( \+ done \= Done ), !, wdmsg(done_run_fti([Done|TODO])),set_vm(program_i,[done]),!.
 run_fti(VM,[if_done|TODO]):- !, (VM.points==[] -> (wdmsg(if_done),set_vm(program_i,[if_done])) ; run_fti(VM,TODO)).
-run_fti(VM,[not_done|TODO]):- !, run_fti(VM,TODO).
+run_fti(VM,[end_of_macro|TODO]):- !, run_fti(VM,TODO).
 run_fti(VM,[recalc_sizes|TODO]):- !, run_fti(VM,TODO).
 
 run_fti(VM,[F|TODO]):- 
@@ -556,7 +596,8 @@ maybe_four_terse(L,F=N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
 maybe_four_terse(L,L):-!.
 %fti(VM,_):- VM.points=[], !.
 fti(_,[]):- !.
-fti(VM,[not_done|TODO]):- !, fti(VM,TODO).
+fti(VM,NotAList):- \+ is_list( NotAList),!, fti(VM,[NotAList]).
+fti(VM,[end_of_macro|TODO]):- !, fti(VM,TODO).
 fti(VM,[recalc_sizes|TODO]):- !, fti(VM,TODO).
 fti(_,[Done|TODO]):-  ( \+ done \= Done ), !, wdmsg(done_fti([Done|TODO])),!.
 %fti(VM,_):- VM.points==[], !.
@@ -642,6 +683,9 @@ fti(VM,_):-
   length(Objs,Count),
   (fail;(member(progress,VM.options); Count > VM.objs_max_len; (statistics(cputime,X), X > (VM.timeleft)))) -> 
    print_vm_debug_objs(VM),fail.
+
+fti(VM,[F|TODO]):- once(fix_indivs_options([F|TODO],NEWTODO)),[F|TODO]\==NEWTODO,!,fti(VM,NEWTODO).
+  
 
 fti(VM,[F|TODO]):-
    wdmsg(fti_miss(F)),
@@ -773,10 +817,10 @@ standalone_dots(VM):-
    standalone_dots(VM).
 standalone_dots(_):-!.
 
-is_fti_step(remaining_points).
-% remaining_points may have adjacent points of the same color (because we are in 'remaining_points' mode)
-remaining_points(VM):-
-  maplist(maybe_make_point_object(VM,[iz(leftovers),iz(remaining_points),iz(dot)]),VM.points,IndvList),
+is_fti_step(remaining_dots).
+% remaining_dots may have adjacent points of the same color (because we are in 'remaining_dots' mode)
+remaining_dots(VM):-
+  maplist(maybe_make_point_object(VM,[iz(leftovers),iz(remaining_dots),iz(dot)]),VM.points,IndvList),
   addObjects(VM,IndvList),
   set(VM.points) =[],!.
 
@@ -853,8 +897,9 @@ maybe_make_point_object(VM,Opts,Point,Indv):-
 one_fti(VM,whole):-
   %localpoints_include_bg(VM.grid,Points),
   Grid = VM.grid,
-  localpoints_include_bg(Grid,Points),
   grid_size(Grid,H,V),
+  %Objs = VM.objs,
+  localpoints_include_bg(Grid,Points),
   length(Points,Len),
   make_indiv_object(VM.id,H,V,Points,[mass(Len),vis_hv(H,V),iz(combined),birth(whole)],Whole),
   %set(VM.points)=[],
@@ -886,8 +931,6 @@ colormass_subshapes(VM,VMObjs):- fail,
 colormass_subshapes(_,_):-!.
 
 
-%fti(VM,[combine_objects|set(VM.program_i)]):- combine_objects(VM),!.
-is_fti_step(combine_objects).
 
 
 /*
@@ -921,7 +964,7 @@ one_fti(VM,by_color(Min,C)):-
 one_fti(VM,shape_lib(Hammer)):- !,
   nop((shape_lib_expanded(Hammer,Reserved),try_shapelib(VM,Hammer,Reserved))).
 
-try_shapelib(VM,Hammer,Reserved):- 
+try_shapelib(VM,Hammer,Reserved):-   
   length(Reserved,RL),
   ignore((RL>30,pt(shape_lib_expanded(Hammer)=RL))),
   smallest_first(Reserved,ReservedSL),
@@ -1165,9 +1208,9 @@ overwrite_use_so_far(FourWay1s,Sofar,UseSofar):-
 overwrite_use_so_far(_FourWay1s,Sofar,Sofar).
 
 
-one_fti(VM,merges(ShapeType1)):-one_fti(VM,merges(ShapeType1,ShapeType1)),!.
-one_fti(VM,merges(ShapeType1,ShapeType2)):-
-  Option = merges(ShapeType1,ShapeType2), copy_term(Option,OptionC),!, 
+one_fti(VM,merge_shapes(ShapeType1)):-one_fti(VM,merge_shapes(ShapeType1,ShapeType1)),!.
+one_fti(VM,merge_shapes(ShapeType1,ShapeType2)):-
+  Option = merge_shapes(ShapeType1,ShapeType2), copy_term(Option,OptionC),!, 
       Sofar = VM.objs,
       selected_from(Sofar,ShapeType1,ShapeType2,HV1,HV2,SofarLess), % trace,
       any_gpoint(HV1,C-P1), is_adjacent_point(P1,Dir,P2), any_gpoint(HV2,C-P2), 
@@ -1272,7 +1315,7 @@ extends(ShapeType1,VM):-
 one_fti(VM,Option):- one_ifti(VM,Option),!.
 
 one_ifti(VM,Option):- 
-   ( Option \== remaining_points), 
+   ( Option \== remaining_dots), 
    find_one_individual(Option,Indv,VM),
    addObjects(VM,Indv),!,
    one_ifti(VM,Option).
@@ -1281,7 +1324,7 @@ one_ifti(_VM,Option):- is_thing_or_connection(Option),!.
 
 is_thing_or_connection(Option):-allowed_dir(Option,_Dir).
 is_thing_or_connection(connects(_,_)).
-is_thing_or_connection(merges(_,_)).
+is_thing_or_connection(merge_shapes(_,_)).
 is_thing_or_connection(jumps(_,_)).
 
 

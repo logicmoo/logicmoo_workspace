@@ -20,6 +20,10 @@
 :- discontiguous(arc_test_property/3).
 :- multifile(arc_test_property/3).
 
+:- dynamic(individuation_macros/2).
+:- discontiguous(individuation_macros/2).
+:- multifile(individuation_macros/2).
+
 % :- dynamic(grid_hint_pred/1). :- discontiguous(grid_hint_pred/1). :- multifile(grid_hint_pred/1).
 
 
