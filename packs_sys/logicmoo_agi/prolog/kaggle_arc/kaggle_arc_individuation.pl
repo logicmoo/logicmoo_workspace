@@ -222,30 +222,29 @@ individuation_macros(do_ending, [
 % 1204
 %individuation_macros(complete, [parallel,done]).
 individuation_macros(complete, [
-	reset_points,
-	(force_by_color),
-	subshape_both,
-	reset_points,
-	(standalone_dots),
-	reset_points,
-	glyphic,
-	reset_points,
-	(non_diag),
-	reset_points,
-	(colormass),
-	reset_points,
-    (fourway),
-    reset_points,
-    (maybe_repair_in_vm(repair_repeats)),
-    reset_points,
-    %keep_points(remaining_dots),
-    (shape_lib(as_is)),
-   reset_points,
-   whole,
- %   when(len(objs)>=70,keep_points(whole)),
-    when(len(objs)<70,when(len(points)<70,glyphic)),
-    do_ending,
-    done]).
+  reset_points,
+  (force_by_color),
+  reset_points,
+  (subshape_both),
+  reset_points,
+  (standalone_dots),
+  reset_points,
+  %(non_diag),
+  %reset_points,
+  (colormass),
+  reset_points,
+  (fourway),
+  reset_points,
+  (maybe_repair_in_vm(repair_repeats)),
+  reset_points,
+  %keep_points(remaining_dots),
+  (shape_lib(as_is)),
+  reset_points,
+  whole,
+  %   when(len(objs)>=70,keep_points(whole)),
+  when(len(objs)<70,when(len(points)<70,glyphic)),
+  do_ending,
+  done]).
 
 %individuation_macros(complete, [parallel]).
 %individuation_macros(complete, [complete2]).
@@ -416,13 +415,13 @@ individuate(ROptions,GridIn,IndvS):-
   ignore((ground(GridIn),nop(asserta(individuated_cache(ROptions,GridIn,IndvS))))),!.
 
 do_individuate(ROptions,GridInIn,IndvS):-
+   %fix_indivs_options(ROptionsL,ROptions),
    must_be_free(IndvS),
    (is_map(GridInIn) -> (VM = GridInIn, GridIn=VM.grid ) ; GridInIn=GridIn),
    into_points_grid(GridIn,_Points,Grid),
    grid_to_id(Grid,ID),
   my_assertion(\+ is_grid(ID)),
    quietly(grid_size(Grid,GH,GV)), 
-   pt(yellow,ig(ROptions,ID)=(GH,GV)),
    individuate7(VM,GH,GV,ID,ROptions,Grid,IndvS),
    !.
    %VM.grid_out
@@ -430,14 +429,13 @@ do_individuate(ROptions,GridInIn,IndvS):-
 % tiny grid becomes a series of points
 %individuate(GH,GV,ID,ROptions,_Grid,Points,IndvS):- \+ is_list(ROptions), is_glyphic(Points,GH,GV), individuate_glyphic(GH,GV,ID,Points,IndvS),!.
 %individuate(GH,GV,ID,whole,_Grid,Points,IndvS):-  individuate_whole(GH,GV,ID,Points,IndvS),!.
-individuate7(VM,_GH,_GV,_ID,ROptions,GridIn,IndvS):-
+individuate7(VM,_GH,_GV,ID,ROptions,GridIn,IndvS):-
       (var(VM) -> into_fti(ID,ROptions,GridIn,VM) ; true),
       %VM.points = Points,
       %individuation_reserved_options(ROptions,Reserved,NewOptions),
       %trace,
       %ensure_fti(GH,GV,ID,Grid,[],Reserved,NewOptions,Points,VM),   
       set_vm(VM),
-      
       %individuals_raw(VM,GH,GV,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
       run_fti(VM), 
       IndvSRaw = VM.objs,
