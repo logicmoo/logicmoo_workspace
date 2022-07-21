@@ -294,8 +294,8 @@ combine_duplicates_old(IndvS,[IO|IndvSO]):-
 combine_duplicates_old(IndvSO,IndvSO).
 
 
-%combine_duplicates(_VM):-!.
 is_fti_step(combine_duplicates).
+combine_duplicates(_VM):-!.
 combine_duplicates(VM):- combine_duplicates(VM.objs,set(VM.objs)).
 
 combine_duplicates(IndvS,IndvSO):-
@@ -318,7 +318,7 @@ overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Di
 overlap_same_obj(I,O):- compare_objs1(same,I,O).
 
 combine_objects(VM):- combine_objects(VM.objs,set(VM.objs)).
-%combine_objects(I,I):-!.
+combine_objects(I,I):-!.
 combine_objects(IndvS,[obj(IO)|IndvSO]):- 
   select(obj([A,B,C,D|I]),IndvS,IndvS1),
   select(obj([A,B,C,D|O]),IndvS1,IndvS2),

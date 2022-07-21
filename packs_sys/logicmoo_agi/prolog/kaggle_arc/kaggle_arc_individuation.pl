@@ -112,7 +112,7 @@ individuation_macros(subshape_in_object, [
    non_diag, % like colormass but guarenteed it wont link diagonals but most ikmportant ti doesnt look for subshapes
    by_color, % any after this wont find individuals unless this is commented out
    not_done % hopefully is never ran outside subshape_in_object !
-   ]) :- fail.
+   ]).
 
 individuation_macros(subshape_main, [
    subshape_both,   
@@ -127,6 +127,7 @@ individuation_macros(subshape_both, [
   % glean_grid_patterns,
    shape_lib(hammer), % is a sanity test/hack
    non_diag,
+   maybe_glyphic,
    hv_line(h),  
    dg_line(d), dg_line(u), 
    hv_line(v),  
@@ -351,7 +352,7 @@ individuate(ROptions,GridIn,IndvS):- individuation_macros(ROptions,R), individua
 individuate(ROptions,GridIn,IndvS):- individuated_cache(ROptions,GridIn,IndvS),!.
 individuate(ROptions,GridIn,IndvS):- 
   do_individuate(ROptions,GridIn,IndvS),!,  
-  asserta(individuated_cache(ROptions,GridIn,IndvS)),!.
+  nop(asserta(individuated_cache(ROptions,GridIn,IndvS))),!.
 
 do_individuate(ROptions,GridInIn,IndvS):-
    must_be_free(IndvS),
@@ -434,7 +435,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
    neededChanged:_, repaired:_,
    full_grid:_, 
    % Original copies of Grid and point representations
-   % grid_o:Grid, 
+   grid_o:Grid, 
    rule_dir: ROptions,
    points_o:Points, % repaired:[],
    % objects found in grid and object that are reserved to not be found

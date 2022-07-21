@@ -170,11 +170,18 @@ learn_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out,
   pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
   ignore(Out = ROut).
 
+learn_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
+ get_current_test(TestID),
+  ignore(get_vm(last_key,Key)),
+  ((learnt_rule(TestID,In,Key,RuleDir,Out);learnt_rule(TestID,_,Key,RuleDir,Out);learnt_rule(TestID,In,_,RuleDir,Out))),
+  pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
+  ignore(Out = ROut).
+
 
 learn_rule(_In00,RuleDir,Out):- get_vm(VM), % Target=VM.grid_out, 
  get_current_test(TestID),
-  get_vm(last_key,Key),  
-   In = VM.grid,
+  ignore(get_vm(last_key,Key)), 
+   In = VM.grid_o,
    Head = learnt_rule(TestID0,In0,Key0,RuleDir0,Out0),
    Rule = rule(Len,In0,Key0,RuleDir0,TestID0,Out0,Ref),
    pt(searching_for=[in(In),dir(RuleDir),key(Key)]),
