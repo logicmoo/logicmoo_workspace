@@ -839,7 +839,7 @@ one_fti(VM,glyphic):-
   PointsLeft = VM.points,
   fif(PointsLeft\==[],
    ((localpoints(VM.grid,Points),
-     set(VM.points)=[],     
+    % set(VM.points)=[],     
      maplist(maybe_make_point_object(VM,[birth(glyphic)]),Points,IndvList),
      addObjects(VM,IndvList)))),
   one_fti(VM,whole),

@@ -24,18 +24,18 @@ learned_test(TName):-
  
 
 
-print_rule(M,ref(Ref)):- !,
+print_rule(M,ref(Ref)):- nonvar(Ref), !,
   clause(H,B,Ref), 
   print_rule(M,(H:-B)).
 
 print_rule(M,(X:-True)):- True == true,!, print_rule(M,X).
 print_rule(M,(learnt_rule(TestID,A,B,C,D):-Body)):- !,
-    ignore((Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),   
-    pt(orange,M=[C=[TestID,in=(A),label=(B),out=(D)]]).
+   \+ \+ (( ignore((Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),   
+    pt(orange,M=[C=[TestID,in=(A),label=(B),out=(D)]]))).
 print_rule(M,(X:-Body)):- !,
-    ignore((Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),   
-    pt(orange,M=[X]).
-print_rule(M,O):- pt(orange,M=[O]).
+    \+ \+ ((  ignore((Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),   
+    pt(orange,M=[X]))).
+print_rule(M,O):- \+ \+ (( pt(orange,M=[O]))).
 
 save_learnt_rule(TestID,In,InKey,RuleDir,Out):-
   save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out)).

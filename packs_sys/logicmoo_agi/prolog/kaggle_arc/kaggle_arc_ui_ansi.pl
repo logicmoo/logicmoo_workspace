@@ -175,15 +175,16 @@ pt(_):- is_print_collapsed,!.
 pt(_):- format('~N'), fail.
 pt(P):- var(P),!,pt(var(P)).
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
-pt(P):- pt_guess_pretty(P,GP),ptw(GP).
+pt(P):- \+ \+ (( pt_guess_pretty(P,GP),ptw(GP))).
 %pt(P):-!,writeq(P).
 ptw(P):- arc_portray(P),!.
 ptw(P):- quietlyd(print_tree_nl(P)),!.
 ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
 
-pt_guess_pretty(P,O):- copy_term(P,O),
+pt_guess_pretty(P,O):- copy_term(P,O,_),
+  ignore((sub_term(Body,O), compound(Body), Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),
   ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)),!,
-  numbervars(O,999999999999,_,[attvar(bind),singletons(true)]).
+  nop((term_singletons(O,SS),numbervars(SS,999999999999,_,[attvar(bind),singletons(true)]))).
 
 print_ansi_tree(P,_OL):- print_tree_nl(P).
 
