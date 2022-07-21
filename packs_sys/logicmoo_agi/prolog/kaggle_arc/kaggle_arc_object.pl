@@ -319,6 +319,7 @@ verify_object(Obj):-
   iz(Obj,symmetry(What)),
   nonvar(What).
 
+override_object([],I,I):-!.
 override_object(E,I,O):- with_object(override,E,I,O).
 
 with_object(Op,E,obj(List),O):- !, with_objprops(Op,E,List,MidList),O=obj(MidList),!,verify_object(O).
@@ -353,7 +354,8 @@ with_objprops(override,E,List,NewList):-
 
 aggregates(iz(_)).
 aggregates(birth(_)).
-aggregates(touches(_,_)).
+aggregates(link(_,_,_)).
+aggregates(link(_,_)).
 aggregates(insideOf(_)).
 
 merge_objs(_VM,Bigger,[],_IPROPS,Bigger):-!.

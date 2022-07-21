@@ -24,10 +24,9 @@ learned_test(TName):-
  
 
 
-print_rule(M,rule(Len,Out,Ref)):- !,
+print_rule(M,ref(Ref)):- !,
   clause(H,B,Ref), 
-  print_rule(M-Len,(H:-B)),
-  print_rule(M-Len,out(Out)).
+  print_rule(M,(H:-B)).
 
 print_rule(M,(X:-True)):- True == true,!, print_rule(M,X).
 print_rule(M,(learnt_rule(TestID,A,B,C,D):-Body)):- !,
@@ -114,12 +113,15 @@ test_local_dyn(why_grouped).
 test_local_dyn(cached_dictation).
 test_local_dyn(oout_associatable).
 
-assert_visually(H:-B):- !,assert_visually1(H,B).
-assert_visually( G  ):- assert_visually1(G,true).
-assert_visually1(G,B):- get_current_test(TestID), arg(1,G,W),W\==TestID,!, G=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
-assert_visually1(G,B):- assert_visually2(G,B).
-assert_visually2(G,_):- copy_term(G,Head),clause(Head,_,Ref), clause(RealHead,_,Ref), G=@=RealHead,!.
-assert_visually2(G,B):- functor(G,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(G:-B)), my_asserta_if_new((G:-B)).
+assert_visually(H:-B):- !,unnumbervars((H:-B),(HH:-BB)), assert_visually1(HH,BB).
+assert_visually( H  ):- unnumbervars(H,HH),assert_visually1(HH,true).
+
+assert_visually1(H,B):- get_current_test(TestID), arg(1,H,W),W\==TestID,!, H=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
+assert_visually1(H,B):- assert_visually2(H,B).
+
+assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,pt(cyan,known_exact(H:-B)).
+assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,pt(cyan,known(H:-B)).
+assert_visually2(H,B):- functor(H,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(H:-B)), my_asserta_if_new((H:-B)).
 
 training_info(TestID,Info):-
  findall((X:-Y),
@@ -149,6 +151,8 @@ learn_rule(In,Out):-
   VM.rule_dir = RuleDir,
   learn_rule(In,RuleDir,Out).
 
+
+
 learn_rule(In,RuleDir,Out):- 
  get_vm(VM), 
  Target=VM.grid_out, 
@@ -158,30 +162,44 @@ learn_rule(In,RuleDir,Out):-
  get_vm(last_key,Key),    
  save_learnt_rule(TestID,In,Key,RuleDir,Out),!.
 
-learn_rule(In,RuleDir,Out):- %get_vm(VM), % Target=VM.grid_out, 
+
+learn_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
  get_current_test(TestID),
   get_vm(last_key,Key),  
-   Head = learnt_rule(TestID0,In0,Key0,Dir0,Out0),
-  findall(rule(Len,Out0,Ref),
+  ((learnt_rule(TestID,In,Key,RuleDir,Out);learnt_rule(TestID,_,Key,RuleDir,Out))),
+  pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
+  ignore(Out = ROut).
+
+
+learn_rule(_In00,RuleDir,Out):- get_vm(VM), % Target=VM.grid_out, 
+ get_current_test(TestID),
+  get_vm(last_key,Key),  
+   In = VM.grid,
+   Head = learnt_rule(TestID0,In0,Key0,RuleDir0,Out0),
+   Rule = rule(Len,In0,Key0,RuleDir0,TestID0,Out0,Ref),
+   pt(searching_for=[in(In),dir(RuleDir),key(Key)]),
+  findall(Rule,
    (clause(Head,_Vars,Ref),
-    matchlen([In0,Key0,Dir0,TestID0],[In,Key,RuleDir,TestID],Len),Len>2),
+    call(Head),
+    matchlen([In0,Key0,RuleDir0,TestID0],[In,Key,RuleDir,TestID],Len)),
    Matches),
    sort(Matches,Sort),
    %reverse(Sort,Reverse),
-   %maplist(print_rule,Sort),
    last(Sort,Last),
-   print_rule(using_learnt_rule,Last),
-   Last = rule(Len,Out0,Ref),
-   ignore(Out = Out0),!.
+   must_det_ll(Last = Rule),
+   ignore(In=In0),
+   ignore(Out = Out0),
+   \+ \+ maplist(print_rule(sort),Matches),
+   \+ \+ print_rule(using_learnt_rule=Len,ref(Ref)),!.
 
 
 matchlen([],[],0):-!.
-matchlen([A|List1],[B|List2],Len):- fitness(A,B,Fit),
+matchlen([A|List1],[B|List2],Len):- fitness(A,B,Fit),!,
    matchlen(List1,List2,Len2), Len is Fit+Len2.
 
-fitness(A,A,1):- !.
-fitness(A,B,Fit):- is_list(A),is_list(B),length(A,L),matchlen(A,B,F),Fit is F/L,!.
-fitness(_,_,0):- !.
+fitness(A,B,1.1):- A=B,!.
+fitness(A,B,Fit):- is_list(A),is_list(B), length(A,L),matchlen(A,B,F), \+ is_grid(A), Fit is F/L,!.
+fitness(_,_,0.01):- !.
 
 %row_to_row
 %row_to_column
@@ -365,7 +383,7 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   PairName= TestID*ExampleNum,
   get_current_test(CName),
   new_test_pair(PairName),
-  must_det_ll((
+  /*must_det_ll*/((
    ignore((CName\==TestID, 
         set_current_test(TestID),
         dash_chars(60,"A"),nl,dash_chars(60,"|"),dash_chars(6,"\n"),nl,

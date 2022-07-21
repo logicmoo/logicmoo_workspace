@@ -130,7 +130,8 @@ individuation_macros(subshape_both, [
    hv_line(h),  
    dg_line(d), dg_line(u), 
    hv_line(v),  
-   diamonds,colormass,
+   diamonds,
+   colormass,
    %show_neighbor_map,
    %indiv_grid_pings,
    %+recalc_sizes,
@@ -138,12 +139,13 @@ individuation_macros(subshape_both, [
    connects(hv_line(_),dg_line(_)),
    connects(hv_line(_),hv_line(_)),
    jumps,% run the "jumps" macro
-   point_corners,
-   by_color,   
    %merges(Z,Z), % merge lines into square
    merges(hv_line(_),hv_line(_)),
    merges(dg_line(_),dg_line(_)),
-   standalone_dots,
+
+   point_corners,
+   by_color,
+   standalone_dots
    %connects(X,X)
    ]).
 
@@ -208,13 +210,14 @@ individuation_macros(altro, [
 
 % the typical toplevel indivduator
 individuation_macros(complete, [
-    maybe_repair_in_vm(repair_repeats),
+    %maybe_repair_in_vm(repair_repeats),
     shape_lib(as_is),
     fourway,
     find_colorfull_idioms,
     maybe_glyphic,
     if_done,
     complete_broken_lines,
+    complete_occluded,
     maybe_1_3rd_mass,
     %shape_lib(as_is),    
     %non_diag,
@@ -223,13 +226,11 @@ individuation_macros(complete, [
     point_corners,
     reduce_population, % @TODO DISABLED FOR TESTS    %altro,
     colormass_subshapes, % find subshapes of the altro
-    find_touches,
     %when((colors(i.points,Cs),len(Cs)<2),standalone_dots), % any after this wont find individuals unless this is commented out
     colormass_merger(2),
     when((len(points)=<30),standalone_dots),
     standalone_dots,
-    leftover_as_one, % any after this wont find individuals unless this is commented out
-    find_touches,
+    leftover_as_one, % any after this wont find individuals unless this is commented out    
    done % stop processing
  ]).
 
@@ -250,9 +251,11 @@ individuation_macros(standard, [
     merges(Z,Z), % merge objects of identical types (horizontal lines become solid squares)   
     find_touches,
     find_contained, % mark any "completely contained points"
+    % call(trace),
     find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
-     % make sure any objects are perfectly the same part of the image are combined       
-    combine_duplicates]).
+    combine_duplicates, % make sure any objects are perfectly the same part of the image are combined       
+    
+    not_done]).
 
 individuation_macros(defaults, [ complete ]).
 
@@ -337,7 +340,7 @@ individuation_reserved_options(ROptions,Reserved,Options):-
 %?- i(v(e41c6fd3)*(trn+0)*in).
 
 :- dynamic(individuated_cache/3).
-
+:- retractall(individuated_cache(_,_,_)).
 
 individuate(VM):-  individuate(VM.roptions, VM),!.
 individuate(ROptions,VM):-  individuate(ROptions,VM,_),!.
@@ -469,6 +472,8 @@ nb_link_pairs_if_missing(VM,K-NewV):- V = VM.K, ((var(V),\+ attvar(V))->nb_link_
 
 
 
+is_fti_step(complete_occluded).
+complete_occluded(_VM):- dmsg(todo(complete_occluded)).
 
 
 is_fti_step(complete_broken_lines).
@@ -774,6 +779,8 @@ remaining_points(VM):-
   addObjects(VM,IndvList),
   set(VM.points) =[],!.
 
+
+
 /*
 fti(VM,[colormass_merger(Size)|TODO]):-
   colormass_merger(Size,VM),!,
@@ -804,11 +811,6 @@ find_mergeable(VM,Found,[Next|ScanPoints],[Next|Engulfed]):-
  find_mergeable(VM,Found,ScanPoints,Engulfed),!.
 find_mergeable(VM,Found,[_|ScanPoints],Engulfed):-
  find_mergeable(VM,Found,ScanPoints,Engulfed),!.
-
-%ft i(VM,[find_touches|set(VM.program_i)]):-
-  %cullObjectsOutsideOfRanges(VM),
-%  find_touches(VM).
-is_fti_step(find_touches).
 
 
 %individuate_points(Grid,How,Results):- globalpoints(Grid,Points), grid_size(Grid,H,V),individuate_points0(H,V,Grid,Points,How,Results).
@@ -893,12 +895,6 @@ fti(VM,[DO|TODO]):-
     VM.h,VM.v,VM.objs,VM.id,[DO|TODO],VM.robjs, VM.points,VM.grid,set(VM.objs),set(VM.points)).
 */
 
-
-is_fti_step(check_engulfed).
-check_engulfed(VM):-
-   smallest_first(VM.objs,SmallestFirst),
-   set(VM.objs) = SmallestFirst,
-   set(VM.program_i) = [find_engulfs|VM.program_i].
 
 
 % Thunk(VM -> ArgList)
@@ -1436,24 +1432,28 @@ meets_size(Len,Points):- mass(Points,L),!,L>=Len.
 remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 
 
-% oclass_piority(Class,Priority).
-oclass_piority(image,4).
-oclass_piority(combined,3).
-oclass_piority(hidden,2).
-object_priority(Indv,Priority):- oclass_piority(Class,Priority), isz(Indv,Class).
-object_priority(_,0).
+% prop_piority(Class,Priority).
+prop_piority(iz(image),4).
+prop_piority(iz(combined),3).
+prop_piority(iz(hidden),2).
+prop_piority(birth(glyphic),1).
+smallest_priority(Indv,Priority):- prop_piority(Prop,Priority), has_prop(Prop,Indv),!.
+smallest_priority(_,0).
 
 resize_inf(1,inf):-!.
 resize_inf(X,X).
 
 smallest_first(IndvS,IndvO):-
-  findall((Priority+Size)-Indv,(member(Indv,IndvS),object_priority(Indv,Priority),mass(Indv,MSize),resize_inf(MSize,Size)),All),
+  findall((Priority+Size)-Indv,(member(Indv,IndvS),smallest_priority(Indv,Priority),mass(Indv,MSize),resize_inf(MSize,Size)),All),
   keysort(All,AllK),
   maplist(arg(2),AllK,IndvO).
 
-largest_first(IndvS,IndvR):-  
-  smallest_first(IndvS,IndvO),
-  reverse(IndvO,IndvR).
+largest_first(IndvS,IndvR):-   
+ must_det_ll((
+  findall((Size-Priority)-Indv,(member(Indv,IndvS),smallest_priority(Indv,NPriority),mass(Indv,Size),Priority is - NPriority),All),
+  keysort(All,AllK),
+  maplist(arg(2),AllK,IndvO),
+  reverse(IndvO,IndvR))).
 
 largest_first_nonbg(IndvS,IndvOB):-  
   largest_first(IndvS,IndvO),

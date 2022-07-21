@@ -218,7 +218,7 @@ move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
 
 move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
- must_det_ll((
+ /*must_det_ll*/((
   loc_xy(I,OX,OY),
   move_dir(N,OX,OY,D,X,Y,NX,NY),
   (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
@@ -226,7 +226,7 @@ move_scale_dir_object(N,D,L,LM):- is_group(L),!,mapgroup(move_scale_dir_object(N
 move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(N,D,M,O).
 
 move_object(NX,NY,I,M):- is_object(I),!,
- must_det_ll((
+ /*must_det_ll*/((
   (NY<1 -> M=I ;
   ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
@@ -236,17 +236,6 @@ move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
 is_input(VM):- VM.id = _ * _ * in.
 
-% ==============================================
-% TOUCHES
-% ==============================================
-
-find_touches(VM):-
- ignore((
-  fail,
-  Objs = VM.objs,
-  length(Objs,N),N>2,
-  show_vm_changes(VM,find_touches,
-       find_touches(VM,Objs,Objs,set(VM.objs))))),!.
 
 %ignore(((NewOptions\==Options;(GoneMissing\==[];SofarMaybeNewL\==SofarL)),
 
@@ -275,35 +264,48 @@ show_grid_changes(VM,S,Goal):-
 
 print_side_by_side_d(C,A,AN,W,B,BN):- nop(print_side_by_side(C,A,AN,W,B,BN)).
 
-%find_touches(VM,ScanNext,SofarInsteadO):- find_touches(VM,ScanNext,ScanNext,SofarInsteadO).
 
-find_touches(_VM,[],SofarInsteadO,SofarInsteadO):-!.
-find_touches(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
- once(find_touches_objects(VM,Found,OtherObjects,_NewTouchesO,DirNewTouches)),
-  NewTouches\==[], !,
-  must_det_ll((
-  mapgroup(mention_touches(Found),DirNewTouches,NewTouchesM),
-    mapgroup(arg(2),DirNewTouches,NewTouches),
-    replace_i_each(OtherObjects,NewTouches,NewTouchesM,NewOtherObjects),    
-    replace_i_each(ScanNext,NewTouches,NewTouchesM,NewScanNext),
-  ignore((length(NewTouches,N),N>0,quietly(print_grid(VM.h,VM.v,"touching",[Found|NewTouchesM])))), !,
-  find_touches(VM,NewScanNext,NewOtherObjects,OtherObjectsO))),!.
-find_touches(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
-  find_touches(VM,Sofar,OtherObjects,OtherObjectsO),!.
+% ==============================================
+% TOUCHES
+% ==============================================
 
-mention_touches(Found,Dir-NewInside,NewInsideO):-
-  must_det_ll((object_indv_id(Found,_Where,Iv),
-  override_object(link(touches,Dir,Iv),NewInside,NewInsideO))),!.
+%ft i(VM,[find_touches|set(VM.program_i)]):-
+  %cullObjectsOutsideOfRanges(VM),
+%  find_touches(VM).
+is_fti_step(find_touches).
+find_touches(VM):-
+  /*must_det_ll*/((Objs = VM.objs, find_touches(Objs,NewObjs))),
+  gset(VM.objs) = NewObjs.
 
-find_touches_objects(_VM,_,[],[],[]).
-find_touches_objects(VM,Found,[Next|ScanPoints],[Next|TouchMore],[Dir-Next|Engulfed]):-    
- touching_object(Dir,Found,Next),
- find_touches_objects(VM,Found,ScanPoints,TouchMore,Engulfed),!.
-find_touches_objects(VM,Found,[_|ScanPoints],TouchMore,Engulfed):-
- find_touches_objects(VM,Found,ScanPoints,TouchMore,Engulfed),!.
 
-touching_object(Dirs,O1,O2):- 
+find_touches(Objs,NewObjs):- /*must_det_ll*/((find_touches(Objs,Objs,NewObjs))).
+find_touches([],_,[]):-!.
+find_touches([Obj|ScanNext],OtherObjects,[NewObj|ScanRest]):-
+  /*must_det_ll*/(find_touches_objects(Obj,OtherObjects,DirNewTouches)),
+  /*must_det_ll*/(override_object(DirNewTouches,Obj,NewObj)),
+  /*must_det_ll*/(find_touches(ScanNext,OtherObjects,ScanRest)).
+
+/*
+mention_touches(Obj,[],Obj):-!.
+mention_touches(Obj,[link(Dir,Touched)|More],NewFObjO):- !,
+  mention_touches(Obj,Dir-Touched,MidObj),
+  mention_touches(MidObj,More,NewFObjO).
+mention_touches(Obj,Dir-Touched,NewObj):-
+  /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+  /*must_det_ll*/(override_object(link(touches,Dir,Iv),Obj,NewObj)),!.
+*/
+
+find_touches_objects(_,[],[]).
+find_touches_objects(Obj,[Touched|ScanNext],[link(touched,Iv,Dirs)|Engulfed]):-    
+ once(touching_object(Dirs,Obj,Touched)),Dirs\==[],!,
+ /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+ /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
+find_touches_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
+
+touching_object(Dirs,O2,O1):- 
   O1\==O2,
+  \+ has_prop(birth(glyphic),O2),
+  \+ has_prop(birth(glyphic),O1),
   globalpoints(O1,Ps1),
   globalpoints(O2,Ps2),
   dir_touching_list(Ps2,Ps1,Dirs),!.
@@ -312,45 +314,51 @@ dir_touching_list(Ps1,Ps2,Dirs):- findall(Dir,(member(Dir,[n,s,e,w,nw,ne,sw,se])
   once(dir_touching_list0(Ps1,Ps2,Dir))),Dirs),Dirs\==[].
 dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacent_point(P1,Dir,P2),!.
 
+:- dynamic(individuated_cache/3).
+:- retractall(individuated_cache(_,_,_)).
+
 % ==============================================
 % ENGULFS
 % ==============================================
+is_fti_step(check_engulfed).
+check_engulfed(VM):-
+   smallest_first(VM.objs,SmallestFirst),
+   set(VM.objs) = SmallestFirst,
+   set(VM.program_i) = [find_engulfs|VM.program_i].
+
 % Find object that are contained in objects and individuate them in their own way  (TODO mame this more complete)
 % Find free points that are contained in objects and individuate them in their own way
 %  find_engulfs(VM).   
+
 is_fti_step(find_engulfs).
-find_engulfs(VM):- 
-  show_vm_changes(VM,find_engulfs,find_engulfs(VM,VM.objs,set(VM.objs))),!.
-
-find_engulfs(VM,ScanNext,SofarInsteadO):-
-  find_engulfs(VM,ScanNext,ScanNext,SofarInsteadO).
-
-find_engulfs(_VM,[],SofarInsteadO,SofarInsteadO).
-find_engulfs(VM,[Found|ScanNext],OtherObjects,OtherObjectsO):-
- ((isz(Found,outline(_));isz(Found,outl)) ->
- (( once(find_engulfs_objects(VM,Found,OtherObjects,NewInside)),
-  
-  NewInside\==[], 
-  must_det_ll((
-  mapgroup(mention_inside(Found),NewInside,NewInsideM),
-  replace_i_each(OtherObjects,NewInside,NewInsideM,NewOtherObjects),
-  replace_i_each(ScanNext,NewInside,NewInsideM,NewScanNext),
-  ignore((length(NewInside,N),N>0,quietly(print_grid(VM.h,VM.v,"find_engulfs",[Found|NewInsideM])))),      
-  find_engulfs(VM,NewScanNext,NewOtherObjects,OtherObjectsO)))))).
-
-find_engulfs(VM,[_|Sofar],OtherObjects,OtherObjectsO):-
-  find_engulfs(VM,Sofar,OtherObjects,OtherObjectsO).
+find_engulfs(VM):-
+  /*must_det_ll*/((Objs = VM.objs, find_engulfs(Objs,NewObjs))),
+  gset(VM.objs) = NewObjs.
 
 
-find_engulfs_objects(_VM,_,[],[]).
-find_engulfs_objects(VM,Found,[Next|ScanPoints],[Next|Engulfed]):-    
- contained_object(Found,Next),
- find_engulfs_objects(VM,Found,ScanPoints,Engulfed).
-find_engulfs_objects(VM,Found,[_|ScanPoints],Engulfed):-
- find_engulfs_objects(VM,Found,ScanPoints,Engulfed).
+find_engulfs(Objs,NewObjs):- /*must_det_ll*/((find_engulfs(Objs,Objs,NewObjs))).
+find_engulfs([],_,[]):-!.
+find_engulfs([Obj|ScanNext],OtherObjects,[NewObj|ScanRest]):-
+  /*must_det_ll*/(find_engulfs_objects(Obj,OtherObjects,DirNewTouches)),
+  /*must_det_ll*/(override_object(DirNewTouches,Obj,NewObj)),
+  /*must_det_ll*/(find_engulfs(ScanNext,OtherObjects,ScanRest)).
 
-contained_object(O1,O2):-   
+find_engulfs_objects(_,[],[]).
+find_engulfs_objects(Obj,[Touched|ScanNext],[link(insideOf,Iv)|Engulfed]):-    
+ once(contained_object(Obj,Touched)),!,
+ /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+ /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
+find_engulfs_objects(Obj,[Touched|ScanNext],[link(contains,Iv)|Engulfed]):-    
+ once(contained_object(Touched,Obj)),!,
+ /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+ /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
+find_engulfs_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
+
+
+contained_object(O2,O1):-   
   O1 \== O2,
+  \+ has_prop(birth(glyphic),O2),
+  \+ has_prop(birth(glyphic),O1),
   loc_xy(O1,LowH1,LowV1),loc_xy(O2,LowH2,LowV2), 
   LowH2 > LowH1, LowV2 > LowV1,
   vis_hv(O1,H1,V1),vis_hv(O2,H2,V2), 
@@ -380,7 +388,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   once(find_contained_points(Found,NextScanPoints,ScanPointsInstead,ContainedPoints)),
   ContainedPoints\==[],
   %grid_size(Found,H,V),
-  must_det_ll((
+  /*must_det_ll*/((
   % points_to_grid(H,V,ContainedPoints,Grid),
   %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
   individuate(subshape_in_object,ContainedPoints,NewInside),

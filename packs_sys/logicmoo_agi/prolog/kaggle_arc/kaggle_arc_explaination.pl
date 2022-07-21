@@ -64,7 +64,7 @@ print_list_of(N,OO):-
  sort(OO,O),
  (N\=[] -> pt(N); true),
   %save_grouped(print_list_of(N),O),
-   maplist(print_info,O).
+   maplist(print_info,O),!.
 
 print_info(A):- is_grid(A),print_grid(A).
 print_info(A):- is_object(A), ignore(debug_indiv(A)).

@@ -143,6 +143,7 @@ check_len(_).
 
 %must_det_ll(G):- !, call(G).
 %must_det_ll(X):- !,must_not_error(X).
+must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(must_det_ll,List).
 must_det_ll(X):- tracing,!,must_not_error(X).
 must_det_ll((X,Y,Z)):- !, (must_det_ll(X),must_det_ll(Y),must_det_ll(Z)).
 must_det_ll((X,Y)):- !, (must_det_ll(X)->must_det_ll(Y)).
@@ -536,7 +537,7 @@ train_using_oo_ii_io(_TestID,_Trn,_N1,DictInOut,DictInOut).
 
 train_only_from_pairs:- notrace(get_current_test(TestID)), train_only_from_pairs(TestID).
 
-train_only_from_pairs(TestID):- train_test(TestID,train_using_io).
+train_only_from_pairs(TestID):- clear_training(TestID), train_test(TestID,train_using_io).
 
 train_using_io(TestID,DictIn,DictOut):- train_using_io(TestID,trn,0,DictIn,DictOut).
 train_using_io(TestID,Trn,N1,DictIn,DictOut):- 
@@ -576,7 +577,7 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  atom_concat(IO1,N1,ION1),
  atom_concat(IO2,N2,ION2),
  atomic_list_concat([ION1,ION2],'_',ExampleNum),
- pt([train_for_objects_from_pair_with_mono=ExampleNum,left=ION1,right=ION2]),
+ pt([train_for_objects_from_1pair1=ExampleNum,left=ION1,right=ION2]),
  garbage_collect,
   Dict0=Dict1,
    format('~N dict= '), pt(Dict0),
@@ -625,7 +626,7 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   nb_setval(no_rdot,false),
    % pt(OutC=InC),
 
-   ignore(( ModeIn \== in_out, learn_rule_o(ModeIn,InVM,OutVM))),
+   ignore(( ModeIn \== in_out, nop(learn_rule_o(ModeIn,InVM,OutVM)))),
 
    ignore(( ModeIn == in_out, Trn == trn,  
             train_io_from_hint(TestID,Trn+N1,InVM))),
