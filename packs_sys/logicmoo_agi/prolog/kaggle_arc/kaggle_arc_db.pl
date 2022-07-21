@@ -340,7 +340,7 @@ create_movements:-
 
 hv(H,V,hv(H,V)).
 
-calc_movement(H,V):- forall(nav(Dir,HO,VO), save_calc_movement(H,V,Dir,HO,VO)).
+calc_movement(H,V):- forall((nav(Dir,HO,VO),Dir\==c), save_calc_movement(H,V,Dir,HO,VO)).
 
 save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
   muarc_mod(M),

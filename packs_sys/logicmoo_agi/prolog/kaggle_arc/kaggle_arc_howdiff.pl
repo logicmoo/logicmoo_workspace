@@ -347,7 +347,6 @@ combine_same_globalpoints(IndvS,IndvSO):-
   must_det_ll(append(NoDupes,NoMoreDupes,IndvSO)),!.
 combine_same_globalpoints(IndvSO,IndvSO).
 
-same_globalpoints(O1,O2):- globalpoints(O1,P1),globalpoints(O2,P2),sort(P1,S1),sort(P2,S2),!,S1=@=S2.
 %overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Diff),Diff==[]. 
 %overlap_same_obj(I,O):- compare_objs1(same,I,O).
 

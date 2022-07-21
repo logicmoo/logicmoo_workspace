@@ -87,10 +87,10 @@ correctify_objs(_Gridname,Obj,Obj).
    %make_embued_points(Grid,H,V,Points,IndvS)
 */
 
-make_indiv_object_list(_ID,_H,_V,[],[]):-!.
-make_indiv_object_list(ID,H,V,[E|L],[O|OL]):-   
-    must(make_indiv_object(ID,H,V,E,O)),
-    make_indiv_object_list(ID,H,V,L,OL).
+make_indiv_object_list(_,[],[]):-!.
+make_indiv_object_list(VM,[E|L],[O|OL]):-   
+    must_det_ll(make_indiv_object(VM,E,O)),
+    make_indiv_object_list(VM,L,OL).
 
 /*
 make_indiv_object_list(ID,H,V,Points,OUT):-
@@ -98,20 +98,6 @@ make_indiv_object_list(ID,H,V,Points,OUT):-
 */
 
 %make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-
-
-make_indiv_object(_ID,_H,_V,IPoints,Obj):- 
-  compound(IPoints),IPoints=obj(_),Obj=IPoints,!.
-make_indiv_object(ID,H,V,IPoints,Obj):-
-  my_assertion(is_list(IPoints)),
-  my_partition(is_cpoint,IPoints,Points,Overrides),
-  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),
-  as_obj(OUT,Obj).
-
-make_indiv_object(ID,H,V,Points,Overrides,Obj):-
-  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!,
-  as_obj(OUT,Obj).
 
 
 :- module_transparent as_obj/2.
@@ -145,12 +131,6 @@ enum_object0(S):- is_grid_id(S,_).
 */
 internal_region(Obj,regionOf(Obj)).
 
-make_indiv_object(Points,Overrides,Obj):- 
-  globalpoints(Points,RPoints),
-  points_range(RPoints,LoH,LoV,HiH,HiV,_HO,_VO),
-  gensym('indiv_object_',ID),
-  make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,RPoints,[Points,Overrides],OUT),
-  as_obj(OUT,Obj).
 
 % @TODO
 reclumped([A,B,C,D|Rest],[A,B,C,D]):- reclumped(Rest,[A,B,C,D]),!.
@@ -162,10 +142,82 @@ reclumped(PenColors,PenColors).
 fg_points(Points,FgPoints):- include(is_fg_point,Points,FgPoints).
 is_fg_point(CPoint):- \+ (only_color_data(CPoint,Color),is_bg_color(Color)).
 
-make_indiv_object(VM,Points,Overrides,Obj):- make_indiv_object(VM.id,VM.h,VM.v,Points,Overrides,Obj).
+rev_key(C-P,P-C).
 
-make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):- 
- (Points==[]-> (dumpST,trace) ; true),
+/*
+make_indiv_object(_ID,_H,_V,IPoints,Obj):- 
+  compound(IPoints),IPoints=obj(_),Obj=IPoints,!.
+make_indiv_object(ID,H,V,IPoints,Obj):-
+  my_partition(is_cpoint,IPoints,Points,Overrides),
+  sort_points(GPoints,Points),
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),
+  as_obj(OUT,Obj).
+
+
+make_indiv_object(VM,Points,Overrides,Obj):- 
+  globalpoints(Points,RPoints),
+  sort_points(RPoints,GPoints),
+  points_range(GPoints,LoH,LoV,HiH,HiV,_HO,_VO),
+  gensym('indiv_object_',ID),
+  make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,GPoints,Overrides,OUT),
+  as_obj(OUT,Obj).
+
+make_indiv_object(ID,H,V,Points,Overrides,Obj):-
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!,
+  as_obj(OUT,Obj).
+
+make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,GPoints,Overrides,Obj):-
+  validate_points(GPoints), sort_points(GPoints,Points),
+  make_indiv_object_s(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj).
+*/
+
+sort_points(P0,P2):- 
+   (P0==[] -> (trace) ; true),
+   my_assertion(is_list(P0)),
+   sort(P0,P1),
+   my_assertion(P1\==[]),  my_assertion(maplist(is_cpoint,P1)),  
+   maplist(rev_key,P1,R1),keysort(R1,R2),maplist(rev_key,R2,P2).
+
+same_globalpoints(O1,O2):- globalpoints(O1,P1),same_globalpoints_ps_obj(P1,O2).
+same_globalpoints_ps_obj(S1,O2):- globalpoints(O2,S2),!,S1=@=S2.
+
+make_indiv_object(VM,CObj,Obj):- compound(CObj), 
+  CObj = obj(_),!,
+  nop(addObjects(VM,CObj)),
+  Obj = CObj.
+make_indiv_object(VM,IPoints,Obj):- 
+  my_partition(is_cpoint,IPoints,Points,Overrides),
+  make_indiv_object(VM,Points,Overrides,Obj).
+
+
+
+make_point_object(VM,Overrides,C-Point,Obj):- make_indiv_object(VM,[C-Point],Overrides,Obj).
+
+/*
+make_indiv_object(VM,GPoints,Overrides,Obj):-
+  sort_points(GPoints,Points),
+  Objs = VM.objs,
+  ((select(E,Objs,Rest),same_globalpoints_ps_obj(Points,E)) 
+    -> (override_object(Overrides,E,Obj), NewObjs = [Obj|Rest])
+    ; (make_indiv_object_s(VM.id,VM.h,VM.v,Points,Overrides,Obj),
+         addObjects(VM,Obj),NewObjs = [Obj|Objs])),
+  gset(VM.objs) = NewObjs .
+*/
+make_indiv_object(VM,GPoints,Overrides,Obj):-
+  sort_points(GPoints,Points),
+  Objs = VM.objs,
+  ((select(E,Objs,Rest),same_globalpoints_ps_obj(Points,E)) 
+    -> (override_object(Overrides,E,Obj), gset(VM.objs) = [Obj|Rest])
+    ; (make_indiv_object_s(VM.id,VM.h,VM.v,Points,Overrides,Obj),
+         addObjects(VM,Obj))),!.
+
+make_indiv_object(ID,H,V,GPoints,Overrides,Obj):-
+  sort_points(GPoints,Points),make_indiv_object_s(ID,H,V,Points,Overrides,Obj).
+
+make_indiv_object_s(ID,H,V,Points,Overrides,Obj):- 
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
   %nb_current(test_pairname,ID),
@@ -211,20 +263,11 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
     [center(CX,CY)],
     [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps))),  
   with_objprops(override,Overrides,Ps,OUT1),
-  sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj).
+  sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj),!.
 
 top(7).
 
 
-make_point_object(VM,Overrides,Point,Obj):- make_point_object(VM.id,VM.h,VM.v,Overrides,Point,Obj).
-make_point_object(ID,H,V,Options,C-Point,Obj):- hv_point(1,1,HV11),
-  hv_point(X,Y,Point), flag(indiv,Fv,Fv+1),
-   Iv is (Fv rem 3000) + 1,
-    as_obj([mass(1),shape([['0'-C]]),colors([cc(C,1)]),localpoints([C-HV11]),vis_hv(1,1),
-    rotation(same),loc_xy(X,Y),
-    changes([]),iz(dots),iz(shape(dot)),iz(solid),center(X,Y),
-    object_indv_id(ID,Iv),globalpoints([C-Point]),
-    grid_size(H,V)|Options],Obj).
 
 
 record_object_change(Rot90,Obj,XObj):- is_object(Obj), object_changes(Obj,Was),

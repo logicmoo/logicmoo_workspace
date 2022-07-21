@@ -233,7 +233,7 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
   Width is EXQ4-SXQ4+1,Height is EYQ4-SYQ4+1,
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
-  make_indiv_object(GN,H,V,1,1,Width,Height, LGPoints,
+  make_indiv_object(GN,H,V,LGPoints,
     [iz(quadrant(CRef,Same)),
      iz(pattern(CRef,SXC,SXC,EXC,EYC)),
      rotation(Same),

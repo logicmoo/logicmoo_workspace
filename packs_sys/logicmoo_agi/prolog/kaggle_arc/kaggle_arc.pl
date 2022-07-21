@@ -125,6 +125,7 @@ clsmake:- update_changed_files,!.
 :- use_module(library(assoc)).
 :- use_module(library(pairs)).
 :- use_module(library(logicmoo_common)).
+:- use_module(library(prolog_trace)).
 :- autoload_all.
 :- use_module(library(gvar_globals_api)).
 :- use_module(library(dictoo_lib)).
@@ -157,7 +158,9 @@ must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll
 must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
 %must_det_ll((M:Y)):- nonvar(M), !, M:must_det_ll(Y).
 must_det_ll(once(A)):- !, once(must_det_ll(A)).
-must_det_ll(X):- must_not_error(X)*->true;must_det_ll_failed(X).
+must_det_ll(X):- 
+  strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
+    nop(trace(M:F/A,-fail))).
 
 must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(dumpST,writeq(E=X),rrtrace(X)))).
 

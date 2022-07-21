@@ -121,7 +121,7 @@ individuation_macros(subshape_main, [
    maybe_glyphic,
    subshape_both,   
    by_color,
-   standalone_dots,
+   %standalone_dots,
    %progress,
    %non_diag % like colormass but guarenteed it wont link diagonals but most ikmportant ti doesnt look for subshapes
    %by_color % any after this wont find individuals unless this is commented out
@@ -148,6 +148,7 @@ individuation_macros(subshape_both, [
    merge_shapes(hv_line(_),hv_line(_)),
    merge_shapes(dg_line(_),dg_line(_)),
    point_corners,
+   standalone_dots,
    %connects(X,X)
    end_of_macro]).
 
@@ -218,17 +219,31 @@ individuation_macros(do_ending, [
   %combine_objects,
   end_of_macro]).
 
+% 1204
+%individuation_macros(complete, [parallel,done]).
 individuation_macros(complete, [
-    keep_points(non_diag),
-    keep_points(subshape_both),
-    keep_points(colormass),
-    keep_points(fourway),
-    keep_points(maybe_repair_in_vm(repair_repeats)),
-    keep_points(force_by_color),
+	reset_points,
+	(force_by_color),
+	subshape_both,
+	reset_points,
+	(standalone_dots),
+	reset_points,
+	glyphic,
+	reset_points,
+	(non_diag),
+	reset_points,
+	(colormass),
+	reset_points,
+    (fourway),
+    reset_points,
+    (maybe_repair_in_vm(repair_repeats)),
+    reset_points,
     %keep_points(remaining_dots),
-    keep_points(shape_lib(as_is)),
-   when(len(objs)>=100,keep_points(whole)),
-   when(len(objs)<100,keep_points(glyphic)),
+    (shape_lib(as_is)),
+   reset_points,
+   whole,
+ %   when(len(objs)>=70,keep_points(whole)),
+    when(len(objs)<70,when(len(points)<70,glyphic)),
     do_ending,
     done]).
 
@@ -302,6 +317,11 @@ individuation_macros(unused, [
 
 % ?- print_grid(gridFn(X)).
 
+is_fti_step(reset_points).
+reset_points(VM):- 
+  globalpoints(VM.grid_o,Points),
+  set(VM.points)=Points .
+
 fix_indivs_options(O,L):-is_list(O),maplist(fix_indivs_options,O,OL),my_append(OL,L).
 fix_indivs_options(G,[G]):- var(G),!.
 fix_indivs_options(I,O):- atom(I),individuation_macros(I,M),!,fix_indivs_options(M,O),!.
@@ -313,12 +333,13 @@ fix_indivs_options(I,O):-listify(I,O),!.
 is_fti_step(keep_points).
 keep_points(While,VM):- 
   assertion(is_map(VM)),
-  %set_vm(VM),
+  set_vm(VM),
   Points  = VM.points,
+%  get_vm
   Program = VM.program_i,
   %OldObjs = VM.objs,
   %set(VM.grid) = VM.grid_o,
-  set(VM.points) = VM.points_o,
+  gset(VM.points) = VM.points_o,
   %set(VM.objs) = [],  
   ignore(fti(VM,While)),
   %NewObjs = VM.objs,
@@ -383,16 +404,16 @@ individuation_reserved_options(ROptions,Reserved,Options):-
 :- dynamic(individuated_cache/3).
 :- retractall(individuated_cache(_,_,_)).
 
+get_individuated_cache(ROptions,GridIn,IndvS):- ground(GridIn), individuated_cache(ROptions,GridIn,IndvS),!.
 individuate(VM):-  individuate(VM.roptions, VM),!.
 individuate(ROptions,VM):-  individuate(ROptions,VM,_),!.
 individuate(_ROptions,Grid,IndvS):- Grid==[],!,IndvS=[].
 individuate([ROption],GridIn,IndvS):- !, individuate(ROption,GridIn,IndvS).
-
-individuate(ROptions,GridIn,IndvS):- individuation_macros(ROptions,R), individuated_cache(R,GridIn,IndvS),!.
-individuate(ROptions,GridIn,IndvS):- individuated_cache(ROptions,GridIn,IndvS),!.
+individuate(ROptions,GridIn,IndvS):- individuation_macros(ROptions,R), atom(R),R\==ROptions,!,individuate(ROptions,GridIn,IndvS).
+individuate(ROptions,GridIn,IndvS):- get_individuated_cache(ROptions,GridIn,IndvS),!.
 individuate(ROptions,GridIn,IndvS):- 
   do_individuate(ROptions,GridIn,IndvS),!,  
-  nop(asserta(individuated_cache(ROptions,GridIn,IndvS))),!.
+  ignore((ground(GridIn),nop(asserta(individuated_cache(ROptions,GridIn,IndvS))))),!.
 
 do_individuate(ROptions,GridInIn,IndvS):-
    must_be_free(IndvS),
@@ -409,7 +430,7 @@ do_individuate(ROptions,GridInIn,IndvS):-
 % tiny grid becomes a series of points
 %individuate(GH,GV,ID,ROptions,_Grid,Points,IndvS):- \+ is_list(ROptions), is_glyphic(Points,GH,GV), individuate_glyphic(GH,GV,ID,Points,IndvS),!.
 %individuate(GH,GV,ID,whole,_Grid,Points,IndvS):-  individuate_whole(GH,GV,ID,Points,IndvS),!.
-individuate7(VM,GH,GV,ID,ROptions,GridIn,IndvS):-
+individuate7(VM,_GH,_GV,_ID,ROptions,GridIn,IndvS):-
       (var(VM) -> into_fti(ID,ROptions,GridIn,VM) ; true),
       %VM.points = Points,
       %individuation_reserved_options(ROptions,Reserved,NewOptions),
@@ -422,9 +443,9 @@ individuate7(VM,GH,GV,ID,ROptions,GridIn,IndvS):-
       IndvSRaw = VM.objs,
       
   %as_debug(9,ptt((individuate=IndvSRaw))),
-      make_indiv_object_list(ID,GH,GV,IndvSRaw,IndvS1),
-      combine_objects(IndvS1,IndvS2),
-      list_to_set(IndvS2,IndvS),
+      make_indiv_object_list(VM,IndvSRaw,IndvS1),
+      %combine_objects(IndvS1,IndvS2),
+      list_to_set(IndvS1,IndvS),
       
       once((delistify_single_element(ROptions,NamedOpts),
        save_grouped(individuate(ID,NamedOpts),IndvS))),!,
@@ -492,7 +513,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
     true)),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
-   
+   pt(yellow,ig(ROptions,ID)=(H,V)),
    !.
 
 
@@ -797,7 +818,7 @@ point_corners(VM):-
      select_always(C-P2,Rest,Points0),C\==OC,
      standalone_point(C-P2,Points0),
      remCPoints(VM,[C-P2]),
-     maybe_make_point_object(VM,[iz(important)],C-P2,Obj),
+     make_point_object(VM,[iz(important)],C-P2,Obj),
      addObjects(VM,Obj))).
 
 select_always(E,B,A):- select(E,B,A)*->true;B=A.
@@ -808,10 +829,19 @@ standalone_point(C-P2,Points):- select_always(C-P2,Points,Points0),
 
 is_fti_step(standalone_dots).
 % standalone_dots that have no adjacent points of the same color (could be gathered first)
+
+is_standalone(Points,C-P2):-  \+ (is_adjacent_point(P2,Dir,P3), member(C-P3,Points), \+ is_diag(Dir)),!.
+
+standalone_dots(VM):- fail,
+  my_partition(is_standalone(VM.points),VM.points,SAPs,Keep),
+  set(VM.points)=Keep,
+  maplist(make_point_object(VM,[iz(standalone),birth(standalone_dots)]),SAPs,IndvList),
+  nop(addObjects(VM,IndvList)).
+  
 standalone_dots(VM):-
    select(C-P1,VM.points,Rest),     
    standalone_point(C-P1,Rest),
-   maybe_make_point_object(VM,[iz(important)],C-P1,Obj),
+   make_point_object(VM,[iz(important)],C-P1,Obj),
    addObjects(VM,Obj),
    remCPoints(VM,[C-P1]),
    standalone_dots(VM).
@@ -820,7 +850,7 @@ standalone_dots(_):-!.
 is_fti_step(remaining_dots).
 % remaining_dots may have adjacent points of the same color (because we are in 'remaining_dots' mode)
 remaining_dots(VM):-
-  maplist(maybe_make_point_object(VM,[iz(leftovers),iz(remaining_dots),iz(dot)]),VM.points,IndvList),
+  maplist(make_point_object(VM,[iz(leftovers),iz(remaining_dots),iz(dot)]),VM.points,IndvList),
   addObjects(VM,IndvList),
   set(VM.points) =[],!.
 
@@ -884,15 +914,13 @@ one_fti(VM,glyphic):-
   fif(PointsLeft\==[],
    ((localpoints(VM.grid,Points),
     % set(VM.points)=[],     
-     maplist(maybe_make_point_object(VM,[birth(glyphic)]),Points,IndvList),
+     maplist(make_point_object(VM,[birth(glyphic)]),Points,IndvList),
      addObjects(VM,IndvList)))),
   one_fti(VM,whole),
   save_grouped(individuate_glyphic(VM.id),VM.objs).
 
-maybe_make_point_object(VM,_Opts,Point,Indv):-
-    member(Point=Indv, VM.allocated_points),!.
-maybe_make_point_object(VM,Opts,Point,Indv):-
-    make_point_object(VM,Opts,Point,Indv).
+%make_point_object(VM,_Opts,Point,Indv):-
+%    member(Point=Indv, VM.allocated_points),!.
 
 one_fti(VM,whole):-
   %localpoints_include_bg(VM.grid,Points),
@@ -901,7 +929,7 @@ one_fti(VM,whole):-
   %Objs = VM.objs,
   localpoints_include_bg(Grid,Points),
   length(Points,Len),
-  make_indiv_object(VM.id,H,V,Points,[mass(Len),vis_hv(H,V),iz(combined),birth(whole)],Whole),
+  make_indiv_object(VM,Points,[mass(Len),vis_hv(H,V),iz(combined),birth(whole)],Whole),
   %set(VM.points)=[],
   addObjects(VM,Whole),
   save_grouped(individuate_whole(VM.id),[Whole]),
@@ -1352,15 +1380,13 @@ find_one_individual3(Option,Obj,VM):-
 
 find_one_individual2(Option,Obj,VM):- 
     Points = VM.points,
-    H = VM.h,
-    V = VM.v,
-    ID = VM.id,
+    %H = VM.h, V = VM.v, ID = VM.id,
     shape_min_points(VM,Option,IndvPoints),
     copy_term(Option,OptionC),Option=ShapeType,    
   select(C-HV,Points,Rest0), \+ free_cell(C), % non_free_fg(C), % \+ is_black(C),
   allowed_dir(Option,Dir),adjacent_point_allowed(C,HV,Dir,HV2),select(C-HV2,Rest0,ScanPoints),
   all_individuals_near(Dir,Option,C,[C-HV,C-HV2],ScanPoints,NextScanPoints,IndvPoints), 
-    make_indiv_object(ID,H,V,IndvPoints,[iz(ShapeType),birth(individual2(Option))],Obj),
+    make_indiv_object(VM,IndvPoints,[iz(ShapeType),birth(individual2(Option))],Obj),
     meets_indiv_criteria(Option,IndvPoints),
   set(VM.points) = NextScanPoints,
   addObjects(VM,Obj),

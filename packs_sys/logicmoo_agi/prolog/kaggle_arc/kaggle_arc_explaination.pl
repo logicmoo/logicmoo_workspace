@@ -115,7 +115,8 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
  must_det_ll((
   ignore((o2g(Obj,GGG), nonvar(GGG),nb_setval(GGG,Obj), nop( my_asserta_if_new(g2o(GGG,Obj))))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
-  once(colors(Obj,[cc(FC,_)|_]);FC=grey),
+  once(colors(Obj,[cc(FC0,_)|_]);FC0=fg),
+  (FC0==black -> FC= wbg ; FC = FC0),
   sort_obj_props(A,AS),
  % will_show_grid(Obj,TF),
   TF = false,
@@ -215,6 +216,7 @@ too_verbose(globalpoints).
 too_verbose(shape).
 too_verbose(localpoints).
 too_verbose(grid).
+too_verbose(link).
 too_verbose(grid_size).
 too_verbose(rotated_grid).
 
