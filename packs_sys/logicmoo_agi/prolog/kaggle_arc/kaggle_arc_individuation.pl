@@ -222,16 +222,17 @@ individuation_macros(do_ending, [
 % 1204
 %individuation_macros(complete, [parallel,done]).
 individuation_macros(complete, [
+%  reset_points,
+% (standalone_dots),
   reset_points,
   (force_by_color),
   reset_points,
   (subshape_both),
   reset_points,
-  (standalone_dots),
-  reset_points,
   %(non_diag),
   %reset_points,
   (colormass),
+  remaining_dots,
   reset_points,
   (fourway),
   reset_points,
