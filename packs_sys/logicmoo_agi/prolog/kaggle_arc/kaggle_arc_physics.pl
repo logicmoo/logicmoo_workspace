@@ -296,6 +296,8 @@ mention_touches(Obj,Dir-Touched,NewObj):-
 */
 
 find_touches_objects(_,[],[]).
+find_touches_objects(Obj,_,[]):- has_prop(link(touched,_,_),Obj),!.
+find_touches_objects(Obj,_,[]):- has_prop(iz(dots),Obj),!.
 find_touches_objects(Obj,[Touched|ScanNext],[link(touched,Iv,Dirs)|Engulfed]):-    
  once(touching_object(Dirs,Obj,Touched)),Dirs\==[],!,
  /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
@@ -344,10 +346,13 @@ find_engulfs([Obj|ScanNext],OtherObjects,[NewObj|ScanRest]):-
   /*must_det_ll*/(find_engulfs(ScanNext,OtherObjects,ScanRest)).
 
 find_engulfs_objects(_,[],[]).
+find_engulfs_objects(Obj,_,[]):- has_prop(link(insideOf,_),Obj),!.
+find_engulfs_objects(Obj,_,[]):- has_prop(link(contains,_),Obj),!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(insideOf,Iv)|Engulfed]):-    
  once(contained_object(Obj,Touched)),!,
  /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
+find_engulfs_objects(Obj,_,[]):- has_prop(mass(M),Obj),M<5,!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(contains,Iv)|Engulfed]):-    
  once(contained_object(Touched,Obj)),!,
  /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),

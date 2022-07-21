@@ -98,6 +98,11 @@ etc.
 :- export(in_bfly/2).
 :- export(in_pp_html/1).
 
+:- dynamic(pretty_clauses:pp_hook/3).
+:- multifile(pretty_clauses:pp_hook/3).
+:- module_transparent(pretty_clauses:pp_hook/3).
+:- export(pretty_clauses:pp_hook/3).
+
 %:- use_module(library(butterfly_console)).
 
 %:- thread_local(pretty_tl:in_pretty_tree/0).
@@ -615,6 +620,7 @@ color_format_maybe(_,F,A):- format(F,A),!.
 
 :- export(write_q/1). 
 write_q(X):- in_pp(bfly),!,print_html_term(X).
+write_q(S):- current_output_line_position(Pos), pretty_clauses:pp_hook(write_q, Pos, S),!.
 write_q(X):- writeq(X).
 
 ec_portray(_,X):- as_is_cmpd(X),!,write_q(X).
@@ -952,6 +958,7 @@ prolog_pretty_print_term(A,Options):-
 % @TODO comment out the next line
 %simple_write_term(A):- !, with_no_hrefs(t,(if_defined(rok_writeq(A),write_q(A)))),!.
 
+system:simple_write_term(S):- current_output_line_position(Pos), pretty_clauses:pp_hook(simple_write_term, Pos, S),!.
 system:simple_write_term(A):- in_pp(bfly),!,print_html_term(A).
 system:simple_write_term(A):- write_q(A).
 system:simple_write_term(A,Options):- Options==[], !, simple_write_term(A).
@@ -974,6 +981,7 @@ system_portray(Tab,Term,_Options) :-
     prefix_spaces(Tab),write_atom_link(Term))),!.
 
 
+system_portray(Pos, S, Options):-  pretty_clauses:pp_hook(Options, Pos, S),!.
 system_portray(Tab,Term,Options):- 
    Ing = Term,
    once(nb_current('$in_system_portray',P);P=[]),
@@ -1018,6 +1026,7 @@ print_tree(Term):- ansi_ansi,!,print_tree_with_final(Term,'.\n').
 print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tree_with_final(Term,''), maybe_reset_spaces(Pos).
 print_tree(Term):-  print_tree00(Term).
 
+print_tree00(S):- current_output_line_position(Pos), pretty_clauses:pp_hook(print_tree00, Pos, S),!.
 print_tree00(Term):-
  current_output_line_position(Pos),
  ensure_pp((
@@ -1452,6 +1461,7 @@ print_lc_tab_term(LC,Tab,T):- write(LC),print_tab_term(Tab,T).
 
 pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
+pt1(FS,Tab,S) :- pretty_clauses:pp_hook(FS,Tab,S),!.
 pt1(_FS,_Tab,S) :- string(S),atom_codes(S,[27|_]), !,  write('"'),writeq(S),write('"').
 
 pt1(_, Tab,Term) :- 

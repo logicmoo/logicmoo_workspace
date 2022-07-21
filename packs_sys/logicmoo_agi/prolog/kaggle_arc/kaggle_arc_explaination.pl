@@ -192,7 +192,13 @@ remove_too_verbose(MyID,List,ListO):- is_list(List),!,maplist(remove_too_verbose
 % @TODO UNCOMMENT THIS remove_too_verbose(MyID,background,S):- sformat(S,'bckgrnd',[]).
 %remove_too_verbose(MyID,iz(H),S):- !, remove_too_verbose(MyID,H,HH),sformat(S,'~q',[s(HH)]).
 
-remove_too_verbose(MyID,link(Touches,Dir,ID),HH):- integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),remove_too_verbose(MyID,link(Touches,Dir,Alt,Glyph),HH).
+remove_too_verbose(MyID,link(Touches,Dir,ID),HH):- number(MyID),MyID\==0,integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
+  remove_too_verbose(0,link(Touches,Dir,Alt,Glyph),HH).
+remove_too_verbose(MyID,link(Touches,ID),HH):- number(MyID),MyID\==0, integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
+  remove_too_verbose(0,link(Touches,Alt,Glyph),HH).
+
+remove_too_verbose(MyID,TP,HH):- compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),
+   compound_name_arguments(TPP,F,A),!,remove_too_verbose(MyID,TPP,HH).
 
 remove_too_verbose(MyID,colors(H),HH):- !, remove_too_verbose(MyID,H,HH).
 remove_too_verbose(_MyID,object_indv_id(_ * _ * X,Y),[layer(XX),nth(Y)]):- =(X,XX).

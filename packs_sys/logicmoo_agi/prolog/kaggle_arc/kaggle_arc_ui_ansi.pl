@@ -169,7 +169,9 @@ ptt(_):- is_print_collapsed,!.
 ptt(P):- \+ \+ ((tersify(P,Q),!,pt(Q))).
 ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 
-pt(Color,P):- quietlyd((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
+pt(Color,P):- quietlyd((format('~N'), wots(S,ptc(P)),!,color_print(Color,S))).
+ptc(call(P)):- callable(P),!,call(P).
+ptc(P):- pt(P).
 
 pt(_):- is_print_collapsed,!.
 pt(_):- format('~N'), fail.
@@ -177,8 +179,7 @@ pt(P):- var(P),!,pt(var(P)).
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
 pt(P):- \+ \+ (( pt_guess_pretty(P,GP),ptw(GP))).
 %pt(P):-!,writeq(P).
-ptw(P):- arc_portray(P),!.
-ptw(P):- quietlyd(print_tree_nl(P)),!.
+%ptw(P):- quietlyd(print_tree_nl(P)),!.
 ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
 
 pt_guess_pretty(P,O):- copy_term(P,O,_),
@@ -186,6 +187,23 @@ pt_guess_pretty(P,O):- copy_term(P,O,_),
   ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)),!,
   nop((term_singletons(O,SS),numbervars(SS,999999999999,_,[attvar(bind),singletons(true)]))).
 
+:- dynamic(pretty_clauses:pp_hook/3).
+:- multifile(pretty_clauses:pp_hook/3).
+:- module_transparent(pretty_clauses:pp_hook/3).
+pretty_clauses:pp_hook(_,_,G):- is_grid(G), 
+ \+ (sub_term(E,G),compound(E),E='$VAR'(_)), 
+  catch((wots(S,print_grid(G)),strip_vspace(S,SS),pt(orange,call(format('"~w"',[SS])))),_,fail).
+
+strip_vspace(S,Stripped):- string_concat(' ',SS,S),!,strip_vspace(SS,Stripped).
+strip_vspace(S,Stripped):- string_concat(SS,' ',S),!,strip_vspace(SS,Stripped).
+strip_vspace(S,Stripped):- string_concat('\n',SS,S),!,strip_vspace(SS,Stripped).
+strip_vspace(S,Stripped):- string_concat(SS,'\n',S),!,strip_vspace(SS,Stripped).
+strip_vspace(S,Stripped):- string_concat('\t',SS,S),!,strip_vspace(SS,Stripped).
+strip_vspace(S,Stripped):- string_concat(SS,'\t',S),!,strip_vspace(SS,Stripped).
+%strip_vspace(S,Stripped):- split_string(S, "", "\t\r\n", [Stripped]).
+strip_vspace(S,S).
+
+print_ansi_tree(P,_):- arc_portray(P),!.
 print_ansi_tree(P,_OL):- print_tree_nl(P).
 
 wqs(X):- is_grid(X), !, print_grid(X).
@@ -220,9 +238,18 @@ dash_chars(H):- integer(H), dash_border(H).
 dash_chars(S):- format('~N'),dash_chars(60,S),format('~N').
 dash_chars(H,_):- H < 1,!.
 dash_chars(H,C):-forall(between(0,H,_),write(C)).
+
+dash_uborder_no_nl(1):-  line_position(current_output,0),!, write('¯¯¯ ').
+dash_uborder_no_nl(1):-  line_position(current_output,W),write(W),!, write('¯¯¯ ').
+dash_uborder_no_nl(1):- write('¯¯¯ ').
+dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_chars(WidthM1,'¯¯'),!.
+%dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__').
+
+dash_border_no_nl(1):-  line_position(current_output,0),!, write(' ___ ').
+dash_border_no_nl(1):-  line_position(current_output,W),write(W),!, write('___ ').
+dash_border_no_nl(1):- write(' ___ ').
 dash_border_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__').
-dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_chars(WidthM1,'¯¯').
-dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__').
+
 dash_border(Width):- !, dash_border_no_nl(Width),nl,!.
 dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_chars(WidthM1,'¯¯'),nl.
 %dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__'),nl.
@@ -556,12 +583,13 @@ print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Grid):- is_object(Grid),!,%prin
   globalpoints(Grid,Points),print_grid0(Bordered,SH,SV,LoH,LoV,HiH,HiV,EH,EV,Points).
 print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
  must_det_ll((
-  write('\n'), 
+  format('~N'), 
   %maybe_grid_numbervars(GridI,Grid),
   GridI=Grid,
   ((plain_var(EH) ; plain_var(EV))->grid_size(Grid,EH,EV);true),
   Width is EH-SH, 
-  once((user:dash_border_no_nl(Width+1))),
+  (Width==0 -> DBW = 1 ; DBW is Width+1),
+  once((user:dash_border_no_nl(DBW))),
   bg_sym(BGC),
   forall(between(SV,EV,V),
    ((format('~N|'),
@@ -570,7 +598,7 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
         (once(print_gw1(CG))))))),write(' |')))),
   %print_g(H,V,C,LoH,LoV,HiH,HiV)
   format('~N'),!,
-  once((user:dash_uborder_no_nl(Width+1))))).
+  once((user:dash_uborder_no_nl(DBW))))).
 
  /*
          "#000000",  # 0: black

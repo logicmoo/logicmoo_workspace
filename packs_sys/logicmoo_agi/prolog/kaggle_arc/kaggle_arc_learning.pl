@@ -55,7 +55,7 @@ group_by(color).
 group_by(shape).
 group_by(rotation).
 
-has_prop(P,Obj):- indv_props(Obj,Props),!,member(Q,Props),Q=@=P.
+has_prop(P,Obj):- indv_props(Obj,Props),!,member(Q,Props), (Q=@=P -> true ; ( \+ Q \= P)).
 
 group_group(What,[Obj|In],[P-G1|Groups]):- indv_props(Obj,Props),member(P,Props),functor(P,What,_),!,
   [Obj|Include] = G1,
