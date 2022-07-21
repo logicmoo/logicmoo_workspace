@@ -126,7 +126,7 @@ the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
 the_hammer(Color,ColorComplex):- 
   ColorComplex = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
-  colors([cc(Color, 6.0)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
+  colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), vis_hv(3, 3), rotation(same), loc_xy(2, 5), 
   changes([]), iz(rectangle), iz(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
@@ -187,7 +187,7 @@ into_monochrome(VM):- Grid = VM.grid,
   print_side_by_side(silver,Grid,into,_,NewGrid,monochrome).
 
 into_monochrome(NoBlack,Mono):- 
-  colors_count_black_first(NoBlack,CCBF), CCBF=[cc(black,0.0),cc(BGC,_)|_],!, 
+  colors_count_black_first(NoBlack,CCBF), CCBF=[cc(black,0),cc(BGC,_)|_],!, 
   grid_into_monochrome(BGC,NoBlack,Mono).
 into_monochrome(Color,Mono):- into_monochrome(black,Color,Mono).
 

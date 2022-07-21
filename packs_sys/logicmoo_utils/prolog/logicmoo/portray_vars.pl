@@ -323,9 +323,10 @@ pretty_numbervars_g(T,T):- really_no_pretty,!.
 pretty_numbervars_g(Term, TermO):- (ground(Term);really_no_pretty),!,duplicate_term(Term,TermO).
 %pretty_numbervars(Term, TermO):- copy_term(Term,TermO,_),guess_pretty(Term),Term=@=TermO,Term=TermO,!.
 
-
+:- export(pretty_numbervars/2).
 pretty_numbervars(TermIn, TermOut):- pretty_numbervars_ground(TermIn, TermOut),!.
 
+:- export(pretty_numbervars_ground/2).
 pretty_numbervars_ground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
 pretty_numbervars_ground(TermIn, TermOut):-  % the new 
  quietly(( %fail,
@@ -343,6 +344,7 @@ term_varnames(_Term,[],_Ug):- !.
 term_varnames(_Term,Vs,_Ug):- %term_variables(Term,Vars),
   (nb_current('$variable_names',Vs)->true;Vs=[]).
 
+:- export(pretty_numbervars_unground/2).
 pretty_numbervars_unground(TermIn, TermOut):- pretty_numbervars_g(TermIn, TermOut),!.
 pretty_numbervars_unground(TermIn, TermOut):-  % the old
  quietly((
@@ -410,7 +412,7 @@ make_pretty(I,O):- dumplicate_term(I,O), pretty1(O),pretty_three(O),pretty_final
 
 :- export(guess_varnames/1).
 
-guess_varnames(I):- guess_pretty1(I),!.
+guess_varnames(I):- guess_pretty1(I).
 
 /*
 guess_varnames(I,O):- guess_pretty1(I), guess_var2names(I,O).

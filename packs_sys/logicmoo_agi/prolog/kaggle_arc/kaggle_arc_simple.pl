@@ -8,16 +8,16 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
-
-:- expects_dialect(pfc).
-
+:- export(grid_part/2).
 grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(nb_current(example,ExampleNum)),!,
   kaggle_arc_io(TestID,ExampleNum,_,Grid),
   grid_part(Grid,Info).
 
-grid_part(Grid,InfoR):- nth1(X,Grid,Info),VInfo=..[v|Info],InfoR=..[row,X,VInfo].
-grid_part(Grid,InfoR):- rot90(Grid,Grid90),nth1(X,Grid90,Info),VInfo=..[v|Info],InfoR=..[col,X,VInfo].
+%grid_part(Grid,InfoR):- nth1(X,Grid,Info),VInfo=..[v|Info],InfoR=..[row,X,VInfo].
+%grid_part(Grid,InfoR):- rot90(Grid,Grid90),nth1(X,Grid90,Info),VInfo=..[v|Info],InfoR=..[col,X,VInfo].
 %grid_part(Grid,NObjs):- wno(individuate(complete,Grid,Objs)), maplist_n(1,number_obj,Objs,NObjs).
+
+%cheapest_desc(Grid
 
 number_obj(N,obj(List),obj([ord(N)|List])).
 /*
@@ -40,6 +40,8 @@ number_obj(N,obj(List),obj([ord(N)|List])).
 
 %is_graid(T*E*IO,T,E,IO).
 is_graid(T*E*IO,G):- kaggle_arc_io(T,E,IO,G).
+
+:- export(is_graid/2).
 %grid_aid(ID,T*E*IO):- is_graid(Grid,T,E,IO),format(ID,).
 
 point(Grid,Color,X,Y):- is_graid(Grid,G),nth1(Y,G,R),nth1(X,R,Color).
@@ -63,6 +65,28 @@ grid_object(Grid,mass(N),object(Points,Color)):-
   ColorHV4 = Color-HV4,
   findall(HV4,(member(ColorHV4,Rest),is_adjacent_point(HV1,_,HV5),is_adjacent_point(HV5,_,HV4)),AdjRest).
 
+:-  locally(set_prolog_flag(access_level,system),
+ ((op(200,fy,'-'),op(300,fx,'-'),
+ op(1190,xfx,('::::')),
+ op(1180,xfx,('==>')),
+ op(1170,xfx,'<==>'),
+ op(1160,xfx,('<-')),
+ op(1150,xfx,'=>'),
+ op(1140,xfx,'<='),
+ op(1130,xfx,'<=>'),
+ op(600,yfx,'&'),
+ op(600,yfx,'v'),
+ op(350,xfx,'xor'),
+ op(300,fx,'~'),
+ op(300,fx,'-'),
+ op(1199,fx,('==>'))))).
+
+%:- module(system).
+%:- use_module(library(pfc_lib)).
+%:- expects_dialect(pfc).
+
+%:- include(library(pfc_syntax)).
+kaggle_arc_io(TestID,ExampleNum,IO,_)==>some_grid_id(TestID*ExampleNum*IO).
 
 :- fixup_exports.
 

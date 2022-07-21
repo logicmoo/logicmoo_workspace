@@ -131,7 +131,7 @@ test_grid_hint(TestID):- grid_hint(TestID).
 
 
 hint_functor(cg(IO,Hint),cg(IO,F)):- !, hint_functor(Hint,F).
-hint_functor(comp(i-o,Hint),F):- !, hint_functor(Hint,F).
+%hint_functor(comp(i-o,Hint),F):- !, hint_functor(Hint,F).
 hint_functor(comp(IO,Hint),comp(IO,F)):- hint_functor(Hint,F).
 hint_functor(rev(Hint),rev(F)):- !, hint_functor(Hint,F).
 hint_functor(mono(Hint),mono(F)):- !, hint_functor(Hint,F).
@@ -164,9 +164,10 @@ relax_arg(_,_).
 
 grid_hint(TestID):- format('~N'),
   compute_grid_hints(TestID),
+    ignore(list_common_props(TestID)),!,
    (listing(arc_test_property(TestID,_,_))),
    (listing(io_xform(TestID,_,_))),
-  ignore(list_common_props(TestID)),!,
+  %ignore(list_common_props(TestID)),!,
   format('~N').
 
 :- dynamic(io_xform/3).
@@ -215,8 +216,10 @@ list_common_props(TestID):-
 list_common_props(TestID):-
  findall(F=Common,
   (arc_test_property(TestID, grid_fhint(F),_-0),
+    retractall(arc_test_property(TestID,common(F),_)),
     (( findall(Data,arc_test_property(TestID,grid_fhint(F),Data-_),Commons),
-      once((min_unifier(Commons,Common),nonvar(Common)))))),FComs),
+      once((min_unifier(Commons,Common),nonvar(Common))))),
+      assert(arc_test_property(TestID,common(F),Common))),FComs),
   sort(FComs,SComs),
   color_print(magenta,call((format('~N % ~w: ~@.~n',[list_common_props,ptv(SComs)])))).
 
@@ -244,8 +247,8 @@ min_unifier(A,B,_):- (\+ compound(A);\+ compound(B)),!.
 min_unifier(A,B,R):- relax_hint(A,R),\+ (B \= R),!.
 
 grid_hint_swap(IO,In,Out):-
- findall(Data,(grid_hint_swap(IO,In,Out,Hint),hint_data(Hint,Data)),Hints),
- color_print(magenta,call((format('~N % ~w: ~@.~n',[IO,ptv(Hints)])))).
+ ((findall(Data,(grid_hint_swap(IO,In,Out,Hint),hint_data(Hint,Data)),Hints),
+ color_print(magenta,call((format('~N % ~w: ~@.~n',[IO,ptv(Hints)])))))).
 
 grid_hint_swap(IO,In,Out,Hint):-  grid_hint_recolor(IO,In,Out,Hint).
 grid_hint_swap(I-O,In,Out,rev(Hint)):- grid_hint_recolor(O-I,Out,In,Hint).
@@ -264,16 +267,16 @@ grid_hint_io(_MC,IO,In,Out,comp(IO,Hint)):- comp_o(IO),  proportional(In,Out,Hin
 grid_hint_io(_MC,_IO,In,Out,ogs_11(XY)):- \+ In=@=Out, findall(loc(X,Y),ogs_11(X,Y,In,Out),XY),XY\==[].
 grid_hint_io(_MC,_-o,In,Out,(=@=)):- In=@=Out.
 %grid_hint_iso(MC,IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,_Color,OH,OV,)).
-grid_hint_io(MC,IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),!,grid_hint_iso(MC,IO,In,Out,IH,IV,OH,OV,Hint).
+%grid_hint_io(MC,IO,In,Out,Hint):- grid_size(In,IH,IV),grid_size(Out,OH,OV),!,grid_hint_iso(MC,IO,In,Out,IH,IV,OH,OV,Hint).
 
 
-%grid_hint_iso(MC,IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
+%grid_hint_iso(_MC,IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
 grid_hint_iso(c(_BGC),_-o,_In,Out,_IH,_IV,OH,OV,has_x_columns(Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_x_columns(Out,Y,Color,_)),Y>1.
 grid_hint_iso(c(_BGC),_-o,_In,Out,_IH,_IV,OH,OV,has_y_columns(Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_y_columns(Out,Y,Color,_)),Y>1.
 
 
-%grid_hint_iso(c(BGC),IO,_In,_Out,IH,IV,  OH,OV,cg(IO,size_r(H,V))):- comp_o(IO), V is rationalize(IV/OV), H is rationalize(IH/OH).
-%grid_hint_iso(c(BGC),IO,In,Out,_IH,_IV,_OH,_OV,cg(IO,mass_r(Mass))):- comp_o(IO), mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
+%grid_hint_iso(_,IO,_In,_Out,IH,IV,  OH,OV,comp(IO,size_r(H,V))):- comp_o(IO), V is rationalize(IV/OV), H is rationalize(IH/OH).
+%grid_hint_iso(c(_BGC),IO,In,Out,_IH,_IV,_OH,_OV,cg(IO,mass_r(Mass))):- comp_o(IO), mass(In,IMass),mass(Out,OMass), IMass\==0,Mass is rationalize(OMass/IMass),Mass\==1.
 grid_hint_iso(c(BGC),IO,In,Out,GH,GV,GH,GV,Hint):- mapgrid(remove_color_if_same(BGC),Out,In,NewIn),
    mass(NewIn,Mass), (Mass==0 -> Hint=containsAll(IO) ; 
     (unique_colors(NewIn,LeftOver),maplist(is_color,LeftOver), Hint=containsAllExceptFor(IO,LeftOver))). 

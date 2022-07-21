@@ -294,21 +294,23 @@ combine_duplicates_old(IndvS,[IO|IndvSO]):-
 combine_duplicates_old(IndvSO,IndvSO).
 
 
-combine_duplicates(_VM):-!.
-combine_duplicates(VM):- combine_duplicates(VM,VM.objs,set(VM.objs)).
-combine_duplicates(VM,IndvS,IndvSO):-
-  combine_duplicates1(VM,IndvS,IndvSM),
-  combine_duplicates1(VM,IndvSM,IndvSO),!.
+%combine_duplicates(_VM):-!.
+is_fti_step(combine_duplicates).
+combine_duplicates(VM):- combine_duplicates(VM.objs,set(VM.objs)).
 
-combine_duplicates1(VM,IndvS,IndvSO):- 
+combine_duplicates(IndvS,IndvSO):-
+  combine_duplicates1(IndvS,IndvSM),
+  combine_duplicates1(IndvSM,IndvSO),!.
+
+combine_duplicates1(IndvS,IndvSO):- 
   append(NoDupes,[I|Rest],IndvS),select(O,Rest,IndvS2),
   overlap_same_obj_no_diff(I,O),!,
   %merge_2objs(VM,I,O,[],IO),
   must_det_ll((indv_props(I,Props),
   override_object(Props,O,IO),
-  combine_duplicates1(VM,[IO|IndvS2],NoMoreDupes),
+  combine_duplicates1([IO|IndvS2],NoMoreDupes),
   append(NoDupes,NoMoreDupes,IndvSO))).
-combine_duplicates1(_VM,IndvSO,IndvSO).
+combine_duplicates1(IndvSO,IndvSO).
 
 overlap_same_obj_no_diff(I,O):- !, globalpoints(I,II),globalpoints(O,OO),!,pred_intersection((=@=),II,OO,_,_,[],[]),!.
 overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Diff),Diff==[]. 

@@ -25,12 +25,14 @@ last_indiv(I,R):- into_group(I,M),I\=@=M,!,predsort(sort_on(loc_xy_term),M,O),re
 
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
-%fav(t(d631b094),human(globalpoints,target=[get(points)],maplist(arg(1)))).
-fav(t('d631b094'),[human(remaining_points,obj_into_cells)]).
+%fav(t(d631b094),human(globalpoints,grid_out=[get(points)],maplist(arg(1)))).
+fav(t('d631b094'),[human(i(remaining_points),get(objs),learn_rule)]).
 fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,summarize,dominant_color,count_tiles,'(4, 1)']).
 
-fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),copy_grid(in)),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
-fav(t('a85d4709'),[human(i([rows,done]),   db(objs:shape,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
+%fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
+fav(t('0d3d703e'),[human(i([columns,done]),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
+%fav(t('a85d4709'),[human(i([rows,done]),o([rows,done]),   db(objs:shape,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
+fav(t('a85d4709'),[human(i([rows,done]),o([rows,done]),learn_rule),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
 
 fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,pattern_repetition,pattern_expansion,pattern_completion,'(3, 1)']).
 %fav(t('ff805c23'),[human(repair_in_vm(repair_repeats(blue)),get(changed),trim_to_rect)]).
@@ -43,13 +45,29 @@ fav(t('29ec7d0e'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,trai
 fav(t('47c1f68c'),[hedra,human(compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1),blur(flipH),blur(flipV))]).
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,recolor,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
 fav(v('cad67732'),[human(i(whole),first_object_term(rotated),learn_rule),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(3, 1) ']).
-fav(t('27a28665'),[human(i(whole),first_object_grid(monogrid),learn_rule)]).
+fav(t('27a28665'),[human(i(whole),learn_rule)]).
 %fav(t('27a28665'),[human(i([glyphic]),one_obj,into_monochrome,db(largest:shape,out:grid:p(1,1):color),resize_grid(1,1))]).
 %fav(t('27a28665'),[human(i(whole),one_obj,into_monochrome,db(largest:shape,out:grid:p(1,1):color),resize_grid(1,1))]).
 fav(t('27a28665'),[learn([shape_to_color]),no_sol([make_box(1),shape_to_color(C),cls_with(C)])]).
 fav(t('27a28665'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,take_negative,associate_images_to_patterns,associate_colors_to_patterns,'(7, 3)']).
 %fav(t('44f52bb0'),[human(i(whole),print_grid,get_vm(objs,[Obj|_]),print_grid,(call(iz(Obj,h_symmetric))->(print_grid,set_out([[blue]]));(print_grid,set_out([[orange]]))))]).
 fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
+/*
+  Grid = [[1,1,1,1]]
+  The Drawer does 
+  Draw Grid = loc_xy(1,1),line_hv(h), pen(1), mass(4)
+  
+  % Grid<->Drawer   Drawer<->Grid
+  
+  DSL for Grid 
+  DSL for Drawer -> 
+  DSL for Solver
+  
+  Slover = [- pen(1), + pen(2)]
+  
+  DrawGrid = loc_xy(1,1),line_hv(h), pen(2), mass(5)
+  Grid = [[2,2,2,2,2]]
+*/
 /*
 fav(t('44f52bb0'),[human(i(whole),call((
   get_vm(objs,[Obj|_]),(iz(Obj,h_symmetric)->set_vm(grid,[[blue]]);set_vm(grid,[[orange]])),set_vm(grid,[[orange]]))))]).
@@ -955,13 +973,18 @@ fav(t('9ecd008a'),[learn([find_damage_to_input,find_center,fraction_evenly_to_fo
 fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([rectangle])],I),rest_indivdual(Is),put_inside(Is,I),
   if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).
 
-fav(v('4b6b68e5'),[
+fav(v('4b6b68e5'),
+ [ 
 
-sol([doall((iz(Obj,outline),internal_region(Obj,Region),individuate_by_color(Region),largestIn(Region,Largest),color(Largest,Color),fill(Color,Region)))]),
+sol([
+  doall((iz(Obj,outline),internal_region(Obj,Region),individuate_by_color(Region),
+         largestIn(Region,Largest),color(Largest,Color),fill(Color,Region)))]),
 
    nthDSL(2,[gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
           colors(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
-                forall(X,(iz(X,dot), \+ (inside(X,P),iz(P,polygon))),delete(X))])]).
+                forall(X,(iz(X,dot), \+ (inside(X,P),iz(P,polygon))),delete(X))])
+
+  ]).
 
 
 fav(X,[]):- clause(fav(X),true).
@@ -1004,6 +1027,7 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
 
 
 */
+
  task_tag(adapt_image_to_grid).
  task_tag(algebra).
  task_tag(associate_color_to_bools).
@@ -1014,7 +1038,6 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
  task_tag(associate_colors_to_patterns).
  task_tag(associate_colors_to_ranks).
  task_tag(associate_colors_to_shapes).
-
  task_tag(associate_images_to_bools).
  task_tag(associate_images_to_colors).
  task_tag(associate_images_to_images).

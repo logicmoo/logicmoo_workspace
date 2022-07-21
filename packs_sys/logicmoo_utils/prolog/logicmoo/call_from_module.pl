@@ -123,6 +123,7 @@
 % % % OFF :- system:reexport(lockable_vars).
 % % % OFF :- system:reexport(library(hook_database)).
 
+%:- module(system).
 
 :- meta_predicate(with_no_mpred_expansions(*)).
 %% with_no_mpred_expansions( :Goal) is det.
@@ -933,6 +934,9 @@ with_pred_head(Pred,F//A2):-A is A2+2, !,atom(F),current_predicate(F/A),!,functo
 with_pred_head(Pred,F):- F\=(_:_),!,prolog_load_context(module,M),!,call(Pred,M:F).
 with_pred_head(Pred,F):- call(Pred,F). 
 
+:- export(is_static_predicate/1).
+:- export(with_pred_head/2).
+
 is_static_predicate(F):- with_pred_head(is_static_predicate0,F).
 
 
@@ -961,7 +965,7 @@ is_static_predicate0(FA):- once(predicate_property(FA,_)),
     \+ predicate_property(FA,dynamic),
     catch(multifile(FA),_,true).
 
-
+:- fixup_exports.
 
 :- export((((dynamic_safe)/1))).
 % = :- meta_predicate(dynamic_safe(+)).
@@ -1142,4 +1146,5 @@ rebuild_pred_into(OMC,NMC,AssertZ,OtherTraits):-
   ignore(((\+ predicate_property(M:H,transparent), module_transparent(M:F/A), \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A]))))))))).
 
 :- create_prolog_flag(mpred_te,true,[keep(true)]).
- 
+
+:- fixup_exports.

@@ -33,9 +33,9 @@ menu_cmd1(_,'u','                  or (u)niqueness between objects in the input/
 menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls,!,detect_supergrid)).
 menu_cmd1(_,'p','                  or (p)rint the test (textured grid)',(print_test)).
 menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls,print_test,!,solve_test)).
-menu_cmd1(_,'L','                  or (L)earn from a human proposed program?',(human_test)).
+menu_cmd1(_,'L','                  or (L)earned program',(learned_test)).
 menu_cmd1(_,'s','              Try to (s)olve based on training',(cls,print_test,!,solve_test)).
-menu_cmd1(_,'S','                  or (S)olve confirming it works on training',(cls,print_test,!,solve_test_training_too)).
+menu_cmd1(_,'S','                  or (S)olve confirming it works on training pairs',(cls,print_test,!,solve_test_training_too)).
 menu_cmd1(_,'h','                  or (h)uman proposed solution',(human_test)).
 menu_cmd1(_,'r','               Maybe (r)un some of the above: (p)rint, (t)rain, (e)xamine and (s)olve !',(cls,fully_test)).
 menu_cmd1(_,'a','                  or (a)dvance to the next test and (r)un it',(cls,!,run_next_test)).
@@ -281,17 +281,6 @@ prev_pair:-
 trn_tst(trn,tst).
 trn_tst(tst,trn).
 
-clear_training(TestID):-
-  set_bgc(_),
-  set_flag(indiv,0),
-  retractall(learnt_rule(TestID,_,_,_)),
-  retractall(print_rule(TestID,_,_,_)),
-  nb_delete(grid_bgc),
-  nb_linkval(test_rules, [rules]),
-  wno((clear_shape_lib(test), clear_shape_lib(noise), 
-   retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
-  nop(retractall(g2o(_,_))),!.
- 
 new_current_test_info:- 
   ignore((
   nb_current(test_name,TestID),
@@ -343,7 +332,7 @@ print_test(TName):-
          as_d_grid(In,In1),as_d_grid(Out,Out1),
        format('~Ngridcase(~q,"\n~@").~n~n~n',[TestID*ExampleNum1,
          print_side_by_side(cyan,In1,NameIn,_,Out1,NameOut)]),
-       grid_hint_swap(i-o,In1,Out1))))),format('~N'),
+       nop((grid_hint_swap(i-o,In1,Out1))))))),format('~N'),
        write('%= '), parcCmt(TestID),!.
 
 next_grid_mode(dots,dashes):-!.

@@ -385,27 +385,45 @@ maybe_set_vm(VM):- nonvar(VM),!,set_vm(VM).
 maybe_set_vm(VM):- get_vm(VM).
 
 
+is_fti_step(maybe_repair_in_vm).
+maybe_repair_in_vm(P4,VM):-
+ ignore(( 
+  maybe_set_vm(VM),
+  VM.h >= 14, VM.v >= 14,
+  Grid=VM.grid,
+  VM.can_repair == true,
+  enum_colors(Color), column_or_row(Grid,Color),
+  repair_in_vm(P4,VM))).
 
 is_fti_step(repair_in_vm).
 repair_in_vm(P4,VM):-
+ ignore((
   maybe_set_vm(VM),
   VM.h >= 10, VM.v >= 10,
-  %VM.is_repair == true,
+  VM.can_repair == true,
   Grid=VM.grid,
   localpoints_include_bg(Grid,OriginalPoints),
-  call(P4,VM,Grid,RepairedResult,Steps),
-  % RepairedResult \=@= Grid,
+  call(P4,VM,Grid,RepairedResult,Steps),!,
   localpoints_include_bg(RepairedResult,RepairedPoints),
-  intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changes),
-  set_vm(neededChanged,NeededChanged),
-  set_vm(repaired,RepairedPoints),  
-  set_vm(changed,Changes),
-  %set_vm(grid,NeededChanged),
+  intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changed),
+  maplist(must_det_ll,[
+%  set_vm_obj(neededChanged,NeededChanged),
+  set_vm_obj(changed,Changed),
+  set_vm_obj(repaired,RepairedPoints),
+  %gset(VM.can_repair) = false,
+  %set_vm_obj(grid,NeededChanged),
   %((print_side_by_side(silver,Grid,repair_in_vm,_,RepairedResult,P4))),
-  (Grid\=@=RepairedResult -> (set(VM.points) = []) ; fail),
-  addProgramStep(VM,[repair_in_vm(P4)|Steps]),!.
+  %(Grid\=@=RepairedResult -> (set(VM.points) = []) ; true),
+  addProgramStep(VM,[repair_in_vm(P4)|Steps])]),
+  set(VM.neededChanged)=NeededChanged,
+  fif(NeededChanged\==[], 
+         (make_indiv_object(VM,NeededChanged,[iz(neededChanged),iz(invisible)],ColorObj),!,
+            addInvObjects(VM,ColorObj))))),!.
 
-guess_to_unbind(Grid,Color):- guess_to_unbind1(Grid,Color).
+column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row). 
+column_or_row(Grid,Color):- rot90(Grid,Grid0),!,member(Row,Grid0), maplist(==(Color),Row). 
+
+guess_to_unbind(Grid,Color):- guess_to_unbind1(Grid,Color), \+ column_or_row(Grid,Color).
 guess_to_unbind1(_Grid,Color):- Color = black.
 guess_to_unbind1(_Grid,Color):- Color = brown.
 guess_to_unbind1(_Grid,Color):- Color = blue.
@@ -423,39 +441,51 @@ repair_repeats(Black,VM,Grid,RepairedResult,[guess_to_unbind(Black)]):-
   (Grid\=@=RepairedResult -> (set(VM.points) = []) ; fail),!.
  
 repair_color_grid_repeats(Black,Grid,RepairedResult):- ground(Grid),!,
+  \+ column_or_row(Grid,Black),
   unbind_color(Black,Grid,RepairedResult),!,
   repair_grid_repeats(RepairedResult),
   ground(Grid),!.
 repair_color_grid_repeats(Black,Grid,RepairedResult):- 
+  \+ column_or_row(Grid,Black),
   unbind_color(Black,Grid,RepairedResult),
   repair_grid_repeats(RepairedResult),!.
  
 repair_grid_repeats(RepairedResult):- ground(RepairedResult),!.
-repair_grid_repeats(RepairedResult):-
-  select(Row1,RepairedResult,More), \+ ground(Row1),
-  member(Row2,More), Row1\=@=Row2, Row1=Row2,
-  repair_grid_repeats(RepairedResult),!.
 repair_grid_repeats(RepairedResult):- 
-  rot90(RepairedResult,RepairedResult2),
-  repair_grid_repeats(RepairedResult2).  
+  repair_grid_repeats1(RepairedResult),
+  rot270(RepairedResult,RepairedResult2),
+  repair_grid_repeats(RepairedResult2).
 repair_grid_repeats(_).
+
+
+repair_grid_repeats1(RepairedResult):- ground(RepairedResult),!.
+repair_grid_repeats1(RepairedResult):-  
+  select(Row1,RepairedResult,More), \+ ground(Row1),
+  member(Row2,More), Row1\=@=Row2, 
+  Row1=Row2,!,
+  repair_grid_repeats1(RepairedResult).
+repair_grid_repeats1(_RepairedResult).
 
 
 is_fti_step(fourway).
 fourway(VM):-  
+  VM.can_repair == true,
   maybe_set_vm(VM),
   VM.h > 12, VM.v > 12,
-  repair_in_vm(repair_fourway,VM).
+  repair_in_vm(repair_fourway,VM),!.
+
+repair_fourway(VM,Grid,RepairedResult,Steps):- fail,  
+  maybe_set_vm(VM), unique_colors(Grid,Colors),
+  member(Color,Colors),
+  unbind_color(Color,Grid,UGrid),
+  repair_2x2([],Steps,UGrid,RepairedResult).
 
 repair_fourway(VM,Grid,RepairedResult,Steps):- 
   maybe_set_vm(VM),
+  VM.can_repair == true,
   once((colors(Grid,Colors),length(Colors,CL),CL>3)),
   largest_first(VM.objs,Ordered),  
   repair_2x2(Ordered,Steps,Grid,RepairedResult),!.
-repair_fourway(VM,Grid,RepairedResult,repair_color_grid_repeats(Color)):- 
-  maybe_set_vm(VM), unique_colors(Grid,Colors),
-  member(Color,[blue,brown|Colors]),
-  repair_color_grid_repeats(Color,Grid,RepairedResult),!.
 
 repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   member(CXL,[0,1]),member(CYL,[0,1]),
@@ -528,10 +558,20 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   try_whole_grid_xforms(GridO),
 
   verify_symmetry(Test,GridO),
+
+  maybe_set_vm(VM),
+  gset(VM.can_repair) = false,
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
   clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
-  set_vm(full_grid,GridO),  
+  set_vm_obj(full_grid,GridO),
+
+  gset(VM.points) = [],
+  OriginalPoints = VM.points_o,
+  include(was_color(Cs),OriginalPoints,NeededChanged),  
+  %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,NeededChanged,[iz(neededChanged),iz(invisible)],ColorObj),!, addObjects(VM,ColorObj),
+  set_vm_obj(neededChanged,NeededChanged),  
+
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
   must_not_error((RepairedResultM = RepairedResult,
   Steps = clip_pattern([PatternName,trial_removal_used(RemovalTrialUsed),try_whole_grid_xforms,verify_symmetry(Test),clip_to_previous_area]))),
@@ -539,6 +579,8 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
 
 glean_patterns_hook(Steps,G,GridO):- make_symmetrical_grid(Steps,G,GridO).
 
+
+was_color(Color,CPoint):- only_color_data(CPoint,Color2),Color==Color2.
 
 make_symmetrical_grid(G,GridO):- make_symmetrical_grid(_,G,GridO).
 
@@ -1116,6 +1158,8 @@ all_bg(Pattern):- get_bgc(BG),is_all_color(BG,Pattern).
 is_all_color(BG,Pattern):- is_list(Pattern),!,maplist(is_all_color(BG),Pattern).
 is_all_color(BG,Pattern):- Pattern=@=BG.
 
+%fti(VM,[show_colorfull_idioms|set(VM.program_i)]):- ignore(show_colorfull_idioms(VM.grid)).
+is_fti_step(show_colorfull_idioms).
 show_colorfull_idioms(G):- ignore(find_colorfull_idioms(G)).
 
 is_fti_step(find_colorfull_idioms).

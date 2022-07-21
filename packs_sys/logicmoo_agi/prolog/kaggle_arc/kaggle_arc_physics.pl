@@ -315,6 +315,10 @@ dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacen
 % ==============================================
 % ENGULFS
 % ==============================================
+% Find object that are contained in objects and individuate them in their own way  (TODO mame this more complete)
+% Find free points that are contained in objects and individuate them in their own way
+%  find_engulfs(VM).   
+is_fti_step(find_engulfs).
 find_engulfs(VM):- 
   show_vm_changes(VM,find_engulfs,find_engulfs(VM,VM.objs,set(VM.objs))),!.
 
@@ -362,6 +366,10 @@ contained_object(O1,O2):-
 % ==============================================
 % Contained
 % ==============================================
+% Find free points that are contained in objects and individuate them in their own way
+%fti(VM,[find_contained|set(VM.program_i)]):- find_contained(VM).
+is_fti_step(find_contained).
+%fti(VM,[colormass_subshapes|set(VM.program_i)]):- colormass_subshapes(VM),!.
 find_contained(VM):-
   show_vm_changes(VM,find_contained,find_contained(VM.h,VM.v,VM.id,VM.objs,set(VM.objs),VM.points,set(VM.points))),!.
 

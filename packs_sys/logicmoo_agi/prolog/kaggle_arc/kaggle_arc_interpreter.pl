@@ -128,7 +128,7 @@ set_vm_grid(VM,In):- set_vm_grid_now(VM,In).
 set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
 set_vm_grid_now(VM,Grp):- 
   data_type(Grp,Type),
-  gset(VM.notes) = data_type(Type),
+  gset(VM.type) = data_type(Type),
   pt(yellow,set_vm_grid_now),pt(cyan,Type),fail.
 set_vm_grid_now(VM,In):- VM==In,!.
 set_vm_grid_now(VM,In):- is_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
@@ -201,6 +201,7 @@ run_dsl(VM,_Mode,nb_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,
 run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
 run_dsl(VM,_Mode,vm_set(Name,Val),In,Out):- !, vm_grid(VM,set_vm(Name,Val),In, Out).
 run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,In,Objs),set_vm_grid(VM,Objs)),In,Out).
+run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.grid_out,Objs),set_vm_grid(VM,Objs)),In,Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
@@ -316,59 +317,6 @@ make_key(Ret,At):-
   write_term(Copy,[attributes(ignore),ignore_ops(true),numbervars(true)])).
 monogrid(X,Y):- object_grid(X,M),into_monochrome(M,Y).                                                   
 
-:- dynamic(learnt_rule/4).
-:- dynamic(print_rule/4).
-
-learn_rule(In,Out):- get_vm(VM), Target=VM.target, 
- is_grid(Target), Out = Target,
- get_current_test(TestID), 
- get_vm(last_key,Key),
-%  nonvar(Key),     
- save_learnt_rule(TestID,In,Key,Out),!.
-learn_rule(In,Out):- get_vm(VM), Target=VM.target, 
- get_current_test(TestID),
-  get_vm(last_key,Key),   
-  ignore((learnt_rule(TestID,In,Key,Out);learnt_rule(TestID,_,Key,Out))),
-  pt(orange,using_learnt_rule(In,Key,Out)),!,
-  ignore(Out = Target).
-
-save_learnt_rule(TestID,In,Key,Out):-
- Rule=learnt_rule(TestID,In,Key,Out),
- Goal = In+Key+Out,
- labels_for(Goal,Set),
- length(Set,Len),length(Vars,Len),
- subst_rvars(Set,Vars,Rule,NewRule),
- maplist(upcase_atom_var,Set,Names),
- subst_rvars(Vars,Names,NewRule:-was_once(Set,Vars),PrintRule),
- pt(yellow,Rule),
- pt(orange,PrintRule),
- my_asserta_if_new(print_rule(TestID,Rule,PrintRule,NewRule)),
- my_asserta_if_new(NewRule:-was_once(Set,Vars)).
-
-was_once(_,_).
-
-upcase_atom_var(Int,'$VAR'(Name)):- integer(Int),atom_concat('INT_',Int,Name).
-upcase_atom_var(Num,'$VAR'(Name)):- number(Num),atom_concat('FLOAT_',Num,DotName),replace_in_string(['.'-'_dot_'],DotName,Name).
-upcase_atom_var(Atom,'$VAR'(Name)):- upcase_atom(Atom,Name).
-labels_for(Goal,Labels):- 
-  findall(Atom,(sub_term(Atom,Goal),maybe_unbind_label(Atom)),Atoms), 
-  sort(Atoms,Set),
-  include(two_or_more(Atoms),Set,Labels).
-
-two_or_more(Atoms,Label):- select(Label,Atoms,Rest),member(Label,Rest).
-
-never_unbind_label(Int):- integer(Int), Int < 7.
-never_unbind_label(true).
-never_unbind_label(false).
-
-maybe_unbind_label(G):- var(G),!,fail.
-maybe_unbind_label(G):- nonvar(G), never_unbind_label(G),!,fail.
-maybe_unbind_label(G):- integer(G),!.
-maybe_unbind_label(G):- \+ atom(G),!,fail.
-maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
-
-subst_rvars([],[],A,A):-!. 
-subst_rvars([F|FF],[R|RR],S,D):- debug_var(F,R),subst001(S,F,R,M), subst_rvars(FF,RR,M,D).
 
 uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
 %known_gridoid(ID,G):- plain_var(ID),!,(known_grid(ID,G);known_object(ID,G)).
@@ -390,6 +338,9 @@ known_grid0(ID,G):- compound(ID),ID=(_*_),!,fix_test_name(ID,Name,ExampleNum),!,
 %known_grid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_grid0(Term,G).
+
+
+
 
 addProgramStep(_VM,Step):-
   pt(addProgramStep(vm,Step)).

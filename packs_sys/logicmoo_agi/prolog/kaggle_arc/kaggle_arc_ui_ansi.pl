@@ -32,9 +32,9 @@ tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
 dumpst_hook:simple_rewrite(I,O):- is_map(I),!, O='..vvmm..'.
 %dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
-dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,O='..points..'(N),!.
+dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,!,O='..points..'(N),!.
 
-portray_terse:- fail.
+portray_terse:- !.
 
 arc_portray(Map,TF):- get_map_pairs(Map,Type,Pairs),!, arc_portray_pairs(Type,TF,Pairs). 
 
@@ -169,17 +169,21 @@ ptt(_):- is_print_collapsed,!.
 ptt(P):- \+ \+ ((tersify(P,Q),!,pt(Q))).
 ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 
+pt(Color,P):- quietlyd((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
+
 pt(_):- is_print_collapsed,!.
+pt(_):- format('~N'), fail.
 pt(P):- var(P),!,pt(var(P)).
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
-
+pt(P):- pt_guess_pretty(P,GP),ptw(GP).
 %pt(P):-!,writeq(P).
+ptw(P):- arc_portray(P),!.
+ptw(P):- quietlyd(print_tree_nl(P)),!.
+ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
 
-pt(_):- format('~N'), fail.
-pt(P):- arc_portray(P),!.
-pt(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
-pt(P):- quietlyd(print_tree_nl(P)),!.
-pt(Color,P):- quietlyd((format('~N'), wots(S,pt(P)),!,color_print(Color,S))).
+pt_guess_pretty(P,O):- copy_term(P,O),
+  ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)),!,
+  numbervars(O,999999999999,_,[attvar(bind),singletons(true)]).
 
 print_ansi_tree(P,_OL):- print_tree_nl(P).
 

@@ -8,6 +8,230 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+
+
+:- dynamic(learnt_rule/5).
+:- dynamic(print_rule/5).
+
+learned_test:- notrace((get_current_test(TestID),learned_test(TestID))).
+learned_test(TName):- 
+  fix_id(TName,TestID),
+   format('% ?- ~q. ~n',[learned_test(TName)]),
+   %forall(clause(learnt_rule(TestID,A,B,C,D),Body),
+    %print_rule(learned_test,learnt_rule(TestID,A,B,C,D):-Body)),
+    training_info(TestID,Info),
+    maplist(print_rule(TestID),Info).
+ 
+
+
+print_rule(M,rule(Len,Out,Ref)):- !,
+  clause(H,B,Ref), 
+  print_rule(M-Len,(H:-B)),
+  print_rule(M-Len,out(Out)).
+
+print_rule(M,(X:-True)):- True == true,!, print_rule(M,X).
+print_rule(M,(learnt_rule(TestID,A,B,C,D):-Body)):- !,
+    ignore((Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),   
+    pt(orange,M=[C=[TestID,in=(A),label=(B),out=(D)]]).
+print_rule(M,(X:-Body)):- !,
+    ignore((Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),   
+    pt(orange,M=[X]).
+print_rule(M,O):- pt(orange,M=[O]).
+
+save_learnt_rule(TestID,In,InKey,RuleDir,Out):-
+  save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out)).
+
+save_learnt_rule(RuleIn):- save_learnt_rule(RuleIn,RuleIn).
+save_learnt_rule(RuleIn,InGoal):-  
+  labels_for(InGoal,InSet),
+  length(InSet,InLen),length(InVars,InLen),
+  subst_rvars(InSet,InVars,RuleIn,NewRuleIn),!,
+  Assert = (NewRuleIn:-was_once(InSet,InVars)), 
+  assert_visually(Assert),!.
+
+    
+group_by(mass).
+group_by(iz).
+group_by(color).
+group_by(shape).
+group_by(rotation).
+
+has_prop(P,Obj):- indv_props(Obj,Props),!,member(Q,Props),Q=@=P.
+
+group_group(What,[Obj|In],[P-G1|Groups]):- indv_props(Obj,Props),member(P,Props),functor(P,What,_),!,
+  [Obj|Include] = G1,
+  my_partition(has_prop(P),In,Include,Exclude),
+  group_group(What,Exclude,Groups).
+group_group(_,_,[]).
+
+learn_group(What,Objs):- assert_visually(group_associatable(What,Objs)).
+
+learn_about_group(In):- 
+  forall(group_by(What),
+   (group_group(What,In,Groups),
+    maplist(learn_group(What),Groups))).
+
+
+learn_rule_o(Mode,InVM,OutVM):- is_map(InVM),is_map(OutVM),!,
+  pt(Mode=learn_rule_o(Mode,InVM,OutVM)),
+  extract_vm_props(InVM,InProps),   learn_grid_rules(Mode,InProps),
+  extract_vm_props(OutVM,OutProps), learn_grid_rules(Mode,OutProps),
+  learn_rule_o(Mode,InProps,OutProps).
+
+learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
+learn_rule_o(_Mode,_,G):- is_list(G), is_group(G), learn_about_group(G), fail.
+
+learn_rule_o(Mode,In,Out):- is_list(In), is_list(Out), 
+  \+ is_grid(In), \+ is_grid(Out),
+  \+ is_group(In), \+ is_group(Out),
+  forall(select_some(I,In,MoreIn),
+   forall(select_some(O,Out,MoreOut),
+    (learn_rule_o(Mode,MoreIn,MoreOut),
+    learn_rule_o(Mode,I,O)))).
+
+learn_rule_o(out_out,I,O):- !, save_learnt_rule(oout_associatable(I,O)).
+
+learn_rule_o(_Mode,I,O):- save_learnt_rule(test_associatable(I,O)).
+
+extract_vm_props(VM,[VM.grid,VM.objs]).
+
+select_some(I,List,Rest):- append(_,[I|Rest],List).
+
+learn_grid_rules(Mode,Props):-  
+  forall(select_some(P,Props,Others),
+    learn_rule_ee(Mode,P,Others)).
+learn_rule_ee(Mode,P,Others):- forall(member(O,Others),learn_grid_local(Mode,P,O)).
+
+learn_grid_local(Mode,P,O):- P @< O, !, learn_grid_local(Mode,O,P).
+learn_grid_local(_Mode,P,O):- assert_visually(grid_associatable(P,O)).
+
+:- dynamic(test_local_dyn/1).
+test_local_dyn(learnt_rule).
+test_local_dyn(print_rule).
+test_local_dyn(grid_associatable).
+test_local_dyn(test_associatable).
+test_local_dyn(why_grouped).
+test_local_dyn(cached_dictation).
+test_local_dyn(oout_associatable).
+
+assert_visually(H:-B):- !,assert_visually1(H,B).
+assert_visually( G  ):- assert_visually1(G,true).
+assert_visually1(G,B):- get_current_test(TestID), arg(1,G,W),W\==TestID,!, G=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
+assert_visually1(G,B):- assert_visually2(G,B).
+assert_visually2(G,_):- copy_term(G,Head),clause(Head,_,Ref), clause(RealHead,_,Ref), G=@=RealHead,!.
+assert_visually2(G,B):- functor(G,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(G:-B)), my_asserta_if_new((G:-B)).
+
+training_info(TestID,Info):-
+ findall((X:-Y),
+  (test_local_dyn(F),
+   (current_predicate(F/A),
+    ((functor(X,F,A),
+      ((clause(X,Y,Ref),arg(1,X,E),E==TestID),
+       nop(erase(Ref))))))),Info).
+
+clear_training(TestID):-
+  set_bgc(_),
+  set_flag(indiv,0),
+  forall(test_local_dyn(F),
+   forall(current_predicate(F/A),
+    ((functor(X,F,A),
+      forall((clause(X,_,Ref),arg(1,X,E),E==TestID),
+       erase(Ref)))))),
+  nb_delete(grid_bgc),
+  nb_linkval(test_rules, [rules]),
+  wno((clear_shape_lib(test), clear_shape_lib(noise), 
+   retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
+  nop(retractall(g2o(_,_))),!.
+ 
+
+learn_rule(In,Out):-
+  get_vm(VM),
+  VM.rule_dir = RuleDir,
+  learn_rule(In,RuleDir,Out).
+
+learn_rule(In,RuleDir,Out):- 
+ get_vm(VM), 
+ Target=VM.grid_out, 
+ is_grid(Target),!,
+ Out = Target,
+ get_current_test(TestID), 
+ get_vm(last_key,Key),    
+ save_learnt_rule(TestID,In,Key,RuleDir,Out),!.
+
+learn_rule(In,RuleDir,Out):- %get_vm(VM), % Target=VM.grid_out, 
+ get_current_test(TestID),
+  get_vm(last_key,Key),  
+   Head = learnt_rule(TestID0,In0,Key0,Dir0,Out0),
+  findall(rule(Len,Out0,Ref),
+   (clause(Head,_Vars,Ref),
+    matchlen([In0,Key0,Dir0,TestID0],[In,Key,RuleDir,TestID],Len),Len>2),
+   Matches),
+   sort(Matches,Sort),
+   %reverse(Sort,Reverse),
+   %maplist(print_rule,Sort),
+   last(Sort,Last),
+   print_rule(using_learnt_rule,Last),
+   Last = rule(Len,Out0,Ref),
+   ignore(Out = Out0),!.
+
+
+matchlen([],[],0):-!.
+matchlen([A|List1],[B|List2],Len):- fitness(A,B,Fit),
+   matchlen(List1,List2,Len2), Len is Fit+Len2.
+
+fitness(A,A,1):- !.
+fitness(A,B,Fit):- is_list(A),is_list(B),length(A,L),matchlen(A,B,F),Fit is F/L,!.
+fitness(_,_,0):- !.
+
+%row_to_row
+%row_to_column
+%dot_to_
+
+was_once(_,_).
+
+upcase_atom_var(Num,VAR):- ignore((upcase_atom_var0(Num,Name),VAR='$VAR'(Name))),!.
+upcase_atom_var(Num,'$VAR'(Num)):-!.
+upcase_atom_var(_,_).
+upcase_atom_var0(Int,Name):- integer(Int),atom_concat('INT_',Int,Name).
+upcase_atom_var0(Num,Name):- number(Num),atom_concat('FLOAT_',Num,DotName),replace_in_string(['.'-'_dot_'],DotName,Name).
+upcase_atom_var0(Atom,Name):- atom(Atom),upcase_atom(Atom,Name).
+
+labels_for(Goal,Labels):- 
+  findall(Atom,(sub_label(Atom,Goal),maybe_unbind_label(Atom)),Atoms), 
+  list_to_set(Atoms,Set),
+  include(two_or_more(Atoms),Set,Labels).
+
+two_or_more(Atoms,Label):- select(Label,Atoms,Rest),member(Label,Rest).
+
+sub_label(X, X).
+sub_label(X, Term) :-
+    compound(Term),
+    \+ never_labels_in(Term),
+    arg(_, Term, Arg),
+    sub_label(X, Arg).
+
+never_labels_in(iz(_)).
+ignored_constraint(globalpoints(_)).
+
+never_unbind_label(G):- var(G),!.
+never_unbind_label(Int):- integer(Int), Int > 7 ; Int == 1.
+never_unbind_label(true).
+never_unbind_label(false).
+never_unbind_label(G):- \+ atom(G),!,fail.
+never_unbind_label(G):- atom_length(G,1),!.
+never_unbind_label(G):- downcase_atom(G,D), upcase_atom(G,D).
+never_unbind_label(G):- atom_chars(G,Cs),member(C,Cs),char_type(C,digit),!.
+
+maybe_unbind_label(G):- var(G),!,fail.
+maybe_unbind_label(G):- never_unbind_label(G),!,fail.
+maybe_unbind_label(G):- integer(G),!.
+maybe_unbind_label(G):- \+ atom(G),!,fail.
+maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
+
+subst_rvars([],[],A,A):-!. 
+subst_rvars([F|FF],[R|RR],S,D):- debug_var(F,R),subst001(S,F,R,M), subst_rvars(FF,RR,M,D).
+
+
 rot_in_incr_90(X,Y):- freeze(X,rot90(X,Y)).
 rot_in_incr_90(X,Y):- freeze(X,rot180(X,Y)).
 rot_in_incr_90(X,Y):- freeze(X,rot270(X,Y)).

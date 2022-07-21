@@ -124,8 +124,9 @@ clsmake:- update_changed_files,!.
 :- autoload_all.
 :- use_module(library(gvar_globals_api)).
 :- use_module(library(dictoo_lib)).
+%:- use_module(library(pfc_lib)).
 
-:- listing((.)/3).
+%:- listing((.)/3).
 :- autoload_all.
 
 
@@ -346,7 +347,6 @@ doit(set(E.v)):- that.
 :- ensure_loaded(kaggle_arc_ui_html).
 :- ensure_loaded(kaggle_arc_test_easy).
 :- ensure_loaded(kaggle_arc_test_old).
-:- ensure_loaded(kaggle_arc_simple).
 
 
 
@@ -387,10 +387,11 @@ arc(TestID):- time(forall(arc1(true,TestID),true)).
 arc1(TName):- arc1(true,TName).
 %arc1(G,TName):- arc2(G,TName,(_+0)).
 
+
+
 arc1(G,TName):-
  set_current_test(TName),
- fix_test_name(TName,TestID,_UExampleNum),
- retractall(why_grouped(TestID,individuate(_),_)),
+ fix_test_name(TName,TestID,_UExampleNum), 
  locally(set_prolog_flag(gc,true),
   (clear_shape_lib(TestID),
    nb_delete('$training_vm'),
@@ -431,10 +432,11 @@ set_vm(Prop,Value):- get_vm(VM),
  (get_kov1(Prop,VM,_) -> gset(VM.Prop) = Value ; 
   (get_kov1(props,VM,Hashmap) -> 
     (var(Hashmap)->(list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap); must_not_error( gset(Hashmap.Prop)=Value));
-      (list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap))),
- ignore(set_vm_obj(Prop,Value)).
+      (list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap))).
 
-set_vm_obj(Prop,Value):- is_grid(Value),!,
+set_vm_obj(Prop,Value):- set_vm(Prop,Value),ignore(set_vm_obj1(Prop,Value)).
+
+set_vm_obj1(Prop,Value):- is_grid(Value),!,
   localpoints_include_bg(Value,IndvPoints),
   grid_size(Value,H,V),
   fif(IndvPoints\==[],
@@ -443,7 +445,7 @@ set_vm_obj(Prop,Value):- is_grid(Value),!,
           addObjects(VM,Obj),
           print_grid(H,V,Prop,Value))),!.
 
-set_vm_obj(Prop,IndvPoints):- is_points_list(IndvPoints),!,
+set_vm_obj1(Prop,IndvPoints):- is_points_list(IndvPoints),!,
   fif(IndvPoints\==[],
     (get_vm(VM),          
           make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
@@ -451,7 +453,7 @@ set_vm_obj(Prop,IndvPoints):- is_points_list(IndvPoints),!,
           print_grid(VM.h,VM.v,Prop,IndvPoints))),!.
 
 
-set_vm_obj(Prop,Value):- is_object(Value),!,
+set_vm_obj1(Prop,Value):- is_object(Value),!,
  ignore(((fail,
   globalpoints(Value,IndvPoints),
   fif(IndvPoints\==[],
@@ -521,24 +523,29 @@ train_using_oo_ii_io(TestID,DictIn,DictOut):-
 train_using_oo_ii_io(TestID,Trn,N1,DictIn,DictOut):-
  (kaggle_arc(TestID,(Trn+N1),In1,Out1), N2 is N1 + 1),
 
- (kaggle_arc(TestID,(Trn+N2),_In2,Out2) -> 
+ (kaggle_arc(TestID,(Trn+N2),_In2,Out2) 
+   -> 
     (train_for_objects_from_pair_with_mono(DictIn,TestID,[Trn,'o',N1,'o',N2],Out1,Out2,Dict1),
      %nop((train_for_objects_from_pair_with_mono(Dict0,TestID,[Trn,'i',N1,'i',N2],In1,In2,Dict1))),
-    train_using_oo_ii_io(TestID,Trn,N2,Dict1,DictM));
-  (DictM = DictIn)),!,
+    train_using_oo_ii_io(TestID,Trn,N2,Dict1,DictM))
+     ; (DictM = DictIn)),
+  !,
   train_for_objects_from_pair_with_mono(DictM,TestID,[Trn,'i',N1,'o',N1],In1,Out1,DictOut),!.
+
 train_using_oo_ii_io(_TestID,_Trn,_N1,DictInOut,DictInOut).
 
 train_only_from_pairs:- notrace(get_current_test(TestID)), train_only_from_pairs(TestID).
 
 train_only_from_pairs(TestID):- train_test(TestID,train_using_io).
 
-train_using_io(TestID,DictIn,DictOut):- 
-  ignore(nb_current(example,ExampleNum)),
-  ignore((Trn+N1) = ExampleNum),
-  kaggle_arc(TestID,(Trn+N1),In,Out),
+train_using_io(TestID,DictIn,DictOut):- train_using_io(TestID,trn,0,DictIn,DictOut).
+train_using_io(TestID,Trn,N1,DictIn,DictOut):- 
+  kaggle_arc(TestID,(Trn+N1),In,Out),!,
   detect_supergrid(TestID,(Trn+N1),In,Out),
-  train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictOut),!.
+  train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictMid),
+  N2 is N1 + 1,
+  train_using_io(TestID,Trn,N2,DictMid,DictOut).
+train_using_io(_TestID,_Trn,_,DictInOut,DictInOut).
 
 :- thread_local(must_sanity:keep_going/0).
 
@@ -564,11 +571,11 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  Desc = [Trn,IsIO1,N1,IsIO2,N2], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
- atomic_list_concat([Trn,IO1,IO2],'_',ModeIn),
- atomic_list_concat([Trn,IO2,IO1],'_',ModeOut),
+ atomic_list_concat([IO1,IO2],'_',ModeIn),
+ atomic_list_concat([IO2,IO1],'_',ModeOut),
  atom_concat(IO1,N1,ION1),
  atom_concat(IO2,N2,ION2),
- atomic_list_concat([Trn,ION1,ION2],'_',ExampleNum),
+ atomic_list_concat([ION1,ION2],'_',ExampleNum),
  pt([train_for_objects_from_pair_with_mono=ExampleNum,left=ION1,right=ION2]),
  garbage_collect,
   Dict0=Dict1,
@@ -585,9 +592,9 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM)]),!,
 
    %InVM.compare=OutVM, 
-   set(InVM.target)=Out,
+   set(InVM.grid_out)=Out,
    %OutVM.compare=InVM, 
-   set(OutVM.target)=In,
+   set(OutVM.grid_out)=In,
   maplist(must_det_ll,[
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
   individuate(InVM),!,
@@ -617,8 +624,12 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    show_pair_diff_code(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!, 
   nb_setval(no_rdot,false),
    % pt(OutC=InC),
-   ignore(( ModeIn == trn_in_out,  
+
+   ignore(( ModeIn \== in_out, learn_rule_o(ModeIn,InVM,OutVM))),
+
+   ignore(( ModeIn == in_out, Trn == trn,  
             train_io_from_hint(TestID,Trn+N1,InVM))),
+
   dash_chars,dash_chars,dash_chars,dash_chars,
   print_testinfo(TestID)]).
 
@@ -627,9 +638,9 @@ train_io_from_hint(TestID,ExampleNum,InVM):-
   ignore((          
     kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
     kaggle_arc_io(TestID,ExampleNum,in,InGrid),
-   (var(InVM) -> into_fti(TestID*ExampleNum*in,trn_in_out,InGrid,InVM) ; true),
+   (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
     gset(InVM.grid) = InGrid,
-    gset(InVM.target) = ExpectedOut,
+    gset(InVM.grid_out) = ExpectedOut,
     do_sols_for("Do Training",InVM,TestID,ExampleNum))),
   confirm_train_io_from_hint(TestID,ExampleNum).
 
@@ -638,9 +649,9 @@ confirm_train_io_from_hint(TestID,ExampleNum):-
   ignore((          
    %kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
     kaggle_arc_io(TestID,ExampleNum,in,InGrid),
-   (var(InVM) -> into_fti(TestID*ExampleNum*in,trn_in_out,InGrid,InVM) ; true),
+   (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
     gset(InVM.grid) = InGrid,
-   % gset(InVM.target) = ExpectedOut,
+   % gset(InVM.grid_out) = ExpectedOut,
     do_sols_for("Confirm Trained",InVM,TestID,ExampleNum))).
 
 
@@ -664,7 +675,14 @@ print_testinfo(TestID):-
 trials(human). trials(sol).
 trials(dsl). trials(runDSL).
 
-sols_for(Name,Trial,Sol):- trials(Trial),Entry=..[Trial,Sol], task_info(Name,Sols),member(Entry,Sols).
+sols_for(TaskID,Trial,TrialSol):- trials(Trial),once((Entry=..[Trial,Sol], task_info(TaskID,Sols),member(Entry,Sols))),
+  append_trial(Trial,Sol,TrialSol).
+
+append_trial(Trial,Sol,TrialSol):- listify(Sol,SolL),
+  ((appended_trial(Trial,TrialAppend), \+ append(_,TrialAppend,SolL)) -> append(SolL,TrialAppend,TrialSol) ;
+    TrialSol = SolL).
+
+appended_trial(human,[learn_rule]).
 
 
 solve_test:- 
@@ -701,13 +719,15 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     %set(InVM.training) = Training,
     set_training(Training),
     maybe_set_vm(InVM),    
-    gset(InVM.target) = _,
+    gset(InVM.grid_out) = _,
     must_det_ll((
     %print(training(Training)),nl,
     %ptt(InVM),
     dash_chars, dash_chars,    
     %print_testinfo(TestID),
     do_sols_for("Taking Test",InVM,TestID,ExampleNum))).
+
+    % find indiviuation one each side that creates the same number of changes
     
 do_sols_for(Why,InVM,TestID,ExampleNum) :-
  must_det_ll(( ptt("BEGIN!!!"+Why+TestID*ExampleNum), 
@@ -789,6 +809,8 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 
 user:portray(Grid):- quietly(arc_portray(Grid)),!.
 :- listing((addOptions)/2).
-:- xlisting((.)/3).
-:- xlisting(user:'.'(_, _, _)).
+%:- xlisting((.)/3).
+%:- xlisting(user:'.'(_, _, _)).
+
+:- ensure_loaded(kaggle_arc_simple).
 

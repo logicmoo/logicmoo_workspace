@@ -35,7 +35,7 @@ props_of_points(E,Ns):- findall(obj(Ps),member(obj(Ps),E),Ns).
 
 
 black_first(SK,[cc(Z,CN)|BF]):- Z=black, select(cc(Z,CN),SK,BF),!.
-black_first(BF,[cc(Z,0.0)|BF]):- Z=black.
+black_first(BF,[cc(Z,0)|BF]):- Z=black.
 
 no_black(SK,BF):-select(cc(Z,_),SK,BF),is_black(Z),!.
 no_black(SK,BF):-select(Z,SK,BF),is_black(Z),!.
@@ -58,7 +58,7 @@ unique_color_count(G,Len):- unique_colors(G,UC),length(UC,Len).
 colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
-into_cc1(N-C,cc(Nm,CN)):- CN is float(N),!,color_name(C,Nm).
+into_cc1(N-C,cc(Nm,CN)):- CN is N,!,color_name(C,Nm).
 
 colors_count_black_first(G,BF):- colors(G,SK),black_first(SK,BF).
 colors_count_no_black(G,BF):- colors(G,SK),no_black(SK,BF).

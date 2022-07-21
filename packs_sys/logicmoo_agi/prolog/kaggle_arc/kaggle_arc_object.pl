@@ -43,7 +43,7 @@ empty_grid_to_individual(H,V,Obj):-
          localpoints([]), vis_hv(H, V), 
          rotation(same), 
          loc_xy(1, 1),
-         pen([]),
+         pen([fg]),
          changes([]), 
          iz(grid),
          object_indv_id(empty_grid_to_individual(H,V), Iv),
@@ -201,10 +201,11 @@ make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj):-
    (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
      close_enough_grid(Grid,GridInCopy,LocalGrid)),ShapesUF),
   flatten([ShapesUF],ShapesU),list_to_set(ShapesU,Shapes),
-  mapgroup(append_term(iz),Shapes,OShapes),
+  maplist(append_term(iz),Shapes,OShapes),
   my_append(
   [ [mass(Len), shape(ColorlessPoints), colors(CC), localpoints(LPoints),
-     vis_hv(Width,Height),  rotation(same), loc_xy(LoH,LoV),pen(PenColors)],     
+     vis_hv(Width,Height), pen(PenColors),
+     rotation(same), loc_xy(LoH,LoV)],     
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|OShapes], % [grid(LocalGrid)],    
     [center(CX,CY)],
@@ -219,7 +220,7 @@ make_point_object(VM,Overrides,Point,Obj):- make_point_object(VM.id,VM.h,VM.v,Ov
 make_point_object(ID,H,V,Options,C-Point,Obj):- hv_point(1,1,HV11),
   hv_point(X,Y,Point), flag(indiv,Fv,Fv+1),
    Iv is (Fv rem 3000) + 1,
-    as_obj([mass(1),shape([['0'-C]]),colors([cc(C,1.0)]),localpoints([C-HV11]),vis_hv(1,1),
+    as_obj([mass(1),shape([['0'-C]]),colors([cc(C,1)]),localpoints([C-HV11]),vis_hv(1,1),
     rotation(same),loc_xy(X,Y),
     changes([]),iz(dots),iz(shape(dot)),iz(solid),center(X,Y),
     object_indv_id(ID,Iv),globalpoints([C-Point]),
@@ -617,7 +618,7 @@ localpoints(Grid,Points):- is_list(Grid),!,maplist(localpoints,Grid,MPoints),app
 
 localpoints(Atom,_):- \+ compound(Atom),!,trace_or_throw(localpoints(Atom)).
 localpoints(I,X):- globalpoints0(I,X),!.
-localpoints(G,G):- mapgroup(is_point,G),!.
+localpoints(G,G):- maplist(is_point,G),!.
 localpoints(I,X):- trace_or_throw(unknown(localpoints(I,X))).
 
   localpoints0(I,X):- indv_props(I,L),member(localpoints(X),L), my_assertion(maplist(is_cpoint,X)),!.
@@ -635,7 +636,7 @@ globalpoints(Grid,Points):- grid_to_id(Grid,ID),findall(-(C,HV),cmem(ID,HV,C),Po
 */
 
 %colors(Points,CC):- is_list(Points),nth0(_,Points,C-_),is_color(C), CC = [cc(C,3)],!.
-colors(G,[cc(black,0.0)]):- G==[],!.
+colors(G,[cc(black,0)]):- G==[],!.
 
 colors(I,X):- is_object(I),indv_props(I,L),member(colors(X),L),!.
 colors(I,X):- is_map(I),into_grid(I,G),!,colors(G,X).

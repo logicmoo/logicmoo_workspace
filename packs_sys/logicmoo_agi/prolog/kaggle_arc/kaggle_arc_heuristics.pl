@@ -17,7 +17,12 @@
 recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
    nop((set(VM.program_i) = [After,recalc_sizes|TODO])).
+/*
+   Ë mass(3) cc(blue,3.0) vis_hv(1,3) loc_xy(2,1) pen([]) birth(individual3(non_diag)) iz(symmetry(sym_hv)) center(2,2) layer(in) nth(21)
+%mass(3) cc(cyan,3.0) vis_hv(1,3) loc_xy(1,1) pen([]) birth(individual3(non_diag)) iz(symmetry(sym_hv)) center(1,2) layer(in) nth(22)
+%  Iz(Non Diag):         Ê mass(3) cc(green,3.0) vis_hv(1,3) loc_xy(3,1) pen([]) birth(individual3(non_diag)) iz(non_diag) iz(rectangulator) iz(symmetry(sym_hv)) center(3,2) layer(in) nth(20)
 
+*/
 
 recalc_sizes(VM):- is_map(VM),
    length(VM.objs,Count), Count>3,

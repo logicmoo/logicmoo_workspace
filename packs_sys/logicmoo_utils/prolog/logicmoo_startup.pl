@@ -55,6 +55,8 @@ This module manages logicmoo startup (adding history and tests, etc).
 :- module_transparent(now_and_later/2).
 :- module_transparent(now_and_later/4).
 
+:- export(now_and_later/1).
+:- export(now_and_later/2).
 now_and_later(MGoal):- strip_module(MGoal,M,Goal), now_and_later(c,M:Goal).
 now_and_later(MC,MGoal):- strip_module(MGoal,M,Goal), '$current_typein_module'(TIM), '$current_source_module'(SM), 
   now_and_later(MC,TIM,SM,M:Goal).

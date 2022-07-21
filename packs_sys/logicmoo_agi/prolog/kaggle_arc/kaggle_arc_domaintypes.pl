@@ -47,7 +47,7 @@ subtypes(C,S):- subClassOf(S,C).
 allow_dir_list(non_diag,[n,s,e,w]). 
 allow_dir_list(colormass,[n,s,e,w,nw,ne,se,sw]). 
 allow_dir_list(diamonds,[nw,sw,se,ne]).
-allow_dir_list(polygs,[n,s,e,w,nw,sw,se,ne]).
+allow_dir_list(colormass,[n,s,e,w,nw,sw,se,ne]).
 allow_dir_list(all,   [nw,sw,se,ne,n,w,s,e]).
 allow_dir_list(hv_line(h),[e,w]).
 allow_dir_list(hv_line(v),[n,s]).
@@ -71,7 +71,7 @@ shape_type_dir(ST,DIR):- allowed_dir(ST,DIR).
 %circles, dots, , rays, walls
 
 shape_filter(X,rectangle):- free_cell(X).
-shape_filter(X,polygs):- non_free_fg(X).
+shape_filter(X,colormass):- non_free_fg(X).
 
 polyg(border(square), [hv_line(H),hv_line(V),hv_line(H),hv_line(V)]):- h_v(H,V).
 polyg(border(diamond),[dg_line(U),dg_line(D),dg_line(U),dg_line(D)]):- u_d(U,D).
@@ -89,25 +89,25 @@ iz(X,Y):- nonvar_or_ci(Y)->(subClassOf(P,Y),iz(X,P));(nonvar_or_ci(X),iz(X,P),su
 iz(X,Y):- nonvar(X),(isz(X,XY),sameOrSubClass(XY,Y),deterministic(YN)), (YN==true->!;true).
 iz(X,Y):- (var(X)->enum_object(X);true),isz(X,Y).
 
-subClassOf(outline(_),noexit).
-subClassOf(outline(_),hollow).
-subClassOf(outl,hollow).
+subClassOf(noexit,outline(_)).
+subClassOf(hollow,outline(_)).
+%subClassOf(outl,hollow).
 %subClassOf(spaceship,outl).
 %subClassOf(outl,spaceship).
-subClassOf(outline(_),thick1).
+subClassOf(thick1,outline(_)).
 %subClassOf(outl,rectangle).
 
-subClassOf(hv_line(H,V),line(H,V,_,_)).
-subClassOf(dg_line(U,D),line(_,_,U,D)).
+subClassOf(hv_line(_),line).
+subClassOf(dg_line(_),line).
 
 subClassOf(dot,hv_symmetric).
 subClassOf(square,hv_symmetric).
 subClassOf(diamond,hv_symmetric).
 subClassOf(circle,hv_symmetric).
 subClassOf(round,hv_symmetric).
+subClassOf(symmetry(sym_hv),hv_symmetric).
 subClassOf(hv_symmetric,h_symmetric).
 subClassOf(hv_symmetric,v_symmetric).
-subClassOf(symmetry(sym_hv),hv_symmetric).
 
 
 subClassOf(triangle,h_symmetric).

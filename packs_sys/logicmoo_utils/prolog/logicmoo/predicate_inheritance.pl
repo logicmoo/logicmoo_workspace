@@ -78,6 +78,21 @@ do_import/4,
 make_as_dynamic/4
           )).
 
+:- export((
+check_mfa/4, 
+%skip_mfa/4,
+create_predicate_inheritance/4,
+now_inherit_above/4,
+decl_as/2,
+decl_az/2,
+decl_as/4,
+decl_az/4,
+do_import/4,
+(kb_local)/1,
+(kb_global)/1,
+(kb_shared)/1,
+make_as_dynamic/4
+          )).
 
 /* Part of LogicMOO Base logicmoo_util_bb_env
 % Provides a prolog database *env*
