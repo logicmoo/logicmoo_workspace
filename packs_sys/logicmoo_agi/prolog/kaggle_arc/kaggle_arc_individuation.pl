@@ -641,16 +641,6 @@ run_fti(VM,[F|TODO]):-
        run_fti(VM,TODO)) ; run_fti(VM)),!.
 
 
-maybe_four_terse(L,F=N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
-maybe_four_terse(L,L):-!.
-%fti(VM,_):- VM.points=[], !.
-fti(_,[]):- !.
-fti(VM,NotAList):- \+ is_list( NotAList),!, fti(VM,[NotAList]).
-fti(VM,[end_of_macro|TODO]):- !, fti(VM,TODO).
-fti(VM,[recalc_sizes|TODO]):- !, fti(VM,TODO).
-fti(_,[Done|TODO]):-  ( \+ done \= Done ), !, wdmsg(done_fti([Done|TODO])),!.
-%fti(VM,_):- VM.points==[], !.
-
 print_vm_debug_objs(_VM):- !.
 print_vm_debug_objs(VM):- 
   Objs = VM.objs,  
@@ -659,6 +649,15 @@ print_vm_debug_objs(VM):-
       maybe_four_terse(VM.program_i,Four),
       pt(t([obj/obj_mass=(Count/Mass),unprocessed_points=PC,roptions=VM.roptions,fsi=Four])))).
 
+
+maybe_four_terse(L,F=N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
+maybe_four_terse(L,L):-!.
+%fti(VM,_):- VM.points=[], !.
+fti(_,[]):- !.
+fti(VM,NotAList):- \+ is_list( NotAList),!, fti(VM,[NotAList]).
+fti(VM,[end_of_macro|TODO]):- !, fti(VM,TODO).
+fti(_,[Done|TODO]):-  ( \+ done \= Done ), !, wdmsg(done_fti([Done|TODO])),!.
+%fti(VM,_):- VM.points==[], !.
 fti(VM,_):-
   Objs = VM.objs,  
   length(Objs,Count),
@@ -667,15 +666,12 @@ fti(VM,_):-
 
 
 fti(VM,_):- fail, member(recalc_sizes,VM.options), once(recalc_sizes(VM)), fail.
-fti(VM,[recalc_sizes,After|TODO]):- After == recalc_sizes,!, fti(VM,[recalc_sizes|TODO]).
 fti(VM,[recalc_sizes|TODO]):- nop(recalc_sizes(VM)),!, fti(VM,TODO).
-%fti(_VM,[recalc_sizes]):- !.
-/*
-
+fti(VM,[recalc_sizes,After|TODO]):- After == recalc_sizes,!, fti(VM,[recalc_sizes|TODO]).
 fti(VM,[recalc_sizes,After|TODO]):- 
   (recalc_sizes(VM,[After|TODO])
      -> true; (set(VM.program_i)= [After,recalc_sizes|TODO])),!.
-*/
+
 fti(VM,[max_learn_objects(Routine,Max)|set(VM.program_i)]):- fail,
    set(VM.objs_max_len) = Max,
    set(VM.options)= [max_learn_objects(Routine,Max)|VM.options].

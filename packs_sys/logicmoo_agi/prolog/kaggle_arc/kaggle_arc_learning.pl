@@ -160,11 +160,21 @@ learn_rule(In,RuleDir,Out):-
  is_grid(Target),!,
  Out = Target,
  get_current_test(TestID), 
- get_vm(last_key,Key),    
+ get_vm(last_key,Key),
  save_learnt_rule(TestID,In,Key,RuleDir,Out),!.
 
-learn_rule(In,RuleDir,Out):- use_learnt_rule(In,RuleDir,ROut).
+learn_rule(In,RuleDir,ROut):- use_learnt_rule(In,RuleDir,ROut).
 
+/*
+] dmiles: instead of a DSL about transformations i think the DSL would be one that creates the images.. then the transformation becomes about what properties of the generative DSL change (both the input and the output have their own starting points that are gleaned by looking at what DSL would generate all the outputs vs what DSL would generate all the inputs) the thing that is learned by training is how the edits are supposed to happen in each of the generative DSLs (edited)
+[7:02 AM] dmiles: the progression of inputs teaches the system abotu what the input's generative DSL is used for inputs (edited)
+[7:02 AM] dmiles: though the progression of outputs give more information about the total task (but still give the hints about the the output's generative DSL) 
+round tripping between a grid and the generative DSL is seems important 
+*/
+properties_that_changed(Grid1,Grid2,Props):-
+  individuate(complete,Grid1,Props1),
+  individuate(complete,Grid2,Props2),
+  diff_terms(Props1,Props2,Props).
 
 use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
  get_current_test(TestID),
@@ -172,7 +182,6 @@ use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out,
   ((learnt_rule(TestID,In,Key,RuleDir,Out);learnt_rule(TestID,_,Key,RuleDir,Out);learnt_rule(TestID,In,_,RuleDir,Out))),
   pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
   ignore(Out = ROut).
-
 
 use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_out, 
  get_current_test(TestID),
