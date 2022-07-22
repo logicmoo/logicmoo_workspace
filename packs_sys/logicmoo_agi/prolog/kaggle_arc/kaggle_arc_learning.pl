@@ -163,8 +163,10 @@ learn_rule(In,RuleDir,Out):-
  get_vm(last_key,Key),    
  save_learnt_rule(TestID,In,Key,RuleDir,Out),!.
 
+learn_rule(In,RuleDir,Out):- use_learnt_rule(In,RuleDir,ROut).
 
-learn_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
+
+use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
  get_current_test(TestID),
   ignore(get_vm(last_key,Key)),
   ((learnt_rule(TestID,In,Key,RuleDir,Out);learnt_rule(TestID,_,Key,RuleDir,Out);learnt_rule(TestID,In,_,RuleDir,Out))),
@@ -172,7 +174,7 @@ learn_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out,
   ignore(Out = ROut).
 
 
-learn_rule(_In00,RuleDir,Out):- get_vm(VM), % Target=VM.grid_out, 
+use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_out, 
  get_current_test(TestID),
   ignore(get_vm(last_key,Key)), 
    In = VM.grid_o,
