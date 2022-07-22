@@ -29,11 +29,12 @@ offset_point(OH,OV,C-Point,C-LPoint):- is_nc_point(Point), hv_point(H,V,Point),H
 
 grid_to_individual(GridIn,Obj):- 
   %my_assertion(is_grid(Grid)),!,
+  get_vm(VM),
   into_grid(GridIn,Grid),
   grid_size(Grid,H,V),
   grid_to_points(Grid,H,V,Points),
   (Points==[]-> empty_grid_to_individual(H,V,Obj); 
-  (grid_to_id(Grid,ID), make_indiv_object(ID,H,V,Points,[iz(grid)],Obj))).
+   (make_indiv_object(VM,[iz(grid)],Points,Obj))).
 
 empty_grid_to_individual(H,V,Obj):-
   Iv is H + V*34,
@@ -50,54 +51,16 @@ empty_grid_to_individual(H,V,Obj):-
          grid_size(H, V)]).
 
 
-%embue_points(ID,_,_,I,I):-!.
-%embue_obj_points(ID,H,V,Points,OUT):- make_indiv_object(ID,H,V,Points,OUT).
-
-
 close_enough_grid(GridIn,GridInCopy,LocalGrid):- 
   \+ \+ (LocalGrid=GridIn, GridIn=@=GridInCopy).
 
-%embue_obj_points(ID,H,V,LoH,LoV,HiH,HiV,C-HV,OBJ):- !, embue_obj_points(ID,H,V,LoH,LoV,HiH,HiV,[C-HV],OBJ).
 
-
-
-  %pt(Image-->Image9x9),
-  %grid_to_id(Grid,Gridname),
-  %quaderants_and_center_rays(Image9x9,Quads,Centers,Rays),
-  %my_append([Quads,Centers,Rays],FourWay1s00),
-  %trace,
-  %correctify_objs(Gridname,FourWay1s00,FourWay1s),!.
-
-
-/*correctify_objs(Gridname,FourWay1s00,FourWay1s):- is_list(FourWay1s00),mapgroup(correctify_objs(Gridname),FourWay1s00,FourWay1s).
-correctify_objs(Gridname,obj(List),obj(NOBJ)):- is_list(List), 
-   member(grid(Grid),List),
-   \+ member(globalpoints(_),List),`
-   grid_size(Grid,H,V),
-   %trace,
-   pt(dleaing_with=obj(List)),
-   globalpoints(Grid,Points),
-   my_assertion(Points\=[]),
-   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-   %nb_current(test_pairname,ID),
-   embue_points1(Gridname,H,V,LoH,LoV,HiH,HiV,Points,OBJ),
-   my_append(List,OBJ,NOBJ),!.
-correctify_objs(_Gridname,obj(List),obj(List)):-!.
-correctify_objs(_Gridname,Obj,Obj).
-   %make_embued_points(Grid,H,V,Points,IndvS)
-*/
 
 make_indiv_object_list(_,[],[]):-!.
 make_indiv_object_list(VM,[E|L],[O|OL]):-   
-    must_det_ll(make_indiv_object(VM,E,O)),
+    must_det_ll(ensure_indiv_object(VM,E,O)),
     make_indiv_object_list(VM,L,OL).
 
-/*
-make_indiv_object_list(ID,H,V,Points,OUT):-
-  mapgroup(make_indiv_object(ID,H,V),Points,OUT).
-*/
-
-%make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-
 
 
 :- module_transparent as_obj/2.
@@ -144,35 +107,6 @@ is_fg_point(CPoint):- \+ (only_color_data(CPoint,Color),is_bg_color(Color)).
 
 rev_key(C-P,P-C).
 
-/*
-make_indiv_object(_ID,_H,_V,IPoints,Obj):- 
-  compound(IPoints),IPoints=obj(_),Obj=IPoints,!.
-make_indiv_object(ID,H,V,IPoints,Obj):-
-  my_partition(is_cpoint,IPoints,Points,Overrides),
-  sort_points(GPoints,Points),
-  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),
-  as_obj(OUT,Obj).
-
-
-make_indiv_object(VM,Points,Overrides,Obj):- 
-  globalpoints(Points,RPoints),
-  sort_points(RPoints,GPoints),
-  points_range(GPoints,LoH,LoV,HiH,HiV,_HO,_VO),
-  gensym('indiv_object_',ID),
-  make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,GPoints,Overrides,OUT),
-  as_obj(OUT,Obj).
-
-make_indiv_object(ID,H,V,Points,Overrides,Obj):-
-  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
-  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!,
-  as_obj(OUT,Obj).
-
-make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,GPoints,Overrides,Obj):-
-  validate_points(GPoints), sort_points(GPoints,Points),
-  make_indiv_object_s(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj).
-*/
-
 sort_points(P0,P2):- 
    (P0==[] -> (trace) ; true),
    my_assertion(is_list(P0)),
@@ -183,56 +117,34 @@ sort_points(P0,P2):-
 same_globalpoints(O1,O2):- globalpoints(O1,P1),same_globalpoints_ps_obj(P1,O2).
 same_globalpoints_ps_obj(S1,O2):- globalpoints(O2,S2),!,S1=@=S2.
 
-make_indiv_object(VM,CObj,Obj):- compound(CObj), 
-  CObj = obj(_),!,
-  nop(addObjects(VM,CObj)),
-  Obj = CObj.
-make_indiv_object(VM,IPoints,Obj):- 
-  my_partition(is_cpoint,IPoints,Points,Overrides),
-  make_indiv_object(VM,Points,Overrides,Obj).
+ensure_indiv_object(VM,IPoints,Obj):- 
+  ((compound(IPoints), IPoints = obj(_)) -> (IPoints = Obj, nop(addObjects(VM,Obj)));
+   (my_partition(is_cpoint,IPoints,Points,Overrides),
+    make_indiv_object(VM,Overrides,Points,Obj))).
 
+make_point_object(VM,Overrides,C-Point,Obj):- 
+  must_det_ll(make_indiv_object(VM,Overrides,[C-Point],Obj)).
 
-
-make_point_object(VM,Overrides,C-Point,Obj):- make_indiv_object(VM,[C-Point],Overrides,Obj).
-
-/*
-make_indiv_object(VM,GPoints,Overrides,Obj):-
+make_indiv_object(VM,Overrides,GPoints,Obj):-
   sort_points(GPoints,Points),
   Objs = VM.objs,
-  ((select(E,Objs,Rest),same_globalpoints_ps_obj(Points,E)) 
-    -> (override_object(Overrides,E,Obj), NewObjs = [Obj|Rest])
-    ; (make_indiv_object_s(VM.id,VM.h,VM.v,Points,Overrides,Obj),
-         addObjects(VM,Obj),NewObjs = [Obj|Objs])),
-  gset(VM.objs) = NewObjs .
-*/
-make_indiv_object(VM,GPoints,Overrides,Obj):-
-  sort_points(GPoints,Points),
-  Objs = VM.objs,
-  ((select(E,Objs,Rest),same_globalpoints_ps_obj(Points,E)) 
-    -> (override_object(Overrides,E,Obj), gset(VM.objs) = [Obj|Rest])
-    ; (make_indiv_object_s(VM.id,VM.h,VM.v,Points,Overrides,Obj),
-         addObjects(VM,Obj))),!.
+  must_det_ll(((((select(Orig,Objs,Rest),same_globalpoints_ps_obj(Points,Orig)) 
+    -> (must_det_ll((override_object(Overrides,Orig,Obj), gset(VM.objs) = [Obj|Rest])))
+    ; must_det_ll((make_indiv_object_s(VM.id,VM.h,VM.v,Overrides,Points,Obj), must_det_ll(gset(VM.objs) = [Obj|Objs]))))))).
 
-make_indiv_object(ID,H,V,GPoints,Overrides,Obj):-
-  sort_points(GPoints,Points),make_indiv_object_s(ID,H,V,Points,Overrides,Obj).
-
-make_indiv_object_s(ID,H,V,Points,Overrides,Obj):- 
+make_indiv_object_s(ID,H,V,Overrides,Points,ObjO):- 
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
   %nb_current(test_pairname,ID),
   Area is Width * Height,
-  
-  my_assertion((Points\==[],
-     mapgroup(between(1,30),[H,V,LoH,LoV,HiH,HiV,Width,Height]))),
- must_det_ll((
   my_assertion(is_list([overrides|Overrides])),
   my_assertion(maplist(is_cpoint,Points)),
   %colors(Points,CC),
   %my_assertion(ground(Points)),
   flag(indiv,Fv,Fv+1),
   Iv is (Fv rem 3000) + 1,
-  once(colors_via_pixels(Points,CC)),
+  colors_via_pixels(Points,CC),
   fg_points(Points,FgPoints),
   length(FgPoints,Len),
   Empty is Area - Len,
@@ -261,9 +173,10 @@ make_indiv_object_s(ID,H,V,Points,Overrides,Obj):-
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|OShapes], % [grid(LocalGrid)],    
     [center(CX,CY)],
-    [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps))),  
+    [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps),  
   with_objprops(override,Overrides,Ps,OUT1),
-  sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj),!.
+  sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj),!,
+ must_det_ll((ObjO = Obj)).
 
 top(7).
 
@@ -357,10 +270,9 @@ add_shape_info([],I,I):-!.
 add_shape_info(Info,I,O):- override_object(iz(Info),I,O).
 
 verify_object(Obj):-
-  localpoints(Obj,_LP),
-  globalpoints(Obj,_GP),
-  iz(Obj,symmetry(What)),
-  nonvar(What).
+  assertion(localpoints(Obj,_LP)),
+  assertion(globalpoints(Obj,_GP)),
+  nop(assertion((iz(Obj,symmetry(What)), nonvar(What)))).
 
 override_object([],I,I):-!.
 override_object(E,I,O):- with_object(override,E,I,O).
@@ -411,7 +323,7 @@ merge_2objs(VM,Bigger,NewInside,IPROPS,Combined):-
  indv_props(Bigger,Props1),indv_props(NewInside,Props2),             
  my_append([GP1,GP2],GPoints), my_append([Props1,Props2,IPROPS],Info),
  my_partition(props_not_for_merge,Info,_Exclude,Include),
- make_indiv_object(VM.id,VM.h,VM.v,GPoints,Include,Combined).
+ make_indiv_object(VM,Include,GPoints,Combined).
 
 props_not_for_merge(globalpoints(_)).
 props_not_for_merge(shape(_)).
@@ -758,6 +670,7 @@ rebuild_from_localpoints(Obj,NewObj):-
   rebuild_from_localpoints(Obj,Points,NewObj).
 
 rebuild_from_localpoints(Obj,WithPoints,NewObj):-
+ get_vm(VM),
  must_det_ll((
   localpoints(WithPoints,Points),
 
@@ -766,9 +679,8 @@ rebuild_from_localpoints(Obj,WithPoints,NewObj):-
   (Points=@=PrevPoints -> (NewObj=Obj) ;
 
  (rotation(Obj,Rot),unrotate(Rot,UnRot),
-  loc_xy(Obj,X,Y),%vis_hv(Obj,H,V),
-  grid_size(Obj,GH,GV),
-  object_indv_id(Obj,ID,_Iv),
+  loc_xy(Obj,X,Y),%vis_hv(Obj,H,V),  
+  %object_indv_id(Obj,ID,_Iv),
   %uncast_grid_to_object(Orig,Grid,NewObj),
   points_to_grid(Points,Grid),
   call(UnRot,Grid,UnRotGrid),
@@ -777,7 +689,8 @@ rebuild_from_localpoints(Obj,WithPoints,NewObj):-
   indv_props(Obj,Props),
   my_partition(lambda_rev(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
-    make_indiv_object(ID,GH,GV,GPoints,[loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj))))),
+  remObjects(VM,Obj),
+  make_indiv_object(VM,[loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],GPoints,NewObj))))),
    verify_object(NewObj),
   !.
 
@@ -810,18 +723,20 @@ rebuild_from_globalpoints(Obj,NewObj):-
   rebuild_from_localpoints(Obj,GPoints,NewObj).
 
 rebuild_from_globalpoints(Obj,GPoints,NewObj):-
+  get_vm(VM),
   rotation(Obj,Rot),unrotate(Rot,UnRot),
   loc_xy(Obj,X,Y),vis_hv(Obj,H,V),
   deoffset_points(X,Y,GPoints,LPoints),
-  object_indv_id(Obj,ID,_Iv),
-  grid_size(Obj,GH,GV),
+  %object_indv_id(Obj,ID,_Iv),
+  %grid_size(Obj,GH,GV),
   points_to_grid(H,V,LPoints,Grid),
   call(UnRot,Grid,UnRotGrid),
   localpoints(UnRotGrid,Points),
   indv_props(Obj,Props),
   my_partition(lambda_rev(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
-    make_indiv_object(ID,GH,GV,Points,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],NewObj),
+  remObjects(VM,Obj),
+    make_indiv_object(VM,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],Points,NewObj),
     verify_object(NewObj),
  !.
 
@@ -1115,7 +1030,7 @@ guess_shape_poly(I,_,_,_,_,Colors,[Point],dot):-!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,rectangulator):- N>1, H\==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,solid):- N > 1.
-guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
+%guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
 
 guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2, 
   (flipSym(SN,GridIn)*->R=symmetry(SN);R=symmetry(none)).

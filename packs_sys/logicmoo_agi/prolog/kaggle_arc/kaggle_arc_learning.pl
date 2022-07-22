@@ -166,13 +166,6 @@ learn_rule(In,RuleDir,Out):-
 
 learn_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
  get_current_test(TestID),
-  get_vm(last_key,Key),  
-  ((learnt_rule(TestID,In,Key,RuleDir,Out);learnt_rule(TestID,_,Key,RuleDir,Out))),
-  pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
-  ignore(Out = ROut).
-
-learn_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
- get_current_test(TestID),
   ignore(get_vm(last_key,Key)),
   ((learnt_rule(TestID,In,Key,RuleDir,Out);learnt_rule(TestID,_,Key,RuleDir,Out);learnt_rule(TestID,In,_,RuleDir,Out))),
   pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
@@ -281,7 +274,7 @@ subtractGrid(Out,In,Alien):- plain_var(Out),!,add_global_points(Alien,In,Out).
 subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 
 find_by_shape(Grid,Find,Founds):- 
- makeup_gridname(ID),
+ get_vm(VM),
  vis_hv(Find,GH,GV),
  decolorize(Find,F), 
  Prog = 
@@ -291,7 +284,7 @@ find_by_shape(Grid,Find,Founds):-
 
    grid_to_points(F1,GH,GV,Points),
    pt(Points),
-   make_indiv_object(ID,GH,GV,Points,[iz(find_by_shape),F1,loc_xy(H,V)],F2)),
+   make_indiv_object(VM,[iz(find_by_shape),F1,loc_xy(H,V),alt_grid_size(GH,GV)],Points,F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).
 

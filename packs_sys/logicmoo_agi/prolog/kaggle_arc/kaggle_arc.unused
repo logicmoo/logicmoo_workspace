@@ -1057,6 +1057,98 @@ fsi(_VM,ReservedIO,Grid,[by_color(Min,Rest)|TODO],H,V,Sofar,ID,[by_color(Min,Opt
     -> NewSofar = [ColorObj|Sofar] 
      ; NewSofar = Sofar).
 */
+/*
+
+fsi(_VM,Reserved,Grid,NewOptions,_H,_V,Sofar,_ID,[by_color|TODO], Reserved, Points, Grid,Sofar, Points):- !,
+   my_append(
+     [(by_color(Min,[(black), (blue),  (red),   (green),(yellow),
+                     (silver),(purple),(orange),(cyan), (brown)]))],TODO,NewOptions).
+*/
+/*
+
+fsi(_VM,Reserved,Grid,TODO,GH,GV,Sofar,ID,[leftover_as_one|TODO], Reserved, Points, Grid,SofarIndvList, []):- !,
+   Points==[] -> SofarIndvList = Sofar ;
+   make_indiv_object(ID,GH,GV,Points,[iz(combined),iz(leftover_as_one)],LeftOverObj), verify_object(LeftOverObj),
+   my_append(Sofar,[LeftOverObj],SofarIndvList).
+
+
+fsi(_VM,Reserved,Grid,TODO,H,V,Sofar,ID,[into_single|TODO],Reserved,Points,Grid,[Indv],Points):- !,
+    maplist(globalpoints,Sofar,IndvPoints), my_append(IndvPoints,IndvPointsL),
+    EIndvPoints=[iz(combined),iz(into_single)|IndvPointsL],
+    make_indiv_object(ID,H,V,EIndvPoints,Indv),
+    meets_indiv_criteria(into_single_hidden,IndvPoints),!.
+
+%  fsi(_VM,NewReserved,NewGrid,NewOptions,H,V,Sofar,ID,TODO,Reserved,Points,Grid,OutInvdivS,NextScanPoints).
+*/
+
+
+/*
+make_indiv_object(_ID,_H,_V,IPoints,Obj):- 
+  compound(IPoints),IPoints=obj(_),Obj=IPoints,!.
+make_indiv_object(ID,H,V,IPoints,Obj):-
+  my_partition(is_cpoint,IPoints,Points,Overrides),
+  sort_points(GPoints,Points),
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),
+  as_obj(OUT,Obj).
+
+
+make_indiv_object(VM,Points,Overrides,Obj):- 
+  globalpoints(Points,RPoints),
+  sort_points(RPoints,GPoints),
+  points_range(GPoints,LoH,LoV,HiH,HiV,_HO,_VO),
+  gensym('indiv_object_',ID),
+  make_indiv_object(ID,HiH,HiV,LoH,LoV,HiH,HiV,GPoints,Overrides,OUT),
+  as_obj(OUT,Obj).
+
+make_indiv_object(ID,H,V,Points,Overrides,Obj):-
+  points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+  make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,OUT),!,
+  as_obj(OUT,Obj).
+
+make_indiv_object(ID,H,V,LoH,LoV,HiH,HiV,GPoints,Overrides,Obj):-
+  validate_points(GPoints), sort_points(GPoints,Points),
+  make_indiv_object_s(ID,H,V,LoH,LoV,HiH,HiV,Points,Overrides,Obj).
+*/
+/*
+make_indiv_object_list(ID,H,V,Points,OUT):-
+  mapgroup(make_indiv_object(ID,H,V),Points,OUT).
+*/
+
+%make_indiv_object(_,_,_,obj(Ps),obj(Ps)):-
+%embue_points(ID,_,_,I,I):-!.
+%embue_obj_points(ID,H,V,Points,OUT):- make_indiv_object(ID,H,V,Points,OUT).
+
+%embue_obj_points(ID,H,V,LoH,LoV,HiH,HiV,C-HV,OBJ):- !, embue_obj_points(ID,H,V,LoH,LoV,HiH,HiV,[C-HV],OBJ).
+
+
+
+  %pt(Image-->Image9x9),
+  %grid_to_id(Grid,Gridname),
+  %quaderants_and_center_rays(Image9x9,Quads,Centers,Rays),
+  %my_append([Quads,Centers,Rays],FourWay1s00),
+  %trace,
+  %correctify_objs(Gridname,FourWay1s00,FourWay1s),!.
+
+
+/*correctify_objs(Gridname,FourWay1s00,FourWay1s):- is_list(FourWay1s00),mapgroup(correctify_objs(Gridname),FourWay1s00,FourWay1s).
+correctify_objs(Gridname,obj(List),obj(NOBJ)):- is_list(List), 
+   member(grid(Grid),List),
+   \+ member(globalpoints(_),List),`
+   grid_size(Grid,H,V),
+   %trace,
+   pt(dleaing_with=obj(List)),
+   globalpoints(Grid,Points),
+   my_assertion(Points\=[]),
+   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
+   %nb_current(test_pairname,ID),
+   embue_points1(Gridname,H,V,LoH,LoV,HiH,HiV,Points,OBJ),
+   my_append(List,OBJ,NOBJ),!.
+correctify_objs(_Gridname,obj(List),obj(List)):-!.
+correctify_objs(_Gridname,Obj,Obj).
+   %make_embued_points(Grid,H,V,Points,IndvS)
+*/
+%  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
 
 % standalone_dots that have no adjacent points of the same color are gathered first
 /*

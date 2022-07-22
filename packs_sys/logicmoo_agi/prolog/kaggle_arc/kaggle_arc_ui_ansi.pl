@@ -23,18 +23,18 @@ tersify(I,O):- tracing,!,I=O.
 %tersify(I,O):- term_variables(I,Vs), \+ ( member(V,Vs), attvar(V)),!,I=O.
 tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 
+/*
 :- multifile(dumpst_hook:simple_rewrite/2).
 :- dynamic(dumpst_hook:simple_rewrite/2).
-
-:- discontiguous arc_portray/2. 
-
 %dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
 dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
 dumpst_hook:simple_rewrite(I,O):- is_map(I),!, O='..vvmm..'.
 %dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
 dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,!,O='..points..'(N),!.
-
+*/
 portray_terse:- !.
+
+:- discontiguous arc_portray/2. 
 
 arc_portray(Map,TF):- get_map_pairs(Map,Type,Pairs),!, arc_portray_pairs(Type,TF,Pairs). 
 

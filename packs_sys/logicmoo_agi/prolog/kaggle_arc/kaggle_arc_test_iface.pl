@@ -123,7 +123,7 @@ interact:- list_of_tests(L), length(L,SelMax),
   %get_single_char(Code), wdmsg(code=Code), char_code(Key,Code),  put_char(Key), 
    % with_tty_raw
    (once(read_menu_chars('',SelMax,Key))),
-   once(do_menu_key(Key)), retract(wants_exit).
+   once((do_menu_key(Key))), retract(wants_exit).
 
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), assert(wants_exit_menu).
 do_menu_key('?'):- !, menu_options('i').

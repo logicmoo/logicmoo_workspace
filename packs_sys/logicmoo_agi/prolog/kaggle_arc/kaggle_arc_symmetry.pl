@@ -226,14 +226,14 @@ grid_has_points(G):- is_grid(G),!.
 
 incr(X,X1):- X1 is X + 1.
 
-clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
+clip_quadrant(CRef,SXC,SXC,EXC,EYC,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
   clip(SXQ4,SYQ4,EXQ4,EYQ4,G,Q4),
   call(Same,Q4,LikeQ4),
   globalpoints(LikeQ4,LGPoints),  
   Width is EXQ4-SXQ4+1,Height is EYQ4-SYQ4+1,
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
-  make_indiv_object(GN,H,V,LGPoints,
+  make_indiv_object(VM,
     [iz(quadrant(CRef,Same)),
      iz(pattern(CRef,SXC,SXC,EXC,EYC)),
      rotation(Same),
@@ -241,17 +241,17 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
      loc_xy(SXQ4,SYQ4),
      globalpoints(GPoints),
      center_info(CRef,SXC,SXC,EXC,EYC) /*,
-     grid(LikeQ4)*/ ],OBJL).
+     grid(LikeQ4)*/ ],LGPoints,OBJL).
   
 
-clip_ray(CRef,SXC,SXC,EXC,EYC,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJ):-
+clip_ray(CRef,SXC,SXC,EXC,EYC,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJ):-
 nop((
   clip(SXQ4,SYQ4,EXQ4,EYQ4,G,Q4),
   CommonQ = [iz(divider(CRef,Same)),iz(ray(CRef,SXC,SXC,EXC,EYC))],
   call(Same,Q4,LikeQ4),
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
-  embue_points1(GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,GPoints,Ps),!,
+  embue_points1(VM,SXQ4,SYQ4,EXQ4,EYQ4,GPoints,Ps),!,
   append([[rotation(Same),
      center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],CommonQ,Ps],OBJL),
   OBJ=obj(OBJL))).
@@ -326,7 +326,6 @@ glean_grid_patterns(VM):-
   % points that NeededChanged must be processed as if something special occluded it
   set(VM.points) = NeededChanged,
   set(VM.grid) = Repaired,
-%  make_indiv_object(VM.id,VM.h,VM.v,RepairedPoints,[iz(symmetric_indiv)],ColorObj),!,
 %  addObjects(VM,ColorObj).
   addProgramStep(VM,Steps).
 
@@ -417,7 +416,7 @@ repair_in_vm(P4,VM):-
   addProgramStep(VM,[repair_in_vm(P4)|Steps])]),
   set(VM.neededChanged)=NeededChanged,
   fif(NeededChanged\==[], 
-         (make_indiv_object(VM,NeededChanged,[iz(neededChanged),iz(invisible)],ColorObj),!,
+         (make_indiv_object(VM,[iz(neededChanged),iz(invisible)],NeededChanged,ColorObj),!,
             addInvObjects(VM,ColorObj))))),!.
 
 column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row). 
@@ -569,7 +568,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   gset(VM.points) = [],
   OriginalPoints = VM.points_o,
   include(was_color(Cs),OriginalPoints,NeededChanged),  
-  %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,NeededChanged,[iz(neededChanged),iz(invisible)],ColorObj),!, addObjects(VM,ColorObj),
+  %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,[iz(neededChanged),iz(invisible)],NeededChanged,ColorObj),!, addObjects(VM,ColorObj),
   set_vm_obj(neededChanged,NeededChanged),  
 
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
@@ -1271,7 +1270,8 @@ rp_test(Y):- rp_test0(X),rot90(X,Y).
 
 
 find_and_use_pattern_gen(G,Grid9x9):- 
- grid_to_id(G,GN), grid_size(G,H,V),
+ %grid_to_id(G,GN), grid_size(G,H,V),
+ get_vm(VM),
  gensym('CRef_',CRef),
   [[Q2,  CN, Q1],
    [CW, _CC, CE],
@@ -1281,15 +1281,15 @@ find_and_use_pattern_gen(G,Grid9x9):-
    SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4)); 
    (writeln(did_NOT_find_pattern_gen),nop(mirror_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,
    SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),fail)),
-  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ2,EXQ2,EYQ2,G,flipHV,Q2),
-  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
-  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),
-  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYQ4,EXQ4,EYQ4,G,same,Q4),
-  %clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXCC,SYCC,EXCC,EYCC,G,CC),    
-  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXCC,SYQ2,EXCC,EYQ2,G,rot270,CN),
-  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXCC,SYQ4,EXCC,EYQ4,G,rot90,CS),
-  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ4,SYCC,EXQ4,EYCC,G,same,CE),
-  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,GN,H,V,SXQ2,SYCC,EXQ2,EYCC,G,rot180,CW),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYQ2,EXQ2,EYQ2,G,flipHV,Q2),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,same,Q4),
+  %clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXCC,SYCC,EXCC,EYCC,G,CC),    
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXCC,SYQ2,EXCC,EYQ2,G,rot270,CN),
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXCC,SYQ4,EXCC,EYQ4,G,rot90,CS),
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYCC,EXQ4,EYCC,G,same,CE),
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYCC,EXQ2,EYCC,G,rot180,CW),
   nop(print_symmetry(localpoints,Q2,Q1,Q3,Q4)),!.
 
 

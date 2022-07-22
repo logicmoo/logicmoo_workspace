@@ -74,7 +74,7 @@ install_dot_intercept:-
    module_transparent('$dicts':('.'/3)),
    '$set_source_module'('$dicts'),
    '$dicts':compile_aux_clauses([
-      (('.'(Self,Func,Value) :- gvlib:dot_eval(Self,Func,Value))) %,
+      (('.'(Self,Func,Value) :- notrace(gvlib:dot_eval(Self,Func,Value)))) %,
       % ('.'(Dict, Func, Value) ':-' BODY)
       ]),
    '$set_source_module'(gvlib),

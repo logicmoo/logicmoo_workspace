@@ -131,8 +131,10 @@ the_hammer(Color,ColorComplex):-
   changes([]), iz(rectangle), iz(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
-the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,H,V,Points,_Complex), 
-  make_indiv_object('ID',H,V,Points,[iz(hammer)],LibObj).
+
+the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,_H,_V,Points,_Complex), 
+  get_vm(VM),
+  make_indiv_object(VM,[iz(hammer)],Points,LibObj).
 
 
 shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,mapgroup(shape_info_props,Shapes,ShapeProps).
@@ -141,16 +143,17 @@ shape_info_props(Shape,iz(Shape)).
 l_shape(LibObj):- 
   in_grid_shape_lib(Shapes0,Grid,GrowthChart),
   once(must_det_ll((
-  grid_size(Grid,H,V),
+  %grid_size(Grid,H,V),
   enum_scale(Scale),
   flatten([Shapes0],Shapes),
   shape_info_props(Shapes,ShapeProps),
-  flatten([Shapes,H,V,Scale],AList),!,
-  atomic_list_concat(AList,'_',ID),
+  %flatten([Shapes,H,V,Scale],AList),!,
+  %atomic_list_concat(AList,'_',ID),
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
   globalpoints(ScaledGrid,Points)))),
-  catch(make_indiv_object(ID,H,V,Points,[iz(l_shape)|ShapeProps],LibObj),_,
-    (dumpST,trace,make_indiv_object(ID,H,V,Points,[iz(l_shape)|ShapeProps],LibObj))).
+  get_vm(VM),
+  catch(make_indiv_object(VM,[iz(l_shape)|ShapeProps],Points,LibObj),_,
+    (dumpST,trace,make_indiv_object(VM,[iz(l_shape)|ShapeProps],Points,LibObj))).
 
 % todo temp
 sortshapes(List,Set):- my_list_to_set_cmp(List, using_compare(shape_key), Set).

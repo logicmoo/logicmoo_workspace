@@ -241,6 +241,7 @@ is_input(VM):- VM.id = _ * _ * in.
 
 %show_object_changes(_VM,_S,Goal):-!, call(Goal).
 
+show_vm_changes(_VM,_S,Goal):- !, call(Goal),!.
 show_vm_changes(VM,S,Goal):-
   show_object_changes(VM,S,show_point_changes(VM,S,show_grid_changes(VM,S,Goal))).
 

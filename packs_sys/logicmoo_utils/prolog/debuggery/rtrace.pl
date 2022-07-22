@@ -227,6 +227,7 @@ quietly(M:Goal):- \+ tracing
 
 % :- 'my_totally_hide'(rtrace:quietly/1).
 :- old_swi(old_set_predicate_attribute(rtrace:quietly/1, hide_childs, true)).
+:- '$hide'(quietly/1).
 
 % Alt version?
 quietlySE(Goal):- %JUNIT \+ tracing 

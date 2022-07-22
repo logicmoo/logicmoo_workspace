@@ -60,8 +60,7 @@ will_show_grid(_,false).
 
 
 print_list_of(_,[]):-!.
-print_list_of(N,OO):-
- sort(OO,O),
+print_list_of(N,O):-
  (N\=[] -> pt(N); true),
   %save_grouped(print_list_of(N),O),
    maplist(print_info,O),!.

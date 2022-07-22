@@ -162,7 +162,7 @@ must_det_ll(X):-
   strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
     nop(trace(M:F/A,-fail))).
 
-must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(dumpST,writeq(E=X),rrtrace(X)))).
+must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(dumpST,writeq(E=X),pt(rrtrace=X),rrtrace(X)))).
 
 must_det_ll_failed(X):- (wdmsg(failed(X)),dumpST)->trace,rrtrace(X),!.
 % must_det_ll(X):- must_det_ll(X),!.
@@ -449,14 +449,14 @@ set_vm_obj1(Prop,Value):- is_grid(Value),!,
   grid_size(Value,H,V),
   fif(IndvPoints\==[],
     (get_vm(VM),
-          make_indiv_object(VM,IndvPoints,[iz(Prop),vis_hv(H,V),birth(set_vm(Prop))],Obj),
+          make_indiv_object(VM,[iz(Prop),vis_hv(H,V),birth(set_vm(Prop))],IndvPoints,Obj),
           addObjects(VM,Obj),
           print_grid(H,V,Prop,Value))),!.
 
 set_vm_obj1(Prop,IndvPoints):- is_points_list(IndvPoints),!,
   fif(IndvPoints\==[],
     (get_vm(VM),          
-          make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
+          make_indiv_object(VM,[iz(Prop),birth(set_vm(Prop))],IndvPoints,Obj),
           addObjects(VM,Obj),
           print_grid(VM.h,VM.v,Prop,IndvPoints))),!.
 
@@ -466,7 +466,7 @@ set_vm_obj1(Prop,Value):- is_object(Value),!,
   globalpoints(Value,IndvPoints),
   fif(IndvPoints\==[],
     (get_vm(VM),
-          make_indiv_object(VM,IndvPoints,[iz(Prop),birth(set_vm(Prop))],Obj),
+          make_indiv_object(VM,[iz(Prop),birth(set_vm(Prop))],IndvPoints,Obj),
           addObjects(VM,Obj),
           print_grid(VM.h,VM.v,Prop,Value)))))),!.
 
@@ -815,7 +815,7 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 :- show_tests.
 :- load_last_test_name.
 
-user:portray(Grid):- quietly(arc_portray(Grid)),!.
+%user:portray(Grid):- quietly(arc_portray(Grid)),!.
 :- listing((addOptions)/2).
 %:- xlisting((.)/3).
 %:- xlisting(user:'.'(_, _, _)).
