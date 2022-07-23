@@ -22,7 +22,7 @@ learned_test(TName):-
     training_info(TestID,Info),
     maplist(print_rule(TestID),Info),
     length(Info,Len),
-    format('% Rules Learned: ~w~n',[Len]),!.
+    ptc(orange,format('~N~n% Rules Learned: ~w~n~n',[Len])),!.
  
 
 
@@ -124,14 +124,41 @@ learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
   %learn_rule_i_o(Mode,InVM.grid,OutVM.objs),
   %learn_rule_i_o(Mode,InVM.objs,OutVM.grid),
   learn_rule_i_o(Mode,InVM.grid,OutVM.grid),
-  get_current_test(TestID), 
+  get_current_test(TestID),
   training_info(TestID,Info),
   length(Info,Len),
-  ptc(orange,format('~n% Rules Known for ~w: ~w~n',[TestID,Len])),!.
+  ptc(orange,format('~N~n% Rules so far for ~w: ~w~n~n',[TestID,Len])),!,
+  confirm_reproduction(InVM.objs,InVM.grid),
+  confirm_reproduction(OutVM.objs,OutVM.grid),
+  confirm_learned(InVM.grid,OutVM.grid).
 
 learn_rule_i_o(Mode,In,Out):- 
   forall(learn_rule_in_out(Mode,In,Out),true).
+
+confirm_reproduction(Objs,ExpectedOut):- 
+   globalpoints(Objs,OGPoints),
+   points_to_grid(OGPoints,Solution),
+   show_result("Our Reproduction", Solution,ExpectedOut).
+
+show_result(What,Solution,ExpectedOut):-
+ get_current_test(TestID),
+ ignore((count_difs(ExpectedOut,Solution,Errors),
+   print_side_by_side(blue,Solution,What,_,ExpectedOut,"Expected"),
+      (Errors==0 -> 
+           arcdbg_info(green,pass(What,TestID))
+         ; arcdbg_info(red,fail(What,Errors,TestID))))),
+ task_info(TestID,InfoF),wqnl(fav(TestID,InfoF)),!.
+
+
+arcdbg_info(Color, Info):- banner_lines(Color), arcdbg(Info), banner_lines(Color).
+
+confirm_learned(In,ExpectedOut):-
+  individuate(complete,In,Objs),
+  (use_test_associatable(Objs,Solution) -> 
+   show_result("Our Solution", Solution,ExpectedOut)
+   ; arcdbg_info(red,warn("No Solution"))).
   
+
 %learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
 %learn_rule_o(_Mode,_,G):- is_list(G), is_group(G), learn_about_group(G), fail.
 
