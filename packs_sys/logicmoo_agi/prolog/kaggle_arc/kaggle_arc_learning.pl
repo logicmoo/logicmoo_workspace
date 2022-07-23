@@ -115,22 +115,25 @@ learn_rule_o(out_out,_InVM,_OutVM):- !.
 learn_rule_o(out_in,_InVM,_OutVM):- !.
 learn_rule_o(in_in,_InVM,_OutVM):- !.
 learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
+  InGrid = InVM.grid, InObjs = InVM.objs,
+  OutGrid = OutVM.grid, OutObjs = OutVM.objs,
  % extract_vm_props(InVM,InProps),     
  % extract_vm_props(OutVM,OutProps), 
  % prolog_pretty_print:print_term(Mode=learn_rule_o(Mode,InProps,OutProps),[fullstop(true),nl(true)]),!,
   %learn_grid_rules(Mode,InProps),
   %learn_grid_rules(Mode,OutProps),!,
-  learn_rule_i_o(Mode,InVM.objs,OutVM.objs),
-  %learn_rule_i_o(Mode,InVM.grid,OutVM.objs),
-  %learn_rule_i_o(Mode,InVM.objs,OutVM.grid),
-  learn_rule_i_o(Mode,InVM.grid,OutVM.grid),
+  learn_rule_i_o(Mode,InObjs,OutObjs),
+  %learn_rule_i_o(Mode,InGrid,OutObjs),
+  %learn_rule_i_o(Mode,InObjs,OutGrid),
+  learn_rule_i_o(Mode,InGrid,OutGrid),
   get_current_test(TestID),
   training_info(TestID,Info),
   length(Info,Len),
   ptc(orange,format('~N~n% Rules so far for ~w: ~w~n~n',[TestID,Len])),!,
-  confirm_reproduction(InVM.objs,InVM.grid),
-  confirm_reproduction(OutVM.objs,OutVM.grid),
-  confirm_learned(InVM.grid,OutVM.grid).
+  confirm_reproduction(InObjs,InGrid),
+  confirm_reproduction(OutObjs,OutGrid),
+  confirm_learned(InGrid,OutGrid),
+  show_proof(InGrid,OutGrid).
 
 learn_rule_i_o(Mode,In,Out):- 
   forall(learn_rule_in_out(Mode,In,Out),true).
