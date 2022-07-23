@@ -18,9 +18,9 @@ recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
    nop((set(VM.program_i) = [After,recalc_sizes|TODO])).
 /*
-   Ë mass(3) cc(blue,3.0) vis_hv(1,3) loc_xy(2,1) pen([]) birth(individual3(nsewmass)) iz(symmetry(sym_hv)) center(2,2) layer(in) nth(21)
-%mass(3) cc(cyan,3.0) vis_hv(1,3) loc_xy(1,1) pen([]) birth(individual3(nsewmass)) iz(symmetry(sym_hv)) center(1,2) layer(in) nth(22)
-%  Iz(Non Diag):         Ê mass(3) cc(green,3.0) vis_hv(1,3) loc_xy(3,1) pen([]) birth(individual3(nsewmass)) iz(nsewmass) iz(rectangulator) iz(symmetry(sym_hv)) center(3,2) layer(in) nth(20)
+   Ë mass(3) cc(blue,3.0) v_hv(1,3) loc(2,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(2,2) layer(in) nth(21)
+%mass(3) cc(cyan,3.0) v_hv(1,3) loc(1,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(1,2) layer(in) nth(22)
+%  Iz(Non Diag):         Ê mass(3) cc(green,3.0) v_hv(1,3) loc(3,1) pen([]) birth(ifti3(nsew)) iz(nsew) iz(rectangulator) iz(symmetry(sym_hv)) center(3,2) layer(in) nth(20)
 
 */
 
@@ -88,7 +88,7 @@ not_very_simular(X):- \+ not_very_different(X).
 
 not_very_different(vis_hv_term(size(A,B))):- !, not_very_different_t(A),not_very_different_t(B).
 not_very_different(vis_hv_term(area(A))):-   !, not_very_different_t(A).
-not_very_different(loc_xy_term(loc(A,B))):-  !, not_very_different_t(A),not_very_different_t(B).
+not_very_different(loc_term(loc(A,B))):-  !, not_very_different_t(A),not_very_different_t(B).
 not_very_different(center_term(loc(A,B))):-  !, not_very_different_t(A),not_very_different_t(B).
 
 not_very_different(mass(A)):- !, not_very_different_t(A).
@@ -128,7 +128,7 @@ proportional_lists(IColor,OColor,OUT):-
 
 
 %proportional_grids(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
-%proportional_grids(Obj1,Obj2,loc_xy_term(N)):- once((loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2))),proportional(N1,N2,N).
+%proportional_grids(Obj1,Obj2,loc_term(N)):- once((loc_term(Obj1,N1),loc_term(Obj2,N2))),proportional(N1,N2,N).
 %proportional_grids(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
 %proportional_grids(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
 
@@ -137,14 +137,14 @@ proportional_lists(IColor,OColor,OUT):-
 :- decl_pt(prop_h,mass(is_object_or_grid,number)).
 
 :- decl_pt(prop_h,center_term(is_object,loc)).
-:- decl_pt(prop_h,loc_xy_term(is_object,loc)).
+:- decl_pt(prop_h,loc_term(is_object,loc)).
 
 :- decl_pt(prop_h,has_y_columns(is_grid,colcount,color,list(rownums))).
 :- decl_pt(prop_h,has_x_columns(is_grid,rowcount,color,list(colnums))).
 
 
 /*proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
-proportional_objs(Obj1,Obj2,loc_xy_term(N)):- once((loc_xy_term(Obj1,N1),loc_xy_term(Obj2,N2))),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,loc_term(N)):- once((loc_term(Obj1,N1),loc_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,color_diff(N)):- colors(Obj1,N1),colors(Obj2,N2),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).

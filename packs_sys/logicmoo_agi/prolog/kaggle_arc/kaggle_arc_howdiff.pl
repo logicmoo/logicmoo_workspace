@@ -130,8 +130,8 @@ showdiff_groups(AG,BG):-
   
   showdiff_groups(A1,B1,
       [compare_objs1([perfect]),
-       compare_objs1([turned,+loc_xy]),
-       compare_objs1([turned,-loc_xy]),
+       compare_objs1([turned,+loc]),
+       compare_objs1([turned,-loc]),
        compare_objs1([moved]),
        compare_objs1([same])],
                   A4,B4),  
@@ -227,7 +227,7 @@ uncomparable(term,globalpoints).
 uncomparable(object,iz).
 uncomparable(shape,localpoints).
 %uncomparable(group,grid_size).
-%uncomparable(group,object_indv_id).
+%uncomparable(group,o_i_d).
 uncomparable(P):- compound(P),functor(P,F,_),uncomparable(F).
 
 make_comparable(I,I):- plain_var(I).
@@ -240,10 +240,10 @@ make_comparable(I,II):- functor(I,II,_).
 
 no_diff(in,out).
 simular([],_,_,[]):- !.
-simular(loc_xy=Where,I,O,object_has_moved(Where)):-  
+simular(loc=Where,I,O,object_has_moved(Where)):-  
   \+ (mass(O,OC), OC < 6) ,
   \+ (colors(O,[cc(BG, _)|_]),is_black_or_bg(BG)),
-  object_indv_id(I,Tst,_Id1), \+ object_indv_id(O,Tst,_Id2).
+  o_i_d(I,Tst,_Id1), \+ o_i_d(O,Tst,_Id2).
 
 
 
@@ -390,7 +390,7 @@ sprop_of(same,shape).
 sprop_of(same,colors).
 
 sprop_of(moved,same).
-sprop_of(moved,loc_xy).
+sprop_of(moved,loc).
 
 sprop_of(turned,rotate).
 
@@ -404,12 +404,12 @@ usefull_compare(P):- compound(P),functor(P,F,_),!,usefull_compare(F).
 usefull_compare(P):- changed_by(P,_).
 
 changed_by(shape,reshape).
-changed_by(loc_xy,move).
+changed_by(loc,move).
 changed_by(mass,grow).
 changed_by(localpoints,reshape_and_recolor).
 changed_by(rotation,rotate).
 changed_by(colors,repaint).
-changed_by(vis_hv,copy).
+changed_by(v_hv,copy).
 
 
 :- style_check(+singleton).
@@ -461,7 +461,7 @@ diff_terms(I,O,D):- compound(I),compound(O),!,diff_compounds(I,O,D).
 diff_terms(I,O,diff(I->O)).
 
 never_diff(iz(_)).
-never_diff(object_indv_id(_,_)).
+never_diff(o_i_d(_,_)).
 diff_compounds(I,O, [] ):- (never_diff(I);never_diff(O)),!.
 diff_compounds(I,O,D):- compound_name_arguments(I,IF,IA),compound_name_arguments(O,OF,OA),
   maplist(compute_diff_or_same,IA,OA,DA),

@@ -185,12 +185,12 @@ ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portr
 pt_guess_pretty(P,O):- copy_term(P,O,_),
   ignore((sub_term(Body,O), compound(Body), Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),
   ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)),!,
-  nop((term_singletons(O,SS),numbervars(SS,999999999999,_,[attvar(bind),singletons(true)]))).
+  ((term_singletons(O,SS),numbervars(SS,999999999999,_,[attvar(skip),singletons(true)]))).
 
 :- dynamic(pretty_clauses:pp_hook/3).
 :- multifile(pretty_clauses:pp_hook/3).
 :- module_transparent(pretty_clauses:pp_hook/3).
-pretty_clauses:pp_hook(_,_,G):- is_grid(G), 
+pretty_clauses:pp_hook(_,_,G):- fail, is_grid(G), 
  \+ (sub_term(E,G),compound(E),E='$VAR'(_)), 
   catch((wots(S,print_grid(G)),strip_vspace(S,SS),pt(orange,call(format('"~w"',[SS])))),_,fail).
 
@@ -618,7 +618,7 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
 %print_rows(List):- maplist(print_g,List),nl.
 %block_colors([(black),(blue),(red),(green),(yellow),'#c0c0c0',(magenta),'#ff8c00',(cyan),'#8b4513']).
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,('#966cb8'),'#ff8c00',(cyan),'#8b4513']):- silver(Silver),!.
-block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#444444','#3a5a3a']):- silver(Silver),!.
+block_colors([('#2a2a2a'),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#444444','#3a5a3a']):- silver(Silver),!.
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#3a5a3a']):- silver(Silver),!.
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),wbg,fg]).
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
@@ -728,7 +728,7 @@ grid_dot(169).
 print_g(H,V,C,_,_,_,_):- write(' '), print_g1(H,V,C),!.
 
 object_glyph(G,Glyph):- is_grid(G),!,grid_dot(Dot),name(Glyph,[Dot]).
-object_glyph(G,Glyph):- is_object(G),!,object_indv_id(G,_Tst,GN2), int2glyph(GN2,Glyph).
+object_glyph(G,Glyph):- is_object(G),!,o_i_d(G,_Tst,GN2), int2glyph(GN2,Glyph).
 object_glyph(G,Glyph):- nobject_glyph(G,Glyph).
 
 nobject_glyph(G,Glyph):- integer(G), between(0,9,G),atom_number(Glyph,G),!.

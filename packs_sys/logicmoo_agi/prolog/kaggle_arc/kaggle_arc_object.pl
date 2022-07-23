@@ -41,13 +41,13 @@ empty_grid_to_individual(H,V,Obj):-
   Obj = obj( [ mass(0),
          shape([]),
          colors([]),
-         localpoints([]), vis_hv(H, V), 
+         localpoints([]), v_hv(H, V), 
          rotation(same), 
-         loc_xy(1, 1),
-         pen([fg]),
+         loc(1, 1),
+         %pen([fg]),
          changes([]), 
          iz(grid),
-         object_indv_id(empty_grid_to_individual(H,V), Iv),
+         o_i_d(empty_grid_to_individual(H,V), Iv),
          grid_size(H, V)]).
 
 
@@ -125,7 +125,8 @@ ensure_indiv_object(VM,IPoints,Obj):-
 make_point_object(VM,Overrides,C-Point,Obj):- 
   must_det_ll(make_indiv_object(VM,Overrides,[C-Point],Obj)).
 
-make_indiv_object(VM,Overrides,GPoints,Obj):-
+make_indiv_object(VM,Overrides,LPoints,Obj):-
+  localpoints_include_bg(LPoints,GPoints),
   sort_points(GPoints,Points),
   Objs = VM.objs,
   must_det_ll(((((select(Orig,Objs,Rest),same_globalpoints_ps_obj(Points,Orig)) 
@@ -146,40 +147,44 @@ make_indiv_object_s(ID,H,V,Overrides,Points,ObjO):-
   Iv is (Fv rem 3000) + 1,
   colors_via_pixels(Points,CC),
   fg_points(Points,FgPoints),
-  length(FgPoints,Len),
+  length(FgPoints,FgLen),length(Points,Len),
   Empty is Area - Len,
   deoffset_points(LoH,LoV,Points,LPoints),
-  sort(LPoints,LPointsS),
-  maplist(arg(1),LPointsS,BPenColors),
-  clumped(BPenColors,CPenColors),
-  reclumped(CPenColors,PenColors),
+  % sort(LPoints,LPointsS), maplist(arg(1),LPointsS,BPenColors), clumped(BPenColors,CPenColors), reclumped(CPenColors,PenColors),
   %remove_color(LPoints,UColorlessPoints),
   make_grid(Width,Height,Grid),
   add_global_points(LPoints,Grid,Grid),
   make_grid(Width,Height,LocalGrid),
-  CX is LoH + floor(Width/2),CY is LoV + floor(Height/2),
+  must_det_ll(once(
+   ((member(UFgPoints,[FgPoints,Points]),
+    ((CX is LoH + floor(Width/2),CY is LoV + floor(Height/2), hv_point(CX,CY,Point), member(_-Point,UFgPoints));
+    (length(UFgPoints,UFgLen),CP is round(UFgLen/2), nth1(CP,UFgPoints,Point),hv_point(CX,CY,Point)))));
+   (CX is LoH + floor(Width/2),CY is LoV + floor(Height/2)))),
   copy_term(Grid,GridInCopy),
-  grid_to_special_points(Grid,UColorlessPoints),
-  sort(UColorlessPoints,ColorlessPoints),
+  grid_to_special_points(Grid,ColorlessPoints),
+  %sort(UColorlessPoints,ColorlessPoints),
   findall(Shape,
-   (guess_shape(Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
+   (guess_shape(H,V,Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
      close_enough_grid(Grid,GridInCopy,LocalGrid)),ShapesUF),
   flatten([ShapesUF],ShapesU),list_to_set(ShapesU,Shapes),
   maplist(append_term(iz),Shapes,OShapes),
   my_append(
-  [ [mass(Len), shape(ColorlessPoints), colors(CC), localpoints(LPoints),
-     vis_hv(Width,Height), pen(PenColors),
-     rotation(same), loc_xy(LoH,LoV)],     
+  [ [ v_hv(Width,Height),mass(Len), center(CX,CY), shape(ColorlessPoints), loc(LoH,LoV), colors(CC), localpoints(LPoints),
+      %pen(PenColors),
+     rotation(same), cmass(FgLen)],     
     %width(Width), height(Height), area(Area), %missing(Empty),
     [changes([])|OShapes], % [grid(LocalGrid)],    
-    [center(CX,CY)],
-    [object_indv_id(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps),  
+    [iz(yc(CY)),iz(xc(CX))],
+    [iz(row(LoV)),iz(col(LoH)),iz(tall(Height)),iz(wide(Width))],
+    [o_i_d(ID,Iv),globalpoints(Points),grid_size(H,V)]],Ps),  
   with_objprops(override,Overrides,Ps,OUT1),
   sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj),!,
  must_det_ll((ObjO = Obj)).
 
 top(7).
 
+prop_order([v_hv,cmass,loc,mass,shape,localpoints,rotation,colors,changes,iz,globalpoints,o_i_d,grid_size]).
+iz_order([crow,ccol,row,col,tall,wide,chromatic,dot]).
 
 
 
@@ -211,9 +216,9 @@ draw_seg(Pen,X,Y,H,V,VM):- nop(doing(draw_seg(Pen,X,Y,H,V,VM))).
 
 
 obj_to_program(Obj,Program,VM):- 
-  (isz(Obj,hv_line(_));isz(Obj,dg_line(_));vis_hv(Obj,1,_);vis_hv(Obj,_,1)),!,
+  (isz(Obj,hv_line(_));isz(Obj,dg_line(_));v_hv(Obj,1,_);v_hv(Obj,_,1)),!,
   Program = 
-  [loc_xy(Obj,X,Y),vis_hv(Obj,H,V),
+  [loc(Obj,X,Y),v_hv(Obj,H,V),
    object_pen(Obj,Pen),
    draw_seg(Pen,X,Y,H,V,VM)].
 
@@ -225,7 +230,7 @@ add_grid_at_offset(X,Y,Grid,VM):- !,
 obj_to_program(Obj,Program,VM):-
   (isz(Obj,outl);isz(Obj,outline(_))),!,
   Program = 
-  [loc_xy(Obj,X,Y),   
+  [loc(Obj,X,Y),   
    object_grid(Obj,Grid),
    add_grid_at_offset(X,Y,Grid,VM)].
 
@@ -243,12 +248,12 @@ object_pen(Obj,pen(Color)):- color(Obj,Color),!.
 object_pen(Obj,Pen):- color(Obj,Pen),!.
 
 prop_of(mass,mass(_)).
-prop_of(size,vis_hv(_,_)).
+prop_of(size,v_hv(_,_)).
 prop_of(shape,shape(_)).
 prop_of(colors,colors(_)).
 prop_of(visually,localpoints(_)).
 prop_of(rotation,rotation(_)).
-prop_of(loc_xy,loc_xy(_,_)).
+prop_of(loc,loc(_,_)).
 
 %sort_obj_props(obj(L),obj(LO)):- !, sort_obj_props(L,LO).
 sort_obj_props(L,LO):- L=LO. %predsort(obj_prop_sort_compare,L,LO).
@@ -328,9 +333,9 @@ merge_2objs(VM,Bigger,NewInside,IPROPS,Combined):-
 props_not_for_merge(globalpoints(_)).
 props_not_for_merge(shape(_)).
 props_not_for_merge(localpoints(_)).
-props_not_for_merge(object_indv_id(_,_)).
-props_not_for_merge(loc_xy(_,_)).
-props_not_for_merge(vis_hv(_,_)).
+props_not_for_merge(o_i_d(_,_)).
+props_not_for_merge(loc(_,_)).
+props_not_for_merge(v_hv(_,_)).
 props_not_for_merge(colors(_)).
 props_not_for_merge(grid_size(_,_)).
 
@@ -348,11 +353,11 @@ transfer_props_l([_|L],Functors,List,NewList):-
   transfer_props_l(L,Functors,List,NewList).
 */
 
-object_indv_id(I,ID,Iv):- indv_props_old(I,L),member(object_indv_id(ID,Iv),L),!.
-object_indv_id(I,_ID,Fv):- is_grid(I),!, flag(indiv,Fv,Fv+1).
-object_indv_id(I,ID,Fv):- into_obj(I,O),!,object_indv_id(O,ID,Fv).
-object_indv_id(I,ID,Iv):- trace_or_throw(missing(object_indv_id(I,ID,Iv))).
-%object_indv_id(_,ID,_Iv):- nb_current(test_pairname,ID).
+o_i_d(I,ID,Iv):- indv_props_old(I,L),member(o_i_d(ID,Iv),L),!.
+o_i_d(I,_ID,Fv):- is_grid(I),!, flag(indiv,Fv,Fv+1).
+o_i_d(I,ID,Fv):- into_obj(I,O),!,o_i_d(O,ID,Fv).
+o_i_d(I,ID,Iv):- trace_or_throw(missing(o_i_d(I,ID,Iv))).
+%o_i_d(_,ID,_Iv):- nb_current(test_pairname,ID).
 
 mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
 mass(I,X):- var_check(I,mass(I,X)).
@@ -365,6 +370,16 @@ mass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
 mass(C-_,1):- nonvar_or_ci(C),!.
 mass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
 
+cmass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
+cmass(I,X):- var_check(I,cmass(I,X)).
+cmass([G|Grid],Points):- (is_group(Grid);(is_list(Grid),is_group(G))),!,mapgroup(cmass,[G|Grid],MPoints),sum_list(MPoints,Points).
+cmass(I,X):- indv_props(I,L),member(cmass(X),L),!.
+cmass(I,XX):- is_object(I),!,must_det_ll((localpoints(I,L), length(L,X))),!,XX=X.
+%cmass(I,X):- is_object(I),!,must_det_ll((indv_props(I,L), member(cmass(X),L))).
+cmass(Points,Count):- is_list(Points),length(Points,Count),!.
+cmass(I,Count):- globalpoints(I,Points),!,length(Points,Count),!.
+cmass(C-_,1):- nonvar_or_ci(C),!.
+cmass(I,Count):- globalpoints(I,Points), length(Points,Count),!.
 
 
 color_mass(Color,Int):- var(Color),!,Int=13.
@@ -406,7 +421,7 @@ indv_props_for_noteablity(obj(L),Notes):- my_assertion(nonvar(L)),!, include(is_
 
 %is_not_prop_for_noteablity(globalpoints).
 %is_not_prop_for_noteablity(grid_size).
-%is_not_prop_for_noteablity(object_indv_id).
+%is_not_prop_for_noteablity(o_i_d).
 
 %indv_props(G,L):- dumpST,trace,into_obj(G,O),is_object(O),indv_props(O,L).
 
@@ -456,7 +471,7 @@ var_check(I,G):- var(I),!,var_check_throw(I,G).
 var_check(I,_):- I==[],!,fail.
 var_check(I,G):- resolve_reference(I,O),I\==O,!,subst001(G,I,O,GG),GG\==G,!,call(GG).
 var_check(I,G):- var(I),!,(enum_object(I)*->G;var_check_throw(I,G)).
-var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,dumpST,trace_or_throw(maybe_enum_i(I,G)),call(G).
+var_check_throw(I,G):- var(I),wdmsg(error(var(G))),!,dumpST,wdmsg(error(var(G))),break,trace_or_throw(maybe_enum_i(I,G)),call(G).
 
 object_shapeW(I,X):- compound(I),I=obj(L),!,my_assertion(is_list(L)),!,member(iz(X),L).
 object_shapeW(I,X):- indv_props(I,L),!,member(iz(X),L).
@@ -561,7 +576,7 @@ globalpoints(G,G):- mapgroup(is_point,G),!.
 globalpoints(I,X):- trace_or_throw(unknown(globalpoints(I,X))).
 
   globalpoints0(I,X):- indv_props(I,L),member(globalpoints(X),L), nop(my_assertion(maplist(is_cpoint,X))),!.
-  %globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc_xy(I,X,Y),offset_points(X,Y,L,G),!.
+  %globalpoints0(I,G):- localpoints(I,L),is_points_list(L),loc(I,X,Y),offset_points(X,Y,L,G),!.
 
 localpoints(I,X):- (var_check(I,localpoints(I,X)), deterministic(TF), true), (TF==true-> ! ; true).
 
@@ -614,44 +629,44 @@ get_instance_method(Obj,Compound,F):- is_object(Obj), compound(Compound),compoun
 
 object_grid(I,G):- is_grid(I),!,G=I.
 object_grid(Group,List):- is_group(Group),!,override_group(object_grid(Group,List)),!.
-%object_grid(I,G):- indv_props(I,L),member(global_points(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
-%object_grid(I,G):- indv_props(I,L),member(localpoints(X),L),member(vis_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
-%object_grid(I,G):- vis_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
-object_grid(I,G):- localpoints(I,LP),vis_hv(I,H,V),points_to_grid(H,V,LP,G),!.
+%object_grid(I,G):- indv_props(I,L),member(global_points(X),L),member(v_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
+%object_grid(I,G):- indv_props(I,L),member(localpoints(X),L),member(v_hv(H,V),L),!,points_to_grid(H,V,X,G),!.
+%object_grid(I,G):- v_hv(I,H,V),localpoints(I,LP),points_to_grid(H,V,LP,G),!.
+object_grid(I,G):- localpoints(I,LP),v_hv(I,H,V),points_to_grid(H,V,LP,G),!.
 %object_grid(I,G):- globalpoints(I,GP),into_grid(GP,G),!.
 
-loc_xy_term(I,loc(X,Y)):- loc_xy(I,X,Y),!.
+loc_term(I,loc(X,Y)):- loc(I,X,Y),!.
 
-loc_xy(G,X,Y):- is_group(G),!,mapgroup(loc_xy_term,G,Offsets),sort(Offsets,[loc(X,Y)|_]). % lowest loc
-loc_xy(Grid,H,V):- is_grid(Grid),!,H=1,V=1.
-%loc_xy(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
-loc_xy(I,X,Y):- into_obj(I,O), indv_props(O,L),member(loc_xy(X,Y),L),!.
-%loc_xy(NT,H,V):- trace, known_gridoid(NT,G),loc_xy(G,H,V).
+loc(G,X,Y):- is_group(G),!,mapgroup(loc_term,G,Offsets),sort(Offsets,[loc(X,Y)|_]). % lowest loc
+loc(Grid,H,V):- is_grid(Grid),!,H=1,V=1.
+%loc(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,_,_,_,_), H is LoH, V is LoV.
+loc(I,X,Y):- into_obj(I,O), indv_props(O,L),member(loc(X,Y),L),!.
+%loc(NT,H,V):- trace, known_gridoid(NT,G),loc(G,H,V).
 
 
 :- decl_pt(prop_h,vis_hv_term(is_object_or_grid,size)).
 
-vis_hv_term(I,size(X,Y)):- vis_hv(I,X,Y),!.
+vis_hv_term(I,size(X,Y)):- v_hv(I,X,Y),!.
 
-vis_hv(Grid,H,V):- is_grid(Grid),!,grid_size(Grid,H,V).
-vis_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
-vis_hv(I,X,Y):- indv_props(I,L),member(vis_hv(X,Y),L),!.
-vis_hv(G,X,Y):- is_group(G),!,mapgroup(vis_hv_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
-vis_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
-vis_hv(NT,H,V):-  known_gridoid(NT,G),G\==NT, vis_hv(G,H,V).
+v_hv(Grid,H,V):- is_grid(Grid),!,grid_size(Grid,H,V).
+v_hv(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
+v_hv(I,X,Y):- indv_props(I,L),member(v_hv(X,Y),L),!.
+v_hv(G,X,Y):- is_group(G),!,mapgroup(vis_hv_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
+v_hv(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
+v_hv(NT,H,V):-  known_gridoid(NT,G),G\==NT, v_hv(G,H,V).
 
 
-%vis_hv(Obj,size(H,V)):- vis_hv(Obj,H,V).
-%loc_xy(Obj,loc(H,V)):- loc_xy(Obj,H,V).
+%v_hv(Obj,size(H,V)):- v_hv(Obj,H,V).
+%loc(Obj,loc(H,V)):- loc(Obj,H,V).
 
 center_term(Obj,loc(1,1)):- is_grid(Obj),!.
 center_term(Obj,loc(H,V)):- center(Obj,H,V).
 
 :- decl_pt(prop_h,hw_rat(is_object_or_grid,size)).
-hw_rat(Obj,HV):- vis_hv(Obj,OH,OV), HV is rationalize(OH/OV).
+hw_rat(Obj,HV):- v_hv(Obj,OH,OV), HV is rationalize(OH/OV).
 
 center(I,X,Y):- indv_props(I,L),member(center(X,Y),L),!.
-%center(Obj,CX,CY):- vis_hv(Obj,H,V), loc_xy(Obj,X,Y),CX is X + floor(H/2),CY is Y + floor(V/2).
+%center(Obj,CX,CY):- v_hv(Obj,H,V), loc(Obj,X,Y),CX is X + floor(H/2),CY is Y + floor(V/2).
 
 
 
@@ -679,8 +694,8 @@ rebuild_from_localpoints(Obj,WithPoints,NewObj):-
   (Points=@=PrevPoints -> (NewObj=Obj) ;
 
  (rotation(Obj,Rot),unrotate(Rot,UnRot),
-  loc_xy(Obj,X,Y),%vis_hv(Obj,H,V),  
-  %object_indv_id(Obj,ID,_Iv),
+  loc(Obj,X,Y),%v_hv(Obj,H,V),  
+  %o_i_d(Obj,ID,_Iv),
   %uncast_grid_to_object(Orig,Grid,NewObj),
   points_to_grid(Points,Grid),
   call(UnRot,Grid,UnRotGrid),
@@ -690,7 +705,7 @@ rebuild_from_localpoints(Obj,WithPoints,NewObj):-
   my_partition(lambda_rev(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
   remObjects(VM,Obj),
-  make_indiv_object(VM,[loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],GPoints,NewObj))))),
+  make_indiv_object(VM,[loc(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],GPoints,NewObj))))),
    verify_object(NewObj),
   !.
 
@@ -703,13 +718,13 @@ blur_p2(P2,Obj,NewObj):-
   globalpoints(X,XGP),
   globalpoints(Y,YGP),
   pct((
-  vis_hv(X,XH,XV),
-  vis_hv(Y,YH,YV),
+  v_hv(X,XH,XV),
+  v_hv(Y,YH,YV),
   grid_size(X,XGH,XGV),
   grid_size(Y,YGH,YGV),
   center(Y,YCH,YCV),
-  loc_xy(X,XX,XY),
-  loc_xy(Y,YX,YY))),
+  loc(X,XX,XY),
+  loc(Y,YX,YY))),
   print_grid(XGH,XGV,XGP),
   print_grid(YGH,YGV,YGP),
   append(XGP,YGP,XYGP),
@@ -725,9 +740,9 @@ rebuild_from_globalpoints(Obj,NewObj):-
 rebuild_from_globalpoints(Obj,GPoints,NewObj):-
   get_vm(VM),
   rotation(Obj,Rot),unrotate(Rot,UnRot),
-  loc_xy(Obj,X,Y),vis_hv(Obj,H,V),
+  loc(Obj,X,Y),v_hv(Obj,H,V),
   deoffset_points(X,Y,GPoints,LPoints),
-  %object_indv_id(Obj,ID,_Iv),
+  %o_i_d(Obj,ID,_Iv),
   %grid_size(Obj,GH,GV),
   points_to_grid(H,V,LPoints,Grid),
   call(UnRot,Grid,UnRotGrid),
@@ -736,7 +751,7 @@ rebuild_from_globalpoints(Obj,GPoints,NewObj):-
   my_partition(lambda_rev(member([colors(_),mass(_),shape(_),
             iz(multicolored(_)),globalpoints(_),localpoints(_)])),Props,_,PropsRetained),
   remObjects(VM,Obj),
-    make_indiv_object(VM,[vis_hv(H,V),loc_xy(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],Points,NewObj),
+    make_indiv_object(VM,[v_hv(H,V),loc(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],Points,NewObj),
     verify_object(NewObj),
  !.
 
@@ -961,10 +976,10 @@ solidness_is_diag(Points,Lo,H,Res):-
   (member(C-HV,Points),findall(Dir,(is_adjacent_point(HV,Dir,HV2), is_diag(Dir),
    member(C-HV2,Points)),L),length(L,N1),N is N1+1,between(Lo,H,N)),Res).
 
-%guess_shape(G,LocalGrid,I,O,N,H,V,Colors,Points,walls_thick(1)):- walls_thick1(G).
+%guess_shape(GH,GV,G,LocalGrid,I,O,N,H,V,Colors,Points,walls_thick(1)):- walls_thick1(G).
 /*
-guess_shape(GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
-   once((I.loc_xy=loc_xy(LoH,LoV),
+guess_shape(GH,GV,GridIn,Grid,I,E,N,H,V,Colors,Points,subI(InvS)):- E>2, fail,
+   once((I.loc=loc(LoH,LoV),
    make_grid(H,V,Grid),
    calc_add_points(LoH,LoV,Grid,Points),
    compute_shared_indivs(Grid,InvS))),!,
@@ -993,7 +1008,7 @@ find_outline_path2(C,L,Grid,sol(ResultO,[]),LeftOverO):-
 
 
 object_to_nm_grid(Obj,SSP):-
-  vis_hv(Obj,H,V),
+  v_hv(Obj,H,V),
   localpoints(Obj,LPoints),
   points_to_grid(H,V,LPoints,GridIn),
   grid_to_special_points(GridIn,SSP),
@@ -1013,16 +1028,20 @@ object_to_nm_points(Obj,NPoints):-
 :- style_check(-singleton).
 :- style_check(-discontiguous).
 
-guess_shape(GridIn,LocalGrid,I,Empty,N,H,V,[cc(Zero,_)],Points,background):- is_bg_color(Zero).
-%guess_shape(GridIn,LocalGrid,I,0,N,H,V,Colors,Points,view_sq):- H == V.%guess_shape(GridIn,LocalGrid,I,I,N,H,V,Colors,Points,rectangle):- H>1, V>1.
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,multicolored(Len)):- Colors=[_,_|_],length(Colors,Len).
-guess_shape(GridIn,LocalGrid,I,0,9,3,3,Colors,Points,keypad).
+guess_shape(GH,GV,GridIn,LocalGrid,I,E,N,1,GV,Colors,Points,column).
+guess_shape(GH,GV,GridIn,LocalGrid,I,E,N,GH,1,Colors,Points,row).
 
-guess_shape(I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
-guess_shape(I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
+guess_shape(GH,GV,GridIn,LocalGrid,I,Empty,N,H,V,[cc(Black,_)],Points,bgc):- is_bg_color(Black).
+%guess_shape(GH,GV,GridIn,LocalGrid,I,0,N,H,V,Colors,Points,view_sq):- H == V.%guess_shape(GH,GV,GridIn,LocalGrid,I,I,N,H,V,Colors,Points,rectangle):- H>1, V>1.
+guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,chromatic(Len)):- maplist(arg(1),Colors,Colorz),include(is_fg_color,Colorz,FGC),length(FGC,Len).
+guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,monochrome):- Colors=[_],length(Colors,Len).
+guess_shape(GH,GV,GridIn,LocalGrid,I,0,9,3,3,Colors,Points,keypad).
+
+guess_shape(GH,GV,I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
+guess_shape(GH,GV,I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
 
 
-guess_shape(GridIn,LocalGrid,I,E,N,H,V,Colors,Points,Keypad):- 
+guess_shape(GH,GV,GridIn,LocalGrid,I,E,N,H,V,Colors,Points,Keypad):- 
   once(guess_shape_poly(I,E,N,H,V,Colors,Points,Keypad)).
 
 guess_shape_poly(I,0,1,1,1,Colors,Points,dot):-!.
@@ -1030,22 +1049,22 @@ guess_shape_poly(I,_,_,_,_,Colors,[Point],dot):-!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,rectangulator):- N>1, H\==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,solid):- N > 1.
-%guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
+%guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
 
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2, 
+guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2, 
   (flipSym(SN,GridIn)*->R=symmetry(SN);R=symmetry(none)).
 
-%guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
-%guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outl2):- H>2,V>2,N>4,
+%guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
+%guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
+guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outl2):- H>2,V>2,N>4,
   once((grid_to_special_points(GridIn,GridON), \+ member('*',GridON), member('.',GridON))).
   
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>2,N>4,
+guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>2,N>4,
   (find_outlines(Points,Sol,Rest)->(length(Sol,SN),SN>0,length(Rest,RN))),!.
 
-guess_shape(GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outl):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
+guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outl):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
 
-guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- fail,
+guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- fail,
   grid_to_special_points(GridIn,GridON),
   subst_1L(['~'-'red','+'-'blue','.'-'yellow'],GridON,SSP),
   localpoints(SSP,NPoints),!.
@@ -1055,10 +1074,14 @@ guess_shape(GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- fail,
 
 flipSym( full,GridIn):- rot90(GridIn,LocalGridR),GridIn=@=LocalGridR,flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,flipV(GridIn,LocalGridN),GridIn=@=LocalGridN.
 flipSym(sym_hv,GridIn):- flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,flipV(GridIn,LocalGridN),GridIn=@=LocalGridN,!.
-flipSym(sym_rot,GridIn):- rot90(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym(rot90,GridIn):- rot90(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
 flipSym(sym_h,GridIn):- flipH(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
 flipSym(sym_v,GridIn):- flipV(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym(rot180,GridIn):- rot180(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
+flipSym(rot270,GridIn):- rot270(GridIn,LocalGridM),GridIn=@=LocalGridM,!.
 
+:- dynamic(individuated_cache/3).
+:- retractall(individuated_cache(_,_,_)).
 
 
 :- fixup_exports.

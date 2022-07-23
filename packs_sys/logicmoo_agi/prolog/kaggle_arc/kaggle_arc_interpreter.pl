@@ -74,8 +74,8 @@ into_singles(Group,Obj):- is_group(Group),!,member(Obj,Group).
 into_singles(Class,Obj):- (iz(Obj,Class),deterministic(YN)), (YN==true->!;true).
 into_singles(Obj,Obj).
 
-vert_pos(Class,Y):- into_singles(Class,Obj),loc_xy(Obj,_X,Y).
-horiz_pos(Class,X):- into_singles(Class,Obj),loc_xy(Obj,X,_Y).
+vert_pos(Class,Y):- into_singles(Class,Obj),loc(Obj,_X,Y).
+horiz_pos(Class,X):- into_singles(Class,Obj),loc(Obj,X,_Y).
 
 when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
 test_config(This):- get_current_test(Name),task_info(Name,InfoL),!,contains_nonvar(This,InfoL).
@@ -83,7 +83,7 @@ test_config(This):- get_current_test(Name),task_info(Name,InfoL),!,contains_nonv
 test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
-call_expanded(VM,G):-  exp_call(VM,G,GG),G\==GG,!,call_expanded(VM,GG).
+call_expanded(VM,G):-  exp_call(VM,G,GG),G\=@=GG,!,call_expanded(VM,GG).
 call_expanded(_VM,G):- catch(call(G),E,(dumpST,pt(E),rrtrace(G))).
 
 quinish(Var):- var(Var),!.
@@ -95,15 +95,21 @@ quinish(Var):- is_list(Var),!.
 quinish(Var):- number(Var),!.
 
 exp_call(_,Var,Var):- quinish(Var),!.
-exp_call(VM,length(G1,G2),length(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
-exp_call(VM,(G1,G2),(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
-exp_call(VM,(G1;G2),(GG1;GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
-exp_call(VM,(G1->G2),(GG1->GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
-exp_call(VM,K,Value):- atom(K),get_kov(K,VM,Value),!.
+exp_call(VM,get(K),Value):- !, get_kov(K,VM,Value).
+%exp_call(VM,length(G1,G2),length(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+%exp_call(VM,(G1,G2),(GG1,GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+%exp_call(VM,(G1;G2),(GG1;GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+%exp_call(VM,(G1->G2),(GG1->GG2)):-!, exp_call(VM,G1,GG1),exp_call(VM,G2,GG2).
+exp_call(VM,K,Value):- atom(K),notrace(catch(get_kov(K,VM,Value),_,fail)),!.
 %  len(points(i))>6
-exp_call(VM,G,GG):- compound(G),arg(N,G,A),nonvar(A),exp_call(VM,A,AA),A\==AA,!,setarg(N,G,AA),exp_call(VM,G,GG).
-exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X).
-exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)).
+%exp_call(VM,G,GG):- compound(G),arg(N,G,A),nonvar(A),exp_call(VM,A,AA),A\==AA,!,setarg(N,G,AA),exp_call(VM,G,GG).
+exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X),!.
+exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)),!.
+exp_call(VM,I,O):- compound(I),
+       compound_name_arguments(I, F, Args),
+       maplist(exp_call(VM), Args, ArgsNew),
+       compound_name_arguments( O, F, ArgsNew ),!.
+%exp_call(_VM,P,(=(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=val(X).
 exp_call(_,E,E).
 
 run_dsl(VM,Prog,In,Out):- 
@@ -145,7 +151,7 @@ set_vm_grid_now(VM,Obj):- is_object(Obj), !,
   gset(VM.objs)=[Obj],
   object_grid(Obj,Grid),
   gset(VM.grid)=Grid,
-  vis_hv(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
+  v_hv(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
   gset(VM.points_o) = VM.points,
   localpoints_include_bg(Obj, Points),
   gset(VM.points)=Points .
@@ -201,6 +207,8 @@ run_dsl(VM,_Mode,nb_set(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,
 run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val,OutValue),run_dsl(VM,Mode,vm_set(Name,OutValue),In,Out).
 run_dsl(VM,_Mode,vm_set(Name,Val),In,Out):- !, vm_grid(VM,set_vm(Name,Val),In, Out).
 run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,In,Objs),set_vm_grid(VM,Objs)),In,Out).
+
+run_dsl(VM,_Mode,o(_Indiv),In,In):- var(VM.grid_out),!.
 run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.grid_out,Objs),set_vm_grid(VM,Objs)),In,Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
@@ -224,7 +232,7 @@ run_dsl(VM,enforce,color(Obj,Color),In,Out):-!,
  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
     override_object_io(VM,color(Color),Obj,In,Out).
 
-run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc_xy(Obj,X,_Old), override_object_io(VM,loc_xy(X,New),Obj,In,Out).
+run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc(Obj,X,_Old), override_object_io(VM,loc(X,New),Obj,In,Out).
 
 run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !, 
   vm_grid(VM, run_dsl_call_io(VM,Mode,Prog,In,Out), In, Out).
@@ -364,11 +372,11 @@ incomplete(X,X).
 into_obj(G,O):- no_repeats(O,known_obj0(G,O)).
 
 o2g(Obj,Glyph):- g2o(Glyph,Obj),!.
-o2g(Obj,NewGlyph):- object_indv_id(Obj,ID,Old), int2glyph(Old,Glyph), 
+o2g(Obj,NewGlyph):- o_i_d(Obj,ID,Old), int2glyph(Old,Glyph), 
  (nb_current(Glyph,O2) ->
 (O2=@=Obj->NewGlyph=Glyph; 
  ( flag(indiv,Iv,Iv+1),int2glyph(Iv,NewGlyph),
-  subst(Obj,object_indv_id(ID,Old),object_indv_id(ID,Iv),NewObj),
+  subst(Obj,o_i_d(ID,Old),o_i_d(ID,Iv),NewObj),
   nb_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,nb_linkval(NewGlyph,Obj))),
  my_asserta_if_new(g2o(NewGlyph,Obj)).
 

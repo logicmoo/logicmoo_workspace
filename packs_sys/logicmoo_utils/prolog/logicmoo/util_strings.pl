@@ -760,6 +760,7 @@ isSlot(V):- is_ftVar(V).
 noCaseChange(VAR):- is_ftVar(VAR),!.
 % noCaseChange(VAR):- if_defined(isSlot(VAR)),!.
 noCaseChange([]):-!.
+noCaseChange(MiXed):-number(MiXed),!.
 noCaseChange(MiXed):-atom(MiXed),atom_concat('#$',_,MiXed),!.
 noCaseChange(c(_)):-!.
 

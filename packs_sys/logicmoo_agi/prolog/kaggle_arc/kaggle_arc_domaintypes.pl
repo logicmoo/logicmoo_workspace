@@ -44,7 +44,7 @@ subtypes(C,S):- subClassOf(S,C).
 
 
 
-allow_dir_list(nsewmass,[n,s,e,w]). 
+allow_dir_list(nsew,[n,s,e,w]). 
 %allow_dir_list(rectangles,[s,e]). 
 
 allow_dir_list(colormass,[n,s,e,w,nw,ne,se,sw]). 
@@ -273,7 +273,8 @@ is_object(O):- compound(O), O = obj(Props), is_list(Props).
 %is_group(Dict):- is_map(Dict),!,get_kov(objs,Dict,_).
 is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 
-is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V),!.
+is_functor(F,E):- compound(E),functor(E,F,_).
+is_object_group(V):- is_list(V),maplist(is_functor(obj),V),!.
 is_grid_group([G|V]):- is_grid(G),is_list(V),maplist(is_grid,V),!.
 
 is_object_or_grid(Grid):- is_list(Grid),!,is_grid(Grid).
@@ -281,7 +282,7 @@ is_object_or_grid(Obj):- is_object(Obj).
 
 
 is_point_obj(O,Color,Point):- nonvar_or_ci(O),O= Color-Point,!.
-is_point_obj(O,Color,Point):- is_object(O),vis_hv(O,H,V), !, hv(H,V)==hv(1,1),
+is_point_obj(O,Color,Point):- is_object(O),v_hv(O,H,V), !, hv(H,V)==hv(1,1),
   globalpoints(O,[Color-Point]),!.
 
 
@@ -364,7 +365,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(vis_hv(h,w)). apv(loc_xy(h,w)). 
+apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(v_hv(h,w)). apv(loc(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).

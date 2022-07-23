@@ -40,57 +40,128 @@ print_rule(M,O):- \+ \+ (( pt(orange,M=[O]))).
 save_learnt_rule(TestID,In,InKey,RuleDir,Out):-
   save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out)).
 
-save_learnt_rule(RuleIn):- save_learnt_rule(RuleIn,RuleIn).
-save_learnt_rule(RuleIn,InGoal):-  
-  labels_for(InGoal,InSet),
+save_learnt_rule(RuleIn):- save_learnt_rule(RuleIn,RuleIn,RuleIn).
+save_learnt_rule(RuleIn,InGoal,OutGoal):-  
+  labels_for(InGoal,OutGoal,InSet),
   length(InSet,InLen),length(InVars,InLen),
   subst_rvars(InSet,InVars,RuleIn,NewRuleIn),!,
   Assert = (NewRuleIn:-was_once(InSet,InVars)), 
   assert_visually(Assert),!.
 
     
-group_by(mass).
-group_by(iz).
-group_by(color).
-group_by(shape).
-group_by(rotation).
 
 has_prop(P,Obj):- indv_props(Obj,Props),!,member(Q,Props), (Q=@=P -> true ; ( \+ Q \= P)).
 
-group_group(What,[Obj|In],[P-G1|Groups]):- indv_props(Obj,Props),member(P,Props),functor(P,What,_),!,
+
+learn_group(What,Objs):- assert_visually(group_associatable(What,Objs)).
+
+learn_about_group(In):- 
+  forall(group_keys(What),
+   (group_group(What,In,Groups),
+    maplist(learn_group(What),Groups))).
+
+not_for_matching(Var):- var(Var),!.
+not_for_matching(M):- too_unique(M).
+not_for_matching(M):- too_non_unique(M).
+not_for_matching(localpoints(_)).
+not_for_matching(iz(combined)).
+not_for_matching(link(_,_,_)).
+not_for_matching(globalpoints(_)).
+not_for_matching(iz(image)).
+
+
+
+my_exclude(P1,I,O):- my_partition(P1,I,_,O).
+simplify_for_matching(I,I):- ( \+ compound(I); I='$VAR'(_)), !.
+simplify_for_matching(obj(I),obj([O|_])):- is_list(I),!, simplify_for_matching(I, O).
+simplify_for_matching(I,O):- is_grid(I),O=I.
+simplify_for_matching(I,O):- is_list(I), my_exclude(not_for_matching,I,M),I\=@=M,!,simplify_for_matching(M,O).
+simplify_for_matching(I,O):- 
+       compound_name_arguments(I, F, Args),
+       maplist(simplify_for_matching, Args, ArgsNew),
+       compound_name_arguments( O, F, ArgsNew ),!.
+
+
+
+group_group(What,[Obj|In],[G1|Groups]):- indv_props(Obj,Props), member(P,Props),matches_key(P,What),!,
   [Obj|Include] = G1,
   my_partition(has_prop(P),In,Include,Exclude),
   group_group(What,Exclude,Groups).
 group_group(_,_,[]).
 
-learn_group(What,Objs):- assert_visually(group_associatable(What,Objs)).
+group_keys(iz).
+group_keys(mass).
+group_keys(birth).
+group_keys(color).
+group_keys(shape).
+group_keys(rotation).
+group_keys(localpoints).
+group_keys(symmetry).
 
-learn_about_group(In):- 
-  forall(group_by(What),
-   (group_group(What,In,Groups),
-    maplist(learn_group(What),Groups))).
+matches_key(P,What):- atom(What),!,functor(P,What,_).
+matches_key(P,P).
+
+simplify_for_matching_nondet(I,O):- is_list(I), is_group(I), \+ is_grid(I), !, 
+   group_keys(Key),
+   group_group(Key,I,ListOfLists),
+   list_to_set(ListOfLists,Set),
+   member(M,Set),once(simplify_for_matching(M,O)).
+simplify_for_matching_nondet(I,O):- simplify_for_matching(I,O).
 
 
-learn_rule_o(Mode,InVM,OutVM):- is_map(InVM),is_map(OutVM),!,
-  pt(Mode=learn_rule_o(Mode,InVM,OutVM)),
-  extract_vm_props(InVM,InProps),   learn_grid_rules(Mode,InProps),
-  extract_vm_props(OutVM,OutProps), learn_grid_rules(Mode,OutProps),
-  learn_rule_o(Mode,InProps,OutProps).
+learn_rule_o(out_out,_InVM,_OutVM):- !.
+learn_rule_o(out_in,_InVM,_OutVM):- !.
+learn_rule_o(in_in,_InVM,_OutVM):- !.
+learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
+ % extract_vm_props(InVM,InProps),     
+ % extract_vm_props(OutVM,OutProps), 
+ % prolog_pretty_print:print_term(Mode=learn_rule_o(Mode,InProps,OutProps),[fullstop(true),nl(true)]),!,
+  %learn_grid_rules(Mode,InProps),
+  %learn_grid_rules(Mode,OutProps),!,
+  learn_rule_i_o(Mode,InVM.objs,OutVM.objs),
+  %learn_rule_i_o(Mode,InVM.grid,OutVM.objs),
+  %learn_rule_i_o(Mode,InVM.objs,OutVM.grid),
+  learn_rule_i_o(Mode,InVM.grid,OutVM.grid).
 
-learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
-learn_rule_o(_Mode,_,G):- is_list(G), is_group(G), learn_about_group(G), fail.
+learn_rule_i_o(Mode,In,Out):- forall(learn_rule_in_out(Mode,In,Out),true).
+%learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
+%learn_rule_o(_Mode,_,G):- is_list(G), is_group(G), learn_about_group(G), fail.
 
-learn_rule_o(Mode,In,Out):- is_list(In), is_list(Out), 
+/*
+learn_rule_in_out(Mode,In,Out):- is_list(In), is_list(Out), 
   \+ is_grid(In), \+ is_grid(Out),
   \+ is_group(In), \+ is_group(Out),
   forall(select_some(I,In,MoreIn),
    forall(select_some(O,Out,MoreOut),
-    (learn_rule_o(Mode,MoreIn,MoreOut),
-    learn_rule_o(Mode,I,O)))).
+    (learn_rule_in_out(Mode,MoreIn,MoreOut),
+     learn_rule_in_out(Mode,I,O)))).
+*/
 
-learn_rule_o(out_out,I,O):- !, save_learnt_rule(oout_associatable(I,O)).
+%learn_rule_in_out(out_out,I,O):- !, ignore(( is_grid(O), save_learnt_rule(oout_associatable(I,O)))).
 
-learn_rule_o(_Mode,I,O):- save_learnt_rule(test_associatable(I,O)).
+learn_rule_in_out(Mode,In,Out):- 
+  is_list(In), is_list(Out), 
+  maplist(compound,In), maplist(compound,Out),
+  length(In,L), length(Out,L),
+  maplist(learn_rule_in_out(Mode),In,Out).
+
+learn_rule_in_out(Mode,In,Out):- 
+  forall(simplify_for_matching_nondet(In,InS),
+    forall(simplify_for_matching_nondet(Out,OutS),
+    learn_rule_in_out_now(Mode,InS,OutS))).
+
+%learn_rule_in_out_now(Mode,_-In,Out):-!,learn_rule_in_out_now(Mode,In,Out).
+%learn_rule_in_out_now(Mode,In,_-Out):-!,learn_rule_in_out_now(Mode,In,Out).
+learn_rule_in_out_now(Mode,[In],[Out]):- \+ is_grid([In]), \+ is_grid([Out]), !, learn_rule_in_out_now(Mode,In,Out).
+learn_rule_in_out_now(_Mode,In,Out):- is_list(In),is_list(Out), \+ is_grid(In), \+ is_grid(Out), length(In,L1), length(Out,L2), \+ (L1 is L2 ; (L1 is L2 * 2, L2>1); (L2 is L1 * 2, L1>1)),!.
+learn_rule_in_out_now(Mode,In,Out):-  is_list(In),is_list(Out), 
+  maplist(compound,In), maplist(compound,Out),
+  length(In,L), length(Out,L),!,
+  maplist(learn_rule_in_out_now(Mode),In,Out).
+  %learn_rule_in_out(Mode,InS,OutS).
+learn_rule_in_out_now(_Mode,In,Out):- save_learnt_rule(test_associatable(In,Out),In,Out).
+
+%learn_rule_in_out(Mode,I,O):- save_learnt_rule(test_associatable(Mode,I,O)).
 
 extract_vm_props(VM,[VM.grid,VM.objs]).
 
@@ -102,11 +173,10 @@ learn_grid_rules(Mode,Props):-
 learn_rule_ee(Mode,P,Others):- forall(member(O,Others),learn_grid_local(Mode,P,O)).
 
 learn_grid_local(Mode,P,O):- P @< O, !, learn_grid_local(Mode,O,P).
-learn_grid_local(_Mode,P,O):- assert_visually(grid_associatable(P,O)).
+learn_grid_local(_Mode,P,O):- ignore((\+ is_grid(P),is_grid(O),assert_visually(grid_associatable(P,O)))).
 
 :- dynamic(test_local_dyn/1).
 test_local_dyn(learnt_rule).
-test_local_dyn(print_rule).
 test_local_dyn(grid_associatable).
 test_local_dyn(test_associatable).
 test_local_dyn(why_grouped).
@@ -119,7 +189,7 @@ assert_visually( H  ):- unnumbervars(H,HH),assert_visually1(HH,true).
 assert_visually1(H,B):- get_current_test(TestID), arg(1,H,W),W\==TestID,!, H=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
 assert_visually1(H,B):- assert_visually2(H,B).
 
-assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,pt(cyan,known_exact(H:-B)).
+assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,nop(pt(cyan,known_exact(H:-B))).
 assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,pt(cyan,known(H:-B)).
 assert_visually2(H,B):- functor(H,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(H:-B)), my_asserta_if_new((H:-B)).
 
@@ -163,7 +233,7 @@ learn_rule(In,RuleDir,Out):-
  get_vm(last_key,Key),
  save_learnt_rule(TestID,In,Key,RuleDir,Out),!.
 
-learn_rule(In,RuleDir,ROut):- use_learnt_rule(In,RuleDir,ROut).
+learn_rule(In,RuleDir,ROut):- nop(use_learnt_rule(In,RuleDir,ROut)).
 
 /*
 ] dmiles: instead of a DSL about transformations i think the DSL would be one that creates the images.. then the transformation becomes about what properties of the generative DSL change (both the input and the output have their own starting points that are gleaned by looking at what DSL would generate all the outputs vs what DSL would generate all the inputs) the thing that is learned by training is how the edits are supposed to happen in each of the generative DSLs (edited)
@@ -176,10 +246,28 @@ properties_that_changed(Grid1,Grid2,Props):-
   individuate(complete,Grid2,Props2),
   diff_terms(Props1,Props2,Props).
 
+has_learnt_rule(TestID,In,Key,RuleDir,Out):- clause(learnt_rule(TestID,In,Key,RuleDir,Out),was_once(InSet,InVars)),
+  maplist(ignore_equal,InSet,InVars).
+ignore_equal(X,Y):- ignore(X=Y).  
+
+
+use_test_associatable(In,OutR):-
+    findall(InS,simplify_for_matching_nondet(In,InS),InL),
+    findall(OutS,(member(InS,InL),use_test_associatable_io(InS,OutS)),OutL),
+    Out=[set],
+    maplist(ignore_some_equals,OutL,Out),
+    ignore(OutR=Out),!.
+
+ignore_some_equals(OutS,Out):- must_det_ll( nb_set_add1(OutS,Out)).
+
+use_test_associatable_io(I,O):- get_current_test(TestID),test_associatable(TestID,I,O).
+
+use_learnt_rule(In,_RuleDir,Out):- use_test_associatable(In,Out).
+
 use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
  get_current_test(TestID),
   ignore(get_vm(last_key,Key)),
-  ((learnt_rule(TestID,In,Key,RuleDir,Out);learnt_rule(TestID,_,Key,RuleDir,Out);learnt_rule(TestID,In,_,RuleDir,Out))),
+  ((has_learnt_rule(TestID,In,Key,RuleDir,Out);has_learnt_rule(TestID,_,Key,RuleDir,Out);has_learnt_rule(TestID,In,_,RuleDir,Out))),
   pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
   ignore(Out = ROut).
 
@@ -226,25 +314,28 @@ upcase_atom_var0(Int,Name):- integer(Int),atom_concat('INT_',Int,Name).
 upcase_atom_var0(Num,Name):- number(Num),atom_concat('FLOAT_',Num,DotName),replace_in_string(['.'-'_dot_'],DotName,Name).
 upcase_atom_var0(Atom,Name):- atom(Atom),upcase_atom(Atom,Name).
 
-labels_for(Goal,Labels):- 
-  findall(Atom,(sub_label(Atom,Goal),maybe_unbind_label(Atom)),Atoms), 
+labels_for(InGoal,OutGoal,Labels):- 
+  findall(Atom,(sub_label(Atom,InGoal,OutGoal),maybe_unbind_label(Atom)),Atoms), 
   list_to_set(Atoms,Set),
   include(two_or_more(Atoms),Set,Labels).
 
 two_or_more(Atoms,Label):- select(Label,Atoms,Rest),member(Label,Rest).
 
-sub_label(X, X).
-sub_label(X, Term) :-
+sub_label(X, X, OutGoal):- sub_var(X,OutGoal).
+sub_label(X, Term, OutGoal) :-
     compound(Term),
+    is_list(Term),
     \+ never_labels_in(Term),
     arg(_, Term, Arg),
-    sub_label(X, Arg).
+    sub_label(X, Arg, OutGoal).
 
 never_labels_in(iz(_)).
-ignored_constraint(globalpoints(_)).
+never_labels_in(shape(_)).
+never_labels_in(loc(_,_)).
+
 
 never_unbind_label(G):- var(G),!.
-never_unbind_label(Int):- integer(Int), Int > 7 ; Int == 1.
+never_unbind_label(Int):- integer(Int), Int > 7 ; Int == 1 ; Int == 0.
 never_unbind_label(true).
 never_unbind_label(false).
 never_unbind_label(G):- \+ atom(G),!,fail.
@@ -253,13 +344,23 @@ never_unbind_label(G):- downcase_atom(G,D), upcase_atom(G,D).
 never_unbind_label(G):- atom_chars(G,Cs),member(C,Cs),char_type(C,digit),!.
 
 maybe_unbind_label(G):- var(G),!,fail.
+maybe_unbind_label(G):- too_non_unique(G).
 maybe_unbind_label(G):- never_unbind_label(G),!,fail.
 maybe_unbind_label(G):- integer(G),!.
 maybe_unbind_label(G):- \+ atom(G),!,fail.
-maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
+maybe_unbind_label(G):- is_color(G).
+%maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
 
 subst_rvars([],[],A,A):-!. 
-subst_rvars([F|FF],[R|RR],S,D):- debug_var(F,R),subst001(S,F,R,M), subst_rvars(FF,RR,M,D).
+subst_rvars([F|FF],[R|RR],S,D):- debug_var(F,R),subst_rvars_1(F,R,S,M), subst_rvars(FF,RR,M,D).
+
+subst_rvars_1(Find, Replace, Term, NewTerm ) :-
+ (Find==Term -> Replace=NewTerm ;
+  (is_list(Term)-> maplist(subst_rvars_1(Find, Replace), Term, NewTerm );
+   (( \+ compound(Term); Term='$VAR'(_); never_labels_in(Term))->Term=NewTerm;
+     ((compound_name_arguments(Term, F, Args),
+       maplist(subst_rvars_1(Find, Replace), Args, ArgsNew),
+        compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 
 rot_in_incr_90(X,Y):- freeze(X,rot90(X,Y)).
@@ -286,7 +387,7 @@ subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 
 find_by_shape(Grid,Find,Founds):- 
  get_vm(VM),
- vis_hv(Find,GH,GV),
+ v_hv(Find,GH,GV),
  decolorize(Find,F), 
  Prog = 
   (all_rotations(F,F1),
@@ -295,7 +396,7 @@ find_by_shape(Grid,Find,Founds):-
 
    grid_to_points(F1,GH,GV,Points),
    pt(Points),
-   make_indiv_object(VM,[iz(find_by_shape),F1,loc_xy(H,V),alt_grid_size(GH,GV)],Points,F2)),
+   make_indiv_object(VM,[iz(find_by_shape),F1,loc(H,V),alt_grid_size(GH,GV)],Points,F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).
 

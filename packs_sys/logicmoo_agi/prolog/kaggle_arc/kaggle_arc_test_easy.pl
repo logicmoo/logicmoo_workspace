@@ -21,12 +21,12 @@ is_keypad_test(TestID,IO):- forall(kaggle_arc_io(TestID,trn+_,IO,Grid), \+ \+ ma
 
 is_fti_step(last_indiv).
 last_indiv(VM):- show_vm_changes(VM,last_indiv, last_indiv(VM.objs,set(VM.objs))).
-last_indiv(I,R):- into_group(I,M),I\=@=M,!,predsort(sort_on(loc_xy_term),M,O),reverse(O,R).
+last_indiv(I,R):- into_group(I,M),I\=@=M,!,predsort(sort_on(loc_term),M,O),reverse(O,R).
 
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
 %fav(t(d631b094),human(globalpoints,grid_out=[get(points)],maplist(arg(1)))).
-fav(t('d631b094'),[human(i(remaining_dots),get(objs),learn_rule)]).
+fav(t('d631b094'),[human(i(lo_dots),get(objs),learn_rule)]).
 fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,summarize,dominant_color,count_tiles,'(4, 1)']).
 
 %fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
@@ -55,7 +55,7 @@ fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
 /*
   Grid = [[1,1,1,1]]
   The Drawer does 
-  Draw Grid = loc_xy(1,1),line_hv(h), pen(1), mass(4)
+  Draw Grid = loc(1,1),line_hv(h), pen(1), mass(4)
   
   % Grid<->Drawer   Drawer<->Grid
   
@@ -65,7 +65,7 @@ fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
   
   Slover = [- pen(1), + pen(2)]
   
-  DrawGrid = loc_xy(1,1),line_hv(h), pen(2), mass(5)
+  DrawGrid = loc(1,1),line_hv(h), pen(2), mass(5)
   Grid = [[2,2,2,2,2]]
 */
 /*

@@ -194,10 +194,10 @@ quaderants_and_center_rays(Grid9x9,QuadsO,CenterO,RaysO):-
    flipH(Q1,Q1R), flipV(Q3,Q3R), flipHV(Q4,Q4R),
    gensym('CRef_',CRef),
    CommonQ = [iz(quadrant),iz(pattern(CRef))],
-   Quads = [obj([grid(Q2),rot(same),loc_xy(CRef,-1,-1)|CommonQ]),
-             obj([grid(Q1R),rot(flipH),loc_xy(CRef,1,-1)|CommonQ]),
-             obj([grid(Q3R),rot(flipV),loc_xy(CRef,-1,1)|CommonQ]),
-             obj([grid(Q4R),rot(flipHV),loc_xy(CRef,1,1)|CommonQ])],
+   Quads = [obj([grid(Q2),rot(same),loc(CRef,-1,-1)|CommonQ]),
+             obj([grid(Q1R),rot(flipH),loc(CRef,1,-1)|CommonQ]),
+             obj([grid(Q3R),rot(flipV),loc(CRef,-1,1)|CommonQ]),
+             obj([grid(Q4R),rot(flipHV),loc(CRef,1,1)|CommonQ])],
    get_center_rays(CRef,Grid9x9,Center,Rays),
    maplist(filter_empty_grids,[Quads,Center,Rays],[QuadsO,CenterO,RaysO]).
 
@@ -209,11 +209,11 @@ get_center_rays(CRef,Grid9x9,Center,Rays):-
    rot180(CW,CWR), rot270(CN,CNR), rot90(CS,CSR),
    CommonR = [iz(divider(CRef)),iz(ray(CRef))],
    
-   Rays  = [obj([grid(CE),rot(same),   loc_xy(CRef,1,0)|CommonR]),
-             obj([grid(CWR),rot(rot180),loc_xy(CRef,-1,0)|CommonR]),
-             obj([grid(CSR),rot(rot90), loc_xy(CRef,0,1)|CommonR]),
-             obj([grid(CNR),rot(rot270),loc_xy(CRef,0,-1)|CommonR])],
-   Center =  [obj([grid(CC),rot(same),loc_xy(CRef,0,0)|iz(center(CRef))])],!.
+   Rays  = [obj([grid(CE),rot(same),   loc(CRef,1,0)|CommonR]),
+             obj([grid(CWR),rot(rot180),loc(CRef,-1,0)|CommonR]),
+             obj([grid(CSR),rot(rot90), loc(CRef,0,1)|CommonR]),
+             obj([grid(CNR),rot(rot270),loc(CRef,0,-1)|CommonR])],
+   Center =  [obj([grid(CC),rot(same),loc(CRef,0,0)|iz(center(CRef))])],!.
 
 
 filter_empty_grids(List,ListO):- include(obj_has_form,List,ListO).
@@ -237,8 +237,8 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
     [iz(quadrant(CRef,Same)),
      iz(pattern(CRef,SXC,SXC,EXC,EYC)),
      rotation(Same),
-     vis_hv(Width,Height),
-     loc_xy(SXQ4,SYQ4),
+     v_hv(Width,Height),
+     loc(SXQ4,SYQ4),
      globalpoints(GPoints),
      center_info(CRef,SXC,SXC,EXC,EYC) /*,
      grid(LikeQ4)*/ ],LGPoints,OBJL).
@@ -407,8 +407,8 @@ repair_in_vm(P4,VM):-
   intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changed),
   maplist(must_det_ll,[
 %  set_vm_obj(neededChanged,NeededChanged),
-  set_vm_obj(changed,Changed),
-  set_vm_obj(repaired,RepairedPoints),
+  set_vm_obj(changed,[iz(image)],Changed),
+  set_vm_obj(repaired,[iz(image)],RepairedPoints),
   %gset(VM.can_repair) = false,
   %set_vm_obj(grid,NeededChanged),
   %((print_side_by_side(silver,Grid,repair_in_vm,_,RepairedResult,P4))),
@@ -563,13 +563,13 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
   clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
-  set_vm_obj(full_grid,GridO),
+  set_vm_obj(full_grid,[iz(image)],GridO),
 
   gset(VM.points) = [],
   OriginalPoints = VM.points_o,
   include(was_color(Cs),OriginalPoints,NeededChanged),  
   %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,[iz(neededChanged),iz(invisible)],NeededChanged,ColorObj),!, addObjects(VM,ColorObj),
-  set_vm_obj(neededChanged,NeededChanged),  
+  set_vm_obj(neededChanged,[iz(image)],NeededChanged),  
 
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
   must_not_error((RepairedResultM = RepairedResult,
@@ -888,7 +888,7 @@ rows_will_align([Row1|Rest1],B):- is_list(B),!, B=[Row2|Rest2],
 rows_will_align(A,B):- A=B,!.
 
 max_hv(Objects,H,V):- 
-  findall(size(H,V),(member(O,Objects),vis_hv(O,H,V)),Sizes),
+  findall(size(H,V),(member(O,Objects),v_hv(O,H,V)),Sizes),
   sort(Sizes,SizesS),
   reverse(SizesS,[size(H,V)|_]),!.
 
@@ -903,7 +903,7 @@ prefect_result(VM,H,V,_Ordered,Grids,RepairedResult,ColorAdvice):-
   maplist(print_grid(makes_prefect_result(ColorAdvice)),[RepairedResult|Grids]).
 /*
   last(Grids,Last),
-  loc_xy(Last,X,Y),
+  loc(Last,X,Y),
   
   maplist(object_grid,Grids,OGrids),% maplist(print_grid(grid_to_3x3_objs),OGrids),
   maplist(free_bg(ColorAdvice),OGrids,FOGrids),
@@ -956,7 +956,7 @@ member_color(Ordered,ColorAdvice):- member(Obj,Ordered),color(Obj,ColorAdvice).
 
 replace_diffs(LPoints,Obj,NewObj):- 
  must_not_error((
-  vis_hv(Obj,H,V),
+  v_hv(Obj,H,V),
   my_partition(point_between(1,1,H,V),LPoints,Points,_),
   localpoints(Obj,LP),
   intersection(LP,Points,_Same,LPOnly,LPointOnly),

@@ -127,8 +127,8 @@ the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 the_hammer(Color,ColorComplex):- 
   ColorComplex = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
-  Color-point_02_02, Color-point_03_02]), vis_hv(3, 3), rotation(same), loc_xy(2, 5), 
-  changes([]), iz(rectangle), iz(hammer), object_indv_id(t('1b60fb0c')*(trn+666)*out, 666), 
+  Color-point_02_02, Color-point_03_02]), v_hv(3, 3), rotation(same), loc(2, 5), 
+  changes([]), iz(rectangle), iz(hammer), o_i_d(t('1b60fb0c')*(trn+666)*out, 666), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
 
@@ -352,7 +352,7 @@ show_shape(Shape):-
 
 
 print_shape_0(Shape):-
-  vis_hv(Shape,H,V),
+  v_hv(Shape,H,V),
   localpoints(Shape,Points),
   
   numbervars(Points,0,_,[attvar(bind)]),
@@ -365,7 +365,7 @@ print_shape_0(Shape):-
   %numbervars(Shape,0,_,[attvar(bind)]),
   %grid_numbervars(FG,Grid),
   pt(Grid), 
-  %object_indv_id(Shape,_Glyph,Iv),
+  %o_i_d(Shape,_Glyph,Iv),
   print_grid(H,V,Grid),!.
   %locally(nb_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
 

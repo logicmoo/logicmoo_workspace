@@ -27,7 +27,7 @@ set_on_grid(OH,OV,Grid,C-Point):- nonvar_or_ci(C),
   nth1(VV,Grid,Row),nb_set_nth1(HH,Row,I).
 
 
-grid_dim(G,vis_hv(H,V)):- grid_size(G,H,V).
+grid_dim(G,v_hv(H,V)):- grid_size(G,H,V).
 %grid_size(O,offset_ranges(_,_,_,_,H,V)):- is_grid(O),grid_size(O,H,V).
 %grid_size(P,S):- grid_size(P,S).
 
@@ -421,7 +421,7 @@ get_dir_color(Grid,H,V,Dir,C):- move_dir(1,H,V,Dir,1,1,NX,NY), hv_c_value(Grid,C
 % Random Non Blk Eles
 first_color(Grid1,C1):- sub_term(C1,Grid1),is_color(C1), \+ is_bg_color(C1).
 
-% Grid vis_hv/resize
+% Grid v_hv/resize
 make_lengths(N,L):- length(L,N).
 
 get_inf(30).
@@ -434,7 +434,7 @@ points_range(Points,LoH,LoV,HiH,HiV,H,V):- get_neg_inf(NInf), get_inf(Inf),
 
 points_range2(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- get_inf(Inf),  get_neg_inf(NInf),
   calc_range(Inf,Inf,NInf,NInf,NInf,NInf,Points,LoH,LoV,HiH,HiV,H,V).
-% vis_hv(Points,vis_hv(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
+% v_hv(Points,v_hv(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
 
 close_color(brown,orange).
 close_color(green,cyan).
@@ -449,9 +449,9 @@ grid_size(G,H,V):- is_graid(G,GG),!, grid_size(GG,H,V).
 grid_size(G,H,V):- is_map(G),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
 grid_size(G,H,V):- is_grid(G),!,grid_size_nd(G,H,V),!.
 grid_size(G,X,Y):- is_group(G),!,mapgroup(grid_size_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
-grid_size(I,X,Y):- is_object(I),indv_props(I,L),(member(grid_size(X,Y),L);member(vis_hv(X,Y),L)),!.
+grid_size(I,X,Y):- is_object(I),indv_props(I,L),(member(grid_size(X,Y),L);member(v_hv(X,Y),L)),!.
 %grid_size(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
-%grid_size(G,H,V):- quietly(is_object(G)), !, vis_hv(G,H,V).
+%grid_size(G,H,V):- quietly(is_object(G)), !, v_hv(G,H,V).
 %grid_size([G|G],H,V):- is_list(G), length(G,H),length([G|G],V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 %grid_size([G|G],H,V):- is_list(G),is_list(G), grid_size_nd([G|G],H,V),!.
@@ -461,7 +461,7 @@ grid_size(_,30,30).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
   max_min(WV,IV,V,_),max_min(WH,IH,H,_).
-%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,vis_hv(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,v_hv(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
 %  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
   calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),

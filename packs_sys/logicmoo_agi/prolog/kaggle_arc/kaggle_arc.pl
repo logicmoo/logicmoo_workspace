@@ -442,33 +442,32 @@ set_vm(Prop,Value):- get_vm(VM),
     (var(Hashmap)->(list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap); must_not_error( gset(Hashmap.Prop)=Value));
       (list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap))).
 
-set_vm_obj(Prop,Value):- set_vm(Prop,Value),ignore(set_vm_obj1(Prop,Value)).
+set_vm_obj(Prop,Or,Value):- set_vm(Prop,Value),ignore(set_vm_obj1(Prop,Or,Value)),!.
 
-set_vm_obj1(Prop,Value):- is_grid(Value),!,
+set_vm_obj1(Prop,Or,Value):- is_grid(Value),!,
   localpoints_include_bg(Value,IndvPoints),
   grid_size(Value,H,V),
   fif(IndvPoints\==[],
     (get_vm(VM),
-          make_indiv_object(VM,[iz(Prop),vis_hv(H,V),birth(set_vm(Prop))],IndvPoints,Obj),
-          addObjects(VM,Obj),
+          make_indiv_object(VM,[iz(Prop),v_hv(H,V),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
+          %addObjects(VM,Obj),
           print_grid(H,V,Prop,Value))),!.
 
-set_vm_obj1(Prop,IndvPoints):- is_points_list(IndvPoints),!,
+set_vm_obj1(Prop,Or,IndvPoints):- is_points_list(IndvPoints),!,
   fif(IndvPoints\==[],
     (get_vm(VM),          
-          make_indiv_object(VM,[iz(Prop),birth(set_vm(Prop))],IndvPoints,Obj),
-          addObjects(VM,Obj),
-          print_grid(VM.h,VM.v,Prop,IndvPoints))),!.
+      make_indiv_object(VM,[iz(Prop),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
+      %addObjects(VM,Obj),
+      print_grid(VM.h,VM.v,Prop,IndvPoints))),!.
 
 
-set_vm_obj1(Prop,Value):- is_object(Value),!,
- ignore(((fail,
-  globalpoints(Value,IndvPoints),
-  fif(IndvPoints\==[],
-    (get_vm(VM),
-          make_indiv_object(VM,[iz(Prop),birth(set_vm(Prop))],IndvPoints,Obj),
-          addObjects(VM,Obj),
-          print_grid(VM.h,VM.v,Prop,Value)))))),!.
+set_vm_obj1(Prop,Or,Value):- is_object(Value),!,
+  get_vm(VM),
+  remObjects(VM,Value),
+  override_object([iz(Prop),birth(set_vm(Prop))|Or],Value,NewObj),
+  addObjects(VM,NewObj),
+  object_grid(NewObj,Grid),
+  print_grid(Prop,Grid),!.
 
 
 
@@ -633,7 +632,7 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   nb_setval(no_rdot,false),
    % pt(OutC=InC),
 
-   ignore(( ModeIn \== in_out, nop(learn_rule_o(ModeIn,InVM,OutVM)))),
+   ignore(( learn_rule_o(ModeIn,InVM,OutVM))),
 
    ignore(( ModeIn == in_out, Trn == trn,  
             train_io_from_hint(TestID,Trn+N1,InVM))),
@@ -794,8 +793,8 @@ reuse_indivs_cleanup(A,B,C,A,B,C).
 %same_object(D)
 reuse_a_b(A,B,AA):-
   findall(H,compare_objs1(H,A,B),How),
-  object_indv_id(B,ID,Iv),
-  setq(A,object_indv_id(ID,Iv),AA),
+  o_i_d(B,ID,Iv),
+  setq(A,o_i_d(ID,Iv),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 

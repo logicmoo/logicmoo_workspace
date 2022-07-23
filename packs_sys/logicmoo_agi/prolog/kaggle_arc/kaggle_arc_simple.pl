@@ -22,7 +22,7 @@ grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(nb_current(ex
 number_obj(N,obj(List),obj([ord(N)|List])).
 /*
   Obj = obj(List),
-  loc_xy(Obj,X,Y),object_indv_id(Obj,_,MyID),
+  loc(Obj,X,Y),o_i_d(Obj,_,MyID),
  % atomic_list_concat([obj,X,Y],'_',Key),
   localpoints_include_bg(Obj,LocalPoints),
   points_to_grid(X,Y,LocalPoints,Grid),mapgrid(sometimes_assume(=,bg),Grid),

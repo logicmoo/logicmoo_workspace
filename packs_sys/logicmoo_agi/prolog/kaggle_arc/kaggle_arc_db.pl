@@ -202,7 +202,7 @@ hv_cg_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_cg_value(ID,CC,H,V
 hv_cg_value(Grid,Color,H,V):- is_grid(Grid),!,nth1(V,Grid,Row),nth1(H,Row,Color).
 hv_cg_value(O,GN,H,V):- is_map(O),O.objs\==[],!,hv_cg_value(O.objs,GN,H,V).
 hv_cg_value(O,GN,H,V):- is_map(O),!,hv_cg_value(O.grid,GN,H,V).
-hv_cg_value(O,Color-GN,H,V):- is_object(O),hv_c_value(O,Color,H,V),object_indv_id(O,_Tst,GN),nonvar_or_ci(GN),!.
+hv_cg_value(O,Color-GN,H,V):- is_object(O),hv_c_value(O,Color,H,V),o_i_d(O,_Tst,GN),nonvar_or_ci(GN),!.
 hv_cg_value([G|Points],CN,H,V):- quietly(( is_list(Points), is_object_or_grid(G))), 
    grid_color_and_glyph([G|Points],C,N,H,V),CN=(C-N),!.
 %hv_cg_value(O,CN,H,V):- (has_index(color_index);has_index(glyph_index)),
@@ -231,10 +231,10 @@ pgt1(Obj):-
          shape( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
-         localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(3, 1),
+         localpoints( [ red-point_01_01, silver-point_02_01]), v_hv(3, 1), rotation(same), loc(3, 1),
          changes([]), iz(combined),
          iz(rectangle), iz(multicolored),
-         iz(polygon), object_indv_id(v('0ad4ef5')*(trn+0)*in, 21),
+         iz(polygon), o_i_d(v('0ad4ef5')*(trn+0)*in, 21),
        %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
 
@@ -243,10 +243,10 @@ pgt2(Obj):- Obj =
          shape( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
-         localpoints( [ red-point_01_01, silver-point_02_01]), vis_hv(3, 1), rotation(same), loc_xy(2, 1),
+         localpoints( [ red-point_01_01, silver-point_02_01]), v_hv(3, 1), rotation(same), loc(2, 1),
          changes([]), iz(combined),
          iz(rectangle), iz(multicolored),
-         iz(polygon), object_indv_id(v('a1d4ef5')*(trn+0)*in, 66),
+         iz(polygon), o_i_d(v('a1d4ef5')*(trn+0)*in, 66),
         %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
 
@@ -316,7 +316,7 @@ replace_local_point_color(Point,NewC,OldC,G,GO):- is_list(G),!, maplist(replace_
 replace_local_point_color(Point,NewC,OldC,G,GO):- is_object(G), !,
     localpoints(G,Points),     
     replace_in_points(Point,NewC,OldC,Points,RPoints),
-    %loc_xy(G,OH,OV),offset_point(OH,OV,Point,LPoint),shape(G,NCPoints), maplist(replace_in_points(Point,NewC,OldC),NCPoints,RNCPoints),,shape(RNCPoints)
+    %loc(G,OH,OV),offset_point(OH,OV,Point,LPoint),shape(G,NCPoints), maplist(replace_in_points(Point,NewC,OldC),NCPoints,RNCPoints),,shape(RNCPoints)
     setq(G,localpoints(RPoints),GO).
 replace_local_point_color(Point,NewC,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_local_point_color(Point,NewC,OldC,G,GO))).
 

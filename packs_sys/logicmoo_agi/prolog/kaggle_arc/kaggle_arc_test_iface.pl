@@ -703,7 +703,7 @@ fix_test_name(Tried*ExampleNum,  Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
 
 fix_id(Tried,   Tried):- var(Tried),!.
-fix_id(object_indv_id(X,_),Fixed):-  !, fix_id(X,Fixed).
+fix_id(o_i_d(X,_),Fixed):-  !, fix_id(X,Fixed).
 fix_id(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
 fix_id(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
 fix_id(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.

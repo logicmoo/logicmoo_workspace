@@ -9,7 +9,7 @@
 :- endif.
 
 
-area(Obj,Area):- vis_hv(Obj,H,V), Area is H * V.
+area(Obj,Area):- v_hv(Obj,H,V), Area is H * V.
 
 density(Obj,Density):- area(Obj,Area),mass(Obj,Mass), Density is Mass/Area.
 
@@ -34,7 +34,7 @@ call_rot([H|T],I,O):- !,
 call_rot(T,I,O):- call(T,I,O).
 
 grav_mass(Grid,same):- iz(Grid,hv_symmetric),!.
-grav_mass(Grid,RotOut):- vis_hv(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut).
+grav_mass(Grid,RotOut):- v_hv(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut).
 % make things bottem heavy
 %tips_to_rot(Grid,H,V,[rot270|RotOut]):- H<V, !, rot90(Grid,Grid90),!,tips_to_rot(Grid90,V,H,RotOut).
 tips_to_rot(Grid,H,V,[rot90|RotOut]):- is_top_heavy(Grid), !, rot270(Grid,Grid90), !, tips_to_rot(Grid90,V,H,RotOut).
@@ -211,7 +211,7 @@ move_rightof_itself(I,M):- move_dir_itself(1,e,I,M).
 
 :- decl_pt(move_dir_itself(int,dir,object,+)).
 %move_dir_itself(N,D,I,M):- check_args(move_dir_itself(N,D,I,M),MaybeCut),(MaybeCut==t->!;true).
-move_dir_itself(N,D,I,M):- is_object(I),vis_hv(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
+move_dir_itself(N,D,I,M):- is_object(I),v_hv(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
 move_dir_itself(N,D,L,LM):- is_group(L),!,mapgroup(move_dir_itself(N,D),L,LM).
 move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 
@@ -219,7 +219,7 @@ move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
 
 move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
  /*must_det_ll*/((
-  loc_xy(I,OX,OY),
+  loc(I,OX,OY),
   move_dir(N,OX,OY,D,X,Y,NX,NY),
   (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
 move_scale_dir_object(N,D,L,LM):- is_group(L),!,mapgroup(move_scale_dir_object(N,D),L,LM).
@@ -230,7 +230,7 @@ move_object(NX,NY,I,M):- is_object(I),!,
   (NY<1 -> M=I ;
   ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
-    setq(I,[globalpoints(GPoints),loc_xy(NX,NY)],M))))).
+    setq(I,[globalpoints(GPoints),loc(NX,NY)],M))))).
 move_object(H,V,L,LM):- is_group(L),!,mapgroup(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
@@ -292,7 +292,7 @@ mention_touches(Obj,[link(Dir,Touched)|More],NewFObjO):- !,
   mention_touches(Obj,Dir-Touched,MidObj),
   mention_touches(MidObj,More,NewFObjO).
 mention_touches(Obj,Dir-Touched,NewObj):-
-  /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+  /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
   /*must_det_ll*/(override_object(link(touches,Dir,Iv),Obj,NewObj)),!.
 */
 
@@ -301,7 +301,7 @@ find_touches_objects(Obj,_,[]):- has_prop(link(touched,_,_),Obj),!.
 find_touches_objects(Obj,_,[]):- has_prop(iz(dots),Obj),!.
 find_touches_objects(Obj,[Touched|ScanNext],[link(touched,Iv,Dirs)|Engulfed]):-    
  once(touching_object(Dirs,Obj,Touched)),Dirs\==[],!,
- /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+ /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
  /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
 find_touches_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
 
@@ -351,12 +351,12 @@ find_engulfs_objects(Obj,_,[]):- has_prop(link(insideOf,_),Obj),!.
 find_engulfs_objects(Obj,_,[]):- has_prop(link(contains,_),Obj),!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(insideOf,Iv)|Engulfed]):-    
  once(contained_object(Obj,Touched)),!,
- /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+ /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 find_engulfs_objects(Obj,_,[]):- has_prop(mass(M),Obj),M<5,!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(contains,Iv)|Engulfed]):-    
  once(contained_object(Touched,Obj)),!,
- /*must_det_ll*/(object_indv_id(Touched,_Where,Iv)),
+ /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 find_engulfs_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 
@@ -365,9 +365,9 @@ contained_object(O2,O1):-
   O1 \== O2,
   \+ has_prop(birth(glyphic),O2),
   \+ has_prop(birth(glyphic),O1),
-  loc_xy(O1,LowH1,LowV1),loc_xy(O2,LowH2,LowV2), 
+  loc(O1,LowH1,LowV1),loc(O2,LowH2,LowV2), 
   LowH2 > LowH1, LowV2 > LowV1,
-  vis_hv(O1,H1,V1),vis_hv(O2,H2,V2), 
+  v_hv(O1,H1,V1),v_hv(O2,H2,V2), 
   H1> H2, V1> V2,
   HighH1 is LowH1+H1, HighV1 is LowV1+V1,
   HighH2 is LowH2+H2, HighV2 is LowV2+V2,
@@ -396,7 +396,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   %grid_size(Found,H,V),
   /*must_det_ll*/((
   % points_to_grid(H,V,ContainedPoints,Grid),
-  %once(object_indv_id(Found,ID,_);grid_to_id(Grid,ID)),
+  %once(o_i_d(Found,ID,_);grid_to_id(Grid,ID)),
   individuate(subshape_in_object,ContainedPoints,NewInside),
   mapgroup(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained",[Found|NewInsideM])))),
@@ -407,7 +407,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScan
 
 
 mention_inside(Found,NewInside,NewInsideO):-
-  object_indv_id(Found,_Where,Iv),
+  o_i_d(Found,_Where,Iv),
   add_shape_info(link(insideOf,Iv),NewInside,NewInsideO).
 
 find_contained_points(_,[],[],[]).
@@ -424,10 +424,10 @@ object_surrounds_point(Obj,_-Point):- point_in_obj_view(Point,Obj),
 
 point_in_obj_view(Next,Obj):- 
   hv_point(H,V,Next),
-  loc_xy(Obj,X,Y),!,
+  loc(Obj,X,Y),!,
   VV is V-Y, VV>=0,
   HH is H - X, HH>=0,
-  vis_hv(Obj,XX,YY),!,
+  v_hv(Obj,XX,YY),!,
   VV<YY, HH<XX.
 
 scan_to_colider1(_Obj,Next,_Dir,_ObjPoints,[]):- hv_point(H,V,Next), (\+ between(1,32,H); \+ between(1,32,V)),!.
