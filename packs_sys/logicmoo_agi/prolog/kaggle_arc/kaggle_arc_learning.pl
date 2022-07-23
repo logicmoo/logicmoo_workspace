@@ -157,7 +157,13 @@ confirm_learned(In,ExpectedOut):-
   (use_test_associatable(Objs,Solution) -> 
    show_result("Our Solution", Solution,ExpectedOut)
    ; arcdbg_info(red,warn("No Solution"))).
-  
+
+
+show_proof(In,ExpectedOut):-
+  individuate(complete,In,Objs),
+  (test_associatable_proof(Objs,Solution) -> 
+   show_result("Our Solution", Solution,ExpectedOut)
+   ; arcdbg_info(red,warn("No Solution"))).
 
 %learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
 %learn_rule_o(_Mode,_,G):- is_list(G), is_group(G), learn_about_group(G), fail.
@@ -295,11 +301,21 @@ ignore_equal(X,Y):- ignore(X=Y).
 
 
 use_test_associatable(In,OutR):-
-    findall(InS,simplify_for_matching_nondet(In,InS),InL),
-    findall(OutS,(member(InS,InL),use_test_associatable_io(InS,OutS)),OutL),
+  findall(InS,simplify_for_matching_nondet(In,InS),InL),
+   findall(OutS,(member(InS,InL),use_test_associatable_io(InS,OutS)),OutL),
     Out=[set],
-    maplist(ignore_some_equals,OutL,Out),
-    ignore(OutR=Out),!.
+     maplist(ignore_some_equals,OutL,Out),
+     ignore(OutR=Out),!.
+
+test_associatable_proof(In,OutR):-
+  findall(InS,simplify_for_matching_nondet(In,InS),InL),
+   findall(OutS,
+     (member(InS,InL),use_test_associatable_io(InS,OutS),
+      arcdbg_info(cyan,proof(InS->OutS))),OutL),
+    Out=[set],
+  maplist(ignore_some_equals,OutL,Out),
+  ignore(OutR=Out),!.
+
 
 ignore_some_equals(OutS,Out):- must_det_ll( nb_set_add1(OutS,Out)).
 
