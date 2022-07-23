@@ -20,7 +20,9 @@ learned_test(TName):-
    %forall(clause(learnt_rule(TestID,A,B,C,D),Body),
     %print_rule(learned_test,learnt_rule(TestID,A,B,C,D):-Body)),
     training_info(TestID,Info),
-    maplist(print_rule(TestID),Info).
+    maplist(print_rule(TestID),Info),
+    length(Info,Len),
+    format('% Rules Learned: ~w~n',[Len]),!.
  
 
 
@@ -121,9 +123,15 @@ learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
   learn_rule_i_o(Mode,InVM.objs,OutVM.objs),
   %learn_rule_i_o(Mode,InVM.grid,OutVM.objs),
   %learn_rule_i_o(Mode,InVM.objs,OutVM.grid),
-  learn_rule_i_o(Mode,InVM.grid,OutVM.grid).
+  learn_rule_i_o(Mode,InVM.grid,OutVM.grid),
+  get_current_test(TestID), 
+  training_info(TestID,Info),
+  length(Info,Len),
+  ptc(orange,format('~n% Rules Known for ~w: ~w~n',[TestID,Len])),!.
 
-learn_rule_i_o(Mode,In,Out):- forall(learn_rule_in_out(Mode,In,Out),true).
+learn_rule_i_o(Mode,In,Out):- 
+  forall(learn_rule_in_out(Mode,In,Out),true).
+  
 %learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
 %learn_rule_o(_Mode,_,G):- is_list(G), is_group(G), learn_about_group(G), fail.
 
@@ -145,10 +153,18 @@ learn_rule_in_out(Mode,In,Out):-
   length(In,L), length(Out,L),
   maplist(learn_rule_in_out(Mode),In,Out).
 
-learn_rule_in_out(Mode,In,Out):- 
+learn_rule_in_out(Mode,In,Out):-
   forall(simplify_for_matching_nondet(In,InS),
     forall(simplify_for_matching_nondet(Out,OutS),
     learn_rule_in_out_now(Mode,InS,OutS))).
+
+learn_rule_in_out(Mode,In,Out):- 
+  is_group(In),is_group(Out),
+  length(In,IL),length(Out,OL),
+  fif((IL=<7,OL=<7),
+   forall(member(I,In),
+     forall(member(O,Out),
+       learn_rule_in_out_now(Mode,I,O)))).
 
 %learn_rule_in_out_now(Mode,_-In,Out):-!,learn_rule_in_out_now(Mode,In,Out).
 %learn_rule_in_out_now(Mode,In,_-Out):-!,learn_rule_in_out_now(Mode,In,Out).
@@ -260,6 +276,7 @@ use_test_associatable(In,OutR):-
 
 ignore_some_equals(OutS,Out):- must_det_ll( nb_set_add1(OutS,Out)).
 
+:- dynamic(test_associatable/3).
 use_test_associatable_io(I,O):- get_current_test(TestID),test_associatable(TestID,I,O).
 
 use_learnt_rule(In,_RuleDir,Out):- use_test_associatable(In,Out).

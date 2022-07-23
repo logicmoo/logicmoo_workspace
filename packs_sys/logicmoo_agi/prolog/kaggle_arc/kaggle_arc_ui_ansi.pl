@@ -169,9 +169,10 @@ ptt(_):- is_print_collapsed,!.
 ptt(P):- \+ \+ ((tersify(P,Q),!,pt(Q))).
 ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 
-pt(Color,P):- quietlyd((format('~N'), wots(S,ptc(P)),!,color_print(Color,S))).
-ptc(call(P)):- callable(P),!,call(P).
-ptc(P):- pt(P).
+pt(Color,P):- quietlyd((format('~N'), wots(S,ptcol(P)),!,color_print(Color,S))).
+ptcol(call(P)):- callable(P),!,call(P).
+ptcol(P):- pt(P).
+ptc(Color,Call):- pt(Color,call(Call)).
 
 pt(_):- is_print_collapsed,!.
 pt(_):- format('~N'), fail.
@@ -192,7 +193,7 @@ pt_guess_pretty(P,O):- copy_term(P,O,_),
 :- module_transparent(pretty_clauses:pp_hook/3).
 pretty_clauses:pp_hook(_,_,G):- fail, is_grid(G), 
  \+ (sub_term(E,G),compound(E),E='$VAR'(_)), 
-  catch((wots(S,print_grid(G)),strip_vspace(S,SS),pt(orange,call(format('"~w"',[SS])))),_,fail).
+  catch((wots(S,print_grid(G)),strip_vspace(S,SS),ptc(orange,(format('"~w"',[SS])))),_,fail).
 
 strip_vspace(S,Stripped):- string_concat(' ',SS,S),!,strip_vspace(SS,Stripped).
 strip_vspace(S,Stripped):- string_concat(SS,' ',S),!,strip_vspace(SS,Stripped).
