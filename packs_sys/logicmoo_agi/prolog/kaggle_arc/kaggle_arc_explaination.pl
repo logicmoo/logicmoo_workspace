@@ -121,8 +121,9 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   TF = false,
   o_i_d(Obj,_,MyID),
   remove_too_verbose(MyID,AS,TV0), include(not_too_verbose,TV0,TV),
+
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
-  once((member(birth(Caps),AS);member(iz(Caps),AS))),
+  sort(AS,ASA),once((member(birth(Caps),ASA);member(iz(Caps),ASA))),
   toPropercase(Caps,PC),
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
   object_glyph(Obj,Glyph),    
@@ -147,6 +148,7 @@ show_st_map(Obj):-
   solidness_is_diag(Points,0,inf,ResD),
   print_side_by_side(print_side_by_side(ResND,ResD),Res))).
 
+debug_indiv(obj(A)):- \+is_list(A),!, append(A,[],A),debug_indiv(obj(A)).
 debug_indiv(obj(A)):- is_list(A),!, 
   dash_chars,  
   maplist(debug_indiv(obj(A)),A),

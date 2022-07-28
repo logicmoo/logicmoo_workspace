@@ -631,7 +631,7 @@ sort_univ(R,A,B):- compare(R,A,B).
 :- style_check(+singleton).
 
 
-macro(one_obj, must(len(objs)=1)).
+macro(one_obj, must_det_ll(len(objs)=1)).
 
 test_p2(P2):- clsmake,
   append_termlist(P2,[N1,'$VAR'('Result')],N2), 
@@ -703,13 +703,15 @@ fix_test_name(Tried*ExampleNum,  Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
 
 fix_id(Tried,   Tried):- var(Tried),!.
+fix_id(X,_):- is_cpoint(X),!,fail.
+fix_id(X,_):- is_list(X),maplist(is_cpoint,X),!,fail.
 fix_id(o_i_d(X,_),Fixed):-  !, fix_id(X,Fixed).
 fix_id(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
 fix_id(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
 fix_id(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
 fix_id(t(Tried),v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
 fix_id(v(Tried),t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
-fix_id(Tried,Fixed):- compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_id(E,Fixed),!.
+%fix_id(Tried,Fixed):- !, fail,compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_id(E,Fixed),!.
 
 
 

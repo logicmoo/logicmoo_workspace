@@ -267,7 +267,7 @@ h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
 h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).
 h_symmetric(Group):- into_grid(Group,Grid),!,h_symmetric(Grid).
 
-is_object(O):- compound(O), O = obj(Props), is_list(Props).
+is_object(O):- compound(O), O = obj(_).
 
 %is_object_group([G|V]):- is_object(G),is_list(V),maplist(is_object,V).
 %is_group(Dict):- is_map(Dict),!,get_kov(objs,Dict,_).

@@ -26,6 +26,7 @@ into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort
 test_grav_rot:- test_p2(grav_rot).
 grav_rot(Group,List):- override_group(grav_rot(Group,List)),!.
 grav_rot(Shape,Final):- into_grid(Shape,Grid),grav_mass(Grid,RotG),!,call_rot(RotG,Shape,Final).
+grav_rot(Shape,RotG,Final):- into_grid(Shape,Grid),grav_mass(Grid,RotG),!,call_rot(RotG,Shape,Final).
 
 call_rot([],I,I):- !.
 call_rot([H|T],I,O):- !,
@@ -34,13 +35,15 @@ call_rot([H|T],I,O):- !,
 call_rot(T,I,O):- call(T,I,O).
 
 grav_mass(Grid,same):- iz(Grid,hv_symmetric),!.
-grav_mass(Grid,RotOut):- v_hv(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut).
+grav_mass(Grid,RotOut):- v_hv(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut,_).
+
 % make things bottem heavy
-%tips_to_rot(Grid,H,V,[rot270|RotOut]):- H<V, !, rot90(Grid,Grid90),!,tips_to_rot(Grid90,V,H,RotOut).
-tips_to_rot(Grid,H,V,[rot90|RotOut]):- is_top_heavy(Grid), !, rot270(Grid,Grid90), !, tips_to_rot(Grid90,V,H,RotOut).
+tips_to_rot(Grid,H,V,[rot270|RotOut],Final):- H<V, !, rot90(Grid,Grid90),!,trace,tips_to_rot(Grid90,V,H,RotOut,Final).
+tips_to_rot(Grid,H,V,[rot90|RotOut],Final):- is_top_heavy(Grid), !, rot270(Grid,Grid90), !, tips_to_rot(Grid90,V,H,RotOut,Final).
 %tips_to_rot(Grid,H,V,[rot180|RotOut]):- is_top_heavy(Grid), !, rot180(Grid,Grid90), !, tips_to_rot(Grid90,H,V,RotOut).
-tips_to_rot(Grid,_H,_V,RotOut):- is_left_heavy(Grid)-> RotOut=rot180; RotOut=same.
-is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,color_mass(Top,TopM),color_mass(Bottem,BottemM),!,BottemM<TopM.
+tips_to_rot(Grid,_H,_V,RotOut,Final):- is_left_heavy(Grid)-> (RotOut=[rot180],rot180(Grid,Final)); (RotOut=[same],Final=Grid).
+
+is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,color_mass(Top,TopM),color_mass(Bottem,BottemM),!,BottemM>TopM.
 is_left_heavy(Grid0):- rot90(Grid0,Grid),is_top_heavy(Grid).
 split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
     my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).

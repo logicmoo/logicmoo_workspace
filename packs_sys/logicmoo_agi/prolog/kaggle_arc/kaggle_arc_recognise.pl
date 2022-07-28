@@ -196,7 +196,7 @@ print_sgrid(F):- ((\+ \+ ((constrain_grid(s,_Trig,F,_FG),print_grid(F),nl)))),!.
 %constrain_type(Var,Cond):- frozen(Var,Goals),sub_term(E,Goals),E=@=Cond,!. % wdmsg(skipping(Cond)),trace.
 constrain_type(Var,Cond):- freeze(Var,Cond).
 
-
+find_ogs(_,_,_FG,SG):- SG==[],!,fail.
 find_ogs(H,V,FG,SG):- 
   %constrain_grid(f,CheckType,FG,_XFG2),
   once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),

@@ -221,14 +221,23 @@ dislike_points(I):- is_list(I),dislike_points1(L),forall(member(E,L),member(E,I)
 dislike_points1([colors([cc(BG, _)]),iz(polygon)]):- freeze(BG,is_black_or_bg(BG)).
 
 
-uncomparable(term,grid).
-uncomparable(term,globalpoints).
+uncomparable(_,Var):- var(Var),!.
+uncomparable(group,W):- good_overlap(W),!,fail.
+uncomparable(group,W):- too_non_unique(W).
+uncomparable(group,W):- too_unique(W).
+uncomparable(H,P):- compound(P),!,functor(P,F,_),uncomparable2(H,F).
+uncomparable(H,F):- uncomparable2(H,F).
 
-uncomparable(object,iz).
-uncomparable(shape,localpoints).
-%uncomparable(group,grid_size).
-%uncomparable(group,o_i_d).
-uncomparable(P):- compound(P),functor(P,F,_),uncomparable(F).
+uncomparable2(group,grid).
+uncomparable2(group,globalpoints).
+uncomparable2(group,grid_size).
+%uncomparable2(group,o_i_d).
+uncomparable2(group,link).
+uncomparable2(object,iz).
+uncomparable2(shape,localpoints).
+
+never_diff(iz(_)).
+never_diff(o_i_d(_,_)).
 
 make_comparable(I,I):- plain_var(I).
 make_comparable(I,I):- \+ compound(I),!.
@@ -460,8 +469,6 @@ diff_terms(IF=IA,O,IF=D):- find_kv(O,IF,OA),!,diff_terms(IA,OA,D).
 diff_terms(I,O,D):- compound(I),compound(O),!,diff_compounds(I,O,D).
 diff_terms(I,O,diff(I->O)).
 
-never_diff(iz(_)).
-never_diff(o_i_d(_,_)).
 diff_compounds(I,O, [] ):- (never_diff(I);never_diff(O)),!.
 diff_compounds(I,O,D):- compound_name_arguments(I,IF,IA),compound_name_arguments(O,OF,OA),
   maplist(compute_diff_or_same,IA,OA,DA),

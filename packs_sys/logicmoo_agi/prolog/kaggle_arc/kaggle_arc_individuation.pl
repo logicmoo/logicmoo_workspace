@@ -228,7 +228,7 @@ individuation_macros(complete, [
    reset_points,
   (force_by_color),
   reset_points,
-   by_color(1,black),
+  by_color(1,black),
   by_color(1,wbg),
   by_color(1,bg),
   by_color(1,fg),
@@ -820,13 +820,19 @@ one_fti(VM,'rows'):-
   maplist_n(1,row_to_indiv(VM), VM.grid),
   set(VM.points) = [].
 
+row_to_indiv(VM,N,[Row]):-  
+  localpoints_include_bg([[Row]],LPoints),
+  offset_points(1,N,LPoints,GPoints),
+  make_indiv_object(VM,[iz(image),birth(rows),loc(1,N),v_hv(VM.h,1),grid_size(VM.h,VM.v)],GPoints,Obj),
+  raddObjects(VM,Obj),!.
+
 row_to_indiv(VM,N,Row):-
   same([Row],Rot90),
   localpoints_include_bg(Rot90,LPoints),
   offset_points(1,N,LPoints,GPoints),
   %grid_to_individual([Row],Obj0),  
   % a column is a row that was prematurely rotated 270 degrees
-  make_indiv_object(VM,[/*iz(hv_line(h)),rotated(same),*/iz(image),birth(rows),loc(1,N),v_hv(VM.h,1),grid_size(VM.h,VM.v)],GPoints,Obj),
+  make_indiv_object(VM,[iz(image),iz(hv_line(h)),birth(rows),loc(1,N),v_hv(VM.h,1),grid_size(VM.h,VM.v)],GPoints,Obj),
   raddObjects(VM,Obj).
 
 one_fti(VM,'columns'):-
@@ -834,13 +840,21 @@ one_fti(VM,'columns'):-
   maplist_n(1,column_to_indiv(VM), Grid90),
   set(VM.points) = [].
 
+column_to_indiv(VM,N,[Row]):-  
+  localpoints_include_bg([[Row]],LPoints),
+  offset_points(N,1,LPoints,GPoints),
+  make_indiv_object(VM,[/*iz(hv_line(v)),rotated(same),*/
+    birth(columns),iz(image),loc(N,1),rotation(same),v_hv(1,VM.v),grid_size(VM.h,VM.v)],GPoints,Obj),
+  raddObjects(VM,Obj).
+
 column_to_indiv(VM,N,Row):-  
-  rot90([Row],Rot90),
+  rot270([Row],Rot90),
   localpoints_include_bg(Rot90,LPoints),
   offset_points(N,1,LPoints,GPoints),
   %grid_to_individual([Row],Obj0),  
   % a column is a row that was prematurely rotated 270 degrees
-  make_indiv_object(VM,[/*iz(hv_line(v)),rotated(same),*/birth(columns),iz(image),loc(N,1),center(N,2),v_hv(1,VM.v),grid_size(VM.h,VM.v)],GPoints,Obj),
+  make_indiv_object(VM,[/*iz(hv_line(v)),rotated(same),*/
+    birth(columns),iz(image),loc(N,1),iz(hv_line(v)),rotation(same),v_hv(1,VM.v),grid_size(VM.h,VM.v)],GPoints,Obj),
   raddObjects(VM,Obj).
   
   

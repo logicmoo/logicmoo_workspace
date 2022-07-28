@@ -125,7 +125,7 @@ fav(X,[]):- key_pad_tests(X).
 :- style_check(-singleton).
 fav(t(ff28f65a),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,count_shapes,associate_images_to_numbers,'(8, 3)']).
 fav(t('1b60fb0c'),[
- sol(
+ sol_unused(
    in_out(In,Out),
    subtractGrid(Out,In,Alien),
    rot_by_90([Alien,A,B,C]),
@@ -408,7 +408,7 @@ fav(v('7e02026e'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shap
 fav(t('90f3ed37'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,recoloring,pattern_repetition,'(3, 1)']).
 fav(t(d06dbe63),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_expansion,pairwise_analogy,'(2, 1)']).
 fav(t(ef135b50),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,+'Errors',training,'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021','https://github.com/fchollet/ARC/issues/28',draw_line_from_point,connect_the_dots,bridges,'(3, 1)']).
-fav(t('1b60fb0c'),[grid_size_same,sol(in_out(_137174,_137176),subtractGrid(_137176,_137174,_137184),rot_by_90([_137184,_137198,_137204,_137210]),find_by_shape(_137174,_137184,[_137198,_137204,_137210]),find_by_shape(_137176,_137184,[_137198,_137204,_137210,_137184])),learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),sol([new_things_are_a_color,fix_image]),-rotation_match,-mask_match,-color_match,+shape_match,+'Errors',tt,training,pattern_rotation,pattern_expansion,pattern_deconstruction,'https://github.com/fchollet/ARC/pull/33','(3, 1)']).
+fav(t('1b60fb0c'),[grid_size_same,sol_u(in_out(_137174,_137176),subtractGrid(_137176,_137174,_137184),rot_by_90([_137184,_137198,_137204,_137210]),find_by_shape(_137174,_137184,[_137198,_137204,_137210]),find_by_shape(_137176,_137184,[_137198,_137204,_137210,_137184])),learn([find_damage_to_input,find_center,fraction_evenly_to_four,map_slices_upon_themselves]),sol([new_things_are_a_color,fix_image]),-rotation_match,-mask_match,-color_match,+shape_match,+'Errors',tt,training,pattern_rotation,pattern_expansion,pattern_deconstruction,'https://github.com/fchollet/ARC/pull/33','(3, 1)']).
 fav(v(cb227835),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(3, 1) ']).
 fav(t('60b61512'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_completion,'(2, 1)']).
 fav(t('4612dd53'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,rectangle_guessing,pattern_completion,'(3, 1)']).

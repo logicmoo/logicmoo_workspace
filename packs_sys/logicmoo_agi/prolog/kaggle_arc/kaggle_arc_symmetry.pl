@@ -1566,9 +1566,6 @@ edge_of_grid(H,_,H,_,e).
 edge_of_grid(_,V,_,V,s).
 edge_of_grid(_,_,_,_,c).
 
-globalpoints_maybe_bg(G,P):- globalpoints(G,P).
-globalpoints_include_bg(G,P):- localpoints_include_bg(G,P).
-
 neighbor_map(Grid,GridO):-
   globalpoints_maybe_bg(Grid,Points),
   grid_size(Grid,H,V),

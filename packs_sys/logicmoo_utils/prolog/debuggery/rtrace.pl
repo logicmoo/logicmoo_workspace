@@ -413,7 +413,7 @@ restart_rtrace:-
    trace.
 :- 'my_totally_hide'(restart_rtrace/0).
       
-rtrace(Goal):- 
+rtrace(Goal):- trace,
   get_trace_reset(W),scce_orig(restart_rtrace,Goal,W).
 
 %:- '$hide'(system:tracing/0).

@@ -121,11 +121,12 @@ map_pred(Pred, P, X) :- map_pred([],Pred, P, X).
 %map_pred(NoCycles,_Pred, P, X) :- member(E,NoCycles), E==P,!, X = P.
 map_pred(NoCycles,Pred, P, X) :- call(Pred, P, X)*->true;map_pred0(NoCycles,Pred, P, X).
 
-map_pred0(_NoCycles,_Pred, Args, ArgSO) :- Args==[],!, ArgSO=[].
+
+map_pred0(_NoCycles,_Pred, Args, ArgSO) :- must_be_free(ArgSO), Args==[],!, ArgSO=[].
 map_pred0(_NoCycles, Pred, P, P1) :-  call(Pred, P, P1),!. % *->true;fail.
 map_pred0(NoCycles,Pred, P, X) :- fail,  attvar(P), !, %duplicate_term(P,X),P=X, 
   get_attrs(P,VS),  map_pred([P|NoCycles],Pred, VS, VSX), P=X,  put_attrs(X,VSX),!.
-map_pred0(_NoCycles,_Pred, P, P1) :- ( \+ compound(P) ; is_ftVar(P)), !, must(P1=P), !.
+map_pred0(_NoCycles,_Pred, P, P1) :- ( \+ compound(P) ; is_ftVar(P)), !, must_det_ll(P1=P), !.
 % map_pred0(NoCycles,Pred, Args, ArgSO) :- is_list(Args), !,  maplist(map_pred([Args|NoCycles],Pred), Args, ArgS), ArgS=ArgSO.
 map_pred0(NoCycles,Pred, IO, OO) :- is_list(IO),!, maplist(map_pred(NoCycles,Pred), IO, OO).
 map_pred0(NoCycles,Pred, IO, [O|ArgS]) :-  IO= [I|Args], !, 

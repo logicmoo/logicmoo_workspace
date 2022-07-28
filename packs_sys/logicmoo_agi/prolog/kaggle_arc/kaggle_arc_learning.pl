@@ -48,9 +48,7 @@ save_learnt_rule(RuleIn,InGoal,OutGoal):-
   length(InSet,InLen),length(InVars,InLen),
   subst_rvars(InSet,InVars,RuleIn,NewRuleIn),!,
   Assert = (NewRuleIn:-was_once(InSet,InVars)), 
-  assert_visually(Assert),!.
-
-    
+  assert_visually(Assert),!.    
 
 has_prop(P,Obj):- indv_props(Obj,Props),!,member(Q,Props), (Q=@=P -> true ; ( \+ Q \= P)).
 
@@ -65,9 +63,11 @@ learn_about_group(In):-
 not_for_matching(Var):- var(Var),!.
 not_for_matching(M):- too_unique(M).
 not_for_matching(M):- too_non_unique(M).
-not_for_matching(localpoints(_)).
+%not_for_matching(localpoints(_)).
 not_for_matching(iz(combined)).
 not_for_matching(link(_,_,_)).
+not_for_matching(shape(_)).
+not_for_matching(o_i_d(_,_)).
 not_for_matching(globalpoints(_)).
 not_for_matching(iz(image)).
 
@@ -75,7 +75,7 @@ not_for_matching(iz(image)).
 
 my_exclude(P1,I,O):- my_partition(P1,I,_,O).
 simplify_for_matching(I,I):- ( \+ compound(I); I='$VAR'(_)), !.
-simplify_for_matching(obj(I),obj([O|_])):- is_list(I),!, simplify_for_matching(I, O).
+simplify_for_matching(obj(I),obj(OL)):- is_list(I),!, my_exclude(not_for_matching,I,M), append(M,_,OL).
 simplify_for_matching(I,O):- is_grid(I),O=I.
 simplify_for_matching(I,O):- is_list(I), my_exclude(not_for_matching,I,M),I\=@=M,!,simplify_for_matching(M,O).
 simplify_for_matching(I,O):- 
@@ -83,9 +83,15 @@ simplify_for_matching(I,O):-
        maplist(simplify_for_matching, Args, ArgsNew),
        compound_name_arguments( O, F, ArgsNew ),!.
 
+member_skip_open_(_, El, El).
+member_skip_open_([H|T], El, _) :- nonvar(T),
+    member_skip_open_(T, El, H).
+
+member_skip_open(El, [H|T]) :-
+    member_skip_open_(T, El, H).
 
 
-group_group(What,[Obj|In],[G1|Groups]):- indv_props(Obj,Props), member(P,Props),matches_key(P,What),!,
+group_group(What,[Obj|In],[G1|Groups]):- indv_props(Obj,Props), member_skip_open(P,Props),matches_key(P,What),!,
   [Obj|Include] = G1,
   my_partition(has_prop(P),In,Include,Exclude),
   group_group(What,Exclude,Groups).
@@ -95,18 +101,18 @@ group_keys(iz).
 group_keys(mass).
 group_keys(birth).
 group_keys(color).
-group_keys(shape).
+%group_keys(shape).
 group_keys(rotation).
 group_keys(localpoints).
 group_keys(symmetry).
 
-matches_key(P,What):- atom(What),!,functor(P,What,_).
-matches_key(P,P).
+matches_key(P,What):- atom(What), nonvar(P), !,functor(P,What,_).
+matches_key(P,What):- nonvar(P), What = P.
 
 simplify_for_matching_nondet(I,O):- is_list(I), is_group(I), \+ is_grid(I), !, 
    group_keys(Key),
-   group_group(Key,I,ListOfLists),
-   list_to_set(ListOfLists,Set),
+   once((group_group(Key,I,ListOfLists),
+   list_to_set(ListOfLists,Set))),
    member(M,Set),once(simplify_for_matching(M,O)).
 simplify_for_matching_nondet(I,O):- simplify_for_matching(I,O).
 
@@ -115,8 +121,10 @@ learn_rule_o(out_out,_InVM,_OutVM):- !.
 learn_rule_o(out_in,_InVM,_OutVM):- !.
 learn_rule_o(in_in,_InVM,_OutVM):- !.
 learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
-  InGrid = InVM.grid, InObjs = InVM.objs,
-  OutGrid = OutVM.grid, OutObjs = OutVM.objs,
+  InGrid = InVM.grid, InObjs0 = InVM.objs,
+  OutGrid = OutVM.grid, OutObjs0 = OutVM.objs,
+  maplist(simplify_for_matching,InObjs0,InObjs),
+  maplist(simplify_for_matching,OutObjs0,OutObjs),
  % extract_vm_props(InVM,InProps),     
  % extract_vm_props(OutVM,OutProps), 
  % prolog_pretty_print:print_term(Mode=learn_rule_o(Mode,InProps,OutProps),[fullstop(true),nl(true)]),!,
@@ -130,20 +138,30 @@ learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
   training_info(TestID,Info),
   length(Info,Len),
   ptc(orange,format('~N~n% Rules so far for ~w: ~w~n~n',[TestID,Len])),!,
-  confirm_reproduction(InObjs,InGrid),
-  confirm_reproduction(OutObjs,OutGrid),
-  confirm_learned(InGrid,OutGrid),
-  show_proof(InGrid,OutGrid).
+  confirm_reproduction(InObjs,InObjs0,InGrid),!,
+  confirm_reproduction(OutObjs,OutObjs0,OutGrid),!,
+  confirm_learned(InGrid,OutGrid),!,
+  show_proof(InGrid,OutGrid),!.
 
 learn_rule_i_o(Mode,In,Out):- 
   forall(learn_rule_in_out(Mode,In,Out),true).
 
-confirm_reproduction(Objs,ExpectedOut):- 
+confirm_reproduction(Objs,DebugObjs,ExpectedOut):- 
+   length(Objs,Len),
+   grid_size(ExpectedOut,H,V),
    globalpoints(Objs,OGPoints),
-   points_to_grid(OGPoints,Solution),
-   show_result("Our Reproduction", Solution,ExpectedOut).
+   points_to_grid(H,V,OGPoints,Solution),
+   show_result("Our Reproduction"=Len, Solution,ExpectedOut,Errors),
+   (Errors==0 -> true; maplist(debug_reproduction(H,V),Objs,DebugObjs)).
 
-show_result(What,Solution,ExpectedOut):-
+debug_reproduction(H,V,Obj,DObj):- 
+  globalpoints(Obj,Points),
+  print_grid(H,V,Obj,Points),
+  o_i_d(Obj,_,ID1),
+  o_i_d(DObj,_,ID2),
+  pt(dobj(ID1,ID2)=DObj),!.
+
+show_result(What,Solution,ExpectedOut,Errors):-
  get_current_test(TestID),
  ignore((count_difs(ExpectedOut,Solution,Errors),
    print_side_by_side(blue,Solution,What,_,ExpectedOut,"Expected"),
@@ -158,14 +176,14 @@ arcdbg_info(Color, Info):- banner_lines(Color), arcdbg(Info), banner_lines(Color
 confirm_learned(In,ExpectedOut):-
   individuate(complete,In,Objs),
   (use_test_associatable(Objs,Solution) -> 
-   show_result("Our Solution", Solution,ExpectedOut)
+   show_result("Our Solution", Solution,ExpectedOut,_)
    ; arcdbg_info(red,warn("No Solution"))).
 
 
 show_proof(In,ExpectedOut):-
   individuate(complete,In,Objs),
   (test_associatable_proof(Objs,Solution) -> 
-   show_result("Our Solution", Solution,ExpectedOut)
+   show_result("Our Solution", Solution,ExpectedOut,_Errors)
    ; arcdbg_info(red,warn("No Solution"))).
 
 %learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
@@ -204,11 +222,13 @@ learn_rule_in_out(Mode,In,Out):-
 
 %learn_rule_in_out_now(Mode,_-In,Out):-!,learn_rule_in_out_now(Mode,In,Out).
 %learn_rule_in_out_now(Mode,In,_-Out):-!,learn_rule_in_out_now(Mode,In,Out).
+learn_rule_in_out_now(_Mode,In,Out):- is_list(In),is_list(Out), \+ is_grid(In), \+ is_grid(Out), length(In,L1), length(Out,L2), 
+   \+ (L1 is L2 ; (L1 is L2 * 2, L2>1); (L2 is L1 * 2, L1>1)),!.
+
 learn_rule_in_out_now(Mode,[In],[Out]):- \+ is_grid([In]), \+ is_grid([Out]), !, learn_rule_in_out_now(Mode,In,Out).
-learn_rule_in_out_now(_Mode,In,Out):- is_list(In),is_list(Out), \+ is_grid(In), \+ is_grid(Out), length(In,L1), length(Out,L2), \+ (L1 is L2 ; (L1 is L2 * 2, L2>1); (L2 is L1 * 2, L1>1)),!.
 learn_rule_in_out_now(Mode,In,Out):-  is_list(In),is_list(Out), 
   maplist(compound,In), maplist(compound,Out),
-  length(In,L), length(Out,L),!,
+  length(In,L), length(Out,L), !,
   maplist(learn_rule_in_out_now(Mode),In,Out).
   %learn_rule_in_out(Mode,InS,OutS).
 learn_rule_in_out_now(_Mode,In,Out):- save_learnt_rule(test_associatable(In,Out),In,Out).
@@ -254,7 +274,7 @@ training_info(TestID,Info):-
        nop(erase(Ref))))))),Info).
 
 clear_training(TestID):-
-  retractall(individuated_cache(_,_,_)),
+  %retractall(individuated_cache(_,_,_)),
   set_bgc(_),
   set_flag(indiv,0),
   forall(test_local_dyn(F),
@@ -288,10 +308,22 @@ learn_rule(In,RuleDir,Out):-
 learn_rule(In,RuleDir,ROut):- nop(use_learnt_rule(In,RuleDir,ROut)).
 
 /*
-] dmiles: instead of a DSL about transformations i think the DSL would be one that creates the images.. then the transformation becomes about what properties of the generative DSL change (both the input and the output have their own starting points that are gleaned by looking at what DSL would generate all the outputs vs what DSL would generate all the inputs) the thing that is learned by training is how the edits are supposed to happen in each of the generative DSLs (edited)
-[7:02 AM] dmiles: the progression of inputs teaches the system abotu what the input's generative DSL is used for inputs (edited)
-[7:02 AM] dmiles: though the progression of outputs give more information about the total task (but still give the hints about the the output's generative DSL) 
-round tripping between a grid and the generative DSL is seems important 
+instead of a DSL about transformations i think the DSL would be one that creates the images.. 
+then the transformation becomes about what properties of the generative DSL change (both the input and the output 
+have their own starting points that are gleaned by looking at what DSL would generate all the outputs vs what 
+DSL would generate all the inputs) the thing that is learned by training is how the edits are supposed to happen in each
+ of the generative DSLs (edited)
+the progression of inputs teaches the system abotu what the input's generative DSL is used for inputs (edited)
+though the progression of outputs give more information about the total task (but still give the hints about the the output's generative DSL) 
+round tripping between a grid and the generative DSL seems important.   Has anyone started a Grid-> "generative DSL" convertor ?
+oh yes even the operations such editing/transformation of the generative DSL is in the domain of yet another DSL that specifies those operations.. and in my code i even have a 3rd DSL that is specific to transformations that both the two previous DSLs are indexed against.. in order to make the things fast i assume that the three forms each transition between will be part of the final index built during training (edited)
+s the training pairs are fed in it eliminates the candidate associations
+(the more training the faster it gets)
+this way the only associations it uses and retains are correct ones 
+we'll see if there are extra possible correct associations (which may end up actually being incorrect answers that are logically correct).. 
+Luckily the system produces a formal proof for it's answers (explainablity) 
+I have also been looking into compression and hashing alternatives in a similar vein such as neural hash and graph compression
+ (thanks for the links, BTW!).
 */
 properties_that_changed(Grid1,Grid2,Props):-
   individuate(complete,Grid1,Props1),
@@ -303,20 +335,23 @@ has_learnt_rule(TestID,In,Key,RuleDir,Out):- clause(learnt_rule(TestID,In,Key,Ru
 ignore_equal(X,Y):- ignore(X=Y).  
 
 
-use_test_associatable(In,OutR):-
+use_test_associatable(In,OutR):- 
+  retractall(for_output(_,_)),
   findall(InS,simplify_for_matching_nondet(In,InS),InL),
-   findall(OutS,(member(InS,InL),use_test_associatable_io(InS,OutS)),OutL),
-    Out=[set],
-     maplist(ignore_some_equals,OutL,Out),
-     ignore(OutR=Out),!.
+   findall(OutS,(member(InS,InL),use_test_associatable_io(InS,OutS),my_asserta_if_new(for_output(InS,OutS))),OutL),    
+     OutSet=[for_output],     
+     nb_set_add1(OutSet,OutL),
+     ignore(OutR=OutSet),!,
+     pt(outSet=OutSet),
+     listing(for_output/2).
 
 test_associatable_proof(In,OutR):-
   findall(InS,simplify_for_matching_nondet(In,InS),InL),
    findall(OutS,
      (member(InS,InL),use_test_associatable_io(InS,OutS),
-      arcdbg_info(cyan,proof(InS->OutS))),OutL),
-    Out=[set],
-  maplist(ignore_some_equals,OutL,Out),
+      arcdbg_info(cyan,proof([in=InS,out=OutS]))),OutL),
+    Out=[test_associatable_proof],
+  nb_set_add1(Out,OutL),
   ignore(OutR=Out),!.
 
 
@@ -387,7 +422,7 @@ two_or_more(Atoms,Label):- select(Label,Atoms,Rest),member(Label,Rest).
 sub_label(X, X, OutGoal):- sub_var(X,OutGoal).
 sub_label(X, Term, OutGoal) :-
     compound(Term),
-    is_list(Term),
+    %is_list(Term),
     \+ never_labels_in(Term),
     arg(_, Term, Arg),
     sub_label(X, Arg, OutGoal).
@@ -402,14 +437,14 @@ never_unbind_label(Int):- integer(Int), Int > 7 ; Int == 1 ; Int == 0.
 never_unbind_label(true).
 never_unbind_label(false).
 never_unbind_label(G):- \+ atom(G),!,fail.
-never_unbind_label(G):- atom_length(G,1),!.
+never_unbind_label(G):- atom_length(G,N),N<3,!.
 never_unbind_label(G):- downcase_atom(G,D), upcase_atom(G,D).
 never_unbind_label(G):- atom_chars(G,Cs),member(C,Cs),char_type(C,digit),!.
 
 maybe_unbind_label(G):- var(G),!,fail.
-maybe_unbind_label(G):- too_non_unique(G).
+%maybe_unbind_label(G):- too_non_unique(G).
 maybe_unbind_label(G):- never_unbind_label(G),!,fail.
-maybe_unbind_label(G):- integer(G),!.
+maybe_unbind_label(G):- integer(G),G<1.
 maybe_unbind_label(G):- \+ atom(G),!,fail.
 maybe_unbind_label(G):- is_color(G).
 %maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
@@ -448,6 +483,7 @@ subtractGrid(Out,In,Alien):- plain_var(Alien), remove_global_points(In,Out,Alien
 subtractGrid(Out,In,Alien):- plain_var(Out),!,add_global_points(Alien,In,Out).
 subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 
+find_by_shape(Grid,_Find,_Founds):- Grid==[],!,fail.
 find_by_shape(Grid,Find,Founds):- 
  get_vm(VM),
  v_hv(Find,GH,GV),

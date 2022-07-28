@@ -234,16 +234,16 @@ each_1trait(T,T):- \+ too_verbose(T).
 each_trait(Obj,Obj-S):- findall(T,each_1trait(Obj,T),L),list_to_set(L,S).
 
 
-too_unique(P):- compound(P),compound_name_arity(P,F,_),!,too_unique(F).
-too_unique(o_i_d).
+too_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_unique(F).
+%too_unique(o_i_d).
 too_unique(globalpoints).
 %good_overlap(shape).
 
-good_overlap(P):- compound(P),compound_name_arity(P,F,_),!,good_overlap(F).
+good_overlap(P):- compound(P),!,compound_name_arity(P,F,_),!,good_overlap(F).
 good_overlap(localpoints).
 good_overlap(rotation).
 
-too_non_unique(P):- compound(P),compound_name_arity(P,F,_),!,too_non_unique(F).
+too_non_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_non_unique(F).
 too_non_unique(grid_size).
 too_non_unique(birth).
 too_non_unique(grid).

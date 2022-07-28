@@ -328,6 +328,7 @@ monogrid(X,Y):- object_grid(X,M),into_monochrome(M,Y).
 
 uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
 %known_gridoid(ID,G):- plain_var(ID),!,(known_grid(ID,G);known_object(ID,G)).
+known_gridoid(ID,G):- is_object(ID),!,G=ID.
 known_gridoid(ID,G):- known_grid(ID,G),!.
 known_gridoid(ID,G):- known_object(ID,G),!.
 %known_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
@@ -338,6 +339,7 @@ known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; 
 test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*Example+Num*IO,fix_id(TstName,Name),!.
 known_grid0(ID,G):- is_grid(ID),!,G=ID.
 known_grid0(ID,_):- is_object(ID),!,fail.
+known_grid0(_,ID):- is_object(ID),!,fail.
 known_grid0(ID,G):- test_id_num_io(ID,TestID,Example,Num,IO),!,ExampleNum=Example+Num,!,(kaggle_arc_io(TestID,ExampleNum,IO,G),deterministic(YN),true),(YN==true-> ! ; true).
 known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- is_grid_id(G,ID).
@@ -371,12 +373,12 @@ incomplete(X,X).
 
 into_obj(G,O):- no_repeats(O,known_obj0(G,O)).
 
-o2g(Obj,Glyph):- g2o(Glyph,Obj),!.
+o2g(Obj,Glyph):-  g2o(Glyph,Obj),!.
 o2g(Obj,NewGlyph):- o_i_d(Obj,ID,Old), int2glyph(Old,Glyph), 
  (nb_current(Glyph,O2) ->
 (O2=@=Obj->NewGlyph=Glyph; 
  ( flag(indiv,Iv,Iv+1),int2glyph(Iv,NewGlyph),
-  subst(Obj,o_i_d(ID,Old),o_i_d(ID,Iv),NewObj),
+  subst001(Obj,o_i_d(ID,Old),o_i_d(ID,Iv),NewObj),
   nb_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,nb_linkval(NewGlyph,Obj))),
  my_asserta_if_new(g2o(NewGlyph,Obj)).
 
@@ -397,7 +399,7 @@ known_obj0(G,O):- is_object(G),!,G=O.
 known_obj0(obj(O),obj(O)):- !, is_list(O),!.
 known_obj0(G,O):- g2o(G,O),!.
 known_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
-known_obj0(G,O):- is_group(G),into_group(G,OL),must([O]=OL).
+known_obj0(G,O):- is_group(G),into_group(G,OL),OL=[_],must([O|_]=OL).
 
 % this is bad  ?- into_grid('E',ID),grid_to_id(G,ID).  ?- into_grid('Z',ID),grid_to_id(G,ID).
 

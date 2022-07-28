@@ -530,11 +530,11 @@ train_using_oo_ii_io(TestID,DictIn,DictOut):-
 train_using_oo_ii_io(TestID,Trn,N1,DictIn,DictOut):-
  (kaggle_arc(TestID,(Trn+N1),In1,Out1), N2 is N1 + 1),
 
- (kaggle_arc(TestID,(Trn+N2),_In2,Out2) 
+ (kaggle_arc(TestID,(Trn+N2),_In2,Out2)
    -> 
     (train_for_objects_from_pair_with_mono(DictIn,TestID,[Trn,'o',N1,'o',N2],Out1,Out2,Dict1),
      %nop((train_for_objects_from_pair_with_mono(Dict0,TestID,[Trn,'i',N1,'i',N2],In1,In2,Dict1))),
-    train_using_oo_ii_io(TestID,Trn,N2,Dict1,DictM))
+     train_using_oo_ii_io(TestID,Trn,N2,Dict1,DictM))
      ; (DictM = DictIn)),
   !,
   train_for_objects_from_pair_with_mono(DictM,TestID,[Trn,'i',N1,'o',N1],In1,Out1,DictOut),!.
@@ -572,6 +572,8 @@ train_for_objects_from_pair_with_mono(Dict0,TestID,Desc,In,Out,Dict9):-
 
 train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
   locally(set_prolog_flag(gc,false),train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1)).
+
+train_for_objects_from_1pair1(Dict0,_TestID,Desc,_InA,_OutA,Dict0):- Desc = [_Trn,'o',_N1,'o',_N2], !.
 
 train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  maplist(must_det_ll,[
