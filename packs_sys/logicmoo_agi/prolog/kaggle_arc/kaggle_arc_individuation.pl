@@ -820,19 +820,13 @@ one_fti(VM,'rows'):-
   maplist_n(1,row_to_indiv(VM), VM.grid),
   set(VM.points) = [].
 
-row_to_indiv(VM,N,[Row]):-  
-  localpoints_include_bg([[Row]],LPoints),
-  offset_points(1,N,LPoints,GPoints),
-  make_indiv_object(VM,[iz(image),birth(rows),loc(1,N),v_hv(VM.h,1),grid_size(VM.h,VM.v)],GPoints,Obj),
-  raddObjects(VM,Obj),!.
-
 row_to_indiv(VM,N,Row):-
   same([Row],Rot90),
   localpoints_include_bg(Rot90,LPoints),
   offset_points(1,N,LPoints,GPoints),
   %grid_to_individual([Row],Obj0),  
   % a column is a row that was prematurely rotated 270 degrees
-  make_indiv_object(VM,[iz(image),iz(hv_line(h)),birth(rows),loc(1,N),v_hv(VM.h,1),grid_size(VM.h,VM.v)],GPoints,Obj),
+  make_indiv_object(VM,[iz(image),birth(rows),loc(1,N),v_hv(VM.h,1),grid_size(VM.h,VM.v)],GPoints,Obj),
   raddObjects(VM,Obj).
 
 one_fti(VM,'columns'):-
@@ -840,21 +834,14 @@ one_fti(VM,'columns'):-
   maplist_n(1,column_to_indiv(VM), Grid90),
   set(VM.points) = [].
 
-column_to_indiv(VM,N,[Row]):-  
-  localpoints_include_bg([[Row]],LPoints),
-  offset_points(N,1,LPoints,GPoints),
-  make_indiv_object(VM,[/*iz(hv_line(v)),rotated(same),*/
-    birth(columns),iz(image),loc(N,1),rotation(same),v_hv(1,VM.v),grid_size(VM.h,VM.v)],GPoints,Obj),
-  raddObjects(VM,Obj).
-
 column_to_indiv(VM,N,Row):-  
-  rot270([Row],Rot90),
-  localpoints_include_bg(Rot90,LPoints),
+  rot270([Row],Rot270),
+  localpoints_include_bg(Rot270,LPoints),
   offset_points(N,1,LPoints,GPoints),
   %grid_to_individual([Row],Obj0),  
   % a column is a row that was prematurely rotated 270 degrees
   make_indiv_object(VM,[/*iz(hv_line(v)),rotated(same),*/
-    birth(columns),iz(image),loc(N,1),iz(hv_line(v)),rotation(same),v_hv(1,VM.v),grid_size(VM.h,VM.v)],GPoints,Obj),
+    birth(columns),iz(image),loc(N,1),rotation(same),v_hv(1,VM.v),grid_size(VM.h,VM.v)],GPoints,Obj),
   raddObjects(VM,Obj).
   
   

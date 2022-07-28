@@ -117,12 +117,35 @@ simplify_for_matching_nondet(I,O):- is_list(I), is_group(I), \+ is_grid(I), !,
 simplify_for_matching_nondet(I,O):- simplify_for_matching(I,O).
 
 
+train_io_from_hint(TestID,ExampleNum,InVM):-
+  ignore((          
+    kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
+    kaggle_arc_io(TestID,ExampleNum,in,InGrid),
+   (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
+    gset(InVM.grid) = InGrid,
+    gset(InVM.grid_out) = ExpectedOut,
+    do_sols_for("Do Training",InVM,TestID,ExampleNum))),
+  confirm_train_io_from_hint(TestID,ExampleNum).
+
+confirm_train_io_from_hint(TestID,ExampleNum):-
+  InVM = _,
+  ignore((          
+   %kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
+    kaggle_arc_io(TestID,ExampleNum,in,InGrid),
+   (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
+    gset(InVM.grid) = InGrid,
+   % gset(InVM.grid_out) = ExpectedOut,
+    do_sols_for("Confirm Trained",InVM,TestID,ExampleNum))).
+
+
 learn_rule_o(out_out,_InVM,_OutVM):- !.
 learn_rule_o(out_in,_InVM,_OutVM):- !.
 learn_rule_o(in_in,_InVM,_OutVM):- !.
 learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
-  InGrid = InVM.grid, InObjs0 = InVM.objs,
+ must_det_ll((
+  InGrid = InVM.grid, InObjs0 = InVM.objs,  
   OutGrid = OutVM.grid, OutObjs0 = OutVM.objs,
+  ignore(InVM.grid_out = OutGrid),
   maplist(simplify_for_matching,InObjs0,InObjs),
   maplist(simplify_for_matching,OutObjs0,OutObjs),
  % extract_vm_props(InVM,InProps),     
@@ -141,7 +164,7 @@ learn_rule_o(in_out,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
   confirm_reproduction(InObjs,InObjs0,InGrid),!,
   confirm_reproduction(OutObjs,OutObjs0,OutGrid),!,
   confirm_learned(InGrid,OutGrid),!,
-  show_proof(InGrid,OutGrid),!.
+  show_proof(InGrid,OutGrid))),!.
 
 learn_rule_i_o(Mode,In,Out):- 
   forall(learn_rule_in_out(Mode,In,Out),true).
@@ -176,15 +199,15 @@ arcdbg_info(Color, Info):- banner_lines(Color), arcdbg(Info), banner_lines(Color
 confirm_learned(In,ExpectedOut):-
   individuate(complete,In,Objs),
   (use_test_associatable(Objs,Solution) -> 
-   show_result("Our Solution", Solution,ExpectedOut,_)
-   ; arcdbg_info(red,warn("No Solution"))).
+   show_result("Our Learned Solution", Solution,ExpectedOut,_)
+   ; arcdbg_info(red,warn("No Learned Solution"))).
 
 
 show_proof(In,ExpectedOut):-
   individuate(complete,In,Objs),
   (test_associatable_proof(Objs,Solution) -> 
-   show_result("Our Solution", Solution,ExpectedOut,_Errors)
-   ; arcdbg_info(red,warn("No Solution"))).
+   show_result("Our Proved Solution", Solution,ExpectedOut,_Errors)
+   ; arcdbg_info(red,warn("No Proved Solution"))).
 
 %learn_rule_o(_Mode,G,_):- is_list(G), is_group(G), learn_about_group(G), fail.
 %learn_rule_o(_Mode,_,G):- is_list(G), is_group(G), learn_about_group(G), fail.

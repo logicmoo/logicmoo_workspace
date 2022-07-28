@@ -642,28 +642,6 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   dash_chars,dash_chars,dash_chars,dash_chars,
   print_testinfo(TestID)]).
 
-
-train_io_from_hint(TestID,ExampleNum,InVM):-
-  ignore((          
-    kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
-    kaggle_arc_io(TestID,ExampleNum,in,InGrid),
-   (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
-    gset(InVM.grid) = InGrid,
-    gset(InVM.grid_out) = ExpectedOut,
-    do_sols_for("Do Training",InVM,TestID,ExampleNum))),
-  confirm_train_io_from_hint(TestID,ExampleNum).
-
-confirm_train_io_from_hint(TestID,ExampleNum):-
-  InVM = _,
-  ignore((          
-   %kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
-    kaggle_arc_io(TestID,ExampleNum,in,InGrid),
-   (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
-    gset(InVM.grid) = InGrid,
-   % gset(InVM.grid_out) = ExpectedOut,
-    do_sols_for("Confirm Trained",InVM,TestID,ExampleNum))).
-
-
 show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),
   dash_chars,dash_chars,
@@ -754,7 +732,7 @@ do_sols_for(Why,InVM,TestID,ExampleNum) :-
        into_pipe(GridOut,Solution)))
        *->    
        ignore((count_difs(ExpectedOut,Solution,Errors),
-        print_side_by_side(blue,Solution,"Our Solution",_,ExpectedOut,"Expected Solution"),
+        print_side_by_side(blue,Solution,"Our Ran Solution",_,ExpectedOut,"Expected Solution"),
            (Errors==0 -> 
               (banner_lines(green),arcdbg(pass(Why,TestID,ExampleNum,SolutionProgram)),banner_lines(green))
               ; (banner_lines(red), arcdbg(fail(Why,Errors,TestID,ExampleNum,SolutionProgram)),
