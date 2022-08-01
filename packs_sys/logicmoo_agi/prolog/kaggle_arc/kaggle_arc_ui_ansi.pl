@@ -220,6 +220,7 @@ strip_vspace(S,S).
 print_ansi_tree(P,_):- arc_portray(P),!.
 print_ansi_tree(P,_OL):- print_tree_nl(P).
 
+wqs(G):- is_map(G), !, write_map(G,'wqs').
 wqs(X):- is_grid(X), !, print_grid(X).
 wqs(X):- is_object(X), !, show_shape(X).
 wqs(X):- plain_var(X), !, wqs(plain_var(X)). wqs(nl):- !, nl. wqs(''):-!. wqs([]):-!.
@@ -231,7 +232,6 @@ wqs([H|T]):- !, wqs(H), wqs(T).
 wqs(format(C,N)):- !, format(C,N).
 wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
-wqs(G):- is_map(G), !, write_map(G,'wqs').
 wqs(pt(C)):- !, pt(C).
 wqs(q(C)):- !, write(' '), writeq(C).
 wqs(uc(C,W)):- !, write(' '), color_print(C,call(underline_print(format("\t~@",[wqs(W)])))).
