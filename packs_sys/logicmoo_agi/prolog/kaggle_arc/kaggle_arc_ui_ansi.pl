@@ -38,12 +38,11 @@ portray_terse:- fail,!.
 
 arc_portray(Map,TF):- get_map_pairs(Map,Type,Pairs),!, arc_portray_pairs(Type,TF,Pairs). 
 
-arc_portray_t(G, _):- is_map(G), !, write('..VM_arc_portray_t..').
-arc_portray_t(G, _):- is_dict(G), !, write('..dict..').
+arc_portray_t(G, _):- is_map(G), !, write_map(G,'arc_portray_t').
 arc_portray_t(G, _):- is_grid(G),  !, data_type(G,W),writeq(grid(W)).
 arc_portray_t(G, _):- is_grid(G),  !, write('..grid..').
 
-arc_portray(G, _):- is_map(G), !, write('..VM..').
+arc_portray(G, _):- is_map(G),  !, write_map(G,'arc_portray').
 arc_portray(G, TF):- portray_terse, arc_portray_t(G, TF),!.
 arc_portray(G, TF):- TF \== true, catch(arc_portray_nt(G, TF),_,fail),!.
 %arc_portray(G, _TF):- writeq(G),!.
@@ -171,8 +170,13 @@ tersify3(I,O):- is_list(I), !, maplist(tersify3,I,O).
 tersify3(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify,IA,OA), compound_name_arguments(O,F,OA).
 tersify3(I,I).
 
+write_map(G,Where):- is_vm(G), !, write('...VM_'),write(Where),write('...').
+write_map(G,Where):- is_dict(G), !, write('...Dict_'),write(Where),write('...').
+write_map(G,Where):- is_map(G), !, write('...Map_'),write(Where),write('...').
+write_map(_G,Where):- write('...'),write(Where),write('...').
+
 ptt(_):- is_print_collapsed,!.
-ptt(G):- is_map(G), !, write('..VM..').
+ptt(G):- is_map(G), !, write_map(G,'ptt').
 ptt(P):- \+ \+ ((tersify(P,Q),!,pt(Q))).
 ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 
@@ -185,11 +189,11 @@ pt(_):- is_print_collapsed,!.
 pt(_):- format('~N'), fail.
 pt(P):- var(P),!,pt(var(P)).
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
-pt(G):- is_map(G), !, write('..VM_pt..').
+pt(G):- is_map(G), !, write_map(G,'pt').
 pt(P):- \+ \+ (( pt_guess_pretty(P,GP),ptw(GP))).
 %pt(P):-!,writeq(P).
 %ptw(P):- quietlyd(print_tree_nl(P)),!.
-ptw(G):- is_map(G), !, write('..VM_ptw..').
+ptw(G):- is_map(G), !, write_map(G,'ptw').
 ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
 
 pt_guess_pretty(P,O):- copy_term(P,O,_),
@@ -227,7 +231,7 @@ wqs([H|T]):- !, wqs(H), wqs(T).
 wqs(format(C,N)):- !, format(C,N).
 wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
-wqs(G):- is_map(G), !, write('..VM_wqs..').
+wqs(G):- is_map(G), !, write_map(G,'wqs').
 wqs(pt(C)):- !, pt(C).
 wqs(q(C)):- !, write(' '), writeq(C).
 wqs(uc(C,W)):- !, write(' '), color_print(C,call(underline_print(format("\t~@",[wqs(W)])))).
@@ -269,7 +273,7 @@ functor_test_color(pass,green).
 functor_test_color(fail,red).
 functor_test_color(warn,yellow).
 
-arcdbg(G):- is_map(G), !, write('..VM_arcdbg..').
+arcdbg(G):- is_map(G), !, write_map(G,'arcdbg').
 arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),
   wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).
