@@ -60,7 +60,7 @@ hide_xpce_library_directory.
 :- system:use_module(library(predicate_streams)).
 :- system:use_module(library(logicmoo/with_no_x)).
 :- system:use_module(library(logicmoo/each_call)).
-:- system:use_module(library(logicmoo/butterfly_console)).
+%:- use_module(library(logicmoo/butterfly_console)).
 
 
 :- if(exists_source(cliopatria('applications/help/load'))).

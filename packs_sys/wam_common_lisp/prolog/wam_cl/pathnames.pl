@@ -12,14 +12,16 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. 
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(pathname, []).
+:- endif.
+:- include('./header').
 
 :- meta_predicate or_nil(0).
 :- meta_predicate or_die(0).
 
 
 
-:- include('./header').
 
 wl:init_args(1,compile_file_pathname).
 f_compile_file_pathname(OSFile,Keys,PLFileOut):-

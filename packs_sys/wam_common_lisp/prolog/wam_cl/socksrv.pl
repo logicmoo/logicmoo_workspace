@@ -12,10 +12,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(socksrv, []).
 
-
-
+:- endif.
 :- include('./header').
 
 :- use_module(library(socket)).

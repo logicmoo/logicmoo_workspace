@@ -4,7 +4,7 @@
             ain0/1,
             aina/1,
             ainz/1,
-            
+            clause_b/1,
             if_flag_true/2,
             current_module_from/2,
             attributes_equal/3,

@@ -12,11 +12,11 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(tests, []).
-
-
-
+:- endif.
 :- include('./header').
+
 
 :- dynamic(tst:is_local_test/1).
 :- multifile(tst:is_local_test/1).
@@ -281,7 +281,7 @@ mf_sys_is([sys_is,Eqf_In, Expected_In, Actual_In],ReplEnv, MFResult) :-
 :- always(set_opv(sys_is, symbol_function, sf_sys_is)).
 
 
-:- fixup_exports.
+%:- fixup_exports.
 
 end_of_file.
 

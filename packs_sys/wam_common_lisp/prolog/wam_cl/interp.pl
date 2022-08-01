@@ -31,11 +31,11 @@
  * lisp evaluator from "Lisp" (3rd ed), Winston & Horn.
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 
 :- module(interp, []).
 
-end_of_file.
-
+:- endif.
 :- include('./header').
 
 
@@ -82,6 +82,7 @@ apply_f(_Binds,[closure, FormalParms, Body, Bindings0], ActualParams, Result):-
 	!.
 
 apply_f(_Binds,ProcedureName, ActualParams, Result):-
+  Ctx = _,Env = _,
 	get_lambda_def(Ctx,Env,defun,ProcedureName,FormalParms, LambdaExpression),!,
 	bind_formal_parameters(FormalParms, ActualParams, Bindings),
         eval(LambdaExpression, Bindings, Result),
@@ -119,5 +120,5 @@ apply_f(Binds,X, _, R):- ignore(R=[]),
 
 
 
-:- fixup_exports.
+%:- fixup_exports.
 

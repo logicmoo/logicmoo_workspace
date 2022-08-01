@@ -13,7 +13,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module('os7r33M', []).
+:- endif.
+:- include('./header').
 
 :- meta_predicate in_comment(0).
 :- meta_predicate both_outputs(0).
@@ -21,12 +24,9 @@
 :- meta_predicate in_md2(*,0).
 :- meta_predicate in_md(*,0).
 :- meta_predicate on_first_write_old_goal(*,0,*,*).
-:- meta_predicate show_call_trace(0).
 :- meta_predicate dnotrace(0).
 :- meta_predicate ansicall_maybe(*,0).
 
-
-:- include('./header').
 
 :- use_module(library(predicate_streams)).
 
@@ -45,8 +45,6 @@ colormsg1(Msg):- mesg_color(Msg,Ctrl),!,ansicall_maybe(Ctrl,in_md(prolog,fmt9(Ms
 %ansicall_maybe(_Ctrl,Cmd):- !,nl,nl,portray_clause_w_vars(Cmd),nl,nl,(Cmd),break.
 ansicall_maybe(_Ctrl,Cmd):- current_output(O), \+ stream_property(O,tty(true)),!,call(Cmd).
 ansicall_maybe(Ctrl,Cmd):- always(make_pretty(Cmd,Cmd0)),!,call(ansicall(Ctrl,Cmd0)).
-
-show_call_trace(G):- G *-> dbginfo(:- side_effect(G)); ((dbginfo(:- failure(show_call_trace(G)))),!,fail).
 
 % http://htmlpreview.github.io/?https://github.com/bartaz/impress.js/blob/master/index.html#/step-3
 
@@ -67,6 +65,7 @@ dnotrace(G):- call(G),!.
 userout(X):- dnotrace(userout0(X)).
 % User Message (intended to be seen)
 userout0(flat(X)):- !,write_flat(X).
+userout0(X):- fmt(X),!.
 userout0(X):- simplify_goal_printed(X,XX),!,in_md(cl,dnotrace(dbmsg(comment(XX)))).
 
 write_flat(X):- !, dnotrace((make_pretty(X,X0),writeq(X0),writeln('.'))),!.

@@ -1,6 +1,6 @@
 %#!/usr/bin/swipl 
 
-:- module(logicmoo_packages,[ rescan_pack_autoload_packages/0]).
+:- module(logicmoo_packages,[ rescan_pack_autoload_packages/0 ]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PACK LOADER

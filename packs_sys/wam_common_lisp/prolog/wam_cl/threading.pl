@@ -12,9 +12,12 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(thread1ng, []).
 
+:- endif.
 :- include('./header').
+
 
 :- meta_predicate(call_engine(?,0,-,-)).
 call_engine(Templ,Goal,Engine,Det):-

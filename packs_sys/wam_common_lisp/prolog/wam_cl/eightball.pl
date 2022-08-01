@@ -13,8 +13,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module('8ball', []).
-:- set_module(class(library)).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module('8ball', [lquietly/1]).
+:- endif.
+:- include('./header').
 
 :- use_module(library(logicmoo_common)).
 
@@ -100,7 +102,8 @@ nonquietly_must_or_rtrace(MG):-
    (callable(Cut)->(!,call(Cut));true).
 
 :- '$hide'(lquietly/1).
-lquietly(G):- quietly((G)).
+:- meta_predicate(lquietly(0)).
+lquietly(G):- /*quietly*/((G)).
 
 slow_trace:- stop_rtrace,nortrace,trace,wdmsg(slow_trace).
 on_x_rtrace(G):- catch(G,E,(dbginfo(E),rtrace(G),break)).
@@ -116,6 +119,9 @@ call_fail:- dmsg(fail),fail.
 
 incr_arg(N,Redo):- arg(N,Redo,Val),ValNext is 1 + Val,nb_setarg(N,Redo,ValNext).
 
+:- meta_predicate show_call_trace(0).
+
+show_call_trace(G):- G *-> dbginfo(:- side_effect(G)); ((dbginfo(:- failure(show_call_trace(G)))),!,fail).
 
 show_call_trace(Info,Goal):-
   Redo = sol(0,0),
@@ -132,6 +138,7 @@ show_call_trace(Info,Goal):-
 
 :- export(((always)/1)).
 :- module_transparent(((always)/1)).
+:- meta_predicate(((always(0)))).
 % Must always succeed (or else there is a bug in the lisp impl!)
 always(Var):- notrace(var(Var)),!,throw(var_always(Var)).
 always([]):-!.
@@ -434,6 +441,7 @@ trim_off(_,A,A).
 assert_lsp(G):- assert_lsp(u,G).
 assert_lsp(S,(G1,G2)):- !,assert_lsp(S,G1),assert_lsp(S,G2).
 assert_lsp(_,G):-  wo_trace((copy_term_nat(G,GG),assert_local(GG))).
+:- export(assert_lsp/2).
 
 assert_local(user:G):-!,assert_local(G).
 assert_local(user:G:-B):-!,assert_local(G:-B).
@@ -451,8 +459,9 @@ clause_asserted_local(H,R):-  predicate_property(H,number_of_clauses(_)),clause(
 %system:goal_expansion(always(G),G) :- wam_cl_option(speed,S),S>2.
 %system:goal_expansion(certainly(G),G) :- wam_cl_option(safety,0).
 
-:- use_module(debugio).
+%:-  use_module(debugio).
 %:- include('./header').
+:-  include(debugio).
 
 wl:interned_eval("(defparameter sys:*markdown* cl:t)").
 

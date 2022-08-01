@@ -12,11 +12,14 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(hash7s, []).
 
 :- set_module(class(library)).
 
+:- endif.
 :- include('./header').
+
 
 f_hash_table_p(HT,RetVal):- t_or_nil((f_class_of(HT,Claz),Claz==claz_hash_table),RetVal).
 

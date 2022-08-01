@@ -142,9 +142,10 @@ method-combination-lambda-list::= (wholevar var*
                 wholevar)
 
 *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(arglists, []).
-
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 /*

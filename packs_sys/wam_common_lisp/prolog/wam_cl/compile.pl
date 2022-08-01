@@ -15,8 +15,10 @@
  *
  *
  *******************************************************************/
-:- module(comp, []).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(comp, [is_comment/2,lisp_compiled_eval/2,same_symbol/2]).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 % :- use_module(library(pce)).
@@ -24,7 +26,7 @@
 lisp_eval(SExpression):- lisp_compiled_eval(SExpression),!.
 
 lisp_compiled_eval(SExpression):-
-  quietly(as_sexp_interned(SExpression,Expression)),
+  /*quietly*/(as_sexp_interned(SExpression,Expression)),
   lisp_compiled_eval(Expression,Result),
   userout(result(Result)),!.
 
@@ -37,13 +39,13 @@ lisp_compiled_eval(SExpression,Result):-
 
 %lisp_compile(SExpression):- source_location(_,_),!,dbginfo((:-lisp_compile(SExpression))).
 lisp_compile(SExpression):-
-  quietly(as_sexp_interned(SExpression,Expression)),
+  /*quietly*/(as_sexp_interned(SExpression,Expression)),
   userout(:- lisp_compile(Expression)),
   lisp_compile(Expression,Code),!,
   userout(:- Code).
 
 lisp_compile(SExpression,Body):-
-   quietly(as_sexp_interned(SExpression,Expression)),
+   /*quietly*/(as_sexp_interned(SExpression,Expression)),
    debug_var('_Ignored',Result),
    lisp_compile(Result,Expression,Body).
 
@@ -55,7 +57,7 @@ lisp_compile(Env,Result,Expression,Body):-
    always(lisp_compile(_Ctx,Env,Result,Expression,(Body))).
 
 lisp_compile(Ctx,Env,Result,SExpression,BodyO):-
-   quietly(as_sexp(SExpression,Expression)),
+   /*quietly*/(as_sexp(SExpression,Expression)),
    always(must_compile_progn(Ctx,Env,Result,[Expression],Body)),!,
    body_cleanup_full(Ctx,Body,BodyO),!.
    
@@ -83,7 +85,7 @@ quotify_each(Ctx,Env,[VarR|Result],[Var|Eval],Code):-
   conjoin_0(Ctx,Code0,Code1,Code),!.
 
 must_quotify(_Ctx,_Env,SelfEval,SelfEval,true):- var(SelfEval),!.
-must_quotify(_Ctx,_Env,SelfEval,SelfEval,true):- quietly(is_self_evaluating_object(SelfEval)),!.
+must_quotify(_Ctx,_Env,SelfEval,SelfEval,true):- /*quietly*/(is_self_evaluating_object(SelfEval)),!.
 must_quotify(_Ctx,_Env,[quote,Var],Var,true).
 
 
@@ -114,7 +116,7 @@ must_compile_progn(Ctx,Env,Result,FunctionBody,Code):-
    body_cleanup_keep_debug_vars(Ctx,Body,Code).
 
 must_compile_progn(Ctx,Env,Result,FormsIn, PreviousResult, Body):-
-  %quietly((maybe_debug_var('_rCtx',Ctx),
+  %/*quietly*/((maybe_debug_var('_rCtx',Ctx),
   %maybe_debug_var('_rEnv',Env),
   %maybe_debug_var('_rResult',Result),
   %maybe_debug_var('_rPrevRes',PreviousResult),
@@ -124,7 +126,7 @@ must_compile_progn(Ctx,Env,Result,FormsIn, PreviousResult, Body):-
    always(((compile_progn(Ctx,Env,Result,Forms,PreviousResult,Body0),nonvar(Body0)))),
    lquietly((sanitize_true(Ctx,Body0,Body))).
 
-compile_progn(_Cx,_Ev,Result,Var,_PreviousResult,Out):- quietly(is_ftVar(Var)),!,Out=f_eval([progn|Var],Result).
+compile_progn(_Cx,_Ev,Result,Var,_PreviousResult,Out):- /*quietly*/(is_ftVar(Var)),!,Out=f_eval([progn|Var],Result).
 compile_progn(_Cx,_Ev,Result,[], PreviousResult,true):-!, PreviousResult = Result.
 compile_progn(Ctx,Env,Result,[Form | Forms], PreviousResult, Body):-  !,
 	must_compile_progbody(Ctx,Env,FormResult, Form,PreviousResult,FormBody),
@@ -184,7 +186,7 @@ must_compile_body(Ctx,Env,ResultO,LispCode, BodyO):-
   %maybe_debug_var('_rResult',Result),
   %maybe_debug_var('_LispCode',LispCode),
   %maybe_debug_var('_rBody',Body))),
-  quietly(resolve_reader_macros(LispCode,Forms)),!,
+  /*quietly*/(resolve_reader_macros(LispCode,Forms)),!,
   always((compile_body(Ctx,Env,Result,Forms, Body9)->nonvar(Body9))),
   must_compile_body_pt2(Ctx,Env,Result,ResultO,Forms, Body9,BodyO).
 
@@ -231,7 +233,7 @@ compile_body(_Cx,_Ev, [],nil,true):- !.
 compile_body(_Ctx,_Env,Result,'$S'([Type|Args]),create_struct([Type|Args],Result)).
 
 % numbers
-compile_body(_Cx,_Ev,Result,SelfEval,Body):- quietly(is_self_evaluating_object(SelfEval)),!,
+compile_body(_Cx,_Ev,Result,SelfEval,Body):- /*quietly*/(is_self_evaluating_object(SelfEval)),!,
   ensure_assignment(Result=SelfEval,Body).
 
 % =============================================================================
@@ -244,7 +246,7 @@ compile_body(_Cx,_Ev,Item,[quote, Item],  true):- !.
    % COMMENTS
    is_comment([COMMENT,String|_],String):- atom(COMMENT),!,atom_concat_or_rtrace('$COMMENT',_,COMMENT).
    is_comment(COMMENTP,String):- compound(COMMENTP),!,COMMENTP=..[COMMENT,String|_],!,atom_concat_or_rtrace('$COMMENT',_,COMMENT).
-
+:- export(is_comment/2).
 
 % ` Backquoted 
 % ``,,(cons 1 1)
@@ -455,16 +457,16 @@ at_least_two_args(deftype).
 at_least_two_args(symbol_macrolet).
 at_least_two_args(define_setf_expander).
 
-compile_direct_assertions(_Ctx,_Env,Symbol,[Function,Symbol,A2|AMORE],assert_lsp(Symbol,P)):- quietly(at_least_two_args(Function)),
+compile_direct_assertions(_Ctx,_Env,Symbol,[Function,Symbol,A2|AMORE],assert_lsp(Symbol,P)):- /*quietly*/(at_least_two_args(Function)),
   \+ is_fboundp(Function),!,
    P=..[Function,Symbol,A2,AMORE].
 
-compile_direct_assertions(_Ctx,_Env,Symbol,[Fun0,Symbol,A2|AMORE],assert_lsp(Symbol,P)):- quietly((at_least_two_args(Function),same_symbol(Function,Fun0))),
+compile_direct_assertions(_Ctx,_Env,Symbol,[Fun0,Symbol,A2|AMORE],assert_lsp(Symbol,P)):- /*quietly*/((at_least_two_args(Function),same_symbol(Function,Fun0))),
   \+ is_fboundp(Function),!,P=..[Function,Symbol,A2,AMORE].
 
 
 % same_symbol(OP1,OP2):-!, OP1=OP2.
-same_symbol(OP1,OP2):- quietly(same_symbol0(OP1,OP2)).
+same_symbol(OP1,OP2):- /*quietly*/(same_symbol0(OP1,OP2)).
 
 %prologcase_name_or_string(S,N):-prologcase_name(S,N).
 

@@ -27,7 +27,9 @@
       non_user_console/0,
       ftrace/1, % rtrace showing only failures
       visible_rtrace/2, 
-      push_guitracer/0,pop_guitracer/0
+      push_guitracer/0,pop_guitracer/0,
+      on_x_rtrace/1,
+      call_call/1
    ]).
 
 

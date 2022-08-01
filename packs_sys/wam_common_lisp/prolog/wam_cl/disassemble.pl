@@ -12,7 +12,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. 
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(dasm, []).
+:- endif.
+:- include('./header').
 
 %:- meta_predicate(maplist_not_tail(1,*)).
 
@@ -94,13 +97,16 @@ print_clause_plain(I):-
      set_prolog_flag(color_term, Was)).
 
 
+:- if(\+ current_predicate(lcolormsg1/1)).
 lcolormsg1(Msg):- mesg_color(Msg,Ctrl),!,ansicall_maybe(Ctrl,fmt9(Msg)).
-
+:- endif.
 % print_clause_plain(C):- portray_clause_w_vars(O).
 
 
 
+:- if(\+ current_predicate(make_pretty/2)).
 make_pretty(I,O):- !,call_each(must_or_rtrace,(shrink_lisp_strings(I,M), pretty_numbervars(M,O))).
+:- endif.
 %make_pretty(I,O):- is_user_output,!,shrink_lisp_strings(I,O), pretty1(O),pretty2(O),pretty3(O).
 %make_pretty(I,O):- I=O, pretty1(O),pretty2(O),pretty3(O).
 
@@ -171,7 +177,7 @@ pretty5(H):-
    must_maplist_det(pretty5,[P1|ARGS]))),!. 
 
 */
-:- fixup_exports.
+%:- fixup_exports.
 
       
 end_of_file.

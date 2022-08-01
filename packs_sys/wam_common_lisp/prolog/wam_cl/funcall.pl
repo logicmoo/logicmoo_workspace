@@ -12,10 +12,12 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. 
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(funcall, []).
 
 :- set_module(class(library)).
 
+:- endif.
 :- include('./header').
 
 

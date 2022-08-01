@@ -18,11 +18,13 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(s3q,[]).
 
 :- set_module(class(library)).
 
-:- include('../wam_cl/header.pl').
+:- endif.
+:- include('./header').
 
 %:- ensure_loaded((utils_writef)).
 :- ensure_loaded(library(lists)).

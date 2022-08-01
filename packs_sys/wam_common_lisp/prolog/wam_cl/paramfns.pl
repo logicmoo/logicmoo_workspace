@@ -11,8 +11,9 @@
  *
 
 *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(kp4rms, []).
-
+:- endif.
 :- include('./header').
 
 :- meta_predicate apply_as_pred(2,?).

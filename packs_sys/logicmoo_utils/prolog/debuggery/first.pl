@@ -15,6 +15,7 @@
             user_use_module/1,
             alldiscontiguous/0,
             arg_is_transparent/1,
+            maybe_fix_varnumbering/2,
             all_module_predicates_are_transparent/1,
             alldiscontiguous/0,
             arg_is_transparent/1,

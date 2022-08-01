@@ -18,10 +18,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(callp,[]).
-
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(callp,[do_interned_eval/1]).
 :- set_module(class(library)).
-
+:- endif.
 :- include('./header').
 
 
@@ -124,7 +124,7 @@ read_prolog_object(Operand):- read(Operand).
 do_interned_eval(MG):- strip_module(MG,_,G),G=call(_),!,call_interned_eval(MG),!.
 do_interned_eval(G):- call_interned_eval(lisp_compiled_eval(G,_)),!.
 
-call_interned_eval(G):- always(subst_castifies(G,GG)),!,always(GG),!.
+call_interned_eval(G):- subst_castifies(G,GG),!,call(GG),!.
 
 % call_interned_eval(M,G):- locally_let(xx_package_xx=pkg_prolog, M:G ).
 
@@ -155,7 +155,7 @@ locally_let(N=V,G):- locally_let([N=V],G).
 subst_castifies(G,G):- \+ compound(G),!.
 subst_castifies(G,GG):- castify(G,GG),!.
 subst_castifies(C1,C2):- compound_name_arguments(C1,F,C1O),
-  must_maplist(subst_castifies,C1O,C2O),C2=..[F|C2O],!.
+  maplist(subst_castifies,C1O,C2O),C2=..[F|C2O],!.
 
 castify(O,O):- \+compound(O),!,fail.
 castify(str(O),S):-!, castify1(O,M),to_lisp_string(M,S).

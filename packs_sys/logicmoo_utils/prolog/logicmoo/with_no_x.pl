@@ -48,7 +48,7 @@ with_no_xdbg_flag(debug_threads,false).
 with_no_xdbg_flag(debug,false).
 with_no_xdbg_flag(report_error,false).
 with_no_xdbg_flag(debug_on_error,false).
-with_no_xdbg_flag(autoload,true).
+%with_no_xdbg_flag(autoload,true).
 with_no_xdbg_flag(trace_gc,false).
 with_no_xdbg_flag(debug_term_position,false).
 with_no_xdbg_flag(warn_override_implicit_import,false).

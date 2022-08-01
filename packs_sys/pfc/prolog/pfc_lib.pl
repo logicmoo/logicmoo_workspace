@@ -323,6 +323,8 @@ input_from_file:- prolog_load_context(stream,Stream),current_input(Stream).
 
 
 :- autoload(library(system),[lock_predicate/1]).
+:- autoload(library(logicmoo/virtualize_source),[set_how_virtualize_file/2,set_how_virtualize_file/1]).
+
 :- module_transparent(expose_api/1).
 :- meta_predicate(expose_api(:)).
 :- module_transparent(expose_api/2).
@@ -900,6 +902,10 @@ pfc_may_see_module(M):- import_module(M,pfc_lib).
 :-hook_database:export(pfc_lib:mpred_ain/1).
 :-hook_database:export(pfc_lib:mpred_aina/1).
 :-hook_database:export(pfc_lib:mpred_ainz/1).
+baseKB:mpred_ain(X,Y):- mpred_ain(X,Y).
+
+%:- sexport(mpred_ain/1).
+%:- sexport(mpred_ain/2).
 
 :- expose_api(add_pfc_to_module/6).
 :- module_transparent(export_most/1).

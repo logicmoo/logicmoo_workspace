@@ -15,8 +15,10 @@
  *
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(cl0z3rs, []).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 

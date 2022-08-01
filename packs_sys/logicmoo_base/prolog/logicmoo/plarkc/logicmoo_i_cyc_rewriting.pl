@@ -20,6 +20,7 @@
 
           [            atom_concatM/3,
             atom_concatR/3,
+            add_rename/2,
             % BAD?  baseKB:cycPrepending/2,
             % cyc_to_clif_notify/2,
             rename_atom/2,
@@ -1511,8 +1512,8 @@ prepend_constant(PT,C,_,P):- transitive_lc(cyc_to_mpred_idiom1,C,PM),dehyphenize
 starts_lower(X):-name(X,[S|_]),char_type(S,lower).
 starts_upper(X):-name(X,[S|_]),char_type(S,upper).
 
-never_idiom((:-)).
-never_idiom((,)).
+never_idiom((':-')).
+never_idiom((',')).
 never_idiom(Atom):-atom_length(Atom,Len),Len<3.
 never_idiom(A):- upcase_atom(A,U),downcase_atom(A,U).
 never_idiom(Atom):- atom_chars(Atom,[S|Codes]),last(Codes,E),never_idiom(S,Codes,E).
@@ -1825,7 +1826,7 @@ add_rename(KB,(:-Goal)):- !, KB:call(Goal).
 add_rename(KB,MRNCP):- strip_module(MRNCP,_,RNCP),asserta(KB:RNCP).
 
 load_renames(File):- \+ exists_source(File), !, dmsg(warning(missing_file(File))).
-load_renames(File):- load_with_asserter(File,_,add_rename(baseKB),[]).
+load_renames(File):- load_with_asserter(File,_, add_rename(baseKB),[]).
 % load_renames(File):- catch(((if_file_exists(baseKB:qcompile(File)))),E,dmsg(E)),!.
 % load_renames(File):- catch(quietly(nodebugx(if_file_exists(baseKB:ensure_loaded(FILE)))),E,dmsg(E)).
 % load_renames(File):- load_with_asserter(pldata(sumo_renames),_AFile,assert_at_line_count(baseKB,Pos),[stream_postion(Pos)]).   

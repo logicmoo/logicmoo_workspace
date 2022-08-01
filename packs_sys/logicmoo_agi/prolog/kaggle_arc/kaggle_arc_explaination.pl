@@ -116,7 +116,8 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   once(colors(Obj,[cc(FC0,_)|_]);FC0=fg),
   (FC0==black_n -> FC= wbg ; FC = FC0),
-  sort_obj_props(A,AS),
+  sort_obj_props(A,AS0),
+  append(AS0,[nth(MyID)],AS),
  % will_show_grid(Obj,TF),
   TF = false,
   o_i_d(Obj,_,MyID),
@@ -213,6 +214,7 @@ remove_too_verbose(MyID,colors(H),HH):- !, remove_too_verbose(MyID,H,HH).
 remove_too_verbose(_MyID,changes([]),'').
 remove_too_verbose(_MyID,rotation(same),'').
 remove_too_verbose(MyID,L,LL):- is_list(L),!, maplist(remove_too_verbose(MyID),L,LL).
+remove_too_verbose(_MyID,H,HH):- compound(H),arg(1,H,L), is_list(L), maybe_four_terse(L,T),H=..[F,L|Args],HH=..[F,T|Args].
 remove_too_verbose(_MyID,H,H).
 
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).

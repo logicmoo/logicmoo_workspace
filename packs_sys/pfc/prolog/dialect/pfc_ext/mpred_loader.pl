@@ -1422,29 +1422,29 @@ transform_opers(LANG,PFCM,PFCO):- quietly((locally(t_l:current_lang(LANG),((tran
 % transform opers  Primary Helper.
 %
 transform_opers_0(AIS,AIS):- if_defined(leave_as_is(AIS)),!.
-transform_opers_0((A/B),C):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]),conjoin_op((/),AA,BB,C).
+transform_opers_0((A/B),C):- !, maplist(transform_opers_0,[A,B],[AA,BB]),conjoin_op((/),AA,BB,C).
 transform_opers_0(PFCM,PFC):- transform_opers_1(PFCM,PFC),!.
 transform_opers_0(=>(A),=>(C)):- !, transform_opers_0(A,C).
 transform_opers_0(==>(A),==>(C)):- !, transform_opers_0(A,C).
 transform_opers_0(~(A),~(C)):- !, transform_opers_0(A,C).
 transform_opers_0(nesc(A),nesc(C)):- !, transform_opers_0(A,C).
 transform_opers_0({A},{A}):-!.
-transform_opers_0((A;B),C):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]),conjoin_op((;),AA,BB,C).
-transform_opers_0((B=>A),(BB=>AA)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0((B==>A),(BB==>AA)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0(<=(A,B),<=(AA,BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0((A<-B),(AA<-BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0((A<=>B),(AA<=>BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0((A<==>B),(AA<==>BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0((A<==>B),(AA<==>BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0(if(A,B),if(AA,BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0(iff(A,B),iff(AA,BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0(implies(A,B),implies(AA,BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0(equiv(A,B),equiv(AA,BB)):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]).
-transform_opers_0((B:-A),OUTPUT):- !, must_maplist(transform_opers_0,[A,B],[AA,BB]),=((BB:-AA),OUTPUT).
-transform_opers_0(not(A),OUTPUT):- !, must_maplist(transform_opers_0,[A],[AA]),=(not(AA),OUTPUT).
+transform_opers_0((A;B),C):- !, maplist(transform_opers_0,[A,B],[AA,BB]),conjoin_op((;),AA,BB,C).
+transform_opers_0((B=>A),(BB=>AA)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0((B==>A),(BB==>AA)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0(<=(A,B),<=(AA,BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0((A<-B),(AA<-BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0((A<=>B),(AA<=>BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0((A<==>B),(AA<==>BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0((A<==>B),(AA<==>BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0(if(A,B),if(AA,BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0(iff(A,B),iff(AA,BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0(implies(A,B),implies(AA,BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0(equiv(A,B),equiv(AA,BB)):- !, maplist(transform_opers_0,[A,B],[AA,BB]).
+transform_opers_0((B:-A),OUTPUT):- !, maplist(transform_opers_0,[A,B],[AA,BB]),=((BB:-AA),OUTPUT).
+transform_opers_0(not(A),OUTPUT):- !, maplist(transform_opers_0,[A],[AA]),=(not(AA),OUTPUT).
 transform_opers_0(not(A),C):- !, transform_opers_0(~(A),C).
-%transform_opers_0((A),OUTPUT):- !, must_maplist(transform_opers_0,[A],[AA]),=((AA),OUTPUT).
+%transform_opers_0((A),OUTPUT):- !, maplist(transform_opers_0,[A],[AA]),=((AA),OUTPUT).
 transform_opers_0(O,O).
 
 
@@ -1454,13 +1454,13 @@ transform_opers_0(O,O).
 %
 % transform opers  Secondary Helper.
 %
-transform_opers_1(not(AB),(BBAA)):- get_op_alias(not(OP),rev(OTHER)), atom(OP),atom(OTHER),AB=..[OP,A,B],!, must_maplist(transform_opers_0,[A,B],[AA,BB]),BBAA=..[OTHER,BB,AA].
-transform_opers_1(not(AB),(BOTH)):- get_op_alias(not(OP),dup(OTHER,AND)),atom(OTHER), atom(OP),AB=..[OP,A,B],!, must_maplist(transform_opers_0,[A,B],[AA,BB]),AABB=..[OTHER,AA,BB],BBAA=..[OTHER,BB,AA],BOTH=..[AND,AABB,BBAA].
-transform_opers_1(not(AB),~(NEG)):- get_op_alias(not(OP),~(OTHER)),atom(OTHER), atom(OP),AB=..[OP|ABL],!, must_maplist(transform_opers_0,ABL,AABB),NEG=..[OTHER|AABB].
-transform_opers_1(not(AB),(RESULT)):- get_op_alias(not(OP),(OTHER)), atom(OP),atom(OTHER),AB=..[OP|ABL],!, must_maplist(transform_opers_0,ABL,AABB),RESULT=..[OTHER|AABB].
-transform_opers_1((AB),(BBAA)):- get_op_alias(OP,rev(OTHER)), atom(OP),atom(OTHER),AB=..[OP,A,B],!, must_maplist(transform_opers_0,[A,B],[AA,BB]),BBAA=..[OTHER,BB,AA].
-transform_opers_1((AB),(BOTH)):- get_op_alias(OP,dup(OTHER,AND)), atom(OP),atom(OTHER),AB=..[OP,A,B],!, must_maplist(transform_opers_0,[A,B],[AA,BB]),AABB=..[OTHER,AA,BB],BBAA=..[OTHER,BB,AA],BOTH=..[AND,AABB,BBAA].
-transform_opers_1((AB),(RESULT)):- get_op_alias(OP,(OTHER)),atom(OP), atom(OTHER),AB=..[OP|ABL],!, must_maplist(transform_opers_0,ABL,AABB),RESULT=..[OTHER|AABB].
+transform_opers_1(not(AB),(BBAA)):- get_op_alias(not(OP),rev(OTHER)), atom(OP),atom(OTHER),AB=..[OP,A,B],!, maplist(transform_opers_0,[A,B],[AA,BB]),BBAA=..[OTHER,BB,AA].
+transform_opers_1(not(AB),(BOTH)):- get_op_alias(not(OP),dup(OTHER,AND)),atom(OTHER), atom(OP),AB=..[OP,A,B],!, maplist(transform_opers_0,[A,B],[AA,BB]),AABB=..[OTHER,AA,BB],BBAA=..[OTHER,BB,AA],BOTH=..[AND,AABB,BBAA].
+transform_opers_1(not(AB),~(NEG)):- get_op_alias(not(OP),~(OTHER)),atom(OTHER), atom(OP),AB=..[OP|ABL],!, maplist(transform_opers_0,ABL,AABB),NEG=..[OTHER|AABB].
+transform_opers_1(not(AB),(RESULT)):- get_op_alias(not(OP),(OTHER)), atom(OP),atom(OTHER),AB=..[OP|ABL],!, maplist(transform_opers_0,ABL,AABB),RESULT=..[OTHER|AABB].
+transform_opers_1((AB),(BBAA)):- get_op_alias(OP,rev(OTHER)), atom(OP),atom(OTHER),AB=..[OP,A,B],!, maplist(transform_opers_0,[A,B],[AA,BB]),BBAA=..[OTHER,BB,AA].
+transform_opers_1((AB),(BOTH)):- get_op_alias(OP,dup(OTHER,AND)), atom(OP),atom(OTHER),AB=..[OP,A,B],!, maplist(transform_opers_0,[A,B],[AA,BB]),AABB=..[OTHER,AA,BB],BBAA=..[OTHER,BB,AA],BOTH=..[AND,AABB,BBAA].
+transform_opers_1((AB),(RESULT)):- get_op_alias(OP,(OTHER)),atom(OP), atom(OTHER),AB=..[OP|ABL],!, maplist(transform_opers_0,ABL,AABB),RESULT=..[OTHER|AABB].
 transform_opers_1(OP,OTHER):- get_op_alias(OPO,OTHER),OPO=OP,!.
 
 %% Possibly should term expand since we are in the userKb modules

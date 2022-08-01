@@ -401,7 +401,7 @@ repair_in_vm(P4,VM):-
   VM.h >= 10, VM.v >= 10,
   VM.can_repair == true,
   Grid=VM.grid,
-  localpoints_include_bg(Grid,OriginalPoints),
+  localpoints_include_bg(VM.grid_o,OriginalPoints),
   call(P4,VM,Grid,RepairedResult,Steps),!,
   localpoints_include_bg(RepairedResult,RepairedPoints),
   intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changed),
@@ -416,7 +416,7 @@ repair_in_vm(P4,VM):-
   addProgramStep(VM,[repair_in_vm(P4)|Steps])]),
   set(VM.neededChanged)=NeededChanged,
   fif(NeededChanged\==[], 
-         (make_indiv_object(VM,[iz(neededChanged),iz(invisible)],NeededChanged,ColorObj),!,
+         (make_indiv_object(VM,[iz(neededChanged),iz(invisible),iz(shaped)],NeededChanged,ColorObj),!,
             addInvObjects(VM,ColorObj))))),!.
 
 column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row). 
@@ -440,30 +440,36 @@ repair_repeats(Black,VM,Grid,RepairedResult,[guess_to_unbind(Black)]):-
   (Grid\=@=RepairedResult -> (set(VM.points) = []) ; fail),!.
  
 repair_color_grid_repeats(Black,Grid,RepairedResult):- ground(Grid),!,
-  \+ column_or_row(Grid,Black),
-  unbind_color(Black,Grid,RepairedResult),!,
-  repair_grid_repeats(RepairedResult),
+  repair_color_grid_repeats_limited(Black,Grid,RepairedResult),
   ground(Grid),!.
 repair_color_grid_repeats(Black,Grid,RepairedResult):- 
-  \+ column_or_row(Grid,Black),
-  unbind_color(Black,Grid,RepairedResult),
-  repair_grid_repeats(RepairedResult),!.
+  repair_color_grid_repeats_limited(Black,Grid,RepairedResult),!.
  
-repair_grid_repeats(RepairedResult):- ground(RepairedResult),!.
-repair_grid_repeats(RepairedResult):- 
-  repair_grid_repeats1(RepairedResult),
+
+
+repair_color_grid_repeats_limited(Black,Grid,RepairedResult):- 
+  \+ column_or_row(Grid,Black),
+  unbind_color(Black,Grid,RepairedResult),!,
+  repair_grid_repeats(900,RepairedResult),!.
+
+
+repair_grid_repeats(_Limit,RepairedResult):- ground(RepairedResult),!.
+repair_grid_repeats(Limit,RepairedResult):- Limit>0,
+  Limit2 is Limit-1,
+  repair_grid_repeats1(Limit2,RepairedResult),
   rot270(RepairedResult,RepairedResult2),
-  repair_grid_repeats(RepairedResult2).
-repair_grid_repeats(_).
+  repair_grid_repeats(Limit2,RepairedResult2).
+repair_grid_repeats(_Limit,_).
 
 
-repair_grid_repeats1(RepairedResult):- ground(RepairedResult),!.
-repair_grid_repeats1(RepairedResult):-  
+repair_grid_repeats1(_Limit,RepairedResult):- ground(RepairedResult),!.
+repair_grid_repeats1(Limit,RepairedResult):-  Limit>0,
   select(Row1,RepairedResult,More), \+ ground(Row1),
   member(Row2,More), Row1\=@=Row2, 
   Row1=Row2,!,
-  repair_grid_repeats1(RepairedResult).
-repair_grid_repeats1(_RepairedResult).
+  Limit2 is Limit-1,
+  repair_grid_repeats1(Limit2,RepairedResult).
+repair_grid_repeats1(_Limit,_RepairedResult).
 
 
 is_fti_step(fourway).

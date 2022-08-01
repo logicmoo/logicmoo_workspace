@@ -17,6 +17,7 @@
           [
           %  /*ex*/predicate_property/2,
 check_mfa/4,
+make_as_dynamic_now/4,
 with_no_retry_undefined/1,
 user_exception_undefined_predicate/5,
 undefined_predicate_exception/4,
@@ -705,7 +706,7 @@ do_decl_kb_global_1(M,F,A,PI):- do_decl_kb_global_2(M,F,A,PI),!.
 
 do_decl_kb_global_2(M,F,A,_PI):- 
    nop(dmsg((do_decl_kb_global(M,F,A)))),
- must_det_l((
+ ((
    make_as_dynamic(kb_global(M:F/A),M,F,A),
     M:export(M:F/A),
     do_import(baseKB,M,F,A),
@@ -721,7 +722,7 @@ do_decl_kb_global_2(M,F,A,_PI):-
    %'$current_source_module'(SM),do_import(SM,M,F,A),   
    %'$current_typein_module'(TM),do_import(TM,M,F,A),
 % TODO END comment these out!
-   decl_wrapped(M,F,A,ereq))).
+   nop(decl_wrapped(M,F,A,ereq)))).
 
    % on_f_throw( (M:F/A)\== (lmcache:loaded_external_kbs/1)),
    % (find_and_call(mtHybrid(M))->ain(baseKB:prologHybrid(F));true),
@@ -786,12 +787,12 @@ do_decl_kb_type_1(Type,M,F,A,PI):- do_decl_kb_type_2(Type,M,F,A,PI),!.
 
 do_decl_kb_type_2(Type,M,F,A,_PI):- 
  nop(dmsg((do_decl_kb_type(Type,M,F,A)))),
- must_det_l((
+ ((
   Why = decl_kb_type(Type,M:F/A),
   make_as_dynamic(Why,M,F,A),
   ain(baseKB:mpred_prop(M,F,A,Type)),
   create_predicate_inheritance(Why,M,F,A),
-  decl_wrapped(M,F,A,ereq))).
+  nop(decl_wrapped(M,F,A,ereq)))).
 
 expand_globals(In,_):- notrace(( \+ callable(In);In\=(':'(_,_)))),!,fail.
 expand_globals((P:-B),(PO:-B)):-!,expand_globals(P,PO).

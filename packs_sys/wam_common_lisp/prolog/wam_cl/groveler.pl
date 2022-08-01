@@ -15,8 +15,11 @@
  *
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(gr0v, []).
 :- set_module(class(library)).
+:- endif.
+:- include('./header').
 
 % wl:body_compiled/1 symbols considered fboundp (compile_body does the work)
 % Also means we *might* not always notice 'defmacros' of these
@@ -57,6 +60,7 @@ was_pkg_prefix(clos,pkg_clos):- current_prolog_flag(wamcl_pcl,true).
 was_pkg_prefix(Prfx,Package):- package_symbol_prefix(Prfx_,Package),atom_concat(Prfx,'_',Prfx_).
 
 % grovel_system_symbols:-!.
+%:- export(grovel_system_symbols/0).
 grovel_system_symbols:- prolog_load_context(source,File),assertz(wl:interned_eval(call(grovel_system_symbols(File)))).
 
 

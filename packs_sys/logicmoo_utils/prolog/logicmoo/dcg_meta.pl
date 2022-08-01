@@ -14,8 +14,19 @@
          isVar/1,
          isQVar/1,
          isVarOrVAR/1,
-
-
+         file_eof//0,
+         charvar/1,
+         cspace//0,
+         cwhite//0,
+         mw//1,
+         bx/1,
+         zalwayz//1,
+         zalwayz/1,
+         one_blank//0,
+         phrase_from_stream_nd/2,
+         parse_meta_term/3,
+         read_string_until//2,
+         read_string_until_no_esc//2,
          dcgOneOrMore//1,
          dcgOptional//1,
          dcgZeroOrMore//1,
@@ -33,7 +44,8 @@
          theText//1,
          theCode//1,         
          dcgLenBetween/4,
-
+         notrace_catch_fail/1,
+         notrace_catch_fail/3,
          % unit test functions
          do_dcgTest/3,
          do_dcgTest_startsWith/3,
@@ -467,11 +479,13 @@ charvar(C):- integer(C)-> true; (writeln(charvar(C)),dumpST,writeln(charvar(C)),
 
 one_blank --> [C],!,{C =< 32}.
 
+:- meta_predicate(file_meta_with_comments(2,+,+,-)).
 %file_meta_with_comments(Pred, O) --> [], {clause(t_l:'$last_comment'(O),_,Ref),erase(Ref)},!.
 file_meta_with_comments(_Pred, end_of_file) --> file_eof,!.
 file_meta_with_comments(Pred, O) --> one_blank,!,file_meta_with_comments(Pred, O).  % WANT? 
 file_meta_with_comments(_Pred, C) --> file_comment_expr(C),!.
-file_meta_with_comments(Pred, Out,S,E):- append_term(Pred,Out,PredOut), \+ t_l:dcg_meta_reader_options(with_text,true),!,phrase(PredOut,S,E),!.
+file_meta_with_comments(Pred, Out,S,E):- append_term(Pred,Out,PredOut), 
+  \+ t_l:dcg_meta_reader_options(with_text,true),!,phrase(PredOut,S,E),!.
 file_meta_with_comments(Pred, Out,S,E):- append_term(Pred,O,PredO), expr_with_text(Out,PredO,O,S,E),!.
 
 file_comment_expr(C)--> {get_dcg_meta_reader_options(file_comment_reader,Pred), append_term(Pred,C,PredC)},PredC.
@@ -496,6 +510,7 @@ escaped_char(Code)  --> [C], {escape_to_char([C],Code)},!.
 
 escape_to_char(Txt,Code):- notrace_catch_fail((sformat(S,'_=`\\~s`',[Txt]),read_from_chars(S,_=[Code]))),!.
 
+zalwayz_debug:-!.
 zalwayz_debug:- current_prolog_flag(zalwayz,debug).
 
 never_zalwayz(Goal):-
@@ -524,7 +539,7 @@ always_b(G,H,T):- writeq(phrase(G,H,T)),dcg_print_start_of(H),writeq(phrase(G,H,
 dcg_print_start_of(H):- (length(L,3000);length(L,300);length(L,30);length(L,10);length(L,1);length(L,0)),append(L,_,H),!,format('~NTEXT: ~s~n',[L]),!.
 bx(CT2):- notrace_catch_fail(CT2,E,(writeq(E:CT2),only_debug(break))),!.
 notrace_catch_fail(G,E,C):- catch(G,E,C),!.
-notrace_catch_fail(G):- catch(G,_,fail),!.
+notrace_catch_fail(G):- notrace(catch(G,_,fail)),!.
 clean_fromt_ws([],[]).
 clean_fromt_ws([D|DCodes],Codes):- 
   ((\+ char_type(D,white), \+ char_type(D,end_of_line)) -> [D|DCodes]=Codes ; clean_fromt_ws(DCodes,Codes)).
@@ -739,8 +754,7 @@ phrase_from_buffer_codes_nd(Grammar, In) :-
 
 %phrase_from_buffer_codes(_Grammar, _In) :- peek_pending_codes(In,Pend),is_eof_codes(Pend),!,fail.
 phrase_from_buffer_codes(Grammar, In):- 
-   notrace((remove_pending_buffer_codes(In,NewCodes),
-   NewCodes \== [])),!,
+   notrace((remove_pending_buffer_codes(In,NewCodes), NewCodes \== [])),!,
    (must_or_rtrace(phrase(Grammar, NewCodes, More))->append_buffer_codes(In,More);(append_buffer_codes(In,NewCodes),!,fail)).
 
 
@@ -797,6 +811,8 @@ eoln --> [C],!, {nonvar(C),charvar(C),eoln(C)},!.
 eoln(10).
 eoln(13).
 eoln --> \+ dcg_peek_meta([_]).
+
+:- meta_predicate(parse_meta_term(2,+,-)).
 
 parse_meta_term(Pred, S, Expr) :- is_stream(S),!, parse_meta_stream(Pred, S,Expr).
 parse_meta_term(Pred, string(String), Expr) :- !,parse_meta_ascii(Pred, String, Expr).

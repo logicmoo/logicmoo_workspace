@@ -451,7 +451,7 @@ start_swish_and_clio_real:- asserta(did_start_swish_and_clio),
 :- use_module(swish(lib/plugin/login)).
 
 
-:- runtime_boot(start_swish_and_clio).
+%:- initialization(start_swish_and_clio).
 
 
 

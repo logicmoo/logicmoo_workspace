@@ -1,7 +1,10 @@
-:- if(\+ current_module(sxpr_reader)).
+%:- if(\+ current_module(sxpr_reader)).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(s3xpr,[
+  parse_sexpr/2,
   codelist_to_forms/2,
   svar_fixvarname/2,
+  parse_sexpr_untyped/2,  
   with_kifvars/1,
   current_input_to_forms/2,
   input_to_forms/2,
@@ -12,6 +15,8 @@
   sexpr//1,
   fixvars/4,
   txt_to_codes/2,
+  quietly_sreader/1,
+  file_sexpr_with_comments//1,
   with_lisp_translation/2,
   to_untyped/2,
   ok_var_name/1,
@@ -22,6 +27,7 @@
   phrase_from_stream_nd/2,
   write_trans/4,
   parse_sexpr/2]).
+:- endif.
 
 :- use_module(library(logicmoo/dcg_must)).
 :- use_module(library(logicmoo/dcg_meta)).
@@ -92,8 +98,8 @@ with_kif_not_ok(G):-
 :- thread_local(t_l:s_reader_info/1).
 
 :- meta_predicate(quietly_sreader(0)).
+%quietly_sreader(G):- quietly(G).
 quietly_sreader(G):- !, call(G).
-quietly_sreader(G):- quietly(G).
 
 %% with_lisp_translation( +FileOrStream, :Pred1) is det.
 %
@@ -1498,5 +1504,5 @@ writeqnl(O):-writeq(O),nl.
 
 
 :- fixup_exports.
-:- endif.
+%:- endif.
 

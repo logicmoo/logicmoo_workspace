@@ -15,8 +15,9 @@
  *
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(c0ndif, []).
-
+:- endif.
 :- include('./header').
 
 

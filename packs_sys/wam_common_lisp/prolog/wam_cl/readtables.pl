@@ -13,11 +13,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(readtables, []).
-
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(readtables, [reader_intern_symbols/3,as_sexp_interned/2]).
+:- endif.
 :- meta_predicate rewrite_some(2,*,*).
-
-
 :- include('./header').
 
 
@@ -52,17 +51,17 @@ reader_intern_symbols(Package,'$OBJ'(Expr),'$OBJ'(ExprO)):-!,reader_intern_symbo
 
 reader_intern_symbols(Package,ExprI,ExprO):- ExprI=..[F,C,D|Expr],F=='$ARRAY',!,  
   ((foc_class(D,K),atom(K));reader_intern_symbols(Package,C,K)),
-  must_maplist(reader_intern_symbols(Package),Expr,TT),ExprO=..[F,C,K|TT].
+  maplist(reader_intern_symbols(Package),Expr,TT),ExprO=..[F,C,K|TT].
 
 reader_intern_symbols(Package,ExprI,ExprO):- ExprI=..[F,C|Expr],F=='$OBJ',!,
   ((foc_class(C,K),atom(K));reader_intern_symbols(Package,C,K)),
-  must_maplist(reader_intern_symbols(Package),Expr,TT),ExprO=..[F,K|TT].
+  maplist(reader_intern_symbols(Package),Expr,TT),ExprO=..[F,K|TT].
 reader_intern_symbols(Package,ExprI,ExprO):- ExprI=..[F|Expr],atom_concat_or_rtrace('$',_,F),!,
-  must_maplist(reader_intern_symbols(Package),Expr,TT),ExprO=..[F|TT].
+  maplist(reader_intern_symbols(Package),Expr,TT),ExprO=..[F|TT].
 
 reader_intern_symbols(Package,C1,C2):- 
   compound_name_arguments(C1,F,C1O),!,
-  must_maplist(reader_intern_symbols(Package),C1O,C2O),C2=..[F|C2O].
+  maplist(reader_intern_symbols(Package),C1O,C2O),C2=..[F|C2O].
 reader_intern_symbols(_Package,Some,Some).
 
 
@@ -164,7 +163,7 @@ rewrite_some(Call,In,Out):-
 readname_terms(Term,Term):-var(Term),!.
 readname_terms([H|Term],[HH|TermO]):- !,readname_terms(H,HH),readname_terms(Term,TermO).
 readname_terms(Term,TermO):- compound(Term), compound_name_arguments(Term,F,TermL),
-     must_maplist(readname_terms,TermL,TermLO),TermO=..[F|TermLO].
+     maplist(readname_terms,TermL,TermLO),TermO=..[F|TermLO].
 readname_terms(Term,TermO):- \+ atom(Term),!,Term=TermO.
 readname_terms(Term,TermO):- is_rename_w(Term,_,_,TermO),!.
 readname_terms(TermI,TermO):- atom_concat('f_',Term,TermI), is_rename_w(Term,_,_,TermOO),atom_concat('f_',TermOO,TermO),!.
@@ -253,19 +252,21 @@ resolve_inlines([A,B,C|II],OO):- resolve_1inline([A,B,C],O),!,resolve_inlines([O
 resolve_inlines([I|II],[O|OO]):-resolve_inlines(I,O),!,resolve_inlines(II,OO).
 resolve_inlines(IO,IO).
 
+local_parse_sexpr_untyped(I,O):- always(parse_sexpr_untyped(I,O)). %/*quietly*/((parse_sexpr(I,M))),!,quietly_sreader((to_untyped(M,O))),!.
 
 as_sexp(I,O):- as_sexp1(I,M),!,resolve_reader_macros(M,M2),!,remove_comments(M2,O),!.
 as_sexp_interned(I,OO):- is_list(I),!,I=OO.
 as_sexp_interned(I,OO):- as_sexp(I,O),!,reader_intern_symbols(O,OO),!.
+:- export(as_sexp_interned/2).
 
 as_sexp1(Var,Var):-var(Var).
 as_sexp1(NIL,NIL):-NIL==[],!.
-as_sexp1(Stream,Expression):- is_stream(Stream),!,always(parse_sexpr_untyped(Stream,SExpression)),!,
+as_sexp1(Stream,Expression):- is_stream(Stream),!,always(local_parse_sexpr_untyped(Stream,SExpression)),!,
   as_sexp2(SExpression,Expression).
-as_sexp1(s(Str),Expression):- !, always(parse_sexpr_untyped(string(Str),SExpression)),!,as_sexp2(SExpression,Expression).
-as_sexp1((Str),Expression):- string(Str),!, always(parse_sexpr_untyped(string(Str),SExpression)),!,as_sexp2(SExpression,Expression).
+as_sexp1(s(Str),Expression):- !, must_det_l(local_parse_sexpr_untyped(string(Str),SExpression)),!,as_sexp2(SExpression,Expression).
+as_sexp1((Str),Expression):- string(Str),!, always(local_parse_sexpr_untyped(string(Str),SExpression)),!,as_sexp2(SExpression,Expression).
 as_sexp1((Str),Expression):- atom(Str),name(Str,List), member(E,List),\+ char_type(E,alpha),
-   parse_sexpr_untyped(string(Str),SExpression),as_sexp2(SExpression,Expression),!.
+   local_parse_sexpr_untyped(string(Str),SExpression),as_sexp2(SExpression,Expression),!.
 as_sexp1(Str,Expression):- fail, \+ ((is_list(Str),nth0(0,Str,E),atom(E),name(E,[_]))),
     notrace(catch(text_to_string(Str,String),_,fail)),!, 
     always(parse_sexpr_untyped(string(String),SExpression)),!,

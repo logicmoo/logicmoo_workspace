@@ -12,13 +12,14 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(d0c5, []).
-
+:- endif.
+:- include('./header').
 :- meta_predicate note_if_matches(*,*,0).
 
 
 
-:- include('./header').
 
 wl:init_args(1,apropos_list).
 f_apropos_list(StringLCI,RestNKeys,Symbols):-

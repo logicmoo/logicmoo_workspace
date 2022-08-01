@@ -18,11 +18,12 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(eq4l1y,[]).
+:- endif.
+:- include('./header').
 
 :- meta_predicate t_or_nil(0,*).
-
-:- include('./header').
 
 %module(_,_).
 

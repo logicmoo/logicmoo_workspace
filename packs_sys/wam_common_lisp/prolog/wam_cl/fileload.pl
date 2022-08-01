@@ -12,15 +12,16 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. 
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(loadfile, []).
+:- endif.
+:- include('./header').
 
 :- meta_predicate lisp_grovel(0).
 :- meta_predicate with_each_form(1,*).
 
-:- include('./header').
-
-cddd:- cd('/home/dmiles/logicmoo_workspace/packs_usr/wam_common_lisp/t/daydreamer/').
-cdkm:- cd('/home/dmiles/logicmoo_workspace/packs_usr/wam_common_lisp/t/km/').
+cddd:- cd('/opt/logicmoo_workspace/packs_usr/wam_common_lisp/t/daydreamer/').
+cdkm:- cd('/opt/logicmoo_workspace/packs_usr/wam_common_lisp/t/km/').
 
 
 lci :- with_lisp_translation(file('ci2.data'),print_term).
@@ -206,6 +207,8 @@ lisp_compile_to_prolog(_,COMMENTP):- is_comment(COMMENTP,Txt),!,fmt_lispcode(Txt
 lisp_compile_to_prolog(Pkg,with_text(I,Txt)):-!,fmt_lispcode(Txt),!,lisp_compile_to_prolog(Pkg,I),!.
 lisp_compile_to_prolog(Pkg,Forms):- source_location(_,_),!,reader_intern_symbols(Pkg,Forms,_),!.
 lisp_compile_to_prolog(Pkg,Expression):- always(locally_let(xx_package_xx=Pkg,lisp_compile_to_prolog(Expression))),!.
+:- export(lisp_compile_to_prolog/2).
+
 
 write_file_info:- 
 % (is_user_output->write(is_user_output);write(not_user_output)),

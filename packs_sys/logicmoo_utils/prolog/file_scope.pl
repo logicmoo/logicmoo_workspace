@@ -34,6 +34,7 @@
           signal_eof/0,
           signal_eom/1, 
           check_skip_id/3,
+          set_skip_file_expansion/2,
           filescope_did/1,
           contains_f/2,
           contains_eq/2,

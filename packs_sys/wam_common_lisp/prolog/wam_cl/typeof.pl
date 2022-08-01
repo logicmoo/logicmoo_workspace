@@ -12,9 +12,11 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(typ30f, []).
-
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(typ30f, [i_type/2,f_type_of/2]).
+:- endif.
 :- include('./header').
+
 
 f_class_of(Obj,Class):- quietly(i_class(Obj,Class0)),!,Class=Class0.
 f_class_of(_,claz_t).
@@ -99,6 +101,7 @@ type_ges(Atom,Type):- atom(Atom),atomic_list_concat([Prefix|Rest],'_',Atom),pref
 
 
 type_or_class_nameof(Obj,Type):- quietly(f_type_of(Obj,Type)),!.
+:- export(type_or_class_nameof/2).
 
 type_named('$OBJ'(_,Type),Type):- atom(Type),!.
 type_named(Type,Type):- atomic(Type).

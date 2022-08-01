@@ -12,14 +12,16 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(package, []).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(package, [reading_package/1]).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 :- multifile(xlisting_config:xlisting_always/1).
 :- dynamic(xlisting_config:xlisting_always/1).
 
-xlisting_config:xlisting_always(G):- G=package:_, current_predicate(_,G),predicate_property(G,dynamic),
+xlisting_config:xlisting_always(G):- G=package :_, current_predicate(_,G),predicate_property(G,dynamic),
   \+ predicate_property(G,imported_from(_)).
 
 
@@ -74,7 +76,7 @@ f_make_package(AName,List,Package):-
   atom_string(AName,Name),  
   atom_concat_or_rtrace(pkg_,Name,Down),prologcase_name(Down,Package),
   add_opv(Package,type_of,package),
-  asserta_if_new(package:package_name(Package,Name)),
+  asserta_if_new(package_name(Package,Name)),
   init_instance_slots(claz_package,2,Package,List), 
   string_upper(Name,UName),
   (Name==UName -> true ; add_opv(Package,kw_nicknames,UName)).
@@ -108,9 +110,9 @@ writing_package(Package):- reading_package(Package).
 
 
 package_unintern_symbol(Package,Symbol):- 
-  retractall(package:package_shadowing_symbols(Package,Symbol)),
-  retractall(package:package_internal_symbols(Package,_,Symbol)),
-  retractall(package:package_external_symbols(Package,_,Symbol)).
+  retractall(package_shadowing_symbols(Package,Symbol)),
+  retractall(package_internal_symbols(Package,_,Symbol)),
+  retractall(package_external_symbols(Package,_,Symbol)).
 
 
 
@@ -125,10 +127,11 @@ package_find_symbol(String,Package,Symbol,kw_internal):- package_internal_symbol
 package_find_symbol(String,Package,Symbol,kw_internal):- fail, get_opv(Symbol,symbol_name,String),get_opv(Symbol,symbol_package,Package),
   ((Package == pkg_cl -> (retract_all_1(soops:o_p_v(Symbol,_,_)), writeq(retract_all_1(soops:o_p_v(Symbol,_,_))))
     ;
-  ((assertz(package:package_internal_symbols(Package,String,Symbol)),!,
-  writeq(package:package_internal_symbols(Package,String,Symbol)),nl)))),!.
+  ((assertz(package_internal_symbols(Package,String,Symbol)),!,
+  writeq(package_internal_symbols(Package,String,Symbol)),nl)))),!.
 package_find_symbol(String,PW,Symbol,kw_inherited):-  package_use_list(PW,Package),package_external_symbols(Package,String,Symbol),!.
 %package_find_symbol(String,Package,Symbol,Found):-  to_prolog_string_if_needed(String,PlString),!,package_find_symbol(PlString,Package,Symbol,Found).
+:- export(package_find_symbol/4).
 
 
 retract_all_1(G):- forall(retract(G),true).
@@ -150,19 +153,19 @@ pl_import(Package,Symbol):-
    package_import_symbol_step2(Package,Symbol,String,OldSymbol,IntExt).
 
 package_import_symbol_step2(Package,Symbol,String,_OldSymbol,'$missing'):-
-   assert_lsp(Symbol,package:package_internal_symbols(Package,String,Symbol)).
+   assert_lsp(Symbol,package_internal_symbols(Package,String,Symbol)).
 package_import_symbol_step2(_Package,Symbol,_String,OldSymbol,_IntExt):- Symbol == OldSymbol,!.
 package_import_symbol_step2(Package,Symbol,String,OldSymbol,kw_iherited):-
-   assert_lsp(Symbol,package:package_shadowing_symbols(Package,OldSymbol)),
-   assert_lsp(Symbol,package:package_internal_symbols(Package,String,Symbol)).
+   assert_lsp(Symbol,package_shadowing_symbols(Package,OldSymbol)),
+   assert_lsp(Symbol,package_internal_symbols(Package,String,Symbol)).
 package_import_symbol_step2(Package,Symbol,String,OldSymbol,kw_external):-
-   retract(package:package_external_symbols(Package,String,OldSymbol)),
-   assert_lsp(Symbol,package:package_shadowing_symbols(Package,OldSymbol)),
-   assert_lsp(Symbol,package:package_internal_symbols(Package,String,Symbol)).
+   retract(package_external_symbols(Package,String,OldSymbol)),
+   assert_lsp(Symbol,package_shadowing_symbols(Package,OldSymbol)),
+   assert_lsp(Symbol,package_internal_symbols(Package,String,Symbol)).
 package_import_symbol_step2(Package,Symbol,String,OldSymbol,kw_internal):-
-   ignore(retract(package:package_internal_symbols(Package,String,OldSymbol))),
-   ((OldSymbol \== Symbol,nonvar(OldSymbol)) -> assert_lsp(Symbol,package:package_shadowing_symbols(Package,OldSymbol)) ; true),
-   assert_lsp(Symbol,package:package_internal_symbols(Package,String,Symbol)).
+   ignore(retract(package_internal_symbols(Package,String,OldSymbol))),
+   ((OldSymbol \== Symbol,nonvar(OldSymbol)) -> assert_lsp(Symbol,package_shadowing_symbols(Package,OldSymbol)) ; true),
+   assert_lsp(Symbol,package_internal_symbols(Package,String,Symbol)).
 
 
 
@@ -180,20 +183,20 @@ pl_export(Package,Symbol):-
    package_export_symbol_step2(Package,Symbol,String,OldSymbol,IntExt),!.
 
 package_export_symbol_step2(Package,Symbol,String,_OldSymbol,'$missing'):-
-   assert_lsp(Symbol,package:package_external_symbols(Package,String,Symbol)).
+   assert_lsp(Symbol,package_external_symbols(Package,String,Symbol)).
 package_export_symbol_step2(_Package,Symbol,_String,OldSymbol,kw_exported):- Symbol == OldSymbol,!.
 package_export_symbol_step2(pkg_cl,_Symbol,_String,_OldSymbol,kw_inherited):-!.
 package_export_symbol_step2(Package,Symbol,String,OldSymbol,kw_inherited):-
-   assert_lsp(Symbol,package:package_shadowing_symbols(Package,OldSymbol)),
-   assert_lsp(Symbol,package:package_external_symbols(Package,String,Symbol)).
+   assert_lsp(Symbol,package_shadowing_symbols(Package,OldSymbol)),
+   assert_lsp(Symbol,package_external_symbols(Package,String,Symbol)).
 package_export_symbol_step2(Package,Symbol,String,OldSymbol,kw_external):-
-   retract(package:package_external_symbols(Package,String,OldSymbol)),
-   assert_lsp(Symbol,package:package_shadowing_symbols(Package,OldSymbol)),
-   assert_lsp(Symbol,package:package_external_symbols(Package,String,Symbol)).
+   retract(package_external_symbols(Package,String,OldSymbol)),
+   assert_lsp(Symbol,package_shadowing_symbols(Package,OldSymbol)),
+   assert_lsp(Symbol,package_external_symbols(Package,String,Symbol)).
 package_export_symbol_step2(Package,Symbol,String,OldSymbol,kw_internal):-
-   retract(package:package_internal_symbols(Package,String,OldSymbol)),
-   assert_lsp(Symbol,package:package_shadowing_symbols(Package,OldSymbol)),
-   assert_lsp(Symbol,package:package_external_symbols(Package,String,Symbol)).
+   retract(package_internal_symbols(Package,String,OldSymbol)),
+   assert_lsp(Symbol,package_shadowing_symbols(Package,OldSymbol)),
+   assert_lsp(Symbol,package_external_symbols(Package,String,Symbol)).
 
 
 f_unexport(Symbol,Result):- reading_package(Package),f_unexport(Symbol,Package,Result).
@@ -207,8 +210,8 @@ f_unexport(Symbol,Pack,t):-
 package_unexport_symbol_step2(_Package,Symbol,_String,OldSymbol,kw_internal):- OldSymbol==Symbol.
 package_unexport_symbol_step2(_Package,_Symbol,_String,_OldSymbol,'$missing'):-!.
 package_unexport_symbol_step2(Package,Symbol,String,OldSymbol,_):-
-   retract(package:package_external_symbols(Package,String,OldSymbol)) -> 
-     assert_lsp(Symbol,package:package_external_symbols(Package,String,Symbol));
+   retract(package_external_symbols(Package,String,OldSymbol)) -> 
+     assert_lsp(Symbol,package_external_symbols(Package,String,Symbol));
      true.
 
 
@@ -226,7 +229,7 @@ package_shadow_symbol_step2(_Package,_String,_OldSymbol,kw_internal).
 package_shadow_symbol_step2( Package,String,_OldSymbol,'$missing'):-
    make_fresh_internal_symbol(Package,String,_Symbol).
 package_shadow_symbol_step2(Package,String,OldSymbol,kw_inherited):-
-   assert_lsp(OldSymbol,package:package_shadowing_symbols(Package,OldSymbol)),
+   assert_lsp(OldSymbol,package_shadowing_symbols(Package,OldSymbol)),
    make_fresh_internal_symbol(Package,String,_Symbol).
 
 
@@ -235,7 +238,7 @@ make_fresh_internal_symbol(pkg_kw,String,Symbol):- !, create_keyword(String,Symb
 make_fresh_internal_symbol(Package,String,Symbol):- 
    (var(Symbol)->symbol_case_name(String,Package,Symbol);true),
    create_symbol(String,Package,Symbol),
-   assert_lsp(Symbol,package:package_internal_symbols(Package,String,Symbol)).
+   assert_lsp(Symbol,package_internal_symbols(Package,String,Symbol)).
 
 
 
@@ -487,7 +490,7 @@ save_pi:- tell('pi2.data'),
      package_external_symbols(_,_,_),
      package_internal_symbols(_,_,_),
      package_shadowing_symbols(_,_)]),
-   forall(clause(package:Assert,true),
+   forall(clause(Assert,true),
       ignore((format('~q.~n',[Assert]))))), told.
 
 :- include('pi.data').

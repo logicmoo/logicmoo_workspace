@@ -366,6 +366,7 @@ is_dvar($(_)):- !, use_dot(_).
 is_dvar(the(_)):- !, use_dot(thevars).
 is_dvar(FA):-compound_name_arity(FA,F,_),dvar_type(F,Type,_,DO),!,(use_dot(Type);DO\==error).
 
+:- export(dvar_name/4).
 dvar_name(_M,GVAR,TYPE,NAME):- is_dvar(GVAR),GVAR=..[TYPE,NAME|_].
 
 dvar_type('$',tvars,deftoplevel,error).

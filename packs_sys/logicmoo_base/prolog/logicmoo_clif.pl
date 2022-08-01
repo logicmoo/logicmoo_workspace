@@ -23,6 +23,9 @@
 
 :- reexport(library('logicmoo/common_logic/common_logic_utils.pl')).
 
+:- if(reexport(library(wamclrt))).
+:- endif.
+
 :- reexport(library(sigma_ace)).
 
 /** <module> MODULE LOGICMOO CLIF / logicmoo_plarkc

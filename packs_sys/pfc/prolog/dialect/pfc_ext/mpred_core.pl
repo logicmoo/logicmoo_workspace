@@ -16,6 +16,7 @@
 :- if(current_prolog_flag(xref,true)).
 :- module(pfc_lib_core, [
   get_startup_uu/1,
+  mpred_ain_now/2,
   call_u_no_bc/1,%fix_mp/3,
   fix_mp/4, %fix_mp/3,
   mpred_fwc/1,
@@ -190,6 +191,364 @@ push_current_choice/1,
   ]).
 :- set_module(class(library)).
 :- endif.
+
+:- export(( 
+  get_startup_uu/1,
+  mpred_ain_now/2,
+  call_u_no_bc/1,%fix_mp/3,
+  fix_mp/4, %fix_mp/3,
+  mpred_fwc/1,
+  get_mpred_is_tracing/1,
+  show_if_debug/1,
+  full_transform_warn_if_changed/3,
+  full_transform_warn_if_same/3,
+  full_transform/3,
+  maybe_mpred_break/1,
+  each_E/3,
+  call_m_g/3,
+  same_modules/2,
+  throw_depricated/0,
+  mpred_post_exactly/1,
+  lookup_m_g/3,
+  head_to_functor_name/2,
+  ain_expanded/1,
+  mpred_notrace_exec/0,
+  get_unnegated_functor/3,
+  mpred_post1_rem/2,
+  mpred_post1/1,
+  mpred_post1_rem2/2,
+  mpred_post2/2,
+  mpred_post12/2,
+  fwc1s_post1s/2,
+  
+  mpred_mark_fa_as/5,
+  %mpred_te/0,
+  %mpred_te/2,
+  maybe_updated_value/3,
+  log_failure/1,
+  code_sentence_op/1,
+  mpred_compile_rhs_term_consquent/3,
+  with_fc_mode/2,
+  filter_buffer_n_test/3,
+  filter_buffer_get_n/3,
+  filter_buffer_trim/2,
+  plus_fwc/0,
+  plus_fwc/1,
+  cut_c/0,
+  to_u/2,
+  fresh_mode/0,
+  mpred_mark_as/3,
+  get_first_user_reason/2,
+  assert_u_confirm_if_missing/1,
+  assert_u_confirmed_was_missing/1,
+  mpred_notrace_exec/0,
+  remove_negative_version/1,
+  listing_u/1,
+  
+  call_mp/2,
+  call_u_mp_fa/4,
+  call_u_mp_lc/4,
+  
+  get_source_uu/1,
+  get_source_mfl/1,
+  is_source_ref1/1,
+  get_why_uu/1,
+  set_fc_mode/1,
+  
+  with_no_breaks/1,
+  mpred_remove1/2,
+  check_never_assert/1,check_never_retract/1,
+  oinfo/1,
+  mpred_fwc0/1,
+  with_no_mpred_trace_exec/1,
+  mpred_set_default/2,
+  mpred_ain/1,mpred_ain/1,mpred_ain/2,
+  action_is_undoable/1,
+  mpred_assumption/1,mpred_assumptions/2,mpred_axiom/1,bagof_or_nil/3,bases_union/2,brake/1,build_rhs/3,
+  mpred_BC_CACHE0/2,
+  build_neg_test/4,build_rule/3,build_code_test/3,
+  build_trigger/4,
+  defaultmpred_select/1,fc_eval_action/2,
+  % foreach/2,
+  get_next_fact/1,
+  justification/2,justifications/2,
+  call_u/1,
+  variant_u/2,
+  mpred_BC_CACHE/2,
+  call_u_no_bc/1,mpred_METACALL/2,mpred_METACALL/3,mpred_METACALL/3,
+  mpred_halt/0,mpred_halt/1,mpred_halt/2,
+  mpred_ain_db_to_head/2,mpred_ain_actiontrace/2,mpred_trace_op/2,mpred_add_support/2,mpred_ain_trigger_reprop/2,
+  mpred_ain_by_type/2,
+  mpred_prompt_ask/2,
+  mpred_METACALL/3,mpred_BC_w_cache/2,
+  ain_fast/1,
+  ain_fast/2,
+  setup_mpred_ops/0,
+  mpred_assert_w_support/2,mpred_asserta_w_support/2,mpred_assertz_w_support/2,mpred_basis_list/2,mpred_bt_pt_combine/3,mpred_child/2,mpred_children/2,
+  mpred_classifyFacts/4,mpred_collect_supports/1,mpred_unhandled_command/3,mpred_compile_rhs_term/3,mpred_conjoin/3,mpred_neg_connective/1,
+  mpred_database_item/1,
+  % mpred_database_term/3,
+  mpred_db_type/2,mpred_set_default/2,mpred_define_bc_rule/3,mpred_descendant/2,
+  mpred_descendants/2,mpred_enqueue/2,mpred_error/1,mpred_error/2,mpred_eval_lhs_full/2,mpred_eval_lhs_1/2,mpred_eval_rhs/2,mpred_fact/1,
+  mpred_fact/2,mpred_facts/1,mpred_facts/2,mpred_facts/3,mpred_fwc/1,mpred_get_support/2,lookup_u/1,lookup_u/2,
+  mpred_literal/1,mpred_load/1,mpred_make_supports/1,mpred_ain_object/1,mpred_aina/2,mpred_ainz/2,mpred_aina/1,mpred_ainz/1,
+  mpred_negated_literal/1,mpred_unnegate/2,mpred_nf/2,mpred_nf1_negation/2,mpred_nf_negation/2,mpred_nf_negations/2,mpred_notrace/0,mpred_nowatch/0,
+  mpred_nospy/0,mpred_nospy/1,mpred_nospy/3,mpred_positive_literal/1,mpred_post/2,pp_qu/0,mpred_undo_action/1,
+  mpred_rem_support/2,mpred_remove_old_version/1,mpred_remove_supports_whine/1,mpred_remove_supports_quietly/1,mpred_reset_kb_0/0,mpred_retract_i/1,mpred_retract_i_or_warn/1,mpred_retract_supported_relations/1,
+  mpred_retract_type/2,mpred_select_justification_node/3,mpred_set_warnings/1,mpred_pp_db_justifications/2,
+  mpred_spy/1,mpred_spy/2,mpred_spy/3,mpred_step/0,mpred_support_relation/1,mpred_supported/1,mpred_supported/2,
+  mpred_trace/0,mpred_trace/1,mpred_trace/2,mpred_trace_maybe_print/3,mpred_trace_maybe_break/3,mpred_trace_exec/0,mpred_trace_op/3,
+  mpred_trace_op/2,mpred_trace_msg/1,mpred_trace_msg/2,mpred_trigger_key/2,mpred_trigger_key/2,mpred_undo/1,mpred_unfwc/1,
+  mpred_unfwc_check_triggers/1,mpred_union/3,mpred_unique_u/1,mpred_untrace/0,mpred_untrace/1,mpred_warn/0,mpred_warn/1,
+  mpred_warn/2,mpred_watch/0,well_founded_0/2,clear_proofs/0,mpred_why/0,mpred_why/1,mpred_whyBrouse/2,mpred_handle_why_command/3,
+  nompred_warn/0, % pfcl_do/1,
+  pp_DB/0,pp_db_facts/0,pp_db_facts/1,pp_db_facts/2,pp_db_items/1,
+  pp_db_rules/0,pp_db_supports/0,pp_db_triggers/0,mpred_load/1,process_rule/3,
+  remove_if_unsupported/1,remove_selection/1,mpred_withdraw1/2,
+  
+  mpred_post1/2,get_mpred_assertion_status/3,mpred_post_update4/4,get_mpred_support_status/5,same_file_facts/2,clause_asserted_u/1,
+  
+  
+  mpred_run/0,
+  
+  fa_to_p/3,
+  call_u_no_bc/1,
+  with_umt/2,
+  asserta_u/1,assert_u/1,assertz_u/1,retract_u/1,retractall_u/1,
+  retract_u0/1,retractall_u0/1,
+  clause_u/1,clause_u/2,clause_u/3,
+  % clause_ii/3,
+  
+  lookup_u/1,
+  
+  mpred_load_term/1,
+  pos_2_neg/2,
+  not_not_ignore_quietly_ex/1,
+  mpred_trace_all/0,
+  really_mpred_mark/4,
+  
+  
+  unassertable/1,
+  log_failure_red/0,
+  convention_to_symbolic_mt/5,
+  attvar_op_fully/2,
+  closest_u/2,
+  pred_check/1,
+  pp_why/0,
+  get_unnegated_functor/3,
+  is_user_reason/1,
+  mpred_retract_i_or_warn_1/1,
+  mpred_is_silent/0,
+  pp_why/1,
+  bad_head_pred/1,
+  get_mpred_current_db/1,
+  mpred_call_no_bc0/1,
+  to_real_mt/3,
+  all_closed/1,
+  convention_to_mt/4,
+  
+  copy_term_vn/2,
+  get_assertion_head_unnegated/2,
+  mpred_undo1/1,
+  convention_to_symbolic_mt_ec/5,
+  
+  push_current_choice/1,
+  
+  
+  
+  get_fc_mode/2,mpred_rem_support_if_exists/2,get_tms_mode/2,
+  
+  stop_trace/1,with_mpred_trace_exec/1,
+  select_next_fact/1,supporters_list/2,triggerSupports/2,well_founded/1,well_founded_list/2,
+  do_assumpts/2,mpred_do_fcnt/2,mpred_do_fcpt/2,mpred_fwc1/1,mpred_do_rule/1,mpred_descendant1/3,mpred_eval_rhs1/2,mpred_nf1/2,
+  mpred_post1/2,mpred_withdraw/1,mpred_withdraw/2,mpred_remove/1,
+  mpred_remove/2,mpred_post1/2,
+  mpred_pp_db_justification1/3,mpred_pp_db_justifications2/4,mpred_spy1/3,
+  mpred_unfwc_check_triggers0/1,mpred_unfwc1/1,mpred_why1/1,mpred_blast/1 )).
+
+system:mpred_ain(X):- mpred_ain(X).
+system:call_u(G):- call_u(G).
+system:set_how_virtualize_file(F):- set_how_virtualize_file(F).
+system:notify_if_neg_trigger(G):- notify_if_neg_trigger(G).
+system:assertz_mu(G):-assertz_mu(G).
+system:convention_to_mt(A,B,C,D,E):-convention_to_mt(A,B,C,D,E).
+system:db_op_call(A,B,C):- db_op_call(A,B,C).
+%esystem:call_safely(G):-call_safely(G).
+%system:clausify_attributes0(X,Y):-clausify_attributes0(X,Y).
+:- baseKB:import(( 
+  get_startup_uu/1,
+  mpred_ain_now/2,
+  call_u/1,
+  call_u_no_bc/1,%fix_mp/3,
+  fix_mp/4, %fix_mp/3,
+  mpred_fwc/1,
+  get_mpred_is_tracing/1,
+  show_if_debug/1,
+  full_transform_warn_if_changed/3,
+  full_transform_warn_if_same/3,
+  full_transform/3,
+  maybe_mpred_break/1,
+  each_E/3,
+  call_m_g/3,
+  same_modules/2,
+  throw_depricated/0,
+  mpred_post_exactly/1,
+  lookup_m_g/3,
+  head_to_functor_name/2,
+  ain_expanded/1,
+  mpred_notrace_exec/0,
+  get_unnegated_functor/3,
+  mpred_post1_rem/2,
+  mpred_post1/1,
+  mpred_post1_rem2/2,
+  mpred_post2/2,
+  mpred_post12/2,
+  fwc1s_post1s/2,
+  
+  mpred_mark_fa_as/5,
+  %mpred_te/0,
+  %mpred_te/2,
+  maybe_updated_value/3,
+  log_failure/1,
+  code_sentence_op/1,
+  mpred_compile_rhs_term_consquent/3,
+  with_fc_mode/2,
+  filter_buffer_n_test/3,
+  filter_buffer_get_n/3,
+  filter_buffer_trim/2,
+  plus_fwc/0,
+  plus_fwc/1,
+  cut_c/0,
+  to_u/2,
+  fresh_mode/0,
+  mpred_mark_as/3,
+  get_first_user_reason/2,
+  assert_u_confirm_if_missing/1,
+  assert_u_confirmed_was_missing/1,
+  mpred_notrace_exec/0,
+  remove_negative_version/1,
+  listing_u/1,
+  
+  call_mp/2,
+  call_u_mp_fa/4,
+  call_u_mp_lc/4,
+  
+  get_source_uu/1,
+  get_source_mfl/1,
+  is_source_ref1/1,
+  get_why_uu/1,
+  set_fc_mode/1,
+  
+  with_no_breaks/1,
+  mpred_remove1/2,
+  check_never_assert/1,check_never_retract/1,
+  oinfo/1,
+  mpred_fwc0/1,
+  with_no_mpred_trace_exec/1,
+  mpred_set_default/2,
+  mpred_ain/1,mpred_ain/1,mpred_ain/2,
+  action_is_undoable/1,
+  mpred_assumption/1,mpred_assumptions/2,mpred_axiom/1,bagof_or_nil/3,bases_union/2,brake/1,build_rhs/3,
+  mpred_BC_CACHE0/2,
+  build_neg_test/4,build_rule/3,build_code_test/3,
+  build_trigger/4,
+  defaultmpred_select/1,fc_eval_action/2,
+  % foreach/2,
+  get_next_fact/1,
+  justification/2,justifications/2,
+  call_u/1,
+  variant_u/2,
+  mpred_BC_CACHE/2,
+  call_u_no_bc/1,mpred_METACALL/2,mpred_METACALL/3,mpred_METACALL/3,
+  mpred_halt/0,mpred_halt/1,mpred_halt/2,
+  mpred_ain_db_to_head/2,mpred_ain_actiontrace/2,mpred_trace_op/2,mpred_add_support/2,mpred_ain_trigger_reprop/2,
+  mpred_ain_by_type/2,
+  mpred_prompt_ask/2,
+  mpred_METACALL/3,mpred_BC_w_cache/2,
+  ain_fast/1,
+  ain_fast/2,
+  setup_mpred_ops/0,
+  mpred_assert_w_support/2,mpred_asserta_w_support/2,mpred_assertz_w_support/2,mpred_basis_list/2,mpred_bt_pt_combine/3,mpred_child/2,mpred_children/2,
+  mpred_classifyFacts/4,mpred_collect_supports/1,mpred_unhandled_command/3,mpred_compile_rhs_term/3,mpred_conjoin/3,mpred_neg_connective/1,
+  mpred_database_item/1,
+  % mpred_database_term/3,
+  mpred_db_type/2,mpred_set_default/2,mpred_define_bc_rule/3,mpred_descendant/2,
+  mpred_descendants/2,mpred_enqueue/2,mpred_error/1,mpred_error/2,mpred_eval_lhs_full/2,mpred_eval_lhs_1/2,mpred_eval_rhs/2,mpred_fact/1,
+  mpred_fact/2,mpred_facts/1,mpred_facts/2,mpred_facts/3,mpred_fwc/1,mpred_get_support/2,lookup_u/1,lookup_u/2,
+  mpred_literal/1,mpred_load/1,mpred_make_supports/1,mpred_ain_object/1,mpred_aina/2,mpred_ainz/2,mpred_aina/1,mpred_ainz/1,
+  mpred_negated_literal/1,mpred_unnegate/2,mpred_nf/2,mpred_nf1_negation/2,mpred_nf_negation/2,mpred_nf_negations/2,mpred_notrace/0,mpred_nowatch/0,
+  mpred_nospy/0,mpred_nospy/1,mpred_nospy/3,mpred_positive_literal/1,mpred_post/2,pp_qu/0,mpred_undo_action/1,
+  mpred_rem_support/2,mpred_remove_old_version/1,mpred_remove_supports_whine/1,mpred_remove_supports_quietly/1,mpred_reset_kb_0/0,mpred_retract_i/1,mpred_retract_i_or_warn/1,mpred_retract_supported_relations/1,
+  mpred_retract_type/2,mpred_select_justification_node/3,mpred_set_warnings/1,mpred_pp_db_justifications/2,
+  mpred_spy/1,mpred_spy/2,mpred_spy/3,mpred_step/0,mpred_support_relation/1,mpred_supported/1,mpred_supported/2,
+  mpred_trace/0,mpred_trace/1,mpred_trace/2,mpred_trace_maybe_print/3,mpred_trace_maybe_break/3,mpred_trace_exec/0,mpred_trace_op/3,
+  mpred_trace_op/2,mpred_trace_msg/1,mpred_trace_msg/2,mpred_trigger_key/2,mpred_trigger_key/2,mpred_undo/1,mpred_unfwc/1,
+  mpred_unfwc_check_triggers/1,mpred_union/3,mpred_unique_u/1,mpred_untrace/0,mpred_untrace/1,mpred_warn/0,mpred_warn/1,
+  mpred_warn/2,mpred_watch/0,well_founded_0/2,clear_proofs/0,mpred_why/0,mpred_why/1,mpred_whyBrouse/2,mpred_handle_why_command/3,
+  nompred_warn/0, % pfcl_do/1,
+  pp_DB/0,pp_db_facts/0,pp_db_facts/1,pp_db_facts/2,pp_db_items/1,
+  pp_db_rules/0,pp_db_supports/0,pp_db_triggers/0,mpred_load/1,process_rule/3,
+  remove_if_unsupported/1,remove_selection/1,mpred_withdraw1/2,
+  
+  mpred_post1/2,get_mpred_assertion_status/3,mpred_post_update4/4,get_mpred_support_status/5,same_file_facts/2,clause_asserted_u/1,
+  
+  
+  mpred_run/0,
+  
+  fa_to_p/3,
+  call_u_no_bc/1,
+  with_umt/2,
+  asserta_u/1,assert_u/1,assertz_u/1,retract_u/1,retractall_u/1,
+  retract_u0/1,retractall_u0/1,
+  clause_u/1,clause_u/2,clause_u/3,
+  % clause_ii/3,
+  
+  lookup_u/1,
+  
+  mpred_load_term/1,
+  pos_2_neg/2,
+  not_not_ignore_quietly_ex/1,
+  mpred_trace_all/0,
+  really_mpred_mark/4,
+  
+  
+  unassertable/1,
+  log_failure_red/0,
+  convention_to_symbolic_mt/5,
+  attvar_op_fully/2,
+  closest_u/2,
+  pred_check/1,
+  pp_why/0,
+  get_unnegated_functor/3,
+  is_user_reason/1,
+  mpred_retract_i_or_warn_1/1,
+  mpred_is_silent/0,
+  pp_why/1,
+  bad_head_pred/1,
+  get_mpred_current_db/1,
+  mpred_call_no_bc0/1,
+  to_real_mt/3,
+  all_closed/1,
+  convention_to_mt/4,
+  
+  copy_term_vn/2,
+  get_assertion_head_unnegated/2,
+  mpred_undo1/1,
+  convention_to_symbolic_mt_ec/5,
+  
+  push_current_choice/1,
+  
+  
+  
+  get_fc_mode/2,mpred_rem_support_if_exists/2,get_tms_mode/2,
+  
+  stop_trace/1,with_mpred_trace_exec/1,
+  select_next_fact/1,supporters_list/2,triggerSupports/2,well_founded/1,well_founded_list/2,
+  do_assumpts/2,mpred_do_fcnt/2,mpred_do_fcpt/2,mpred_fwc1/1,mpred_do_rule/1,mpred_descendant1/3,mpred_eval_rhs1/2,mpred_nf1/2,
+  mpred_post1/2,mpred_withdraw/1,mpred_withdraw/2,mpred_remove/1,
+  mpred_remove/2,mpred_post1/2,
+  mpred_pp_db_justification1/3,mpred_pp_db_justifications2/4,mpred_spy1/3,
+  mpred_unfwc_check_triggers0/1,mpred_unfwc1/1,mpred_why1/1,mpred_blast/1 )).
 
 %:- use_module(mpred_kb_ops).
 %:- use_module(library(util_varnames)).
@@ -1079,6 +1438,7 @@ each_E(P,[H|T],S) :- !, each_E(P,H,S), each_E(P,T,S).
 each_E(P,(H,T),S) :- !, each_E(P,H,S), each_E(P,T,S).
 each_E(P,H,S) :- apply(P,[H|S]).
 
+baseKB:each_E(P,H,S):- each_E(P,H,S).
 
 % =================================================
 % ==============  UTILS END          ==============
@@ -1289,16 +1649,16 @@ mpred_ain_now5(SM,AM,PIn,S):- % module_sanity_check(SM),
   call_from_module(AM, 
     with_source_module(SM,
       locally_tl(current_defaultAssertMt(AM), 
-         with_current_why(S,rtrace_if_booted(SM:mpred_ain_now(SM:PIn,S)))))).
+         with_current_why(S,(SM:mpred_ain_now(SM:PIn,S)))))).
 
 mpred_ain_now(PIn,S):-
   PIn=P, % must_ex(add_eachRulePreconditional(PIn,P)),  
   must_ex(full_transform(ain,P,P0)),!, % P=P0,  
   must_ex(ain_fast(P0,S)),!,
   nop(ignore((P\=@=P0, mpred_db_type(P,fact(_)),show_failure(mpred_fwc(P))))).
-
 mpred_ain_now(P,S):- mpred_warn("mpred_ain(~p,~p) failed",[P,S]),!,fail.
 
+baseKB:mpred_ain_now(P,S):- mpred_ain_now(P,S).
 :- thread_local(t_l:is_repropagating/1).
 ain_fast(P):-  \+ t_l:is_repropagating(_),clause_asserted(P),!.
 ain_fast(P):- call_u((( get_source_uu(UU), ain_fast(P,UU)))).

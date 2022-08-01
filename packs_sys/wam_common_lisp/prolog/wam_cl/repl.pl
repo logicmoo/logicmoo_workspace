@@ -13,9 +13,11 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(cl, []). 
-
+:- endif.
 :- include('./header').
+
 
 % :- cls.
 set_stack_gb:- Six = 6, 
@@ -261,7 +263,7 @@ lw:- f_load("wam-cl-params",_).
 
 :- use_module(library(shell)).
 
-:- initialization((in1t:lisp_repl),main).
+:- initialization((lisp_repl),main).
 
 :- if(false).
 :- if(getuid(1006)).

@@ -13,9 +13,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module('0pts', []).
 :- set_module(class(library)).
-
+:- endif.
 :- include('./header').
 
 is_pl_atom_key(N):- wl:wam_cl_option_local(N,_).

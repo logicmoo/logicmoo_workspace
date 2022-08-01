@@ -15,6 +15,7 @@
           [ call_if_defined/1,
             convert_to_dynamic/1,
             convert_to_dynamic/3,
+            fix_baseKB_imports/0,
             current_predicate_module/2,
             context_module_of_file/1,
           call_from_module/2,
@@ -200,7 +201,7 @@ promiscuous_module(M):-
 :- promiscuous_module(mu).
 :- promiscuous_module(baseKB).
 
-fix_baseKB_imports:- !.
+fix_baseKB_imports:- fix_baseKB_imports_now,!.
 fix_baseKB_imports_now:- 
   % ignore(delete_import_module(system,baseKB)),
   % ignore(add_import_module(baseKB,system,start)),
@@ -950,6 +951,7 @@ warn_if_static(F,A):-
   trace_or_throw(warn(pfcPosTrigger,Goal,static)))).
 
 
+:- export(is_static_predicate0/1).
 
 is_static_predicate0(M:F):-atom(F),predicate_property(M:F,static),!,predicate_property(F,number_of_clauses(_)),\+ predicate_property(F,dynamic).
 is_static_predicate0(FA):- predicate_property(FA,dynamic),!,fail.

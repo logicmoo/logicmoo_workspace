@@ -1,11 +1,18 @@
 
+/*
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(s3t5, []).
+:- set_module(class(library)).
+:- endif.
+:- include('./header').
+*/
 :- style_check(-singleton).
 
 % :- export(f_get_setf_expansion/3).
 
 
 /*********** /home/dmiles/logicmoo_workspace/packs_usr/wam_common_lisp/prolog/wam_cl/wam-cl-init.lisp:4948 **********************/
-:-lisp_compile_to_prolog(pkg_sys,[defmacro,pushnew,['&environment',env,item,place,'&rest',keys],[if,[and,[symbolp,place],[eq,place,[macroexpand,place,env]]],['#BQ',[setq,['#COMMA',place],[adjoin,['#COMMA',item],['#COMMA',place],['#BQ-COMMA-ELIPSE',keys]]]],['multiple-value-bind',[dummies,vals,newval,setter,getter],['get-setf-expansion',place,env],[let,[[g,[gensym]]],['#BQ',['let*',[[['#COMMA',g],['#COMMA',item]],['#BQ-COMMA-ELIPSE',[mapcar,function(list),dummies,vals]],[['#COMMA',[car,newval]],[adjoin,['#COMMA',g],['#COMMA',getter],['#BQ-COMMA-ELIPSE',keys]]]],['#COMMA',setter]]]]]]]).
+delay_init:-lisp_compile_to_prolog(pkg_sys,[defmacro,pushnew,['&environment',env,item,place,'&rest',keys],[if,[and,[symbolp,place],[eq,place,[macroexpand,place,env]]],['#BQ',[setq,['#COMMA',place],[adjoin,['#COMMA',item],['#COMMA',place],['#BQ-COMMA-ELIPSE',keys]]]],['multiple-value-bind',[dummies,vals,newval,setter,getter],['get-setf-expansion',place,env],[let,[[g,[gensym]]],['#BQ',['let*',[[['#COMMA',g],['#COMMA',item]],['#BQ-COMMA-ELIPSE',[mapcar,function(list),dummies,vals]],[['#COMMA',[car,newval]],[adjoin,['#COMMA',g],['#COMMA',getter],['#BQ-COMMA-ELIPSE',keys]]]],['#COMMA',setter]]]]]]]).
 wl:lambda_def(defmacro, pushnew, mf_pushnew, [c38_environment, env, item, sys_place, c38_rest, sys_keys], [progn, [if, [and, [symbolp, sys_place], [eq, sys_place, [macroexpand, sys_place, env]]], ['#BQ', [setq, ['#COMMA', sys_place], [adjoin, ['#COMMA', item], ['#COMMA', sys_place], ['#BQ-COMMA-ELIPSE', sys_keys]]]], [multiple_value_bind, [sys_dummies, sys_vals, sys_newval, sys_setter, sys_getter], [get_setf_expansion, sys_place, env], [let, [[sys_g, [gensym]]], ['#BQ', [let_xx, [[['#COMMA', sys_g], ['#COMMA', item]], ['#BQ-COMMA-ELIPSE', [mapcar, function(list), sys_dummies, sys_vals]], [['#COMMA', [car, sys_newval]], [adjoin, ['#COMMA', sys_g], ['#COMMA', sys_getter], ['#BQ-COMMA-ELIPSE', sys_keys]]]], ['#COMMA', sys_setter]]]]]]]).
 wl: declared_as(mf_pushnew, env_arg1).
 
@@ -83,7 +90,7 @@ mf_pushnew([pushnew, Item_In, Place_In|RestNKeys], Env_In, MFResult) :-
               ),
               block_exit(pushnew, MFResult),
               true).
-:- set_opv(mf_pushnew, type_of, sys_macro),
+delay_init:- set_opv(mf_pushnew, type_of, sys_macro),
    set_opv(pushnew, symbol_function, mf_pushnew),
    DefMacroResult=pushnew.
 

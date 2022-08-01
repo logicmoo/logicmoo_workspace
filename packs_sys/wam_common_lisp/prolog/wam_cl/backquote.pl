@@ -12,10 +12,12 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+
 :- module(bq, []).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
-               
 
 macro_expand([],[]):-!.
 macro_expand([#, '''', X|Xs], [[function, MX]|MXs ]

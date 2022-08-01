@@ -12,8 +12,9 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(env, []).
-
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(env, [ensure_env/0]).
+:- endif.
 :- include('./header').
 
 :- meta_predicate ct(3,?,?,?).
@@ -332,6 +333,6 @@ add_alphas0(_Ctx,Alphas):- \+ compound(Alphas),!.
 add_alphas0(Ctx,Alphas):- Alphas=..[_|ARGS],maplist(add_alphas0(Ctx),ARGS).
 
 
-:- fixup_exports.
-:- thread_initialization(reset_env).
+%:- fixup_exports.
+delay_init:- thread_initialization(reset_env).
 

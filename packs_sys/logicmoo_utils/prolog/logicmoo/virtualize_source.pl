@@ -16,20 +16,22 @@
 :- module(virtualize_source,
           [
 %cnas/3,
-nb_current_or_nil/2,
-safe_virtualize/3,
-same_terms/2,          
-decl_wrapped/4,
-sd_goal_expansion/4,
-%skipped_dirs/1,
-swc/0,
-virtualize_code/3,
-virtualize_code_each/4,
-virtualize_code_fa/5,
-virtualize_ereq/2,
-virtualize_source/3,
-vwc/0
-]).
+          nb_current_or_nil/2,
+          safe_virtualize/3,
+          same_terms/2,          
+          decl_wrapped/4,
+          sd_goal_expansion/4,
+          %skipped_dirs/1,
+          swc/0,
+          virtualize_code/3,
+          virtualize_code_each/4,
+          virtualize_code_fa/5,
+          virtualize_ereq/2,
+          virtualize_source/3,
+          set_how_virtualize_file/2,
+          set_how_virtualize_file/1,
+          vwc/0
+          ]).
 /** <module> Utility LOGICMOO VIRTUALIZE SOURCE
 Source code transformation - Uses Hook Database and Hook Hybrid to rewrite source code to better interact with hybrid database. 
 
@@ -46,7 +48,7 @@ Source code transformation - Uses Hook Database and Hook Hybrid to rewrite sourc
 nb_current_or_nil/2,
 safe_virtualize/3,
 same_terms/2,          
-decl_wrapped/4,
+%decl_wrapped/4,
 sd_goal_expansion/4,
 %skipped_dirs/1,
 swc/0,
@@ -100,8 +102,10 @@ get_current_clause(_).
 
 
 
-:- export(( set_how_virtualize_file/1, could_safe_virtualize/0,
-            virtualize_source_file/0,
+:- export(( 
+     set_how_virtualize_file/1, 
+     could_safe_virtualize/0,
+     virtualize_source_file/0,
      set_how_virtualize_file/2,
      check_how_virtualize_file/2,
      get_how_virtualize_file/2)).
@@ -780,7 +784,7 @@ decl_wrapped(M,F,A,How):-
  assert_if_new(rdf_rewrite:arity(F,A)), % TODO puts this in Local Mt
  assert_if_new(baseKB:safe_wrap(M,F,A,How)).
  % once((M==baseKB->true;assert_if_new(baseKB:predicateConventionMt(F,M)))).
-
+:- export(decl_wrapped/4).
 
 %= 	 	 
 

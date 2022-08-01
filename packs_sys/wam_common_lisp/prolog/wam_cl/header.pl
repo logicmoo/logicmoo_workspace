@@ -16,6 +16,10 @@
  *
  *******************************************************************/
 
+:- multifile(soops:o_p_v/3).
+:- dynamic(soops:o_p_v/3).
+:- multifile(soops:c_p_v/3).
+:- dynamic(soops:c_p_v/3).
 
 :- set_prolog_flag(generate_debug_info, true).
 
@@ -36,6 +40,10 @@
 :- discontiguous(user:portray/1).
 
 
+:- multifile(delay_init/0).
+:- dynamic(delay_init/0).
+:- discontiguous(delay_init/0).
+
 :- if(current_prolog_flag(debug,false)).
 
 %:- set_prolog_flag(last_call_optimisation,true).
@@ -44,11 +52,7 @@
 
 :- endif.
 
-:- if(\+ current_module(sxpr)).
-:- if(\+ current_module(sxpr_reader)).
-:- ensure_loaded(sreader).
-:- endif.
-:- endif.
+
 
 %:- use_module(library(logicmoo/portray_vars)).
 
@@ -169,9 +173,15 @@
 
 :- use_module(library(logicmoo_common)).
 :- user:ensure_loaded(library(logicmoo/portray_vars)).
+
+
+:- if(\+ current_module(sxpr)).
+:- if(\+ current_module(sxpr_reader)).
+:- ensure_loaded(sreader).
+:- endif.
+:- endif.
 :- ensure_loaded(eightball).
 :- ensure_loaded('init').
-:- ensure_loaded(utests).
 :- ensure_loaded(places).
 :- ensure_loaded(environs).
 :- ensure_loaded(proclaim).
@@ -222,9 +232,9 @@
 :- ensure_loaded(typecheck).
 :- ensure_loaded(typeof).
 :- ensure_loaded(loptions).
-:- ensure_loaded(groveler).
 :- ensure_loaded(paramfns).
 :- ensure_loaded(socksrv).
+:- ensure_loaded(groveler).
 
 
 /*
@@ -238,6 +248,6 @@
 %:- use_module(utils_list).
 :- use_module(utils_higher_order).
 */
-
-:- grovel_system_symbols.
+:- prolog_load_context(source,File),assertz(wl:interned_eval(call(grovel_system_symbols(File)))).
+%:- grovel_system_symbols.
 

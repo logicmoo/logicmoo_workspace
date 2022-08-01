@@ -22,6 +22,7 @@
             atom_concat_safe0/3,
             atom_ensure_endswtih/3,
             canonical_pathname/2,
+            load_with_asserter/4,
             clip_dir_sep/2,
             concat_paths/2,
             concat_paths/3,
@@ -194,6 +195,7 @@ assert_at_line_count(M,Pos,File,Cl):-
 assert_at_line_count_p1(Pred1,Cl,_Vs,_):- call(Pred1,Cl).
 assert_at_line_count_p2(Pred2,Cl, Vs,_):- call(Pred2,Cl,Vs).
 
+:- meta_predicate(load_with_asserter(+,+,1,+)).
 load_with_asserter(File0,File,Asserter,Options):-    
    once(absolute_file_name(File0, File, [access(read)]);
         absolute_file_name(File0, File, [access(read),file_type(prolog)])),

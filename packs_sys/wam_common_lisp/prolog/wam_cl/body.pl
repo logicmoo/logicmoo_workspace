@@ -15,8 +15,10 @@
  *
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(body, []).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 :- discontiguous(compile_body_form/5).
@@ -258,7 +260,7 @@ compile_body_form(_Ctx,_Env,[],['values'], nb_setval('$mv_return',[])):-!.
 :- thread_initialization(nb_setval('$mv_return',[])).
 %reset_mv:- b_getval('$mv_return',[V1,_V2|_])->b_setval('$mv_return',[V1]);true.
 f_values_list([V1|Push],V1):- always(nonvar(Push)),nb_setval('$mv_return',[V1|Push]).
-
+:- export(f_values_list/2).
 
 % Macro MULTIPLE-VALUE-BIND
 compile_body_form(Ctx,Env,Result,[OP,Vars,Eval1|ProgN], Body):- same_symbol(OP,'multiple-value-bind'),

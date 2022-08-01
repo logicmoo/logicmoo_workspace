@@ -1813,7 +1813,7 @@ is_logical_functor0(all).
 is_logical_functor0(X):-atom(X),member(X,[',',';',xor,'\\+',~]).
 is_logical_functor0(X):- a(logical_functor_pttp,X).
 is_logical_functor0(X):- a(is_quantifier,X).
-is_logical_functor0(And):-member(And,[(,),(;),('<-'),('=>'),('<=>'),(':-'),(and),nop]).
+is_logical_functor0(And):-member(And,[(','),(';'),('<-'),('=>'),('<=>'),(':-'),(and),nop]).
 
 
 

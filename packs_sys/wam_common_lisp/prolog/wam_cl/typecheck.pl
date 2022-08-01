@@ -12,9 +12,12 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(typcheck, []).
 
+:- endif.
 :- include('./header').
+
 
 do_correctly(P,AT):- compound(P),functor(P,F,A),functor(AT,F,A),wl:type_checked(AT).
 

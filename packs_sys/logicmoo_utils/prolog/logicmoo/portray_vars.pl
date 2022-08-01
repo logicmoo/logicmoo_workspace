@@ -500,7 +500,9 @@ name_one(V,R):- is_dict(V), dict_pairs(V,VV,_), !, name_one(VV,R).
 name_one(R,V):- nonvar(R),var(V),!, name_one_var(R,V).
 name_one(_,_):- fail.
 
+:- if( \+ current_predicate(vnl:attr_unify_hook/2)).
 vnl:attr_unify_hook(_,_).
+:- endif.
 
 :- thread_local(t_l:dont_append_var/0).
 

@@ -12,8 +12,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(evil, []).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 sf_declare(_ReplEnv,_,_).
@@ -21,7 +23,7 @@ sf_proclaim(_ReplEnv,Assert,t):- assert(is_proclaimed(Assert)).
 
 f_sxhash(O,H):- term_hash(O,H).
 
-:- f_intern("PSXHASH",pkg_sys,_).
+delay_init:- f_intern("PSXHASH",pkg_sys,_).
 f_sys_psxhash(O,H):- f_sys_to_pvs(O,HT),term_hash(HT,H).
 %f_u_psxhash(O,H):-f_sys_psxhash(O,H).
 

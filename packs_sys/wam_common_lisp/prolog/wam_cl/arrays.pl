@@ -12,10 +12,11 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(aray, []).
-
+:- endif.
 :- include('./header').
-
 % make-array dimensions &key element-type initial-element initial-contents adjustable fill-pointer displaced-to displaced-index-offset
 
 

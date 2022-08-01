@@ -223,7 +223,8 @@ test_suite_name(test_names_by_hard).
 test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
 
 :- dynamic(cached_tests/2).
-:- nb_setval(test_order,human_t).
+%:- retractall(cached_tests(_,_)).
+:- nb_setval(test_order,sol_t).
 get_current_suite_testnames(Set):-
   nb_current(test_order,X),
   current_suite_testnames(X,Set).
@@ -369,20 +370,23 @@ in_out_name(tst+NN,SI,SO):- N is NN+1, format(atom(SI),'EVALUATION TEST #~w',[N]
 in_out_name(X,'Input'(X),'Output'(X)).
 
 
-
-arc_test_name(TestID):- 
-  findall(TestID,kaggle_arc(TestID,_,_,_),All),
-  list_to_set(All,AllS),member(TestID,AllS).
+arc_test_name(TestID):- kaggle_arc(TestID,trn+0,_,_).
 
 some_task_info(TestID,III):- more_task_info(TestID,III).
-some_task_info(TestID,III):- user:fav(TestID,III);fav(TestID,III).
+some_task_info(X,[keypad]):- key_pad_tests(X). 
+some_task_info(TestID,III):- user:fav(TestID,III).
 
-task_info(TestID,InfoS):- fix_test_name(TestID,FTestID,_),TestID\=@=FTestID,!,task_info(FTestID,InfoS).
-task_info(TestID,InfoS):- arc_test_name(TestID),
+%:- dynamic(task_info_cache/2).
+%:- retractall(task_info_cache/2).
+task_info(TestID,InfoS):- var(TestID),!,arc_test_name(TestID),task_info(TestID,InfoS).
+%task_info(TestID,InfoS):- \+ \+ task_info_cache(TestID,_),!,task_info_cache(TestID,InfoS).
+task_info(TestID,InfoS):- nonvar(TestID),once(fix_test_name(TestID,FTestID,_)),TestID\=@=FTestID,!,task_info(FTestID,InfoS).
+task_info(TestID,InfoS):- 
  findall(Inf,
   (some_task_info(CTestID,Inf0),once((fix_test_name(CTestID,CFTestID,_),CFTestID=TestID)),
-  repair_info(Inf0,Inf)),Info),
-  flatten([Info],InfoFF),repair_info(InfoFF,InfoF),list_to_set(InfoF,InfoS).
+   repair_info(Inf0,Inf)),Info),
+  flatten([Info],InfoFF),repair_info(InfoFF,InfoF),list_to_set(InfoF,InfoS),!,
+  asserta(task_info_cache(TestID,InfoS)),!.
 
 repair_info(Inf,InfO):- listify(Inf,Inf1),maplist(repair_info0,Inf1,InfO).
 repair_info0(Inf0,Inf):- is_list(Inf0),!,maplist(repair_info0,Inf0,Inf).
@@ -411,15 +415,17 @@ alphabetical_t(Set):- findall(t(Name),arc_test_name(t(Name)),List),sort(List,Set
 
 
 human_t(T):- human_t_set(Set),member(T,Set).
+
+%human_t_set(NamesByHardUR):- cached_tests(human_t_set,NamesByHardUR),!.
 human_t_set(NamesByHardUR):- % Name=t(_),
-  findall(Name,arc_test_name(Name),List),sort(List,Sorted),
-  findall(Name,(member(Name,Sorted),task_info(Name,Sol),member(human(_),Sol)),All),
+  findall(Name,(task_info(Name,Sol),member(human(_),Sol)),All),
   list_to_set(All,NamesByHardUR).
 
 sol_t(T):- sol_t_set(Set),member(T,Set).
+sol_t(T):- human_t_set(Set),member(T,Set).
 sol_t_set(NamesByHardUR):- % Name=t(_),
-  findall(Name,arc_test_name(Name),List),sort(List,Sorted),
-  findall(Name,(member(Name,Sorted),task_info(Name,Sol),member(sol(_),Sol)),All),
+  findall(Name,
+   (task_info(Name,Sol),member(C,Sol),compound(C),functor(C,F,1),atom_contains(F,sol)),All),
   list_to_set(All,NamesByHardUR).
 
 
@@ -697,7 +703,6 @@ kaggle_arc(v(Name), TypeI, In, Out):-
 
 fix_test_name(V,VV,_):- var(V),!,VV=V.
 fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=E.
-
 fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried*ExampleNum,  Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).

@@ -12,8 +12,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(symbol, []).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(symbol, [intern_symbol/4,is_keywordp/1]).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 wl:type_checked(f_symbol_name(claz_symbol,claz_string)).
@@ -67,7 +69,7 @@ f_gentemp(Name,Package,Symbol):- to_prolog_string(Name,String), gensym(String,Sy
 
 is_boundp(Symbol):- is_keywordp(Symbol);get_opv(Symbol,symbol_value,_).
 is_constantp(Object):- is_self_evaluationing_const(Object);get_opv(Object,defined_as,defconstant).
-is_keywordp(Symbol):- package:package_external_symbols(pkg_kw,_,Symbol).
+is_keywordp(Symbol):- package_external_symbols(pkg_kw,_,Symbol).
 is_symbolp(Symbol):- is_keywordp(Symbol);get_opv(Symbol,type_of,symbol).
 
 is_fboundp(Symbol):- get_opv(Symbol,symbol_function,_).
@@ -89,7 +91,7 @@ f_intern(String,OptPackage,Result):-
   optional_package(OptPackage,Package),
   intern_symbol(String,Package,Symbol,IntExt),
   f_values_list([Symbol,IntExt],Result),!.
-
+:- export(f_intern/3).
 optional_package([[]],[]):-!.
 optional_package([Pack],Package):-!, find_package_or_die(Pack,Package).
 optional_package([],Package):- reading_package(Package),!.
@@ -129,7 +131,7 @@ create_keyword(Name,Symbol):- atom_concat_or_rtrace(':',Make,Name),!,create_keyw
 create_keyword(Name,Symbol):- as_string_upper(Name,String),
    prologcase_name(String,Lower),
    atom_concat_or_rtrace('kw_',Lower,Symbol),
-   assert_lsp(package:package_external_symbols(pkg_kw,String,Symbol)).
+   assert_lsp(package_external_symbols(pkg_kw,String,Symbol)).
 
 to_kw(Name0,Name):-atom(Name0),atom_concat('kw_',_,Name0),!,Name0=Name.
 to_kw(Name,Combined):- pl_symbol_name(Name,Str),create_keyword(Str,Combined).

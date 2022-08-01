@@ -32,29 +32,35 @@ dumpst_hook:simple_rewrite(I,O):- is_map(I),!, O='..vvmm..'.
 %dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
 dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,!,O='..points..'(N),!.
 */
-portray_terse:- !.
+portray_terse:- fail,!.
 
 :- discontiguous arc_portray/2. 
 
 arc_portray(Map,TF):- get_map_pairs(Map,Type,Pairs),!, arc_portray_pairs(Type,TF,Pairs). 
 
-arc_portray(G, _):- is_map(G), portray_terse, !, write('..VM..').
-arc_portray(G, _):- is_dict(G), portray_terse, !, write('..dict..').
-arc_portray(G, _):- is_grid(G), portray_terse, !, data_type(G,W),writeq(grid(W)).
-arc_portray(G, _):- is_grid(G), portray_terse, !, write('..grid..').
+arc_portray_t(G, _):- is_map(G), !, write('..VM_arc_portray_t..').
+arc_portray_t(G, _):- is_dict(G), !, write('..dict..').
+arc_portray_t(G, _):- is_grid(G),  !, data_type(G,W),writeq(grid(W)).
+arc_portray_t(G, _):- is_grid(G),  !, write('..grid..').
+
+arc_portray(G, _):- is_map(G), !, write('..VM..').
+arc_portray(G, TF):- portray_terse, arc_portray_t(G, TF),!.
+arc_portray(G, TF):- TF \== true, catch(arc_portray_nt(G, TF),_,fail),!.
+%arc_portray(G, _TF):- writeq(G),!.
 
 % Portray In Debugger
-arc_portray(G,false):- is_object(G),!,object_grid(G,OG), 
+arc_portray_nt(G,false):- is_object(G),!,object_grid(G,OG), 
   neighbor_map(OG,NG), 
-  print_grid(NG),nl,underline_print(debug_indiv(G)),ptt(G).
-arc_portray(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_grid(H,V,G).
+  print_grid(object_grid,NG),nl,
+  underline_print(debug_indiv(G)),ptt(G).
+arc_portray_nt(G,false):- via_print_grid(G),!, grid_size(G,H,V),!,H>0,V>0, print_grid(H,V,G).
 
 % Portray In tracer
-arc_portray(G,true):- is_object(G),underline_print((ptt(G))).
-arc_portray(G,true):- via_print_grid(G),write(' '),underline_print((ptt(G))),write(' ').
-arc_portray(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
+arc_portray_nt(G,true):- is_object(G),underline_print((ptt(G))).
+arc_portray_nt(G,true):- via_print_grid(G),write(' '),underline_print((ptt(G))),write(' ').
+arc_portray_nt(G,true):- tersify(G,O),write(' '),writeq(O),write(' ').
 
-arc_portray(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1, 
+arc_portray_nt(G0, false):- is_group(G0), into_list(G0,G), length(G,L), L>1, 
    dash_chars, 
    once((why_grouped(_TestID,Why,WG),WG=@=G);Why = (size=L)),
    print_grid(Why,G),nl,
@@ -166,6 +172,7 @@ tersify3(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify
 tersify3(I,I).
 
 ptt(_):- is_print_collapsed,!.
+ptt(G):- is_map(G), !, write('..VM..').
 ptt(P):- \+ \+ ((tersify(P,Q),!,pt(Q))).
 ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 
@@ -178,9 +185,11 @@ pt(_):- is_print_collapsed,!.
 pt(_):- format('~N'), fail.
 pt(P):- var(P),!,pt(var(P)).
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
+pt(G):- is_map(G), !, write('..VM_pt..').
 pt(P):- \+ \+ (( pt_guess_pretty(P,GP),ptw(GP))).
 %pt(P):-!,writeq(P).
 %ptw(P):- quietlyd(print_tree_nl(P)),!.
+ptw(G):- is_map(G), !, write('..VM_ptw..').
 ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
 
 pt_guess_pretty(P,O):- copy_term(P,O,_),
@@ -218,6 +227,7 @@ wqs([H|T]):- !, wqs(H), wqs(T).
 wqs(format(C,N)):- !, format(C,N).
 wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
+wqs(G):- is_map(G), !, write('..VM_wqs..').
 wqs(pt(C)):- !, pt(C).
 wqs(q(C)):- !, write(' '), writeq(C).
 wqs(uc(C,W)):- !, write(' '), color_print(C,call(underline_print(format("\t~@",[wqs(W)])))).
@@ -259,6 +269,7 @@ functor_test_color(pass,green).
 functor_test_color(fail,red).
 functor_test_color(warn,yellow).
 
+arcdbg(G):- is_map(G), !, write('..VM_arcdbg..').
 arcdbg(G):- compound(G), compound_name_arity(G,F,_),functor_test_color(F,C),
   wots(S,print(G)),color_print(C,S),!,format('~N').
 arcdbg(G):- wdmsg(G).

@@ -47,6 +47,7 @@
             cls/0,
             dmsg0/1,
             dmsg00/1,
+            fmt90/1,
             dmsg1/1,
             dmsg2/1,
             dmsg3/1,

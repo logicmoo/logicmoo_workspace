@@ -12,8 +12,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(soops, []).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(soops, [get_opv_iiii/3,get_opv/3]).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 :- multifile(soops:struct_opv/3).
@@ -237,7 +239,7 @@ init_instance_kv(Kind,Obj,[[Key|LList]|Props]):- slot_is_vertical_items(Key),!,
   maplist(add_opv_new(Obj,SlotName),List))),
   init_instance_kv(Kind,Obj,Props).
 % tuple
-init_instance_kv(Kind,Obj,[KV|Props]):- compound(KV),get_kv(KV,Key,Value),!,
+init_instance_kv(Kind,Obj,[KV|Props]):- compound(KV),get_kv_soop(KV,Key,Value),!,
   show_call_trace(set_kind_object_slot_value(Kind,Obj,Key,Value)),
   init_instance_kv(Kind,Obj,Props).
 % plist
@@ -245,6 +247,12 @@ init_instance_kv(Kind,Obj,[Key,Value|Props]):-
   nop(always(is_keywordp(Key))),
   set_kind_object_slot_value(Kind,Obj,Key,Value),!,
   init_instance_kv(Kind,Obj,Props).
+
+
+get_kv_soop(X=Y,X,Y):- !.
+get_kv_soop(X-Y,X,Y):- !.
+get_kv_soop(KV,X,Y):- functor(KV,_,1),KV=..[X,Y],!.
+get_kv_soop(KV,X,Y):- arg(1,KV,X),arg(2,KV,Y),!.
 
 /*
 init_instance_kv(Kind,Obj,[[Key|List]|Props]):- is_keywordp(Key),
@@ -254,7 +262,7 @@ init_instance_kv(Kind,Obj,[[Key|List]|Props]):- is_keywordp(Key),
   (type_slot_number(Kind,Key,SOrd)->Ord2 is SOrd+1;Ord2 is Ord+1),
    init_instance_kv(Kind,Obj,Props).
 
-init_instance_kv(Kind,Obj,[KV|Props]):- compound(KV),get_kv(KV,Key,Value),
+init_instance_kv(Kind,Obj,[KV|Props]):- compound(KV),get_kv_soop(KV,Key,Value),
  (type_slot_number(Kind,Key,SOrd)->Ord2 is SOrd+1;Ord2 is Ord+1),
   get_kind_slot_name(Kind,Key,SlotName),
   add_opv_new(Obj,SlotName,Value),!,  
@@ -673,7 +681,7 @@ get_opv_iiii_dict(_,Obj,Prop,Value):-
 get_opv_iiii(Obj,Prop,Value):- is_dict(Obj,Type),!,get_opv_iiii_dict(Type,Obj,Prop,Value).
 get_opv_iiii(Obj,Key,Value):- atom(Obj),atom(Key),!,get_opv_iiiii(Obj,Key,Value),!.
 get_opv_iiii(Obj,Key,Value):- get_opv_iiiii(Obj,Key,Value).
-
+:- export(get_opv_iiii/3).
 /*get_opv_iiiii_ref(Obj,Prop,Value):- 
   % current_prolog_flag(wamcl_gvars,true),
   (atom(Obj)->nb_current(Obj,Ref);
@@ -803,7 +811,7 @@ set_opv(Obj,Prop,Value):-
   %(thread_self(main)->retractall(soops:o_p_v(Obj,Prop,_));true),
   /*delete_opvalues(Obj,Prop),*/ 
    add_opv_new(Obj,Prop,Value).
-
+:- export(set_opv/3).
 
 add_opv(Obj,Prop,Value):- add_opv_new(Obj,Prop,Value),!.
 add_opv_new_iii(Obj,Prop,Value):- add_opv_new(Obj,Prop,Value),!.
@@ -1011,6 +1019,9 @@ decl_mapped_opv(Kind,Prop=Pred):-
   nop(assertz(wl:interned_eval(call(forall(OPred,add_opv_new(Obj,Prop,Val)))))),
   nop(assert_lsp((OPred:- (is_kind(Obj,Kind),(fail->!;true),get_opv(Obj,Prop,Val))))).
 
+:- export(decl_mapped_opv/2).
+%:- fixup_exports.
+
 is_kind(O,_K):- nonvar(O).
 
 kind_attribute_pred(Kind,Prop,Pred):- wl:type_attribute_pred_dyn(Kind,Prop,Pred).
@@ -1094,11 +1105,6 @@ write_o_p_v(Obj,result_type(sbcl),WAS):- write_o_p_v(Obj,result_type,WAS).
 write_o_p_v(Obj,Prop,Value):- format('~q.~n',[o_p_v(Obj,Prop,Value)]).
 write_o_p_t(Obj,Prop):- format('~q.~n',[o_p_v(Obj,Prop,t)]).
 
-:- multifile o_p_v/3.
-:- dynamic o_p_v/3.
-:- multifile c_p_v/3.
-:- dynamic c_p_v/3.
-
 load_si:-
   open('si.data',read,Stream),
   repeat,
@@ -1127,7 +1133,5 @@ process_si(soops:o_p_v(X,Y,Z)):- X\==[], set_opv(X,Y,Z).
 %:- include('si2.data').
 
 :- fixup_exports.
-
-
 
 

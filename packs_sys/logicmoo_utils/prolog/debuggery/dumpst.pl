@@ -94,6 +94,7 @@
           dumpST9/0,dumpST9/1,dumpST9/2.
 
 
+
 %:- ensure_loaded(library(debug)).
 % % % OFF :- system:use_module((dmsg)).% WAS OFF  :- system:use_module(library(logicmoo_util_strings)).
 
@@ -151,6 +152,10 @@ dumpST0(Frame,MaxDepth):-  prolog_current_frame(Current),(number(Frame);get_dump
 %
 % Dump S True Stucture.
 %
+
+%:- use_module(library(sandbox)).
+%sandbox:safe_primitive(dumpST/0).
+
 dumpST:- ((prolog_current_frame(Current),get_dump_frame(Current,Frame),
   no_bfly(zotrace(with_all_dmsg((b_setval('$dump_frame',Frame),dumpST1)))))).
 

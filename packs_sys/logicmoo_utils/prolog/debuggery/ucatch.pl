@@ -36,7 +36,9 @@
             doall_and_fail/1,
             quietly_must/1,
             on_x_f/3,
-            
+
+            current_mfl4/4,
+            current_source_location/2,
             hide_trace/1,
             (block)/2,
             (block3)/3,

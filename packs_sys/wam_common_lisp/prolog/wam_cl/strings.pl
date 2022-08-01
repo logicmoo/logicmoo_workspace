@@ -14,7 +14,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(string, []).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(string, [is_stringp/1]).
+:- endif.
+:- include('./header').
 
 :- meta_predicate index_of_first_failure(*,2,*,*,*).
 :- meta_predicate index_of_first_success(*,2,*,*,*).
@@ -52,6 +55,7 @@ to_prolog_string(S,SN):- is_symbolp(S),!,pl_symbol_name(S,S2),to_prolog_string(S
 
 % Only Make a STRING if not already a Prolog String
 to_prolog_string_if_needed(L,Loc):- \+ string(L),!,always(to_prolog_string_anyways(L,Loc)).
+:- export(to_prolog_string_if_needed/2).
 % Always make a STRING
 to_prolog_string_anyways(I,O):- atom(I),upcase_atom(I,I),!,atom_string(I,O).
 to_prolog_string_anyways(I,O):- is_pathnamep(I),pl_namestring(I,O),!.

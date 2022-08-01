@@ -12,8 +12,10 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog (YAP 4x faster).
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(clstructs, []).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 % :- expects_dialect(pfc).

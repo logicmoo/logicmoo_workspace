@@ -15,10 +15,11 @@
  *
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(decls, []).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
-:- set_module(class(library)).
 
 wl:declared_as(f_special_operator_p,needs_env).
 f_special_operator_p(Env,Obj,RetVal):- t_or_nil(is_special_operator_p(Env,Obj),RetVal).

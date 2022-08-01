@@ -12,7 +12,11 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
-:- module(in1t, []).
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
+:- module(in1t, [do_wamcl_inits/0]).
+:- endif.
+:- include('./header').
+
 
 :- meta_predicate show_must(0).
 :- meta_predicate without_gc(0).
@@ -327,7 +331,7 @@ $ swipl -x wamcl.prc
 
 ').
 
-:- set_opv(xx_package_xx,symbol_value,pkg_sys).
+delay_init:- set_opv(xx_package_xx,symbol_value,pkg_sys).
 
 :- fixup_exports.
 

@@ -14,6 +14,7 @@
  *******************************************************************/
 :- module(soops, []).
 :- set_module(class(library)).
+:- endif.
 :- include('./header').
 
 :- multifile(soops:struct_opv/3).

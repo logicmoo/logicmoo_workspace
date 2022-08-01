@@ -222,9 +222,9 @@ individuation_macros(complete, [
   %reset_points,
   %inside_objs(force_by_color,subshape_both),
    reset_points,
-   when(get(h)<7,columns),
+   %TODO %when(get(h)<7,columns),
    reset_points,
-   when(get(v)<7,rows),
+   %TODO %when(get(v)<7,rows),
    reset_points,
   (force_by_color),
   reset_points,
@@ -247,13 +247,14 @@ individuation_macros(complete, [
   reset_points,
   %keep_points(lo_dots),
   (shape_lib(as_is)),
-  reset_points,
+  reset_points,  
   whole,
   reset_points,
   %   when(len(objs)>=70,keep_points(whole)),
-  when(len(objs)<70,when(len(points)<50,glyphic)),
+  %TODO when(len(objs)<70,when(len(points)<50,glyphic)),
   do_ending,
   reset_points,
+  label_sizes,
   %complete_broken_lines,
   %complete_occluded,
   done]).
@@ -353,8 +354,24 @@ inside_objs(From,Next,VM):-
     raddObjects(VM,WasInside))),!.
 
 
+is_fti_step(label_sizes).
 
-  
+label_sizes(VM):- 
+   smallest_first(VM.objs,SF),
+   set_zorder(sf,SF),
+   largest_first(SF,LF), 
+   set_zorder(lf,LF),
+   gset(VM.objs) = LF,
+   !.
+set_zorder(ZType,IndvS):- set_zorder(ZType,0,IndvS).
+set_zorder(_ZType,_,[]):-!.
+set_zorder(ZType,N,[L|IndvS]):-  
+  get_setarg_p1(nb_setarg,I,L,P1), compound(I), I=.. [z_o,ZType|_],
+   call(P1,z_o(ZType,N)),
+   N2 is N+1,!,
+   set_zorder(ZType,N2,IndvS).
+set_zorder(ZType,N,[_|IndvS]):-
+   set_zorder(ZType,N,IndvS).
 
 is_fti_step(reset_points).
 reset_points(VM):- 
@@ -454,7 +471,7 @@ individuate(ROptions,GridIn,IndvS):-
   do_individuate(ROptions,GridIn,IndvS),!,  
   ignore((ground(GridIn),(asserta(individuated_cache(ROptions,GridIn,IndvS))))),!.
 
-do_individuate(ROptions,GridInIn,IndvS):-
+do_individuate(ROptions,GridInIn,LF):-
    %fix_indivs_options(ROptionsL,ROptions),
    must_be_free(IndvS),
    (is_map(GridInIn) -> (VM = GridInIn, GridIn=VM.grid ) ; GridInIn=GridIn),
@@ -462,6 +479,9 @@ do_individuate(ROptions,GridInIn,IndvS):-
    grid_to_id(Grid,ID),
   my_assertion(\+ is_grid(ID)),
    individuate7(VM,ID,ROptions,Grid,IndvS),
+  smallest_first(IndvS,SF),
+  largest_first(SF,LF),
+  %gset(VM.objs) = LF,
    !.
    %VM.grid_out
 
@@ -483,11 +503,11 @@ individuate7(VM,ID,ROptions,GridIn,IndvS):-
       make_indiv_object_list(VM,IndvSRaw,IndvS1),
       %combine_objects(IndvS1,IndvS2),
       list_to_set(IndvS1,IndvS),
-      
       once((delistify_single_element(ROptions,NamedOpts),
        save_grouped(individuate(ID,NamedOpts),IndvS))),!,
       nop(print_info(IndvS)).
-      
+
+
 
 into_points_grid(GridIn,Points,Grid):-
   (var(GridIn) -> trace ; true),
@@ -661,7 +681,7 @@ print_vm_debug_objs(VM):-
       pt(t([obj/obj_mass=(Count/Mass),unprocessed_points=PC,roptions=VM.roptions,fsi=Four])))).
 
 
-maybe_four_terse(L,F=N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
+maybe_four_terse(L,F=..N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
 maybe_four_terse(L,L):-!.
 %fti(VM,_):- VM.points=[], !.
 fti(_,[]):- !.
@@ -871,13 +891,13 @@ is_sa(Points,C-P2):-  \+ (is_adjacent_point(P2,Dir,P3), member(C-P3,Points), \+ 
 alone_dots(VM):-
   my_partition(is_sa(VM.points),VM.points,SAPs,Keep),
   set(VM.points)=Keep,
-  maplist(make_point_object(VM,[birth(alone_dots)]),SAPs,IndvList),
+  maplist(make_point_object(VM,[birth(alone_dots),iz(shaped),z_o(lf,nil),z_o(sf,nil)]),SAPs,IndvList),
   nop(raddObjects(VM,IndvList)),!.
   
 alone_dots(VM):-
    select(C-P1,VM.points,Rest),     
    sa_point(C-P1,Rest),
-   make_point_object(VM,[birth(alone_dots)],C-P1,Obj),
+   make_point_object(VM,[birth(alone_dots),iz(shaped),z_o(lf,nil),z_o(sf,nil)],C-P1,Obj),
    raddObjects(VM,Obj),
    remCPoints(VM,[C-P1]),
    alone_dots(VM).
@@ -885,7 +905,11 @@ alone_dots(_):-!.
 
 is_fti_step(lo_dots).
 % lo_dots may have adjacent points of the same color (because we are in 'lo_dots' mode)
-lo_dots(VM):-
+lo_dots(VM):-  ( VM.h=<5 ; VM.v=<5 ),
+  maplist(make_point_object(VM,[birth(lo_dots),iz(dot),iz(shaped),z_o(lf,nil),z_o(sf,nil)]),VM.points,IndvList),
+  raddObjects(VM,IndvList),
+  set(VM.points) =[],!.
+lo_dots(VM):-  
   maplist(make_point_object(VM,[birth(lo_dots),iz(dot)]),VM.points,IndvList),
   raddObjects(VM,IndvList),
   set(VM.points) =[],!.
@@ -961,7 +985,7 @@ mass_gt(N,Obj):- mass(Obj,Mass),Mass>N.
 
 one_fti(VM,glyphic):- 
   localpoints(VM.grid,Points),
-  maplist(make_point_object(VM,[birth(glyphic)]),Points,IndvList),
+  maplist(make_point_object(VM,[birth(glyphic),iz(shaped),z_o(lf,nil),z_o(sf,nil)]),Points,IndvList),
   raddObjects(VM,IndvList),
   one_fti(VM,whole),
   save_grouped(individuate_glyphic(VM.id),VM.objs).
@@ -977,7 +1001,7 @@ one_fti(VM,whole):-
   length(Points,Len),
   make_indiv_object(VM,[mass(Len),v_hv(H,V),birth(whole),iz(image)],Points,Whole),raddObjects(VM,Whole),
   localpoints(Grid,LPoints),
-  length(LPoints,CLen),fif(CLen=<144,(make_indiv_object(VM,[birth(whole),iz(sa)],LPoints,Whole2),raddObjects(VM,Whole2))),
+  length(LPoints,CLen),fif(CLen=<144,(make_indiv_object(VM,[birth(whole),iz(shaped)],LPoints,Whole2),raddObjects(VM,Whole2))),
   %set(VM.points)=[],
   save_grouped(individuate_whole(VM.id),[Whole]),
   assert_shape_lib(pair,Whole),!.
@@ -1031,9 +1055,8 @@ one_fti(VM,by_color(Min,C)):-
   ignore(((
    length(ThisGroup,Len),  Len >= Min,
    set(VM.points)=LeftOver,
-   make_indiv_object(VM,[birth(by_color),iz(image)],ThisGroup,ColorObj),
+   make_indiv_object(VM,[birth(by_color),iz(image),iz(shaped),z_o(lf,nil),z_o(sf,nil)],ThisGroup,ColorObj),
    raddObjects(VM,ColorObj)))).
-
 
 
 one_fti(VM,shape_lib(Hammer)):- !,
@@ -1399,7 +1422,7 @@ find_one_ifti3(Option,Obj,VM):-
      (allowed_dir(Option,Dir2),Dir2\=Dir, adjacent_point_allowed(C,HV2,Dir2,HV3),select(C-HV3,Rest1,ScanPoints))),    
     %maybe_multivar(C), 
     all_individuals_near(Dir,Option,C,[C-HV,C-HV2,C-HV3],ScanPoints,NextScanPoints,IndvPoints), !,
-    make_indiv_object(VM,[iz(ShapeType),birth(i3(Option))],IndvPoints,Obj),
+    make_indiv_object(VM,[iz(ShapeType),iz(shaped),z_o(lf,nil),z_o(sf,nil),birth(i3(Option))],IndvPoints,Obj),
     meets_indiv_criteria(Option,IndvPoints),
   set(VM.points) = NextScanPoints,
   raddObjects(VM,Obj),
@@ -1414,7 +1437,7 @@ find_one_ifti2(Option,Obj,VM):-
   select(C-HV,Points,Rest0), \+ free_cell(C), % non_free_fg(C), % \+ is_black(C),
   allowed_dir(Option,Dir),adjacent_point_allowed(C,HV,Dir,HV2),select(C-HV2,Rest0,ScanPoints),
   all_individuals_near(Dir,Option,C,[C-HV,C-HV2],ScanPoints,NextScanPoints,IndvPoints), 
-    make_indiv_object(VM,[iz(ShapeType),birth(i2(Option))],IndvPoints,Obj),
+    make_indiv_object(VM,[iz(ShapeType),iz(shaped),z_o(lf,nil),z_o(sf,nil),birth(i2(Option))],IndvPoints,Obj),
     meets_indiv_criteria(Option,IndvPoints),
   set(VM.points) = NextScanPoints,
   raddObjects(VM,Obj),
@@ -1531,21 +1554,22 @@ remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 
 
 % sprop_piority(Class,Priority).
-sprop_piority(iz(hidden),4).
 
-sprop_piority(birth(i3(_)),0).
-sprop_piority(birth(i2(_)),0).
-sprop_piority(iz(sa),0).
+sprop_piority(iz(hidden),4).
+sprop_piority(iz(shaped),0).
+sprop_piority(z_o(_,_),0).
+%sprop_piority(birth(i3(_)),0).
+%sprop_piority(birth(i2(_)),0).
 
 sprop_piority(iz(combined),1).
 sprop_piority(iz(image),2).
 sprop_piority(birth(by_color),3).
 sprop_piority(birth(glyphic),2).
 smallest_priority(Indv,Priority):- sprop_piority(Prop,Priority), has_prop(Prop,Indv),!.
-smallest_priority(_,0).
+smallest_priority(_,1).
 
 largest_priority(Indv,Priority):- sprop_piority(Prop,Priority), has_prop(Prop,Indv),!.
-largest_priority(_,0).
+largest_priority(_,1).
 
 
 resize_inf(1,inf):-!.
@@ -1555,7 +1579,7 @@ smallest_first(IndvS0,IndvO):-
   sort(IndvS0,IndvS),
   findall((Priority+Size)-Indv,(member(Indv,IndvS),smallest_priority(Indv,Priority),mass(Indv,MSize),resize_inf(MSize,Size)),All),
   keysort(All,AllK),
-  maplist(arg(2),AllK,IndvO).
+  maplist(arg(2),AllK,IndvO).  
 
 largest_first(IndvS0,IndvR):-   
  sort(IndvS0,IndvS),

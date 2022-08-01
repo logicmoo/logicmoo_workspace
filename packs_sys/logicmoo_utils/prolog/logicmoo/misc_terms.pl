@@ -45,6 +45,8 @@ This module includes random predicate utilities that manipulate terms for substi
 */
 :- module(logicmoo_util_terms,
         [
+append_term/3,
+append_term0/3,
 at_start/1,
 remember_at_start/2,
 expire_tabled_list/1,
@@ -114,7 +116,7 @@ weak_nd_subst1/5,
 weak_nd_subst2/4,
 wsubst/4,
 append_termlist/3,            
-append_term/3,            
+append_term0/3,            
 apply_term/3,
 atom_concat_safe/3,
 compound_name_args_safe/3,
@@ -656,13 +658,16 @@ compound_name_args_safe(P,F,A):-
        -> (call(call, ( =.. ),P,[F|A]))
         ;  (apply_term(F,A,P)))),!.
 
-%% append_term( ?T, ?I, ?HEAD) is semidet.
+%% append_term0( ?T, ?I, ?HEAD) is semidet.
 %
 % Append Term.
 %
-append_term(F,I,HEAD):-atom(F),!,HEAD=..[F,I],!.
-append_term(Call,E,CallE):-var(Call),!, must(compound(CallE)),CallE=..ListE,append(List,[E],ListE),Call=..List.
-append_term(Call,E,CallE):-must(compound(Call)), Call=..List, append(List,[E],ListE), CallE=..ListE.
+append_term(M:I,P,M:O):- !, append_term0(I,P,O).
+append_term(I,P,O):- append_term0(I,P,O).
+append_term0(F,I,HEAD):-atom(F),!,HEAD=..[F,I],!.
+append_term0(F,I,HEAD):-atom(F),!,HEAD=..[F,I],!.
+append_term0(Call,E,CallE):-var(Call),!, must(compound(CallE)),CallE=..ListE,append(List,[E],ListE),Call=..List.
+append_term0(Call,E,CallE):-must(compound(Call)), Call=..List, append(List,[E],ListE), CallE=..ListE.
 
 
 apply_term(T,LST,HEAD):- atom(T),!,HEAD=..[T|LST],!.

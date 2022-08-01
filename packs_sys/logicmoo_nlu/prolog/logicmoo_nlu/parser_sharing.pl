@@ -11,6 +11,8 @@
 
 
 :- module(parser_sharing,[
+  each_parser_module/1,
+  each_parser_module_0/1,
   % term_expansion/4,
    op(1150,fx,(share_mp)),
    op(1150,fx,(shared_parser_data)),
@@ -100,9 +102,8 @@ nl_call_exit(_M,_F,_A,_P).
 % :- make_nl_call_stubs. 
 %:- listing(nl_call).
 % (predicate_property(P,number_of_clauses(N))
-:- module_transparent(each_parser_module/1).
 each_parser_module(M):- no_repeats(M,each_parser_module_0(M)).
-:- module_transparent(each_parser_module_0/1).
+:- export(each_parser_module_0/1).
 each_parser_module_0(baseKB):- fail.
 each_parser_module_0(parser_shared).
 each_parser_module_0(parser_all).
@@ -230,8 +231,8 @@ find_predicate_module_maybe(MPO,P):- find_predicate_module_maybe(MPO,baseKB:P).
 use_shared_parser_data(User,File):- parser_sharing:using_shared_parser_data(User,File),!.
 use_shared_parser_data(User,File):- asserta(parser_sharing:using_shared_parser_data(User,File)),!.
 
-:- module_transparent(use_shared_parser_data/0).
-use_shared_parser_data:- 
+:- module_transparent(use_shared_parser_data_now/0).
+use_shared_parser_data_now:- 
    prolog_load_context(module,User),
    ignore((source_location(File,_), use_shared_parser_data(User,File))), 
    ignore((prolog_load_context(source,File2), use_shared_parser_data(User,File2))), 
@@ -241,7 +242,7 @@ use_shared_parser_data:-
 def_parser_data(M,F/A):- !, ground(F/A), assertion((atom(F),integer(A),functor(P,F,A))), def_parser_data(M,P).
 def_parser_data(_,M:XY):- !, def_parser_data(M,XY).
 def_parser_data(M,P):-
-   use_shared_parser_data,
+   use_shared_parser_data_now,
    functor(P,F,A),
    def_nl_pred(M,F,A),
    ( \+ predicate_property(M:P,defined) -> define_shared_loadable_pred(M,P) ; true ),!.   

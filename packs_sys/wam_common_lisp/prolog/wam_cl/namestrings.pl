@@ -20,8 +20,9 @@
  * The program is a *HUGE* common-lisp compiler/interpreter. It is written for YAP/SWI-Prolog .
  *
  *******************************************************************/
+:- if( \+ current_prolog_flag(wamcl_modules,false)).
 :- module(pnames, []).
-
+:- endif.
 :- include('./header').
 
 %:- if(exists_source(library(logicmoo/portray_vars))).

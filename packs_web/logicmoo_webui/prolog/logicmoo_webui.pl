@@ -190,7 +190,6 @@ load_web_package_dirs0:-
 :- endif.
 
 
-sandbox:safe_primitive(dumpst:dumpST).
 sandbox:safe_meta_predicate(system:notrace/1).
 
 :- if(\+ prolog_load_context(reloading,true)).

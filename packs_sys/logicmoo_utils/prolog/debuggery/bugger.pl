@@ -46,6 +46,8 @@
             caller_module/1,
             caller_module2/2,
             callsc/1,
+            must_maplist/2,
+            must_maplist/3,
 
           % all_source_file_predicates_are_transparent/0,
           all_source_file_predicates_are_transparent/1,

@@ -20,10 +20,12 @@
 % We save the name of the module loading this module
 :- module(logicmoo_startup,[
           maybe_notrace/1,
+          if_file_exists/1,
           absolute_startup_script/1,
           before_boot/1,
           during_boot/1,
           after_boot/1,
+          sexport/1,
           has_ran_once/1,
           has_ran_once/2,
           app_argv/1,
@@ -403,7 +405,9 @@ setup_hist0:-  '$toplevel':setup_history.
 :- system:use_module(library(dialect/xsb)).
 :- system:use_module(library(dialect/yap)).
 */
-:- set_prolog_flag(autoload,false).
+%:- set_prolog_flag(autoload,false).
+%:- set_prolog_flag(autoload,user_or_explicit).
+%:- set_prolog_flag(autoload,true).
 %:- ensure_loaded(library(debuggery/wemsg)).
 :- system:use_module(library(sandbox)).
 :- system:use_module(library(hashtable)).
