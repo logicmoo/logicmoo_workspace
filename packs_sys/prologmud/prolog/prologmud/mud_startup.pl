@@ -179,7 +179,7 @@ start_mud_server:-
 % [Optionaly] Start the telent server % iCommanderdata66
 % ==============================================
 %:- if( \+ app_argv('--nonet')).
-:- after_boot(start_mud_server).
+%:- after_boot(start_mud_server).
 % :- assert_setting01(lmconf:eachFact_Preconditional(isRuntime)).
 %:- endif.
 
@@ -293,7 +293,6 @@ lar :- % set_prolog_flag(dmsg_level,never),
 
 :- during_boot(baseKB:ain(tSourceData(iWorldData8))).
 
-:- export(start_runtime_mud/0).
 start_runtime_mud:- 
    update_changed_files,
    forall(tCol(X),call(baseKB:kb_shared,X/1)),
@@ -305,6 +304,8 @@ start_runtime_mud:-
    notrace(with_mpred_trace_exec(baseKB:ain(isRuntime))),
    show_lm_tests.
 
+:- export(start_runtime_mud/0).
+:- baseKB:import(start_runtime_mud/0).
 
 show_lm_tests:-
   dmsg(call(listing(baseKB:feature_test))),
@@ -313,7 +314,7 @@ show_lm_tests:-
   !.
 
 
-:- after_boot(start_runtime_mud).
+%:- after_boot(start_runtime_mud).
 
 %:- setenv('DISPLAY', '').
 

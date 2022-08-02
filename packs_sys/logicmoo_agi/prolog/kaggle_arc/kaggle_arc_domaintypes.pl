@@ -217,13 +217,13 @@ is_cpoint(C):- \+ compound(C),!,fail.
 %is_cpoint(C-P):- (nonvar_or_ci(C);cant_be_color(C)),!,is_nc_point(P).
 is_cpoint(_-P):- is_nc_point(P).
 
-is_list_of(P1,List):- is_list(List),maplist(P1,List).
+%is_list_of_gt0(P1,List):- is_list(List),maplist(P1,List).
 
 is_nc_point(P):- nonvar(P),hv_point(_,_,P).
 
 is_gpoint(G):- plain_var(G),!,fail.
 is_gpoint(_-G):-!,is_gpoint(G).
-is_gpoint(G):- hv_point(H,_,G),!,nonvar_or_ci(H).
+is_gpoint(G):- hv_point(H,_,G),!,nonvar_or_ci(H),my_assertion(number(H)).
 
 % Grid-oids
 is_list_of_gridoids([G|V]):- \+ is_grid([G|V]), is_gridoid(G), is_list(V), maplist(is_gridoid,V).

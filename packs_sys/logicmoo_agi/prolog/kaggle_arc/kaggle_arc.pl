@@ -478,6 +478,8 @@ get_kov(K,O,V):- get_kov1(K,O,V),!.
 get_kov(K,O,V):- get_kov1(props,O,VV),!,get_kov1(K,VV,V).
 % (get_kov(Prop,VM,Value) -> true ; (get_kov(props,VM,Hashmap),nonvar(Hashmap),must_not_error(nb_get_value(Hashmap,Prop,ValueOOV)),get_oov_value(ValueOOV,Value))).
 get_kov1(K,O,V):- is_dict(O),!,get_dict(K,O,OOV),get_oov_value(OOV,V).
+
+get_kov1(K,O,V):- nonvar(K),is_rbtree(O),!,rb_lookup(K,V,O).
 get_kov1(K,O,V):- is_rbtree(O),!,rb_in(K,V,OOV),get_oov_value(OOV,V).
 %get_kov(K,O,V):- is_rbtree(O),!,nb_rb_get_node(K,O,Node),nb_rb_node_value(Node,V).
 

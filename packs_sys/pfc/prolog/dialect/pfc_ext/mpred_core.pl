@@ -226,6 +226,7 @@ system:db_op_call(A,B,C):- db_op_call(A,B,C).
                       maybe_unnegated/2,maybe_unnegated0/2,
                       defaultAssertMt0/1,check_db_sanity/3,
                       lookup_m/1,add_side_effect/2,
+                      mpred_reset/0,
  call_u/1,  
   assertz_mu/1,
  notify_if_neg_trigger/1,
