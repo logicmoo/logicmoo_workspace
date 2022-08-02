@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.6</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.6</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -267,7 +267,7 @@ the predicate fails although there are solutions. This is due to the
 incomplete nature of&nbsp;<a class="pred" href="control.html#\+/1">\+/1</a>.
 
 <p>To make your programs work correctly also in situations where the 
-arguments are not yet sufficiently instantiated, use <a id="idx:dif2:699"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+arguments are not yet sufficiently instantiated, use <a id="idx:dif2:698"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
 instead.
 </dd>
 </dl>
@@ -298,7 +298,7 @@ arguments, leftmost argument first.
 
 <p>Although variables are ordered, there are some unexpected properties 
 one should keep in mind when relying on variable ordering. This applies 
-to the predicates below as to predicate such as <a id="idx:sort2:700"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
+to the predicates below as to predicate such as <a id="idx:sort2:699"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a> 
 as well as libraries that reply on ordering such as library <code>library(assoc)</code> 
 and library
 <code>library(ordsets)</code>. Obviously, an established relation <var>A</var> <code><code>@&lt;</code></code> <var>B</var> 
@@ -373,11 +373,11 @@ unification and comparison predicates</span></a></h3>
 <a id="sec:unifyspecial"></a>
 
 <p>This section describes special purpose variations on Prolog 
-unification. The predicate <a id="idx:unifywithoccurscheck2:701"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
+unification. The predicate <a id="idx:unifywithoccurscheck2:700"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
 provides sound unification and is part of the ISO standard. The 
-predicate <a id="idx:subsumesterm2:702"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a> 
+predicate <a id="idx:subsumesterm2:701"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a> 
 defines&lsquo;one-sided unification' and is part of the ISO proposal 
-established in Edinburgh (2010). Finally, <a id="idx:unifiable3:703"></a><a class="pred" href="compare.html#unifiable/3">unifiable/3</a> 
+established in Edinburgh (2010). Finally, <a id="idx:unifiable3:702"></a><a class="pred" href="compare.html#unifiable/3">unifiable/3</a> 
 is a&lsquo;what-if' version of unification that is often used as a 
 building block in constraint reasoners.
 
@@ -397,14 +397,14 @@ A = f(A).
 false.
 </pre>
 
-<p><a id="idx:occurscheck:704"></a>The first statement creates a <em>cyclic 
+<p><a id="idx:occurscheck:703"></a>The first statement creates a <em>cyclic 
 term</em>, also called a
 <em>rational tree</em>. The second executes logically sound unification 
 and thus fails. Note that the behaviour of unification through
 <a class="pred" href="compare.html#=/2">=/2</a> as well as implicit 
 unification in the head can be changed using the Prolog flag <a class="flag" href="flags.html#flag:occurs_check">occurs_check</a>.
 
-<p>The SWI-Prolog implementation of <a id="idx:unifywithoccurscheck2:705"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
+<p>The SWI-Prolog implementation of <a id="idx:unifywithoccurscheck2:704"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
 is cycle-safe and only guards against <em>creating</em> cycles, not 
 against cycles that may already be present in one of the arguments. This 
 is illustrated in the following two queries:
@@ -416,9 +416,9 @@ X = Y, Y = f(Y).
 X = Y, Y = f(Y).
 </pre>
 
-<p>Some other Prolog systems interpret <a id="idx:unifywithoccurscheck2:706"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
+<p>Some other Prolog systems interpret <a id="idx:unifywithoccurscheck2:705"></a><a class="pred" href="compare.html#unify_with_occurs_check/2">unify_with_occurs_check/2</a> 
 as if defined by the clause below, causing failure on the above two 
-queries. Direct use of <a id="idx:acyclicterm1:707"></a><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> 
+queries. Direct use of <a id="idx:acyclicterm1:706"></a><a class="pred" href="typetest.html#acyclic_term/1">acyclic_term/1</a> 
 is portable and more appropriate for such applications.
 
 <pre class="code">
@@ -428,7 +428,7 @@ unify_with_occurs_check(X,X) :- acyclic_term(X).
 </dd>
 <dt class="pubdef"><a id="=@=/2"><var>+Term1</var> <strong>=@=</strong> <var>+Term2</var></a></dt>
 <dd class="defbody">
-<a id="idx:variant:708"></a>True if <var>Term1</var> is a <em>variant</em> 
+<a id="idx:variant:707"></a>True if <var>Term1</var> is a <em>variant</em> 
 of (or <em>structurally equivalent</em> to) <var>Term2</var>. Testing 
 for a variant is weaker than equivalence (<a class="pred" href="compare.html#==/2">==/2</a>), 
 but stronger than unification (<a class="pred" href="compare.html#=/2">=/2</a>). 
@@ -456,9 +456,9 @@ terms are no longer variant.</span></sup> Examples:
 </blockquote>
 
 <p>A term is always a variant of a copy of itself. Term copying takes 
-place in, e.g., <a id="idx:copyterm2:709"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>, <a id="idx:findall3:710"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
+place in, e.g., <a id="idx:copyterm2:708"></a><a class="pred" href="manipterm.html#copy_term/2">copy_term/2</a>, <a id="idx:findall3:709"></a><a class="pred" href="allsolutions.html#findall/3">findall/3</a> 
 or proving a clause added with
-<a id="idx:asserta1:711"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>. 
+<a id="idx:asserta1:710"></a><a class="pred" href="db.html#asserta/1">asserta/1</a>. 
 In the pure Prolog world (i.e., without attributed variables), <a class="pred" href="compare.html#=@=/2">=@=/2</a> 
 behaves as if defined below. With attributed variables, variant of the 
 attributes is tested rather than trying to satisfy the constraints.
@@ -483,7 +483,7 @@ contributed by Kuniaki Mukai.</span></sup>
 in some other Prolog systems. Be aware of possible differences in 
 semantics if the arguments contain attributed variables or share 
 variables.<sup class="fn">67<span class="fn-text">In many systems 
-variant is implemented using two calls to <a id="idx:subsumesterm2:712"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a>.</span></sup></dd>
+variant is implemented using two calls to <a id="idx:subsumesterm2:711"></a><a class="pred" href="compare.html#subsumes_term/2">subsumes_term/2</a>.</span></sup></dd>
 <dt class="pubdef"><a id="\=@=/2"><var>+Term1</var> <strong>\=@=</strong> <var>+Term2</var></a></dt>
 <dd class="defbody">
 Equivalent to <code>&lsquo;<code>\+</code>Term1 =@= Term2'</code>. See <a class="pred" href="compare.html#=@=/2">=@=/2</a> 
@@ -495,10 +495,10 @@ by only binding variables in <var>Generic</var>. The current
 implementation performs the unification and ensures that the variable 
 set of <var>Specific</var> is not changed by the unification. On 
 success, the bindings are undone.<sup class="fn">68<span class="fn-text">This 
-predicate is often named <a id="idx:subsumeschk2:713"></a><a class="pred" href="terms.html#subsumes_chk/2">subsumes_chk/2</a> 
+predicate is often named <a id="idx:subsumeschk2:712"></a><a class="pred" href="terms.html#subsumes_chk/2">subsumes_chk/2</a> 
 in older Prolog dialects. The current name was established in the ISO 
 WG17 meeting in Edinburgh (2010). The <code>chk</code> postfix was 
-considered to refer to determinism as in e.g., <a id="idx:memberchk2:714"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a>.</span></sup> 
+considered to refer to determinism as in e.g., <a id="idx:memberchk2:713"></a><a class="pred" href="builtinlist.html#memberchk/2">memberchk/2</a>.</span></sup> 
 This predicate respects constraints.
 
 <p>See <a class="sec" href="ssu.html#sec:5.6">section 5.6</a> for 
@@ -517,8 +517,8 @@ If <var>X</var> and <var>Y</var> can unify, unify <var>Unifier</var>
 with a list of
 <var>Var</var> = <var>Value</var>, representing the bindings required to 
 make <var>X</var> and <var>Y</var> equivalent.<sup class="fn">69<span class="fn-text">This 
-predicate was introduced for the implementation of <a id="idx:dif2:715"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
-and <a id="idx:when2:716"></a><a class="pred" href="coroutining.html#when/2">when/2</a> 
+predicate was introduced for the implementation of <a id="idx:dif2:714"></a><a class="pred" href="coroutining.html#dif/2">dif/2</a> 
+and <a id="idx:when2:715"></a><a class="pred" href="coroutining.html#when/2">when/2</a> 
 after discussion with Tom Schrijvers and Bart Demoen. None of us is 
 really happy with the name and therefore suggestions for a new name are 
 welcome.</span></sup> This predicate can handle cyclic terms. Attributed 

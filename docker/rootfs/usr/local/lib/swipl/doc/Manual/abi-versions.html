@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 2.22</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 2.22</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,7 +238,7 @@ compatibility</span></a></h2>
 
 <a id="sec:abi-versions"></a>
 
-<p><a id="idx:compatibilitybinary:339"></a><a id="idx:ABIcompatibility:340"></a>SWI-Prolog 
+<p><a id="idx:compatibilitybinary:338"></a><a id="idx:ABIcompatibility:339"></a>SWI-Prolog 
 first of all attempts to maintain <em>source code</em> compatibility 
 between versions. Data and programs can often be represented in binary 
 form. This touches a number of interfaces with varying degrees of 
@@ -268,7 +268,7 @@ key:
 <dd class="defbody">
 Terms may be represented in binary format using <a class="func" href="foreigninclude.html#PL_record_external()">PL_record_external()</a> 
 and
-<a id="idx:fastwrite2:341"></a><a class="pred" href="IO.html#fast_write/2">fast_write/2</a>. 
+<a id="idx:fastwrite2:340"></a><a class="pred" href="IO.html#fast_write/2">fast_write/2</a>. 
 As these formats are used for storing binary terms in databases or 
 communicate terms between Prolog processes in binary form, great care is 
 taken to maintain compatibility.
@@ -278,7 +278,7 @@ key:
 <code>record</code></dd>
 <dt><b>QLF files</b></dt>
 <dd class="defbody">
-QLF files (see <a id="idx:qcompile1:342"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>) 
+QLF files (see <a id="idx:qcompile1:341"></a><a class="pred" href="consulting.html#qcompile/1">qcompile/1</a>) 
 are binary representation of Prolog file or module. They represent 
 clauses as sequences of <em>virtual machine</em> (VM) instructions. 
 Their compatibility relies on the QLF file format and the ABI of the VM. 
@@ -291,7 +291,7 @@ key: <code>qlf</code>,
 <code>qlf_min_load</code>, <code>vmi</code></dd>
 <dt><b>Saved states</b></dt>
 <dd class="defbody">
-Saved states (see <strong>-c</strong> and <a id="idx:qsaveprogram2:343"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>) 
+Saved states (see <strong>-c</strong> and <a id="idx:qsaveprogram2:342"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>) 
 is a zip file that contains the entire Prolog database using the same 
 representation as QLF files. A saved state may contain additional 
 resources, such as foreign extensions, data files, etc. In addition to 

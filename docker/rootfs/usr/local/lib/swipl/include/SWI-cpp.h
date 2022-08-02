@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2000-2022, University of Amsterdam
+    Copyright (c)  2000-2021, University of Amsterdam
                               VU University Amsterdam
 			      SWI-Prolog Solutions b.v.
     All rights reserved.
@@ -80,14 +80,6 @@ public:
   PlFunctor(const wchar_t *name, ARITY_T arity)
   { functor = PL_new_functor(PL_new_atom_wchars(wcslen(name), name), arity);
   }
-
-  operator const functor_t(void) const
-  { return functor;
-  }
-
-  int operator ==(functor_t to) const
-  { return functor == to;
-  }
 };
 
 
@@ -160,8 +152,6 @@ public:
   operator wchar_t *(void) const;
   operator long(void) const;
   operator int(void) const;
-  operator uint32_t(void) const;
-  operator bool(void) const;
   operator double(void) const;
   operator PlAtom(void) const;
   operator void *(void) const;
@@ -779,24 +769,6 @@ __inline PlTerm::operator int(void) const
     return v;
 
   throw PlTypeError("integer", ref);
-}
-
-__inline PlTerm::operator uint32_t(void) const
-{ int64_t v;
-
-  if ( PL_get_int64(ref, &v) && v >= 0 && v <= UINT32_MAX )
-    return v;
-
-  throw PlTypeError("uint32_t", ref);
-}
-
-__inline PlTerm::operator bool(void) const
-{ int v;
-
-  if ( PL_get_bool(ref, &v) )
-    return v;
-
-  throw PlTypeError("bool", ref);
 }
 
 __inline PlTerm::operator double(void) const

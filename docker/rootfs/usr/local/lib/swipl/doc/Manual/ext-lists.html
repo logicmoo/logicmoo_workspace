@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 5.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 5.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -282,13 +282,13 @@ dedicated list functions. For convenience, the macros <code>ATOM_nil</code>
 and <code>ATOM_dot</code> are provided by
 <code>SWI-Prolog.h</code>.
 
-<p>Another place that is affected is <a id="idx:writecanonical1:1867"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>. 
-Impact is minimized by using the list syntax for lists. The predicates <a id="idx:readterm2:1868"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+<p>Another place that is affected is <a id="idx:writecanonical1:1864"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>. 
+Impact is minimized by using the list syntax for lists. The predicates <a id="idx:readterm2:1865"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
 and
-<a id="idx:writeterm2:1869"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+<a id="idx:writeterm2:1866"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
 support the option <code>dotlists(true)</code>, which causes
-<a id="idx:readterm2:1870"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
-to read <code>.(a,[])</code> as <code>[a]</code> and <a id="idx:writeterm2:1871"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
+<a id="idx:readterm2:1867"></a><a class="pred" href="termrw.html#read_term/2">read_term/2</a> 
+to read <code>.(a,[])</code> as <code>[a]</code> and <a id="idx:writeterm2:1868"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a> 
 to write <code>[a]</code> as <code>.(a,[])</code>.
 
 <p><h3 id="sec:ext-list-motivation"><a id="sec:5.1.1"><span class="sec-nr">5.1.1</span> <span class="sec-title">Motivating&lsquo;<code>[|]</code>&rsquo;and <code>[]</code> 

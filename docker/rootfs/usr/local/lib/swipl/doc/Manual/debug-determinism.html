@@ -2,12 +2,12 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.40</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.40</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
 <link rel="previous" href="debugger.html">
-<link rel="next" href="builtin-statistics.html">
+<link rel="next" href="statistics.html">
 
 <style type="text/css">
 
@@ -231,7 +231,7 @@ table.frame-box
 <a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
 <a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
 <a class="nav" href="debugger.html"><img src="prev.gif" alt="Previous"></a>
-<a class="nav" href="builtin-statistics.html"><img src="next.gif" alt="Next"></a>
+<a class="nav" href="statistics.html"><img src="next.gif" alt="Next"></a>
 </div>
 <h2 id="sec:debug-determinism"><a id="sec:4.40"><span class="sec-nr">4.40</span> <span class="sec-title">Debugging 
 and declaring determinism</span></a></h2>
@@ -254,10 +254,10 @@ where
 <var>Declared</var> is currently always <code>det</code>, <var>Observed</var> 
 is one of
 <var>fail</var> or <var>nondet</var> and <var>DeclType</var> is one of <var>property</var> 
-(<a id="idx:det1:1816"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a>), <var>guard</var> 
+(<a id="idx:det1:1813"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a>), <var>guard</var> 
 (<a class="pred" href="debug-determinism.html#$/0">$/0</a>) or <var>goal</var> 
-(<a class="pred" href="debug-determinism.html#$/1">$/1</a>). Using <a id="idx:trap1:1817"></a><a class="pred" href="prologdebug.html#trap/1">trap/1</a> 
-or <a id="idx:gtrap1:1818"></a><span class="pred-ext">gtrap/1</span> we 
+(<a class="pred" href="debug-determinism.html#$/1">$/1</a>). Using <a id="idx:trap1:1814"></a><a class="pred" href="prologdebug.html#trap/1">trap/1</a> 
+or <a id="idx:gtrap1:1815"></a><span class="pred-ext">gtrap/1</span> we 
 can ask Prolog to start the debugger in such events using
 
 <pre class="code">
@@ -308,7 +308,7 @@ ERROR:   [10] p(a)
 The <a class="pred" href="debug-determinism.html#$/0">$/0</a> constructs 
 acts similar to the <a class="pred" href="control.html#!/0">!/0</a>, but 
 in addition declares that the remainder of the clause body shall succeed 
-deterministically. It exploits the same underlying mechanism as the <a id="idx:det1:1819"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a> 
+deterministically. It exploits the same underlying mechanism as the <a id="idx:det1:1816"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a> 
 declaration. See also <a class="pred" href="debug-determinism.html#$/1">$/1</a>.
 
 <p>Violations throw an <b>error/2</b> exception
@@ -322,11 +322,11 @@ Otherwise the result depends on the Prolog flag <a class="flag" href="flags.html
 <dl class="latex">
 <dt><strong>silent</strong></dt>
 <dd class="defbody">
-Act as <a id="idx:once1:1820"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
+Act as <a id="idx:once1:1817"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
 </dd>
 <dt><strong>warning</strong></dt>
 <dd class="defbody">
-Print a warning and act as <a id="idx:once1:1821"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
+Print a warning and act as <a id="idx:once1:1818"></a><a class="pred" href="metacall.html#once/1">once/1</a>.
 </dd>
 <dt><strong>error</strong></dt>
 <dd class="defbody">
@@ -355,7 +355,7 @@ last predicate is a normal predicate the requirement to succeed
 deterministically is transferred to the new goal. As last-call 
 optimization causes the information which predicate initially claimed to 
 be deterministic to be lost, the error is associated with the called 
-predicate. Debug mode (see <a id="idx:debug0:1822"></a><a class="pred" href="debugger.html#debug/0">debug/0</a> 
+predicate. Debug mode (see <a id="idx:debug0:1819"></a><a class="pred" href="debugger.html#debug/0">debug/0</a> 
 or the Prolog flag <a class="flag" href="flags.html#flag:debug">debug</a>) 
 may be used to avoid last call optimization and find the call stack that 
 causes the issue.

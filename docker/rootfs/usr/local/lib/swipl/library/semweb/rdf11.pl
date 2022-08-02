@@ -1057,23 +1057,6 @@ pre_object(Obj, _, _, _) :-
 :- rdf_meta
     pre_ground_object(+, o).
 
-pre_ground_object(Val@Lang,  literal(lang(Lang0, Val0))) :-
-    !,
-    downcase_atom(Lang, Lang0),
-    in_lang_string(Val, Val0).
-pre_ground_object(Val^^Type, literal(type(Type0, Val0))) :-
-    !,
-    in_type(Type, Val, Type0, Val0).
-pre_ground_object(literal(Lit0), literal(Lit)) :-
-    old_literal(Lit0, Lit),
-    !.
-% Interpret `false' and `true' as the Boolean values.
-pre_ground_object(false, literal(type(xsd:boolean, false))) :- !.
-pre_ground_object(true, literal(type(xsd:boolean, true))) :- !.
-pre_ground_object(Atom, URI) :-
-    atom(Atom),
-    !,
-    URI = Atom.
 % Interpret Prolog integer as xsd:integer.
 pre_ground_object(Int, Object) :-
     integer(Int),
@@ -1093,6 +1076,9 @@ pre_ground_object(String, Object) :-
     !,
     rdf_equal(Object, literal(type(xsd:string, Atom))),
     atom_string(Atom, String).
+% Interpret `false' and `true' as the Boolean values.
+pre_ground_object(false, literal(type(xsd:boolean, false))) :- !.
+pre_ground_object(true, literal(type(xsd:boolean, true))) :- !.
 % Interpret date(Y,M,D) as xsd:date,
 %           date_time(Y,M,D,HH,MM,SS) as xsd:dateTime,
 %           date_time(Y,M,D,HH,MM,SS,TZ) as xsd:dateTime,
@@ -1104,6 +1090,20 @@ pre_ground_object(Term, literal(type(Type, Atom))) :-
     !,
     xsd_time_string(Term, Type, String),
     atom_string(Atom, String).
+pre_ground_object(Val@Lang,  literal(lang(Lang0, Val0))) :-
+    !,
+    downcase_atom(Lang, Lang0),
+    in_lang_string(Val, Val0).
+pre_ground_object(Val^^Type, literal(type(Type0, Val0))) :-
+    !,
+    in_type(Type, Val, Type0, Val0).
+pre_ground_object(Atom, URI) :-
+    atom(Atom),
+    !,
+    URI = Atom.
+pre_ground_object(literal(Lit0), literal(Lit)) :-
+    old_literal(Lit0, Lit),
+    !.
 pre_ground_object(Value, _) :-
     type_error(rdf_object, Value).
 

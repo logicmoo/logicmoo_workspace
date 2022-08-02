@@ -346,8 +346,8 @@ op1(prefix, Term, ArgPri, Options) -->
               | Attrs
               ],
               [ span(class('pl-functor'), S),
-                \space(Functor, Arg, o, a, FuncOptions, ArgOptions),
-                \op_arg(Arg, ArgOptions)
+                \space(Functor, Arg, FuncOptions, ArgOptions),
+                \any(Arg, ArgOptions)
               ])).
 op1(postfix, Term, ArgPri, Options) -->
     { Term =.. [Functor,Arg],
@@ -362,8 +362,8 @@ op1(postfix, Term, ArgPri, Options) -->
                 'data-name'(Functor)
               | Attrs
               ],
-              [ \op_arg(Arg, ArgOptions),
-                \space(Arg, Functor, a, o, ArgOptions, FuncOptions),
+              [ \any(Arg, ArgOptions),
+                \space(Arg, Functor, ArgOptions, FuncOptions),
                 span(class('pl-functor'), S)
               ])).
 
@@ -394,8 +394,8 @@ op2(Term, _Type, LeftPri, RightPri, Options) -->
       LeftOptions  = DepthOptions.put(priority, LeftPri),
       FuncOptions  = DepthOptions.put(embrace, never),
       RightOptions = DepthOptions.put(priority, RightPri),
-      (   (   need_space(Left, Functor, a, o, LeftOptions, FuncOptions)
-          ;   need_space(Functor, Right, o, a, FuncOptions, RightOptions)
+      (   (   need_space(Left, Functor, LeftOptions, FuncOptions)
+          ;   need_space(Functor, Right, FuncOptions, RightOptions)
           )
       ->  Space = ' '
       ;   Space = ''
@@ -408,39 +408,28 @@ op2(Term, _Type, LeftPri, RightPri, Options) -->
                 'data-name'(Functor)
               | Attrs
               ],
-              [ \op_arg(Left, LeftOptions),
+              [ \any(Left, LeftOptions),
                 Space,
                 span(class('pl-functor'), S),
                 Space,
-                \op_arg(Right, RightOptions)
+                \any(Right, RightOptions)
               ])).
-
-%!  op_arg(+Term, +Options)// is det.
-
-op_arg(Atom, Options) -->
-    { atom(Atom),
-      operator_module(Module, Options),
-      current_op(_,_,Module:Atom)
-    }, !,
-    embrace(\any(Atom, Options.put(embrace, never))).
-op_arg(Any, Options) -->
-    any(Any, Options).
 
 op_seq([Last], _Functor, LastPri, Options) -->
     !,
     { LastOptions = Options.put(priority, LastPri)
     },
-    html(span(class('pl-op-seq-el'), \op_arg(Last, LastOptions))).
+    html(span(class('pl-op-seq-el'), \any(Last, LastOptions))).
 op_seq([H|T], Functor, LastPri, Options) -->
     html(span(class('pl-op-seq-el'),
-              [ \op_arg(H, Options),
+              [ \any(H, Options),
                 \left_space(H, Functor, Options),
                 span(class('pl-infix'), Options.quoted_op)
               ])),
     op_seq(T, Functor, LastPri, Options).
 
 left_space(Left, Functor, Options) -->
-    { need_space(Left, Functor, a, o, Options, Options.put(embrace, never))
+    { need_space(Left, Functor, Options, Options.put(embrace, never))
     },
     !,
     html(' ').
@@ -467,26 +456,26 @@ embrace(HTML) -->
                 span(class('pl-parenthesis'), ')')
               ])).
 
-%!  space(@T1, @T2, +C1, +C2, +Options)//
+%!  space(@T1, @T2, +Options)//
 %
 %   Emit a space if omitting a space   between T1 and T2 would cause
 %   the two terms to join.
 
-space(T1, T2, C1, C2, LeftOptions, RightOptions) -->
-    { need_space(T1, T2, C1, C2, LeftOptions, RightOptions) },
+space(T1, T2, LeftOptions, RightOptions) -->
+    { need_space(T1, T2, LeftOptions, RightOptions) },
     html(' ').
-space(_, _, _, _, _, _) -->
+space(_, _, _, _) -->
     [].
 
-need_space(T1, T2, _, _, _, _) :-
+need_space(T1, T2, _, _) :-
     (   is_solo(T1)
     ;   is_solo(T2)
     ),
     !,
     fail.
-need_space(T1, T2, C1, C2, LeftOptions, RightOptions) :-
-    end_code_type(T1, C1, TypeR, LeftOptions.put(side, right)),
-    end_code_type(T2, C2, TypeL, RightOptions.put(side, left)),
+need_space(T1, T2, LeftOptions, RightOptions) :-
+    end_code_type(T1, TypeR, LeftOptions.put(side, right)),
+    end_code_type(T2, TypeL, RightOptions.put(side, left)),
     \+ no_space(TypeR, TypeL).
 
 no_space(punct, _).
@@ -497,19 +486,10 @@ no_space(quote(R), quote(L)) :-
 no_space(alnum, symbol).
 no_space(symbol, alnum).
 
-%!  end_code_type(+Term, +Class, -Code, Options)
+%!  end_code_type(+Term, -Code, Options)
 %
 %   True when code is the first/last character code that is emitted
 %   by printing Term using Options.
-
-end_code_type(Atom, a, Type, Options) :-
-    atom(Atom),
-    operator_module(Module, Options),
-    current_op(_,_,Module:Atom),
-    !,
-    Type = punct.
-end_code_type(Atom, _, Type, Options) :-
-    end_code_type(Atom, Type, Options).
 
 end_code_type(_, Type, Options) :-
     Options.depth >= Options.max_depth,
@@ -545,37 +525,27 @@ end_code_type(OpTerm, Type, Options) :-
     !,
     (   Pri > Options.priority
     ->  Type = punct
-    ;   (   OpType == prefix, Options.side == left
-        ->  end_code_type(Name, Type, Options)
-        ;   OpType == postfix, Options.side == right
+    ;   (   OpType == prefix
         ->  end_code_type(Name, Type, Options)
         ;   arg(1, OpTerm, Arg),
             arg_options(Options, ArgOptions),
-            op_end_code_type(Arg, Type, ArgOptions.put(priority, ArgPri))
+            end_code_type(Arg, Type, ArgOptions.put(priority, ArgPri))
         )
     ).
 end_code_type(OpTerm, Type, Options) :-
     compound_name_arity(OpTerm, Name, 2),
-    is_op2(Name, _Type, LeftPri, Pri, RightPri, Options),
+    is_op2(Name, _Type, LeftPri, Pri, _RightPri, Options),
     \+ Options.get(ignore_ops) == true,
     !,
     (   Pri > Options.priority
     ->  Type = punct
-    ;   Options.side == left
-    ->  arg(1, OpTerm, Arg),
+    ;   arg(1, OpTerm, Arg),
         arg_options(Options, ArgOptions),
-        op_end_code_type(Arg, Type, ArgOptions.put(priority, LeftPri))
-    ;   Options.side == right
-    ->  arg(2, OpTerm, Arg),
-        arg_options(Options, ArgOptions),
-        op_end_code_type(Arg, Type, ArgOptions.put(priority, RightPri))
+        end_code_type(Arg, Type, ArgOptions.put(priority, LeftPri))
     ).
 end_code_type(Compound, Type, Options) :-
     compound_name_arity(Compound, Name, _),
     end_code_type(Name, Type, Options).
-
-op_end_code_type(Atom, Type, Options) :-
-    end_code_type(Atom, a, Type, Options).
 
 end_type(S, Type, Options) :-
     number(S),
@@ -733,7 +703,7 @@ primitive_class(Class, _, _, Class).
 
 finalize_term(Term, Dict) -->
     (   { true == Dict.get(full_stop) }
-    ->  space(Term, '.', o, o, Dict, Dict),
+    ->  space(Term, '.', Dict, Dict),
         (   { true == Dict.get(nl) }
         ->  html(['.', br([])])
         ;   html('. ')

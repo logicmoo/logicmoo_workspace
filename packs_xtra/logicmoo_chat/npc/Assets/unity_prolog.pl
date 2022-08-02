@@ -1296,11 +1296,11 @@ property(Obj,Prop,Num):-
 
 
 :- fixup_exports.
+:- use_module(library(yall)).
 :- unload_file(library(yall)).
 '>>'(X,Y):- uslash_completion(X,Y).
 (X/Y) :- uslash_call(X,Y).
 '/'(X):- uslash_call_top(X).
-:-use_module(library(yall)).
 
 :- multifile(term_expansion/4).
 :- dynamic(term_expansion/4).

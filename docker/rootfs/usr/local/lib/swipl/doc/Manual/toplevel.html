@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.37</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.37</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -249,14 +249,14 @@ environment is terminated by typing the system's end-of-file character
 <code>end_of_file.</code> can be entered to return from the break 
 environment. If the <strong>-t</strong> <var>toplevel</var> command line 
 option is given, this goal is started instead of entering the default 
-interactive top level (<a id="idx:prolog0:1780"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>).
+interactive top level (<a id="idx:prolog0:1777"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>).
 
 <p>Notably the gui based versions (<b>swipl-win</b> on Windows and 
 MacOS) provide the menu <b>Run/New thread</b> that opens a new toplevel 
 that runs concurrently with the initial toplevel. The concurrent 
 toplevel can be used to examine the program, in particular global 
 dynamic predicates. It can not access <em>global variables</em> or 
-thread-local dynamic predicates (see <a id="idx:threadlocal1:1781"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>) 
+thread-local dynamic predicates (see <a id="idx:threadlocal1:1778"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>) 
 of the main thread.</dd>
 <dt class="pubdef"><a id="abort/0"><strong>abort</strong></a></dt>
 <dd class="defbody">
@@ -266,9 +266,9 @@ this goal is restarted instead of entering the default interactive top
 level.
 
 <p>Aborting is implemented by throwing the reserved exception
-<code>'$aborted'</code>. This exception can be caught using <a id="idx:catch3:1782"></a><a class="pred" href="exception.html#catch/3">catch/3</a>, 
+<code>'$aborted'</code>. This exception can be caught using <a id="idx:catch3:1779"></a><a class="pred" href="exception.html#catch/3">catch/3</a>, 
 but the recovery goal is wrapped with a predicate that prunes the choice 
-points of the recovery goal (i.e., as <a id="idx:once1:1783"></a><a class="pred" href="metacall.html#once/1">once/1</a>) 
+points of the recovery goal (i.e., as <a id="idx:once1:1780"></a><a class="pred" href="metacall.html#once/1">once/1</a>) 
 and re-throws the exception. This is illustrated in the example below, 
 where we press control-C and&lsquo;a'. See also <a class="sec" href="exception.html#sec:4.10.1">section 
 4.10.1</a>.
@@ -282,7 +282,7 @@ where we press control-C and&lsquo;a'. See also <a class="sec" href="exception.h
 </dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="halt/0"><strong>halt</strong></a></dt>
 <dd class="defbody">
-Terminate Prolog execution with default exit code using <a id="idx:halt1:1784"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a>. 
+Terminate Prolog execution with default exit code using <a id="idx:halt1:1781"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a>. 
 The default exit code is normally 0, but can be 1 if one of the Prolog 
 flags <a class="flag" href="flags.html#flag:on_error">on_error</a> or <a class="flag" href="flags.html#flag:on_warning">on_warning</a> 
 is set to
@@ -299,8 +299,8 @@ preforms the following steps:
 to <var>Status</var>.
 
 <p>
-<li>Call all hooks registered using <a id="idx:athalt1:1785"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>. 
-If <var>Status</var> equals 0 (zero), any of these hooks calls <a id="idx:cancelhalt1:1786"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>, 
+<li>Call all hooks registered using <a id="idx:athalt1:1782"></a><a class="pred" href="consulting.html#at_halt/1">at_halt/1</a>. 
+If <var>Status</var> equals 0 (zero), any of these hooks calls <a id="idx:cancelhalt1:1783"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>, 
 termination is cancelled.
 
 <p>
@@ -313,7 +313,7 @@ Currently, this only prints a warning.
 
 <p>
 <ul class="latex">
-<li>Cancel all threads, calling <a id="idx:threadatexit1:1787"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
+<li>Cancel all threads, calling <a id="idx:threadatexit1:1784"></a><a class="pred" href="threadcreate.html#thread_at_exit/1">thread_at_exit/1</a> 
 registered termination hooks. Threads not responding within 1 second are 
 cancelled forcefully.
 <li>Flush I/O and close all streams except for standard I/O.
@@ -326,14 +326,14 @@ cancelled forcefully.
 <li>Call exit(Status) to terminate the process
 </ol>
 
-<p><a id="idx:halt1:1788"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
+<p><a id="idx:halt1:1785"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
 has been extended in SWI-Prolog to accept the arg <code>abort</code>. 
-This performs as <a id="idx:halt1:1789"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
+This performs as <a id="idx:halt1:1786"></a><a class="pred" href="toplevel.html#halt/1">halt/1</a> 
 above except that:
 
 <p>
 <ul class="latex">
-<li>Termination cannot be cancelled with <a id="idx:cancelhalt1:1790"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>.
+<li>Termination cannot be cancelled with <a id="idx:cancelhalt1:1787"></a><a class="pred" href="consulting.html#cancel_halt/1">cancel_halt/1</a>.
 <li>abort() is called instead of exit(Status).
 </ul>
 </dd>
@@ -341,7 +341,7 @@ above except that:
 <dd class="defbody">
 This goal starts the default interactive top level. Queries are read 
 from the stream <code>user_input</code>. See also the Prolog flag
-<a class="flag" href="flags.html#flag:history">history</a>. The <a id="idx:prolog0:1791"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
+<a class="flag" href="flags.html#flag:history">history</a>. The <a id="idx:prolog0:1788"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
 predicate is terminated (succeeds) by typing the end-of-file character 
 (typically control-D).
 </dd>
@@ -359,13 +359,13 @@ expansion mechanism described in <a class="sec" href="topvars.html#sec:2.9">sect
 Hook in module <code>user</code>, normally not defined. <var>Query</var> 
 and
 <var>Bindings</var> represents the query read from the user and the 
-names of the free variables as obtained using <a id="idx:readterm3:1792"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>. 
+names of the free variables as obtained using <a id="idx:readterm3:1789"></a><a class="pred" href="termrw.html#read_term/3">read_term/3</a>. 
 If this predicate succeeds, it should bind <var>Expanded</var> and <var>ExpandedBindings</var> 
 to the query and bindings to be executed by the top level. This 
-predicate is used by the top level (<a id="idx:prolog0:1793"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>). 
-See also <a id="idx:expandanswer2:1794"></a><a class="pred" href="toplevel.html#expand_answer/2">expand_answer/2</a> 
+predicate is used by the top level (<a id="idx:prolog0:1790"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>). 
+See also <a id="idx:expandanswer2:1791"></a><a class="pred" href="toplevel.html#expand_answer/2">expand_answer/2</a> 
 and
-<a id="idx:termexpansion2:1795"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>.</dd>
+<a id="idx:termexpansion2:1792"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a>.</dd>
 <dt class="pubdef"><a id="expand_answer/2"><strong>expand_answer</strong>(<var>+Bindings, 
 -ExpandedBindings</var>)</a></dt>
 <dd class="defbody">

@@ -2,12 +2,12 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section A.48</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.48</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
-<link rel="previous" href="settings.html">
-<link rel="next" href="strings.html">
+<link rel="previous" href="debug-determinism.html">
+<link rel="next" href="profile.html">
 
 <style type="text/css">
 
@@ -230,8 +230,8 @@ table.frame-box
 <a class="nav" href="Contents.html"><img src="index.gif" alt="Contents"></a>
 <a class="nav" href="DocIndex.html"><img src="yellow_pages.gif" alt="Index"></a>
 <a class="nav" href="summary.html"><img src="info.gif" alt="Summary"></a>
-<a class="nav" href="settings.html"><img src="prev.gif" alt="Previous"></a>
-<a class="nav" href="strings.html"><img src="next.gif" alt="Next"></a>
+<a class="nav" href="debug-determinism.html"><img src="prev.gif" alt="Previous"></a>
+<a class="nav" href="profile.html"><img src="next.gif" alt="Next"></a>
 </div>
 <h2 id="sec:statistics"><a id="sec:A.48"><span class="sec-nr">A.48</span> <span class="sec-title">library(statistics): 
 Get information about resource usage</span></a></h2>
@@ -252,7 +252,7 @@ Print information about resource usage using <a class="pred" href="printmsg.html
 <dl class="tags">
 <dt class="tag">See also</dt>
 <dd>
-All statistics printed are obtained through <a class="pred" href="builtin-statistics.html#statistics/2">statistics/2</a>.
+All statistics printed are obtained through <a class="pred" href="statistics.html#statistics/2">statistics/2</a>.
 </dd>
 </dl>
 
@@ -263,7 +263,7 @@ All statistics printed are obtained through <a class="pred" href="builtin-statis
 <a class="pred" href="statistics.html#statistics/0">statistics/0</a>. 
 This convience function is primarily intended to pass statistical 
 information to e.g., a web client. Time critical code that wishes to 
-collect statistics typically only need a small subset and should use <a class="pred" href="builtin-statistics.html#statistics/2">statistics/2</a> 
+collect statistics typically only need a small subset and should use <a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
 to obtain exactly the data they need.</dd>
 <dt class="pubdef"><span class="pred-tag">[nondet]</span><a id="thread_statistics/2"><strong>thread_statistics</strong>(<var>?Thread, 
 -Stats:dict</var>)</a></dt>
@@ -288,7 +288,7 @@ CPU time. Notable, this is lacking on MacOS X.
 <dl class="tags">
 <dt class="mtag">See also</dt>
 <dd>
-- <a class="pred" href="builtin-statistics.html#statistics/2">statistics/2</a> 
+- <a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
 for obtaining statistics in your program and understanding the reported 
 values. <br>
 - <a class="pred" href="statistics.html#call_time/2">call_time/2</a>, <a class="pred" href="statistics.html#call_time/3">call_time/3</a> 

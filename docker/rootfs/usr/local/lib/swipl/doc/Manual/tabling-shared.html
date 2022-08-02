@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 7.9</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 7.9</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -299,14 +299,14 @@ marked for destruction on completion. The thread that is completing the
 table continues to do so and continues execution with the computed table 
 answers. Any other thread blocks, waiting for the table to complete. 
 Once completed, the table is destroyed and the waiting threads see a
-<em>fresh</em> table<sup class="fn">184<span class="fn-text">Future 
+<em>fresh</em> table<sup class="fn">182<span class="fn-text">Future 
 versions may avoid waiting by converting the abolished shared table to a 
 private table.</span></sup>.
 
 <p>The current implementation never reclaims shared tables. Instead, 
 they remain part of the global variant table and only the answers of the 
 shared table are reclaimed. Future versions may garbage collect such 
-tables. See also <a id="idx:abolishsharedtables0:2118"></a><a class="pred" href="tabling-preds.html#abolish_shared_tables/0">abolish_shared_tables/0</a>.
+tables. See also <a id="idx:abolishsharedtables0:2114"></a><a class="pred" href="tabling-preds.html#abolish_shared_tables/0">abolish_shared_tables/0</a>.
 
 <p><h3 id="sec:tabling-shared-status"><a id="sec:7.9.2"><span class="sec-nr">7.9.2</span> <span class="sec-title">Status 
 and future of shared tabling</span></a></h3>

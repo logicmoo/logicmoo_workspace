@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 2.12</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 2.12</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -1033,7 +1033,7 @@ cookies and passwords.
 
 <p>Currently, enabling this flag reduces the resolution of <a id="idx:gettime1:121"></a><a class="pred" href="system.html#get_time/1">get_time/1</a> 
 and
-<a id="idx:statistics2:122"></a><a class="pred" href="builtin-statistics.html#statistics/2">statistics/2</a> 
+<a id="idx:statistics2:122"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
 CPU time to <var>20&mus</var>.
 
 <p><b>WARNING</b>: Although a coarser timer makes a successful attack of 
@@ -1322,20 +1322,19 @@ for details.</dd>
 Available in multithreaded version (see <a class="sec" href="threads.html#sec:10">section 
 10</a>) where the operating system provides system-wide integer thread 
 identifiers. The integer is the thread identifier used by the operating 
-system for the calling thread. On Linux systems this is the PID of the 
-thread.</dd>
+system for the calling thread. See also <a id="idx:threadself1:145"></a><a class="pred" href="threadcreate.html#thread_self/1">thread_self/1</a>.</dd>
 <dt class="pubdef"><a id="flag:table_incremental"><strong>table_incremental</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 Set the default for whether to use incremental tabling or not. Initially 
-set to <code>false</code>. See <a id="idx:table1:145"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
+set to <code>false</code>. See <a id="idx:table1:146"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
 <dt class="pubdef"><a id="flag:table_shared"><strong>table_shared</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 Set the default for whether to use shared tabling or not. Initially set 
-to <code>false</code>. See <a id="idx:table1:146"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
+to <code>false</code>. See <a id="idx:table1:147"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
 <dt class="pubdef"><a id="flag:table_space"><strong>table_space</strong>(<var>integer</var>, changeable)</a></dt>
 <dd class="defbody">
 Space reserved for storing answer tables for <em>tabled predicates</em> 
-(see <a id="idx:table1:147"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>).<sup class="fn">bug<span class="fn-text">Currently 
+(see <a id="idx:table1:148"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>).<sup class="fn">bug<span class="fn-text">Currently 
 only counts the space occupied by the nodes in the answer tries.</span></sup> 
 When exceeded a
 <code>resource_error(table_space)</code> exception is raised.</dd>
@@ -1343,7 +1342,7 @@ When exceeded a
 <dd class="defbody">
 Set the default choice between <em>variant</em> tabling and
 <em>subsumptive</em> tabling. Initially set to <code>false</code>. See
-<a id="idx:table1:148"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
+<a id="idx:table1:149"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a>.</dd>
 <dt class="pubdef"><a id="flag:threads"><strong>threads</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 True when threads are supported. If the system is compiled without 
@@ -1356,7 +1355,7 @@ flag.</dd>
 <dd class="defbody">
 Offset in seconds west of GMT of the current time zone. Set at 
 initialization time from the <code>timezone</code> variable associated 
-with the POSIX tzset() function. See also <a id="idx:formattime3:149"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>.</dd>
+with the POSIX tzset() function. See also <a id="idx:formattime3:150"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>.</dd>
 <dt class="pubdef"><a id="flag:tmp_dir"><strong>tmp_dir</strong>(<var>atom</var>, changeable)</a></dt>
 <dd class="defbody">
 Path to the temporary directory. initialised from the environment 
@@ -1367,7 +1366,7 @@ or
 <dt class="pubdef"><a id="flag:toplevel_goal"><strong>toplevel_goal</strong>(<var>term</var>, changeable)</a></dt>
 <dd class="defbody">
 Defines the goal that is executed after running the initialization goals 
-and entry point (see <strong>-g</strong>, <a id="idx:initialization2:150"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+and entry point (see <strong>-g</strong>, <a id="idx:initialization2:151"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
 and
 <a class="sec" href="compilation.html#sec:2.11.2.1">section 2.11.2.1</a>. 
 The initial value is <code>default</code>, starting a normal interactive 
@@ -1375,21 +1374,21 @@ session. This value may be changed using the command line option <strong>-t</str
 The explicit value <code>prolog</code> is equivalent to <code>default</code>. 
 If <code>initialization(Goal,main)</code> is used and the toplevel is <code>default</code>, 
 the toplevel is set to
-<code>halt</code> (see <a id="idx:halt0:151"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a>).</dd>
+<code>halt</code> (see <a id="idx:halt0:152"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a>).</dd>
 <dt class="pubdef"><a id="flag:toplevel_list_wfs_residual_program"><strong>toplevel_list_wfs_residual_program</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 If <code>true</code> (default) and the answer is <em>undefined</em> 
 according to the Well Founded Semantics (see <a class="sec" href="WFS.html#sec:7.6">section 
 7.6</a>), list the
 <em>residual program</em> before the answer. Otherwise the answer 
-terminated with <b>undefined</b>. See also <a id="idx:undefined0:152"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>.</dd>
+terminated with <b>undefined</b>. See also <a id="idx:undefined0:153"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>.</dd>
 <dt class="pubdef"><a id="flag:toplevel_mode"><strong>toplevel_mode</strong>(<var>atom</var>, changeable)</a></dt>
 <dd class="defbody">
 If <code>backtracking</code> (default), the toplevel backtracks after 
 completing a query. If <code>recursive</code>, the toplevel is 
 implemented as a recursive loop. This implies that global variables set 
 using
-<a id="idx:bsetval2:153"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a> 
+<a id="idx:bsetval2:154"></a><a class="pred" href="gvar.html#b_setval/2">b_setval/2</a> 
 are maintained between queries. In <em>recursive</em> mode, answers to 
 toplevel variables (see <a class="sec" href="topvars.html#sec:2.9">section 
 2.9</a>) are kept in backtrackable global variables and thus <b>not 
@@ -1448,11 +1447,11 @@ following <code>~</code> (tilde) sequences are replaced:
 
 <p><table class="latex frame-hsides center">
 <tr><td><code><code>~</code></code>m</td><td><em>Type in</em> module if 
-not <code>user</code> (see <a id="idx:module1:154"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>) </td></tr>
+not <code>user</code> (see <a id="idx:module1:155"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a>) </td></tr>
 <tr><td><code><code>~</code></code>l</td><td><em>Break level</em> if not 
-0 (see <a id="idx:break0:155"></a><a class="pred" href="toplevel.html#break/0">break/0</a>) </td></tr>
+0 (see <a id="idx:break0:156"></a><a class="pred" href="toplevel.html#break/0">break/0</a>) </td></tr>
 <tr><td><code><code>~</code></code>d</td><td><em>Debugging state</em> if 
-not normal execution (see <a id="idx:debug0:156"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>, <a id="idx:trace0:157"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>) </td></tr>
+not normal execution (see <a id="idx:debug0:157"></a><a class="pred" href="debugger.html#debug/0">debug/0</a>, <a id="idx:trace0:158"></a><a class="pred" href="debugger.html#trace/0">trace/0</a>) </td></tr>
 <tr><td><code><code>~</code></code>!</td><td><em>History event</em> if 
 history is enabled (see flag <a class="flag" href="flags.html#flag:history">history</a>) </td></tr>
 </table>
@@ -1489,13 +1488,13 @@ in this mode. See also <a class="sec" href="extensions.html#sec:5">section
 <dt class="pubdef"><a id="flag:tty_control"><strong>tty_control</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 Determines whether the terminal is switched to raw mode for
-<a id="idx:getsinglechar1:158"></a><a class="pred" href="chario.html#get_single_char/1">get_single_char/1</a>, 
+<a id="idx:getsinglechar1:159"></a><a class="pred" href="chario.html#get_single_char/1">get_single_char/1</a>, 
 which also reads the user actions for the trace. May be set. If this 
 flag is <code>false</code> at startup, command line editing is disabled. 
 See also the <strong>--no-tty</strong> command line option.</dd>
 <dt class="pubdef"><a id="flag:unix"><strong>unix</strong>(<var>bool</var>)</a></dt>
 <dd class="defbody">
-<a id="idx:unix:159"></a>If present and <code>true</code>, the operating 
+<a id="idx:unix:160"></a>If present and <code>true</code>, the operating 
 system is some version of Unix. Defined if the C compiler used to 
 compile this version of SWI-Prolog either defines <code>__unix__</code> 
 or <code>unix</code>. On other systems this flag is not available. See 
@@ -1512,8 +1511,8 @@ implies that normal modules inherit the flag from <code>user</code>,
 which in turn inherit the value <code>error</code> from <code>system</code>. 
 The user may change the flag for module <code>user</code> to change the 
 default for all application modules or for a specific module. It is 
-strongly advised to keep the <code>error</code> default and use <a id="idx:dynamic1:160"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
-and/or <a id="idx:multifile1:161"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a> 
+strongly advised to keep the <code>error</code> default and use <a id="idx:dynamic1:161"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a> 
+and/or <a id="idx:multifile1:162"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a> 
 to specify possible non-existence of a predicate.</dd>
 <dt class="pubdef"><a id="flag:unload_foreign_libraries"><strong>unload_foreign_libraries</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
@@ -1523,13 +1522,13 @@ reclaim the resources anyway and unloading the foreign code may cause
 registered hooks to point to no longer existing data or code.</dd>
 <dt class="pubdef"><a id="flag:user_flags"><strong>user_flags</strong>(<var>Atom</var>, changeable)</a></dt>
 <dd class="defbody">
-Define the behaviour of <a id="idx:setprologflag2:162"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+Define the behaviour of <a id="idx:setprologflag2:163"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
 if the flag is not known. Values are <code>silent</code>, <code>warning</code> 
 and <code>error</code>. The first two create the flag on-the-fly, where <code>warning</code> 
 prints a message. The value <code>error</code> is consistent with ISO: 
-it raises an existence error and does not create the flag. See also <a id="idx:createprologflag3:163"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a>. 
+it raises an existence error and does not create the flag. See also <a id="idx:createprologflag3:164"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a>. 
 The default is <code>silent</code>, but future versions may change that. 
-Developers are encouraged to use another value and ensure proper use of <a id="idx:createprologflag3:164"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a> 
+Developers are encouraged to use another value and ensure proper use of <a id="idx:createprologflag3:165"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a> 
 to create flags for their library.</dd>
 <dt class="pubdef"><a id="flag:var_prefix"><strong>var_prefix</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
@@ -1539,7 +1538,7 @@ to the module in which it is changed. See <a class="sec" href="syntax.html#sec:2
 2.16.1.8</a>.</dd>
 <dt class="pubdef"><a id="flag:verbose"><strong>verbose</strong>(<var>atom</var>, changeable)</a></dt>
 <dd class="defbody">
-This flag is used by <a id="idx:printmessage2:165"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+This flag is used by <a id="idx:printmessage2:166"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
 If its value is <code>silent</code>, messages of type <code>informational</code> 
 and <code>banner</code> are suppressed. The <strong>-q</strong> switches 
 the value from the initial
@@ -1552,9 +1551,9 @@ to be used for debugging purposes.</dd>
 <dt class="pubdef"><a id="flag:verbose_file_search"><strong>verbose_file_search</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
 If <code>true</code> (default <code>false</code>), print messages 
-indicating the progress of <a id="idx:absolutefilename23:166"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/[2,3]</a> 
+indicating the progress of <a id="idx:absolutefilename23:167"></a><a class="pred" href="files.html#absolute_file_name/2">absolute_file_name/[2,3]</a> 
 in locating files. Intended for debugging complicated file-search paths. 
-See also <a id="idx:filesearchpath2:167"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
+See also <a id="idx:filesearchpath2:168"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a>.</dd>
 <dt class="pubdef"><a id="flag:verbose_load"><strong>verbose_load</strong>(<var>atom</var>, changeable)</a></dt>
 <dd class="defbody">
 Determines messages printed for loading (compiling) Prolog files. 
@@ -1564,7 +1563,7 @@ end of each file loaded), <code>brief</code> (print a message at end of
 loading the toplevel file), and <code>silent</code> (no messages are 
 printed, default). The value of this flag is normally controlled by the 
 option
-<code>silent(Bool)</code> provided by <a id="idx:loadfiles2:168"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>.</dd>
+<code>silent(Bool)</code> provided by <a id="idx:loadfiles2:169"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a>.</dd>
 <dt class="pubdef"><a id="flag:version"><strong>version</strong>(<var>integer</var>)</a></dt>
 <dd class="defbody">
 The version identifier is an integer with value: 
@@ -1585,8 +1584,8 @@ Available if created from a git repository. See <b>git-describe</b> for
 details.</dd>
 <dt class="pubdef"><a id="flag:vmi_builtin"><strong>vmi_builtin</strong>(<var>bool</var>, changeable)</a></dt>
 <dd class="defbody">
-Determines whether well known built-ins such as <a id="idx:true0:169"></a><a class="pred" href="control.html#true/0">true/0</a> 
-or <a id="idx:atom1:170"></a><a class="pred" href="typetest.html#atom/1">atom/1</a> 
+Determines whether well known built-ins such as <a id="idx:true0:170"></a><a class="pred" href="control.html#true/0">true/0</a> 
+or <a id="idx:atom1:171"></a><a class="pred" href="typetest.html#atom/1">atom/1</a> 
 are handled by their translation into virtual machine code. The default 
 for this flag is <code>true</code>, unless debug mode is enabled. 
 Setting this flag to <code>false</code> may improve other runtime 
@@ -1597,11 +1596,11 @@ is currently not translated into a normal predicate call.</dd>
 <dd class="defbody">
 If <code>true</code> (default), a warning is printed if an implicitly 
 imported predicate is clobbered by a local definition. See
-<a id="idx:usemodule1:171"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
+<a id="idx:usemodule1:172"></a><a class="pred" href="import.html#use_module/1">use_module/1</a> 
 for details.</dd>
 <dt class="pubdef"><a id="flag:win_file_access_check"><strong>win_file_access_check</strong>(<var>atom</var>, changeable)</a></dt>
 <dd class="defbody">
-Controls the behaviour or <a id="idx:accessfile2:172"></a><a class="pred" href="files.html#access_file/2">access_file/2</a> 
+Controls the behaviour or <a id="idx:accessfile2:173"></a><a class="pred" href="files.html#access_file/2">access_file/2</a> 
 under Windows. There is no reliable way to check access to files and 
 directories on Windows. This flag allows for switching between three 
 alternative approximations.
@@ -1629,7 +1628,7 @@ This is the default.
 </dd>
 <dt class="pubdef"><a id="flag:windows"><strong>windows</strong>(<var>bool</var>)</a></dt>
 <dd class="defbody">
-<a id="idx:windows:173"></a>If present and <code>true</code>, the 
+<a id="idx:windows:174"></a>If present and <code>true</code>, the 
 operating system is an implementation of Microsoft Windows. This flag is 
 only available on MS-Windows based versions. See also <a class="flag" href="flags.html#flag:unix">unix</a>.</dd>
 <dt class="pubdef"><a id="flag:wine_version"><strong>wine_version</strong>(<var>atom</var>)</a></dt>
@@ -1638,14 +1637,14 @@ If present, SWI-Prolog is the MS-Windows version running under the <a class="url
 emulator.</dd>
 <dt class="pubdef"><a id="flag:write_attributes"><strong>write_attributes</strong>(<var>atom</var>, changeable)</a></dt>
 <dd class="defbody">
-Defines how <a id="idx:write1:174"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+Defines how <a id="idx:write1:175"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 and friends write attributed variables. The option values are described 
 with the <code>attributes</code> option of
-<a id="idx:writeterm2:175"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+<a id="idx:writeterm2:176"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
 Default is <code>ignore</code>.</dd>
 <dt class="pubdef"><a id="flag:write_help_with_overstrike"><strong>write_help_with_overstrike</strong>(<var>bool</var>)</a></dt>
 <dd class="defbody">
-Internal flag used by <a id="idx:help1:176"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
+Internal flag used by <a id="idx:help1:177"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
 when writing to a terminal. If present and <code>true</code> it prints 
 bold and underlined text using
 <em>overstrike</em>.</dd>
@@ -1660,9 +1659,9 @@ Available and set to the version of the loaded XPCE system.</dd>
 <dd class="defbody">
 If <code>true</code>, source code is being read for <em>analysis</em> 
 purposes such as cross-referencing. Otherwise (default) it is being read 
-to be compiled. This flag is used at several places by <a id="idx:termexpansion2:177"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+to be compiled. This flag is used at several places by <a id="idx:termexpansion2:178"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
 and
-<a id="idx:goalexpansion2:178"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
+<a id="idx:goalexpansion2:179"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a> 
 hooks, notably if these hooks use side effects. See also the libraries <code>library(prolog_source)</code> 
 and <code>library(prolog_xref)</code>.
 </dd>
@@ -1694,7 +1693,7 @@ represent any valid Prolog term.
 
 <p>The behaviour when <var>Key</var> denotes a non-existent key depends 
 on the Prolog flag <a class="flag" href="flags.html#flag:user_flags">user_flags</a>. 
-The default is to define them silently. New code is encouraged to use <a id="idx:createprologflag3:179"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a> 
+The default is to define them silently. New code is encouraged to use <a id="idx:createprologflag3:180"></a><a class="pred" href="flags.html#create_prolog_flag/3">create_prolog_flag/3</a> 
 for portability.</dd>
 <dt class="pubdef"><span class="pred-tag">[YAP]</span><a id="create_prolog_flag/3"><strong>create_prolog_flag</strong>(<var>+Key, 
 +Value, +Options</var>)</a></dt>
@@ -1717,7 +1716,7 @@ Note that <code>term</code> restricts the term to be ground.</dd>
 <dt><strong>keep</strong>(<var>+Boolean</var>)</dt>
 <dd class="defbody">
 If <code>true</code>, do not modify the flag if it already exists. 
-Otherwise (default), this predicate behaves as <a id="idx:setprologflag2:180"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+Otherwise (default), this predicate behaves as <a id="idx:setprologflag2:181"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
 if the flag already exists.
 </dd>
 </dl>

@@ -5,11 +5,6 @@
 
 index((http_ax_attributes), 2, http_ax, ax).
 index((ax_form_attributes), 2, http_ax, ax).
-index((graphql_read_document), 3, graphql, graphql).
-index((graphql_execute_document), 4, graphql, graphql).
-index((graphql_document_to_string), 3, graphql, graphql).
-index((graphql_document_to_codes), 3, graphql, graphql).
-index((graphql), 4, graphql, graphql).
 index((html_resource), 2, html_head, html_head).
 index((html_requires), 3, html_head, html_head).
 index((html_current_resource), 1, html_head, html_head).

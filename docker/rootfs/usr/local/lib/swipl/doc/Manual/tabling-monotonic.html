@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 7.8</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 7.8</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -246,7 +246,7 @@ invalid tables when their content is needed. Incremental tabling
 preserves all normal tabling properties, including well founded 
 semantics. The downside is that re-evaluation recomputes the table from 
 scratch. This section deals with <em>monotonic tabling</em>, a mechanism 
-that propagates the consequences of <a id="idx:assert1:2109"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+that propagates the consequences of <a id="idx:assert1:2105"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
 and friends without recomputing the dependent tables from scratch. 
 Unlike incremental tabling though, monotonic tabling can only deal with 
 monotonic programs, in particular it does <em>not</em> deal with 
@@ -282,12 +282,12 @@ to other tabling primitives:
 
 <p>
 <ul class="latex">
-<li>When using <a id="idx:retract1:2110"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+<li>When using <a id="idx:retract1:2106"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
 on a dynamic monotonic predicate, all dependent tables and dependency 
 links are invalidated and marked for normal <em>incremental</em> update.
 
 <p>
-<li><a id="idx:abolishalltables0:2111"></a><a class="pred" href="tabling-preds.html#abolish_all_tables/0">abolish_all_tables/0</a> 
+<li><a id="idx:abolishalltables0:2107"></a><a class="pred" href="tabling-preds.html#abolish_all_tables/0">abolish_all_tables/0</a> 
 destroys all monotonic dependency relations.
 
 <p>
@@ -341,7 +341,7 @@ new answers to monotonic tables</span></a></h3>
 
 <a id="sec:tabling-tracking"></a>
 
-<p>The <a id="idx:prologlisten2:2112"></a><a class="pred" href="prolog-event.html#prolog_listen/2">prolog_listen/2</a> 
+<p>The <a id="idx:prologlisten2:2108"></a><a class="pred" href="prolog-event.html#prolog_listen/2">prolog_listen/2</a> 
 interface allows for tracking new facts that are added to monotonic 
 tables. For example, we can print new possible connections from the 
 above program using this code:
@@ -355,14 +355,14 @@ connection_change(new_answer, _:connected(From, To)) :-
 
 <p>Currently, <em>failure</em> of the hook are ignored. If the hook 
 throws an exception this is propagated. The hook is executed outside the 
-current tabling context.<sup class="fn">182<span class="fn-text">The 
+current tabling context.<sup class="fn">180<span class="fn-text">The 
 final behavior may be different in both aspects.</span></sup>
 
-<p>After loading the <a id="idx:connected2:2113"></a><span class="pred-ext">connected/2</span> 
+<p>After loading the <a id="idx:connected2:2109"></a><span class="pred-ext">connected/2</span> 
 program and the above declarations we can observe the interaction below. 
 Note that query&nbsp;1 establishes the dependencies and fills the tables 
 using normal tabling. In the current implementation, possibly discovered 
-connections do not trigger the hook.<sup class="fn">183<span class="fn-text">This 
+connections do not trigger the hook.<sup class="fn">181<span class="fn-text">This 
 is likely to change in the future.</span></sup>. Adding a single link/2 
 fact links both locations to itself and to each other in both 
 directions. Adding a second fact extends the network.
@@ -413,13 +413,13 @@ my_data(X, Y) :-
 
 <p>Any monotonic table that depends on my_data/2 will be populated 
 correctly and build a dependency. Next, if a new answer is added to the 
-external data the user must call <a id="idx:incrpropagatecalls1:2114"></a><a class="pred" href="tabling-monotonic.html#incr_propagate_calls/1">incr_propagate_calls/1</a> 
+external data the user must call <a id="idx:incrpropagatecalls1:2110"></a><a class="pred" href="tabling-monotonic.html#incr_propagate_calls/1">incr_propagate_calls/1</a> 
 from the Prolog library <code>library(increval)</code>. Similarly, when 
-an answer is removed from the extenal data we use <a id="idx:incrinvalidatecalls1:2115"></a><a class="pred" href="increval.html#incr_invalidate_calls/1">incr_invalidate_calls/1</a>. 
+an answer is removed from the extenal data we use <a id="idx:incrinvalidatecalls1:2111"></a><a class="pred" href="increval.html#incr_invalidate_calls/1">incr_invalidate_calls/1</a>. 
 Both notification calls must be made <em>after</em> the external data 
 has been updated, i.e., my_data/2 must reflect the new situation before 
-calling <a id="idx:incrpropagatecalls1:2116"></a><a class="pred" href="tabling-monotonic.html#incr_propagate_calls/1">incr_propagate_calls/1</a> 
-or <a id="idx:incrinvalidatecalls1:2117"></a><a class="pred" href="increval.html#incr_invalidate_calls/1">incr_invalidate_calls/1</a>.
+calling <a id="idx:incrpropagatecalls1:2112"></a><a class="pred" href="tabling-monotonic.html#incr_propagate_calls/1">incr_propagate_calls/1</a> 
+or <a id="idx:incrinvalidatecalls1:2113"></a><a class="pred" href="increval.html#incr_invalidate_calls/1">incr_invalidate_calls/1</a>.
 
 <pre class="code">
 :- use_module(library(increval)).

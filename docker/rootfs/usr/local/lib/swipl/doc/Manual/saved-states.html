@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 13.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 13.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -239,10 +239,10 @@ saved states</span></a></h2>
 <a id="sec:saved-states"></a>
 
 <p>A SWI-Prolog <em>saved state</em> is a <em>resource archive</em> that 
-contains the compiled program in a machine-independent format,<sup class="fn">221<span class="fn-text">Although 
+contains the compiled program in a machine-independent format,<sup class="fn">219<span class="fn-text">Although 
 the compiled code is independent from the CPU and operating system, 
 32-bit compiled code does not run on the 64-bit emulator, nor the other 
-way around. Conditionally compiled code (see <a id="idx:if1:2590"></a><a class="pred" href="consulting.html#if/1">if/1</a>) 
+way around. Conditionally compiled code (see <a id="idx:if1:2585"></a><a class="pred" href="consulting.html#if/1">if/1</a>) 
 may also reduce platform independence.</span></sup> startup options, 
 optionally shared objects/DLLs and optionally additional
 <em>resource</em> files. As of version 7.7.13, the resource archive 
@@ -254,7 +254,7 @@ swipl -o mystate option ... -c file.pl ...
 </pre>
 
 <p>The above causes SWI-Prolog to load the given Prolog files and call
-<a id="idx:qsaveprogram2:2591"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+<a id="idx:qsaveprogram2:2586"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
 using options created from the <i>option ...</i> in the command above.
 
 <p>A saved state may be <b>executed</b> in several ways. The basic 
@@ -267,7 +267,7 @@ swipl -x mystate app-arg ...
 <p>Saved states may have an arbitrary payload at the <em>start</em>. 
 This allows combining a (shell) script or the emulator with the state to 
 turn the state into a single file executable. By default a state starts 
-with a shell script (Unix) or the emulator (Windows).<sup class="fn">222<span class="fn-text">As 
+with a shell script (Unix) or the emulator (Windows).<sup class="fn">220<span class="fn-text">As 
 the default emulator is a short program while the true emulator is in a 
 DLL this keeps the state short.</span></sup> The options <code>emulator(File)</code> 
 and
@@ -290,8 +290,8 @@ swipl -o mystate --foreign=save -c load.pl
 </pre>
 
 <p>Long (<code>--</code>) options are translated into options for
-<a id="idx:qsaveprogram2:2592"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>. 
-This transformation uses the same conventions as used by <a id="idx:argvoptions3:2593"></a><a class="pred" href="main.html#argv_options/3">argv_options/3</a>, 
+<a id="idx:qsaveprogram2:2587"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a>. 
+This transformation uses the same conventions as used by <a id="idx:argvoptions3:2588"></a><a class="pred" href="main.html#argv_options/3">argv_options/3</a>, 
 except that the transformation is guided by the option type. This 
 implies that integer and callable options need to have valid syntax and 
 boolean options may be abbreviated to simply
@@ -305,8 +305,8 @@ boolean options may be abbreviated to simply
 Saves the current state of the program to the file <var>File</var>. The 
 result is a resource archive <var>File</var> containing expresses all 
 Prolog data from the running program, all user-defined resources (see
-<a id="idx:resource2:2594"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a> 
-and <a id="idx:openresource2:2595"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a>) 
+<a id="idx:resource2:2589"></a><a class="pred" href="program-resources.html#resource/2">resource/2</a> 
+and <a id="idx:openresource2:2590"></a><a class="pred" href="program-resources.html#open_resource/2">open_resource/2</a>) 
 and optionally all shared objects/DLLs required by the program for the 
 current architecture. Depending on the
 <code>stand_alone</code> option, the resource is headed by the emulator, 
@@ -324,14 +324,14 @@ option <strong>--stack-limit</strong> and the Prolog flag
 <dd class="defbody">
 Initialization goal for the new executable (see <strong>-g</strong>). 
 Two values have special meaning: <code>prolog</code> starts the Prolog 
-toplevel and <code>default</code> runs <a id="idx:halt0:2596"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a> 
-if there are initialization goals and the <a id="idx:prolog0:2597"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
+toplevel and <code>default</code> runs <a id="idx:halt0:2591"></a><a class="pred" href="toplevel.html#halt/0">halt/0</a> 
+if there are initialization goals and the <a id="idx:prolog0:2592"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
 toplevel otherwise.
 </dd>
 <dt><strong>toplevel</strong>(<var>:Callable</var>)</dt>
 <dd class="defbody">
 Top-level goal for the new executable (see <strong>-t</strong>). Similar 
-to <a id="idx:initialization2:2598"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+to <a id="idx:initialization2:2593"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
 using <code>main</code>, the default toplevel is to enter the Prolog 
 interactive shell unless a goal has been specified using
 <code>goal(Callable)</code>.
@@ -347,11 +347,11 @@ If <code>runtime</code> (default), read resources from the state and
 disconnect the code loaded into the state from the original source. If
 <code>development</code>, save the predicates in their current state and 
 keep reading resources from their source (if present). See also
-<a id="idx:openresource3:2599"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>.
+<a id="idx:openresource3:2594"></a><a class="pred" href="program-resources.html#open_resource/3">open_resource/3</a>.
 </dd>
 <dt><strong>autoload</strong>(<var>+Boolean</var>)</dt>
 <dd class="defbody">
-If <code>true</code> (default), run <a id="idx:autoload0:2600"></a><span class="pred-ext">autoload/0</span> 
+If <code>true</code> (default), run <a id="idx:autoload0:2595"></a><span class="pred-ext">autoload/0</span> 
 first. If the class is
 <code>runtime</code> and <code>autoload</code> is <code>true</code>, the 
 state is supposed to be self contained and autoloading is disabled in 
@@ -381,16 +381,16 @@ File to use for the emulator. Default is the running Prolog image.</dd>
 <dt><strong>foreign</strong>(<var>+Action</var>)</dt>
 <dd class="defbody">
 If <code>save</code>, include shared objects (DLLs) for the current 
-architecture into the saved state. See <a id="idx:currentforeignlibrary2:2601"></a><a class="pred" href="foreignlink.html#current_foreign_library/2">current_foreign_library/2</a>, 
+architecture into the saved state. See <a id="idx:currentforeignlibrary2:2596"></a><a class="pred" href="foreignlink.html#current_foreign_library/2">current_foreign_library/2</a>, 
 and current_prolog_flag(arch, Arch). If the program <b>strip</b> is 
 available, this is first used to reduce the size of the shared object. 
-If a state is started, <a id="idx:useforeignlibrary1:2602"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+If a state is started, <a id="idx:useforeignlibrary1:2597"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
 first tries to locate the foreign resource in the resource database. 
 When found it copies the content of the resource to a temporary file and 
 loads it. If possible (Unix), the temporary object is deleted 
-immediately after opening.<sup class="fn">223<span class="fn-text">This 
+immediately after opening.<sup class="fn">221<span class="fn-text">This 
 option is experimental and currently disabled by default. It will become 
-the default if it proves robust.</span></sup><sup class="fn">224<span class="fn-text">Creating 
+the default if it proves robust.</span></sup><sup class="fn">222<span class="fn-text">Creating 
 a temporary file is the most portable way to load a shared object from a 
 zip file but requires write access to the file system. Future versions 
 may provide shortcuts for specific platforms that bypass the file 
@@ -401,7 +401,7 @@ then the shared objects for the specified architectures are stored in
 the saved state. On the command line, the list of architectures can be 
 passed as <code>--foreign=&lt;<var>CommaSepArchesList</var>&gt;</code>. 
 In order to obtain the shared object file for the specified 
-architectures, <a id="idx:qsaveprogram2:2603"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+architectures, <a id="idx:qsaveprogram2:2598"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
 calls a user defined hook:
 <code>qsave:arch_shlib(+Arch, +FileSpec, -SoPath)</code>. This hook 
 needs to unify <code>SoPath</code> with the absolute path to the shared 
@@ -418,7 +418,7 @@ order):
 <ol class="latex">
 <li>There is a shared object in the saved state file which matches the 
 current architecture name (from
-<a id="idx:currentprologflag2:2604"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>) 
+<a id="idx:currentprologflag2:2599"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>) 
 exactly.
 <li>The user definable <code>qsave:compat_arch(Arch1, Arch2)</code> hook 
 succeeds.
@@ -461,12 +461,12 @@ Check the current Prolog program for predicates that are referred to,
 are undefined and have a definition in the Prolog library. Load the 
 appropriate libraries.
 
-<p>This predicate is used by <a id="idx:qsaveprogram12:2605"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a> 
+<p>This predicate is used by <a id="idx:qsaveprogram12:2600"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a> 
 to ensure the saved state does not depend on availability of the 
 libraries. The predicate
-<a id="idx:autoloadall0:2606"></a><a class="pred" href="saved-states.html#autoload_all/0">autoload_all/0</a> 
+<a id="idx:autoloadall0:2601"></a><a class="pred" href="saved-states.html#autoload_all/0">autoload_all/0</a> 
 examines all clauses of the loaded program (obtained with
-<a id="idx:clause2:2607"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a>) 
+<a id="idx:clause2:2602"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a>) 
 and analyzes the body for referenced goals. Such an analysis cannot be 
 complete in Prolog, which allows for the creation of arbitrary terms at 
 runtime and the use of them as a goal. The current analysis is limited 
@@ -476,7 +476,7 @@ to the following:
 <ul class="latex">
 <li>Direct goals appearing in the body
 <li>Arguments of declared meta-predicates that are marked with an 
-integer (0..9). See <a id="idx:metapredicate1:2608"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>.
+integer (0..9). See <a id="idx:metapredicate1:2603"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>.
 </ul>
 
 <p>The analysis of meta-predicate arguments is limited to cases where 
@@ -493,7 +493,7 @@ correctly:
 
 <p>But, the calls to prove_simple/1 and prove_complex/1 in the example 
 below are <em>not</em> discovered by the analysis and therefore the 
-modules that define these predicates must be loaded explicitly using <a id="idx:usemodule12:2609"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>.
+modules that define these predicates must be loaded explicitly using <a id="idx:usemodule12:2604"></a><a class="pred" href="import.html#use_module/1">use_module/[1,2]</a>.
 
 <pre class="code">
         ...,
@@ -504,11 +504,11 @@ modules that define these predicates must be loaded explicitly using <a id="idx:
                Goal)),
 </pre>
 
-<p>It is good practice to use <a id="idx:gxref0:2610"></a><a class="pred" href="xref.html#gxref/0">gxref/0</a> 
+<p>It is good practice to use <a id="idx:gxref0:2605"></a><a class="pred" href="xref.html#gxref/0">gxref/0</a> 
 to make sure that the program has sufficient declarations such that the 
 analysis tools can verify that all required predicates can be resolved 
-and that all code is called. See <a id="idx:metapredicate1:2611"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>, <a id="idx:dynamic1:2612"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>, <a id="idx:public1:2613"></a><a class="pred" href="dynamic.html#public/1">public/1</a> 
-and <a id="idx:prologcalledby2:2614"></a><a class="pred" href="prologxref.html#prolog:called_by/2">prolog:called_by/2</a>.</dd>
+and that all code is called. See <a id="idx:metapredicate1:2606"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>, <a id="idx:dynamic1:2607"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>, <a id="idx:public1:2608"></a><a class="pred" href="dynamic.html#public/1">public/1</a> 
+and <a id="idx:prologcalledby2:2609"></a><a class="pred" href="prologxref.html#prolog:called_by/2">prolog:called_by/2</a>.</dd>
 <dt class="pubdef"><a id="volatile/1"><strong>volatile</strong> <var>+Name/Arity, 
 ...</var></a></dt>
 <dd class="defbody">
@@ -525,7 +525,7 @@ of qsave_program</span></a></h3>
 <a id="sec:qsavelimits"></a>
 
 <p>There are three areas that require special attention when using
-<a id="idx:qsaveprogram12:2615"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>.
+<a id="idx:qsaveprogram12:2610"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>.
 
 <p>
 <ul class="latex">
@@ -536,12 +536,12 @@ foreign context. See <a class="sec" href="saved-states.html#sec:13.2.3">section
 
 <p>
 <li>If the program uses directives (<code>:- goal.</code> lines) that 
-perform other actions than setting predicate attributes (<a id="idx:dynamic1:2616"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>, <a id="idx:volatile1:2617"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>, 
-etc.) or loading files (<a id="idx:usemodule1:2618"></a><a class="pred" href="import.html#use_module/1">use_module/1</a>, 
-etc.). Goals that need to be executed when the state is started must use <a id="idx:initialization1:2619"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
-(ISO standard) or <a id="idx:initialization2:2620"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+perform other actions than setting predicate attributes (<a id="idx:dynamic1:2611"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>, <a id="idx:volatile1:2612"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>, 
+etc.) or loading files (<a id="idx:usemodule1:2613"></a><a class="pred" href="import.html#use_module/1">use_module/1</a>, 
+etc.). Goals that need to be executed when the state is started must use <a id="idx:initialization1:2614"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a> 
+(ISO standard) or <a id="idx:initialization2:2615"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
 (SWI extension that provides more control over when the goal is 
-executed). For example, <a id="idx:initialization2:2621"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
+executed). For example, <a id="idx:initialization2:2616"></a><a class="pred" href="consulting.html#initialization/2">initialization/2</a> 
 can be used to start the application:
 
 <pre class="code">
@@ -549,19 +549,19 @@ can be used to start the application:
 </pre>
 
 <p>
-<li><em>Blobs</em> used as references to the database (see <a id="idx:clause3:2622"></a><a class="pred" href="examineprog.html#clause/3">clause/3</a>,
-<a id="idx:recorded3:2623"></a><a class="pred" href="db.html#recorded/3">recorded/3</a>), 
+<li><em>Blobs</em> used as references to the database (see <a id="idx:clause3:2617"></a><a class="pred" href="examineprog.html#clause/3">clause/3</a>,
+<a id="idx:recorded3:2618"></a><a class="pred" href="db.html#recorded/3">recorded/3</a>), 
 streams, threads, etc. can not be saved. This implies that (dynamic) 
 clauses may not contain such references at the moment the
-<a id="idx:qsaveprogram2:2624"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+<a id="idx:qsaveprogram2:2619"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
 is called. Note that the required foreign context (stream, etc.) cannot 
 be present in the state anyway, making it pointless to save such 
 references. An attempt to save such objects results in a warning.
 
-<p>The <a id="idx:volatile1:2625"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a> 
+<p>The <a id="idx:volatile1:2620"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a> 
 directive may be used to prevent saving the clauses of predicates that 
 hold such references. The saved program must reinitialise such 
-references using the normal program initialization techniques: use <a id="idx:initialization1:2626"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a>,2 
+references using the normal program initialization techniques: use <a id="idx:initialization1:2621"></a><a class="pred" href="consulting.html#initialization/1">initialization/1</a>,2 
 directives, explicitly create them by the entry point or make the 
 various components recreate the context lazily when required.
 </ul>
@@ -575,7 +575,7 @@ and Foreign Code</span></a></h3>
 <p>Many applications use packages that include foreign language 
 components compiled to shared objects or DLLs. This code is normally 
 loaded using
-<a id="idx:useforeignlibrary1:2627"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+<a id="idx:useforeignlibrary1:2622"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
 and the <code>foreign</code> file search path. Below is an example from 
 the <code>socket</code> library.
 
@@ -585,10 +585,10 @@ the <code>socket</code> library.
 
 <p>There are two options to handle shared objects in runtime 
 applications. The first is to use the <code>foreign(save)</code> option 
-of <a id="idx:qsaveprogram2:2628"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
+of <a id="idx:qsaveprogram2:2623"></a><a class="pred" href="saved-states.html#qsave_program/2">qsave_program/2</a> 
 or the <strong>--foreign=save</strong> commandline option. This causes 
 the dependent shared objects to be included into the resource archive. 
-The <a id="idx:useforeignlibrary1:2629"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
+The <a id="idx:useforeignlibrary1:2624"></a><a class="pred" href="foreignlink.html#use_foreign_library/1">use_foreign_library/1</a> 
 directive first attempts to find the foreign file in the resource 
 archive. Alternatively, the shared objects may be placed in a directory 
 that is distributed with the application. In this cases the file search 

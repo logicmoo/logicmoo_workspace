@@ -3,9 +3,8 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2007-2022, University of Amsterdam
+    Copyright (c)  2007-2017, University of Amsterdam
                               VU University Amsterdam
-                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -48,7 +47,6 @@
 	    [instantiation_error/1,must_be/2,syntax_error/1]).
 :- autoload(library(option),[option/3]).
 
-:- encoding(utf8).
 
 /** <module> Base64 encoding and decoding
 
@@ -68,9 +66,7 @@ to base64. Base64URL encoded strings do not contain white space.
 
 @tbd    Stream I/O
 @tbd    White-space introduction and parsing
-@tbd	Encoding support (notably UTF-8)
-@bug	Base64 only works with _bytes_.  The grammars do not check
-        the input to be in the range 0..255.
+@author Jan Wielemaker
 */
 
 %!  base64_encoded(+Plain, -Encoded, +Options) is det.
@@ -89,9 +85,6 @@ to base64. Base64URL encoded strings do not contain white space.
 %     - as(+Type)
 %     Defines the type of the output.  One of `string` (default) or
 %     `atom`.
-%     - encoding(+Encoding)
-%     Encoding to use for translation between (Unicode) text and
-%     _bytes_ (Base64 is an encoding for bytes).  Default is `utf8`.
 %
 %   @arg Plain is an atom or string containing the unencoded (plain)
 %   text.
@@ -102,39 +95,46 @@ base64_encoded(Plain, Encoded, Options) :-
     option(charset(CharSet), Options, classic),
     option(padding(Padding), Options, true),
     option(as(As), Options, string),
-    option(encoding(Enc), Options, utf8),
     (   nonvar(Plain)
-    ->  string_bytes(Plain, PlainBytes, Enc),
-        phrase(base64(Padding, PlainBytes, CharSet), EncCodes),
-        as(As, Encoded, EncCodes, iso_latin_1)
+    ->  atom_codes(Plain, PlainCodes),
+        phrase(base64(Padding, PlainCodes, CharSet), EncCodes),
+        as(As, Encoded, EncCodes)
     ;   nonvar(Encoded)
-    ->  string_bytes(Encoded, EncCodes, iso_latin_1),
-        phrase(base64(Padding, PlainBytes, CharSet), EncCodes),
-        as(As, Plain, PlainBytes, Enc)
+    ->  atom_codes(Encoded, EncCodes),
+        phrase(base64(Padding, PlainCodes, CharSet), EncCodes),
+        as(As, Plain, PlainCodes)
     ;   instantiation_error(base64(Plain, Encoded))
     ).
 
-as(atom, Atom, Codes, Enc) :-
+as(atom, Atom, Codes) :-
     !,
-    string_bytes(String, Codes, Enc),
-    atom_string(Atom, String).
-as(string, String, Codes, Enc) :-
+    atom_codes(Atom, Codes).
+as(string, String, Codes) :-
     !,
-    string_bytes(String, Codes, Enc).
-as(As, _, _, _) :-
+    string_codes(String, Codes).
+as(As, _, _) :-
     must_be(oneof([atom,string]), As).
 
 %!  base64(+Plain, -Encoded) is det.
 %!  base64(-Plain, +Encoded) is det.
 %
-%   Equivalent  to  base64_encoded/3  using  the  options  as(atom)  and
-%   encoding(iso_latin_1).
-%
-%   @deprecated  New  code  should  use  base64_encoded/3.  Notably  the
-%   `iso_latin_1` should be `utf8` in most today's applications.
+%   Translates between plaintext and base64  encoded atom or string.
+%   See also base64//1.
 
 base64(Plain, Encoded) :-
-    base64_encoded(Plain, Encoded, [ as(atom), encoding(iso_latin_1) ]).
+    nonvar(Plain),
+    !,
+    atom_codes(Plain, PlainCodes),
+    phrase(base64(true, PlainCodes, classic), EncCodes),
+    atom_codes(Encoded, EncCodes).
+base64(Plain, Encoded) :-
+    nonvar(Encoded),
+    !,
+    atom_codes(Encoded, EncCodes),
+    phrase(base64(true, PlainCodes, classic), EncCodes),
+    atom_codes(Plain, PlainCodes).
+base64(Plain, Encoded) :-
+    instantiation_error(base64(Plain, Encoded)).
 
 %!  base64url(+Plain, -Encoded) is det.
 %!  base64url(-Plain, +Encoded) is det.
@@ -144,16 +144,21 @@ base64(Plain, Encoded) :-
 %   file names. The use "-" instead of   "+", "_" instead of "/" and
 %   do not use padding. This implies   that the encoded value cannot
 %   be embedded inside a longer string.
-%
-%   Equivalent  to  base64_encoded/3   using    the   options  as(atom),
-%   encoding(utf8) and charset(url).
 
 base64url(Plain, Encoded) :-
-    base64_encoded(Plain, Encoded,
-                   [ as(atom),
-                     encoding(utf8),
-                     charset(url)
-                   ]).
+    nonvar(Plain),
+    !,
+    atom_codes(Plain, PlainCodes),
+    phrase(encode(false, PlainCodes, url), EncCodes),
+    atom_codes(Encoded, EncCodes).
+base64url(Plain, Encoded) :-
+    nonvar(Encoded),
+    !,
+    atom_codes(Encoded, EncCodes),
+    phrase(decode(false, PlainCodes, url), EncCodes),
+    atom_codes(Plain, PlainCodes).
+base64url(_, _) :-
+    throw(error(instantiation_error, _)).
 
 %!  base64_encoded(+PlainText, +Options)// is det.
 %!  base64_encoded(-PlainText, +Options)// is det.

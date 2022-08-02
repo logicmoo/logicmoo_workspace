@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 12.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 12.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -287,7 +287,7 @@ indicates the argument is&lsquo;input'. </td></tr>
 <p><b>WARNING</b> Term references that are accessed in&lsquo;write' (-) 
 mode will refer to an invalid term if the term is allocated on the 
 global stack and backtracking takes us back to a point before the term 
-was written.<sup class="fn">207<span class="fn-text">This could have 
+was written.<sup class="fn">205<span class="fn-text">This could have 
 been avoided by <em>trailing</em> term references when data is written 
 to them. This seriously hurts performance in some scenarios though. If 
 this is desired, use <a class="func" href="foreigninclude.html#PL_put_variable()">PL_put_variable()</a> 
@@ -439,7 +439,7 @@ must be compared.
 <p>Because atoms are often used to represent (parts of) arbitrary input, 
 intermediate results, and output of data processed by Prolog, it is 
 necessary that atoms be subject to <em>garbage collection</em> (see
-<a id="idx:garbagecollectatoms0:2482"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a>). 
+<a id="idx:garbagecollectatoms0:2478"></a><a class="pred" href="memory.html#garbage_collect_atoms/0">garbage_collect_atoms/0</a>). 
 The garbage collection makes atoms ideal handles for arbitrary data 
 structures, which are generalized as
 <em>blobs</em>. Blobs provide <em>safe</em> access to many internal 

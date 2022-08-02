@@ -451,7 +451,8 @@ pipeline_file_loading:-
 :- initialization(pipeline_file_loading, after_load).
 
 :- if(exists_source(ape(tests/acetexts))).
-:- ensure_loaded(ape(tests/acetexts)).
+% should only be loaded for testing
+:- nop(ensure_loaded(ape(tests/acetexts))).
 :- endif.
 
 %:- break.

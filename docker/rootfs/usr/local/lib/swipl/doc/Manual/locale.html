@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.23</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.23</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -243,24 +243,24 @@ applications.
 
 <p>
 <ul class="latex">
-<li>The predicates <a id="idx:chartype2:1502"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
-and <a id="idx:codetype2:1503"></a><a class="pred" href="chartype.html#code_type/2">code_type/2</a> 
+<li>The predicates <a id="idx:chartype2:1499"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
+and <a id="idx:codetype2:1500"></a><a class="pred" href="chartype.html#code_type/2">code_type/2</a> 
 query character classes depending on the locale.
-<li>The predicates <a id="idx:collationkey2:1504"></a><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a> 
-and <a id="idx:localesort2:1505"></a><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a> 
+<li>The predicates <a id="idx:collationkey2:1501"></a><a class="pred" href="chartype.html#collation_key/2">collation_key/2</a> 
+and <a id="idx:localesort2:1502"></a><a class="pred" href="chartype.html#locale_sort/2">locale_sort/2</a> 
 can be used for locale dependent sorting of atoms.
-<li>The predicate <a id="idx:formattime3:1506"></a><a class="pred" href="system.html#format_time/3">format_time/3</a> 
+<li>The predicate <a id="idx:formattime3:1503"></a><a class="pred" href="system.html#format_time/3">format_time/3</a> 
 can be used to format time and date representations, where some of the 
 specifiers are locale dependent.
-<li>The predicate <a id="idx:format2:1507"></a><a class="pred" href="format.html#format/2">format/2</a> 
+<li>The predicate <a id="idx:format2:1504"></a><a class="pred" href="format.html#format/2">format/2</a> 
 provides locale-specific formatting of numbers. This functionality is 
 based on a more fine-grained localization model that is the subject of 
 this section.
 </ul>
 
 <p>A locale is a (optionally named) read-only object that provides 
-information to locale specific functions.<sup class="fn">118<span class="fn-text">The 
-locale interface described in this section and its effect on <a id="idx:format2:1508"></a><a class="pred" href="format.html#format/2">format/2</a> 
+information to locale specific functions.<sup class="fn">117<span class="fn-text">The 
+locale interface described in this section and its effect on <a id="idx:format2:1505"></a><a class="pred" href="format.html#format/2">format/2</a> 
 and reading integers from digit groups was discussed on the SWI-Prolog 
 mailinglist. Most input in this discussion is from Ulrich Neumerkel and 
 Richard O'Keefe. The predicates in this section were designed by Jan 
@@ -268,7 +268,7 @@ Wielemaker.</span></sup> The system creates a default locale object
 named
 <code>default</code> from the system locale. This locale is used as the 
 initial locale for the three standard streams as well as the
-<code>main</code> thread. Locale sensitive output predicates such as <a id="idx:format3:1509"></a><a class="pred" href="format.html#format/3">format/3</a> 
+<code>main</code> thread. Locale sensitive output predicates such as <a id="idx:format3:1506"></a><a class="pred" href="format.html#format/3">format/3</a> 
 get their locale from the stream to which they deliver their output. New 
 streams get their locale from the thread that created the stream. 
 Threads get their locale from the thread that created them.
@@ -315,7 +315,7 @@ grouped.
 [ decimal_point('.'), thousands_sep(','), grouping([repeat(3)]) ]
 </pre>
 
-<p>Named locales exists until they are destroyed using <a id="idx:localedestroy1:1510"></a><a class="pred" href="locale.html#locale_destroy/1">locale_destroy/1</a> 
+<p>Named locales exists until they are destroyed using <a id="idx:localedestroy1:1507"></a><a class="pred" href="locale.html#locale_destroy/1">locale_destroy/1</a> 
 and they are no longer referenced. Unnamed locales are subject to (atom) 
 garbage collection.</dd>
 <dt class="pubdef"><a id="locale_destroy/1"><strong>locale_destroy</strong>(<var>+Locale</var>)</a></dt>
@@ -327,15 +327,15 @@ reclaimed by garbage collection.</dd>
 ?Property</var>)</a></dt>
 <dd class="defbody">
 True when <var>Locale</var> has <var>Property</var>. Properties are the 
-same as the <var>Options</var> described with <a id="idx:localecreate3:1511"></a><a class="pred" href="locale.html#locale_create/3">locale_create/3</a>.</dd>
+same as the <var>Options</var> described with <a id="idx:localecreate3:1508"></a><a class="pred" href="locale.html#locale_create/3">locale_create/3</a>.</dd>
 <dt class="pubdef"><a id="set_locale/1"><strong>set_locale</strong>(<var>+Locale</var>)</a></dt>
 <dd class="defbody">
 Set the default locale for the current thread, as well as the locale for 
 the standard streams (<code>user_input</code>, <code>user_output</code>,
 <code>user_error</code>, <code>current_output</code> and <code>current_input</code>. 
 This locale is used for new streams, unless overruled using the
-<code>locale(Locale)</code> option of <a id="idx:open4:1512"></a><a class="pred" href="IO.html#open/4">open/4</a> 
-or <a id="idx:setstream2:1513"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
+<code>locale(Locale)</code> option of <a id="idx:open4:1509"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+or <a id="idx:setstream2:1510"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
 <dt class="pubdef"><a id="current_locale/1"><strong>current_locale</strong>(<var>-Locale</var>)</a></dt>
 <dd class="defbody">
 True when <var>Locale</var> is the locale of the calling thread.

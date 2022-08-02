@@ -710,10 +710,13 @@ setup_hist0:-  '$toplevel':setup_history.
 :- system:use_module(library(xmlenc)).
 %:- system:use_module(library(xpath)).
 :- system:use_module(library(xsdp_types)).
-:- system:use_module(library(yall)).
 :- system:use_module(library(yaml)).
 :- system:use_module(library(zip)).
 :- system:use_module(library(zlib)).
+
+
+%:- system:use_module(library(yall)).
+
 :- endif.
 % :- predicate_inheritance:kb_global(plunit:loading_unit/4).
 

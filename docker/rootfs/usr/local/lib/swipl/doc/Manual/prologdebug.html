@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section A.37</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section A.37</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -277,30 +277,19 @@ to allow for alternative specifications of the thing to debug.
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="debugging/0"><strong>debugging</strong></a></dt>
 <dd class="defbody">
 Report current status of the debugger.</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="trap/1"><strong>trap</strong>(<var>+Formal</var>)</a></dt>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="notrap/1"><strong>notrap</strong>(<var>+Formal</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="trap/1"><strong>trap</strong>(<var>+Exception</var>)</a></dt>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="notrap/1"><strong>notrap</strong>(<var>+Exception</var>)</a></dt>
 <dd class="defbody">
 Install a trap on <code>error(Formal, Context)</code> exceptions that 
-unify. The tracer is started when a matching exception is raised. This 
-predicate enables <i>debug mode</i> using <a class="pred" href="debugger.html#debug/0">debug/0</a> 
+unify with
+<var>Exception</var>. The tracer is started when a matching exception is 
+raised. This predicate enables <i>debug mode</i> using <a class="pred" href="debugger.html#debug/0">debug/0</a> 
 to get more context about the exception. Even with debug mode disabled 
 exceptions are still trapped and thus one may call <a class="pred" href="debugger.html#nodebug/0">nodebug/0</a> 
-to run in normal mode after installing a trap. Exceptions are trapped in 
-any thread. Debug mode is only enabled in the calling thread. To enable 
-debug mode in all threads use <a class="pred" href="thutil.html#tdebug/0">tdebug/0</a>.
+to run in normal mode after installing a trap.
 
-<p>Calling <a class="pred" href="debugger.html#debugging/0">debugging/0</a> 
-lists the enabled traps. The predicate <a class="pred" href="prologdebug.html#notrap/1">notrap/1</a> 
+<p>The predicate <a class="pred" href="prologdebug.html#notrap/1">notrap/1</a> 
 removes matching (unifying) traps.
-
-<p>In many cases debugging an exception that is caught is as simple as 
-below (assuming <span class="pred-ext">run/0</span> starts your 
-program).
-
-<pre class="code">
-?- gtrap(_).
-?- run.
-</pre>
 
 <dl class="tags">
 <dt class="mtag">See also</dt>

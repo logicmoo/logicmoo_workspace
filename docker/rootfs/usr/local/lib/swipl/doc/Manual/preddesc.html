@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.1</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.1</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -248,7 +248,7 @@ argument mode indicator</span></a></h3>
 
 <a id="sec:argmode"></a>
 
-<p><a id="idx:argumentmodeindicator:390"></a>An <em>argument mode 
+<p><a id="idx:argumentmodeindicator:389"></a>An <em>argument mode 
 indicator</em> gives information about the intended direction in which 
 information carried by a predicate argument is supposed to flow. Mode 
 indicators (and types) are not a formal part of the Prolog language but 
@@ -290,7 +290,7 @@ constraints, <code>det</code> effectively becomes
 <code>nondet</code>. </td></tr>
 <tr><td>--</td><td>At call time, the argument must be unbound. This is 
 typically used by predicates that create&lsquo;something' and return a 
-handle to the created object, such as <a id="idx:open3:391"></a><a class="pred" href="IO.html#open/3">open/3</a>, 
+handle to the created object, such as <a id="idx:open3:390"></a><a class="pred" href="IO.html#open/3">open/3</a>, 
 which creates a <em>stream</em>. </td></tr>
 <tr><td>?</td><td>At call time, the argument must be bound to a <em>partial 
 term</em> (a term which may or may not be ground) satisfying some 
@@ -307,8 +307,8 @@ This flag implies <code><code>+</code></code>. </td></tr>
 at call-time. Typically used for type tests. </td></tr>
 <tr><td>!</td><td>Argument contains a mutable structure that may be 
 modified using
-<a id="idx:setarg3:392"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
-or <a id="idx:nbsetarg3:393"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. </td></tr>
+<a id="idx:setarg3:391"></a><a class="pred" href="manipterm.html#setarg/3">setarg/3</a> 
+or <a id="idx:nbsetarg3:392"></a><a class="pred" href="manipterm.html#nb_setarg/3">nb_setarg/3</a>. </td></tr>
 </table>
 
 <p>See also <a class="sec" href="metacall.html#sec:4.8">section 4.8</a> 
@@ -321,7 +321,7 @@ indicators</span></a></h3>
 
 <a id="sec:predicate-indic"></a>
 
-<p><a id="idx:predicateindicator:394"></a>Referring to a predicate in 
+<p><a id="idx:predicateindicator:393"></a>Referring to a predicate in 
 running text is done using a
 <em>predicate indicator</em>. The canonical and most generic form of a 
 predicate indicator is a term <code>[&lt;<var>module</var>&gt;:]&lt;<var>name</var>&gt;/&lt;<var>arity</var>&gt;</code>. 
@@ -333,7 +333,7 @@ indicators</span></a></h4>
 
 <a id="sec:nonterminal-indic"></a>
 
-<p><a id="idx:nonterminalindicator:395"></a>Compliant to the ISO 
+<p><a id="idx:nonterminalindicator:394"></a>Compliant to the ISO 
 standard draft on Definite Clause Grammars (see
 <a class="sec" href="DCG.html#sec:4.13">section 4.13</a>), SWI-Prolog 
 also allows for the <em>non-terminal indicator</em> to refer to a <em>DCG 
@@ -349,15 +349,15 @@ taking two additional arguments, the input list and the output list, in
 accumulator style. This <em>need</em> not be true in all 
 implementations.</span></sup> The <code><code>//</code></code>-notation 
 can be used in all places that traditionally allow for a predicate 
-indicator, e.g., the module declaration, <a id="idx:spy1:396"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>, 
-and <a id="idx:dynamic1:397"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>.
+indicator, e.g., the module declaration, <a id="idx:spy1:395"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>, 
+and <a id="idx:dynamic1:396"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>.
 
 <p><h3 id="sec:determinism"><a id="sec:4.1.3"><span class="sec-nr">4.1.3</span> <span class="sec-title">Predicate 
 behaviour and determinism</span></a></h3>
 
 <a id="sec:determinism"></a>
 
-<p><a id="idx:predicatebehaviouranddeterminism:398"></a>To describe the 
+<p><a id="idx:predicatebehaviouranddeterminism:397"></a>To describe the 
 general behaviour of a predicate, the following vocabulary is employed. 
 In source code, structured comments contain the corresponding keywords:
 
@@ -375,7 +375,7 @@ solution. </td></tr>
 <tr><td><code>multi</code> </td><td>As <code>nondet</code>, but succeeds 
 at least once. </td></tr>
 <tr><td><code>undefined</code> </td><td>Well founded semantics third 
-value. See <a id="idx:undefined0:399"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>. </td></tr>
+value. See <a id="idx:undefined0:398"></a><a class="pred" href="WFS.html#undefined/0">undefined/0</a>. </td></tr>
 </table>
 
 <p></body></html>

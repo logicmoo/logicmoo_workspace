@@ -262,8 +262,7 @@ delete([Elem|Tail], Del, Result) :-
 
 nth0(Index, List, Elem) :-
     (   integer(Index)
-    ->  '$seek_list'(Index, List, RestIndex, RestList),
-        nth0_det(RestIndex, RestList, Elem) % take nth det
+    ->  nth0_det(Index, List, Elem)         % take nth deterministically
     ;   var(Index)
     ->  List = [H|T],
         nth_gen(T, Elem, H, 0, Index)       % match
@@ -271,8 +270,13 @@ nth0(Index, List, Elem) :-
     ).
 
 nth0_det(0, [Elem|_], Elem) :- !.
-nth0_det(N, [_|Tail], Elem) :-
-    M is N - 1,
+nth0_det(1, [_,Elem|_], Elem) :- !.
+nth0_det(2, [_,_,Elem|_], Elem) :- !.
+nth0_det(3, [_,_,_,Elem|_], Elem) :- !.
+nth0_det(4, [_,_,_,_,Elem|_], Elem) :- !.
+nth0_det(5, [_,_,_,_,_,Elem|_], Elem) :- !.
+nth0_det(N, [_,_,_,_,_,_   |Tail], Elem) :-
+    M is N - 6,
     M >= 0,
     nth0_det(M, Tail, Elem).
 
@@ -292,8 +296,7 @@ nth_gen([H|Tail], Elem, _, N, Base) :-
 nth1(Index, List, Elem) :-
     (   integer(Index)
     ->  Index0 is Index - 1,
-        '$seek_list'(Index0, List, RestIndex, RestList),
-        nth0_det(RestIndex, RestList, Elem) % take nth det
+        nth0_det(Index0, List, Elem)        % take nth deterministically
     ;   var(Index)
     ->  List = [H|T],
         nth_gen(T, Elem, H, 1, Index)       % match

@@ -1250,7 +1250,7 @@ decl_type(Spec):- never_type_why(Spec,Why),!,trace_or_throw(never_type_why(Spec,
 
 
 
-:- expects_dialect(pfc).
+%:- expects_dialect(pfc).
 % ============================================
 % decl_type/1
 % ============================================

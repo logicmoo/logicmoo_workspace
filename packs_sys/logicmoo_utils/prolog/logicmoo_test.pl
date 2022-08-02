@@ -17,6 +17,8 @@
     must_ex/1,
     quietly_must_ex/1,
     run_junit_tests/1,
+    add_test_info/3,
+    %echo_source_file_no_catchup/1,
     run_tests_and_halt/0,
     run_tests_and_halt/1]).
 :- endif.                             

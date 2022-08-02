@@ -69,7 +69,7 @@ extern "C" {
 /* PLVERSION_TAG: a string, normally "", but for example "rc1" */
 
 #ifndef PLVERSION
-#define PLVERSION 80515
+#define PLVERSION 80512
 #endif
 #ifndef PLVERSION_TAG
 #define PLVERSION_TAG ""
@@ -939,7 +939,6 @@ PL_EXPORT(void)         PL_release_string_buffers_from_mark(buf_mark_t mark);
 PL_EXPORT(int)		PL_unify_stream(term_t t, IOSTREAM *s);
 PL_EXPORT(int)		PL_get_stream_handle(term_t t, IOSTREAM **s);
 PL_EXPORT(int)		PL_get_stream(term_t t, IOSTREAM **s, int flags);
-PL_EXPORT(int)		PL_get_stream_from_blob(atom_t a, IOSTREAM**s, int flags);
 PL_EXPORT(IOSTREAM*)	PL_acquire_stream(IOSTREAM *s);
 PL_EXPORT(int)		PL_release_stream(IOSTREAM *s);
 PL_EXPORT(int)		PL_release_stream_noerror(IOSTREAM *s);
@@ -986,7 +985,6 @@ PL_EXPORT(IOSTREAM *)*_PL_streams(void);	/* base of streams */
 #define PL_WRT_RAT_NATURAL         0x200000 /* Write rationals as 1/3 */
 #define PL_WRT_CHARESCAPES_UNICODE 0x400000 /* Use \uXXXX escapes */
 #define PL_WRT_QUOTE_NON_ASCII	   0x800000 /* Quote atoms containing non-ascii */
-#define PL_WRT_PARTIAL		  0x1000000 /* Partial output */
 
 PL_EXPORT(int)	PL_write_term(IOSTREAM *s,
 			     term_t term,
@@ -1100,42 +1098,6 @@ PL_EXPORT(void)			PL_abort_hook(PL_abort_hook_t);
 PL_EXPORT(void)			PL_initialise_hook(PL_initialise_hook_t);
 PL_EXPORT(int)			PL_abort_unhook(PL_abort_hook_t);
 PL_EXPORT(PL_agc_hook_t)	PL_agc_hook(PL_agc_hook_t);
-
-
-		 /*******************************
-		 *	      OPTIONS		*
-		 *******************************/
-
-typedef enum
-{ _OPT_END = -1,
-  OPT_BOOL = 0,				/* int */
-  OPT_INT,				/* int */
-  OPT_INT64,				/* int64_t */
-  OPT_UINT64,				/* uint64_t */
-  OPT_SIZE,				/* size_t */
-  OPT_DOUBLE,				/* double */
-  OPT_STRING,				/* char* (UTF-8) */
-  OPT_ATOM,				/* atom_t */
-  OPT_TERM,				/* term_t */
-  OPT_LOCALE				/* void* */
-} _PL_opt_enum_t;
-
-#define OPT_TYPE_MASK	0xff
-#define OPT_INF		0x100		/* allow 'inf' */
-
-#define OPT_ALL		0x1		/* flags */
-
-typedef struct
-{ atom_t		name;		/* Name of option */
-  _PL_opt_enum_t	type;		/* Type of option */
-  const char *		string;		/* For foreign access */
-} PL_option_t;
-
-#define PL_OPTION(name, type) { 0, type, name }
-#define PL_OPTIONS_END	      { 0, _OPT_END, (const char*)0 }
-
-PL_EXPORT(int)	PL_scan_options(term_t options, int flags, const char *opttype,
-				PL_option_t specs[], ...);
 
 
 		/********************************
