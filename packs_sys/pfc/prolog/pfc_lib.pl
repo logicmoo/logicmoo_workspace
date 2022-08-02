@@ -454,7 +454,7 @@ pfc_sanity_check:- forall(pfc_sanity_check_0,true).
 %:- locally_tl(side_effect_ok,doall(call_no_cuts(module_local_init(abox,baseKB)))).
 % :- forall(baseKB:sanity_check,true).
 
-
+/*
 :- if( \+ prolog_load_context(reload,true)).
 :-module_transparent(hook_database:ain/1).
 :-module_transparent(hook_database:aina/1).
@@ -468,7 +468,7 @@ pfc_sanity_check:- forall(pfc_sanity_check_0,true).
 :-asserta_new((hook_database:ain(G):- !, must(mpred_ain(G)))).
 :-asserta_new((hook_database:ainz(G):- !, must(mpred_ainz(G)))).
 :-asserta_new((hook_database:aina(G):- !, must(mpred_aina(G)))).
-
+*/
 /*
 :-module_transparent(pfc_lib:mpred_ain/1).
 :-module_transparent(pfc_lib:mpred_aina/1).
@@ -480,8 +480,9 @@ pfc_sanity_check:- forall(pfc_sanity_check_0,true).
 :-dynamic(pfc_lib:mpred_ain/1).
 :-dynamic(pfc_lib:mpred_aina/1).
 :-dynamic(pfc_lib:mpred_ainz/1).
-*/
+
 :- endif.
+*/
 
 % Load boot base file
 user:lmbf:- 
@@ -897,10 +898,11 @@ pfc_may_see_module(M):- import_module(M,pfc_lib).
 %:- lock_predicate('$pt'/3).
 :- lock_predicate('$bt'/2).
 
-
+/*
 :-hook_database:export(pfc_lib:mpred_ain/1).
 :-hook_database:export(pfc_lib:mpred_aina/1).
 :-hook_database:export(pfc_lib:mpred_ainz/1).
+*/
 %baseKB:mpred_ain(X,Y):- mpred_ain(X,Y).
 
 %:- sexport(mpred_ain/1).

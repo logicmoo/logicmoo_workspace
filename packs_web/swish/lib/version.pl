@@ -241,6 +241,7 @@ gen_module_property(Name, Term) :-
                  *        KEEP UP-TO-DATE       *
                  *******************************/
 
+bg_git_update_versions :- !.
 bg_git_update_versions :-
     print_message(informational, git(update_versions)),
     thread_create(git_update_versions(_), _,

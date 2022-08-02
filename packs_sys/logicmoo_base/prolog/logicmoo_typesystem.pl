@@ -121,8 +121,8 @@ wsce(W):- with_subclause_expansion((virtualize_source:set_how_virtualize_file(bo
 :- set_prolog_flag(pfc_booted,true).
 :- set_prolog_flag(read_attvars,false).
 
-:- ((hook_database:call(asserta_if_new,(ereq(G):- !, call_u(G))))).
-:- after_boot((dmsg(after_boot),hook_database:call(asserta_new,(ereq(G):- !, call_u(G))))).
+:- ((call(asserta_if_new,(ereq(G):- !, call_u(G))))).
+:- after_boot((dmsg(after_boot),call(asserta_new,(ereq(G):- !, call_u(G))))).
 
 
 
