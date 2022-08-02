@@ -76,12 +76,13 @@ cycQuery80(Q):- current_predicate(_, Q), call(Q).
 :- shared_parser_data(installed_converter/4).
 :- shared_parser_data(isa/2).
 
-:- shared_parser_data(transitive_subclass/2).
-:- shared_parser_data(tSet/1).
-:- shared_parser_data(ttFormatType/1).
-:- shared_parser_data(capitalized/5).
-:- shared_parser_data(mpred_arity/2).
-:- shared_parser_data(posName/1).
+% TODO where did it go? :- shared_parser_data(transitive_subclass/2).
+:- shared_parser_data(baseKB:tSet/1).
+:- shared_parser_data(baseKB:ttFormatType/1).
+:- shared_parser_data(dcg_meta:capitalized//1).
+:- shared_parser_data(baseKB:mpred_arity/2).
+% TODO where did it go? :- shared_parser_data(posName/1).
+
 
 
 :- shared_parser_data(parser_chat80:longitude80/2).

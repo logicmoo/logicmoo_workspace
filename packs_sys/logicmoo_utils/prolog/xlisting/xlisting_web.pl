@@ -206,7 +206,7 @@ hide_xpce_library_directory.
 :- system:use_module(library(predicate_streams)).
 :- system:use_module(library(logicmoo/with_no_x)).
 :- system:use_module(library(logicmoo/each_call)).
-:- system:use_module(library(logicmoo/butterfly_console)).
+%:- system:use_module(library(logicmoo/butterfly_console)).
 
 :- thread_local(t_l:no_cycstrings/0).
 :- asserta(t_l:no_cycstrings).

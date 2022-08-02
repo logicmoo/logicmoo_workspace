@@ -41,7 +41,15 @@
           init_why/2,
           define_into_module/2,
           now_and_later/1,
+          only_runtime/1,
+          logicmoo_compiling_mud_server/0,
+          call_safely/1,
           fixup_exports_system/0,
+          all_source_file_predicates_are_transparent/0,
+          all_source_file_predicates_are_transparent/2,
+          all_source_file_predicates_are_exported/0,
+          all_source_file_predicates_are_exported/2,
+          all_source_file_predicates_are_exported/4,
           run_pending_inits/0]).
 
 /** <module> Utility LOGICMOO_STARTUP
@@ -1524,6 +1532,8 @@ user:expand_query(Goal, _Expanded, Bindings, _ExpandedBindings):-        fail,
 :- endif.
 
 :- module_transparent(fixup_exports/0).
+:- module_transparent(all_source_file_predicates_are_exported/0).
+:- module_transparent(all_source_file_predicates_are_transparent/0).
 
 fixup_exports:-    
    all_source_file_predicates_are_exported,

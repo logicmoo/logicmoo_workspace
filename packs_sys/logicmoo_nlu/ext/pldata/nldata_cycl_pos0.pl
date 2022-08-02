@@ -4,6 +4,7 @@
   bposToCPosForm/2,bcr/1,transprob/4,transprob2/3]).
 
 :- use_module(library(logicmoo_plarkc)).
+:- ensure_loaded(library(logicmoo/plarkc/logicmoo_i_cyc_rewriting)).
 
 :- dynamic((brillPos/1,bcr/1,transprob/4,transprob2/3)).
 

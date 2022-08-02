@@ -9,7 +9,7 @@
 % Revised At:   $Date: 2012/06/06 15:43:15 $
 % ===================================================================
 
-:-module(parser_e2c, []).
+:-module(parser_e2c, [add_e2c/1,add_e2c/2]).
 
 :- set_module(class(library)).
 

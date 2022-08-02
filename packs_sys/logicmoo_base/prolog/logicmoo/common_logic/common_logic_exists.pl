@@ -1,6 +1,8 @@
 :- module(kbe,[ % existentialize/2,
          % kbi_define/1
-  non_modal_positive/1,groundoid/1
+  non_modal_positive/1,groundoid/1,
+  subtract_eq/4
+
 ]).
 /** <module> common_logic_kbi
 % Provides a prolog database replacement that uses an interpretation of KIF

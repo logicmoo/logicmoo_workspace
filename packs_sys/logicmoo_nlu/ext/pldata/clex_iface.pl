@@ -3,9 +3,8 @@
    clex_call/1,clex_call/2,
    clex_call/3,clex_call/4,
    clex_call/5,clex_call/6,
+   clex_verb/4,
 
-
-         clex_verb/4,
 /*           tv_pp/2,
            tv_infpl/2,
            tv_finsg/2,

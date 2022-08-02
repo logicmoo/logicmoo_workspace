@@ -20,6 +20,7 @@
 */
 
 % We save the name of the module loading this module
+:- if(current_prolog_flag(xref,true)).  % XREF
 :- if((prolog_load_context(source,F),prolog_load_context(file,F))).
 :- module(butterfly,[bformat/1,bformat/2,bformat/3,
   is_butterfly_console/0,
@@ -29,6 +30,7 @@
   bfly_tests/0,
   send_tokens/1,
   pre_style/0,mouse_over_span/0]).
+:- endif.
 :- endif.
 :- export((bformat/1,bformat/2,bformat/3,
   is_butterfly_console/0,

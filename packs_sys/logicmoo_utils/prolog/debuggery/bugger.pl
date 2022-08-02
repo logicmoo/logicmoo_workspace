@@ -49,8 +49,8 @@
             must_maplist/2,
             must_maplist/3,
 
-          % all_source_file_predicates_are_transparent/0,
-          all_source_file_predicates_are_transparent/1,
+          %all_source_file_predicates_are_transparent_bugger/0,
+          all_source_file_predicates_are_transparent_bugger/1,
 
 
           debugCallWhy/2,
@@ -489,23 +489,23 @@ not_debugging:- \+ ( nb_current('$inprint_message', Messages), Messages\==[] ),
  \+ current_prolog_flag(debug,true).
 
 /*
-%% all_source_file_predicates_are_transparent() is det.
+%% all_source_file_predicates_are_transparent_bugger() is det.
 %
 % All Module Predicates Are Transparent.
 %
-:- module_transparent(all_source_file_predicates_are_transparent/0).
-:- export(all_source_file_predicates_are_transparent/0).
-all_source_file_predicates_are_transparent:-
-  must(prolog_load_context(source,SFile)),all_source_file_predicates_are_transparent(SFile),
-  must(prolog_load_context(file,File)),(SFile==File->true;all_source_file_predicates_are_transparent(File)).
+:- module_transparent(all_source_file_predicates_are_transparent_bugger/0).
+:- export(all_source_file_predicates_are_transparent_bugger/0).
+all_source_file_predicates_are_transparent_bugger:-
+  must(prolog_load_context(source,SFile)),all_source_file_predicates_are_transparent_bugger(SFile),
+  must(prolog_load_context(file,File)),(SFile==File->true;all_source_file_predicates_are_transparent_bugger(File)).
 */
 
 :- system:use_module(library(debug)).
 
-:- module_transparent(all_source_file_predicates_are_transparent/1).
-:- export(all_source_file_predicates_are_transparent/1).
-all_source_file_predicates_are_transparent(File):-
-    debug(logicmoo(loader),'~N~p~n',[all_source_file_predicates_are_transparent(File)]),
+:- module_transparent(all_source_file_predicates_are_transparent_bugger/1).
+:- export(all_source_file_predicates_are_transparent_bugger/1).
+all_source_file_predicates_are_transparent_bugger(File):-
+    debug(logicmoo(loader),'~N~p~n',[all_source_file_predicates_are_transparent_bugger(File)]),
     forall((source_file(ModuleName:P,File),functor(P,F,A)),
       ignore(( 
         ignore(( \+ atom_concat('$',_,F), ModuleName:export(ModuleName:F/A))),

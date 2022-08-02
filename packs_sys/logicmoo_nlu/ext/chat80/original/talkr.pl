@@ -121,8 +121,10 @@ tti(T,I):- ti(T,I).
 
 named_eq(X,X).
 
+:- export(answerTF/2).
 answerTF(G,S):- call(G)-> S=true;S=false.
 :- system:import(parser_chat80:answerTF/2).
+:- export(answerSet/3).
 answerSet(X,G,S):- setof(X,G,S)*->true;S=[].
 :- system:import(parser_chat80:answerSet/3).
 

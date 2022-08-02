@@ -20,6 +20,7 @@
             all_disjoint_in_sets/3,
             del_each_attr/2,
             get_random_headvars/1,
+            member_open/2,
             get_random_headvars/4,
             get_1head_arg_var/5,
             term_slots/2,

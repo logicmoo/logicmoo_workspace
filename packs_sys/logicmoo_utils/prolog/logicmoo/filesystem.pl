@@ -71,7 +71,8 @@
             to_filename/2,
             upcase_atom_safe/2,
             with_filematch/1,
-            with_filematches/1
+            with_filematches/1,
+            contains_wildcard/1
 
 
             

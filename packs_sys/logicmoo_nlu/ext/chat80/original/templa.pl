@@ -330,6 +330,7 @@ verb_form_db(talkdb,  Wrote,Write,past+fin,_):-    talkdb_talk_db(_Transitive,Wr
 
 verb_form_db(talkdb,A,B,C,D):- verb_form_db(clex,A,B,C,D).
 
+:- clex_iface:export(clex_iface:clex_verb/4).
 :- import(clex_iface:clex_verb/4).
 clex_verb80(Looked,Look,VerbType,Form):- \+ compound(Looked),\+ compound(Look), 
   clex_iface:clex_verb(Looked,Look,VerbType,Form).

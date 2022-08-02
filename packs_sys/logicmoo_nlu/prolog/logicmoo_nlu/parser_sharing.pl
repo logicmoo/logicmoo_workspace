@@ -16,6 +16,8 @@
   (use_shared_parser_data)/2,
   (use_shared_parser_data/2),
   share_mfa/3,
+  pi_splits/3,
+
   (shared_parser_data)/1,
   % term_expansion/4,
    op(1150,fx,(share_mp)),
@@ -26,7 +28,13 @@
    op(1150,fx,(shared_parser_data)),
    op(1150,fx,(dynamic_multifile_exported)).
 */
-
+:- define_into_module(system,
+  [each_parser_module/1,
+  each_parser_module_0/1,
+  (use_shared_parser_data)/2,
+  share_mfa/3,
+  pi_p/2,
+  pi_splits/3]).
 % :- ensure_loaded(nl_pipeline).
 
 :- absolute_file_name('../../ext/',Dir,[file_type(directory)]),

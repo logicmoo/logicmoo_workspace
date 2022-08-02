@@ -91,6 +91,8 @@ lex_frivilous_col(xtLexicalWord).
 lex_frivilous_col(xtEnglishWord).
 lex_frivilous_col(tIndividual).
 
+:- use_module(parser_e2c).
+
 :- add_e2c("a red cat fastly jumped onto the table which is in the kitchen of the house").
 :- add_e2c("After Slitscan, Laney heard about another job from Rydell, the night security man at the Chateau.").
 :- add_e2c("Rydell was a big quiet Tennessean with a sad shy grin, cheap sunglasses, and a walkie-talkie screwed permanently into one ear.").

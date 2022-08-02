@@ -28,6 +28,7 @@
             cyc_to_mpred_idiom1/2,
             cyc_to_mpred_idiom_unused/2,
             cyc_to_mpred_sent_idiom_2/3,
+            install_constant_renamer_until_eof/0,
             % delay_rule_eval/3,
             
             % BAD?  baseKB:cyc_to_plarkc/2,

@@ -9,7 +9,7 @@
 % Revised At:   $Date: 2002/06/06 15:43:15 $
 % ===================================================================
 
-:- module(parser_pipeline, [maybe_display/1]).
+:- module(parser_pipeline, [maybe_display/1,dont_load_parser_interface/2,ainz_installed_converter/4]).
 
 
 %:- '$set_typein_module'(baseKB).
@@ -175,7 +175,7 @@ install_converter(M, CNV):-
   %while_tracing_pipeline(dmsg(installed_converter(M, CNVLST))),
   get_in_outs(CNVLST,Ins,Outs),
   ainz(installed_converter_io(M, CNVLST, Ins,Outs)),
-  must_maplist(ainz_installed_converter(M, CNVLST, Ins),Outs),
+  maplist(ainz_installed_converter(M, CNVLST, Ins),Outs),
   install_pipeline_rule(M, CNVLST, Ins,Outs).
 %install_converter(M, CNV):-strip_module(CNV, M, CNVLST), functor(CNVLST, F, A), '@'(export(M:F/A), M), must(assertz_new(installed_converter(M, CNVLST,Ins,Outs))).
 

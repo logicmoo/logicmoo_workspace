@@ -8,7 +8,7 @@
 :- dynamic((rememberDictionary2/3, idioms/3, rememberDictionary/0, translatePersonal/3, translatePersonalUTokens/2, rememberDictionary/3, explitVocab/2, to_codes/2, decontract/2, dictionary/3, dictionary_access/3, idioms2/3, idioms2/3, isa_speechpart/1, lexicicalRefWord/2, translatePersonalCodes3/2, lexicicalRefWords/2, translatePersonalCodes2/2, translatePersonalCodes/2, my_lexicalRef/4)).
 
 :- use_module(library(logicmoo_plarkc)).
-
+:- ensure_loaded(library(logicmoo/plarkc/logicmoo_i_cyc_rewriting)).
 :- style_check(-singleton).
 :- style_check(-discontiguous).
 % :- style_check(-atom).
