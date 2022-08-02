@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.4</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.4</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -240,14 +240,14 @@ Interface</span></a></h2>
 
 <p>SWI-Prolog offers an extensible interface which allows the user to 
 edit objects of the program: predicates, modules, files, etc. The editor 
-interface is implemented by <a id="idx:edit1:665"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+interface is implemented by <a id="idx:edit1:666"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
 and consists of three parts:
 <em>locating</em>, <em>selecting</em> and <em>starting</em> the editor. 
 Any of these parts may be customized. See <a class="sec" href="edit.html#sec:4.4.1">section 
 4.4.1</a>.
 
-<p>The built-in edit specifications for <a id="idx:edit1:666"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
-(see <a id="idx:prologeditlocate3:667"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a>) 
+<p>The built-in edit specifications for <a id="idx:edit1:667"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+(see <a id="idx:prologeditlocate3:668"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a>) 
 are described in the table below:
 
 <p><table class="latex frame-box center">
@@ -274,12 +274,12 @@ to translate
 <var>Specification</var> into a list of <em>Locations</em>. If there is 
 more than one&lsquo;hit', the user is asked to select from the locations 
 found. Finally, <a class="pred" href="edit.html#prolog_edit:edit_source/1">prolog_edit:edit_source/1</a> 
-is used to invoke the user's preferred editor. Typically, <a id="idx:edit1:668"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+is used to invoke the user's preferred editor. Typically, <a id="idx:edit1:669"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
 can be handed the name of a predicate, module, basename of a file, XPCE 
 class, XPCE method, etc.</dd>
 <dt class="pubdef"><a id="edit/0"><strong>edit</strong></a></dt>
 <dd class="defbody">
-Edit the&lsquo;default' file using <a id="idx:edit1:669"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
+Edit the&lsquo;default' file using <a id="idx:edit1:670"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
 The default file is either the first <code>.pl</code> file from the 
 commandline (the <em>associated</em> file, see the Prolog flag <a class="flag" href="flags.html#flag:associated_file">associated_file</a> 
 or the first script file specified using the <strong>-s</strong> or <strong>-l</strong> 
@@ -296,7 +296,7 @@ the editor interface</span></a></h3>
 <a id="sec:customedit"></a>
 
 <p>The predicates described in this section are <em>hooks</em> that can 
-be defined to disambiguate specifications given to <a id="idx:edit1:670"></a><a class="pred" href="edit.html#edit/1">edit/1</a>, 
+be defined to disambiguate specifications given to <a id="idx:edit1:671"></a><a class="pred" href="edit.html#edit/1">edit/1</a>, 
 find the related source, and open an editor at the given source 
 location.
 
@@ -304,7 +304,7 @@ location.
 <dt class="pubdef"><a id="prolog_edit:locate/3"><strong>prolog_edit:locate</strong>(<var>+Spec, 
 -FullSpec, -Location</var>)</a></dt>
 <dd class="defbody">
-Where <var>Spec</var> is the specification provided through <a id="idx:edit1:671"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
+Where <var>Spec</var> is the specification provided through <a id="idx:edit1:672"></a><a class="pred" href="edit.html#edit/1">edit/1</a>. 
 This multifile predicate is used to enumerate locations where an object 
 satisfying the given <var>Spec</var> can be found. <var>FullSpec</var> 
 is unified with the complete specification for the object. This 
@@ -319,16 +319,16 @@ if available, the term <code>line(Line)</code>.</dd>
 <dt class="pubdef"><a id="prolog_edit:locate/2"><strong>prolog_edit:locate</strong>(<var>+Spec, 
 -Location</var>)</a></dt>
 <dd class="defbody">
-Same as <a id="idx:prologeditlocate3:672"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a>, 
+Same as <a id="idx:prologeditlocate3:673"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a>, 
 but only deals with fully specified objects.</dd>
 <dt class="pubdef"><a id="prolog_edit:edit_source/1"><strong>prolog_edit:edit_source</strong>(<var>+Location</var>)</a></dt>
 <dd class="defbody">
-Start editor on <var>Location</var>. See <a id="idx:prologeditlocate3:673"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a> 
+Start editor on <var>Location</var>. See <a id="idx:prologeditlocate3:674"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a> 
 for the format of a location term. This multifile predicate is normally 
-not defined. If it succeeds, <a id="idx:edit1:674"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+not defined. If it succeeds, <a id="idx:edit1:675"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
 assumes the editor is started.
 
-<p>If it fails, <a id="idx:edit1:675"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+<p>If it fails, <a id="idx:edit1:676"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
 uses its internal defaults, which are defined by the Prolog flag <a class="flag" href="flags.html#flag:editor">editor</a> 
 and/or the environment variable
 <code>EDITOR</code>. The following rules apply. If the Prolog flag <a class="flag" href="flags.html#flag:editor">editor</a> 
@@ -346,12 +346,12 @@ for examples.</dd>
 <dt class="pubdef"><a id="prolog_edit:edit_command/2"><strong>prolog_edit:edit_command</strong>(<var>+Editor, 
 -Command</var>)</a></dt>
 <dd class="defbody">
-Determines how <var>Editor</var> is to be invoked using <a id="idx:shell1:676"></a><a class="pred" href="system.html#shell/1">shell/1</a>. <var>Editor</var> 
+Determines how <var>Editor</var> is to be invoked using <a id="idx:shell1:677"></a><a class="pred" href="system.html#shell/1">shell/1</a>. <var>Editor</var> 
 is the determined editor (see <a class="pred" href="edit.html#prolog_edit:edit_source/1">prolog_edit:edit_source/1</a>), 
 without the full path specification, and without a possible (<code>.exe</code>) 
 extension. <var>Command</var> is an atom describing the command. The 
 following %-sequences are replaced in <var>Command</var> before the 
-result is handed to <a id="idx:shell1:677"></a><a class="pred" href="system.html#shell/1">shell/1</a>:
+result is handed to <a id="idx:shell1:678"></a><a class="pred" href="system.html#shell/1">shell/1</a>:
 
 <p><table class="latex frame-box center">
 <tr><td>%e</td><td>Replaced by the (OS) command name of the editor </td></tr>

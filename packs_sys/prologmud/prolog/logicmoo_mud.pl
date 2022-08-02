@@ -5,7 +5,7 @@
 % Douglas Miles
 
 */
-:- module(logicmoo_mud, [ ]).
+:- module(logicmoo_mud, [ensure_mud_startup/0]).
 
 % ==============================================
 % [Required] Load the Logicmoo User System
@@ -43,7 +43,10 @@ ensure_mud_startup:-
 
 :- if( \+ app_argv('--nomud')).
 %:- ensure_mud_startup.
+:- wdmsg('dont forget to ?- ensure_mud_startup. ').
 :- endif.
+
+
 
 
 

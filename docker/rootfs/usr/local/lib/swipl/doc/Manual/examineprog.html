@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.16</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.16</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -242,7 +242,7 @@ the program</span></a></h2>
 <dt class="pubdef"><a id="current_atom/1"><strong>current_atom</strong>(<var>-Atom</var>)</a></dt>
 <dd class="defbody">
 Successively unifies <var>Atom</var> with all atoms known to the system. 
-Note that <a id="idx:currentatom1:1060"></a><a class="pred" href="examineprog.html#current_atom/1">current_atom/1</a> 
+Note that <a id="idx:currentatom1:1061"></a><a class="pred" href="examineprog.html#current_atom/1">current_atom/1</a> 
 always succeeds if <var>Atom</var> is instantiated to an atom.</dd>
 <dt class="pubdef"><a id="current_blob/2"><strong>current_blob</strong>(<var>?Blob, 
 ?Type</var>)</a></dt>
@@ -261,7 +261,7 @@ arguments was created. Functor objects are currently not subject to
 garbage collection. Due to timing, t/2 below with instantiated
 <var>Name</var> and <var>Arity</var> can theoretically fail, i.e., a 
 functor may be visible in instantiated mode while it is not yet visible 
-in unbound mode. Considering that the only practical value of <a id="idx:currentfunctor2:1061"></a><a class="pred" href="examineprog.html#current_functor/2">current_functor/2</a> 
+in unbound mode. Considering that the only practical value of <a id="idx:currentfunctor2:1062"></a><a class="pred" href="examineprog.html#current_functor/2">current_functor/2</a> 
 we are aware of is to analyse resource usage we accept this impure 
 behaviour.
 
@@ -278,11 +278,11 @@ t(Name, Arity) :-
 <dd class="defbody">
 Successively unifies <var>FlagKey</var> with all keys used for flags 
 (see
-<a id="idx:flag3:1062"></a><a class="pred" href="db.html#flag/3">flag/3</a>).</dd>
+<a id="idx:flag3:1063"></a><a class="pred" href="db.html#flag/3">flag/3</a>).</dd>
 <dt class="pubdef"><a id="current_key/1"><strong>current_key</strong>(<var>-Key</var>)</a></dt>
 <dd class="defbody">
 Successively unifies <var>Key</var> with all keys used for records (see
-<a id="idx:recorda3:1063"></a><a class="pred" href="db.html#recorda/3">recorda/3</a>, 
+<a id="idx:recorda3:1064"></a><a class="pred" href="db.html#recorda/3">recorda/3</a>, 
 etc.).</dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="current_predicate/1"><strong>current_predicate</strong>(<var>:PredicateIndicator</var>)</a></dt>
 <dd class="defbody">
@@ -291,28 +291,28 @@ A predicate is considered defined if it exists in the specified module,
 is imported into the module or is defined in one of the modules from 
 which the predicate will be imported if it is called (see
 <a class="sec" href="importmodule.html#sec:6.10">section 6.10</a>). Note 
-that <a id="idx:currentpredicate1:1064"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a> 
+that <a id="idx:currentpredicate1:1065"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a> 
 does <em>not</em> succeed for predicates that can be <em>autoloaded</em> 
-unless they are imported using <a id="idx:autoload2:1065"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a>. 
-See also <a id="idx:currentpredicate2:1066"></a><a class="pred" href="examineprog.html#current_predicate/2">current_predicate/2</a> 
+unless they are imported using <a id="idx:autoload2:1066"></a><a class="pred" href="module-autoload.html#autoload/2">autoload/2</a>. 
+See also <a id="idx:currentpredicate2:1067"></a><a class="pred" href="examineprog.html#current_predicate/2">current_predicate/2</a> 
 and
-<a id="idx:predicateproperty2:1067"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
+<a id="idx:predicateproperty2:1068"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
 
 <p>If <var>PredicateIndicator</var> is not fully specified, the 
 predicate only generates values that are defined in or already imported 
 into the target module. Generating all callable predicates therefore 
-requires enumerating modules using <a id="idx:currentmodule1:1068"></a><a class="pred" href="manipmodule.html#current_module/1">current_module/1</a>. 
+requires enumerating modules using <a id="idx:currentmodule1:1069"></a><a class="pred" href="manipmodule.html#current_module/1">current_module/1</a>. 
 Generating predicates callable in a given module requires enumerating 
-the import modules using <a id="idx:importmodule2:1069"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a> 
+the import modules using <a id="idx:importmodule2:1070"></a><a class="pred" href="importmodule.html#import_module/2">import_module/2</a> 
 and the autoloadable predicates using the
-<a id="idx:predicateproperty2:1070"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> <code>autoload</code>.</dd>
+<a id="idx:predicateproperty2:1071"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> <code>autoload</code>.</dd>
 <dt class="pubdef"><a id="current_predicate/2"><strong>current_predicate</strong>(<var>?Name, 
 :Head</var>)</a></dt>
 <dd class="defbody">
-Classical pre-ISO implementation of <a id="idx:currentpredicate1:1071"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a>, 
+Classical pre-ISO implementation of <a id="idx:currentpredicate1:1072"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a>, 
 where the predicate is represented by the head term. The advantage is 
 that this can be used for checking the existence of a predicate before 
-calling it without the need for <a id="idx:functor3:1072"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a>:
+calling it without the need for <a id="idx:functor3:1073"></a><a class="pred" href="manipterm.html#functor/3">functor/3</a>:
 
 <pre class="code">
 call_if_exists(G) :-
@@ -320,7 +320,7 @@ call_if_exists(G) :-
         call(G).
 </pre>
 
-<p>Because of this intended usage, <a id="idx:currentpredicate2:1073"></a><a class="pred" href="examineprog.html#current_predicate/2">current_predicate/2</a> 
+<p>Because of this intended usage, <a id="idx:currentpredicate2:1074"></a><a class="pred" href="examineprog.html#current_predicate/2">current_predicate/2</a> 
 also succeeds if the predicate can be autoloaded. Unfortunately, 
 checking the autoloader makes this predicate relatively slow, in 
 particular because a failed lookup of the autoloader will cause the 
@@ -330,15 +330,15 @@ autoloader to verify that its index is up-to-date.</dd>
 <dd class="defbody">
 True when <var>Head</var> refers to a predicate that has property
 <var>Property</var>. With sufficiently instantiated <var>Head</var>,
-<a id="idx:predicateproperty2:1074"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
+<a id="idx:predicateproperty2:1075"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
 tries to resolve the predicate the same way as calling it would do: if 
-the predicate is not defined it scans the default modules (see <a id="idx:defaultmodule2:1075"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>) 
+the predicate is not defined it scans the default modules (see <a id="idx:defaultmodule2:1076"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>) 
 and finally tries the autoloader. Unlike calling, failure to find the 
 target predicate causes
-<a id="idx:predicateproperty2:1076"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
+<a id="idx:predicateproperty2:1077"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
 to fail silently. If <var>Head</var> is not sufficiently bound, only 
 currently locally defined and already imported predicates are 
-enumerated. See <a id="idx:currentpredicate1:1077"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a> 
+enumerated. See <a id="idx:currentpredicate1:1078"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a> 
 for enumerating all predicates. A common issue concerns <em>generating</em> 
 all built-in predicates. This can be achieved using the code below:
 
@@ -349,9 +349,9 @@ generate_built_in(Name/Arity) :-
     \+ sub_atom(Name, 0, _, _, $).   % discard reserved names
 </pre>
 
-<p>The predicate <a id="idx:predicateproperty2:1078"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
+<p>The predicate <a id="idx:predicateproperty2:1079"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
 is covered by part-II of the ISO standard (modules). Although we are not 
-aware of any Prolog system that implements part-II of the ISO standard, <a id="idx:predicateproperty2:1079"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
+aware of any Prolog system that implements part-II of the ISO standard, <a id="idx:predicateproperty2:1080"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a> 
 is available in most systems. There is little consensus on the 
 implemented properties though. SWI-Prolog's <em>auto loading</em> 
 feature further complicate this predicate.
@@ -373,20 +373,20 @@ seen in the tracer.</dd>
 True if the predicate is defined. This property is aware of sources 
 being <em>reloaded</em>, in which case it claims the predicate defined 
 only if it is defined in another source or it has seen a definition in 
-the current source. See <a id="idx:compileauxclauses1:1080"></a><a class="pred" href="consulting.html#compile_aux_clauses/1">compile_aux_clauses/1</a>.</dd>
+the current source. See <a id="idx:compileauxclauses1:1081"></a><a class="pred" href="consulting.html#compile_aux_clauses/1">compile_aux_clauses/1</a>.</dd>
 <dt><strong>det</strong></dt>
 <dd class="defbody">
-The predicate is defined to be deterministic using <a id="idx:det1:1081"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a>.</dd>
+The predicate is defined to be deterministic using <a id="idx:det1:1082"></a><a class="pred" href="debug-determinism.html#det/1">det/1</a>.</dd>
 <dt><strong>discontiguous</strong></dt>
 <dd class="defbody">
-True after <a id="idx:discontiguous1:1082"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
+True after <a id="idx:discontiguous1:1083"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a> 
 was used to flag that the clauses of the predicates may not be 
 contiguous.</dd>
 <dt><strong>dynamic</strong></dt>
 <dd class="defbody">
-True if <a id="idx:assert1:1083"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
-and <a id="idx:retract1:1084"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
-may be used to modify the predicate. This property is set using <a id="idx:dynamic1:1085"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>.</dd>
+True if <a id="idx:assert1:1084"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+and <a id="idx:retract1:1085"></a><a class="pred" href="db.html#retract/1">retract/1</a> 
+may be used to modify the predicate. This property is set using <a id="idx:dynamic1:1086"></a><a class="pred" href="dynamic.html#dynamic/1">dynamic/1</a>.</dd>
 <dt><strong>exported</strong></dt>
 <dd class="defbody">
 True if the predicate is in the public list of the context module.</dd>
@@ -396,11 +396,11 @@ Is true if the predicate is imported into the context module from module <var>Mo
 <dt><strong>file</strong>(<var>FileName</var>)</dt>
 <dd class="defbody">
 Unify <var>FileName</var> with the name of the source file in which the 
-predicate is defined. See also <a id="idx:sourcefile2:1086"></a><a class="pred" href="consulting.html#source_file/2">source_file/2</a> 
+predicate is defined. See also <a id="idx:sourcefile2:1087"></a><a class="pred" href="consulting.html#source_file/2">source_file/2</a> 
 and the property
 <code>line_count</code>. Note that this reports the file of the first 
-clause of a predicate. A more robust interface can be achieved using <a id="idx:nthclause3:1087"></a><a class="pred" href="examineprog.html#nth_clause/3">nth_clause/3</a> 
-and <a id="idx:clauseproperty2:1088"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>.</dd>
+clause of a predicate. A more robust interface can be achieved using <a id="idx:nthclause3:1088"></a><a class="pred" href="examineprog.html#nth_clause/3">nth_clause/3</a> 
+and <a id="idx:clauseproperty2:1089"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>.</dd>
 <dt><strong>foreign</strong></dt>
 <dd class="defbody">
 True if the predicate is defined in the C language.</dd>
@@ -411,7 +411,7 @@ will be defined. Resolving this property goes through the same search
 mechanism as when an undefined predicate is encountered, but does not 
 perform any loading. It searches (1) the module inheritance hierarchy 
 (see
-<a id="idx:defaultmodule2:1089"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>) 
+<a id="idx:defaultmodule2:1090"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>) 
 and (2) the autoload index if the <a class="flag" href="flags.html#flag:unknown">unknown</a> 
 flag is not set to <code>fail</code> in the target module.</dd>
 <dt><strong>indexed</strong>(<var>Indexes</var>)</dt>
@@ -449,7 +449,7 @@ terms.
 
 <p><b>Note:</b> This predicate property should be used for analysis and 
 statistics only. The exact representation of <var>Indexes</var> may 
-change between versions. The utilities <a id="idx:jitilist0:1090"></a><a class="pred" href="prologjiti.html#jiti_list/0">jiti_list/0</a> <a id="idx:jitilist1:1091"></a><a class="pred" href="prologjiti.html#jiti_list/1">jiti_list/1</a> 
+change between versions. The utilities <a id="idx:jitilist0:1091"></a><a class="pred" href="prologjiti.html#jiti_list/0">jiti_list/0</a> <a id="idx:jitilist1:1092"></a><a class="pred" href="prologjiti.html#jiti_list/1">jiti_list/1</a> 
 list the
 <em>jit</em> indexes of matching predicates in a user friendly way.</dd>
 <dt><strong>interpreted</strong></dt>
@@ -464,18 +464,18 @@ True if the predicate is covered by the ISO standard (ISO/IEC 13211-1).</dd>
 <dd class="defbody">
 Unify <var>LineNumber</var> with the line number of the first clause of 
 the predicate. Fails if the predicate is not associated with a file. See 
-also <a id="idx:sourcefile2:1092"></a><a class="pred" href="consulting.html#source_file/2">source_file/2</a>. 
-See also the <code>file</code> property above, notably the reference to <a id="idx:clauseproperty2:1093"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>.</dd>
+also <a id="idx:sourcefile2:1093"></a><a class="pred" href="consulting.html#source_file/2">source_file/2</a>. 
+See also the <code>file</code> property above, notably the reference to <a id="idx:clauseproperty2:1094"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>.</dd>
 <dt><strong>multifile</strong></dt>
 <dd class="defbody">
 True if there may be multiple (or no) files providing clauses for the 
-predicate. This property is set using <a id="idx:multifile1:1094"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>.</dd>
+predicate. This property is set using <a id="idx:multifile1:1095"></a><a class="pred" href="dynamic.html#multifile/1">multifile/1</a>.</dd>
 <dt><strong>meta_predicate</strong>(<var>Head</var>)</dt>
 <dd class="defbody">
-If the predicate is declared as a meta-predicate using <a id="idx:metapredicate1:1095"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>, 
+If the predicate is declared as a meta-predicate using <a id="idx:metapredicate1:1096"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a>, 
 unify <var>Head</var> with the head-pattern. The head-pattern is a 
 compound term with the same name and arity as the predicate where each 
-argument of the term is a meta-predicate specifier. See <a id="idx:metapredicate1:1096"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+argument of the term is a meta-predicate specifier. See <a id="idx:metapredicate1:1097"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 for details.</dd>
 <dt><strong>monotonic</strong></dt>
 <dd class="defbody">
@@ -489,7 +489,7 @@ way using the Prolog flag <a class="flag" href="flags.html#flag:generate_debug_i
 <dt><strong>non_terminal</strong></dt>
 <dd class="defbody">
 True if the predicate implements a <em>grammar rule</em>. See
-<a id="idx:nonterminal1:1097"></a><a class="pred" href="dynamic.html#non_terminal/1">non_terminal/1</a>.</dd>
+<a id="idx:nonterminal1:1098"></a><a class="pred" href="dynamic.html#non_terminal/1">non_terminal/1</a>.</dd>
 <dt><strong>notrace</strong></dt>
 <dd class="defbody">
 Do not show ports of this predicate in the debugger.</dd>
@@ -517,20 +517,20 @@ is not an error for an opaque predicate to depend on incremental or
 monotonic dynamic or tabled predicates.</dd>
 <dt><strong>public</strong></dt>
 <dd class="defbody">
-Predicate is declared public using <a id="idx:public1:1098"></a><a class="pred" href="dynamic.html#public/1">public/1</a>. 
+Predicate is declared public using <a id="idx:public1:1099"></a><a class="pred" href="dynamic.html#public/1">public/1</a>. 
 Note that without further definition, public predicates are considered 
 undefined and this property is <em>not</em> reported.</dd>
 <dt><strong>quasi_quotation_syntax</strong></dt>
 <dd class="defbody">
 The predicate (with arity&nbsp;4) is declared to provide quasi quotation 
-syntax with <a id="idx:quasiquotationsyntax1:1099"></a><a class="pred" href="quasiquotations.html#quasi_quotation_syntax/1">quasi_quotation_syntax/1</a>.</dd>
+syntax with <a id="idx:quasiquotationsyntax1:1100"></a><a class="pred" href="quasiquotations.html#quasi_quotation_syntax/1">quasi_quotation_syntax/1</a>.</dd>
 <dt><strong>size</strong>(<var>Bytes</var>)</dt>
 <dd class="defbody">
 Memory used for this predicate. This includes the memory of the 
 predicate header, the combined memory of all clauses including erased 
-but not yet garbage collected clauses (see <a id="idx:garbagecollectclauses0:1100"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a> 
+but not yet garbage collected clauses (see <a id="idx:garbagecollectclauses0:1101"></a><a class="pred" href="memory.html#garbage_collect_clauses/0">garbage_collect_clauses/0</a> 
 and
-<a id="idx:clauseproperty2:1101"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>) 
+<a id="idx:clauseproperty2:1102"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a>) 
 and the memory used by clause indexes (see the
 <code>indexed(Indexes)</code> property. <em>Excluded</em> are <em>lingering</em> 
 data structures. These are garbage data structures that have been 
@@ -542,7 +542,7 @@ The predicate has been defined using <em>single sided unification</em>
 rules. See <a class="sec" href="ssu.html#sec:5.6">section 5.6</a>.</dd>
 <dt><strong>static</strong></dt>
 <dd class="defbody">
-The definition can <em>not</em> be modified using <a id="idx:assertz1:1102"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
+The definition can <em>not</em> be modified using <a id="idx:assertz1:1103"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
 and friends. This property is the opposite from <code>dynamic</code>, 
 i.e., for each defined predicate, either <code>static</code> or <code>dynamic</code> 
 is true but never both.</dd>
@@ -574,18 +574,18 @@ The table is subject to
 
 <p>Use the <code>tabled</code> property to enumerate all tabled 
 predicates. See
-<a id="idx:table1:1103"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
+<a id="idx:table1:1104"></a><a class="pred" href="tabling-preds.html#table/1">table/1</a> 
 for details.</dd>
 <dt><strong>thread_local</strong></dt>
 <dd class="defbody">
 If true (only possible on the multithreaded version) each thread has its 
 own clauses for the predicate. This property is set using
-<a id="idx:threadlocal1:1104"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>.</dd>
+<a id="idx:threadlocal1:1105"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>.</dd>
 <dt><strong>transparent</strong></dt>
 <dd class="defbody">
 True if the predicate is declared transparent using the
-<a id="idx:moduletransparent1:1105"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a> 
-or <a id="idx:metapredicate1:1106"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+<a id="idx:moduletransparent1:1106"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a> 
+or <a id="idx:metapredicate1:1107"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 declaration. In the latter case the property <code>meta_predicate(Head)</code> 
 is also provided. See <a class="sec" href="modules.html#sec:6">chapter 6</a> 
 for details.</dd>
@@ -597,21 +597,21 @@ is true if the predicate occurs in the body of a loaded predicate, an
 attempt to call it has been made via one of the meta-call predicates, 
 the predicate has been declared as e.g., a meta-predicate or the 
 predicate had a definition in the past. Originally used to find missing 
-predicate definitions. The current implementation of <a id="idx:listundefined0:1107"></a><a class="pred" href="check.html#list_undefined/0">list_undefined/0</a> 
+predicate definitions. The current implementation of <a id="idx:listundefined0:1108"></a><a class="pred" href="check.html#list_undefined/0">list_undefined/0</a> 
 used cross-referencing. Deprecated.</dd>
 <dt><strong>visible</strong></dt>
 <dd class="defbody">
 True when predicate can be called without raising a predicate existence 
 error. This means that the predicate is (1) defined, (2) can be 
-inherited from one of the default modules (see <a id="idx:defaultmodule2:1108"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>) 
+inherited from one of the default modules (see <a id="idx:defaultmodule2:1109"></a><a class="pred" href="importmodule.html#default_module/2">default_module/2</a>) 
 or (3) can be autoloaded. The behaviour is logically consistent iff the 
 property
 <code>visible</code> is provided explicitly. If the property is left 
 unbound, only defined predicates are enumerated.</dd>
 <dt><strong>volatile</strong></dt>
 <dd class="defbody">
-If true, the clauses are not saved into a saved state by <a id="idx:qsaveprogram12:1109"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>. 
-This property is set using <a id="idx:volatile1:1110"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>.
+If true, the clauses are not saved into a saved state by <a id="idx:qsaveprogram12:1110"></a><a class="pred" href="saved-states.html#qsave_program/1">qsave_program/[1,2]</a>. 
+This property is set using <a id="idx:volatile1:1111"></a><a class="pred" href="saved-states.html#volatile/1">volatile/1</a>.
 </dd>
 </dl>
 
@@ -624,7 +624,7 @@ term, whose name and arity are used as a predicate specification. <var>Dwim</var
 is instantiated with the most general term built from <var>Name</var> 
 and the arity of a defined predicate that matches the predicate 
 specified by
-<var>Term</var> in the&lsquo;Do What I Mean' sense. See <a id="idx:dwimmatch2:1111"></a><a class="pred" href="miscpreds.html#dwim_match/2">dwim_match/2</a> 
+<var>Term</var> in the&lsquo;Do What I Mean' sense. See <a id="idx:dwimmatch2:1112"></a><a class="pred" href="miscpreds.html#dwim_match/2">dwim_match/2</a> 
 for&lsquo;Do What I Mean' string matching. Internal system predicates 
 are not generated, unless the access level is <code>system</code> (see
 <a class="flag" href="flags.html#flag:access_level">access_level</a>). 
@@ -635,21 +635,21 @@ Backtracking provides all alternative matches.</dd>
 True if <var>Head</var> can be unified with a clause head and <var>Body</var> 
 with the corresponding clause body. Gives alternative clauses on 
 backtracking. For facts, <var>Body</var> is unified with the atom <var>true</var>. 
-Note that SWI-Prolog allows <a id="idx:clause2:1112"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
-to work on both dynamic and static code.<sup class="fn">93<span class="fn-text">Using <a id="idx:clause2:1113"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+Note that SWI-Prolog allows <a id="idx:clause2:1113"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+to work on both dynamic and static code.<sup class="fn">93<span class="fn-text">Using <a id="idx:clause2:1114"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
 is disallowed if either the flag <a class="flag" href="flags.html#flag:iso">iso</a> 
 or <a class="flag" href="flags.html#flag:protect_static_code">protect_static_code</a> 
-is <code>true</code>.</span></sup> Note that <a id="idx:clause2:1114"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> <em>decompiles</em> 
+is <code>true</code>.</span></sup> Note that <a id="idx:clause2:1115"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> <em>decompiles</em> 
 the actual clause and may return a clause that is different from the 
 source or asserted clause, i.e.,
-<a id="idx:clause2:1115"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
+<a id="idx:clause2:1116"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a> 
 only promises <em>semantic equivalence</em>.</dd>
 <dt class="pubdef"><a id="clause/3"><strong>clause</strong>(<var>:Head, 
 ?Body, ?Reference</var>)</a></dt>
 <dd class="defbody">
-Equivalent to <a id="idx:clause2:1116"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a>, 
+Equivalent to <a id="idx:clause2:1117"></a><a class="pred" href="examineprog.html#clause/2">clause/2</a>, 
 but unifies <var>Reference</var> with a unique reference to the clause 
-(see also <a id="idx:assert2:1117"></a><a class="pred" href="db.html#assert/2">assert/2</a>, <a id="idx:erase1:1118"></a><a class="pred" href="db.html#erase/1">erase/1</a>). 
+(see also <a id="idx:assert2:1118"></a><a class="pred" href="db.html#assert/2">assert/2</a>, <a id="idx:erase1:1119"></a><a class="pred" href="db.html#erase/1">erase/1</a>). 
 If <var>Reference</var> is instantiated to a reference the clause's head 
 and body will be unified with <var>Head</var> and <var>Body</var>.</dd>
 <dt class="pubdef"><a id="nth_clause/3"><strong>nth_clause</strong>(<var>?Pred, 
@@ -663,7 +663,7 @@ and arity of <var>Pred</var> are used to determine the predicate. If <var>Index<
 is provided, <var>Reference</var> will be unified with the clause 
 reference. If <var>Index</var> is unbound, backtracking will yield both 
 the indexes and the references of all clauses of the predicate. The 
-following example finds the 2nd clause of <a id="idx:append3:1119"></a><a class="pred" href="lists.html#append/3">append/3</a>:
+following example finds the 2nd clause of <a id="idx:append3:1120"></a><a class="pred" href="lists.html#append/3">append/3</a>:
 
 <pre class="code">
 ?- use_module(library(lists)).
@@ -679,10 +679,10 @@ Body = append(_G24, _G21, _G27).
 -Property</var>)</a></dt>
 <dd class="defbody">
 Queries properties of a clause. <var>ClauseRef</var> is a reference to a 
-clause as produced by <a id="idx:clause3:1120"></a><a class="pred" href="examineprog.html#clause/3">clause/3</a>, <a id="idx:nthclause3:1121"></a><a class="pred" href="examineprog.html#nth_clause/3">nth_clause/3</a> 
+clause as produced by <a id="idx:clause3:1121"></a><a class="pred" href="examineprog.html#clause/3">clause/3</a>, <a id="idx:nthclause3:1122"></a><a class="pred" href="examineprog.html#nth_clause/3">nth_clause/3</a> 
 or
-<a id="idx:prologframeattribute3:1122"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a>. 
-Unlike most other predicates that access clause references, <a id="idx:clauseproperty2:1123"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a> 
+<a id="idx:prologframeattribute3:1123"></a><a class="pred" href="manipstack.html#prolog_frame_attribute/3">prolog_frame_attribute/3</a>. 
+Unlike most other predicates that access clause references, <a id="idx:clauseproperty2:1124"></a><a class="pred" href="examineprog.html#clause_property/2">clause_property/2</a> 
 may be used to get information about erased clauses that have not yet 
 been reclaimed. <var>Property</var> is one of the following:
 
@@ -691,7 +691,7 @@ been reclaimed. <var>Property</var> is one of the following:
 <dd class="defbody">
 Unify <var>FileName</var> with the name of the file from which the 
 clause is loaded. Fails if the clause was not created by loading a file 
-(e.g., clauses added using <a id="idx:assertz1:1124"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>). 
+(e.g., clauses added using <a id="idx:assertz1:1125"></a><a class="pred" href="db.html#assertz/1">assertz/1</a>). 
 See also <code>source</code>.
 </dd>
 <dt><strong>line_count</strong>(<var>LineNumber</var>)</dt>
@@ -712,7 +712,7 @@ Unify <var>FileName</var> with the name of the source file that created
 the clause. This is the same as the <code>file</code> property, unless 
 the file is loaded from a file that is textually included into source 
 using
-<a id="idx:include1:1125"></a><a class="pred" href="consulting.html#include/1">include/1</a>. 
+<a id="idx:include1:1126"></a><a class="pred" href="consulting.html#include/1">include/1</a>. 
 In this scenario, <code>file</code> is the included file, while the <code>source</code> 
 property refers to the <em>main</em> file.
 </dd>
@@ -729,7 +729,7 @@ referenced.
 <dd class="defbody">
 <var>PredicateIndicator</var> denotes the predicate to which this clause 
 belongs. This is needed to obtain information on erased clauses because 
-the usual way to obtain this information using <a id="idx:clause3:1126"></a><a class="pred" href="examineprog.html#clause/3">clause/3</a> 
+the usual way to obtain this information using <a id="idx:clause3:1127"></a><a class="pred" href="examineprog.html#clause/3">clause/3</a> 
 fails for erased clauses.
 </dd>
 <dt><strong>module</strong>(<var>Module</var>)</dt>

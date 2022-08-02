@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 2.13</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 2.13</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,72 +238,72 @@ overview of hook predicates</span></a></h2>
 
 <a id="sec:hooks"></a>
 
-<p><a id="idx:hooks:182"></a>SWI-Prolog provides a large number of 
+<p><a id="idx:hooks:181"></a>SWI-Prolog provides a large number of 
 hooks, mainly to control handling messages, debugging, startup, 
 shut-down, macro-expansion, etc. Below is a summary of all defined hooks 
 with an indication of their portability.
 
 <p>
 <ul class="latex">
-<li><i><a id="idx:portray1:183"></a><a class="pred" href="termrw.html#portray/1">portray/1</a></i><br>
-Hook into <a id="idx:writeterm3:184"></a><a class="pred" href="termrw.html#write_term/3">write_term/3</a> 
+<li><i><a id="idx:portray1:182"></a><a class="pred" href="termrw.html#portray/1">portray/1</a></i><br>
+Hook into <a id="idx:writeterm3:183"></a><a class="pred" href="termrw.html#write_term/3">write_term/3</a> 
 to alter the way terms are printed (ISO).
-<li><i><a id="idx:messagehook3:185"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a></i><br>
-Hook into <a id="idx:printmessage2:186"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<li><i><a id="idx:messagehook3:184"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a></i><br>
+Hook into <a id="idx:printmessage2:185"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 to alter the way system messages are printed (Quintus/SICStus).
-<li><i><a id="idx:messageproperty2:187"></a><a class="pred" href="printmsg.html#message_property/2">message_property/2</a></i><br>
-Hook into <a id="idx:printmessage2:188"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<li><i><a id="idx:messageproperty2:186"></a><a class="pred" href="printmsg.html#message_property/2">message_property/2</a></i><br>
+Hook into <a id="idx:printmessage2:187"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 that defines prefix, output stream, color, etc.
-<li><i><a id="idx:messageprefixhook2:189"></a><span class="pred-ext">message_prefix_hook/2</span></i><br>
-Hook into <a id="idx:printmessage2:190"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<li><i><a id="idx:messageprefixhook2:188"></a><span class="pred-ext">message_prefix_hook/2</span></i><br>
+Hook into <a id="idx:printmessage2:189"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 to add additional prefixes to the message such as the time and thread.
-<li><i><a id="idx:librarydirectory1:191"></a><a class="pred" href="consulting.html#library_directory/1">library_directory/1</a></i><br>
-Hook into <a id="idx:absolutefilename3:192"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+<li><i><a id="idx:librarydirectory1:190"></a><a class="pred" href="consulting.html#library_directory/1">library_directory/1</a></i><br>
+Hook into <a id="idx:absolutefilename3:191"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
 to define new library directories (most Prolog systems).
-<li><i><a id="idx:filesearchpath2:193"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a></i><br>
-Hook into <a id="idx:absolutefilename3:194"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
+<li><i><a id="idx:filesearchpath2:192"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a></i><br>
+Hook into <a id="idx:absolutefilename3:193"></a><a class="pred" href="files.html#absolute_file_name/3">absolute_file_name/3</a> 
 to define new search paths (Quintus/SICStus).
-<li><i><a id="idx:termexpansion2:195"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a></i><br>
-Hook into <a id="idx:loadfiles2:196"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+<li><i><a id="idx:termexpansion2:194"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a></i><br>
+Hook into <a id="idx:loadfiles2:195"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
 to modify read terms before they are compiled (macro-processing) (most 
 Prolog systems).
-<li><i><a id="idx:goalexpansion2:197"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a></i><br>
-Same as <a id="idx:termexpansion2:198"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+<li><i><a id="idx:goalexpansion2:196"></a><a class="pred" href="consulting.html#goal_expansion/2">goal_expansion/2</a></i><br>
+Same as <a id="idx:termexpansion2:197"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
 for individual goals (SICStus).
-<li><i><a id="idx:prologloadfile2:199"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a></i><br>
-Hook into <a id="idx:loadfiles2:200"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+<li><i><a id="idx:prologloadfile2:198"></a><a class="pred" href="loadfilehook.html#prolog_load_file/2">prolog_load_file/2</a></i><br>
+Hook into <a id="idx:loadfiles2:199"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
 to load other data formats for Prolog sources from&lsquo;non-file' 
-resources. The <a id="idx:loadfiles2:201"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
-predicate is the ancestor of <a id="idx:consult1:202"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, <a id="idx:usemodule1:203"></a><a class="pred" href="import.html#use_module/1">use_module/1</a>, 
+resources. The <a id="idx:loadfiles2:200"></a><a class="pred" href="consulting.html#load_files/2">load_files/2</a> 
+predicate is the ancestor of <a id="idx:consult1:201"></a><a class="pred" href="consulting.html#consult/1">consult/1</a>, <a id="idx:usemodule1:202"></a><a class="pred" href="import.html#use_module/1">use_module/1</a>, 
 etc.
-<li><i><a id="idx:prologeditlocate3:204"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a></i><br>
-Hook into <a id="idx:edit1:205"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+<li><i><a id="idx:prologeditlocate3:203"></a><a class="pred" href="edit.html#prolog_edit:locate/3">prolog_edit:locate/3</a></i><br>
+Hook into <a id="idx:edit1:204"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
 to locate objects (SWI).
-<li><i><a id="idx:prologediteditsource1:206"></a><a class="pred" href="edit.html#prolog_edit:edit_source/1">prolog_edit:edit_source/1</a></i><br>
-Hook into <a id="idx:edit1:207"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+<li><i><a id="idx:prologediteditsource1:205"></a><a class="pred" href="edit.html#prolog_edit:edit_source/1">prolog_edit:edit_source/1</a></i><br>
+Hook into <a id="idx:edit1:206"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
 to call an internal editor (SWI).
-<li><i><a id="idx:prologediteditcommand2:208"></a><a class="pred" href="edit.html#prolog_edit:edit_command/2">prolog_edit:edit_command/2</a></i><br>
-Hook into <a id="idx:edit1:209"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
+<li><i><a id="idx:prologediteditcommand2:207"></a><a class="pred" href="edit.html#prolog_edit:edit_command/2">prolog_edit:edit_command/2</a></i><br>
+Hook into <a id="idx:edit1:208"></a><a class="pred" href="edit.html#edit/1">edit/1</a> 
 to define the external editor to use (SWI).
-<li><i><a id="idx:prologlistgoal1:210"></a><a class="pred" href="intlibs.html#prolog_list_goal/1">prolog_list_goal/1</a></i><br>
+<li><i><a id="idx:prologlistgoal1:209"></a><a class="pred" href="intlibs.html#prolog_list_goal/1">prolog_list_goal/1</a></i><br>
 Hook into the tracer to list the code associated to a particular goal 
 (SWI).
-<li><i><a id="idx:prologtraceinterception4:211"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a></i><br>
+<li><i><a id="idx:prologtraceinterception4:210"></a><a class="pred" href="tracehook.html#prolog_trace_interception/4">prolog_trace_interception/4</a></i><br>
 Hook into the tracer to handle trace events (SWI).
-<li><i><a id="idx:prologdebugcontrolhook1:212"></a><a class="pred" href="prologdebug.html#prolog:debug_control_hook/1">prolog:debug_control_hook/1</a></i><br>
-Hook in <a id="idx:spy1:213"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>, <a id="idx:nospy1:214"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>, <a id="idx:nospyall0:215"></a><a class="pred" href="debugger.html#nospyall/0">nospyall/0</a> 
-and <a id="idx:debugging0:216"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a> 
+<li><i><a id="idx:prologdebugcontrolhook1:211"></a><a class="pred" href="prologdebug.html#prolog:debug_control_hook/1">prolog:debug_control_hook/1</a></i><br>
+Hook in <a id="idx:spy1:212"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>, <a id="idx:nospy1:213"></a><a class="pred" href="debugger.html#nospy/1">nospy/1</a>, <a id="idx:nospyall0:214"></a><a class="pred" href="debugger.html#nospyall/0">nospyall/0</a> 
+and <a id="idx:debugging0:215"></a><a class="pred" href="debugger.html#debugging/0">debugging/0</a> 
 to extend these control predicates to higher-level libraries.
-<li><i><a id="idx:prologhelphook1:217"></a><a class="pred" href="intlibs.html#prolog:help_hook/1">prolog:help_hook/1</a></i><br>
-Hook in <a id="idx:help0:218"></a><a class="pred" href="online-help.html#help/0">help/0</a>, <a id="idx:help1:219"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
-and <a id="idx:apropos1:220"></a><a class="pred" href="online-help.html#apropos/1">apropos/1</a> 
+<li><i><a id="idx:prologhelphook1:216"></a><a class="pred" href="intlibs.html#prolog:help_hook/1">prolog:help_hook/1</a></i><br>
+Hook in <a id="idx:help0:217"></a><a class="pred" href="online-help.html#help/0">help/0</a>, <a id="idx:help1:218"></a><a class="pred" href="online-help.html#help/1">help/1</a> 
+and <a id="idx:apropos1:219"></a><a class="pred" href="online-help.html#apropos/1">apropos/1</a> 
 to extend the help system.
-<li><i><a id="idx:resource3:221"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a></i><br>
+<li><i><a id="idx:resource3:220"></a><a class="pred" href="program-resources.html#resource/3">resource/3</a></i><br>
 Define a new resource (not really a hook, but similar) (SWI).
-<li><i><a id="idx:exception3:222"></a><a class="pred" href="exception3.html#exception/3">exception/3</a></i><br>
+<li><i><a id="idx:exception3:221"></a><a class="pred" href="exception3.html#exception/3">exception/3</a></i><br>
 Old attempt to a generic hook mechanism. Handles undefined predicates 
 (SWI).
-<li><i><a id="idx:attrunifyhook2:223"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a></i><br>
+<li><i><a id="idx:attrunifyhook2:222"></a><a class="pred" href="attvar.html#attr_unify_hook/2">attr_unify_hook/2</a></i><br>
 Unification hook for attributed variables. Can be defined in any module. 
 See <a class="sec" href="attvar.html#sec:8.1">section 8.1</a> for 
 details.

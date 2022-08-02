@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2013-2021, VU University Amsterdam
+    Copyright (c)  2013-2022, VU University Amsterdam
                               CWI, Amsterdam
                               SWI-Prolog Solutions b.v
     All rights reserved.
@@ -57,7 +57,8 @@
     safe_meta/2,                    % Goal, Calls
     safe_meta/3,                    % Goal, Context, Calls
     safe_global_variable/1,         % Name
-    safe_directive/1.               % Module:Goal
+    safe_directive/1,               % Module:Goal
+    safe_prolog_flag/2.             % +Name, +Value
 
 % :- debug(sandbox).
 
@@ -74,7 +75,6 @@ safe_goal/1, which determines whether it is safe to call its argument.
 @see    http://www.swi-prolog.org/pldoc/package/pengines.html
 */
 
-:- create_prolog_flag(no_sandbox, false, [type(boolean), keep(true)]).
 
 :- meta_predicate
     safe_goal(:),
@@ -146,9 +146,6 @@ safe(V, _, Parents, _, _) :-
     Error = error(instantiation_error, sandbox(V, Parents)),
     nb_setval(sandbox_last_error, Error),
     throw(Error).
-
-safe(_,_,_Parents,_Safe0,true):-current_prolog_flag(no_sandbox,true),!.
-
 safe(M:G, _, Parents, Safe0, Safe) :-
     !,
     must_be(atom, M),
@@ -264,7 +261,6 @@ compiled(system:(@(_,_))).
 known_module(M:_, _) :-
     current_module(M),
     !.
-known_module(_,_):- current_prolog_flag(no_sandbox, true), !, fail.    
 known_module(M:G, Parents) :-
     throw(error(permission_error(call, sandboxed, M:G),
                 sandbox(M:G, Parents))).
@@ -432,9 +428,9 @@ term_expansion(safe_primitive(Goal), Term) :-
     ->  Term = safe_primitive(Goal)
     ;   Term = []
     ).
-term_expansion((safe_primitive(Goal) :- _), Term) :-
+term_expansion((safe_primitive(Goal) :- Body), Term) :-
     (   verify_safe_declaration(Goal)
-    ->  Term = safe_primitive(Goal)
+    ->  Term = (safe_primitive(Goal) :- Body)
     ;   Term = []
     ).
 
@@ -444,10 +440,10 @@ system:term_expansion(sandbox:safe_primitive(Goal), Term) :-
     ->  Term = sandbox:safe_primitive(Goal)
     ;   Term = []
     ).
-system:term_expansion((sandbox:safe_primitive(Goal) :- _), Term) :-
+system:term_expansion((sandbox:safe_primitive(Goal) :- Body), Term) :-
     \+ current_prolog_flag(xref, true),
     (   verify_safe_declaration(Goal)
-    ->  Term = sandbox:safe_primitive(Goal)
+    ->  Term = (sandbox:safe_primitive(Goal) :- Body)
     ;   Term = []
     ).
 
@@ -455,7 +451,6 @@ verify_safe_declaration(Var) :-
     var(Var),
     !,
     instantiation_error(Var).
-verify_safe_declaration(_):- current_prolog_flag(no_sandbox, true), !.
 verify_safe_declaration(Module:Goal) :-
     !,
     must_be(atom, Module),
@@ -483,8 +478,8 @@ ok_meta(system:assert(_)).
 ok_meta(system:load_files(_,_)).
 ok_meta(system:use_module(_,_)).
 ok_meta(system:use_module(_)).
+ok_meta('$syspreds':predicate_property(_,_)).
 
-verify_predefined_safe_declarations :- current_prolog_flag(no_sandbox, true), !.
 verify_predefined_safe_declarations :-
     forall(clause(safe_primitive(Goal), _Body, Ref),
            ( E = error(F,_),
@@ -581,11 +576,13 @@ safe_primitive(system:setarg(_,_,_)).
 safe_primitive(system:nb_setarg(_,_,_)).
 safe_primitive(system:nb_linkarg(_,_,_)).
 safe_primitive(functor(_,_,_)).
+safe_primitive(system:functor(_,_,_,_)).
 safe_primitive(_ =.. _).
 safe_primitive(system:compound_name_arity(_,_,_)).
 safe_primitive(system:compound_name_arguments(_,_,_)).
 safe_primitive(system:'$filled_array'(_,_,_,_)).
 safe_primitive(copy_term(_,_)).
+safe_primitive(system:copy_term(_,_,_,_)).
 safe_primitive(system:duplicate_term(_,_)).
 safe_primitive(system:copy_term_nat(_,_)).
 safe_primitive(system:size_abstract_term(_,_,_)).
@@ -690,6 +687,10 @@ safe_primitive(asserta(X)) :- safe_assert(X).
 safe_primitive(assertz(X)) :- safe_assert(X).
 safe_primitive(retract(X)) :- safe_assert(X).
 safe_primitive(retractall(X)) :- safe_assert(X).
+safe_primitive('$dcg':dcg_translate_rule(_,_)).
+safe_primitive('$syspreds':predicate_property(Pred, _)) :-
+    nonvar(Pred),
+    Pred \= (_:_).
 
 % We need to do data flow analysis to find the tag of the
 % target key before we can conclude that functions on dicts
@@ -838,7 +839,6 @@ safe_assert(_).
 %   private information from other modules.
 
 safe_clause(H) :- var(H), !.
-safe_clause(_):- current_prolog_flag(no_sandbox, true), !.
 safe_clause(_:_) :- !, fail.
 safe_clause(_).
 
@@ -848,7 +848,6 @@ safe_clause(_).
 %   True if Name  is  a  global   variable  to  which  assertion  is
 %   considered safe.
 
-safe_global_var(_Name):- current_prolog_flag(no_sandbox, true), !.
 safe_global_var(Name) :-
     var(Name),
     !,
@@ -956,9 +955,6 @@ expand_nt(NT, Xs0, Xs, NewGoal) :-
 safe_meta_call(Goal, _, _Called) :-
     debug(sandbox(meta), 'Safe meta ~p?', [Goal]),
     fail.
-    
-safe_meta_call(_, _, _):- current_prolog_flag(no_sandbox, true), !.    
-    
 safe_meta_call(Goal, Context, Called) :-
     (   safe_meta(Goal, Called)
     ->  true
@@ -1075,6 +1071,7 @@ safe_meta(call(5,*,*,*,*,*)).
 safe_meta(call(6,*,*,*,*,*,*)).
 safe_meta('$tabling':start_tabling(*,0)).
 safe_meta('$tabling':start_tabling(*,0,*,*)).
+safe_meta(wfs:call_delays(0,*)).
 
 %!  safe_output(+Output)
 %
@@ -1136,7 +1133,6 @@ format_callables([_|TT], [_|TA], TG) :-
 prolog:sandbox_allowed_directive(Directive) :-
     debug(sandbox(directive), 'Directive: ~p', [Directive]),
     fail.
-prolog:sandbox_allowed_directive(_):- current_prolog_flag(no_sandbox, true), !.    
 prolog:sandbox_allowed_directive(Directive) :-
     safe_directive(Directive),
     !.
@@ -1179,7 +1175,6 @@ prolog:sandbox_allowed_directive(G) :-
 %     ==
 
 
-safe_pattr(_):- current_prolog_flag(no_sandbox, true), !.    
 safe_pattr(dynamic(_)).
 safe_pattr(thread_local(_)).
 safe_pattr(volatile(_)).
@@ -1190,7 +1185,6 @@ safe_pattr(meta_predicate(_)).
 safe_pattr(table(_)).
 safe_pattr(non_terminal(_)).
 
-safe_pattr(_, _):- current_prolog_flag(no_sandbox, true), !.    
 safe_pattr(Var, _) :-
     var(Var),
     !,
@@ -1230,7 +1224,6 @@ directive_loads_file(load_files(library(X), _Options), X).
 directive_loads_file(ensure_loaded(library(X)), X).
 directive_loads_file(include(X), X).
 
-safe_path(_):- current_prolog_flag(no_sandbox, true), !.    
 safe_path(X) :-
     var(X),
     !,
@@ -1286,7 +1279,6 @@ safe_prolog_flag(max_table_answer_size,_).
 safe_prolog_flag(max_table_answer_size_action,_).
 safe_prolog_flag(max_table_subgoal_size,_).
 safe_prolog_flag(max_table_subgoal_size_action,_).
-safe_prolog_flag(_,_):- current_prolog_flag(no_sandbox, true), !.    
 
 
 %!  prolog:sandbox_allowed_expansion(:G) is det.

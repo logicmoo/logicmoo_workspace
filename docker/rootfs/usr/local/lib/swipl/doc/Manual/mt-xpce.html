@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 10.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 10.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -252,7 +252,7 @@ from a single thread and deploy other threads for (long) computations.
 <p>Traditionally, XPCE runs in the foreground (<code>main</code>) 
 thread. We are working towards a situation where XPCE can run 
 comfortably in a separate thread. A separate XPCE thread can be created 
-using <a id="idx:pcedispatch1:2417"></a><a class="pred" href="mt-xpce.html#pce_dispatch/1">pce_dispatch/1</a>. 
+using <a id="idx:pcedispatch1:2421"></a><a class="pred" href="mt-xpce.html#pce_dispatch/1">pce_dispatch/1</a>. 
 It is also possible to create this thread as the <code>library(()</code>pce) 
 is loaded by setting the <b>xpce_threaded</b> to <code>true</code>.
 
@@ -264,22 +264,22 @@ two predicates to communicate with XPCE.
 <dd class="defbody">
 Assuming XPCE is running in the foreground thread, this call gives 
 background threads the opportunity to make calls to the XPCE thread. A 
-call to <a id="idx:inpcethread1:2418"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a> 
+call to <a id="idx:inpcethread1:2422"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a> 
 succeeds immediately, copying <var>Goal</var> to the XPCE thread. <var>Goal</var> 
 is added to the XPCE event queue and executed synchronous to normal user 
 events like typing and clicking.</dd>
 <dt class="pubdef"><span class="pred-tag">[semidet]</span><a id="in_pce_thread_sync/1"><strong>in_pce_thread_sync</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
-Same as <a id="idx:inpcethread1:2419"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a>, 
+Same as <a id="idx:inpcethread1:2423"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a>, 
 but wait for <var>Goal</var> to be completed. Success depends on the 
 success of executing <var>Goal</var>. Variable bindings inside <var>Goal</var> 
 are visible to the caller, but it should be noted that the values are 
 being <em>copied</em>. If <var>Goal</var> throws an exception, this 
-exception is re-thrown by <a id="idx:inpcethread1:2420"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a>. 
-If the calling thread is the&lsquo;pce thread', <a id="idx:inpcethreadsync1:2421"></a><a class="pred" href="mt-xpce.html#in_pce_thread_sync/1">in_pce_thread_sync/1</a> 
-executes a direct meta-call. See also <a id="idx:inpcethread1:2422"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a>.
+exception is re-thrown by <a id="idx:inpcethread1:2424"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a>. 
+If the calling thread is the&lsquo;pce thread', <a id="idx:inpcethreadsync1:2425"></a><a class="pred" href="mt-xpce.html#in_pce_thread_sync/1">in_pce_thread_sync/1</a> 
+executes a direct meta-call. See also <a id="idx:inpcethread1:2426"></a><a class="pred" href="mt-xpce.html#in_pce_thread/1">in_pce_thread/1</a>.
 
-<p>Note that <a id="idx:inpcethreadsync1:2423"></a><a class="pred" href="mt-xpce.html#in_pce_thread_sync/1">in_pce_thread_sync/1</a> 
+<p>Note that <a id="idx:inpcethreadsync1:2427"></a><a class="pred" href="mt-xpce.html#in_pce_thread_sync/1">in_pce_thread_sync/1</a> 
 is expensive because it requires copying and thread communication. For 
 example, <code>in_pce_thread_synctrue</code> runs at approximately 
 50,000 calls per second (AMD Phenom 9600B, Ubuntu 11.04).</dd>
@@ -290,7 +290,7 @@ event handling. In the X11 version this call creates a thread that
 executes the X11 event-dispatch loop. In MS-Windows it creates a thread 
 that executes a windows event-dispatch loop. The XPCE event-handling 
 thread has the alias <code>pce</code>. <var>Options</var> specifies the 
-thread attributes as <a id="idx:threadcreate3:2424"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.
+thread attributes as <a id="idx:threadcreate3:2428"></a><a class="pred" href="threadcreate.html#thread_create/3">thread_create/3</a>.
 </dd>
 </dl>
 

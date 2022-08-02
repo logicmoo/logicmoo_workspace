@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 12.9</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 12.9</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -254,7 +254,7 @@ The <code>IOSTREAM</code> type has considerably more features though.
 The <code>IOSTREAM</code> type is practically disconnected from the rest 
 of the Prolog system. Prolog refers to streams either by
 <em>alias</em> (<code>user_input</code>, etc. or created using the
-<code>alias(Name)</code> option of <a id="idx:open4:2576"></a><a class="pred" href="IO.html#open/4">open/4</a>) 
+<code>alias(Name)</code> option of <a id="idx:open4:2581"></a><a class="pred" href="IO.html#open/4">open/4</a>) 
 or using a <em>stream handle</em> which is represented as a <em>blob</em> 
 (see <a class="sec" href="foreigninclude.html#sec:12.4.8">section 12.4.8</a>). 
 Foreign extensions that wish to access or define streams should include
@@ -291,7 +291,7 @@ these flags:
 <dl class="latex">
 <dt><b><code>SIO_INPUT</code></b></dt>
 <dd class="defbody">
-Get an <em>input stream</em>. If <var>t</var> is a stream pair (see <a id="idx:streampair3:2577"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a>), 
+Get an <em>input stream</em>. If <var>t</var> is a stream pair (see <a id="idx:streampair3:2582"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a>), 
 return the input channel. If <var>t</var> is an output stream the 
 function fails.
 </dd>
@@ -309,6 +309,13 @@ If the function fails no exception is produced.
 
 <p>The returned stream is owned by the calling thread using
 <a class="func" href="foreign-streams.html#PL_acquire_stream()">PL_acquire_stream()</a>.</dd>
+<dt class="pubdef"><a id="PL_get_stream_from_blob()"><var>int</var> <strong>PL_get_stream_from_blob</strong>(<var>atom_t 
+b, IOSTREAM **s, int flags</var>)</a></dt>
+<dd class="defbody">
+Same as <a class="func" href="foreign-streams.html#PL_get_stream()">PL_get_stream()</a>, 
+but operates directly on the blob <var>b</var>. This allows for foreign 
+code that wishes long term access to a stream to maintain a handle to 
+the stream as a (registered) <code>atom_t</code> object rather than a <code>IOSTREAM*</code>.</dd>
 <dt class="pubdef"><a id="PL_acquire_stream()"><var>IOSTREAM *</var> <strong>PL_acquire_stream</strong>(<var>IOSTREAM 
 *s</var>)</a></dt>
 <dd class="defbody">
@@ -432,7 +439,7 @@ encoding is not changed.</dd>
 Called by <a class="func" href="foreign-streams.html#Sflush()">Sflush()</a> 
 after flushing the stream's output buffer. Note that this is only called 
 on an <em>explicit</em> flush using <a class="func" href="foreign-streams.html#Sflush()">Sflush()</a> 
-or <a id="idx:flushoutput1:2578"></a><a class="pred" href="chario.html#flush_output/1">flush_output/1</a>. 
+or <a id="idx:flushoutput1:2583"></a><a class="pred" href="chario.html#flush_output/1">flush_output/1</a>. 
 An implicit flush because the output buffer is full does <em>not</em> 
 call this hook.</dd>
 <dt><b><code>SIO_GETSIZE</code>, <code>int64_t*</code></b></dt>
@@ -489,7 +496,7 @@ Otherwise this is a binary stream and the encoding is set to
 </dd>
 <dt><b><code>SIO_RECORDPOS</code></b></dt>
 <dd class="defbody">
-If given, enable position maintenance on the stream. This is used by <a class="func" href="foreign-streams.html#Stell()">Stell()</a>, <a class="func" href="foreign-streams.html#Sseek()">Sseek()</a>, <a id="idx:streamproperty2:2579"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+If given, enable position maintenance on the stream. This is used by <a class="func" href="foreign-streams.html#Stell()">Stell()</a>, <a class="func" href="foreign-streams.html#Sseek()">Sseek()</a>, <a id="idx:streamproperty2:2584"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
 using the
 <code>position</code> property and related predicates.
 </dd>
@@ -803,7 +810,7 @@ includes
 buffer is empty. Update the stream position information unless <var>flags</var> 
 include <code>SIO_RP_NOPOS</code>. This function effectively provides 
 functionality similar to POSIX read() on a stream. This function is used 
-by <a id="idx:readpendingcodes3:2580"></a><a class="pred" href="chario.html#read_pending_codes/3">read_pending_codes/3</a>.</dd>
+by <a id="idx:readpendingcodes3:2585"></a><a class="pred" href="chario.html#read_pending_codes/3">read_pending_codes/3</a>.</dd>
 <dt class="pubdef"><a id="Spending()"><var>size_t</var> <strong>Spending</strong>(<var>IOSTREAM 
 *s</var>)</a></dt>
 <dd class="defbody">
@@ -1018,7 +1025,7 @@ The default encoding of a text stream depends on the Prolog flag
 <a class="flag" href="flags.html#flag:encoding">encoding</a>. The 
 encoding is used by all functions that perform text I/O on a stream. The 
 encoding can be changed at any moment using <a class="func" href="foreign-streams.html#Ssetenc()">Ssetenc()</a> 
-which is available from Prolog using the <a id="idx:setstream2:2581"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>
+which is available from Prolog using the <a id="idx:setstream2:2586"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>
 <code>encoding(Encoding)</code> property. Functions that explicitly 
 manage the encoding are:
 
@@ -1068,7 +1075,7 @@ stream line endings</span></a></h3>
 handling of the newline convention. Note that inside Prolog all lines 
 end with a single newline (<code>\u000a</code>, <code>\n</code>) code 
 point. The values are described below. The default depends on the OS and 
-can be manipulated using the <code>newline(Mode)</code> property of <a id="idx:setstream2:2582"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.
+can be manipulated using the <code>newline(Mode)</code> property of <a id="idx:setstream2:2587"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.
 
 <dl class="latex">
 <dt><b><code>SIO_NL_DETECT</code></b></dt>
@@ -1083,7 +1090,7 @@ Do not do any translation on input or output.
 <dt><b><code>SIO_NL_DOS</code></b></dt>
 <dd class="defbody">
 Emit a newline (<code>\n</code>) as <code>\r\n</code>. Discard <code>\r</code> 
-from the input.<sup class="fn">218<span class="fn-text">The current 
+from the input.<sup class="fn">220<span class="fn-text">The current 
 implementation does not check that the character is followed by <code><code>\</code></code>n.</span></sup>
 </dd>
 </dl>
@@ -1109,7 +1116,7 @@ typedef struct io_position
 
 <p>If a stream is created using the flag <code>SIO_RECORDPOS</code> the 
 IO functions maintain the position information. Note that, supporting 
-the ISO stream position data (see <a id="idx:streamproperty2:2583"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>), 
+the ISO stream position data (see <a id="idx:streamproperty2:2588"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>), 
 both the byte and character position is maintained. These may differ if 
 the stream uses a multibyte encoding.
 

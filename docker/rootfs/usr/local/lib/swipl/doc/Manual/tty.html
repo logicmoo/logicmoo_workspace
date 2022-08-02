@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.34</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.34</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -262,15 +262,15 @@ fast.
 <dd class="defbody">
 Goto position (<var>X</var>, <var>Y</var>) on the screen. Note that the 
 predicates
-<a id="idx:linecount2:1680"></a><a class="pred" href="streamstat.html#line_count/2">line_count/2</a> 
-and <a id="idx:lineposition2:1681"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a> 
+<a id="idx:linecount2:1683"></a><a class="pred" href="streamstat.html#line_count/2">line_count/2</a> 
+and <a id="idx:lineposition2:1684"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a> 
 will not have a well-defined behaviour while using this predicate.
 </dd>
 <dt class="pubdef"><a id="tty_put/2"><strong>tty_put</strong>(<var>+Atom, 
 +Lines</var>)</a></dt>
 <dd class="defbody">
 Put an atom via the termcap library function tputs(). This function 
-decodes padding information in the strings returned by <a id="idx:ttygetcapability3:1682"></a><a class="pred" href="tty.html#tty_get_capability/3">tty_get_capability/3</a> 
+decodes padding information in the strings returned by <a id="idx:ttygetcapability3:1685"></a><a class="pred" href="tty.html#tty_get_capability/3">tty_get_capability/3</a> 
 and should be used to output these strings. <var>Lines</var> is the 
 number of lines affected by the operation, or 1 if not applicable (as in 
 almost all cases).
@@ -283,10 +283,10 @@ Determine the size of the terminal. Platforms:
 <dl class="latex">
 <dt><b>Unix</b></dt>
 <dd>
-If the system provides <em>ioctl</em> calls for this, these are used and <a id="idx:ttysize2:1683"></a><a class="pred" href="tty.html#tty_size/2">tty_size/2</a> 
+If the system provides <em>ioctl</em> calls for this, these are used and <a id="idx:ttysize2:1686"></a><a class="pred" href="tty.html#tty_size/2">tty_size/2</a> 
 properly reflects the actual size after a user resize of the window. The <em>ioctl</em> 
 is issued on the file descriptor associated with the <code>user_input</code> 
-stream. As a fallback, the system uses <a id="idx:ttygetcapability3:1684"></a><a class="pred" href="tty.html#tty_get_capability/3">tty_get_capability/3</a> 
+stream. As a fallback, the system uses <a id="idx:ttygetcapability3:1687"></a><a class="pred" href="tty.html#tty_get_capability/3">tty_get_capability/3</a> 
 using <code>li</code> and <code>co</code> capabilities. In this case the 
 reported size reflects the size at the first call and is not updated 
 after a user-initiated resize of the terminal.</dd>

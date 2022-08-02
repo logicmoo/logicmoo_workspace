@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 6.5</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 6.5</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -242,23 +242,23 @@ a meta-predicate</span></a></h2>
 dynamically, modifies a predicate, or reasons about properties of a 
 predicate. Such predicates use either a compound term or a <em>predicate 
 indicator</em> to describe the predicate they address, e.g., <code>assert(name(jan))</code> 
-or <code>abolish(<a id="idx:name1:1999"></a><span class="pred-ext">name/1</span>)</code>. 
+or <code>abolish(<a id="idx:name1:2003"></a><span class="pred-ext">name/1</span>)</code>. 
 With modules, this simple schema no longer works as each module defines 
 its own mapping from name+arity to predicate. This is resolved by 
 wrapping the original description in a term &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt;, 
 e.g., <code>assert(person:name(jan))</code> or
-<code>abolish(<a id="idx:personname1:2000"></a><span class="pred-ext">person:name/1</span>)</code>.
+<code>abolish(<a id="idx:personname1:2004"></a><span class="pred-ext">person:name/1</span>)</code>.
 
-<p>Of course, when calling <a id="idx:assert1:2001"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
+<p>Of course, when calling <a id="idx:assert1:2005"></a><a class="pred" href="db.html#assert/1">assert/1</a> 
 from inside a module, we expect to assert to a predicate local to this 
 module. In other words, we do not wish to provide this <code><code>:</code>/2</code> 
-wrapper by hand. The <a id="idx:metapredicate1:2002"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+wrapper by hand. The <a id="idx:metapredicate1:2006"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 directive tells the compiler that certain arguments are terms that will 
 be used to look up a predicate and thus need to be wrapped (qualified) 
 with &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt;, unless they are 
 already wrapped.
 
-<p>In the example below, we use this to define <a id="idx:maplist3:2003"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+<p>In the example below, we use this to define <a id="idx:maplist3:2007"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
 inside a module. The argument&lsquo;2' in the meta_predicate declaration 
 means that the argument is module-sensitive and refers to a predicate 
 with an arity that is two more than the term that is passed in. The 
@@ -268,11 +268,11 @@ and <code><code>?</code></code>, which denote
 <em>modes</em>. The values 0..9 are used by the
 <em>cross-referencer</em> and syntax highlighting. Note that the helper 
 predicate maplist_/3 does not need to be declared as a meta-predicate 
-because the <a id="idx:maplist3:2004"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
+because the <a id="idx:maplist3:2008"></a><a class="pred" href="apply.html#maplist/3">maplist/3</a> 
 wrapper already ensures that
 <var>Goal</var> is qualified as &lt;<var>module</var>&gt;:<var>Goal</var>. 
 See the description of
-<a id="idx:metapredicate1:2005"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+<a id="idx:metapredicate1:2009"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 for details.
 
 <pre class="code">
@@ -320,14 +320,14 @@ predicate. For example: <code>consult(:)</code>.
 <dd class="defbody">
 This extension is used to denote the possibly <code>^</code>-annotated 
 goal of
-<a id="idx:setof3:2006"></a><a class="pred" href="allsolutions.html#setof/3">setof/3</a>, <a id="idx:bagof3:2007"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, <a id="idx:aggregate3:2008"></a><a class="pred" href="aggregate.html#aggregate/3">aggregate/3</a> 
-and <a id="idx:aggregate4:2009"></a><a class="pred" href="aggregate.html#aggregate/4">aggregate/4</a>. 
+<a id="idx:setof3:2010"></a><a class="pred" href="allsolutions.html#setof/3">setof/3</a>, <a id="idx:bagof3:2011"></a><a class="pred" href="allsolutions.html#bagof/3">bagof/3</a>, <a id="idx:aggregate3:2012"></a><a class="pred" href="aggregate.html#aggregate/3">aggregate/3</a> 
+and <a id="idx:aggregate4:2013"></a><a class="pred" href="aggregate.html#aggregate/4">aggregate/4</a>. 
 It is processed similar to&lsquo;0', but leaving the <code><code>^</code></code>/2 
 intact.
 </dd>
 <dt><strong><code>//</code></strong></dt>
 <dd class="defbody">
-The argument is a DCG body. See <a id="idx:phrase3:2010"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>.
+The argument is a DCG body. See <a id="idx:phrase3:2014"></a><a class="pred" href="DCG.html#phrase/3">phrase/3</a>.
 </dd>
 <dt><strong><code>-</code></strong></dt>
 <dt><strong><code>?</code></strong></dt>
@@ -375,12 +375,12 @@ Module=m2, Term = test
 Module=42, Term = test
 </pre>
 
-<p>The <a id="idx:metapredicate1:2011"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
+<p>The <a id="idx:metapredicate1:2015"></a><a class="pred" href="metapred.html#meta_predicate/1">meta_predicate/1</a> 
 declaration is the portable mechanism for defining meta-predicates and 
 replaces the old SWI-Prolog specific mechanism provided by the 
-deprecated predicates <a id="idx:moduletransparent1:2012"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a>,
-<a id="idx:contextmodule1:2013"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
-and <a id="idx:stripmodule3:2014"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a>. 
+deprecated predicates <a id="idx:moduletransparent1:2016"></a><a class="pred" href="ctxmodule.html#module_transparent/1">module_transparent/1</a>,
+<a id="idx:contextmodule1:2017"></a><a class="pred" href="ctxmodule.html#context_module/1">context_module/1</a> 
+and <a id="idx:stripmodule3:2018"></a><a class="pred" href="ctxmodule.html#strip_module/3">strip_module/3</a>. 
 See also <a class="sec" href="modulecompat.html#sec:6.16">section 6.16</a>.
 </dd>
 </dl>

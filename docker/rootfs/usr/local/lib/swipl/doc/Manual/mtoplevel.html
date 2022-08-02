@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 6.7</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 6.7</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -242,22 +242,22 @@ with modules from the top level</span></a></h2>
 modules: running them, setting spy points on them, etc. This can be 
 achieved using the &lt;<var>module</var>&gt;:&lt;<var>term</var>&gt; 
 construct explicitly as described above. In SWI-Prolog, you may also 
-wish to omit the module qualification. Setting a spy point (<a id="idx:spy1:2018"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>) 
+wish to omit the module qualification. Setting a spy point (<a id="idx:spy1:2022"></a><a class="pred" href="debugger.html#spy/1">spy/1</a>) 
 on a plain predicate sets a spy point on any predicate with that name in 
-any module. Editing (<a id="idx:edit1:2019"></a><a class="pred" href="edit.html#edit/1">edit/1</a>) 
+any module. Editing (<a id="idx:edit1:2023"></a><a class="pred" href="edit.html#edit/1">edit/1</a>) 
 or calling an unqualified predicate invokes the DWIM (Do What I Mean) 
 mechanism, which generally suggests the correct qualified query.
 
-<p>Mainly for compatibility, we provide <a id="idx:module1:2020"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a> 
+<p>Mainly for compatibility, we provide <a id="idx:module1:2024"></a><a class="pred" href="mtoplevel.html#module/1">module/1</a> 
 to switch the module with which the interactive top level interacts:
 
 <dl class="latex">
 <dt class="pubdef"><a id="module/1"><strong>module</strong>(<var>+Module</var>)</a></dt>
 <dd class="defbody">
 The call <code>module(<var>Module</var>)</code> may be used to switch 
-the default working module for the interactive top level (see <a id="idx:prolog0:2021"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>). 
+the default working module for the interactive top level (see <a id="idx:prolog0:2025"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a>). 
 This may be used when debugging a module. The example below lists the 
-clauses of <a id="idx:fileoflabel2:2022"></a><span class="pred-ext">file_of_label/2</span> 
+clauses of <a id="idx:fileoflabel2:2026"></a><span class="pred-ext">file_of_label/2</span> 
 in the module <code>tex</code>.
 
 <pre class="code">
