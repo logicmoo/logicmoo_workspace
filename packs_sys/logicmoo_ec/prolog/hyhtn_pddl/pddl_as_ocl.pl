@@ -1,7 +1,10 @@
 :- module(logicmoo_ocl_and_pddl,[
 
   solve_files_w_ocl/2,
-  test_blocks/0,test_domain/1,test_all/0,test_rest/0,test_sas/0,test_dir_files_sas/1,test_dir_files_sas/3]).
+  %test_blocks/0,
+  %test_domain/1,
+  %test_all/0,
+    test_rest/0,test_sas/0,test_dir_files_sas/1,test_dir_files_sas/3]).
 
 
 
@@ -945,7 +948,7 @@ test_rest:-
         expand_file_name('../pddl/ipc2008-no-cybersec/?*?/*/',O),
         forall(member(E,O),test_dir_sas(E)).
 
-/*
+
 test_dir_files_sas(PDDLDir,D,P):- pddl_dir(PDDLDir,Dir), directory_file_path(Dir,D,DF), directory_file_path(Dir,P,PF),
         test_parse_file(DF),test_parse_file(PF),
         solve_files(DF,PF),!.
@@ -983,5 +986,3 @@ test_dir_files_sas(Dir):-
 	test_dir_files_sas(Dir,'p30-domain.pddl','p30.pddl').
 
 
-
-*/

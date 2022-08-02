@@ -37,6 +37,7 @@
             isa_pred_l/3,
             isa_pred_l/4,
             chk_cond/2,
+            is_existential/1,
             call_cond/2,
             condz_to_isa/2,
             map_subterms/3,

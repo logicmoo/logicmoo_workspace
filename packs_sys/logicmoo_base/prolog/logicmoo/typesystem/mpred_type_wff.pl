@@ -417,21 +417,21 @@ is_quantifier(F):- pttp_nnf_pre_clean_functor(F,(all),[]);pttp_nnf_pre_clean_fun
 %
 % Pttp Negated Normal Form Pre Clean Functor.
 %
-pttp_nnf_pre_clean_functor('&',(,),[]).
-pttp_nnf_pre_clean_functor('v',(;),[]).
-pttp_nnf_pre_clean_functor(and,(,),[]).
-pttp_nnf_pre_clean_functor(('/\\'), (,),[]).
-pttp_nnf_pre_clean_functor(or,(;),[]).
-pttp_nnf_pre_clean_functor(('\\/'),(;),[]).
+pttp_nnf_pre_clean_functor('&',(','),[]).
+pttp_nnf_pre_clean_functor('v',(';'),[]).
+pttp_nnf_pre_clean_functor(and,(','),[]).
+pttp_nnf_pre_clean_functor(('/\\'), (','),[]).
+pttp_nnf_pre_clean_functor(or,(';'),[]).
+pttp_nnf_pre_clean_functor(('\\/'),(';'),[]).
 % pttp_nnf_pre_clean_functor('::',(:),[]).
-pttp_nnf_pre_clean_functor(~,(-),[]).
-pttp_nnf_pre_clean_functor(not,(-),[]).
-pttp_nnf_pre_clean_functor(~,(-),[]).
-pttp_nnf_pre_clean_functor(implies,(=>),[]).
-pttp_nnf_pre_clean_functor(imp,(=>),[]).
-pttp_nnf_pre_clean_functor(equiv,(<=>),[]).
+pttp_nnf_pre_clean_functor('~',('-'),[]).
+pttp_nnf_pre_clean_functor('not',('-'),[]).
+pttp_nnf_pre_clean_functor('~',('-'),[]).
+pttp_nnf_pre_clean_functor(implies,('=>'),[]).
+pttp_nnf_pre_clean_functor(imp,('=>'),[]).
+pttp_nnf_pre_clean_functor(equiv,('<=>'),[]).
 %pttp_nnf_pre_clean_functor(->,(=>),[]).
-pttp_nnf_pre_clean_functor(entailed_from,(:-),[]).
+pttp_nnf_pre_clean_functor(entailed_from,(':-'),[]).
 pttp_nnf_pre_clean_functor(implied_by,(:-),[]).
 pttp_nnf_pre_clean_functor(forAll,(all),[]).
 pttp_nnf_pre_clean_functor(thereExists,(ex),[]).

@@ -13,7 +13,7 @@
 :- use_module(library(logicmoo_common)).
 :- use_module(library(sgml)).
 :- use_module(library(logicmoo/xml_reader)).
-
+:- dynamic(vndata:verbnet_frame_vars/3).
 
 %:- use_module(library(nomic_mu)).
 

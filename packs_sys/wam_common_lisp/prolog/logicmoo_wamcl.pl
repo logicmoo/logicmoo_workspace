@@ -1,5 +1,5 @@
 
 :- module(logicmoo_wamcl,[]).
 
-:- reexport(library(wamclrt)).
+:- ensure_loaded(library(wamclrt)).
 

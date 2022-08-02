@@ -10,12 +10,6 @@
 :- install_constant_renamer_until_eof.
 
 
-ttBarrierStr(A),{atomic_list_concat([A,"Type"],AType0),
-  atomic_list_concat([A,''],Type0),
-  if_defined(do_renames(Type0,Type),true),
-  if_defined(do_renames(AType0,TypeType),true)} ==> barrierSpindle(TypeType,Type).
-
-
 :- if(false).
 :- set_prolog_flag(gc,true).
 :- trim_stacks.
@@ -33,6 +27,7 @@ barrierSpindle(TypeType,Type)==>
 ttBarrier(C)==>tSet(C).
 (ttBarrierType(C)==>(tSet(C),ttTypeType(C))).
 
+:- set_prolog_flag(gc,false).
 /*
 
 @ TODO RE-ENABLE WHEN NEEDED
@@ -64,4 +59,12 @@ ttBarrierStr("ExpressionType").
 ttBarrierStr("TimeParameter").
 ttBarrierStr("Topic").
 % ttBarrierStr("Collection").
+
+(ttBarrierStr(A),
+ {atomic_list_concat([A,"Type"],AType0),
+  atomic_list_concat([A,''],Type0),
+  if_defined(do_renames(Type0,Type),Type0=Type),
+  if_defined(do_renames(AType0,TypeType),AType0=TypeType)}) 
+  ==> barrierSpindle(TypeType,Type).
+
 

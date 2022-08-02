@@ -580,7 +580,6 @@ notrace_ex(X):- catch(notrace(X),_,rtrace(X)).
 
 %:- fixup_exports.
 
-get_mz(MZ):- strip_module(_,MZ,_).
 
 sub_atom(F,C):- sub_atom(F,_,_,_,C).
 
@@ -902,7 +901,7 @@ pfc_may_see_module(M):- import_module(M,pfc_lib).
 :-hook_database:export(pfc_lib:mpred_ain/1).
 :-hook_database:export(pfc_lib:mpred_aina/1).
 :-hook_database:export(pfc_lib:mpred_ainz/1).
-baseKB:mpred_ain(X,Y):- mpred_ain(X,Y).
+%baseKB:mpred_ain(X,Y):- mpred_ain(X,Y).
 
 %:- sexport(mpred_ain/1).
 %:- sexport(mpred_ain/2).

@@ -1,4 +1,4 @@
-%:- module(wmclrt,[load_wamcl_runtime/0]).
+:- module(wmclrt,[load_wamcl_runtime/0]).
 
 :- set_prolog_flag(wamcl_modules,false).
 

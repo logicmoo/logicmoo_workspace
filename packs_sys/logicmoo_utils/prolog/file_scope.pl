@@ -38,6 +38,7 @@
           filescope_did/1,
           contains_f/2,
           contains_eq/2,
+          %cfunctor/3,
           term_expansion_option/3,
           add_did_id/3,
           notice_file/3
@@ -93,12 +94,12 @@ system:qdmsg(M):-debug(logicmoo(M),'QMSG: ~q',[M]).
 
 
 
+/*
 cfunctor(A,B,C):- compound(A)->compound_name_arity(A,B,C);functor(A,B,C).
-
 :- system:import(cnas/3).
 :- system:import(cfunctor/3).
 :- system:export(cfunctor/3).
-
+*/
 
 is_current_source_term(H):- notrace(is_current_source_term0(H)).
 is_current_source_term0((H:-B)):- !, (is_current_source_term1((H:-B))->true; (B==true -> is_current_source_term1(H))),!.

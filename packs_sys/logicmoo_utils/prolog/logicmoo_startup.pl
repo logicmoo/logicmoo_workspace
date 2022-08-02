@@ -32,10 +32,16 @@
           app_argv1/1,
           app_argv_ok/1,
           app_argv_off/1,
+          qsave_bin/1,
+          qsave_lm/1,
+          qsave_lm/0,
+          add_absolute_search_folder/2,
           pack_upgrade_soft/1,
           is_startup_script/1,
           init_why/2,
+          define_into_module/2,
           now_and_later/1,
+          fixup_exports_system/0,
           run_pending_inits/0]).
 
 /** <module> Utility LOGICMOO_STARTUP
@@ -76,6 +82,25 @@ in_lm_ws(MGoal):- getenv('LOGICMOO_WS',WS),!,
    setup_call_cleanup(cd(WS),(cd(prologmud_server),call(M:Goal)),cd(X)).
 in_lm_ws(MGoal):- strip_module(MGoal,M,Goal), call(M:Goal).
 
+:- meta_predicate(define_into_module(:,+)).
+define_into_module(S:M,List):- is_list(List),!,maplist(define_into_module_now_and_later(S,M),List).
+define_into_module(S:M,FA):- define_into_module_now_and_later(S,M,FA).
+
+define_into_module_now_and_later(A,B,C):- now_and_later(define_into_module_now(A,B,C)).
+
+define_into_module_now(S,[M],FA):-!,define_into_module_now(S,M,FA).
+define_into_module_now(S,[M,N],FA):-!,define_into_module_now(S,M,FA),define_into_module_now(S,N,FA).
+define_into_module_now(S,M,op(P,XFY,F)):-!,S:op(P,XFY,F),M:op(P,XFY,F).
+define_into_module_now(_,M,SM:FA):-!, define_into_module_now(SM,M,FA).
+define_into_module_now(S,M,F//A):-!, A2 is A+2,define_into_module_now(S,M,F/A2).
+define_into_module_now(S,M,F/A):-
+ set_prolog_flag(access_level,system),
+ %S:dynamic(F/A),
+ S:export(F/A), S:module_transparent(F/A),
+ notrace(catch((M:import(S:F/A)),_,true)),
+ %ignore((\+ current_predicate(M:F/A), functor(P,F,A), M:assert(((M:P):- P)))),
+ nop(module_transparent(M:F/A)).
+define_into_module_now(S,M,FA):- dumpST,format(user_error,'~N ~q ~n',[define_into_module_now(S,M,FA)]).
 :- module_transparent(sys:call_now/4).
 %sys:call_now(n,_TIM,_SM,_MGoal):-!.
 %sys:call_now(m,_TIM,_SM,_MGoal):-!.
@@ -1211,7 +1236,7 @@ all_source_file_predicates_are_exported:- current_prolog_flag(xref,true),!.
 all_source_file_predicates_are_exported:-
  prolog_load_context(source,S), prolog_load_context(module,LC),
  all_source_file_predicates_are_exported(S,LC),!.
-all_source_file_predicates_are_exported:-
+all_source_file_predicates_are_exported:- 
  prolog_load_context(module,LC),'$current_typein_module'(TIM),
  forall((LC\==user,module_property(LC,file(S))),all_source_file_predicates_are_exported(S,LC)),
  forall((TIM\==LC,TIM\==user,module_property(TIM,file(S))),all_source_file_predicates_are_exported(S,TIM)).

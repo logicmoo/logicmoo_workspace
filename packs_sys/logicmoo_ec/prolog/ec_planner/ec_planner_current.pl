@@ -588,13 +588,6 @@ resolve(call(G),R,[]) :- !, call(G).
 
 resolve(G,R,Gs) :- axiom_local(G,Gs).
 
-get_zero(0):- !.
-get_zero(start).
-get_zero(t0).
-get_zero(begin).
-get_zero(init).
-
-set_zero(0).
 
 /*
    demo_nafs([G1...Gn],R) demos not(G1) and ... and not(Gn).

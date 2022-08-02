@@ -87,7 +87,7 @@
             upprop/1,
             upprop/2,
             use_if_modify_new/0,
-            with_assert_op_override/2,
+            %with_assert_op_override/2,
             with_fail_is_asserted/2,
             with_fallbacks/1,
             with_fallbacksg/1,

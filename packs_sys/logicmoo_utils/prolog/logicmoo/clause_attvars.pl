@@ -26,7 +26,7 @@
 
 :- module_transparent
       attr_bind/2,attr_bind/1,
-      clausify_attributes/2,
+      %clausify_attributes/2,
       clausify_attributes4/4,
       variant_i/2,av_comp/2,
       unify_bodies/2.

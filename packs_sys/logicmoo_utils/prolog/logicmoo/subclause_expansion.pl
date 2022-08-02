@@ -12,7 +12,7 @@
 % ===================================================================
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/clause_expansion.pl
-:- module(subclause_expansion, [save_pred_to/2]).
+:- module(subclause_expansion, [save_pred_to/2,with_subclause_expansion/1]).
 
 /** <module>Utility LOGICMOO SUBCLAUSE EXPANSION
 This module fixes all the problems with prolog term expansion by designing how terms will be divided between clauses goals and basic terms. 

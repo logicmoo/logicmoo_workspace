@@ -900,6 +900,7 @@ cycBetween(A,B,N):-
   (number(A) -> 
      ((number(B);number(N)),system_between(A,B,N));
      ((number(B),number(N))->system_between(A,B,N))).
+%system:cycBetween(A,B,N):- between(A,B,N).
 
 
 

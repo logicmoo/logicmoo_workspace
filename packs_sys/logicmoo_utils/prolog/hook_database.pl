@@ -11,7 +11,7 @@
             
           ereq/1,
           dbreq/1,
-            
+            suggest_m/1,
             is_visible_module/1,
             hb_to_clause/3,
             paina/1,pain/1,painz/1,
@@ -823,7 +823,7 @@ clause_true_anywhere(G):- strip_module(G,M,S),!,
      (B==true->! ;
     (clause_property(Ref,module(M22));M22=M2),!,call(M22:B)).
 
-
+:- export(current_assertion_module/1).
 current_assertion_module(M):- if_defined(defaultAssertMt(M),M=baseKB).
 suggest_m(M):- prolog_load_context(module, M),!.
 suggest_m(M):- (if_defined(defaultAssertMt(M),fail);current_module_ordered(M)),is_visible_module(M).

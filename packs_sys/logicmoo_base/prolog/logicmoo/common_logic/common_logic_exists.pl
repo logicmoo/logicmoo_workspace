@@ -1,5 +1,6 @@
 :- module(kbe,[ % existentialize/2,
          % kbi_define/1
+  non_modal_positive/1,groundoid/1
 ]).
 /** <module> common_logic_kbi
 % Provides a prolog database replacement that uses an interpretation of KIF
@@ -24,6 +25,8 @@
 :- meta_predicate skolem_test(0).
 :- meta_predicate skolem_unify(*,0).
 
+:- ensure_loaded(common_logic_modal).
+:- ensure_loaded(library(logicmoo/typesystem/mpred_type_constraints)).
 
 :- module_transparent with_no_kif_var_coroutines/1.
 
@@ -211,7 +214,7 @@ non_modal_positive(P):- atomic(P),!.
 non_modal_positive(P):- compound(P),functor(P,F,_), F\=='$VAR', F\=='\\+', F\=='~', \+ modal_functor(F).
 :- export(non_modal_positive/1).
 :- system:import(non_modal_positive/1).
-:- system:export(non_modal_positive/1).
+:- baseKB:import(non_modal_positive/1).
 
 groundoid(P):- term_variables(P,AV), maplist(is_existential,AV).
 % groundoid(P):- term_attvars(P,AV), maplist(is_existential,AV).
@@ -305,6 +308,7 @@ sk_set_maker(M,P0):-
 %:- module_transparent(system:(nesc)/1).
 %baseKB:nesc(MP):- strip_module(MP,M,P),no_repeats((nesc_lc(M,P))).
 :- module_transparent(nesc_lc/2).
+:- export(nesc_lc/2).
 
 % :- table(nesc_lc/2).
 nesc_lc(M,P):- same_compound(P,proven_tru(PP)),!,nesc(M,PP),show_failure(groundoid(PP)).
@@ -729,6 +733,7 @@ system:call_tru(M,X):- call(M:call,nesc(X)).
 % call_tru(X):- arg(1,X,E),call_e_tru(E,X).
 
 :- module_transparent(call_e_tru/2).
+:- export(call_e_tru/2).
 % :- meta_predicate call_e_tru(*,*).
 call_e_tru(_E,X):- proven_tru(X), \+ proven_neg((X)).
 

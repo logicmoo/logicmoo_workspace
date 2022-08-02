@@ -15,6 +15,7 @@
    [mpred_test/1,    
     run_junit_tests/0,
     must_ex/1,
+    quietly_must_ex/1,
     run_junit_tests/1,
     run_tests_and_halt/0,
     run_tests_and_halt/1]).

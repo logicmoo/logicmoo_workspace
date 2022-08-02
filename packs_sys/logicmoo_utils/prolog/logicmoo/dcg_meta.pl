@@ -23,6 +23,7 @@
          zalwayz//1,
          zalwayz/1,
          one_blank//0,
+         set_dcg_meta_reader_options/2,
          phrase_from_stream_nd/2,
          parse_meta_term/3,
          read_string_until//2,

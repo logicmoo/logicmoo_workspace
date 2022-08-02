@@ -203,7 +203,7 @@ prepender(Pre,C):- builtin_rn_or_rn(C,P),atom_concat(Pre,C,P).
 :- dynamic(baseKB:rn_new/2).
 :- export(baseKB:rn_new/2).
 
-
+builtin_rn_or_rn_new(C,_):- C == between,!,fail.
 builtin_rn_or_rn_new(C,P):-builtin_rn(C,P).
 builtin_rn_or_rn_new(C,P):-baseKB:rnc(C,P).
 builtin_rn_or_rn_new(C,P):-baseKB:rn_new(C,P).
@@ -212,7 +212,7 @@ builtin_rn_or_rn(P,PP):-builtin_rn_or_rn_new(P,PP),!.
 builtin_rn_or_rn(P,PP):-builtin_rn_or_rn_new(_,P),!,P=PP.
 
 % BAD? builtin_rn('BaseKB', baseKB).
-builtin_rn('between', cycBetween).
+% TODO BAD? builtin_rn('between', cycBetween).
 % builtin_rn('forall', cycforAll).
 
 % BAD?  builtin_rn('equals', mudEquals).
@@ -1526,6 +1526,7 @@ never_idiom(_S, Codes,_E):- member(M,Codes),char_type(M,period),!.
 
 
 cyc_to_mpred_create(X,_):- \+ atom(X),!,fail.
+%cyc_to_mpred_create(_,_):- !,fail.
 cyc_to_mpred_create(equiv,(<=>)).
 cyc_to_mpred_create(implies,(=>)). 
 % cyc_to_mpred_create(KW,SYMBOL):-name(KW,[58,LETTER|REST]),char_type(LETTER,alpha),!,name(SYMBOL,[LETTER|REST]).
@@ -1847,7 +1848,8 @@ azzert_rename(C,P):- C=P,!.
 azzert_rename(C,P):- builtin_rn(C,P),!.
 azzert_rename(C,P):- baseKB:rnc(C,P),!.
 azzert_rename(C,P):- baseKB:rn_new(C,P),!.
-azzert_rename(C,P):- asserta(baseKB:rn_new(C,P)),dmsg_rename(C,P).
+azzert_rename(C,P):- nop(dmsg_rename(C,not(P))).
+%azzert_rename(C,P):- asserta(baseKB:rn_new(C,P)),dmsg_rename(C,P).
 
 dmsg_rename(C,P):- C\=P,dmsg((azzert_rename(C,P))).
 dmsg_rename(C,_):- downcase_atom(C,C),!.
@@ -2041,10 +2043,10 @@ system_clause_expansion(I, O):- compound(I),
    % b_setval('$term', O),
      nop(dmsg(do_renames(I)-->O)).
 */
-
+:- ignore((retract(baseKB:rnc(between,_)))).
 :- fixup_exports.
 
 
 % inform_new(X,Y):- builtin_rn_or_rn_new(X,New),(New==Y-> true; ( writeq(builtin_rn(X,New)),writeln('.'))).
 
-
+:- set_prolog_flag(do_renames,never).

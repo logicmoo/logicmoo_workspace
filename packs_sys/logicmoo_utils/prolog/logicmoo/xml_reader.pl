@@ -1,4 +1,4 @@
-:- module(xml_reader,[]).
+:- module(xml_reader,[fileToLineInfoElements/3]).
 /** <module> Utility LOGICMOO XML READER
 Allows you to read xml files from prolog. 
 

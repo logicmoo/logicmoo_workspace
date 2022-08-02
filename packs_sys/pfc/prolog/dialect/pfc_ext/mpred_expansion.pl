@@ -54,7 +54,9 @@
 %
 */
 :- if(current_prolog_flag(xref,true)).
-:- module(mpred_expansion,
+:- module(mpred_expansion,[]).
+:- endif.
+:- define_into_module(system,
           [ a/2,
             acceptable_xform/2,
             additiveOp/1,
@@ -66,6 +68,7 @@
             cheaply_u/1,
             maybe_prepend_mt/3,
             compare_op/4,
+            with_assert_op_override/2,
             comparitiveOp/1,
             compound_all_open/1,
             conjoin_l/3,
@@ -88,7 +91,7 @@
             do_expand_args_l/3,
             do_expand_args_pa/4,
             ex_argIsa/3,
-            exact_args/1,
+            %exact_args/1,
             exact_args0/1,
             expand_isEach_or_fail/2,
             expand_goal_correct_argIsa/2,
@@ -168,7 +171,6 @@
          is_elist_functor/1
           
           ]).
-:- endif.
 
 :- include('mpred_header.pi').
 

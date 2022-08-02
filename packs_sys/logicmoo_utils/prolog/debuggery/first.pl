@@ -9,6 +9,7 @@
             check_variable_names/2,
             unnumbervars4/4,
             get_varname_list/1,
+            cfunctor/3,
             set_varname_list/1,
             on_xf_cont/1,
             user_ensure_loaded/1,

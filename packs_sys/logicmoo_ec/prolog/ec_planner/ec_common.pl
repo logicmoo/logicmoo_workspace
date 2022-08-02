@@ -178,6 +178,15 @@ system:show_ec_current_domain_db:-
 
    listing(user:ec_current_domain_db2/2).
 
+:- export(get_zero/1).
+
+get_zero(0):- !.
+get_zero(start).
+get_zero(t0).
+get_zero(begin).
+get_zero(init).
+
+set_zero(0).
 
 
 user_ec_current_domain_db(axiom(G,Gs)):- nonvar(G), !, ec_current_domain_axiom(G,Gs).

@@ -1,4 +1,4 @@
-:- module(common_logic_modalization,[qualify_nesc/2]).
+:- module(common_logic_modalization,[qualify_nesc/2,same_compound/2]).
 
 :- ensure_loaded(common_logic_utils).
 

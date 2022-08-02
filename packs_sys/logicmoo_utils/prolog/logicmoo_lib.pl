@@ -277,7 +277,7 @@ load_library_system(library(logicmoo_webbot))).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- dmsg("[Required] Load the Logicmoo Type System").
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-:- load_library_system(library(logicmoo_typesystem)).
+:- ensure_loaded(library(logicmoo_typesystem)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- dmsg("[Mostly Required] Load the Logicmoo Plan Generator System").

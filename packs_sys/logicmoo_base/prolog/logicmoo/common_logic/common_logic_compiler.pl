@@ -1513,8 +1513,8 @@ list_to_conjuncts_det(I,O):- list_to_conjuncts(I,O),!.
 %
 % Clean Repeats (debug).
 %
-clean_repeats_d((PTT,P0),PTTP):-!, conjuncts_to_list_det((PTT,P0),DLIST),list_to_set(DLIST,DSET),must_maplist_det(clean_repeats_d,DSET,CSET),list_to_conjuncts_det((,),CSET,PTTP),!.
-clean_repeats_d((PTT;P0),PTTP):-!, disjuncts_to_list((PTT;P0),DLIST),list_to_set(DLIST,DSET),must_maplist_det(clean_repeats_d,DSET,CSET),list_to_conjuncts_det((;),CSET,PTTP),!.
+clean_repeats_d((PTT,P0),PTTP):-!, conjuncts_to_list_det((PTT,P0),DLIST),list_to_set(DLIST,DSET),must_maplist_det(clean_repeats_d,DSET,CSET),list_to_conjuncts_det((','),CSET,PTTP),!.
+clean_repeats_d((PTT;P0),PTTP):-!, disjuncts_to_list((PTT;P0),DLIST),list_to_set(DLIST,DSET),must_maplist_det(clean_repeats_d,DSET,CSET),list_to_conjuncts_det((';'),CSET,PTTP),!.
 clean_repeats_d(PTTP,PTTP).
 
 

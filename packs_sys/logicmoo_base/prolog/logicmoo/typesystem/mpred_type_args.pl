@@ -21,7 +21,7 @@
             assert_predArgTypes_from_left/3,
             assert_predArgTypes_from_right/3,
             assert_predArgTypes_l/3,
-            atom_to_value/2,
+            %atom_to_value/2,
             checkAnyType/4,
             coerce/3,
             correctAnyType/4,

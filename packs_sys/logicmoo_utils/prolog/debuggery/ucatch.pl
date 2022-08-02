@@ -37,6 +37,8 @@
             quietly_must/1,
             on_x_f/3,
 
+            show_current_source_location/0,
+            varnames_load_context/1,
             current_mfl4/4,
             current_source_location/2,
             hide_trace/1,

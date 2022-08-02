@@ -73,13 +73,13 @@ cycQuery80(Q):- current_predicate(_, Q), call(Q).
 :- shared_parser_data(talkdb:talk_db/2).
 :- shared_parser_data(talkdb:talk_db/3).
 :- shared_parser_data(talkdb:talk_db/6).
-:- shared_parser_data(installed_converter/1).
+:- shared_parser_data(installed_converter/4).
+:- shared_parser_data(isa/2).
 
 :- shared_parser_data(transitive_subclass/2).
 :- shared_parser_data(tSet/1).
 :- shared_parser_data(ttFormatType/1).
 :- shared_parser_data(capitalized/5).
-:- shared_parser_data(isa/2).
 :- shared_parser_data(mpred_arity/2).
 :- shared_parser_data(posName/1).
 

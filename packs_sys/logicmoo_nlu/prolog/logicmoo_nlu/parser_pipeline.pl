@@ -9,7 +9,7 @@
 % Revised At:   $Date: 2002/06/06 15:43:15 $
 % ===================================================================
 
-:- module(parser_pipeline, []).
+:- module(parser_pipeline, [maybe_display/1]).
 
 
 %:- '$set_typein_module'(baseKB).
@@ -37,11 +37,11 @@
 %:- use_module(library(logicmoo_nlu)).
 %:- ensure_loaded(library(wamclrt)).
 
-%:- dynamic(baseKB:installed_converter/4).
+:- dynamic(baseKB:installed_converter/4).
+:- export(baseKB:installed_converter/4).
 %:- rtrace.
 :- shared_parser_data(baseKB:installed_converter/4).
-:- export(baseKB:installed_converter/4).
-
+%:- break.
 
 :- export(load_parser_interface/1).
 % load_parser_interface(File):- \+ exists_source(File), !, call(File:ensure_loaded_no_mpreds(logicmoo_nlu_ext(File))).

@@ -99,11 +99,11 @@ use_shared_module(USM):- with_no_mpred_expansions(baseKB:reexport(USM)).
 :- kb_shared(baseKB:'$spft'/4).
 :- kb_shared(baseKB:tms/1).
 */
-:- system:use_module(library(logicmoo/subclause_expansion)).
-:- system:use_module(library(logicmoo/virtualize_source)).
-:- system:use_module(library(logicmoo/filesystem)).
+:- use_module(library(logicmoo/subclause_expansion)).
+:- use_module(library(logicmoo/virtualize_source)).
+:- use_module(library(logicmoo/filesystem)).
 
-wsce(W):- with_subclause_expansion((set_how_virtualize_file(bodies,W,0),ensure_loaded(W))).
+wsce(W):- with_subclause_expansion((virtualize_source:set_how_virtualize_file(bodies,W,0),ensure_loaded(W))).
 :- wsce(library('logicmoo/typesystem/mpred_agenda.pl')).
 :- wsce(library('logicmoo/typesystem/mpred_hooks.pl')).
 :- wsce(library('logicmoo/typesystem/mpred_storage.pl')).

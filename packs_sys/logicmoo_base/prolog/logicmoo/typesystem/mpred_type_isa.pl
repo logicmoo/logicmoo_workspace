@@ -13,12 +13,11 @@
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/mpred/mpred_type_isa.pl
 %:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )).
-:- module(mpred_type_isa,
-          [ 
+:- module(mpred_type_isa,[]).
 
-          was_isa0/3,
-          to_isa_out/3,
-
+:- define_into_module(system,
+          [ was_isa0/3,
+            to_isa_out/3,
             assert_isa/2,
             assert_isa_rev/2,
             assert_isa_safe/2,
@@ -994,7 +993,7 @@ isa_asserted_2(I,C):- atom(I),isa_from_morphology(I,C).
 % isa_asserted_3(I,tCol,C):- (atom(I);atom(C)),type_isa(I,C).
 isa_asserted_3(_,C,C).
 
-:- on_f_rtrace((prolog_load_context(file,File),is_file_virtualize_allowed(File))).
+:- on_f_rtrace((prolog_load_context(file,File),virtualize_source:is_file_virtualize_allowed(File))).
 %:- rtrace.
 isa_asserted_3(I,SType,C):- vwc, var(C),genls(C,SType),nonvar(C),SType\==C,isa_asserted_0(I,C).
 /*

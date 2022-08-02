@@ -32,6 +32,7 @@ vim: set filetype=md:
 
 :- kb_shared(baseKB:wid/3).
 
+:- ensure_loaded(common_logic_exists).
 
 % % whenever we know about clif we''ll use the prolog forward chainging system
 % % this is broken down to the next 6 clauses
@@ -41,6 +42,7 @@ vim: set filetype=md:
       % % this consequent asserts the new rules
       PROLOG,{slow_sanity(is_entailed_u(CLIF))})).
 */
+:- ensure_loaded(common_logic_exists).
 
 workflow_holder_queue(clif).
 workflow_holder_queue(modal_clif).

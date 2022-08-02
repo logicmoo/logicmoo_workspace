@@ -9,7 +9,9 @@
 
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/mpred/mpred_loader.pl
 :- if(current_prolog_flag(xref,true)).  % XREF
-:- module(mpred_loader,
+:- module(mpred_loader,[]).
+:- endif.
+:- define_into_module(system,
           [ add_from_file/1,
           % unused_assertion/1,
           mpred_ops/0,
@@ -198,7 +200,6 @@
 :- include('mpred_header.pi').
 :- use_module(library(dictoo_lib)).
 
-:- endif.
 
 %:- user:use_module(library('file_scope')).
 
