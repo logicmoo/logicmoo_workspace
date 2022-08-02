@@ -11,7 +11,7 @@ pretty_three/1,
 pretty_final/1,
   maybe_debug_var/2,
   guess_varnames/1,
-  %guess_varnames/2,
+  guess_varnames/2,
   toProperCamelAtom/2,
   simpler_textname/2,simpler_textname/3)).
 /** <module> Utility LOGICMOO PORTRAY VARS
@@ -20,7 +20,7 @@ pretty_final/1,
 - @license LGPL 
 */
 %:- endif.
-:- set_module(class(library)).
+%:- set_module(class(library)).
 %:- use_module(util_varnames,[get_var_name/2]).
 
 :- use_module(library(occurs)).
@@ -410,11 +410,11 @@ make_pretty(I,O):- pretty_numbervars(I,O),!.
 make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
 make_pretty(I,O):- dumplicate_term(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
 
-:- export(guess_varnames/1).
+%:- export(guess_varnames/1).
 
 guess_varnames(I):- guess_pretty1(I).
 
-/*
+
 guess_varnames(I,O):- guess_pretty1(I), guess_var2names(I,O).
 
 
@@ -441,7 +441,7 @@ guess_var2names(Each,H,H ):- H=..[F,V],var(V),
   call(Each,UF1,V),!.
 guess_var2names(Each,H,HH ):- H=..[F|ARGS],!,must_maplist_det(guess_var2names(Each),ARGS,ARGSO),!,HH=..[F|ARGSO].
 guess_var2names(_Each, (G), (G)):- guess_pretty1(G),!.
-*/
+
 
 /*
 :- export(print_clause_plain/1).
@@ -768,7 +768,7 @@ pretty_final(H,F,A,P1,ARGS):- atom_codes_w_blobs(F,[_,49|Rest]),atom_codes_w_blo
 pretty_final(H,F,A,P1,ARGS):- atom_codes_w_blobs(F,[T|Rest]),\+ char_type(T, alpha), !,atom_codes_w_blobs(F0,Rest),!,pretty_final(H,F0,A,P1,ARGS).
 pretty_final(_H,'',_A,P1,ARGS):- must_maplist_det(guess_varnames,[P1|ARGS]),!.
 pretty_final(H,F,A,P1,ARGS):- 
-   must_maplist_det(guess_varnames,[P1|ARGS]),
+   maplist(guess_varnames,[P1|ARGS]),
    arg(A,H,R),may_debug_var_weak([F,'_'],R),
    ignore((A>2, may_debug_var_weak([F,'_P_',A,'_v'],P1))),   
    !. 

@@ -21,7 +21,7 @@ call_print_reply(LF, Goal):-
    ;  print_reply_colored(  failed(Goal))),
    E, print_reply_colored(  E)).
 
-print_reply(Other) :- quietly((portray_vars:pretty_numbervars(Other, O), print_tree(O),format('~N',[]))), !.
+print_reply(Other) :- quietly((pretty_numbervars(Other, O), print_tree(O),format('~N',[]))), !.
 
 
 print_reply(C, O):-  notrace(((ansicall(C,print_reply(O))))), !.

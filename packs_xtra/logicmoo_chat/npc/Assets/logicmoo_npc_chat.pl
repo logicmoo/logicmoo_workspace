@@ -3,13 +3,15 @@
 :- module(npc_chat,[]).
 :- endif.
 
+:- dynamic(lmconf:unity_module_name/1).
+
 :- use_module(library(logicmoo_clif)).
 :- use_module(library(logicmoo_nlu)).
-:- clause(unity_module_name(_),_) -> true ; prolog_load_context(module,M),asserta_if_new(unity_module_name(M)).
+:- clause(lmconf:unity_module_name(_),_) -> true ; prolog_load_context(module,M),asserta(lmconf:unity_module_name(M)).
 :- use_module(library(logicmoo_common)).
 %:- use_module(library(pfc_lib)).
 :- style_check(- discontiguous).  
-:- unity_module_name(M), module(M),'$set_source_module'(M).
+:- lmconf:unity_module_name(M), module(M),'$set_source_module'(M).
 
 % use_module(library('../ext/lmchat/Assets/logicmoo_lmchat')).
 :- use_module(library(logicmoo_utils)).
@@ -22,17 +24,17 @@ assume_dyn_fail(FA):- pi_to_p(FA,P), TODO=assume_dyn_fail(P), assert_if_new((P:-
 assume_dyn_succeed(FA):- pi_to_p(FA,P), TODO=assume_dyn_succeed(P), asserta_if_new((P:- predicate_property(P,number_of_clauses(1)), !, log(warn(TODO)),!)).
 
 :- if( \+ prolog_load_context(reloading,false)).
-:- prolog_load_context(directory,D),asserta_if_new(lmchat_dir(D)).
-:- clause(unity_module_name(_),_)-> true; prolog_load_context(module,D),asserta_if_new(unity_module_name(D)).
+:- clause(lmconf:lmchat_dir(_),_)-> true; prolog_load_context(directory,D),asserta(lmconf:lmchat_dir(D)).
+:- clause(lmconf:unity_module_name(_),_)-> true; prolog_load_context(module,D),asserta(lmconf:unity_module_name(D)).
 :- endif.
 
-load_lmchat:- lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_name(F,List),
+load_lmchat:- lmconf:lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_name(F,List),
   reverse(List,Rev),
   maplist(load_unity_prolog_file,Rev).
 
 print_load_unity_prolog_file(F):- format('~N :- ~q.~n',[load_unity_prolog_file(F)]).
 
-print_load_lmchat:- lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_name(F,List),
+print_load_lmchat:- lmconf:lmchat_dir(D),atom_concat(D,'/*/*.prolog',F), expand_file_name(F,List),
   reverse(List,Rev),
   maplist(print_load_unity_prolog_file,Rev).
 %:- print_load_lmchat.
@@ -262,7 +264,7 @@ s(Words,LogicalForm):- Words =[_|_], npc_chat:sentence(LogicalForm, Mood, Polari
 
 
 :- 
-  unity_module_name(M),add_history(module(M)).
+  lmconf:unity_module_name(M),add_history(module(M)).
 
 :- forall(clause(unity_init,Body),must_or_rtrace(Body)).
 

@@ -24,6 +24,8 @@
 :- discontiguous(individuation_macros/2).
 :- multifile(individuation_macros/2).
 
+:- multifile(goal_expansion/4).
+
 % :- dynamic(grid_hint_pred/1). :- discontiguous(grid_hint_pred/1). :- multifile(grid_hint_pred/1).
 
 
@@ -126,13 +128,13 @@ clsmake:- update_changed_files,!.
 :- use_module(library(pairs)).
 :- use_module(library(logicmoo_common)).
 :- use_module(library(prolog_trace)).
-:- autoload_all.
+%:- autoload_all.
 :- use_module(library(gvar_globals_api)).
 :- use_module(library(dictoo_lib)).
 %:- use_module(library(pfc_lib)).
 
 %:- listing((.)/3).
-:- autoload_all.
+%:- autoload_all.
 
 
 % we alias these so we can catch out of control list growth
@@ -178,7 +180,6 @@ remove_must_dets(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),
 
 %:- system:ensure_loaded(library(pfc_lib)).
 %:- expects_dialect(pfc).
-
 /*
 goal_expansion(Goal,Out):- compound(Goal), arg(N1,Goal,E), 
    compound(E), E = set(Obj,Member), setarg(N1,Goal,Var),

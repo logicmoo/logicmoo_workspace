@@ -370,7 +370,7 @@ try_maybe_p(M:P):- !, call(M:P).
 try_maybe_p(M:P):- !, P=..[F,_|List],try_maybe_pl(M:P,F,List).
 try_maybe_p(P):-!,try_maybe_p(parser_chat80:P).
 
-print_reply_local(Other) :- quietly((portray_vars:pretty_numbervars(Other, O), print_tree(O),format('~N',[]))), !.
+print_reply_local(Other) :- quietly((pretty_numbervars(Other, O), print_tree(O),format('~N',[]))), !.
 
 try_maybe_pl(_  ,F,List):- (member(E,List),compound(E),E=error(F,_)),!,print_reply_local(E),fail.
 try_maybe_pl(M:P,F,List):- member(E,List),var(E),reverse(List,RList),member(R,RList),var(R),!,                 

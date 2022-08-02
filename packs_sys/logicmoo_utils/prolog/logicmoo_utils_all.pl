@@ -17,6 +17,7 @@
 */
 
 :- module(logicmoo_utils_all_legacy,[]).
+:- discontiguous('$exported_op'/3).
 /** <module> Utility LOGICMOO_UTILS_ALL
 This module loads ALL (the most common and uncommon) utils at once.
 @author Douglas R. Miles

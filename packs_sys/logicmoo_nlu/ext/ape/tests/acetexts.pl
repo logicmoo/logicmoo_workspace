@@ -81,5 +81,6 @@ text_drs_eval(0, 48, 'Some men wait. They are happy.', drs([A, B, C, D], [object
 text_drs_eval(0, 49, 'There is 1 man D. There is 1 park B. D waits in B.', drs([A, B, C], [object(A, park, countable, na, eq, 1)-2, object(B, man, countable, na, eq, 1)-1, predicate(C, wait, B)-3, modifier_pp(C, in, A)-3]), [[specification, [top_s, [topic, [quant, ['{there is}']], [np, [numberp, [gen_quant, [[]]], [number, [1]]], [nbar, [n, [man]], [appos_coord, [appos, [var, ['D']]]]]]]], ['.']], [specification, [top_s, [topic, [quant, ['{there is}']], [np, [numberp, [gen_quant, [[]]], [number, [1]]], [nbar, [n, [park]], [appos_coord, [appos, [var, ['B']]]]]]]], ['.']], [specification, [s, [np, [np, [var, ['D']]]], [vp, [vbar, [vbar, [v, [waits]]], [pp, [prep, [in]], [np, [np, [var, ['B']]]]]]]], ['.']]], '2005-08-26-19-00-46', blade17, '').
 text_drs_eval(0, 50, 'Every man waits-for some women who are happy or are sad.', drs([], []), [], '2005-08-17-18-45-14', blade17, '').
 
+:- encoding(utf8).
 :- include('acetexts.nldata').
 

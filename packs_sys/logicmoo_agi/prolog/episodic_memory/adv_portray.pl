@@ -4,7 +4,7 @@
 
 :- '$set_source_module'(mu).
 
-:- use_module(library(logicmoo/portray_vars)).
+:- use_module(library(logicmoo/pretty_clauses)).
 
 /*
 set_our_portray_level(N):- flag('$adv_pp_level', _, N).
@@ -21,7 +21,7 @@ get_current_portray_level(Level) :- flag('$adv_pp_level', Level, Level), Level=L
 adv_pretty_print(Term):-
    notrace((setup_call_cleanup(
         (flag('$adv_pp_level', Level, Level+1), push_operators([op(0, xfx, props), op(0, xfx, type)], Undo)),
-           \+ \+ (portray_vars:pretty_numbervars(Term, Term2), adv_pretty_print(Level, Term2)),
+           \+ \+ (pretty_numbervars(Term, Term2), adv_pretty_print(Level, Term2)),
           (pop_operators(Undo), flag('$adv_pp_level', _, Level))))), !.
 
 adv_pretty_print(Level, Term):-
@@ -96,7 +96,7 @@ adv_prolog_portray_now(Term):- %fail,
  \+ \+ setup_call_cleanup(
       (flag('$adv_pp_level', Level, Level+2),
        flag('english', ELevel, ELevel-1)), % put a little less English on it
-         (Level < 3, portray_vars:pretty_numbervars(Term, Term2), mu:adv_pretty_print(Level, Term2)),
+         (Level < 3, pretty_numbervars(Term, Term2), mu:adv_pretty_print(Level, Term2)),
         (flag('$adv_pp_level', _, Level),
          flag('english', _, ELevel))), !.
 

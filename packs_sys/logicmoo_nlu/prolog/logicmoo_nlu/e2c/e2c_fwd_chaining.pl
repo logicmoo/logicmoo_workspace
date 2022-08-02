@@ -131,7 +131,7 @@ uninteresting_pipe(parsed80).
 
 ((pipeline(ID, monitor, send_to(User, Channel)),
       pipeline(ID, Name, Value),
-     {\+ uninteresting_pipe(Name), portray_vars:pretty_numbervars(Value, ValueO)})
+     {\+ uninteresting_pipe(Name), pretty_numbervars(Value, ValueO)})
   ==> tell_aboutonce(Channel:User, Name=ValueO)).
 
 tell_aboutonce(N, V) ==> {once(say(N, V))}.

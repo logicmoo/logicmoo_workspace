@@ -35,6 +35,7 @@
           qsave_bin/1,
           qsave_lm/1,
           qsave_lm/0,
+          is_startup_file/1,
           add_absolute_search_folder/2,
           pack_upgrade_soft/1,
           is_startup_script/1,
@@ -44,6 +45,11 @@
           only_runtime/1,
           logicmoo_compiling_mud_server/0,
           call_safely/1,
+          whenever/2,
+          whenever_flag_permits/2,
+          during_net_boot/1,
+          runtime_boot/1,
+          after_net_boot/1,
           fixup_exports_system/0,
           all_source_file_predicates_are_transparent/0,
           all_source_file_predicates_are_transparent/2,
@@ -1287,6 +1293,7 @@ maybe_export(LC,M,F,A):-
 
 :- set_prolog_flag(logicmoo_import_to_system, baseKB).
 
+:- module_transparent(all_source_file_predicates_are_exported/2).
 all_source_file_predicates_are_exported(S,LC):- 
  (ignore(source_location(S,_);prolog_load_context(source,S))),
   ignore(prolog_load_context(module,LC)),
@@ -1298,6 +1305,7 @@ all_source_file_predicates_are_exported(S,LC):-
   % M:public(M:F/A),
   now_and_later(all_source_file_predicates_are_exported(LC,M,F,A))))).
 
+:- module_transparent(all_source_file_predicates_are_exported/4).
 all_source_file_predicates_are_exported(LC,M,F,A):-
   enotrace(catch(maybe_export(M,M,F,A),_,fail)), maybe_export(LC,M,F,A),
  (current_prolog_flag(logicmoo_import_to_system, BaseKB)-> maybe_export(BaseKB,M,F,A) ; true),
@@ -1532,8 +1540,6 @@ user:expand_query(Goal, _Expanded, Bindings, _ExpandedBindings):-        fail,
 :- endif.
 
 :- module_transparent(fixup_exports/0).
-:- module_transparent(all_source_file_predicates_are_exported/0).
-:- module_transparent(all_source_file_predicates_are_transparent/0).
 
 fixup_exports:-    
    all_source_file_predicates_are_exported,

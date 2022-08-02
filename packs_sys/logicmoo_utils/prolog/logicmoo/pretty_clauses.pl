@@ -323,10 +323,10 @@ sample_pp_term(X):- world_snap(X).
 prolog_pprint(Term):- prolog_pprint(Term, []).
 :- export(prolog_pprint/2).
 prolog_pprint(Term, Options):- ground(Term),
-   \+ \+ (mort((portray_vars:pretty_numbervars(Term, Term2),
+   \+ \+ (mort((pretty_numbervars(Term, Term2),
      prolog_pprint_0(Term2, Options)))), !.
 prolog_pprint(Term, Options):- \+ ground(Term),
-   \+ \+ (mort((portray_vars:pretty_numbervars(Term, Term2),
+   \+ \+ (mort((pretty_numbervars(Term, Term2),
      prolog_pprint_0(Term2, Options)))), !.
 
 
@@ -1969,7 +1969,7 @@ pprint_tree(Term, Options) :- select('variable_names'(Vs),Options,OptionsM),!,
 pprint_tree(Term, Options) :-  saneify_vars(Term,TermO), pprint_tree_1(TermO, Options).
 
 %pprint_tree_1(Term, Options) :- prolog_pretty_print:pprint_tree_2(Term, Options).
-pprint_tree_1(Term, Options) :- prolog_pretty_print:pprint_tree_2(Term, Options).
+pprint_tree_1(Term, Options) :- pprint_tree_2(Term, Options).
 %pprint_tree(Term, Options) :- \+ \+ pprint_tree_2(Term, Options).
 
 pprint_tree_2(Term, Options0) :-

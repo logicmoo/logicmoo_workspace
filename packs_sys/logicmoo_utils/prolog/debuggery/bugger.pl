@@ -48,6 +48,7 @@
             callsc/1,
             must_maplist/2,
             must_maplist/3,
+            must_maplist/4,
 
           %all_source_file_predicates_are_transparent_bugger/0,
           all_source_file_predicates_are_transparent_bugger/1,

@@ -217,7 +217,7 @@ f_remove(A,B,C):- pl_remove(-1,is_equal,A,B,C,_Did).
 pl_remove(_Tst,0, X, _, X, 0).
 pl_remove(_Tst,_,[], _, [],0).
 pl_remove(Tst,May,[Elem|Tail], Del, Result,Done2) :-
-    ( call(Tst,Elem,Del) ->  (May2 is May-1, pl_remove(Tst,May2,Tail, Del, Result,Done),Done2 is Done+1)
+    ( call(call,Tst,Elem,Del) ->  (May2 is May-1, pl_remove(Tst,May2,Tail, Del, Result,Done),Done2 is Done+1)
     ; ( Result = [Elem|Rest],pl_remove(Tst,May,Tail,Del,Rest,Done2))).
 
 %f_subst('$ARRAY'([S],Type,A),B,C,'$ARRAY'([Sm1],Type,R)):-pl_subst(C,B,A,R),(number(S)->Sm1 is S-Did ; Sm1=S).

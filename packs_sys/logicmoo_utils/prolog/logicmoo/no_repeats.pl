@@ -22,10 +22,11 @@
             no_repeats_save/2,
             no_repeats_save/4,
             no_repeats_u/2,
-            subtract_eq/3,
+            
             succeeds_n_times/2,
             nr_test/2,
             */
+            subtract_eq/3,
             no_repeats_var/1
 %            loop_check_nr/1
           ]).

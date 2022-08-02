@@ -99,7 +99,7 @@ start_mud_telnet :-  app_argv1('--nonet'),!.
 start_mud_telnet:- 
   logicmoo_base_port(Base),
   WebPort is Base, % + 1000,
-  whenever(run_network,start_mud_telnet(WebPort)).
+  whenever(run_network,baseKB:start_mud_telnet(WebPort)).
 
 port_busy(Port):-
     tcp_socket(ServerSocket),

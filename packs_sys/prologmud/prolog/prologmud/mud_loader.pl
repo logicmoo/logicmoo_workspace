@@ -88,7 +88,7 @@ user:prolog_load_file(ModuleSpec, Options) :-
 % ==============================================
 :- user:load_library_system(library(logicmoo_lib)).
 
-:- use_module(library(logicmoo/butterfly_console)).
+%:- use_module(library(logicmoo/butterfly_console)).
 
 
 :- if(\+ app_argv('--nonet')).

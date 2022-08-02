@@ -244,8 +244,9 @@ next_in_list(TestID,List,Next):- append(_,[TestID,Next|_],List)-> true; List=[Ne
 prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(List,PrevID)).
 
 %v(f9d67f8b)
+:- export(load_last_test_name/0).
 load_last_test_name:- 
-  ignore(notrace((setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),nb_setval(test_name,TestID))),close(O))))).
+  ignore(notrace((exists_file(current_test),setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),nb_setval(test_name,TestID))),close(O))))).
 save_last_test_name:- 
   ignore(notrace((nb_current(test_name,TestID), tell(current_test),format('~n~q.~n',[TestID]),told))).
 

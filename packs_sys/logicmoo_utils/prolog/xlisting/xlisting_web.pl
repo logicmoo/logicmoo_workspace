@@ -258,6 +258,9 @@ cp_menu:cp_menu(X,X).
 %cp_menu:cp_menu.
 :- endif.
 
+:- export(extra_cp_menu//0).
+:- system:import(extra_cp_menu//0).
+
 extra_cp_menu -->  
    { \+ (( httpd_wrapper:http_current_request(Request),member(request_uri(URI),Request), atom_contains(URI,pldoc))) },!,
    pldoc_search:doc_links([],[]).

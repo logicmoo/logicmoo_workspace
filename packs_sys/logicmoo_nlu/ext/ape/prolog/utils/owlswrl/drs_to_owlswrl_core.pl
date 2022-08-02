@@ -790,7 +790,7 @@ make_restr(greater, QNum, Property, Class, 'ObjectMinCardinality'(Num, Property,
 	Num is QNum + 1.
 
 
-%% get_entity(+iri(Name:atom), -Individual:term) is semidet.
+%% get_entity(+iriName:atom, -Individual:term) is semidet.
 %% get_entity(+Name:atom, +NS:atom, -Individual:term) is semidet.
 %% get_entity(+Name:atom, -Individual:term) is semidet.
 %

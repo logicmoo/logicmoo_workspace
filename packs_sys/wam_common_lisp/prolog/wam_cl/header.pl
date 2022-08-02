@@ -172,7 +172,7 @@
 :- discontiguous(ssip_define/2).
 
 :- use_module(library(logicmoo_common)).
-:- user:ensure_loaded(library(logicmoo/portray_vars)).
+:- ensure_loaded(library(logicmoo/pretty_clauses)).
 
 
 :- if(\+ current_module(sxpr)).

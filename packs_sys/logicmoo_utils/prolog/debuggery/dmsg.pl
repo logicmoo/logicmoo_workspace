@@ -545,7 +545,7 @@ hide_some_hiddens(S,M):-
    compound_name_arguments(M,F,ArgsO),!.
 
 
-pretty_and_hide(In, Info):- dzotrace((portray_vars:pretty_numbervars(In,M),hide_some_hiddens(M,Info))),!.
+pretty_and_hide(In, Info):- dzotrace((pretty_numbervars(In,M),hide_some_hiddens(M,Info))),!.
 
 dmsg_pretty(In):- dzotrace( ignore( \+ \+   ( pretty_and_hide(In, Info),dmsg(Info)))).
 

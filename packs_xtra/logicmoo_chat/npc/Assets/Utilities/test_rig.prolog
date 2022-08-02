@@ -36,10 +36,10 @@ run_utests(Name) :-
 %% test_body(+Name, -Options, -Body)
 %  There is a test with Name, Options, and Body.
 test_body(Name, Options, Body) :-
-   unity_module_name(Unity),
+   lmconf:unity_module_name(Unity),
    Unity:call(clause,test(Name, Options), Body).
 test_body(Name, [ ], Body) :-
-   unity_module_name(Unity),
+   lmconf:unity_module_name(Unity),
    Unity:call(clause,test(Name), Body).
 
 %% run_test(+Name, +Options, +Body)

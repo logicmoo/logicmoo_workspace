@@ -9,7 +9,7 @@
 %
 % Warn But Keep Going.
 %
-warn_but_keep_going(G):-  G *-> true ; (clause(G,_)->log(warn(failed(G)));true).
+warn_but_keep_going(G):-  G *-> true ; (clause(G,Body)->log(warn(failed(G:-Body)));true).
 :- public load_csv_row/2.
 :- public begin_csv_loading/1, end_csv_loading/1.
 :- external begin_csv_loading/1, end_csv_loading/1.

@@ -175,7 +175,7 @@ install_converter(M, CNV):-
   %while_tracing_pipeline(dmsg(installed_converter(M, CNVLST))),
   get_in_outs(CNVLST,Ins,Outs),
   ainz(installed_converter_io(M, CNVLST, Ins,Outs)),
-  maplist(ainz_installed_converter(M, CNVLST, Ins),Outs),
+  maplist(parser_pipeline:ainz_installed_converter(M, CNVLST, Ins),Outs),
   install_pipeline_rule(M, CNVLST, Ins,Outs).
 %install_converter(M, CNV):-strip_module(CNV, M, CNVLST), functor(CNVLST, F, A), '@'(export(M:F/A), M), must(assertz_new(installed_converter(M, CNVLST,Ins,Outs))).
 

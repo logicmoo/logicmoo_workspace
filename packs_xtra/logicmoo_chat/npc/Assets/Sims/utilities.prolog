@@ -382,6 +382,7 @@ ensure_core_systems_initialized :-
 %  IMPERATIVE
 %  Called once by SimController.Start().
 %  DO NOT CALL!
+:- export(do_all_character_initializations/1).
 do_all_character_initializations :-
    ensure_core_systems_initialized,
    (character_initialization, fail) ; true.

@@ -42,7 +42,7 @@ ensure_mud_startup:-
 
 
 :- if( \+ app_argv('--nomud')).
-:- ensure_mud_startup.
+%:- ensure_mud_startup.
 :- endif.
 
 

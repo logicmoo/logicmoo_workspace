@@ -127,7 +127,7 @@ correct_common(I,O):- correct_modal(_,I,O),!.
 negations_inward(Formula, NNF):-  
  nnf(not(Formula), NNF ).
 
-:- use_module(library(logicmoo/portray_vars)).
+:- use_module(library(logicmoo/pretty_clauses)).
 
 clausify_pnf_v1( Formula, CF ):-
   hide_output((negations_inward(Formula, NNF), 

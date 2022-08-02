@@ -1,7 +1,7 @@
 % :- module(unity_prolog,[]).
 
 :- dynamic(tmpu:(is_unity_file/1)).
-:- dynamic(unity_module_name/1).
+:- dynamic(lmconf:unity_module_name/1).
 
 %:- set_prolog_flag(occurs_check,error).
 
@@ -108,7 +108,7 @@ convert_assert(_Why,Arg,Slash):- expand_uterm(Arg,Slash),!.
 /*
 convert_assert(_Why,G,G):- \+ compound(G),!.
 convert_assert(_Why,X,X):- \+ \+ X = uslash(_,_),!.
-convert_assert(Why,'::'(G,Arg),Slash):- G == $global,!, unity_module_name(M), expand_assert(Why,M:Arg,Slash).
+convert_assert(Why,'::'(G,Arg),Slash):- G == $global,!, lmconf:unity_module_name(M), expand_assert(Why,M:Arg,Slash).
 convert_assert(Why,M:Arg,M:Slash):- !,expand_assert(Why,Arg,Slash).
 convert_assert(_Why,C,O):- no_more_expansion(a,C,O),!.
 convert_assert(Why,B,(O)):- get_var_expansions(a,B,M,G),G\==true,immediate_expansion,!,call(G),!,expand_assert(Why,M,O).
@@ -911,7 +911,7 @@ load_unity_prolog_file(F):-
   log(load_unity_prolog_file(F)),
   unity_prolog_filename(F,Filename),
   asserta_if_new(tmpu:is_unity_file(Filename)),
-  unity_module_name(Unity),
+  lmconf:unity_module_name(Unity),
   load_files(Filename,[module(Unity),must_be_module(false),redefine_module(false),scope_settings(false)]).
 
 load_unity_csv_file(F):- 
@@ -921,8 +921,8 @@ load_unity_csv_file(F):-
     load_unity_csv_file_data(Prolog))).
 
 unity_prolog_filename(F,Filename):- exists_file(F),!,Filename=F.
-unity_prolog_filename(F,Filename):- lmchat_dir(D),atomic_list_concat([D,'/',F],Filename),exists_file(Filename),!.
-unity_prolog_filename(N,Filename):- name(F,N), lmchat_dir(D),absolute_file_name(F,Filename,[relative_to(D),extensions(['prolog','pl','P','']),access(read)]),!.
+unity_prolog_filename(F,Filename):- lmconf:lmchat_dir(D),atomic_list_concat([D,'/',F],Filename),exists_file(Filename),!.
+unity_prolog_filename(N,Filename):- name(F,N), lmconf:lmchat_dir(D),absolute_file_name(F,Filename,[relative_to(D),extensions(['prolog','pl','P','']),access(read)]),!.
 unity_prolog_filename(F,F).
 
 now(Now):-  get_time(Now).
@@ -1010,7 +1010,7 @@ source_file_expansion:- t_l:pretend_expansion(YN),!,YN==file.
 source_file_expansion:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
 
 unity_uctx:- prolog_load_context(file,File),prolog_load_context(source,File),!,tmpu:is_unity_file(File).
-unity_uctx:- unity_module_name(M),module_uctx(T),!,M==T.
+unity_uctx:- lmconf:unity_module_name(M),module_uctx(T),!,M==T.
 
 print_clexp(_,X,Y):- X=@=Y,!.
 print_clexp(_,X,Y):- ((#(global))::X)=@=Y,!.

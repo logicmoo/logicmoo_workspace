@@ -60,6 +60,7 @@
             is_sk_functor/1,
             is_sk_unit/1,
             isa_asserted/2,
+            isa_complete_0/2,
             % isa_asserted_0/2,            isa_asserted_compound/2,
             isa_complete/2,
           % cached_isa/2,isa_w_type_atom/2,isa_atom_call/2,isa_atom_call_ilc/2,

@@ -42,7 +42,7 @@
 :- meta_predicate with_e_file_write2(1,?,+).
 
 
-:- use_module(library(logicmoo/portray_vars)).
+:- use_module(library(logicmoo/pretty_clauses)).
 
 
 set_ec_option(N,V):- retractall(etmp:ec_option(N,_)),asserta(etmp:ec_option(N,V)).
