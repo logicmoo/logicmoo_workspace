@@ -189,8 +189,8 @@ ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,
 test_grids(TestID,G):- ignore(get_current_test(TestID)), kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
 with_test_grids1(TestID,G,P):- ignore(nb_current(example,ExampleNum)),
-  kaggle_arc_io(TestID,ExampleNum,IO,G),((ExampleNum*IO) \= ((tst+_)*out)),
-  my_menu_call(P).
+  forall((kaggle_arc_io(TestID,ExampleNum,IO,G),((ExampleNum*IO) \= ((tst+_)*out))),
+  my_menu_call(P)).
 
 bad:- ig([complete],v(aa4ec2a5)*(trn+0)*in).
 

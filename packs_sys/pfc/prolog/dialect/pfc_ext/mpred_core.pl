@@ -209,6 +209,7 @@ system:db_op_call(A,B,C):- db_op_call(A,B,C).
 
 :- define_into_module([baseKB,system],
  [get_startup_uu/1,
+ is_ftText/1,
  mpred_do_fact/1,
  mpred_m_fwc2/2,
  mpred_add_support_fast/2,
@@ -227,6 +228,59 @@ system:db_op_call(A,B,C):- db_op_call(A,B,C).
                       defaultAssertMt0/1,check_db_sanity/3,
                       lookup_m/1,add_side_effect/2,
                       mpred_reset/0,
+                               assert_setting01/1,
+         make_module_name_local/2,
+         make_module_name_local0/2,
+         (make_shared_multifile)/1,
+         (make_shared_multifile)/3,
+         (make_shared_multifile)/4,
+         % (kb_global)/1,
+         add_import_predicate/3,
+         autoload_library_index/4,
+         ensure_abox_hybrid/1,
+         ensure_abox/1,
+         baseKB_hybrid_support/2,
+         correct_module/3,
+         correct_module/5,
+         defaultAssertMt/1,
+         ensure_imports/1,
+
+         set_fileAssertMt/1,
+          setup_module_ops/1,
+
+         in_mpred_kb_module/0,
+         
+         makeConstant/1,
+         is_mtCanAssert/1,
+         %registerCycPred/4,
+         %registerCycPred/5,
+
+         set_defaultAssertMt/1,
+         set_fileAssertMt/1,
+         transitive_path/3,
+         which_file/1,
+         user_m_check/1,
+
+
+         % add_abox_module/1,
+
+         ensure_tbox/1,
+          get_file_type_local/2,
+
+         fixup_modules/0,
+         import_predicate/2,
+         skip_user/1,
+         inherit_into_module/2,
+         box_type/3,
+         make_reachable/2,
+         % clause_bq/1,
+         fixup_module/2,
+         is_undefaulted/1,
+         ensure_imports_tbox/2,
+         map_inheritance/1,
+
+
+         which_file/1,
  call_u/1,  
   assertz_mu/1,
  notify_if_neg_trigger/1,

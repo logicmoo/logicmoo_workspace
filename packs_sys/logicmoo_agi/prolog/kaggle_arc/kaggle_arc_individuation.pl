@@ -46,7 +46,7 @@ ig(ROptions,Grid):-
   format("~N~n% ?- ~q.~n~n",[ig(ROptions,ID)]),
   length(IndvS,LenS),
   largest_first(IndvS,IndvSS),
-  print_list_of(individuate=LenS,IndvSS),
+  print_list_of(individuate=LenS,IndvSS),  
   dash_chars.
 % =========================================================
 
@@ -112,7 +112,7 @@ individuation_macros(force_by_color, X):-
    findall(by_color(1,Color),enum_colors(Color),X).
 
 individuation_macros(subshape_in_object, [
-   subshape_both,   
+   subshape_both(colormass),   
    %progress,
    nsew, % like colormass but guarenteed it wont link diagonals but most ikmportant ti doesnt look for subshapes
    by_color, % any after this wont find individuals unless this is commented out
@@ -120,7 +120,7 @@ individuation_macros(subshape_in_object, [
 
 individuation_macros(subshape_main, [
    maybe_glyphic,
-   subshape_both,   
+   subshape_both(nsew),   
    by_color,
    %alone_dots,
    %progress,
@@ -129,11 +129,12 @@ individuation_macros(subshape_main, [
    end_of_macro]).
 
 % never add done to macros
-individuation_macros(subshape_both, [
+individuation_macros(subshape_both(CM), [
   % glean_grid_patterns,
    shape_lib(hammer), % is a sanity test/hack
-   nsew, hv_line(h), dg_line(d), dg_line(u), hv_line(v), 
-   diamonds, colormass, 
+   CM, hv_line(h), dg_line(d), dg_line(u), hv_line(v), 
+   diamonds,
+   nsew, colormass, 
    %show_neighbor_map,
    %indiv_grid_pings,
    %+recalc_sizes,
@@ -226,22 +227,30 @@ individuation_macros(complete, [
    reset_points,
    %TODO %when(get(v)<7,rows),
    reset_points,
+   bg_shapes(nsew),
+   bg_shapes(alone_dots),
+   reset_points,
   (force_by_color),
   reset_points,
   by_color(1,black),
   by_color(1,wbg),
   by_color(1,bg),
   by_color(1,fg),
-  reset_points,
-  (subshape_both),
-  alone_dots,
    reset_points,
-   rectangles,
+   subshape_both(colormass),
+   alone_dots,
+   reset_points,
+   subshape_both(nsew),
+   alone_dots,
+                     reset_points,
+                     rectangles,
+                     reset_points,
+                     rectanglez,
   %reset_points,
   (colormass),
   lo_dots,
-  reset_points,
-  (fourway),
+ reset_points,
+ (fourway),
   reset_points,
   (maybe_repair_in_vm(repair_repeats)),
   reset_points,
@@ -318,7 +327,7 @@ individuation_macros(unused, [
   use_reserved, % objects that were already found dont find again
   - progress, % turn off a detector option
   + progress, % turn on a detector option
-  solid(nsew), % chat that looks for solid rectangles
+  solid(nsew), % chat that looks for solid rectanglez
   
   %polygons,%shape_lib(nsew), %shape_lib(all), %shape_lib(hammer),
   
@@ -460,7 +469,7 @@ individuation_reserved_options(ROptions,Reserved,Options):-
 :- dynamic(individuated_cache/3).
 :- retractall(individuated_cache(_,_,_)).
 
-get_individuated_cache(ROptions,GridIn,IndvS):- ground(GridIn), individuated_cache(ROptions,GridIn,IndvS),!.
+get_individuated_cache(ROptions,GridIn,IndvS):- fail, ground(GridIn), individuated_cache(ROptions,GridIn,IndvS),!.
 individuate(VM):-  individuate(VM.roptions, VM),!.
 individuate(ROptions,VM):-  individuate(ROptions,VM,_),!.
 individuate(_ROptions,Grid,IndvS):- Grid==[],!,IndvS=[].
@@ -577,7 +586,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
 
 
 into_grid_d(Grid,Grid_D):- most_d_colors(Grid,_CI,Grid_D),!.
-%must_det_ll((subst001(Grid,black,wbg,In0), most_d_colors(In0,_CI,Grid_D))),
+%must_det_ll((subst001(Grid,black,wbg,TexturedGrid), most_d_colors(TexturedGrid,_CI,Grid_D))),
 
 transfer_missing(ArgVM,VM):-
      dict_pairs(ArgVM,_,Pairs),
@@ -695,6 +704,12 @@ fti(VM,_):-
   ((member(progress,VM.options); Count > VM.objs_max_len; (statistics(cputime,X), X > (VM.timeleft)))) -> 
    print_vm_debug_objs(VM),fail.
 
+fti(VM,[IsToBeRewritten|Rest]):-
+    %atom(IsToBeRewritten), 
+    nonvar(IsToBeRewritten),
+    individuation_macros(IsToBeRewritten,Expansion),!,
+    listify(Expansion,ExpansionL),
+    my_append(ExpansionL,Rest,set(VM.program_i)).
 
 fti(VM,_):- fail, member(recalc_sizes,VM.options), once(recalc_sizes(VM)), fail.
 fti(VM,[recalc_sizes|TODO]):- nop(recalc_sizes(VM)),!, fti(VM,TODO).
@@ -784,7 +799,6 @@ i_step0(Name):- individuation_macros(Name,_).
 
 warn_missing_arity(Step,N):- missing_arity(Step,N) -> wdmsg(warning(missing_arity(Step,N))).
 
-is_fti_step(release_objs_lighter).
 is_fti_stepr(_):-fail.
 
 is_fti_step(indiv_grid_pings).
@@ -795,6 +809,7 @@ indiv_grid_pings(VM):- into_grid(VM,G),!,indiv_grid_pings(G).
 
 
 
+is_fti_step(release_objs_lighter).
 release_objs_lighter(Two,VM):-
  ignore(( fail,
   my_partition(less_mass(Two),VM.objs,Smaller,set(VM.objs)),
@@ -864,7 +879,24 @@ column_to_indiv(VM,N,Row):-
     birth(columns),iz(image),loc(N,1),rotation(same),v_hv(1,VM.v),grid_size(VM.h,VM.v)],GPoints,Obj),
   raddObjects(VM,Obj).
   
-  
+is_fti_step(bg_shapes).
+bg_shapes(Shape,VM):-
+  localpoints_include_bg(VM.grid_o,OPoints),
+  include(is_bgp,OPoints,OKeep),
+  Points = VM.points,
+  OldObjs = VM.objs,
+  subst001(OKeep,black,wbg,Keep),
+  set(VM.points)=Keep,
+  set(VM.objs)=[],
+  one_ifti(VM,Shape),
+  WBGNewObjs = VM.objs,
+  %subst001(WBGNewObjs,wbg,black,NewObjs),
+  NewObjs = WBGNewObjs,
+  set(VM.points)=Points,
+  append(NewObjs,OldObjs,Objs),
+  set(VM.objs)=Objs,
+  !.
+
 is_fti_step(point_corners).
 point_corners(VM):-
   each_obj(VM.objs,Obj,
@@ -969,13 +1001,165 @@ one_fti(VM,maybe_glyphic):-
 is_glyphic(Points,_GH,_GV):- length(Points,Len), Len < 5.
 is_glyphic(Points,GH,GV):- ( GH=<5 ; GV=<5 ), length(Points,Len), Len is GH * GV.
 
+maybe_subst_grid_type(Var,Var):- var(Var),!.
+maybe_subst_grid_type(E-C,'+'-C):- atom(E),arg(_,t('A','<','y','>','/','\\','=','!'),E),nop(ignore(C=wbg)).
+maybe_subst_grid_type(E-C,'*'-C):- atom(E), arg(_,t('v','A'),E),nop(ignore(C=wbg)).
+%maybe_subst_grid_type(E-C,'.'-C):- arg(_,t('|','-'),E),ignore(C=wbg).
+maybe_subst_grid_type(A,A).
+maybe_wbg(E-V,E-wbg):- var(V),!.
+maybe_wbg(V,wbg):- var(V),!.
+maybe_wbg(X,X).
+
+unbind_list(L,O):- length(L,N),length(O,N),!.
+%texture_grid(In,In2):- must_det_ll((subst001(In,black,wbg,Retextured), most_d_colors(Retextured,_CI,In2))).
+texture_grid(In,In2):- most_d_colors(In,_CI,In2),!.
+
+/*
+row_is(LeftN,RightN,C,Row):-
+  L = '+',
+  append([Left,[L-C],List,[L-C],Right],Row),
+  maplist(same_color(C),List),
+  length(Left,LeftN), length(Right,RightN).
+row_isnt(LeftN,RightN,C,Row):-
+  length(Left,LeftN),length(Right,RightN),
+  \+ ((append([Left,[(_)-C],UList,[(_)-C],Right],Row), maplist(same_color(C),UList))).
+*/
+row_not_isnt(LeftN,Width,RightN,C,OrigRow,NewSubRow,Replacements):-
+  length(Left,LeftN), length(Right,RightN),length(SubRow,Width),
+  append([Left,SubRow,Right],OrigRow),
+  maplist(never_dash,SubRow),
+  append([_-C|List],[_-C],SubRow), nonvar(C), C\==wbg,
+  maplist(ground_or_var,List),
+  %maplist(was_color(C),List),
+  maplist(divide_colors(C),SubRow,NewSubRow,NewSubRowReplace),
+  maplist(never_dash,NewSubRowReplace),
+  maplist(never_dash,SubRow),
+  wqnl(SubRow-NewSubRow=NewSubRowReplace),
+  append([Left,NewSubRowReplace,Right],Replacements),!.
+
+ground_or_var(VG):- ground(VG)-> true ; var(VG).
+
+%never_dash(G):- nonvar(G),!,ground(G).
+never_dash(G):- (G = '.'-wbc),!.
+never_dash(G):- freeze(G,ground(G)).
+divide_colors(C,Cell,Cell,'.'-bg):- was_color(C,Cell).
+divide_colors(_,Cell,'.'-bg,Cell).
+
+mustlist_until_failed(P3,[A1|L1],[A2|L2],[A3|L3],Rest):-
+  call(P3,A1,A2,A3),!,
+  mustlist_until_failed(P3,L1,L2,L3,Rest).
+mustlist_until_failed(_P3,Rest,[],[],Rest):-!.
+
 is_fti_step(rectangles).
+rectangles(VM):- rectangles2(VM),!.
 rectangles(VM):- 
+  Grid = VM.grid,
+  texture_grid(Grid,TexturedGrid),
+  mapgrid(maybe_subst_grid_type,TexturedGrid,Retextured),
+  print_side_by_side(blue,TexturedGrid,texture,_,Retextured,retextured),!,
+  rectangles_grid(Retextured,VM),!.
+rectangles(_VM).
+
+
+rectangles_grid(Retextured,VM):-
+  
+  %grid_size(Retextured,H,_),%make_list('X'-black,H,DeadRow),
+  member(FirstRow,Retextured),
+  append([Left,[L-C|List],[L-C], Right],FirstRow),  nonvar(C), C\==wbg,
+  L == '+',
+  append([L-C|List],[L-C],FirstSubRow), length(FirstSubRow,Width),
+  append(BeforeFirstRow,[FirstRow|Rest],Retextured),
+  length(Left,LeftN), length(Right,RightN), 
+  rectangles_grid_gather(LeftN,Width,RightN,C,FirstRow,Rest,RowsInvolvedClipped,Replacements,Below),
+  last(RowsInvolvedClipped,Last), maplist(was_color(C),Last),
+  append([BeforeFirstRow,Replacements,Below],NewGrid),
+  print_side_by_side(C,NewGrid,'grid',_,RowsInvolvedClipped,rectable),
+  localpoints(RowsInvolvedClipped,NewObjPoints),
+  ignore((NewObjPoints\==[],make_indiv_object(VM,[birth(rectangles_grid)],NewObjPoints,_Obj))),
+  ignore((NewGrid\==[], print_grid(newGrid, NewGrid),!, set(VM.grid) = NewGrid, rectangles(VM))),
+  !.
+
+
+rectangles_grid_gather(LeftN,Width,RightN,C,FirstRow,Rest,RowsInvolvedClipped,Replacements,Below):- 
+        %append([Left,[L-C],List,[L-C],Right],FirstRow), maplist(was_color(C),List),
+        mustlist_until_failed(row_not_isnt(LeftN,Width,RightN,C),[FirstRow|Rest],RowsInvolvedClipped,Replacements,Below),
+        length(RowsInvolvedClipped,N), N>1, 
+        (Below == [] -> true ;
+           \+ \+ nop((Below = [First|_], length(Left2,LeftN), length(Right2,RightN),
+                                  append([Left2,[_-C],List2,[_-C],Right2],First),
+                                  ground(List2),
+                                  member('|'-C,List2)))).
+
+
+rectangles2(VM):- !, fail,
+  Grid = VM.grid,
+  texture_grid(Grid,TexturedGrid),
+  mapgrid(maybe_subst_grid_type,TexturedGrid,Retextured),!,
+  % writeq(GridOO),  print_side_by_side(NewGrid,Replacements),!,
+  grid_size(Retextured,H,_),%make_list('X'-black,H,DeadRow),
+  %append([[DeadRow],Retextured,[DeadRow]],Retextured),
+
+
+  %dif(C,wbg),
+  L = '+',
+  append(BeforeFirstRow,[FirstRow|Rest],Retextured),
+  %member(FirstRow,Retextured),
+  %member(L-C,FirstRow),
+  %dif(C,wbg),
+  append([Left,[L-C],List,[L-C],Right],FirstRow),
+
+  %append([Left,FirstSubRow,Right],FirstRow),
+  append([[L-C],List,[L-C]],FirstSubRow),
+  length(FirstSubRow,Width),
+  maplist(was_color(C),List),
+  length(Left,LeftN), %length(FirstSubRow,Width), 
+  length(Right,RightN),
+  Width is H - RightN - LeftN,
+  %row_is(LeftN,RightN,C,FirstRow),
+  print_side_by_side(C,TexturedGrid,texture,_,Retextured,retextured(LeftN+Width+RightN)),
+  mustlist_until_failed(row_not_isnt(LeftN,Width,RightN,C),[FirstRow|Rest],RowsInvolvedClipped,Replacements,Below),
+  append([BeforeFirstRow,Replacements,Below],NewGrid),
+  %
+  print_side_by_side(C,NewGrid,'grid',_,RowsInvolvedClipped,clipped),
+  last(RowsInvolvedClipped,Last), maplist(was_color(C),Last),!,
+  localpoints(RowsInvolvedClipped,NewObjPoints),
+  ignore((NewObjPoints\==[],make_indiv_object(VM,[birth(rows)],NewObjPoints,_Obj))),
+  ignore((NewGrid\==[], print_grid(newGrid, NewGrid),!, set(VM.grid) = NewGrid, rectangles(VM))),
+  !.
+
+
+
+  /*n
+  ='+'
+  length(Left,StartNext),
+
+  maplist(same_color(C),List),
+  localpoints(GridO,Points),
+  select(C-P1,Points,Rest1),
+  is_adjacent_point(P1,s,P2),
+  select(C-P2,Rest2,Rest3),
+  is_adjacent_point(P1,n,P3),
+  \+ member(C-P3,Rest3),
+  select(C-P4,Rest3,Rest4),
+  is_adjacent_point(P1,e,P5),
+  select(C-P5,Rest4,Rest5),
+  is_adjacent_point(P1,w,P6P),
+  \+ member(C-P6,Rest6),
+
+
+  include(has_prop(iz(nsew)),VM.objs,NSEW),
+  include(mass_gt(3),NSEW,Candidates),
+  maplist(rects_of,Candidates,Rects),append(Rects,RectsL),
+  maplist(make_indiv_object(VM,[iz(rectangle),birth(rectanglez)]),RectsL,_Objs).
+*/
+
+is_fti_step(rectanglez).
+rectanglez(VM):- 
   %localpoints(VM.points,Points),  
   include(has_prop(iz(nsew)),VM.objs,NSEW),
   include(mass_gt(3),NSEW,Candidates),
   maplist(rects_of,Candidates,Rects),append(Rects,RectsL),
-  maplist(make_indiv_object(VM,[iz(rectangle),birth(rectangles)]),RectsL,_Objs).
+  maplist(make_indiv_object(VM,[iz(rectangle),birth(rectanglez)]),RectsL,_Objs).
 
 % @TODO
 rects_of(_Obj,[]).
@@ -1165,11 +1349,7 @@ ignore_rest(VM):- VM.points=[].
 
 same_lcolor(LargestColor,Obj):- color(Obj,Color),nop(print_grid(Obj)),!,Color==LargestColor.
 
-one_fti(VM,IsToBeRewritten):-
-    atom(IsToBeRewritten), 
-    individuation_macros(IsToBeRewritten,Expansion),!,
-    listify(Expansion,ExpansionL),
-    my_append(ExpansionL,VM.program_i,set(VM.program_i)).
+
 
 
 % @TODO will get sub objects later
@@ -1410,6 +1590,7 @@ is_thing_or_connection(jumps(_,_)).
 
 find_one_individual(Option,Obj,VM):- find_one_ifti3(Option,Obj,VM),!.
 find_one_individual(Option,Obj,VM):- find_one_ifti2(Option,Obj,VM),!.
+
 
 find_one_ifti3(Option,Obj,VM):- 
     Points = VM.points,
@@ -1677,8 +1858,8 @@ unraw_inds2(VM,Options,IndvS,IndvO):- fail,
 
 /*
 unraw_inds2(VM,Options,IndvS,IndvO):-   
-  select([C1-Point1],IndvS,Rest),
-  nearby_one(Dir,Options,C,C1-Point1,Rest),
+  select([C-Point1],IndvS,Rest),
+  nearby_one(Dir,Options,C,C-Point1,Rest),
   select([C-Point2],Rest1,Rest),
   findall(C-Point,member([C-Point],Rest),CRest),
   subtract(Rest,CRest,IndvM),

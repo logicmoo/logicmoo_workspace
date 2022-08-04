@@ -364,7 +364,7 @@ into_gridnameA(G,TstName):- known_grid(TstName,G).
 grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
 %grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
 grid_to_id(Grid,ID):- known_grid0(ID,GVar),Grid=@=GVar,!.
-grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_),!,grid_to_id(GGrid,ID).
+grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_,[attvar(bind)]),!,grid_to_id(GGrid,ID).
 grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(ID), set_grid_id(Grid,ID),!.
 
 makeup_gridname(GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridName = ID*('ExampleNum'+F)*io.
@@ -386,9 +386,12 @@ o2c(Obj,Glyph):- color(Obj,Glyph).
 o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
 :- dynamic(g2o/2).
 
-g2o(G,O):- (atom(G);string(G)),Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
-g2o(G,O):- (var(G),atom(G)),!,nb_current(G,O),is_object(O).
-g2o(C,O):- compound(C), !, C= objFn(G), !, g2o(G,O).
+g2o(G,O):- var(G),!,nb_current(G,O),is_object(O).
+g2o(G,O):- atom(G),nb_current(G,O),is_object(O),!.
+g2o(G,O):- integer(G),int2glyph(G,C),!,g2o(C,O),!.
+g2o(C,O):- compound(C), !, C= objFn(G,_), !, g2o(G,O).
+g2o(G,O):- atom(G),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
+g2o(G,O):- string(G),Chars=[_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
 
 
 known_object(G,O):- known_obj0(G,O).
@@ -503,7 +506,7 @@ one_change(resize(C1, C2), Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1
 
 */
 
-arc_expand_arg(objFn(X),Var,known_object(X,Var)).
+arc_expand_arg(objFn(X,_),Var,known_object(X,Var)).
 arc_expand_arg(gridFn(X),Var,known_grid(X,Var)).
 arc_expand_arg(groupFn(X),Var,into_group(X,Var)).
 

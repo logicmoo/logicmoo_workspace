@@ -302,16 +302,32 @@ mention_touches(Obj,Dir-Touched,NewObj):-
 find_touches_objects(_,[],[]).
 find_touches_objects(Obj,_,[]):- has_prop(link(touched,_,_),Obj),!.
 find_touches_objects(Obj,_,[]):- has_prop(iz(dots),Obj),!.
-find_touches_objects(Obj,[Touched|ScanNext],[link(touched,Iv,Dirs)|Engulfed]):-    
+find_touches_objects(Obj,[Touched|ScanNext],[BetterTouch|Engulfed]):-    
  once(touching_object(Dirs,Obj,Touched)),Dirs\==[],!,
+ better_touched(Iv,Dirs,BetterTouch),
  /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
  /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
 find_touches_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
 
+better_touched(Iv,Dirs,link(touched,Iv,[-LO])):- length(Dirs,7),subtract([n,s,e,w,nw,ne,sw,se],Dirs,[LO]).
+better_touched(Iv,[n,s,e,w,nw,ne,sw,se],link(touched,Iv,[c])).
+better_touched(Iv,[n,s,e,w],link(touched,Iv,[c])).
+better_touched(Iv,[ne,se],O):- !,better_touched(Iv,[e],O).
+better_touched(Iv,[nw,sw],O):- !,better_touched(Iv,[w],O).
+better_touched(Iv,[nw,ne],O):- !,better_touched(Iv,[n],O).
+better_touched(Iv,[sw,se],O):- !,better_touched(Iv,[s],O).
+better_touched(Iv,Dirs,O):- member(sw,Dirs),subtract(Dirs,[s,w],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
+better_touched(Iv,Dirs,O):- member(nw,Dirs),subtract(Dirs,[n,w],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
+better_touched(Iv,Dirs,O):- member(se,Dirs),subtract(Dirs,[s,e],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
+better_touched(Iv,Dirs,O):- member(ne,Dirs),subtract(Dirs,[n,e],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
+better_touched(Iv,Dirs,link(touched,Iv,Dirs)).
+
 touching_object(Dirs,O2,O1):- 
   O1\==O2,
-  \+ has_prop(birth(glyphic),O2),
-  \+ has_prop(birth(glyphic),O1),
+  has_prop(z_o(_,_),O1),
+  has_prop(z_o(_,_),O2),
+  %\+ has_prop(birth(glyphic),O2),
+  %\+ has_prop(birth(glyphic),O1),
   globalpoints(O1,Ps1),
   globalpoints(O2,Ps2),
   dir_touching_list(Ps2,Ps1,Dirs),!.

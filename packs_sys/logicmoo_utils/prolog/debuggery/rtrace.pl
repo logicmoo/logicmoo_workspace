@@ -12,6 +12,8 @@
 */
 :- module(rtrace,
    [
+   restart_rtrace/0,
+   tAt_rtrace/0,
       rtrace/1,  % Non-interactive tracing
       rtrace_break/1,  % Interactive tracing
       quietly/1,  % Non-det notrace/1

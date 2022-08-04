@@ -808,7 +808,7 @@ isa(vtValue,ttValueType).
 %argIsa(Prop,N,Type) :- cwc,number(N),loop_check(argIsa_known(Prop,N,Type)),must(ground(argIsa(Prop,N,Type))).
 %argIsa(Prop,N,Type) <- {cwc,number(N),argIsa_known(Prop,N,Type),must(ground(argIsa(Prop,N,Type)))}.
 
-ttExpressionType(Type) ==> (argIsa(Prop,N,Type),{number(N)} ==> argQuotedIsa(Prop,N,Type)).
+extraTypeCheck ==> (ttExpressionType(Type) ==> (argIsa(Prop,N,Type),{number(N)} ==> argQuotedIsa(Prop,N,Type))).
 
 :- discontiguous(prologSingleValued/1).
 

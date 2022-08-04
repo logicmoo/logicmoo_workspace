@@ -58,12 +58,12 @@ will_show_grid(_,false).
 
   
 
-
-print_list_of(_,[]):-!.
-print_list_of(N,O):-
+print_list_of(N,O):- print_list_of(print_info,N,O).
+print_list_of(_,_,[]):-!.
+print_list_of(P1,N,O):-
  (N\=[] -> pt(N); true),
   %save_grouped(print_list_of(N),O),
-   maplist(print_info,O),!.
+   maplist(P1,O),!.
 
 print_info(A):- is_grid(A),print_grid(A).
 print_info(A):- is_object(A), ignore(debug_indiv(A)).
@@ -108,33 +108,44 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   hv_point(H,V,Point), i_glyph(Id,Sym),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc(H,V)]),!. 
 */
+object_glyph_color(Obj,FC):- once(colors(Obj,[cc(FC0,_)|_]);FC0=fg),
+  (FC0==black_n -> FC= wbg ; FC = FC0).
+
+prefered(nsew).
+prefered(colormass).
+prefered(alone_dots).
+prefered_header(birth(Caps),Caps):-prefered(Caps).
+prefered_header(iz(Caps),Caps):-prefered(Caps).
+prefered_header(birth(Caps),Caps).
+prefered_header(iz(Caps),Caps).
 
 debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A).
 debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
  must_det_ll((
   ignore((o2g(Obj,GGG), nonvar(GGG),nb_setval(GGG,Obj), nop( my_asserta_if_new(g2o(GGG,Obj))))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
-  once(colors(Obj,[cc(FC0,_)|_]);FC0=fg),
-  (FC0==black_n -> FC= wbg ; FC = FC0),
+  object_glyph_color(Obj,FC),
   sort_obj_props(A,AS0),
-  append(AS0,[nth(MyID)],AS),
  % will_show_grid(Obj,TF),
   TF = false,
   o_i_d(Obj,_,MyID),
+  append(AS0,[nth(MyID)],AS),
   remove_too_verbose(MyID,AS,TV0), include(not_too_verbose,TV0,TV),
 
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
-  sort(AS,ASA),once((member(birth(Caps),ASA);member(iz(Caps),ASA))),
+  sort(AS,ASA),reverse(ASA,ASAR),once((prefered_header(P,Caps),member(P,ASAR))),
   toPropercase(Caps,PC),
   %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
-  object_glyph(Obj,Glyph),    
+  object_glyph(Obj,Glyph), 
+  sort_obj_props(TV,TVS),
+
   ignore((TF==true,dash_chars)),
-  ignore((is_colorish(FC) -> wqnl([format("% ~w:\t",[PC]), color_print(FC,Glyph) | TV ]);
-                             wqnl([format("% ~w:\t",[PC]), color_print(Glyph) | TV ]))),
+  ignore((is_colorish(FC) -> wqnl([format("% ~w:\t",[PC]), color_print(FC,Glyph) | TVS ]);
+                             wqnl([format("% ~w:\t",[PC]), color_print(Glyph) | TVS ]))),
   ignore(( TF==true, mass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, mass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pt(A),
-  ignore((TF==true,dash_chars)))),!.
+  ignore(( TF==true,dash_chars)))),!.
 
 not_too_verbose(X):- X\==(''), X\==s('').
 
@@ -178,13 +189,8 @@ debug_indiv(Other):-
 
 debug_indiv(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
 
-priority("bckgrnd",0).
-priority("point",0).
-priority(A,1):- atom_contains(A,")").
-priority(_,2).
-longer_strings(R,A,B):- string(A),string(B),priority(A,PA),priority(B,PB),atom_length(A,AL),atom_length(B,BL),compare(R,PA+AL+A,PB+BL+B).
-longer_strings(R,A,B):- obj_prop_sort_compare(R,A,B).
 
+%alt_id(_MyID,ID,Alt):- int2glyph(ID,Alt).
 alt_id(MyID,ID,Alt):- Alt is abs(MyID-ID).
 remove_too_verbose(_MyID,Var,plain_var(Var)):- plain_var(Var),!.
 remove_too_verbose(_MyID,H,''):- too_verbose(H),!.
@@ -200,10 +206,12 @@ remove_too_verbose(_MyID,o_i_d(_ * _ * X,Y),NTH):- NTH=..[X,Y].
 remove_too_verbose(_MyID,o_i_d(_ * _+_ * X,Y),NTH):- NTH=..[X,Y].
 remove_too_verbose(_MyID,o_i_d(_ * X,Y),NTH):- NTH=..[X,Y].
 
-remove_too_verbose(MyID,link(Touches,Dir,ID),HH):- number(MyID),MyID\==0,integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
-  remove_too_verbose(0,link(Touches,Dir,Alt,Glyph),HH).
-remove_too_verbose(MyID,link(Touches,ID),HH):- number(MyID),MyID\==0, integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
-  remove_too_verbose(0,link(Touches,Alt,Glyph),HH).
+remove_too_verbose(MyID,link(Touched,ID,Dir),HH):- %number(MyID),
+  MyID\==0,integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
+  remove_too_verbose(0,link(Touched,Alt,Dir,Glyph),HH).
+remove_too_verbose(MyID,link(Touched,ID),HH):- % number(MyID),
+  MyID\==0, integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
+  remove_too_verbose(0,link(Touched,Alt,Glyph),HH).
 
 remove_too_verbose(MyID,TP,HH):- compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),
    compound_name_arguments(TPP,F,A),!,remove_too_verbose(MyID,TPP,HH).
@@ -222,7 +230,7 @@ too_verbose(globalpoints).
 too_verbose(shape).
 too_verbose(localpoints).
 too_verbose(grid).
-too_verbose(link).
+%too_verbose(link).
 too_verbose(grid_size).
 too_verbose(rotated_grid).
 

@@ -14,6 +14,7 @@
             on_xf_cont/1,
             user_ensure_loaded/1,
             user_use_module/1,
+            dupe_term/2,
             alldiscontiguous/0,
             arg_is_transparent/1,
             maybe_fix_varnumbering/2,

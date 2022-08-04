@@ -27,7 +27,7 @@ barrierSpindle(TypeType,Type)==>
 ttBarrier(C)==>tSet(C).
 (ttBarrierType(C)==>(tSet(C),ttTypeType(C))).
 
-:- set_prolog_flag(gc,false).
+%:- set_prolog_flag(gc,false).
 /*
 
 @ TODO RE-ENABLE WHEN NEEDED

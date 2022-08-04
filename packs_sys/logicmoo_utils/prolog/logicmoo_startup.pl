@@ -49,6 +49,7 @@
           whenever_flag_permits/2,
           during_net_boot/1,
           runtime_boot/1,
+          test_runtime_boot/1,
           after_net_boot/1,
           fixup_exports_system/0,
           all_source_file_predicates_are_transparent/0,

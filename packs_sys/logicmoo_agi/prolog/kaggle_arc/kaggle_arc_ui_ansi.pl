@@ -136,7 +136,7 @@ tersify0(I,I):- var(I),!.
 
 %tersifyC(D):- is_map(D),!.
 tersifyC(av(_,_)).
-tersifyC(objFn(_)).
+tersifyC(objFn(_,_)).
 tersifyC(groupFn(_)).
 
 tersify1(av(_,Blue), -(Blue)):-!.
@@ -145,7 +145,9 @@ tersify1(gridFn(I),gridFn(O)):-tersifyG(I,O).
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
 tersify1(I,groupFn(O)):- is_group(I),  why_grouped(Why,II),I==II,!,O=Why.
-tersify1(I,objFn(S)):- is_object(I), o2g(I,O),!,sformat(S,"' ~w '",[O]).
+tersify1(I,Q):- is_object(I),object_glyph_color(I,FC), o2g(I,O),!,wots(A,color_print(FC,call(format('"~w"',[O])))),
+   mass(I,M),
+   wots(S,call(write(objFn(A,M)))),atom_string(Q,S).
 tersify1(I,O):- is_map(I), get_kov(objs,I,_),!, O='$VAR'('VM').
 tersify1(I,O):- is_map(I), get_kov(pairs,I,_),!, O='$VAR'('Training').
 
@@ -177,6 +179,7 @@ write_map(_G,Where):- write('...'),write(Where),write('...').
 
 ptt(_):- is_print_collapsed,!.
 ptt(G):- is_map(G), !, write_map(G,'ptt').
+ptt(S):- term_is_ansi(S), !, write_keeping_ansi(S).
 ptt(P):- \+ \+ ((tersify(P,Q),!,pt(Q))).
 ptt(C,P):- \+ \+ ((tersify(P,Q),!,pt(C,Q))).
 
@@ -190,10 +193,12 @@ pt(_):- format('~N'), fail.
 pt(P):- var(P),!,pt(var(P)).
 pt(P):- atomic(P),atom_contains(P,'~'),!,format(P).
 pt(G):- is_map(G), !, write_map(G,'pt').
+pt(S):- term_is_ansi(S), !, write_keeping_ansi(S).
 pt(P):- \+ \+ (( pt_guess_pretty(P,GP),ptw(GP))).
 %pt(P):-!,writeq(P).
 %ptw(P):- quietlyd(print_tree_nl(P)),!.
 ptw(G):- is_map(G), !, write_map(G,'ptw').
+ptw(S):- term_is_ansi(S), !, write_keeping_ansi(S).
 ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
 
 pt_guess_pretty(P,O):- copy_term(P,O,_),
@@ -204,6 +209,7 @@ pt_guess_pretty(P,O):- copy_term(P,O,_),
 :- dynamic(pretty_clauses:pp_hook/3).
 :- multifile(pretty_clauses:pp_hook/3).
 :- module_transparent(pretty_clauses:pp_hook/3).
+pretty_clauses:pp_hook(_,Tab,S):- term_is_ansi(S), !,prefix_spaces(Tab), write_keeping_ansi(S).
 pretty_clauses:pp_hook(_,_,G):- fail, is_grid(G), 
  \+ (sub_term(E,G),compound(E),E='$VAR'(_)), 
   catch((wots(S,print_grid(G)),strip_vspace(S,SS),ptc(orange,(format('"~w"',[SS])))),_,fail).
@@ -217,18 +223,20 @@ strip_vspace(S,Stripped):- string_concat(SS,'\t',S),!,strip_vspace(SS,Stripped).
 %strip_vspace(S,Stripped):- split_string(S, "", "\t\r\n", [Stripped]).
 strip_vspace(S,S).
 
+print_ansi_tree(S,_):- term_is_ansi(S), !, write_keeping_ansi(S).
 print_ansi_tree(P,_):- arc_portray(P),!.
 print_ansi_tree(P,_OL):- print_tree_nl(P).
 
 wqs(G):- is_map(G), !, write_map(G,'wqs').
 wqs(X):- is_grid(X), !, print_grid(X).
+wqs(S):- term_is_ansi(S), !, write_keeping_ansi(S).
 wqs(X):- is_object(X), !, show_shape(X).
 wqs(X):- plain_var(X), !, wqs(plain_var(X)). wqs(nl):- !, nl. wqs(''):-!. wqs([]):-!.
 %wqs([H1,H2|T]):- string(H1),string(H2),!, write(H1),write(' '), wqs([H2|T]).
 %wqs([H1|T]):- string(H1),!, write(H1), wqs(T).
 wqs([skip(_)|T]):- !,wqs(T).
 %wqs([H|T]):- compound(H),!, writeq(H), wqs(T).
-wqs([H|T]):- !, wqs(H), wqs(T).
+wqs([H|T]):- !, wqs(H),need_nl(H,T), wqs(T).
 wqs(format(C,N)):- !, format(C,N).
 wqs(writef(C,N)):- !, writef(C,N).
 wqs(call(C)):- !, call(C).
@@ -242,9 +250,14 @@ wqs(color_print(C,X)):- is_color(C), !, write(' '), color_print(C,X).
 wqs(color_print(C,X)):- \+ plain_var(C), !, write(' '), color_print(C,X).
 wqs(C):- is_color(C),!,wqs(color_print(C,C)).
 
+wqs(S):- term_is_ansi(S), !, write_keeping_ansi(S).
 wqs(X):- \+ compound(X),!, write(' '), write(X).
 wqs(X):- write(' '), writeq(X).
 
+is_breaker(P):- compound(P),functor(P,_,A), A>=3.
+need_nl(H,[P|_]):- \+ is_breaker(H),is_breaker(P),line_position(user_output,L1),L1>80,nl,write('\t\t').
+need_nl(_,_):- line_position(user_output,L1),L1>160,nl,write('\t\t').
+need_nl(_,_).
 wqln(X):- wqnl(X).
 wqnl(X):- is_list(X),!,format('~N'),wqs(X),format('~N').
 wqnl(X):- format('~N~q~N',[X]).
@@ -634,7 +647,7 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
 %print_rows(List):- maplist(print_g,List),nl.
 %block_colors([(black),(blue),(red),(green),(yellow),'#c0c0c0',(magenta),'#ff8c00',(cyan),'#8b4513']).
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,('#966cb8'),'#ff8c00',(cyan),'#8b4513']):- silver(Silver),!.
-block_colors([('#2a2a2a'),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#444444','#3a5a3a']):- silver(Silver),!.
+block_colors([('#2a2a2a'),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#3a5a3a','#6a5a3a','#444455']):- silver(Silver),!.
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#3a5a3a']):- silver(Silver),!.
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),wbg,fg]).
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).

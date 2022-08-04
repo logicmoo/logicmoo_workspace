@@ -7,6 +7,7 @@
   privmsg_prefixed/2,
   privmsg1/2,
   privmsg2/2,
+  %get_text_restore_pred/2,
   say_owner/1,
   format_nv/2,get2react/1,get_session_prefix/1,ignore_catch/1,ignored_source/1,
   ircEventUsed/3,ircEventNow/3,ircEvent/3,irc_really_call/4,irc_filtered_call/4,

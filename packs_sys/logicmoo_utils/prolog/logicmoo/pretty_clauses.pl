@@ -16,6 +16,8 @@
            bfly_term//2,          % +Term, +Options
            print_tree_nl/1,
            guess_pretty/1,
+           term_is_ansi/1,
+           write_keeping_ansi/1,
            make_pretty/2,
    color_format_maybe/3,print_tree00/1,print_as_tree/1,current_print_write_options/1,mort/1,
    print_tree_with_final/2,
@@ -918,6 +920,7 @@ in_color(C,P):-
 % pretty_clauses:goal_expansion(pt_nl,(pformat(S:L),nl)):- source_location(S,L).
 
 write_simple(A):- write_simple(A,[]).
+write_simple(S,_):- term_is_ansi(S), !, write_keeping_ansi(S).
 write_simple(A,Options):- get_portrayal_vars(Vs), 
   my_merge_options(Options,[quoted(true), portrayed(true), variable_names(Vs)],OptionsNew),
   without_ec_portray_hook((
@@ -976,6 +979,7 @@ system_portray(Tab,Term,Options):- recalc_tab(Tab, NewTab), !, system_portray(Ne
 
 %system_portray(Tab,Term,_Options) :-  ground(Term), Term = [tag(_,N),M], prefix_spaces(Tab),write([N,M]),!.
 %system_portray(Tab,Term,_Options) :-  ground(Term), Term = tag(_,N), prefix_spaces(Tab),write(N),!.
+system_portray(_Tab, S,_Options) :- term_is_ansi(S), !, write_keeping_ansi(S).
 system_portray(Tab,Term,_Options) :- 
   with_no_hrefs(t,(if_defined(rok_linkable(Term),fail),
     prefix_spaces(Tab),write_atom_link(Term))),!.
@@ -1449,7 +1453,20 @@ print_tree_width(W120):- W120=120.
 maybe_prefix_spaces(V,Tab):- ignore(( \+ as_is(V),prefix_spaces(Tab) )).
 maybe_print_tab_term(Tab,V):- maybe_prefix_spaces(V,Tab), print_tree_no_nl( V ).
 
-term_contains_ansi(S):- \+ compound(S),!,string(S),sub_string(S,_,_,_,'\x1B').
+write_keeping_ansi(S):- string(S),!, write('"'),write(S),write('"').
+write_keeping_ansi(S):- \+ atom(S),!, write(S).
+write_keeping_ansi(S):- is_color(S), !, real_ansi_format([bold, hfg(S)], '~q',[S]).
+%write_keeping_ansi(S):- write('\''),write(S),write('\'').
+write_keeping_ansi(S):- write(S).
+
+
+term_is_ansi(S):- compound(S),!,fail.
+term_is_ansi(S):- string(S),!,sub_string(S,_,_,_,"\x1B"),!.
+term_is_ansi(S):- \+ atom(S),!,fail.
+term_is_ansi(S):- sub_string(S,_,_,_,"\x1B"),!.
+term_is_ansi(S):- is_color(S).
+
+term_contains_ansi(S):- \+ compound(S),!,term_is_ansi(S).
 term_contains_ansi(S):- arg(_,S,E),term_contains_ansi(E),!.
 :- export(term_contains_ansi/1).
 
@@ -1462,7 +1479,8 @@ print_lc_tab_term(LC,Tab,T):- write(LC),print_tab_term(Tab,T).
 pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
 pt1(FS,Tab,S) :- pretty_clauses:pp_hook(FS,Tab,S),!.
-pt1(_FS,_Tab,S) :- string(S),atom_codes(S,[27|_]), !,  write('"'),writeq(S),write('"').
+
+pt1(_FS,_Tab,S) :- term_is_ansi(S), !, write_keeping_ansi(S).
 
 pt1(_, Tab,Term) :- 
   with_no_hrefs(t,(if_defined(rok_linkable(Term),fail), !,
@@ -3027,6 +3045,7 @@ finalize_term(Term, Dict) -->
 %:- fixup_exports.
 :- multifile(user:portray/1).
 :- dynamic(user:portray/1).
+user:portray(S):- term_is_ansi(S), !, write_keeping_ansi(S).
 user:portray(Term):- 
   %fail, 
   notrace(pc_portray(Term)),!.

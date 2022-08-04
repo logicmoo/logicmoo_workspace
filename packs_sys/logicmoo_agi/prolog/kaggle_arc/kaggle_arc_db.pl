@@ -157,9 +157,14 @@ maybe_glyph(_G,N,Code):- i_glyph(N,Code),!.
 maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
 maybe_glyph(_,N,N).
 
+object_printables(Points,Group,GroupPP):-
+  smallest_first(Points,Group0),
+  include(has_prop(z_o(_,_)),Group0,Group1), 
+  (Group1==[] -> Group = Group0 ; Group = Group1),
+  append(Group,Group0,GroupP),list_to_set(GroupP,GroupPP),!.
 
 grid_color_and_glyph(Points,C,GN,H,V):- %is_object_group(Points), 
-  smallest_first(Points,ObjList),
+  object_printables(Points,_,ObjList),
   gridoid_color(Points,C,H,V),
   gridoid_glyph(ObjList,GN,H,V),!.
 grid_color_and_glyph(Points,C,GN,H,V):- %is_object_group(Points), 
@@ -167,11 +172,11 @@ grid_color_and_glyph(Points,C,GN,H,V):- %is_object_group(Points),
   gridoid_glyph(Points,GN,H,V),!.
 
 gridoid_color(Points,C,H,V):-
- (((nb_current(color_index,ObjList),ObjList\==[e]),fail) -> ObjList=List ; Points=List),
+ ((nb_current(color_index,ObjList),ObjList\==[]) -> ObjList=List ; Points=List),
   from_gridoid(List,C,_N,H,V,_G),!.
 
 gridoid_glyph(Points,GN,H,V):-
- (((nb_current(color_index,ObjList),ObjList\==[e]),fail) -> ObjList=List ; Points=List),
+ ((nb_current(color_index,ObjList),ObjList\==[]) -> ObjList=List ; Points=List),
   from_gridoid(List,_,N,H,V,G), maybe_glyph(G,N,GN).
 
 %from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).

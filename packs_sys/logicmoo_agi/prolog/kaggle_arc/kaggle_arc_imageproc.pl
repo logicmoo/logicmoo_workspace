@@ -334,6 +334,12 @@ blur(Op,G0,GG):- into_grid(G0,G),call(Op,G,GGG),replace_local_points(GGG,black,G
 
 backfill_vars(GridO):- clause(backfill(GridO),true).
 
+unbind_color_whole(Num1,Var,_):- (plain_var(Var);plain_var(Num1)),!,Num1==Var.
+unbind_color_whole(Num1,Grid,GridO):- is_grid(Grid),!,mapgrid(unbind_color_whole(Num1),Grid,GridO).
+unbind_color_whole(Num1,Grid,GridO):- is_list(Grid),!,maplist(unbind_color_whole(Num1),Grid,GridO).
+unbind_color_whole(Num1,Num2,_):- \+ compound(Num2),!, Num1=Num2.
+unbind_color_whole(Num1,_-Num1,_).
+
 unbind_color(Color1,Grid,GridO):- is_grid(Grid),!,grid_color_code(Color1,Num1),unbind_color0(Num1,Grid,GridO).
 unbind_color(Color1,Grid,GridO):- color_code(Color1,Num1),subst001(Grid,Num1,_,GridO).
 

@@ -424,6 +424,8 @@ is_fg_color_if_nonvar(_Trig,C):- is_fg_color(C),!.
 is_bg(C):- is_bg_color(C).
 is_bgc(C):- is_bg_color(C).
 
+is_bgp(C-_):- is_bg_color(C).
+
 constrain_grid_now(_CT,_Trig,_GridIn,_Hi,0,_GH,_GV,_GridO):-!.
 constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
   get_color_at(Hi,Vi,GridIn,C1I),

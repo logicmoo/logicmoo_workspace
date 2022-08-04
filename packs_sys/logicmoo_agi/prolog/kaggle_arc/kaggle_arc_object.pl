@@ -76,7 +76,7 @@ register_obj(L):- notrace(o2g(L,_)).
 :- dynamic(obj_cache/3).
 :- module_transparent obj_cache/2.
 
-enum_object(O):- var(O),!,trace,no_repeats_cmp(=@=,O,enum_object0(O)).
+enum_object(O):- var(O),!,no_repeats_cmp(=@=,O,enum_object0(O)).
 enum_object(O):- ptt(enum_object(O)),!.
 
 enum_object0(Obj):- % listing(obj_cache/2),
@@ -172,7 +172,7 @@ make_indiv_object_s(_ID,H,V,Overrides,Points,ObjO):-
 
   copy_term(Grid,GridInCopy),
 
-  %grid_to_special_points(Grid,ColorlessPoints), 
+  %grid_to_gridmap(Grid,ColorlessPoints), 
 
   findall(Shape,
    (guess_shape(H,V,Grid,LocalGrid,Ps,Empty,Len,Width,Height,CC,LPoints,Shape),
@@ -286,27 +286,47 @@ obj_to_program(Obj,Program,VM):-
 object_pen(Obj,pen(Color)):- color(Obj,Color),!.
 object_pen(Obj,Pen):- color(Obj,Pen),!.
 
-prop_of(mass,mass(_)).
 prop_of(size,v_hv(_,_)).
+prop_of(mass,mass(_)).
+prop_of(mass,cmass(_)).
 prop_of(shape,shape(_)).
 prop_of(colors,colors(_)).
 prop_of(visually,localpoints(_)).
 prop_of(rotation,rotation(_)).
 prop_of(loc,loc(_,_)).
 
-%sort_obj_props(obj(L),obj(LO)):- !, sort_obj_props(L,LO).
-sort_obj_props(L,LO):- L=LO. %predsort(obj_prop_sort_compare,L,LO).
-obj_prop_sort_compare(R,A,B):- compound(A), compound(B), !, obj_prop_sort_compare2(R,A,B).
-obj_prop_sort_compare(R,A,B):- compare(R,A,B).
+
+sort_obj_props(obj(L),obj(LO)):- !, sort_obj_props(L,LO).
+%sort_obj_props(L,LO):- L=LO.
+sort_obj_props(L,LOR):- maplist(in_obj_keys,L,LL),keysort(LL,LLS),maplist(arg(2),LLS,LO),reverse(LO,LOR).
+%obj_prop_sort_compare(R,A,B):- compound(A), compound(B), !, obj_prop_sort_compare2(R,B,A).
+%obj_prop_sort_compare(R,A,B):- compare(R,B,A).
+%obj_prop_sort_compare2(R,A,B):- obk_key(A,AK),obk_key(B,BK),!,compare(R,AK-A,BK-B).
 e1_member(E,L):- \+ \+ member(E,L).
 
-obj_prop_sort_compare2(R,A,B):- obk_key(A,AK),obk_key(B,BK),compare(R,AK-A,BK-B).
+in_obj_keys(P,(K-P)):- obk_key(P,K),!.
 
-obk_key(A,AK):- clause(prop_of(_,A),true,Ref),nth_clause(prop_of(_,_),Ref,AK),!. 
-obk_key(iz(_),50):-!.
+obk_key(A,P):- string(A), priority(A,P).
+obk_key(A,0):- \+ compound(A),!.
+obk_key(A,AK):- callable(A), clause(prop_of(_,A),true,Ref),nth_clause(prop_of(_,_),Ref,AK),!. 
+obk_key(iz(C),O):- compound(C),!,obk_key(C,O).
+obk_key(touched(_,_,_),-150).
+obk_key(touched(_,_),-150).
+obk_key(link(_,_,_),-150).
+obk_key(link(_,_),-150).
+obk_key(chromatic(_),150):-!.
 obk_key(A,99):- arg(1,A,L), is_grid(L).
-obk_key(A,90):- arg(1,A,L), is_list(L).
+obk_key(A,92):- arg(_,A,L), is_list(L).
+obk_key(A,91):- arg(_,A,L), number(L).
 obk_key(_,80). 
+
+priority("bckgrnd",0).
+priority("point",0).
+priority(A,10):- atom_contains(A,")").
+priority(_,20).
+longer_strings(R,A,B):- string(A),string(B),priority(A,PA),priority(B,PB),atom_length(A,AL),atom_length(B,BL),compare(R,PA+AL+A,PB+BL+B).
+longer_strings(R,A,B):- compare(R,A,B).
+
 
 add_shape_info(Info,I,M):- add_shape_info0(Info,I,M),!.
 
@@ -402,7 +422,8 @@ transfer_props_l([_|L],Functors,List,NewList):-
 */
 
 %indv_u_props(I,[localpoints(Ps),loc(X,Y),pen(Pen),v_hv(H,V),rotation(Rot)]):- loc(I,X,Y),shape(I,Ps),pen(I,Pen),v_hv(I,H,V),rotation(I,Rot),!.
-indv_u_props(I,[localpoints(Ps),loc(X,Y),v_hv(H,V),rotation(Rot)]):- loc(I,X,Y),localpoints(I,Ps),v_hv(I,H,V),rotation(I,Rot),!.
+indv_u_props(I,[v_hv(H,V),cmass(C),loc(X,Y),localpoints(Ps),rotation(Rot)]):- 
+             v_hv(I,H,V), cmass(I,C),loc(I,X,Y),localpoints(I,Ps),rotation(I,Rot),!.
 %indv_u_props(I,[shape(Ps),center(X,Y),pen(Pen),v_hv(H,V),rotation(Rot)]):- center(I,X,Y),shape(I,Ps),pen(I,Pen),v_hv(I,H,V),rotation(I,Rot),!.
 
 :- dynamic(is_iv_for/2).
@@ -1084,10 +1105,10 @@ object_to_nm_grid(Obj,SSP):-
   v_hv(Obj,H,V),
   localpoints(Obj,LPoints),
   points_to_grid(H,V,LPoints,GridIn),
-  grid_to_special_points(GridIn,SSP),
+  grid_to_gridmap(GridIn,SSP),
   print_grid(SSP).
 
-grid_to_special_points(GridIn,GridON):- 
+grid_to_gridmap(GridIn,GridON):- 
   neighbor_map(GridIn,GridO),
   mapgrid(only_neib_data,GridO,GridON),
   %subst_1L(['*'-'.','~'-'red','+'-'blue','.'-'yellow'],GridON,SSP),
@@ -1114,7 +1135,7 @@ guess_shape(GH,GV,I,0,N,N,1,Colors,Points,hv_line(h)):- N > 1.
 guess_shape(GH,GV,I,0,N,1,N,Colors,Points,hv_line(v)):- N > 1.
 
 
-guess_shape(GH,GV,GridIn,LocalGrid,I,E,N,H,V,Colors,Points,Keypad):- 
+guess_shape(GH,GV,GridIn,LocalGrid,I,E,N,H,V,Colors,Points,poly(Keypad)):- 
   once(guess_shape_poly(I,E,N,H,V,Colors,Points,Keypad)).
 
 guess_shape_poly(I,0,1,1,1,Colors,Points,dot):-!.
@@ -1130,7 +1151,7 @@ guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2,
 %guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
 %guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
 guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outl2):- H>2,V>2,N>4,
-  once((grid_to_special_points(GridIn,GridON), \+ member('*',GridON), member('.',GridON))).
+  once((grid_to_gridmap(GridIn,GridON), \+ member('*',GridON), member('.',GridON))).
   
 guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>2,N>4,
   (find_outlines(Points,Sol,Rest)->(length(Sol,SN),SN>0,length(Rest,RN))),!.
@@ -1138,7 +1159,7 @@ guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,outline(SN)):- H>2,V>
 guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,[cc(Color,_)],Points,outl):- H>2,V>2, N>7,add_borders(Color,GridIn,LocalGrid).
 
 guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- fail,
-  grid_to_special_points(GridIn,GridON),
+  grid_to_gridmap(GridIn,GridON),
   subst_1L(['~'-'red','+'-'blue','.'-'yellow'],GridON,SSP),
   localpoints(SSP,NPoints),!.
   %clumped(ON,COO),!,maplist(arg(1),COO,PAT).

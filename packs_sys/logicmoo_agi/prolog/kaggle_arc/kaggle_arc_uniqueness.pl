@@ -67,7 +67,7 @@ what_unique:- get_current_test(TestID),what_unique(TestID).
 what_unique(TestID):- get_vm(VM),
    fif((VM.id \= (TestID * _ * _)), ndividuator1),
    get_vm(VM2),
-   what_unique_obj(TestID,_Obj,VM2.objs).
+   explain_uniqueness(VM2.objs).
 
 what_unique(TestID,Dict):- is_map(Dict),!,what_unique_dict(TestID,Dict).
 what_unique(TestID,Obj):- get_current_test(TestID),select_group(TestID,Group,_How), member(Obj,Group), what_unique(TestID,Obj,Group).
@@ -86,7 +86,6 @@ what_unique_obj(TestID,Obj,Group):-
   Dict.group = Group,
   Dict.object = Obj,
   what_unique_dict(TestID,Dict),
-  !,
   report_unique(Dict).
 
 /*what_unique(TestID,CountMask,GroupSizeMask):-
@@ -106,8 +105,8 @@ report_unique(Dict):-
   maplist_e(tersify,SharedWith,SharedWithO),
   maplist_e(tersify,Group,GroupO),
   maplist_e(tersify,Obj,ObjO),
-  (Obj\==[] -> ignore(print_grid(Obj)) ; true),
- pt(what_unique(ObjO=[ActualCount/ActualGroupSize-Trait],sharedWith=SharedWithO,
+  %(Obj\==[] -> ignore(print_grid(Obj)) ; true),
+  format('~N'), print_tree_nl(what_unique(ObjO=[ActualCount/ActualGroupSize-Trait],sharedWith=SharedWithO,
   setL/listL=SetL/ListL,others=HTraitSetO,how=How,
   groupSizeMask=GroupSizeMask,group:GroupO,countMask=CountMask,otherL=OtherL)))).
 
@@ -119,7 +118,9 @@ maplist_e(P2,A,B):- call(P2,A,B).
 :- style_check(+singleton).
 
 
-obj_exclude(Obj,Group,Others):- select(O,Group,Others),O==Obj *-> true; Group=Others.
+obj_exclude(Obj,Group,Others):- var(Obj),!,select(Obj,Group,Others).
+obj_exclude(Obj,Group,Others):- select(O,Group,Others),(O==Obj *-> true; Group=Others).
+
 
 what_unique_dict(TestID,Dict):- 
   ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
@@ -148,6 +149,24 @@ what_unique_dict(TestID,Dict):-
    findall(C-HTrait,(member(HTrait,HTraitSet),found_in_w(HTrait,NotMine,LS),length(LS,C)),TraitCounts),
    sort(TraitCounts,TraitCountSets),
    \+ filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How).
+
+
+explain_uniqueness(GroupWhole):-
+  object_printables(GroupWhole,Group,GroupPP),
+  get_current_test(TestID),!,
+  forall(member(Obj,Group),
+   (dash_chars,
+    object_glyph(Obj,G), object_glyph_color(Obj,GC), object_grid(Obj,OG), 
+    locally(nb_setval(color_index,[Obj|GroupPP]),print_side_by_side(GC,GroupPP,'explain_uniqueness',_,OG,G)),
+    dmsg(uobj=Obj),!,
+    forall(what_unique_obj(TestID,Obj,Group),true))),
+  dash_chars.
+
+
+% touching vs each dir
+% size
+
+
 
 :- style_check(-singleton).
 filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How):-

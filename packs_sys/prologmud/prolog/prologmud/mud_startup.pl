@@ -15,9 +15,9 @@
 %:-pfc_untrace.
 %:-pfc_no_spy_all.
 
-use_baseKB :- nop('$set_typein_module'( baseKB)),nop('$set_source_module'( baseKB)),nop(module( baseKB)),ignore(notrace(update_changed_files)).
+use_baseKB :- ('$set_typein_module'( baseKB)),('$set_source_module'( baseKB)),(module( baseKB)),ignore(notrace(update_changed_files)).
 :- use_baseKB.
-
+%:- baseKB.
 % ==============================================
 % ============= MUD SERVER CODE LOADED =============
 % ==============================================
@@ -305,7 +305,7 @@ start_runtime_mud:-
    show_lm_tests.
 
 :- export(start_runtime_mud/0).
-:- baseKB:import(start_runtime_mud/0).
+%:- baseKB:import(start_runtime_mud/0).
 
 show_lm_tests:-
   dmsg(call(listing(baseKB:feature_test))),

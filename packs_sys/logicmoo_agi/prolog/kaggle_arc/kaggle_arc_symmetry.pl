@@ -503,7 +503,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   clip_and_rot(SXQ4,SYQ4,EXQ4,EYQ4,Grid,Q4R,Q4),
   clip_and_rot(SXQ4,SYQ2,EXQ4,EYQ2,Grid,Q1R,Q1),
   clip_and_rot(SXQ2,SYQ4,EXQ2,EYQ4,Grid,Q3R,Q3),
-  print_quadrants(orange,Q1,Q2,Q3,Q4),
+  print_quadrants(orange,Q1,Q2,Q3,Q4),  
 
   XLQ2 is EXQ2-SXQ2, YLQ2 is EYQ2-SYQ2,
   XLQ4 is EXQ4-SXQ4, YLQ4 is EYQ4-SYQ4,
@@ -585,7 +585,11 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
 glean_patterns_hook(Steps,G,GridO):- make_symmetrical_grid(Steps,G,GridO).
 
 
-was_color(Color,CPoint):- only_color_data(CPoint,Color2),Color==Color2.
+was_color(ColorMatch,CPoint):- only_color_data(CPoint,Color2), unify_color(ColorMatch,Color2).
+
+unify_color(ColorMatch,Color2):- plain_var(Color2),!,ColorMatch==Color2.
+unify_color(ColorMatch,Color2):- plain_var(ColorMatch),!,ColorMatch==Color2.
+unify_color(ColorMatch,Color2):- \+ ColorMatch \= Color2.
 
 make_symmetrical_grid(G,GridO):- make_symmetrical_grid(_,G,GridO).
 
@@ -1368,11 +1372,15 @@ ping_indiv_grid(show_neighbor_map).
 get_fill_points2(Grid,FillPoints):-
   findall(C-Point,would_fill(Grid,C,Point),FillPoints).
 
+%:- set_prolog_flag(occurs_check,error).
+
 get_fill_points(In,UNFP,GridO):-
  %grid_size(Grid,H,V),
  subst001(In,black,wbg,Grid),
+ %print(In=Grid),
  neighbor_map(Grid,GridO), 
  localpoints(GridO,NPS),  
+ %print(NPS),nl,
  include(p1_or(is_point_type('~'),is_fill_point(NPS)),NPS,FillPoints),
  include(is_point_type('wbg'),NPS,NotFillPoints),
  subtract(FillPoints,NotFillPoints,RFillPoints),
@@ -1401,8 +1409,7 @@ is_fill_point(GridO,_,C,P1):- would_fill(GridO,C,P1).
 is_sedge('.').
  
 p1_or(P1A,P1B,X):- call(P1A,X)->true;call(P1B,X).
-is_point_type(T,V):- compound(V),arg(_,V,E), is_point_type(T,E).
-is_point_type(T,V):- V==T.
+is_point_type(T,V):- ground(V),ground(T), sub_var(T,V).
  
 
 nr_make_symmetrical_grid(Steps,G,GridO):- 

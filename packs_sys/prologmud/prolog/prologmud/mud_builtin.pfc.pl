@@ -671,7 +671,7 @@ prologHybrid(mudStowing(tAgent,tItem)).
 % :- break.
 
 prologHybrid(text_actverb(ftText,vtVerb)).
-:- sanity(((argIsa(text_actverb,1,C);argQuotedIsa(text_actverb,1,C)))).
+%:- sanity(((argIsa(text_actverb,1,C);argQuotedIsa(text_actverb,1,C)))).
 
 :-dynamic((latitude/2, mudMoveDist/2, longitude/2)).
 prologHybrid(typeHasGlyph,2).

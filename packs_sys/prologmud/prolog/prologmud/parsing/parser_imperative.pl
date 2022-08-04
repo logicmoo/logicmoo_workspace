@@ -394,9 +394,10 @@ nameString(O,S):-nonvar(O),nonvar(S),nameString(O,SU),same_ci(S,SU).
 
 
 % :- sanity((clause_u(baseKB:text_actverb(S,actWhere)),argIsa(text_actverb,1,C),isa(S,C))).
-
+/*
 :- must((clause_u(baseKB:text_actverb(S,actWhere))))
   ->must(((argIsa(text_actverb,1,C);call_u(argQuotedIsa(text_actverb,1,C))),(isa(S,C);quotedIsa(S,C)))).
+*/
 
 %:- listing(baseKB:text_actverb/2).
 %:- break.
