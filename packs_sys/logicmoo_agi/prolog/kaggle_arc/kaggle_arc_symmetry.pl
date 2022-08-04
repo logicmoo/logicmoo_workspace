@@ -586,6 +586,8 @@ glean_patterns_hook(Steps,G,GridO):- make_symmetrical_grid(Steps,G,GridO).
 
 
 was_color(ColorMatch,CPoint):- only_color_data(CPoint,Color2), unify_color(ColorMatch,Color2).
+was_color_or_unbound(_,CPoint):- var(CPoint),!.
+was_color_or_unbound(ColorMatch,CPoint):- only_color_data(CPoint,Color2), unify_color(ColorMatch,Color2).
 
 unify_color(ColorMatch,Color2):- plain_var(Color2),!,ColorMatch==Color2.
 unify_color(ColorMatch,Color2):- plain_var(ColorMatch),!,ColorMatch==Color2.

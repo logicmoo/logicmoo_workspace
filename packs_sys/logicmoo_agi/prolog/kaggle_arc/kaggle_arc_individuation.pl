@@ -1001,9 +1001,9 @@ one_fti(VM,maybe_glyphic):-
 is_glyphic(Points,_GH,_GV):- length(Points,Len), Len < 5.
 is_glyphic(Points,GH,GV):- ( GH=<5 ; GV=<5 ), length(Points,Len), Len is GH * GV.
 
-
-maybe_subst_grid_type(E-C,'+'-C):- arg(_,t('A','<','y','>','/','\\','=','!'),E),ignore(C=wbg).
-maybe_subst_grid_type(E-C,'*'-C):- arg(_,t('v','A'),E),ignore(C=wbg).
+maybe_subst_grid_type(V,V):- var(V),!.
+maybe_subst_grid_type(E-C,'+'-C):- nonvar(E), arg(_,t('A','<','y','>','/','\\','=','!'),E). %,ignore(C=wbg).
+maybe_subst_grid_type(E-C,'*'-C):- arg(_,t('v','A'),E). %,ignore(C=wbg).
 %maybe_subst_grid_type(E-C,'.'-C):- arg(_,t('|','-'),E),ignore(C=wbg).
 maybe_subst_grid_type(A,A).
 maybe_wbg(E-V,E-wbg):- var(V),!.
@@ -1023,17 +1023,16 @@ row_isnt(LeftN,RightN,C,Row):-
   length(Left,LeftN),length(Right,RightN),
   \+ ((append([Left,[(_)-C],UList,[(_)-C],Right],Row), maplist(same_color(C),UList))).
 */
-row_not_isnt(LeftN,RightN,C,Row,IRow,NewRow):-
+row_not_isnt(LeftN,RightN,C,Row,NewSubRow,NewRow):-
   length(Left,LeftN), length(Right,RightN),
   append([Left,SubRow,Right],Row),  
   append([[_-C],_List,[_-C]],SubRow),!,
   %maplist(was_color(C),List),
-  maplist(divide_colors(C),SubRow,NewSubRow,NewSubRowReplace),
-  append([Left,NewSubRow,Right],IRow),
+  maplist(divide_colors(C),SubRow,NewSubRow,NewSubRowReplace),  
   append([Left,NewSubRowReplace,Right],NewRow),!.
 
-divide_colors(C,Cell,Cell,_):- was_color(C,Cell),!.
-divide_colors(_,Cell,_Keep,Cell).
+divide_colors(C,Cell,Cell,'~'-fg):- was_color(C,Cell),!.
+divide_colors(_,Cell,_,Cell).
 
 mustlist_until_failed(P3,[A1|L1],[A2|L2],[A3|L3],Rest):-
   call(P3,A1,A2,A3),!,
@@ -1045,108 +1044,31 @@ rectangles(VM):-
   Grid = VM.grid,
   texture_grid(Grid,TexturedGrid),
   mapgrid(maybe_subst_grid_type,TexturedGrid,Retextured),!,
-  % writeq(GridOO),  print_side_by_side(NewGrid,Replacements),!,
   grid_size(Retextured,H,_),%make_list('X'-black,H,DeadRow),
-  %append([[DeadRow],Retextured,[DeadRow]],Retextured),
-
-
-  %dif(C,wbg),
   L = '+',
   append(BeforeFirstRow,[FirstRow|Rest],Retextured),
-  %member(FirstRow,Retextured),
-  %member(L-C,FirstRow),
-  dif(C,wbg),
   append([Left,[L-C],List,[L-C],Right],FirstRow),
-  %append([Left,FirstSubRow,Right],FirstRow),
-  %append([[L-C],List,[L-C]],FirstSubRow),
+  nonvar(List),
+  nonvar(C), C \== wbg,C \== fg,
+  maplist(nonvar,List),
   maplist(was_color(C),List),
-  length(Left,LeftN), %length(FirstSubRow,Width), 
-  length(Right,RightN),
+  length(Left,LeftN), length(Right,RightN), 
   Width is H - RightN - LeftN,
-  %row_is(LeftN,RightN,C,FirstRow),
-  print_side_by_side(C,TexturedGrid,texture,_,Retextured,retextured(LeftN+Width+RightN)),!,
   mustlist_until_failed(row_not_isnt(LeftN,RightN,C),[FirstRow|Rest],RowsInvolvedClipped,Replacements,Below),
+  length(RowsInvolvedClipped,N),
+  length(RowsInvolvedClipped,N),N>1,!,
   append([BeforeFirstRow,Replacements,Below],NewGrid),
-%  last(RowsInvolvedClipped,Last), maplist(was_color(C),Last),!,
-  print_side_by_side(C,NewGrid,'grid',_,RowsInvolvedClipped,clipped),
-  localpoints(RowsInvolvedClipped,NewObjPoints),
-  ignore((NewObjPoints\==[],make_indiv_object(VM,[birth(rows)],NewObjPoints,_Obj))),
-  ignore((NewGrid\==[], print_grid(newGrid, NewGrid),!, set(VM.grid) = NewGrid, rectangles(VM))),
-  !.
-
-clip_row(LeftN,RightN,FirstRow,Clipped,LeftOver):- 
-     length(Right,RightN),length(Left,LeftN),
-     append([Left,Clipped,Right],FirstRow),
-     length(Clipped,ClippedN),
-     length(UClipped,ClippedN),
-     append([Left,UClipped,Right],LeftOver),!.
-
-is_fti_step(rectangles).
-rectangles(VM):- 
-  Grid = VM.grid,
-  texture_grid(Grid,TexturedGrid),
-  mapgrid(maybe_subst_grid_type,TexturedGrid,Retextured),!,
-  %grid_size(Retextured,H,_),%make_list('X'-black,H,DeadRow),
-  L = '+',
-  member(FirstRow,Retextured),
-  dif(C,wbg),
-  once((
-        append([Left,[L-C],List,[L-C],Right],FirstRow),
-        maplist(was_color(C),List),
-        length(Left,LeftN), length(Right,RightN),
-        append(BeforeFirstRow,[FirstRow,SecondRow|Rest],Retextured),
-        %row_not_isnt(LeftN,RightN,C,FirstRow,_,_),  
-        row_not_isnt(LeftN,RightN,C,SecondRow,_,_),
-        print_side_by_side(C,TexturedGrid,texture,_,Retextured,retextured(LeftN,RightN)),
-        trace,
-        mustlist_until_failed(row_not_isnt(LeftN,RightN,C),[FirstRow,SecondRow|Rest],RowsInvolvedClipped,Replacements,Below),
-        (Below == [] -> true ;
-           nop((Below = [First|_], \+ \+
-                                ((length(Left2,LeftN), length(Right2,RightN),
-                                  append([Left2,[_-C],List2,[_-C],Right2],First),
-                                  member('|'-C,List2)))))))),  
   last(RowsInvolvedClipped,Last),
-  maplist(was_color(C),Last),!,
-  append([BeforeFirstRow,Replacements,Below],NewGrid),
-  print_side_by_side(C,NewGrid,'grid',_,RowsInvolvedClipped,clipped),
-  localpoints(RowsInvolvedClipped,NewObjPoints),
-  ignore((NewObjPoints\==[],make_indiv_object(VM,[birth(rows)],NewObjPoints,_Obj))),
-  ignore((NewGrid\==[],
-  print_grid(newGrid, NewGrid),!,
-  set(VM.grid) = NewGrid,
-  rectangles(VM))),
+  writeq(Last),nl,
+  maplist(was_color_or_unbound(C),Last),!,
+  print_side_by_side(C,TexturedGrid,texture,_,Retextured,retextured(Width,N)),
+  print_side_by_side(C,NewGrid,'grid',_,RowsInvolvedClipped,clipped(Width,N)),
+  localpoints(RowsInvolvedClipped,NewObjPoints),!,
+  ignore((NewObjPoints\==[],make_indiv_object(VM,[birth(rectangles),iz(birth(rectangle))],NewObjPoints,_Obj))),
+  ignore((NewGrid\==[], print_grid(newGrid, NewGrid),!, gset(VM.grid) = NewGrid, rectangles(VM))),
   !.
 rectangles(_VM).
 
-clip_row(LeftN,RightN,FirstRow,Clipped,LeftOver):- 
-     length(Right,RightN),length(Left,LeftN),
-     append([Left,Clipped,Right],FirstRow),
-     length(Clipped,ClippedN),
-     length(UClipped,ClippedN),
-     append([Left,UClipped,Right],LeftOver),!.
-  /*n
-  ='+'
-  length(Left,StartNext),
-
-  maplist(same_color(C),List),
-  localpoints(GridO,Points),
-  select(C-P1,Points,Rest1),
-  is_adjacent_point(P1,s,P2),
-  select(C-P2,Rest2,Rest3),
-  is_adjacent_point(P1,n,P3),
-  \+ member(C-P3,Rest3),
-  select(C-P4,Rest3,Rest4),
-  is_adjacent_point(P1,e,P5),
-  select(C-P5,Rest4,Rest5),
-  is_adjacent_point(P1,w,P6P),
-  \+ member(C-P6,Rest6),
-
-
-  include(has_prop(iz(nsew)),VM.objs,NSEW),
-  include(mass_gt(3),NSEW,Candidates),
-  maplist(rects_of,Candidates,Rects),append(Rects,RectsL),
-  maplist(make_indiv_object(VM,[iz(rectangle),birth(rectanglez)]),RectsL,_Objs).
-*/
 
 is_fti_step(rectanglez).
 rectanglez(VM):- 
@@ -1178,12 +1100,13 @@ one_fti(VM,whole):-
   grid_size(Grid,H,V),
   localpoints_include_bg(Grid,Points),
   length(Points,Len),
-  make_indiv_object(VM,[mass(Len),v_hv(H,V),birth(whole),iz(image)],Points,Whole),raddObjects(VM,Whole),
+  fif(Len>0,
+    (make_indiv_object(VM,[mass(Len),v_hv(H,V),birth(whole),iz(image)],Points,Whole),raddObjects(VM,Whole),
+       save_grouped(individuate_whole(VM.id),[Whole]),assert_shape_lib(pair,Whole))),
   localpoints(Grid,LPoints),
-  length(LPoints,CLen),fif(CLen=<144,(make_indiv_object(VM,[birth(whole),iz(shaped)],LPoints,Whole2),raddObjects(VM,Whole2))),
-  %set(VM.points)=[],
-  save_grouped(individuate_whole(VM.id),[Whole]),
-  assert_shape_lib(pair,Whole),!.
+  length(LPoints,CLen),fif((CLen=<144,CLen>0),    
+    (make_indiv_object(VM,[birth(whole),iz(shaped)],LPoints,Whole2),raddObjects(VM,Whole2))).
+  %set(VM.points)=[],!.
 
 
 is_fti_step(remove_used_points).
