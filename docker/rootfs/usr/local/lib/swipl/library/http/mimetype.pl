@@ -162,8 +162,10 @@ ext_mimetype(doc,  application/msword).
                                         % Java classes
 ext_mimetype(class, application/'octet-stream').
 ext_mimetype(jar,  application/'x-java-archive').
-                                        % JavaScript
+                                        % JavaScript and WASM
 ext_mimetype(js,   text/javascript).
+ext_mimetype(wasm, application/wasm).
+ext_mimetype(data, application/'octet-stream').
                                         % Visual Basic Script :-(
 ext_mimetype(vbs,  text/vbscript).
                                         % Some image formats

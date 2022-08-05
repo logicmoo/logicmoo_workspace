@@ -12,10 +12,13 @@
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_dmsg.pl
 :- if((prolog_load_context(source,F),prolog_load_context(file,F))).
+:- module(dmsg,[]).
+:- dumpST.
 :- else.
 %module(_,Y):- maplist(export,Y).
 :- endif.
-:- module(dmsg,
+
+:- define_into_module(
   [ ansi_control_conv/2,
     % source_variables_lwv/1,
     %style_on_off/4,
@@ -235,7 +238,7 @@ into_oncode_call(Out,OnCode,OnCodeCall):- OnCodeCall= smart_format(Out,'\e[~wm',
 wldmsg_0(_CM,ops):- !.
 wldmsg_0(_CM,ops):-
  dzotrace((
- dmsg:wldmsg_2('======================\\'),
+ wldmsg_2('======================\\'),
  (prolog_load_context(stream,X)-> dmsgln(prolog_load_context(stream,X)) ; (current_input(X),dmsgln(current_input(X)))),
  ignore((
  fail,
@@ -253,12 +256,12 @@ wldmsg_0(_CM,ops):-
  dmsgln(strip_module(M)),
  dmsgln(call('$current_source_module'(_SM))),
  dmsgln(call('$current_typein_module'(_TM))),
-  (source_location(F,L)-> dmsg:wldmsg_2(X=source_location(F,L)) ; dmsg:wldmsg_2(no_source_location(X))),
+  (source_location(F,L)-> wldmsg_2(X=source_location(F,L)) ; wldmsg_2(no_source_location(X))),
    %dmsgln(forall(byte_count(X,_))),
    %dmsgln(forall(character_count(X,_))),
    dmsgln(forall(line_count(X,_))),
    dmsgln(forall(line_position(X,_))),
-  dmsg:wldmsg_2('======================/'))),
+  wldmsg_2('======================/'))),
  !.
 
 wldmsg_0(_,CM:Goal):- !, wldmsg_0(CM,Goal).
@@ -299,23 +302,22 @@ output_to_x(S,Info):- ignore(dzotrace(catch(output_to_x_0(S,Info),_,true))).
 output_to_x_0(S,Info):- into_stream(S,X),!, flush_output(X),
   catch(smart_format(X,'~N% ~p~n',[Info]),_,smart_format(X,'~N% DMSGQ: ~q~n',[Info])),flush_output(X).
 
-dmsgln(CMSpec):- strip_module(CMSpec,CM,Spec),!, ignore(dzotrace(dmsg:wldmsg_0(CM,Spec))).
-% system:dmsgln(List):-!,dzotrace(dmsg:wldmsg_0(user,List)).
-
 :- export(prepend_trim/2).
 :- export(is_html_white_l/1).
 :- export(is_html_white_r/1).
 :- export(likely_folded/1).
-:- module_transparent(dmsg:dmsgln/1).
-:- dmsg:export(dmsg:dmsgln/1).
-:- system:import(dmsg:dmsgln/1).
-:- meta_predicate(dmsg:dmsgln(:)).
-:- dmsg:dynamic(dmsg:dmsgln/1).
-:- module_transparent(dmsg:dmsgln/1).
-:- dmsg:export(dmsg:dmsgln/1).
-:- system:import(dmsg:dmsgln/1).
-:- meta_predicate(dmsg:dmsgln(:)).
-dmsgln(CMSpec):- strip_module(CMSpec,CM,Spec),!, ignore(dzotrace(dmsg:wldmsg_0(CM,Spec))).
+:- module_transparent(dmsgln/1).
+:- export(dmsgln/1).
+:- system:import(dmsgln/1).
+:- meta_predicate(dmsgln(:)).
+:- dynamic(dmsgln/1).
+:- module_transparent(dmsgln/1).
+:- export(dmsgln/1).
+:- system:import(dmsgln/1).
+:- meta_predicate(dmsgln(:)).
+dmsgln222(CMSpec):- strip_module(CMSpec,CM,Spec),!, ignore(dzotrace(wldmsg_0(CM,Spec))).
+% system:dmsgln(List):-!,dzotrace(wldmsg_0(user,List)).
+dmsgln(CMSpec):- strip_module(CMSpec,CM,Spec),!, ignore(dzotrace(wldmsg_0(CM,Spec))).
 
 
 
@@ -1236,7 +1238,7 @@ dmsg(V):- quietly(likely_folded((locally(set_prolog_flag(retry_undefined,none),
 %dmsg(F,A):- dzotrace((tlbugger:no_slow_io,on_x_fail(smart_format(atom(S),F,A))->writeln(dmsg(S));writeln(dmsg_fail(F,A)))),!.
 
 :- system:import(dmsg/1).
-% system:dmsg(O):-logicmoo_util_dmsg:dmsg(O).
+% system:dmsg(O):-logicmoo_util_dmsg(O).
 %= 	 	 
 
 %% dmsg( ?F, ?A) is det.

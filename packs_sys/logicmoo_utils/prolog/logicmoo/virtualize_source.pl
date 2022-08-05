@@ -47,7 +47,7 @@ Source code transformation - Uses Hook Database and Hook Hybrid to rewrite sourc
 :- autoload(library(lists),[member/2,append/3]).
 :- autoload(library(occurs),[sub_term/2]).
 
-:- define_into_module(system,
+:- define_into_module(
    [nb_current_or_nil/2,
     safe_virtualize/3,          
     %skipped_dirs/1,

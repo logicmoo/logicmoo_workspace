@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 2.16</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 2.16</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -261,7 +261,7 @@ Character Set</span></a></h4>
 
 <a id="sec:processorcharset"></a>
 
-<p><a id="idx:ISOLatin1:250"></a><a id="idx:characterset:251"></a>The 
+<p><a id="idx:ISOLatin1:249"></a><a id="idx:characterset:250"></a>The 
 processor character set specifies the class of each character used for 
 parsing Prolog source text. Character classification is fixed to
 <a class="url" href="http://www.unicode.org/">Unicode</a>. See also <a class="sec" href="widechars.html#sec:2.19">section 
@@ -443,15 +443,15 @@ Back quote.
 
 <p>Character escaping is only available if
 <code>current_prolog_flag(character_escapes, true)</code> is active 
-(default). See <a id="idx:currentprologflag2:252"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>. 
-Character escapes conflict with <a id="idx:writef2:253"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
-in two ways: <code>\40</code> is interpreted as decimal 40 by <a id="idx:writef2:254"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
-but as octal 40 (decimal 32) by <code>read</code>. Also, the <a id="idx:writef2:255"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
+(default). See <a id="idx:currentprologflag2:251"></a><a class="pred" href="flags.html#current_prolog_flag/2">current_prolog_flag/2</a>. 
+Character escapes conflict with <a id="idx:writef2:252"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
+in two ways: <code>\40</code> is interpreted as decimal 40 by <a id="idx:writef2:253"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
+but as octal 40 (decimal 32) by <code>read</code>. Also, the <a id="idx:writef2:254"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
 sequence
 <code>\l</code> is illegal. It is advised to use the more widely 
 supported
-<a id="idx:format23:256"></a><a class="pred" href="format.html#format/2">format/[2,3]</a> 
-predicate instead. If you insist upon using <a id="idx:writef2:257"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
+<a id="idx:format23:255"></a><a class="pred" href="format.html#format/2">format/[2,3]</a> 
+predicate instead. If you insist upon using <a id="idx:writef2:256"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
 either switch <a class="flag" href="flags.html#flag:character_escapes">character_escapes</a> 
 to <code>false</code>, or use double <code>\\</code>, as in <code>writef('\\l')</code>.
 
@@ -485,7 +485,7 @@ following all express the integer 1&nbsp;million:
 1_000_/*more*/000
 </pre>
 
-<p>Integers can be printed using this notation with <a id="idx:format2:258"></a><a class="pred" href="format.html#format/2">format/2</a>, 
+<p>Integers can be printed using this notation with <a id="idx:format2:257"></a><a class="pred" href="format.html#format/2">format/2</a>, 
 using the
 <code>~I</code> format specifier. For example:
 
@@ -519,7 +519,7 @@ rational numbers to be e.g., <code>1r3</code>. In addition, ECLiPSe
 accepts
 <code>1_3</code> and SWI-Prolog can be asked to accept <code>1/3</code> 
 using the module sensitive Prolog flag <a class="flag" href="flags.html#flag:rational_syntax">rational_syntax</a>, 
-which has the values below. Note that <a id="idx:writecanonical1:259"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a> 
+which has the values below. Note that <a id="idx:writecanonical1:258"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a> 
 always uses the compatible
 <code>1r3</code> syntax.
 
@@ -545,7 +545,7 @@ numbers are:
 <p>We expect very few programs to have text parsed into a rational 
 number while a term was expected. Note that for rationals appearing in 
 an arithmetic expression the only difference is that evaluation moves 
-from runtime to compiletime. The utility <a id="idx:listrationals0:260"></a><a class="pred" href="check.html#list_rationals/0">list_rationals/0</a> 
+from runtime to compiletime. The utility <a id="idx:listrationals0:259"></a><a class="pred" href="check.html#list_rationals/0">list_rationals/0</a> 
 may be used on a loaded program to check whether the program contains 
 rational numbers inside clauses and thus may be subject to compatibility 
 issues. If a term is intended this can be written as <code>/(1,2)</code>, <code>(1)/2</code>,
@@ -647,8 +647,8 @@ This section describes the implication for the source files, while
 writing international source files is described in <a class="sec" href="projectfiles.html#sec:3.1.3">section 
 3.1.3</a>.
 
-<p>The SWI-Prolog Unicode character classification is based on version 
-6.0.0 of the Unicode standard. Please note that <a id="idx:chartype2:261"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
+<p>The SWI-Prolog Unicode character classification is currently based on 
+version 14.0.0 of the Unicode standard. Please note that <a id="idx:chartype2:260"></a><a class="pred" href="chartype.html#char_type/2">char_type/2</a> 
 and friends, intended to be used with all text except Prolog source 
 code, is based on the C library locale-based classification routines.
 
@@ -674,6 +674,18 @@ as
 <code>_name</code>.
 
 <p>
+<li><i>Numbers</i><br>
+
+<p>Decimal number characters (Nd) are accepted to form numbers, 
+regardless of the Unicode block in which they appear. Currently this is 
+supported for integers, rational numbers (see <a class="sec" href="syntax.html#sec:2.16.1.6">section 
+2.16.1.6</a>) and floating point numbers. In any number, <em>all</em> 
+digits must come from the same block, i.e., if the nominator of a 
+rational is uses Indian script, so must the demoninator. All special 
+characters such as the sign, rational separator, floating point <code><code>.</code></code>, 
+and floating point exponent must use their usual ASCII character.
+
+<p>
 <li><i>White space</i><br>
 All characters marked as separators (Z*) in the Unicode tables are 
 handled as layout characters.
@@ -681,7 +693,12 @@ handled as layout characters.
 <p>
 <li><i>Control and unassigned characters</i><br>
 Control and unassigned (C*) characters produce a syntax error if 
-encountered outside quoted atoms/strings and outside comments.
+encountered outside quoted atoms/strings and outside comments. Quoted 
+writing (e.g., <a id="idx:writeq1:261"></a><a class="pred" href="termrw.html#writeq/1">writeq/1</a>) 
+of an atom or string that contains one of these characters causes the 
+atom or string to be quoted and the control or unassigned characters to 
+be written using an escape sequence. See
+<a class="sec" href="syntax.html#sec:2.16.1.3">section 2.16.1.3</a>.
 
 <p>
 <li><i>Other characters</i><br>

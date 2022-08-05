@@ -27,7 +27,7 @@
 :- dynamic(dot_cfg:using_dot_type/2).
 :- system:use_module(library(logicmoo_common)).
 
-:- use_module(library(must_sanity)).
+:- use_module(library(debuggery/bugger)).
 :- reexport(library(debug),[debug/3]).
 :- system:reexport(library(dicts)).
 :- system:reexport(library(gvar_globals_api)).

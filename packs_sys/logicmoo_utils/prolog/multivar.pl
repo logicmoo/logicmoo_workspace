@@ -58,6 +58,7 @@ mdwq(Q):- format(user_error,'~NMWQ: ~q~n',[Q]).
 mdwq_call(Q):- !, call(Q).
 mdwq_call(Q):- call(Q) *-> mdwq(success:Q); (mdwq(failed:Q),!,fail).
 :- export(mdwq_call/1).
+:- system:import(mdwq_call/1).
 
 :- create_prolog_flag(attr_pre_unify_hook,true,[keep(true)]).
 
@@ -124,13 +125,17 @@ uhook(Module, AttVal, Value, M) :-
 :- '$set_source_module'('multivar').
 
 :- module_transparent(attr_pre_unify_hook_m/4).
+:- dynamic(attr_pre_unify_hook_m/4).
 :- export(attr_pre_unify_hook_m/4).
 attr_pre_unify_hook_m(IDVar, Value, _, M):- \+ attvar(IDVar),!, M:(IDVar=Value).
 attr_pre_unify_hook_m(Var,Value,Rest, M):- 
   mdwq_call('$attvar':call_all_attr_uhooks(Rest, Value, M)),
   nop(M:mv_add1(Var,Value)).
 
-user:attr_pre_unify_hook(Var,Value,Rest):- strip_module(Rest,M,_), attr_pre_unify_hook_m(Var,Value,Rest,M).
+:- module_transparent(attr_pre_unify_hook/3).
+:- dynamic(attr_pre_unify_hook/3).
+:- export(attr_pre_unify_hook/3).
+attr_pre_unify_hook(Var,Value,Rest):- strip_module(Rest,M,_), attr_pre_unify_hook_m(Var,Value,Rest,M).
            
 
 

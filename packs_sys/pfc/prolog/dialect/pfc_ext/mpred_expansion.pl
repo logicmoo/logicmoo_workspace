@@ -56,7 +56,7 @@
 :- if(current_prolog_flag(xref,true)).
 :- module(mpred_expansion,[]).
 :- endif.
-:- define_into_module(system,
+:- define_into_module(
           [ a/2,
             acceptable_xform/2,
             additiveOp/1,

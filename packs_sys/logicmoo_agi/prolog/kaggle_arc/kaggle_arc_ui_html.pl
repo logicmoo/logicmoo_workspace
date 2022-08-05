@@ -11,13 +11,13 @@
 %
 % Then navigate to http://localhost:1777 in your browser
 
-
+/*
 :- module(kaggle_arc_ui_html,
   [ start_arc_server/0,
     stop_arc_server/0
   ]
 ).
-
+*/
 :- if(current_module(trill)).
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
@@ -150,7 +150,7 @@ arcproc_left(_Request):-
   flush_output_safe)),!.
 
 :- if(current_module(logicmoo_arc)).
-arcproc_left(Request):- handler_logicmoo_cyclone(Request),!.
+arcproc_left(Request):- xlisting_web:handler_logicmoo_cyclone(Request),!.
 :- else.
 :- initialization arc_http_server.
 :- endif.

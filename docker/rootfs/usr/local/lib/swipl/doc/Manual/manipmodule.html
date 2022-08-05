@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 6.15</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 6.15</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -301,7 +301,7 @@ True if <var>Module</var> was loaded from the N-th line of file.
 True if <var>Module</var> exports the given predicates. Predicate 
 indicators are in canonical form (i.e., always using name/arity and 
 never the DCG form name//arity). Future versions may also use the DCG 
-form. See also <a id="idx:predicateproperty2:2061"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>. 
+form. See also <a id="idx:predicateproperty2:2065"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>. 
 Succeeds with an empty list if the module exports no predicates.
 </dd>
 <dt><strong>exported_operators</strong>(<var>-ListOfOperators</var>)</dt>
@@ -315,7 +315,7 @@ Succeeds with an empty list if the module exports no operators.
 Total size in bytes used to represent the module. This includes the 
 module itself, its (hash) tables and the summed size of all predicates 
 defined in this module. See also the <code>size(Bytes)</code> property 
-in <a id="idx:predicateproperty2:2062"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
+in <a id="idx:predicateproperty2:2066"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
 </dd>
 <dt><strong>program_size</strong>(<var>-Bytes</var>)</dt>
 <dd class="defbody">
@@ -325,12 +325,12 @@ figure includes the predicate header and clauses.
 <dt><strong>program_space</strong>(<var>-Bytes</var>)</dt>
 <dd class="defbody">
 If present, this number limits the <code>program_size</code>. See
-<a id="idx:setmodule1:2063"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
+<a id="idx:setmodule1:2067"></a><a class="pred" href="manipmodule.html#set_module/1">set_module/1</a>.
 </dd>
 <dt><strong>last_modified_generation</strong>(<var>-Generation</var>)</dt>
 <dd class="defbody">
 Integer expression the last database generation where a clause was added 
-or removed from a predicate that is implemented in this module. See also <a id="idx:predicateproperty2:2064"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
+or removed from a predicate that is implemented in this module. See also <a id="idx:predicateproperty2:2068"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>.
 </dd>
 </dl>
 
@@ -350,7 +350,7 @@ See
 </dd>
 <dt><strong>class</strong>(<var>+Class</var>)</dt>
 <dd class="defbody">
-Set the class of the module. See <a id="idx:moduleproperty2:2065"></a><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a>.
+Set the class of the module. See <a id="idx:moduleproperty2:2069"></a><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a>.
 </dd>
 <dt><strong>program_space</strong>(<var>+Bytes</var>)</dt>
 <dd class="defbody">
@@ -358,9 +358,9 @@ Maximum amount of memory used to store the predicates defined inside the
 module. Raises a permission error if the current usage is above the 
 requested limit. Setting the limit to 0 (zero) removes the limit. An 
 attempt to assert clauses that causes the limit to be exceeded causes a
-<code>resource_error(program_space)</code> exception. See <a id="idx:assertz1:2066"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
+<code>resource_error(program_space)</code> exception. See <a id="idx:assertz1:2070"></a><a class="pred" href="db.html#assertz/1">assertz/1</a> 
 and
-<a id="idx:moduleproperty2:2067"></a><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a>.
+<a id="idx:moduleproperty2:2071"></a><a class="pred" href="manipmodule.html#module_property/2">module_property/2</a>.
 </dd>
 </dl>
 

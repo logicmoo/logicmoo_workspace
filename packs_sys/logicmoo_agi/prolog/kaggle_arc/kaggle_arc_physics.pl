@@ -301,7 +301,7 @@ mention_touches(Obj,Dir-Touched,NewObj):-
 
 find_touches_objects(_,[],[]).
 find_touches_objects(Obj,_,[]):- has_prop(link(touched,_,_),Obj),!.
-find_touches_objects(Obj,_,[]):- has_prop(iz(dots),Obj),!.
+%find_touches_objects(Obj,_,[]):- has_prop(iz(dots),Obj),!.
 find_touches_objects(Obj,[Touched|ScanNext],[BetterTouch|Engulfed]):-    
  once(touching_object(Dirs,Obj,Touched)),Dirs\==[],!,
  better_touched(Iv,Dirs,BetterTouch),
@@ -332,6 +332,7 @@ touching_object(Dirs,O2,O1):-
   globalpoints(O2,Ps2),
   dir_touching_list(Ps2,Ps1,Dirs),!.
 
+dir_touching_list(Ps1,Ps2,[overlap]):- member(P1,Ps1), \+ \+ member(P1,Ps2),!.
 dir_touching_list(Ps1,Ps2,Dirs):- findall(Dir,(member(Dir,[n,s,e,w,nw,ne,sw,se]),
   once(dir_touching_list0(Ps1,Ps2,Dir))),Dirs),Dirs\==[].
 dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacent_point(P1,Dir,P2),!.

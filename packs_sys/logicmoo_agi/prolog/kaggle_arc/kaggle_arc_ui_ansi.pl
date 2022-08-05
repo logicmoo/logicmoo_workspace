@@ -252,6 +252,7 @@ wqs(C):- is_color(C),!,wqs(color_print(C,C)).
 
 wqs(S):- term_is_ansi(S), !, write_keeping_ansi(S).
 wqs(X):- \+ compound(X),!, write(' '), write(X).
+wqs(S):- term_contains_ansi(S), !,write(' '), write_keeping_ansi(S).
 wqs(X):- write(' '), writeq(X).
 
 is_breaker(P):- compound(P),functor(P,_,A), A>=3.
@@ -272,6 +273,7 @@ dash_uborder_no_nl(1):-  line_position(current_output,W),write(W),!, write('¯¯¯ 
 dash_uborder_no_nl(1):- write('¯¯¯ ').
 dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_chars(WidthM1,'¯¯'),!.
 %dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__').
+
 
 dash_border_no_nl(1):-  line_position(current_output,0),!, write(' ___ ').
 dash_border_no_nl(1):-  line_position(current_output,W),write(W),!, write('___ ').
@@ -618,7 +620,7 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
   ((plain_var(EH) ; plain_var(EV))->grid_size(Grid,EH,EV);true),
   Width is EH-SH, 
   (Width==0 -> DBW = 1 ; DBW is Width+1),
-  once((user:dash_border_no_nl(DBW))),
+  once((dash_border_no_nl(DBW))),
   bg_sym(BGC),
   forall(between(SV,EV,V),
    ((format('~N|'),
@@ -627,7 +629,7 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
         (once(print_gw1(CG))))))),write(' |')))),
   %print_g(H,V,C,LoH,LoV,HiH,HiV)
   format('~N'),!,
-  once((user:dash_uborder_no_nl(DBW))))).
+  once((dash_uborder_no_nl(DBW))))).
 
  /*
          "#000000",  # 0: black
@@ -650,8 +652,9 @@ print_grid0(_Bordered,SH,SV,_LoH,_LoV,_HiH,_HiV,EH,EV,GridI):-
 block_colors([('#2a2a2a'),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#3a5a3a','#6a5a3a','#444455']):- silver(Silver),!.
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#3a5a3a']):- silver(Silver),!.
 named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),wbg,fg]).
-named_colors([(black),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
-named_colors([(black),(blue),(red),(green),(yellow),(grey),(pink),(orange),(cyan),(maroon)]).
+%named_colors([(lack),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),bg,fg,black]).
+named_colors([(lack),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
+named_colors([(lack),(blue),(red),(green),(yellow),(grey),(pink),(orange),(cyan),(maroon)]).
 
 % silver(rgb(123,123,123)).
 silver('#7b7b7b').
@@ -674,11 +677,14 @@ arc_acolor(_,[bold,underline]).
 ansi_color_bg(C,bg(C1)):- arc_acolor(C,C2),C2=fg(C1),nonvar(C1),!.
 ansi_color_bg(C,C1):- arc_acolor(C,C1).
 
-on_bg(C,G):- ansi_color_bg(C,C1),ansi_format(C1,'~@',[call(user:G)]).
-on_bg(G):- ansi_format(reset,'~@',[call(user:G)]).
+:- define_into_module(on_bg/2).
+on_bg(C,G):- ansi_color_bg(C,C1),ansi_format(C1,'~@',[call(G)]).
+:- define_into_module(on_bg/1).
+:- export(on_bg/1).
+:- system:import(on_bg/1).
+on_bg(G):- ansi_format(reset,'~@',[call(G)]).
 
-%ansi_term:import(ansi_format_arc/3).
-
+:- define_into_module(ansi_format_arc/3).
 ansi_format_arc(Ansi,Format,Args):- on_bg(ansi_format(Ansi,Format,Args)),!.
 
 underline_print(W):- ansi_format([bold,underline],'~@',[user:W]),!.
@@ -692,6 +698,9 @@ is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
 
 
 %color_print(_,W):- write(W),!.
+:- export(color_print/2).
+:- system:import(color_print/2).
+
 color_print(C,W):- compound(W),compound_name_arity(W,call,_),!,(wots(S1,call(call,W))->color_print(C,S1);color_print(C,failed(W))).
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,on_bg(black,write(' ')),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').

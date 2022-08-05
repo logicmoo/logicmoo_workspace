@@ -30,7 +30,10 @@ This module allows easier loading of common logicmoo utility predicates.
 :- discontiguous '$exported_op'/3.
 
 
-:- system:reexport((logicmoo_startup)).
+:- system:use_module((logicmoo_startup)).
+
+:- reexport((logicmoo_startup)).
+
 /*
 :- system:reexport(library(logicmoo/util_dlist)).
 :- system:reexport(library(logicmoo/attvar_reader)).

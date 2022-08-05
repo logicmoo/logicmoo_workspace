@@ -258,8 +258,10 @@ cp_menu:cp_menu(X,X).
 %cp_menu:cp_menu.
 :- endif.
 
-:- export(extra_cp_menu//0).
-:- system:import(extra_cp_menu//0).
+:- multifile((extra_cp_menu/0)).
+:- dynamic((xlisting_web:extra_cp_menu//0)).
+:- export(xlisting_web:extra_cp_menu//0).
+:- cp_menu:import(xlisting_web:extra_cp_menu//0).
 
 extra_cp_menu -->  
    { \+ (( httpd_wrapper:http_current_request(Request),member(request_uri(URI),Request), atom_contains(URI,pldoc))) },!,
@@ -268,6 +270,8 @@ extra_cp_menu --> [].
 
 :- multifile(cp_menu:(cp_menu/2)).
 :- dynamic(cp_menu:(cp_menu/2)).
+:- multifile(cp_menu:(current_menu_item/2)).
+:- dynamic(cp_menu:(current_menu_item/2)).
 
 % handler_with_output_to 
 suppliment_cp_menu:- 
@@ -284,7 +288,7 @@ suppliment_cp_menu:-
     C=A,
     html_requires(css('menu.css'), C, D),
     html(ul(id(nav), \menu(Menu)), D, B1),
-    html(\ extra_cp_menu,B1,B)))).
+    html(\ xlisting_web:extra_cp_menu,B1,B)))).
 
 :- suppliment_cp_menu.
 
@@ -2879,7 +2883,7 @@ set_line_pos(Out,LP):-
 current_line_position(LP):-current_output(Out),current_line_position(Out,LP).
 
 :- kb_shared(baseKB:wid/3).
-
+:- asserta((baseKB:wid(_,_,_):-fail)).
 
 %% current_line_position( ?ARG1, ?ARG2) is det.
 %

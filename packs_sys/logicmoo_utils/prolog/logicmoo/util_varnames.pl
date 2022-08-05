@@ -28,13 +28,12 @@
             dif_matrix/2,
             term_singleslots/2,
           term_singleslots/3,
-          term_singleslots/5,
+          term_singleslots/5,         
             set_varname/2,
             set_varname/3,
             write_functor/2,
             atom_subst_frak_0/4,
             arg_varname/3,
-            variable_name_or_ref/2,
             renumbervars/3,
             b_implode_varnames/1,
             b_implode_varnames0/1,
@@ -97,7 +96,6 @@
             
             v_dif_rest/2,
             vmust/1,
-            name_variable/2, variable_name/2,
             init_varname_stores/1,
             maybe_scan_for_varnames/0
 
@@ -232,133 +230,6 @@ This module holds utilities to access and change the names of prolog variables.
 %:- use_module(library(editline)).
 :- use_module(library(listing)).
 
-
-%%	name_variable(+Var, +Name) is det.
-%
-%	Assign a name to a variable. Succeeds   silently if Var is not a
-%	variable (anymore).
-
-
-%name_variable(Var,_Name) :- nonvar(Var),!.
-%name_variable(Var,Name) :- !, put_attr(Var,vn,Name).
-
-name_variable(Var, Name1) :- get_attr(Var,vn,Name2),
-        combine_names(Name1,Name2,Name),
-	put_attr(Var, vn, Name). % add_var_to_env(Name,Var),!.
-name_variable(Var, Name) :- var(Var), !,
-	put_attr(Var, vn, Name).
-
-name_variable('$VAR'(Var), Name):- Name==Var, !.
-name_variable('$VAR'(Var), Name):- var(Var),Name=Var,!.
-% name_variable('$VAR'(Var), Name) :- trace_or_throw(numbervars_name_variable(Var, Name)),!.
-name_variable(_, _).
-
-:- nodebug(logicmoo(varnames)).
-
-
-variable_name_or_ref(Var, Name) :- get_var_name(Var, Name),!.
-variable_name_or_ref(Var, Name) :- format(atom(Name),'~q',[Var]).
-
-
-%% project_attributes( ?QueryVars, ?ResidualVars) is semidet.
-%
-% Project Attributes.
-%
-vn:project_attributes(QueryVars, ResidualVars):- fail,dmsg(vn:proj_attrs(vn,QueryVars, ResidualVars)),fail.
-
-
-%% attribute_goals(@V)// is det.
-%	copy_term/3, which also determines  the   toplevel  printing  of
-%	residual constraints.
-%  Hook To [dom:attribute_goals/3] For Module Logicmoo_varnames.
-%  Attribute Goals.
-%
-vn:attribute_goals(Var) --> {get_var_name(Var,  Name)},!,[name_variable(Var,  Name)],!.
-
-numbervars_using_vs(T,TT,Vs):- numbervars_using_vs_(Vs,T,TT).
-
-numbervars_using_vs_(Vs,T,TT):- var(T),get_var_name(T,VN,Vs),TT='$VAR'(VN),!.
-numbervars_using_vs_(_Vs,T,TT):- (ground(T); \+ compound(T)),!,TT=T.
-numbervars_using_vs_(Vs,T,TT):- compound_name_arguments(T,F,A),maplist(numbervars_using_vs_(Vs),A,AA),compound_name_arguments(TT,F,AA),!.
-
-get_var_name(T,VN,Vs):- member(N=V,Vs),V==T,!,VN=N.
-get_var_name(T,VN,_Vs):- get_var_name(T,VN),!.
-get_var_name(T,VN,_Vs):- term_to_atom(T,VN).
-
-
-
-
-grab_vn_varnames(Msg,Vs2):-
-  term_attvars(Msg,AttVars),
-  %append(AttVars,Vars,AllVars),
-  sort(AttVars,AllVarS),
-  grab_each_vn_varname(AllVarS,Vs2).
-grab_each_vn_varname([],[]):-!.
-grab_each_vn_varname([AttV|AttVS],Vs2):-
-    grab_each_vn_varname(AttVS,VsMid),!,
-     (get_attr(AttV, vn, Name) -> Vs2 = [Name=AttV|VsMid] ; VsMid=       Vs2),!.
-
-:- export(get_var_name_or_fake/2).
-get_var_name_or_fake(T,VN):- get_var_name(T,VN),!.
-get_var_name_or_fake(T,VN):- term_to_atom(T,VN).
-
-%%	variable_name(+Var, -Name) is semidet.
-%
-%	True if Var has been assigned Name.
-
-variable_name(Var, Name) :- must(var(Var)),(get_attr(Var, vn, Name);var_property(Var,name(Name));get_attr(Var, varnames, Name)),!.
-
-:- export(get_varname_list_local/1).
-get_varname_list_local(Vs):- bugger:get_varname_list(Vs).
-% get_var_name0(Var,Name):- attvar(Var),get_varname_list_local(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
-
-varname_of(Vs,Var,Name):- compound(Vs), Vs=[NV|VsL],  
-  ((compound(NV) , (NV=(N=V)),atomic(N), V==Var,!,N=Name) ; varname_of(VsL,Var,Name)).
-
-:- export(get_var_name/2).
-get_var_name(V,N):- notrace(get_var_name0(V,N)),!.
-:- export(get_var_name0/2).
-get_var_name0(Var,Name):- nonvar(Name),!,must(get_var_name0(Var, NameO)),!,Name=NameO.
-get_var_name0(Var,Name):- nonvar(Var),!,get_var_name1(Var,Name),!.
-get_var_name0(Var,Name):- var_property(Var,name(Name)),!.
-get_var_name0(Var,Name):- get_attr(Var, vn, Name),!.
-get_var_name0(Var,Name):- nb_current('$variable_names', Vs),varname_of(Vs,Var,Name),!.
-get_var_name0(Var,Name):- get_attr(Var, varnames, Name),!.
-get_var_name0(Var,Name):- nb_current('$old_variable_names', Vs),varname_of(Vs,Var,Name),!.
-get_var_name0(Var,Name):- get_varname_list_local(Vs),varname_of(Vs,Var,Name),!.
-get_var_name0(Var,Name):- sourceable_variables_lwv(Vs),varname_of(Vs,Var,Name),!.
-get_var_name0(Var,Name):- execute_goal_vs(Vs),varname_of(Vs,Var,Name).
-
-:- export(get_var_name1/2).
-get_var_name1(Var,Name):- nonvar(Name),!,must(get_var_name1(Var, NameO)),!,Name=NameO.
-get_var_name1(Var,Name):- var(Var),!,get_var_name0(Var,Name).
-get_var_name1('$VAR'(Name),Name):- atom(Name),!.
-get_var_name1('$VAR'(Int),Name):- integer(Int),format(atom(A),"~w",['$VAR'(Int)]),!,A=Name.
-get_var_name1('$VAR'(Var),Name):- (var(Var)->get_var_name0(Var,Name);Name=Var),!.
-get_var_name1('$VAR'(Att3),Name):- !, get_var_name1(Att3,Name).
-get_var_name1('aVar'(Att3),Name):- !, get_var_name1(Att3,Name).
-get_var_name1('aVar'(Name,Att3),Value):- !, get_var_name1('$VAR'(Name),Value); get_var_name1('aVar'(Att3),Value).
-get_var_name1(att(vn,Name,_),Name):- !.
-get_var_name1(att(_,_,Rest),Name):- Rest\==[],get_var_name1(Rest,Name).
-get_var_name1(Var,Name):- catch(call(call,oo_get_attr(Var, vn, Name)),_,fail),!. % ground(Name),!.
-
-
-term_varnames(Msg,Vs,Unnamed):- 
-  term_attvars(Msg,AttVars),term_variables(Msg,Vars),
-  append(AttVars,Vars,AllVars),
-  sort(AllVars,AllVarsS),
-  grab_each_varname(AllVarsS,Vs,Unnamed).
-grab_each_varname([],[],[]):-!.
-grab_each_varname([AttV|AttVS],[Name=AttV|Vs],Unnamed):- 
-   get_var_name(AttV, Name),!,
-   grab_each_varname(AttVS,Vs,Unnamed).
-grab_each_varname([AttV|AttVS],Vs,[AttV|Unnamed]):- 
-   grab_each_varname(AttVS,Vs,Unnamed).
-
-
-
-get_var_by_name(N,V):- nb_current('$variable_names',Vs), member_open(NV, Vs), NV=(N=V).
-get_var_by_name(N,V):- nb_current('$old_variable_names',Vs), member_open(NV, Vs), NV=(N=V).
 
 %% member_open( ?ARG1, :TermARG2) is det.
 %

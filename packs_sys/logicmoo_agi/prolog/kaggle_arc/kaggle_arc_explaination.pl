@@ -62,12 +62,16 @@ print_list_of(N,O):- print_list_of(print_info,N,O).
 print_list_of(_,_,[]):-!.
 print_list_of(P1,N,O):-
  (N\=[] -> pt(N); true),
+  maybe_cache_glyphs(O),
   %save_grouped(print_list_of(N),O),
    maplist(P1,O),!.
 
+
+maybe_cache_glyphs(O):- ignore((is_group(O),maplist(o2g,O,_))).
+
 print_info(A):- is_grid(A),print_grid(A).
 print_info(A):- is_object(A), ignore(debug_indiv(A)).
-print_info(A):- is_group(A),debug_indiv(A).
+print_info(A):- is_group(A),maybe_cache_glyphs(A),debug_indiv(A).
 %print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
 print_info(A):- pt(A).
@@ -207,10 +211,10 @@ remove_too_verbose(_MyID,o_i_d(_ * _+_ * X,Y),NTH):- NTH=..[X,Y].
 remove_too_verbose(_MyID,o_i_d(_ * X,Y),NTH):- NTH=..[X,Y].
 
 remove_too_verbose(MyID,link(Touched,ID,Dir),HH):- %number(MyID),
-  MyID\==0,integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
+  MyID\==0,integer(ID),alt_id(MyID,ID,Alt),o2ansi(ID,Glyph),
   remove_too_verbose(0,link(Touched,Alt,Dir,Glyph),HH).
 remove_too_verbose(MyID,link(Touched,ID),HH):- % number(MyID),
-  MyID\==0, integer(ID),alt_id(MyID,ID,Alt),int2glyph(ID,Glyph),
+  MyID\==0, integer(ID),alt_id(MyID,ID,Alt),o2ansi(ID,Glyph),
   remove_too_verbose(0,link(Touched,Alt,Glyph),HH).
 
 remove_too_verbose(MyID,TP,HH):- compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),

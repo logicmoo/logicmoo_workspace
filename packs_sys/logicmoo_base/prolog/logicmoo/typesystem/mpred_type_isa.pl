@@ -15,7 +15,7 @@
 %:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )).
 :- module(mpred_type_isa,[]).
 
-:- define_into_module(system,
+:- define_into_module(
           [ was_isa0/3,
             to_isa_out/3,
             assert_isa/2,

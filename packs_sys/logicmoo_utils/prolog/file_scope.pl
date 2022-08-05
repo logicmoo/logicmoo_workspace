@@ -12,8 +12,9 @@
 % ===================================================================
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_body_file_scope.pl
-:- module(file_scope,
-          [
+:- module(file_scope,[]).
+:- use_module(logicmoo_startup).
+:- define_into_module([
           loading_source_file/1,
           assert_until_eof/2,
           assert_until_eof/1,

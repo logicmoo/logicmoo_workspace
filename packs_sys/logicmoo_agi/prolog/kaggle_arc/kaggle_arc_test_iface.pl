@@ -7,7 +7,7 @@
 :- if(current_module(trill)).
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
-
+:- use_module(library(pengines)).
 
 menu :- write_menu('i').
 write_menu(Mode):-
@@ -68,12 +68,12 @@ list_of_tests(S):- findall(F,find_tests(F),L),sort(L,S).
 show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
 
   % ignore((read_line_to_string(user_input,Sel),atom_number(Sel,Num))),
-
   
 my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
 my_submenu_call(E):- catch(ignore(locally(set_prolog_flag(gc,false),E)),_,true).
    
 
+read_menu_chars(_Start,_SelMax,Out):- pengine_self(_Id),!,read(Out).
 read_menu_chars(Start,SelMax,Out):-
   get_single_key_code(Codes), atom_codes(Key,Codes),
   append_num_code(Start,SelMax,Key,Out).
@@ -304,7 +304,7 @@ new_test_pair(PairName):-
   retractall(is_grid_id(PairName*_,_)),
   retractall(is_grid_id(PairName,_)),!.
 
-human_test:- solve_test.
+human_test:- solve_test_trial(human).
 fully_test:- print_test, !, train_test, !, solve_test, !.
 run_next_test:- notrace(next_test), fully_test.
 
@@ -375,7 +375,7 @@ arc_test_name(TestID):- kaggle_arc(TestID,trn+0,_,_).
 
 some_task_info(TestID,III):- more_task_info(TestID,III).
 some_task_info(X,[keypad]):- key_pad_tests(X). 
-some_task_info(TestID,III):- user:fav(TestID,III).
+some_task_info(TestID,III):- fav(TestID,III).
 
 %:- dynamic(task_info_cache/2).
 %:- retractall(task_info_cache/2).
@@ -654,7 +654,11 @@ one_obj(I,I):- is_group(I),!.
 one_obj(I,I).
 
 is_fti_step(uncolorize).
-uncolorize(VM):- put_attr(FG,ci,fg(_)),set_all_fg_colors(FG,VM.grid,UCGRID),set_vm_grid(VM,UCGRID),set_all_fg_colors(FG,VM.objs,UCOBJS),set(VM.objs)=UCOBJS.
+uncolorize(VM):- put_attr(FG,ci,fg(_)),
+  set_all_fg_colors(FG,VM.grid,UCGRID),
+  set_vm_grid(VM,UCGRID),
+  set_all_fg_colors(FG,VM.objs,UCOBJS),
+  set(VM.objs)=UCOBJS.
 uncolorize(I,O):- set_all_fg_colors(fg,I,O).
 %resize_grid(_H,_V,List,_,List):- is_list(List).
 %resize_grid(H,V,Color,_,NewGrid):- make_grid(H,V,Grid),replace_grid_point(1,1,Color,_,Grid,NewGrid),nop(set_bgc(Color)).

@@ -12,7 +12,7 @@
 :- module(mpred_type_args,
           []).
 
-:- define_into_module(system,
+:- define_into_module(
           [ any_to_relation/2,
             argIsa_op_call/4,
             as_one_of/2,

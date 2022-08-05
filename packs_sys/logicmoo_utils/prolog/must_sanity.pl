@@ -10,16 +10,21 @@
 % Licience: LGPL
 % ===================================================================
 */
-%:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
-:- module(must_sanity,
+:- if((prolog_load_context(source,F),prolog_load_context(file,F))).
+:- module(must_sanity,[]).
+:- endif.
+:- use_module(logicmoo_startup).
+
+:- define_into_module(          
    [
       must/1, % Goal must succeed at least once once
       must_once/1, % Goal must succeed at most once
       must_det/1, % Goal must succeed determistically
       sanity/1,  % like assertion but adds trace control
-      nop/1, % syntactic comment
+      %nop/1, % syntactic comment
       scce_orig/3,
-      must_or_rtrace/1
+      must_or_rtrace/1,
+      xnotrace/1
     ]).
 %:- endif.
 /** <module> Utility LOGICMOO_MUST_SANITY
@@ -212,11 +217,13 @@ must_det(Goal):- must_once((Goal,deterministic(YN))),(YN==true->true;dmsg(warn(n
 must_det(Goal):- must_once((Goal,deterministic(YN))),(YN==true->true;throw(nondet_exit(Goal))).
 */
 
+:- redefine_system_predicate(system:nop/1).
+:- abolish(system:nop/1),asserta(system:nop(_)).
 %! nop( :Goal) is det.
 %
 %  Comments out code without losing syntax
 %
-nop(_).
+
 
 
 /*
@@ -350,4 +357,5 @@ scce_orig2(Setup,Goal,Cleanup):-
   ignore(((\+ predicate_property(M:H,transparent), module_transparent(M:F/A), \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A]))))))))).
 
  
+
 

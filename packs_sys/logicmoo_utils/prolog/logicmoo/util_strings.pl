@@ -2071,9 +2071,10 @@ longest_string(Order,TStr1,TStr2):-
 
 :- logicmoo_util_strings:fixup_exports.
 
+cfunctor31(A,B,C):- compound(A)->compound_name_arity(A,B,C);functor(A,B,C).
 :- ignore((source_location(S,_),prolog_load_context(module,M),module_property(M,class(library)),
  forall(source_file(M:H,S),
- ignore((cfunctor(H,F,A),
+ ignore((cfunctor31(H,F,A),
   ignore(((atom(F),\+ atom_concat('$',_,F),(export(F/A) , current_predicate(system:F/A)->true; system:import(M:F/A))))),
   ignore(((\+ predicate_property(M:H,transparent), module_transparent(M:F/A), \+ atom_concat('__aux',_,F),debug(modules,'~N:- module_transparent((~q)/~q).~n',[F,A]))))))))).
 

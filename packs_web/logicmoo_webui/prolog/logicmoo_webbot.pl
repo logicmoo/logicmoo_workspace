@@ -75,6 +75,8 @@ foo_broken2.
 %#:- set_current_module(baseKB).
 :- endif.
 
+:- set_prolog_flag(gc,true).
+
 :- if((app_argv('--irc'))).
 :- if(exists_source(library(eggdrop))).
 :- dmsg("Eggdrop Server").

@@ -493,8 +493,9 @@ enum_group(S):- is_unshared_saved(_,S).
 
 
 %indv_props(Obj,L):- compound(Obj), arg(1,Obj,L), is_list(L),!.
-indv_props(C,LL):- compound(C), C=obj(L),(is_list(L)->LL=L ; (copy_term(L,LL),append(LL,[],LL))),!.
-
+indv_props(C,LL):- \+ compound(C),!,nonvar(C),g2o(C,I),indv_props(I,LL).
+indv_props(C,LL):- C=obj(L),!,(is_list(L)->LL=L ; (copy_term(L,LL),append(LL,[],LL))),!.
+indv_props(C,LL):- arc_expand_arg(C,I,G),call(G),!,indv_props(I,LL).
 indv_props_for_noteablity(obj(L),Notes):- my_assertion(nonvar(L)),!, include(is_prop_for_noteablity,L,Notes).
 
 %is_not_prop_for_noteablity(globalpoints).
@@ -708,6 +709,7 @@ colors(G,[cc(black,0)]):- G==[],!.
 
 colors(I,X):- is_object(I),indv_props(I,L),member(colors(X),L),!.
 colors(I,X):- is_map(I),into_grid(I,G),!,colors(G,X).
+colors(I,X):- is_object(I),indv_u_props(I,L),member(localpoints(LP),L),!,colors_via_pixels(LP,X).
 colors(G,BFO):- colors_via_pixels(G,BFO),!.
 colors_via_pixels(G,BFO):- quietly((pixel_colors(G,GF),list_to_set(GF,GS),
   count_each(GS,GF,UC),keysort(UC,KS),reverse(KS,SK),!,
