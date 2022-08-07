@@ -2929,10 +2929,10 @@ i(section(2,'10','sec:sgml-unsupported'),"Unsupported SGML features",swi_man_pac
 i(section(2,'11','sec:sgml-acknowledgements'),"Acknowledgements",swi_man_packages('sgml.html'),packages,108135).
 i(section(0,'0','packages/readline.html'),"SWI-Prolog binding to GNU readline",swi_man_packages('readline.html'),packages,2786).
 i(section(2,'1','sec:readline'),"library(readline): GNU readline interface",swi_man_packages('readline.html'),packages,3542).
-i(/(rl_read_init_file,1),"Read a GNU readline config file.",swi_man_packages('readline.html'),packages,4466).
-i(/(rl_add_history,1),"Add a line to the history.",swi_man_packages('readline.html'),packages,4711).
-i(/(rl_write_history,1),"Save the history to File.",swi_man_packages('readline.html'),packages,4902).
-i(/(rl_read_history,1),"Read a saved history from File.",swi_man_packages('readline.html'),packages,5218).
+i(/(rl_read_init_file,1),"Read a GNU readline config file.",swi_man_packages('readline.html'),packages,4460).
+i(/(rl_add_history,1),"Add a line to the history.",swi_man_packages('readline.html'),packages,4705).
+i(/(rl_write_history,1),"Save the history to File.",swi_man_packages('readline.html'),packages,4896).
+i(/(rl_read_history,1),"Read a saved history from File.",swi_man_packages('readline.html'),packages,5212).
 i(section(0,'0','packages/rdf2pl.html'),"SWI-Prolog RDF parser",swi_man_packages('rdf2pl.html'),packages,2772).
 i(section(2,'1','sec:rdfxml-intro'),"Introduction",swi_man_packages('rdf2pl.html'),packages,5024).
 i(section(2,'2','sec:rdfxml-parser'),"Parsing RDF in Prolog",swi_man_packages('rdf2pl.html'),packages,6685).
@@ -3342,60 +3342,60 @@ i(/(turtle_pn_local,1),"True if Atom is a valid Turtle PN_LOCAL name.",swi_man_p
 i(/(turtle_write_quoted_string,2),"Same as turtle_write_quoted_string(Out, Value, false), writing a string with only a single \".",swi_man_packages('semweb.html'),packages,169145).
 i(/(turtle_write_uri,2),"Write a URI as <...>",swi_man_packages('semweb.html'),packages,169513).
 i(/('rdf_db:rdf_load_stream',3),"(Turtle clauses)",swi_man_packages('semweb.html'),packages,169729).
-i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,169984).
-i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,170316).
-i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,171000).
-i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,171847).
-i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,176174).
-i(section(2,'6','sec:rdfntriples'),"library(semweb/rdf_ntriples): Process files in the RDF N-Triples format",swi_man_packages('semweb.html'),packages,176495).
-i(/(read_ntriple,2),"Read the next triple from Stream as Triple.",swi_man_packages('semweb.html'),packages,177544).
-i(/(read_nquad,2),"Read the next quad from Stream as Quad.",swi_man_packages('semweb.html'),packages,178286).
-i(/(read_ntuple,2),"Read the next triple or quad from Stream as Tuple.",swi_man_packages('semweb.html'),packages,179018).
-i(/(rdf_read_ntriples,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179577).
-i(/(rdf_read_nquads,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179577).
-i(/(rdf_process_ntriples,3),"Call-back interface, compatible with the other triple readers.",swi_man_packages('semweb.html'),packages,181350).
-i(/('rdf_db:rdf_load_stream',3),"Plugin rule that supports loading the ntriples and nquads formats.",swi_man_packages('semweb.html'),packages,182039).
-i(/('rdf_db:rdf_file_type',2),"Bind the ntriples reader to files with the extensions nt, ntriples and nquads.",swi_man_packages('semweb.html'),packages,182379).
-i(section(2,'7','sec:rdfa'),"library(semweb/rdfa): Extract RDF from an HTML or XML DOM",swi_man_packages('semweb.html'),packages,182735).
-i(/(read_rdfa,3),"True when Triples is a list of rdf(S,P,O) triples extracted from Input.",swi_man_packages('semweb.html'),packages,183671).
-i(/(xml_rdfa,3),"True when RDF is a list of rdf(S,P,O) terms extracted from DOM according to the RDFa specification.",swi_man_packages('semweb.html'),packages,184364).
-i(/('rdf_db:rdf_load_stream',3),"Register library(semweb/rdfa) as loader for HTML RDFa files.",swi_man_packages('semweb.html'),packages,185293).
-i(section(2,'8','sec:rdfs'),"library(semweb/rdfs): RDFS related queries",swi_man_packages('semweb.html'),packages,185777).
-i(section(3,'8.1','sec:semweb-rdfs-classes'),"Hierarchy and class-individual relations",swi_man_packages('semweb.html'),packages,187141).
-i(/(rdfs_subproperty_of,2),"True if SubProperty is equal to Property or Property can be reached from SubProperty following the rdfs:subPropertyOf relation.",swi_man_packages('semweb.html'),packages,187681).
-i(/(rdfs_subclass_of,2),"True if SubClass is equal to Class or Class can be reached from SubClass following the rdfs:subClassOf relation.",swi_man_packages('semweb.html'),packages,188594).
-i(/(rdfs_class_property,2),"True if the domain of Property includes Class.",swi_man_packages('semweb.html'),packages,189091).
-i(/(rdfs_individual_of,2),"True if Resource is an indivisual of Class.",swi_man_packages('semweb.html'),packages,189368).
-i(section(3,'8.2','sec:semweb-rdfs-containers'),"Collections and Containers",swi_man_packages('semweb.html'),packages,189849).
-i(/(rdfs_member,2),"Test or generate the members of Set.",swi_man_packages('semweb.html'),packages,190304).
-i(/(rdfs_list_to_prolog_list,2),"Convert Set, which must be an individual of rdf:List into a Prolog list of objects.",swi_man_packages('semweb.html'),packages,190583).
-i(/(rdfs_assert_list,2),"Equivalent to rdfs_assert_list/3 using DB = user.",swi_man_packages('semweb.html'),packages,190848).
-i(/(rdfs_assert_list,3),"If List is a list of resources, create an RDF list Resource that reflects these resources.",swi_man_packages('semweb.html'),packages,191150).
-i(section(2,'9','sec:rdflib'),"Managing RDF input files",swi_man_packages('semweb.html'),packages,191638).
-i(section(3,'9.1','sec:semweb-rdf-manifest'),"The Manifest file",swi_man_packages('semweb.html'),packages,192618).
-i(section(4,'9.1.1','sec:semweb-void'),"Support for the VoID and VANN vocabularies",swi_man_packages('semweb.html'),packages,196880).
-i(section(4,'9.1.2','sec:semweb-find-manifest'),"Finding manifest files",swi_man_packages('semweb.html'),packages,198909).
-i(/(rdf_attach_library,1),"Load meta-data on RDF repositories from FileOrDirectory.",swi_man_packages('semweb.html'),packages,199292).
-i(/(rdf_list_library,0),"List the available resources in the library.",swi_man_packages('semweb.html'),packages,200234).
-i(/(rdf_list_library,1),"Same as rdf_list_library(Id,[]).",swi_man_packages('semweb.html'),packages,201314).
-i(/(rdf_list_library,2),"Lists the resources that will be loaded if Id is handed to rdf_load_library/2.",swi_man_packages('semweb.html'),packages,201491).
-i(/(rdf_load_library,2),"Load the given library.",swi_man_packages('semweb.html'),packages,202362).
-i(section(3,'9.2','sec:usage'),"Usage scenarios",swi_man_packages('semweb.html'),packages,202762).
-i(section(4,'9.2.1','sec:semweb-manifest-resources'),"Referencing resources",swi_man_packages('semweb.html'),packages,205711).
-i(section(3,'9.3','sec:semweb-rdflib-example'),"Putting it all together",swi_man_packages('semweb.html'),packages,208151).
-i(section(3,'9.4','sec:w3cmanifest'),"Example: A metadata file for W3C WordNet",swi_man_packages('semweb.html'),packages,209413).
-i(section(2,'10','sec:sparqlclient'),"library(semweb/sparql_client): SPARQL client library",swi_man_packages('semweb.html'),packages,213192).
-i(/(sparql_query,3),"Execute a SPARQL query on an HTTP SPARQL endpoint.",swi_man_packages('semweb.html'),packages,214258).
-i(/(sparql_set_server,1),"Set sparql server default options.",swi_man_packages('semweb.html'),packages,216824).
-i(/(sparql_read_xml_result,2),"Specs from http://www.w3.org/TR/rdf-sparql-XMLres/.",swi_man_packages('semweb.html'),packages,217296).
-i(/(sparql_read_json_result,2),"The returned Result term is of the format: select(VarNames, Rows)Where VarNames is a term v(Name, ...) and Rows is a list of row(....) containing the column values in the same order as the variable names.",swi_man_packages('semweb.html'),packages,218076).
-i(section(2,'11','sec:rdfcompare'),"library(semweb/rdf_compare): Compare RDF graphs",swi_man_packages('semweb.html'),packages,218960).
-i(/(rdf_equal_graphs,3),"True if GraphA and GraphB are the same under Substition.",swi_man_packages('semweb.html'),packages,219535).
-i(section(2,'12','sec:rdfportray'),"library(semweb/rdf_portray): Portray RDF resources",swi_man_packages('semweb.html'),packages,220533).
-i(/(rdf_portray_as,1),"Set the style used to portray resources.",swi_man_packages('semweb.html'),packages,221607).
-i(/(rdf_portray_lang,1),"If Lang is a list, set the list or preferred languages.",swi_man_packages('semweb.html'),packages,222534).
-i(section(2,'13','sec:semweb-related-packages'),"Related packages",swi_man_packages('semweb.html'),packages,222856).
-i(section(2,'14','sec:semweb-version3'),"Version 3 release notes",swi_man_packages('semweb.html'),packages,223852).
+i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,169984).
+i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,170294).
+i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,170626).
+i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,171310).
+i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,172157).
+i(section(2,'6','sec:rdfntriples'),"library(semweb/rdf_ntriples): Process files in the RDF N-Triples format",swi_man_packages('semweb.html'),packages,176494).
+i(/(read_ntriple,2),"Read the next triple from Stream as Triple.",swi_man_packages('semweb.html'),packages,177543).
+i(/(read_nquad,2),"Read the next quad from Stream as Quad.",swi_man_packages('semweb.html'),packages,178285).
+i(/(read_ntuple,2),"Read the next triple or quad from Stream as Tuple.",swi_man_packages('semweb.html'),packages,179017).
+i(/(rdf_read_ntriples,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179576).
+i(/(rdf_read_nquads,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179576).
+i(/(rdf_process_ntriples,3),"Call-back interface, compatible with the other triple readers.",swi_man_packages('semweb.html'),packages,181349).
+i(/('rdf_db:rdf_load_stream',3),"Plugin rule that supports loading the ntriples and nquads formats.",swi_man_packages('semweb.html'),packages,182038).
+i(/('rdf_db:rdf_file_type',2),"Bind the ntriples reader to files with the extensions nt, ntriples and nquads.",swi_man_packages('semweb.html'),packages,182378).
+i(section(2,'7','sec:rdfa'),"library(semweb/rdfa): Extract RDF from an HTML or XML DOM",swi_man_packages('semweb.html'),packages,182734).
+i(/(read_rdfa,3),"True when Triples is a list of rdf(S,P,O) triples extracted from Input.",swi_man_packages('semweb.html'),packages,183670).
+i(/(xml_rdfa,3),"True when RDF is a list of rdf(S,P,O) terms extracted from DOM according to the RDFa specification.",swi_man_packages('semweb.html'),packages,184363).
+i(/('rdf_db:rdf_load_stream',3),"Register library(semweb/rdfa) as loader for HTML RDFa files.",swi_man_packages('semweb.html'),packages,185292).
+i(section(2,'8','sec:rdfs'),"library(semweb/rdfs): RDFS related queries",swi_man_packages('semweb.html'),packages,185776).
+i(section(3,'8.1','sec:semweb-rdfs-classes'),"Hierarchy and class-individual relations",swi_man_packages('semweb.html'),packages,187140).
+i(/(rdfs_subproperty_of,2),"True if SubProperty is equal to Property or Property can be reached from SubProperty following the rdfs:subPropertyOf relation.",swi_man_packages('semweb.html'),packages,187680).
+i(/(rdfs_subclass_of,2),"True if SubClass is equal to Class or Class can be reached from SubClass following the rdfs:subClassOf relation.",swi_man_packages('semweb.html'),packages,188593).
+i(/(rdfs_class_property,2),"True if the domain of Property includes Class.",swi_man_packages('semweb.html'),packages,189090).
+i(/(rdfs_individual_of,2),"True if Resource is an indivisual of Class.",swi_man_packages('semweb.html'),packages,189367).
+i(section(3,'8.2','sec:semweb-rdfs-containers'),"Collections and Containers",swi_man_packages('semweb.html'),packages,189848).
+i(/(rdfs_member,2),"Test or generate the members of Set.",swi_man_packages('semweb.html'),packages,190303).
+i(/(rdfs_list_to_prolog_list,2),"Convert Set, which must be an individual of rdf:List into a Prolog list of objects.",swi_man_packages('semweb.html'),packages,190582).
+i(/(rdfs_assert_list,2),"Equivalent to rdfs_assert_list/3 using DB = user.",swi_man_packages('semweb.html'),packages,190847).
+i(/(rdfs_assert_list,3),"If List is a list of resources, create an RDF list Resource that reflects these resources.",swi_man_packages('semweb.html'),packages,191149).
+i(section(2,'9','sec:rdflib'),"Managing RDF input files",swi_man_packages('semweb.html'),packages,191637).
+i(section(3,'9.1','sec:semweb-rdf-manifest'),"The Manifest file",swi_man_packages('semweb.html'),packages,192617).
+i(section(4,'9.1.1','sec:semweb-void'),"Support for the VoID and VANN vocabularies",swi_man_packages('semweb.html'),packages,196879).
+i(section(4,'9.1.2','sec:semweb-find-manifest'),"Finding manifest files",swi_man_packages('semweb.html'),packages,198908).
+i(/(rdf_attach_library,1),"Load meta-data on RDF repositories from FileOrDirectory.",swi_man_packages('semweb.html'),packages,199291).
+i(/(rdf_list_library,0),"List the available resources in the library.",swi_man_packages('semweb.html'),packages,200233).
+i(/(rdf_list_library,1),"Same as rdf_list_library(Id,[]).",swi_man_packages('semweb.html'),packages,201313).
+i(/(rdf_list_library,2),"Lists the resources that will be loaded if Id is handed to rdf_load_library/2.",swi_man_packages('semweb.html'),packages,201490).
+i(/(rdf_load_library,2),"Load the given library.",swi_man_packages('semweb.html'),packages,202361).
+i(section(3,'9.2','sec:usage'),"Usage scenarios",swi_man_packages('semweb.html'),packages,202761).
+i(section(4,'9.2.1','sec:semweb-manifest-resources'),"Referencing resources",swi_man_packages('semweb.html'),packages,205710).
+i(section(3,'9.3','sec:semweb-rdflib-example'),"Putting it all together",swi_man_packages('semweb.html'),packages,208150).
+i(section(3,'9.4','sec:w3cmanifest'),"Example: A metadata file for W3C WordNet",swi_man_packages('semweb.html'),packages,209412).
+i(section(2,'10','sec:sparqlclient'),"library(semweb/sparql_client): SPARQL client library",swi_man_packages('semweb.html'),packages,213191).
+i(/(sparql_query,3),"Execute a SPARQL query on an HTTP SPARQL endpoint.",swi_man_packages('semweb.html'),packages,214257).
+i(/(sparql_set_server,1),"Set sparql server default options.",swi_man_packages('semweb.html'),packages,216823).
+i(/(sparql_read_xml_result,2),"Specs from http://www.w3.org/TR/rdf-sparql-XMLres/.",swi_man_packages('semweb.html'),packages,217295).
+i(/(sparql_read_json_result,2),"The returned Result term is of the format: select(VarNames, Rows)Where VarNames is a term v(Name, ...) and Rows is a list of row(....) containing the column values in the same order as the variable names.",swi_man_packages('semweb.html'),packages,218075).
+i(section(2,'11','sec:rdfcompare'),"library(semweb/rdf_compare): Compare RDF graphs",swi_man_packages('semweb.html'),packages,218959).
+i(/(rdf_equal_graphs,3),"True if GraphA and GraphB are the same under Substition.",swi_man_packages('semweb.html'),packages,219534).
+i(section(2,'12','sec:rdfportray'),"library(semweb/rdf_portray): Portray RDF resources",swi_man_packages('semweb.html'),packages,220532).
+i(/(rdf_portray_as,1),"Set the style used to portray resources.",swi_man_packages('semweb.html'),packages,221606).
+i(/(rdf_portray_lang,1),"If Lang is a list, set the list or preferred languages.",swi_man_packages('semweb.html'),packages,222533).
+i(section(2,'13','sec:semweb-related-packages'),"Related packages",swi_man_packages('semweb.html'),packages,222855).
+i(section(2,'14','sec:semweb-version3'),"Version 3 release notes",swi_man_packages('semweb.html'),packages,223851).
 i(section(0,'0','packages/protobufs.html'),"Google's Protocol Buffers Library",swi_man_packages('protobufs.html'),packages,2785).
 i(section(2,'1','sec:protobufs-main'),"Google's Protocol Buffers",swi_man_packages('protobufs.html'),packages,6616).
 i(section(3,'1.1','sec:protobufs-overview'),"Overview",swi_man_packages('protobufs.html'),packages,6795).
@@ -3580,21 +3580,25 @@ i(/(stomp_commit,2),"Send a COMMIT frame.",swi_man_packages('stomp.html'),packag
 i(/(stomp_abort,2),"Send a ABORT frame.",swi_man_packages('stomp.html'),packages,18989).
 i(/(stomp_transaction,2),"Run Goal as once/1, tagging all SEND messages inside the transaction with the transaction id.",swi_man_packages('stomp.html'),packages,19411).
 i(/(stomp_disconnect,2),"Send a DISCONNECT frame.",swi_man_packages('stomp.html'),packages,19985).
-i(section(0,'0','packages/pcre.html'),"SWI-Prolog Regular Expression library",swi_man_packages('pcre.html'),packages,2789).
-i(section(2,'1','sec:pcre-motivation'),"Motivation",swi_man_packages('pcre.html'),packages,3610).
-i(section(2,'2','sec:pcre'),"library(pcre): Perl compatible regular expression matching for SWI-Prolog",swi_man_packages('pcre.html'),packages,5229).
-i(/(re_match,2),"Succeeds if String matches Regex.",swi_man_packages('pcre.html'),packages,6689).
-i(/(re_match,3),"Succeeds if String matches Regex.",swi_man_packages('pcre.html'),packages,6689).
-i(/(re_matchsub,3),"Match String against Regex.",swi_man_packages('pcre.html'),packages,11319).
-i(/(re_matchsub,4),"Match String against Regex.",swi_man_packages('pcre.html'),packages,11319).
-i(/(re_foldl,6),"Fold all matches of Regex on String.",swi_man_packages('pcre.html'),packages,13254).
-i(/(re_split,3),"Split String using the regular expression Pattern.",swi_man_packages('pcre.html'),packages,15253).
-i(/(re_split,4),"Split String using the regular expression Pattern.",swi_man_packages('pcre.html'),packages,15253).
-i(/(re_replace,4),"Replace matches of the regular expression Pattern in String with With (possibly containing references to captured substrings).",swi_man_packages('pcre.html'),packages,16700).
-i(/(re_replace,5),"Replace matches of the regular expression Pattern in String with With (possibly containing references to captured substrings).",swi_man_packages('pcre.html'),packages,16700).
-i(/(re_compile,3),"Compiles Pattern to a Regex blob of type regex (see blob/2).",swi_man_packages('pcre.html'),packages,19336).
-i(/(re_flush,0),"Clean pattern and replacement caches.",swi_man_packages('pcre.html'),packages,29388).
-i(/(re_config,1),"Extract configuration information from the pcre library.",swi_man_packages('pcre.html'),packages,29647).
+i(section(0,'0','packages/libedit.html'),"SWI-Prolog binding to BSD libedit",swi_man_packages('libedit.html'),packages,2785).
+i(section(2,'1','sec:editline'),"library(editline): BSD libedit based command line editing",swi_man_packages('libedit.html'),packages,3472).
+i(/(el_wrap,0),"Enable using editline on the standard user streams if user_input is connected to a terminal.",swi_man_packages('libedit.html'),packages,3934).
+i(/(el_wrap,4),"Enable editline on the stream-triple <In,Out,Error>.",swi_man_packages('libedit.html'),packages,4514).
+i(/(el_setup,1),"This hooks is called as forall(el_setup(Input), true) after the input stream has been wrapped, the default Prolog commands have been added and the default user setup file has been sourced using el_source/2.",swi_man_packages('libedit.html'),packages,5111).
+i(/(el_wrapped,1),"True if In is a stream wrapped by el_wrap/3.",swi_man_packages('libedit.html'),packages,5608).
+i(/(el_unwrap,1),"Remove the libedit wrapper for In and the related output and error streams.",swi_man_packages('libedit.html'),packages,5859).
+i(/(el_source,2),"Initialise editline by reading the contents of File.",swi_man_packages('libedit.html'),packages,6304).
+i(/(el_bind,2),"Invoke the libedit bind command with the given arguments.",swi_man_packages('libedit.html'),packages,6597).
+i(/(el_addfn,4),"Add a new command to the command line editor associated with Input.",swi_man_packages('libedit.html'),packages,7426).
+i(/(el_line,2),"Fetch the currently buffered input line.",swi_man_packages('libedit.html'),packages,9430).
+i(/(el_cursor,2),"Move the cursor Move character forwards (positive) or backwards (negative).",swi_man_packages('libedit.html'),packages,9838).
+i(/(el_insertstr,2),"Insert Text at the cursor.",swi_man_packages('libedit.html'),packages,10115).
+i(/(el_deletestr,2),"Delete Count characters before the cursor.",swi_man_packages('libedit.html'),packages,10329).
+i(/(el_history,2),"Perform a generic action on the history.",swi_man_packages('libedit.html'),packages,10560).
+i(/(el_history_events,2),"Unify Events with a list of pairs of the form Num-String, where Num is the event number and String is the associated string without terminating newline.",swi_man_packages('libedit.html'),packages,11272).
+i(/(el_add_history,2),"Add a line to the command line history.",swi_man_packages('libedit.html'),packages,11669).
+i(/(el_read_history,2),"Read the history saved using el_write_history/2.",swi_man_packages('libedit.html'),packages,11891).
+i(/(el_write_history,2),"Save editline history to File.",swi_man_packages('libedit.html'),packages,12329).
 i(section(0,'0','packages/ssl.html'),"SWI-Prolog SSL Interface",swi_man_packages('ssl.html'),packages,2776).
 i(section(2,'1','sec:ssl-intro'),"Introduction",swi_man_packages('ssl.html'),packages,9022).
 i(section(2,'2','sec:ssl'),"library(ssl): Secure Socket Layer (SSL) library",swi_man_packages('ssl.html'),packages,11054).

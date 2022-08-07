@@ -261,7 +261,6 @@ cp_menu:cp_menu(X,X).
 :- multifile((extra_cp_menu/0)).
 :- dynamic((extra_cp_menu//0)).
 :- export(extra_cp_menu//0).
-%cp_menu:extra_cp_menu--> extra_cp_menu.
 
 cp_menu:extra_cp_menu -->  
    { \+ (( httpd_wrapper:http_current_request(Request),member(request_uri(URI),Request), atom_contains(URI,pldoc))) },!,
@@ -289,7 +288,7 @@ suppliment_cp_menu:-
     C=A,
     html_requires(css('menu.css'), C, D),
     html(ul(id(nav), \menu(Menu)), D, B1),
-    html(\ extra_cp_menu,B1,B)))).
+    html(\ xlisting_web:extra_cp_menu,B1,B)))).
 
 :- suppliment_cp_menu.
 
