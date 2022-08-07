@@ -382,8 +382,14 @@ o2g(Obj,NewGlyph):- o_i_d(Obj,ID,Old), int2glyph(Old,Glyph),
   nb_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,nb_linkval(NewGlyph,Obj))),
  my_asserta_if_new(g2o(NewGlyph,Obj)).
 
-o2c(Obj,Glyph):- color(Obj,Glyph).
-o2ansi(Obj,S):- o2c(Obj,C),o2g(Obj,G),atomic_list_concat([' ',G,' '],O),!,sformat(F,'~q',[O]),wots(S,color_print(C,F)).
+o2c(Obj,Glyph):- color(Obj,Glyph),!.
+
+o2ansi(I,S):- integer(I),int2glyph(I,G),!,o2ansi(G,S). 
+o2ansi(G,S):- atom(G),!,g2o(G,O),o2ansi(O,S),!.
+o2ansi(Obj,S):- o2g(Obj,G),colors(Obj,Colors),maplist(arg(1),Colors,NColors),
+  wots(S,maplist(print_ncolors(G),NColors)).
+print_ncolors(G,C):- sformat(F,'~q',[G]),color_print(C,F).
+
 :- dynamic(g2o/2).
 
 g2o(G,O):- var(G),!,nb_current(G,O),is_object(O).

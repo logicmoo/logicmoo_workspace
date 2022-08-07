@@ -39,10 +39,10 @@ baseKB:agent_call_command(_Agent,actDMsg(ON_OFF)):- !, (ON_OFF==vOff->FLAG=false
 set_show_dmsg(FLAG):- set_prolog_flag(debug,FLAG),set_bugger_flag(opt_debug,FLAG),fmt(current_prolog_flag(opt_debug,FLAG)).
 
 baseKB:action_info(actShow(isOptional(ftProlog,isValueMissing)),"show messages of col").
-baseKB:agent_call_command(_Agent,actShow(A)):-!, (A==isValueMissing -> (set_show_dmsg(true),show_dmsg_values) ; (bugger:dmsg_show(A),prolog_debug:debug(A))).
+baseKB:agent_call_command(_Agent,actShow(A)):-!, (A==isValueMissing -> (set_show_dmsg(true),show_dmsg_values) ; (dmsg_show(A),prolog_debug:debug(A))).
 
 baseKB:action_info(actHide(isOptional(ftProlog,isValueMissing)),"hide messages of col").
-baseKB:agent_call_command(_Agent,actHide(A)):-!, A==isValueMissing -> (set_show_dmsg(false),show_dmsg_values) ; (bugger:dmsg_hide(A),prolog_debug:nodebug(A)).
+baseKB:agent_call_command(_Agent,actHide(A)):-!, A==isValueMissing -> (set_show_dmsg(false),show_dmsg_values) ; (dmsg_hide(A),prolog_debug:nodebug(A)).
 
 % ===========================================================
 % DEBUG/NODEBUG command

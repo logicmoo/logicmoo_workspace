@@ -19,6 +19,7 @@
            term_is_ansi/1,
            write_keeping_ansi/1,
            make_pretty/2,
+         %  term_varnames/2,
    color_format_maybe/3,print_tree00/1,print_as_tree/1,current_print_write_options/1,mort/1,
    print_tree_with_final/2,
    print_tree_with_final/3]).

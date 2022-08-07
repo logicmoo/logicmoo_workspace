@@ -32,14 +32,17 @@
   pre_style/0,mouse_over_span/0]).
 :- endif.
 :- endif.
-:- export((bformat/1,bformat/2,bformat/3,
+
+:- define_into_module([
+  bformat/1,bformat/2,bformat/3,
   is_butterfly_console/0,
   set_is_butterfly_console/1,
   bfly_test/1,
   write_html/1,
   bfly_tests/0,
+  bfly/0,
   send_tokens/1,
-  pre_style/0,mouse_over_span/0)).
+  pre_style/0,mouse_over_span/0]).
 
 :- use_module(library(logicmoo_common)).
 :- use_module(library(logicmoo/pretty_clauses)).
@@ -629,6 +632,7 @@ bfly_tests:- forall(clause(bfly_test(_Name),Body),
 
 
 :- fixup_exports.
+:- fixup_module_exports_now.
 
 :- multifile(user:portray/1).
 :- dynamic(user:portray/1).

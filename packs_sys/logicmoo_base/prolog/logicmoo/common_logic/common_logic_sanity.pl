@@ -69,35 +69,35 @@ kif_show:-  baseKB:listing(clif/1), baseKB:listing(boxlog/1), baseKB:listing(pfc
 :- export(kif_show/0).
 
 
-:- kb_shared(compiled_clif/0).
-clif_uncompile:-  ain(==>( \+ compiled_clif)), clif_show.
-clif_recompile:-  ain(==>( \+ compiled_clif)), ain(==> compiled_clif), clif_show.
-clif_compile:-  ain(==> compiled_clif). % clif_show.
+:- kb_shared(baseKB:compiled_clif/0).
+clif_uncompile:-  ain(==>( \+ baseKB:compiled_clif)), clif_show.
+clif_recompile:-  ain(==>( \+ baseKB:compiled_clif)), ain(==> baseKB:compiled_clif), clif_show.
+clif_compile:-  ain(==> baseKB:compiled_clif). % clif_show.
 clif_show:-  baseKB:listing(clif/1), baseKB:listing(boxlog/1).
 :- export(clif_recompile/0).
 :- export(clif_compile/0).
 :- export(clif_uncompile/0).
 :- export(clif_show/0).
 
-:- kb_shared(compiled_boxlog/0).
+:- kb_shared(baseKB:compiled_boxlog/0).
 :- export(boxlog_recompile/0).
 :- export(boxlog_compile/0).
 :- export(boxlog_uncompile/0).
 :- export(boxlog_show/0).
-boxlog_uncompile:-  ain(==>( \+ compiled_boxlog)), boxlog_show.
-boxlog_recompile:-  ain(==>( \+ compiled_boxlog)), ain(==> compiled_boxlog), boxlog_show.
-boxlog_compile:-  ain(==> compiled_boxlog). % boxlog_show.
+boxlog_uncompile:-  ain(==>( \+ baseKB:compiled_boxlog)), boxlog_show.
+boxlog_recompile:-  ain(==>( \+ baseKB:compiled_boxlog)), ain(==> baseKB:compiled_boxlog), boxlog_show.
+boxlog_compile:-  ain(==> baseKB:compiled_boxlog). % boxlog_show.
 boxlog_show:-  baseKB:listing(boxlog/1), baseKB:listing(pfclog/1).
 
-:- kb_shared(compiled_pfclog/0).
+:- kb_shared(baseKB:compiled_pfclog/0).
 :- export(pfclog_recompile/0).
 :- export(pfclog_compile/0).
 :- export(pfclog_uncompile/0).
 :- export(pfclog_show/0).
 
-pfclog_uncompile:-  ain(==>( \+ compiled_pfclog)), pfclog_show.
-pfclog_recompile:-  ain(==>( \+ compiled_pfclog)), ain(==> compiled_pfclog), pfclog_show.
-pfclog_compile:-  ain(==> compiled_pfclog). %pfclog_show.
+pfclog_uncompile:-  ain(==>( \+ baseKB:compiled_pfclog)), pfclog_show.
+pfclog_recompile:-  ain(==>( \+ baseKB:compiled_pfclog)), ain(==> baseKB:compiled_pfclog), pfclog_show.
+pfclog_compile:-  ain(==> baseKB:compiled_pfclog). %pfclog_show.
 pfclog_show:-  baseKB:listing(pfclog/1).
 
 

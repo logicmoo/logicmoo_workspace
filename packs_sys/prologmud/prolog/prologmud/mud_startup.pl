@@ -293,7 +293,7 @@ lar :- % set_prolog_flag(dmsg_level,never),
 
 :- during_boot(baseKB:ain(tSourceData(iWorldData8))).
 
-start_runtime_mud:- 
+start_runtime_mud_ms:- 
    update_changed_files,
    forall(tCol(X),call(baseKB:kb_shared,X/1)),
    forall(tSet(X),call(baseKB:kb_shared,X/1)),
@@ -304,7 +304,7 @@ start_runtime_mud:-
    notrace(with_mpred_trace_exec(baseKB:ain(isRuntime))),
    show_lm_tests.
 
-:- export(start_runtime_mud/0).
+:- export(start_runtime_mud_ms/0).
 %:- baseKB:import(start_runtime_mud/0).
 
 show_lm_tests:-

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 9.3</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 9.3</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -255,7 +255,7 @@ Constraint declaration</span></a></h3>
 <dt class="pubdef"><a id="chr_constraint/1">:- <strong>chr_constraint</strong>(<var>+Specifier</var>)</a></dt>
 <dd class="defbody">
 Every constraint used in CHR rules has to be declared with a
-<a id="idx:chrconstraint1:2210"></a><a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a> 
+<a id="idx:chrconstraint1:2214"></a><a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a> 
 declaration by the <em>constraint specifier</em>. For convenience 
 multiple constraints may be declared at once with the same
 <a class="pred" href="practical.html#chr_constraint/1">chr_constraint/1</a> 
@@ -357,7 +357,7 @@ have any type. This is the default value.
 <dd class="defbody">
 User-defined types are algebraic data types, similar to those in Haskell 
 or the discriminated unions in Mercury. An algebraic data type is 
-defined using <a id="idx:chrtype1:2211"></a><a class="pred" href="practical.html#chr_type/1">chr_type/1</a>:
+defined using <a id="idx:chrtype1:2215"></a><a class="pred" href="practical.html#chr_type/1">chr_type/1</a>:
 
 <pre class="code">
 :- chr_type type ---&gt; body.
@@ -494,7 +494,7 @@ runtime overhead.
 <p><h3 id="sec:chr-compilation"><a id="sec:9.3.3"><span class="sec-nr">9.3.3</span> <span class="sec-title">CHR 
 Compilation</span></a></h3>
 
-<a id="sec:chr-compilation"></a> The SWI-Prolog CHR compiler exploits <a id="idx:termexpansion2:2212"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
+<a id="sec:chr-compilation"></a> The SWI-Prolog CHR compiler exploits <a id="idx:termexpansion2:2216"></a><a class="pred" href="consulting.html#term_expansion/2">term_expansion/2</a> 
 rules to translate the constraint handling rules to plain Prolog. These 
 rules are loaded from the library <code>library(chr)</code>. They are 
 activated if the compiled file has the <code>.chr</code> extension or 

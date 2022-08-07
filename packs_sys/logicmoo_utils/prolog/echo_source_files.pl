@@ -12,7 +12,11 @@
 % ===================================================================
 */
 % File:  $PACKDIR/subclause_expansion/prolog/echo_files.pl
-:- module(echo_files, [
+:- module(echo_files,
+          []).
+
+:- define_into_module(
+ [
           check_current_echo/0,
           echo_source_file/0,
           echo_source_file_no_catchup/1,

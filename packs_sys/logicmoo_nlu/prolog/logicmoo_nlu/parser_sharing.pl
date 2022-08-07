@@ -28,7 +28,7 @@
    op(1150,fx,(shared_parser_data)),
    op(1150,fx,(dynamic_multifile_exported)).
 */
-:- define_into_module(system,
+:- define_into_module(
   [each_parser_module/1,
   each_parser_module_0/1,
   (use_shared_parser_data)/2,

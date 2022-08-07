@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section E.2</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section E.2</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -241,7 +241,7 @@ support to keep track of license conditions</span></a></h2>
 <p>Given the above, it is possible that SWI-Prolog packages and 
 extensions rely on the GPL, LGPL or other licenses. The predicates below 
 allow for registering license requirements for Prolog files and foreign 
-modules. The predicate <a id="idx:license0:2879"></a><a class="pred" href="softlicense.html#license/0">license/0</a> 
+modules. The predicate <a id="idx:license0:2884"></a><a class="pred" href="softlicense.html#license/0">license/0</a> 
 reports which components from the currently configured system are 
 distributed under non-permissive open source licenses and therefore may 
 need to be replaced to suit your requirements.
@@ -259,7 +259,7 @@ the use of other license conditions. Likewise for for LGPL components.</dd>
 <dd class="defbody">
 Register the fact that <var>Component</var> is distributed under a 
 license identified by <var>LicenseId</var>. Known license identifiers 
-can be listed using <a id="idx:knownlicenses0:2880"></a><a class="pred" href="softlicense.html#known_licenses/0">known_licenses/0</a>. 
+can be listed using <a id="idx:knownlicenses0:2885"></a><a class="pred" href="softlicense.html#known_licenses/0">known_licenses/0</a>. 
 A new license can be registered as a known language using a declaration 
 like below. The second argument defines the
 <em>category</em> if the license, which is one of <code>gpl</code>,
@@ -280,7 +280,7 @@ license:license(mylicense, permissive,
 <dt class="pubdef"><a id="license/1"><strong>license</strong>(<var>+LicenseId</var>)</a></dt>
 <dd class="defbody">
 Intended as a directive in Prolog source files. It takes the current 
-filename and calls <a id="idx:license2:2881"></a><a class="pred" href="softlicense.html#license/2">license/2</a>.</dd>
+filename and calls <a id="idx:license2:2886"></a><a class="pred" href="softlicense.html#license/2">license/2</a>.</dd>
 <dt class="pubdef"><a id="PL_license()"><var>void</var> <strong>PL_license</strong>(<var>const 
 char *LicenseId, const char *Component</var>)</a></dt>
 <dd class="defbody">
@@ -289,7 +289,7 @@ be made <em>before</em> <a class="func" href="foreigninclude.html#PL_initialise(
 <dt class="pubdef"><a id="known_licenses/0"><strong>known_licenses</strong></a></dt>
 <dd class="defbody">
 List all licenses <em>known</em> to the system. This does not imply the 
-system contains code covered by the listed licenses. See <a id="idx:license2:2882"></a><a class="pred" href="softlicense.html#license/2">license/2</a>.
+system contains code covered by the listed licenses. See <a id="idx:license2:2887"></a><a class="pred" href="softlicense.html#license/2">license/2</a>.
 </dd>
 </dl>
 

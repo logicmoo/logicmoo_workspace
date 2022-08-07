@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.32</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.32</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -239,9 +239,9 @@ Write</span></a></h2>
 <a id="sec:format"></a>
 
 <p>The current version of SWI-Prolog provides two formatted write 
-predicates. The&lsquo;writef' family (<a id="idx:writef1:1617"></a><a class="pred" href="format.html#writef/1">writef/1</a>, <a id="idx:writef2:1618"></a><a class="pred" href="format.html#writef/2">writef/2</a>, <a id="idx:swritef3:1619"></a><a class="pred" href="format.html#swritef/3">swritef/3</a>), 
+predicates. The&lsquo;writef' family (<a id="idx:writef1:1620"></a><a class="pred" href="format.html#writef/1">writef/1</a>, <a id="idx:writef2:1621"></a><a class="pred" href="format.html#writef/2">writef/2</a>, <a id="idx:swritef3:1622"></a><a class="pred" href="format.html#swritef/3">swritef/3</a>), 
 is compatible with Edinburgh C-Prolog and should be considered
-<em>deprecated</em>. The&lsquo;format' family (<a id="idx:format1:1620"></a><a class="pred" href="format.html#format/1">format/1</a>, <a id="idx:format2:1621"></a><a class="pred" href="format.html#format/2">format/2</a>, <a id="idx:format3:1622"></a><a class="pred" href="format.html#format/3">format/3</a>), 
+<em>deprecated</em>. The&lsquo;format' family (<a id="idx:format1:1623"></a><a class="pred" href="format.html#format/1">format/1</a>, <a id="idx:format2:1624"></a><a class="pred" href="format.html#format/2">format/2</a>, <a id="idx:format3:1625"></a><a class="pred" href="format.html#format/3">format/3</a>), 
 was defined by Quintus Prolog and currently available in many Prolog 
 systems, although the details vary.
 
@@ -252,7 +252,7 @@ systems, although the details vary.
 <dl class="latex">
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="writef/1"><strong>writef</strong>(<var>+Atom</var>)</a></dt>
 <dd class="defbody">
-Equivalent to <code>writef(Atom, []).</code> See <a id="idx:writef2:1623"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
+Equivalent to <code>writef(Atom, []).</code> See <a id="idx:writef2:1626"></a><a class="pred" href="format.html#writef/2">writef/2</a> 
 for details.
 </dd>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="writef/2"><strong>writef</strong>(<var>+Format, 
@@ -267,7 +267,7 @@ provides all the terms required to be output.
 <p>Escape sequences to generate a single special character:
 
 <p><table class="latex frame-box center">
-<tr><td><code>\n</code> </td><td>Output a newline character (see also <a id="idx:nl01:1624"></a><a class="pred" href="chario.html#nl/0">nl/[0,1]</a>) </td></tr>
+<tr><td><code>\n</code> </td><td>Output a newline character (see also <a id="idx:nl01:1627"></a><a class="pred" href="chario.html#nl/0">nl/[0,1]</a>) </td></tr>
 <tr><td><code>\l</code> </td><td>Output a line separator (same as <code>\n</code>) </td></tr>
 <tr><td><code>\r</code> </td><td>Output a carriage return character 
 (ASCII 13) </td></tr>
@@ -291,17 +291,17 @@ time a
 is formatted according to the specification.
 
 <p><table class="latex frame-box center">
-<tr><td><code>%t</code> </td><td><a id="idx:print1:1625"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+<tr><td><code>%t</code> </td><td><a id="idx:print1:1628"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
 the next item (mnemonic: term) </td></tr>
-<tr><td><code>%w</code> </td><td><a id="idx:write1:1626"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+<tr><td><code>%w</code> </td><td><a id="idx:write1:1629"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 the next item </td></tr>
-<tr><td><code>%q</code> </td><td><a id="idx:writeq1:1627"></a><a class="pred" href="termrw.html#writeq/1">writeq/1</a> 
+<tr><td><code>%q</code> </td><td><a id="idx:writeq1:1630"></a><a class="pred" href="termrw.html#writeq/1">writeq/1</a> 
 the next item </td></tr>
 <tr><td><code>%d</code> </td><td>Write the term, ignoring operators. See 
 also
-<a id="idx:writeterm2:1628"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
-Mnemonic: old Edinburgh <a id="idx:display1:1629"></a><span class="pred-ext">display/1</span> </td></tr>
-<tr><td><code>%p</code> </td><td><a id="idx:print1:1630"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
+<a id="idx:writeterm2:1631"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+Mnemonic: old Edinburgh <a id="idx:display1:1632"></a><span class="pred-ext">display/1</span> </td></tr>
+<tr><td><code>%p</code> </td><td><a id="idx:print1:1633"></a><a class="pred" href="termrw.html#print/1">print/1</a> 
 the next item (identical to <code>%t</code>) </td></tr>
 <tr><td><code>%n</code> </td><td>Put the next item as a character (i.e., 
 it is a character code) </td></tr>
@@ -309,7 +309,7 @@ it is a character code) </td></tr>
 the second item (an integer) </td></tr>
 <tr><td><code>%s</code> </td><td>Write the next item as a String (so it 
 must be a list of characters) </td></tr>
-<tr><td><code>%f</code> </td><td>Perform a <a id="idx:ttyflush0:1631"></a><a class="pred" href="chario.html#ttyflush/0">ttyflush/0</a> 
+<tr><td><code>%f</code> </td><td>Perform a <a id="idx:ttyflush0:1634"></a><a class="pred" href="chario.html#ttyflush/0">ttyflush/0</a> 
 (no items used) </td></tr>
 <tr><td><code>%Nc</code> </td><td>Write the next item Centered in <var>N</var> 
 columns </td></tr>
@@ -324,7 +324,7 @@ be an atom, integer, float or string. </td></tr>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="swritef/3"><strong>swritef</strong>(<var>-String, 
 +Format, +Arguments</var>)</a></dt>
 <dd class="defbody">
-Equivalent to <a id="idx:writef2:1632"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
+Equivalent to <a id="idx:writef2:1635"></a><a class="pred" href="format.html#writef/2">writef/2</a>, 
 but &ldquo;writes'' the result on <var>String</var> instead of the 
 current output stream. Example:
 
@@ -346,7 +346,7 @@ Equivalent to <code>swritef(String, Format, []).</code>
 
 <a id="sec:format-predicates"></a>
 
-<p>The format family of predicates is the most versatile and portable<sup class="fn">140<span class="fn-text">Unfortunately 
+<p>The format family of predicates is the most versatile and portable<sup class="fn">141<span class="fn-text">Unfortunately 
 not covered by any standard.</span></sup> way to produce textual output.
 
 <dl class="latex">
@@ -354,7 +354,7 @@ not covered by any standard.</span></sup> way to produce textual output.
 <dd class="defbody">
 Defined as&lsquo;<code>format(Format) :- format(Format, []).</code>&rsquo;. 
 See
-<a id="idx:format2:1633"></a><a class="pred" href="format.html#format/2">format/2</a> 
+<a id="idx:format2:1636"></a><a class="pred" href="format.html#format/2">format/2</a> 
 for details.</dd>
 <dt class="pubdef"><a id="format/2"><strong>format</strong>(<var>+Format, 
 :Arguments</var>)</a></dt>
@@ -369,7 +369,7 @@ arguments are put in a list.
 <p>Special sequences start with the tilde (<code><code>~</code></code>), 
 followed by an optional numeric argument, optionally followed by a colon 
 modifier (:),
-<sup class="fn">141<span class="fn-text">The colon modifiers is a 
+<sup class="fn">142<span class="fn-text">The colon modifiers is a 
 SWI-Prolog extension, proposed by Richard O'Keefe.</span></sup> followed 
 by a character describing the action to be undertaken. A numeric 
 argument is either a sequence of digits, representing a positive decimal 
@@ -389,9 +389,9 @@ three examples all pass 46 (<code><code>.</code></code>) to <code>~t</code>:
 <p>Some format expressions may call back Prolog, i.e., <code>~p</code>,
 <code>~W</code>, <code>~@</code> and user defined extensions registered 
 with
-<a id="idx:formatpredicate2:1634"></a><a class="pred" href="format.html#format_predicate/2">format_predicate/2</a>. 
+<a id="idx:formatpredicate2:1637"></a><a class="pred" href="format.html#format_predicate/2">format_predicate/2</a>. 
 Output written to the stream <code>current_output</code> is merged into 
-the <a id="idx:format2:1635"></a><a class="pred" href="format.html#format/2">format/2</a> 
+the <a id="idx:format2:1638"></a><a class="pred" href="format.html#format/2">format/2</a> 
 output. If there is no pending
 <em>rubber</em> (<code>~t</code>) and the the position notation aligns, 
 only the output is switched. Otherwise the output is captured in a 
@@ -399,8 +399,8 @@ temporary memory buffer and emitted after the callback finishes. The
 system attempts to preserve the position and alignment promises. It sets 
 the <code>tty</code> property of the temporary stream to reflect the 
 main stream and uses the position information of the temporary stream to 
-update its notion of the position. Notable <a id="idx:ansiformat3:1636"></a><a class="pred" href="ansiterm.html#ansi_format/3">ansi_format/3</a> 
-cooperates properly in callbacks.<sup class="fn">142<span class="fn-text">As 
+update its notion of the position. Notable <a id="idx:ansiformat3:1639"></a><a class="pred" href="ansiterm.html#ansi_format/3">ansi_format/3</a> 
+cooperates properly in callbacks.<sup class="fn">143<span class="fn-text">As 
 of version 8.3.30</span></sup>.
 
 <p>Numeric conversion (<code>d</code>, <code>D</code>, <code>e</code>, <code>E</code>, <code>f</code>, <code>g</code> 
@@ -501,16 +501,16 @@ The default is 3. See also <a class="sec" href="syntax.html#sec:2.16.1.5">sectio
 
 <p>
 <li><code>k</code><br>
-Give the next argument to <a id="idx:writecanonical1:1637"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>.
+Give the next argument to <a id="idx:writecanonical1:1640"></a><a class="pred" href="termrw.html#write_canonical/1">write_canonical/1</a>.
 <li><code>n</code><br>
 Output a newline character.
 <li><code>N</code><br>
 Only output a newline if the last character output on this stream was 
 not a newline. Not properly implemented yet.
 <li><code>p</code><br>
-Give the next argument to <a id="idx:print1:1638"></a><a class="pred" href="termrw.html#print/1">print/1</a>.
+Give the next argument to <a id="idx:print1:1641"></a><a class="pred" href="termrw.html#print/1">print/1</a>.
 <li><code>q</code><br>
-Give the next argument to <a id="idx:writeq1:1639"></a><a class="pred" href="termrw.html#writeq/1">writeq/1</a>.
+Give the next argument to <a id="idx:writeq1:1642"></a><a class="pred" href="termrw.html#writeq/1">writeq/1</a>.
 
 <p>
 <li><code>r</code><br>
@@ -525,7 +525,7 @@ digit groups.
 Same as <b>r</b>, but uses uppercase letters for digits above 9.
 <li><code>s</code><br>
 Output text from a list of character codes, characters, string (see
-<a id="idx:string1:1640"></a><a class="pred" href="typetest.html#string/1">string/1</a> 
+<a id="idx:string1:1643"></a><a class="pred" href="typetest.html#string/1">string/1</a> 
 and <a class="sec" href="string.html#sec:5.2">section 5.2</a>) or atom 
 from the next argument. If an numeric argument is given the string is 
 truncated to this number of characters.
@@ -534,7 +534,7 @@ truncated to this number of characters.
 <li><code>@</code><br>
 Interpret the next argument as a goal and execute it. Output written to 
 the <code>current_output</code> stream is inserted at this place. Goal 
-is called in the module calling <a id="idx:format3:1641"></a><a class="pred" href="format.html#format/3">format/3</a>. 
+is called in the module calling <a id="idx:format3:1644"></a><a class="pred" href="format.html#format/3">format/3</a>. 
 This option is not present in the original definition by Quintus, but 
 supported by some other Prolog systems. The goal is executed as <code>\+ \+ Goal</code>, 
 i.e., bindings created by the goal are discarded.
@@ -574,9 +574,9 @@ specification.
 
 <p>
 <li><code>w</code><br>
-Give the next argument to <a id="idx:write1:1642"></a><a class="pred" href="termrw.html#write/1">write/1</a>.
+Give the next argument to <a id="idx:write1:1645"></a><a class="pred" href="termrw.html#write/1">write/1</a>.
 <li><code>W</code><br>
-Give the next two arguments to <a id="idx:writeterm2:1643"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
+Give the next two arguments to <a id="idx:writeterm2:1646"></a><a class="pred" href="termrw.html#write_term/2">write_term/2</a>. 
 For example,
 <code>format('~W', [Term, [numbervars(true)]])</code>. This option is 
 SWI-Prolog specific.
@@ -605,11 +605,11 @@ Runtime: .................. 3.45  Inferences: .......... 60,345
 <dt class="pubdef"><a id="format/3"><strong>format</strong>(<var>+Output, 
 +Format, :Arguments</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:format2:1644"></a><a class="pred" href="format.html#format/2">format/2</a>, 
+As <a id="idx:format2:1647"></a><a class="pred" href="format.html#format/2">format/2</a>, 
 but write the output on the given <var>Output</var>. The de-facto 
 standard only allows <var>Output</var> to be a stream. The SWI-Prolog 
 implementation allows all valid arguments for
-<a id="idx:withoutputto2:1645"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.<sup class="fn">143<span class="fn-text">Earlier 
+<a id="idx:withoutputto2:1648"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.<sup class="fn">144<span class="fn-text">Earlier 
 versions defined sformat/3 . These predicates have been moved to the 
 library <code>library(backcomp)</code>.</span></sup> For example:
 
@@ -631,7 +631,7 @@ Format</span></a></h3>
 +Head</var>)</a></dt>
 <dd class="defbody">
 If a sequence <code>~c</code> (tilde, followed by some character) is 
-found, the <a id="idx:format3:1646"></a><a class="pred" href="format.html#format/3">format/3</a> 
+found, the <a id="idx:format3:1649"></a><a class="pred" href="format.html#format/3">format/3</a> 
 and friends first check whether the user has defined a predicate to 
 handle the format. If not, the built-in formatting rules described above 
 are used. <var>Char</var> is either a character code or a one-character 
@@ -642,7 +642,7 @@ predicate is the numeric argument of the format command, or the atom <code>defau
 if no argument is specified. The remaining arguments are filled from the 
 argument list. The example below defines <code>~T</code> to print a 
 timestamp in ISO8601 format (see
-<a id="idx:formattime3:1647"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>). 
+<a id="idx:formattime3:1650"></a><a class="pred" href="system.html#format_time/3">format_time/3</a>). 
 The subsequent block illustrates a possible call.
 
 <pre class="code">

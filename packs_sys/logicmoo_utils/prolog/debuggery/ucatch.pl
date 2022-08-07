@@ -12,7 +12,9 @@
 */
 
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_catch.pl
-:- module(ucatch,
+:- module(ucatch,[]).
+
+:- define_into_module(
           [ !/1,
             addLibraryDir/0,
             get_main_error_stream/1,
@@ -37,6 +39,8 @@
             quietly_must/1,
             on_x_f/3,
 
+            keep_going/0,keep_going0/0,
+            must/1,
             show_current_source_location/0,
             varnames_load_context/1,
             current_mfl4/4,
@@ -49,6 +53,7 @@
             %bubbled_ex_check/1,
             catchv/3,
             flag_call/1,
+            flag_call0/1,
             current_source_file/1,current_source_location0/2,
             lmcache:current_main_error_stream/1,
             lmcache:thread_current_input/2,
@@ -69,7 +74,7 @@
             ib_multi_transparent33/1,
             if_defined/1,if_defined/2,
             input_key/1,
-            is_ftCompound/1,ftCompound/1, 
+            is_ftCompound/1,%ftCompound/1, 
             not_ftCompound/1,
             is_ftNameArity/2,
             is_ftNonvar/1, % ftNonvar/1,ftVar/1,
@@ -163,7 +168,7 @@ keep_going0:- getenv(keep_going,'-k').
 keep_going0:- non_user_console.
 keep_going0:- tlbugger:show_must_go_on(X)->X==true,!.
 keep_going0:- current_prolog_flag(runtime_must,keep_going),!.
-keep_going0:- current_prolog_flag(debug_on_error,true), !, fail.
+%keep_going0:- current_prolog_flag(debug_on_error,true), !, fail.
 
 
 % % % OFF :- system:use_module((dmsg)).
@@ -1131,7 +1136,7 @@ is_ftVar0('aVar'(_,_)).
 
 
 % quotedDefnIff
-
+/*
 :- dynamic(baseKB:ftVar/1).
 baseKB:ftVar(X):- ucatch:is_ftVar(X).
 :- export(baseKB:ftVar/1).
@@ -1147,7 +1152,7 @@ baseKB:ftCompound(X):- ucatch:is_ftCompound(X).
 baseKB:ftNonvar(X):- ucatch:is_ftNonvar(X).
 :- export(baseKB:ftNonvar/1).
 :- system:import(baseKB:ftNonvar/1).
-
+*/
 %=
 
 %% is_ftNonvar( ?V) is semidet.

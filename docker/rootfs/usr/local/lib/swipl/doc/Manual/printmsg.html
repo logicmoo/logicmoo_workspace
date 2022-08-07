@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.11</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.11</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -238,11 +238,11 @@ messages</span></a></h2>
 
 <a id="sec:printmsg"></a>
 
-<p>The predicate <a id="idx:printmessage2:836"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<p>The predicate <a id="idx:printmessage2:837"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 is used to print a message term in a human-readable format. The other 
 predicates from this section allow the user to refine and extend the 
 message system. A common usage of
-<a id="idx:printmessage2:837"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<a id="idx:printmessage2:838"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 is to print error messages from exceptions. The code below prints errors 
 encountered during the execution of <var>Goal</var>, without further 
 propagating the exception and without starting the debugger.
@@ -256,7 +256,7 @@ propagating the exception and without starting the debugger.
         ...
 </pre>
 
-<p>Another common use is to define <a id="idx:messagehook3:838"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
+<p>Another common use is to define <a id="idx:messagehook3:839"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
 for printing messages that are normally <em>silent</em>, suppressing 
 messages, redirecting messages or make something happen in addition to 
 printing the message.
@@ -265,14 +265,14 @@ printing the message.
 <dt class="pubdef"><a id="print_message/2"><strong>print_message</strong>(<var>+Kind, 
 +Term</var>)</a></dt>
 <dd class="defbody">
-The predicate <a id="idx:printmessage2:839"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+The predicate <a id="idx:printmessage2:840"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 is used by the system and libraries to print messages. <var>Kind</var> 
 describes the nature of the message, while
 <var>Term</var> is a Prolog term that describes the content. Printing 
-messages through this indirection instead of using <a id="idx:format3:840"></a><a class="pred" href="format.html#format/3">format/3</a> 
+messages through this indirection instead of using <a id="idx:format3:841"></a><a class="pred" href="format.html#format/3">format/3</a> 
 to the stream <code>user_error</code> allows displaying the message 
 appropriate to the application (terminal, logfile, graphics), acting on 
-messages based on their content instead of a string (see <a id="idx:messagehook3:841"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>) 
+messages based on their content instead of a string (see <a id="idx:messagehook3:842"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>) 
 and creating language specific versions of the messages. See also
 <a class="sec" href="printmsg.html#sec:4.11.1">section 4.11.1</a>. The 
 following message kinds are known:
@@ -285,7 +285,7 @@ the Prolog flag <a class="flag" href="flags.html#flag:verbose">verbose</a>
 to <code>silent</code>.</dd>
 <dt><strong>debug</strong>(<var>Topic</var>)</dt>
 <dd class="defbody">
-Message from library(debug). See <a id="idx:debug3:842"></a><a class="pred" href="debug.html#debug/3">debug/3</a>.</dd>
+Message from library(debug). See <a id="idx:debug3:843"></a><a class="pred" href="debug.html#debug/3">debug/3</a>.</dd>
 <dt><strong>error</strong></dt>
 <dd class="defbody">
 The message indicates an erroneous situation. This kind is used to print 
@@ -294,16 +294,16 @@ section introduction (<a class="sec" href="printmsg.html#sec:4.11">section
 4.11</a>). An error message causes the process to halt with status 1 if 
 the Prolog flag <a class="flag" href="flags.html#flag:on_error">on_error</a> 
 is set to
-<code>halt</code> and the message is not intercepted by <a id="idx:messagehook3:843"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
+<code>halt</code> and the message is not intercepted by <a id="idx:messagehook3:844"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
 Not intercepted error messages increment the <code>errors</code> key for
-<a id="idx:statistics2:844"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a>.</dd>
+<a id="idx:statistics2:845"></a><a class="pred" href="builtin-statistics.html#statistics/2">statistics/2</a>.</dd>
 <dt><strong>help</strong></dt>
 <dd class="defbody">
 User requested help message, for example after entering&lsquo;h' or&lsquo;?' 
 to a prompt.</dd>
 <dt><strong>information</strong></dt>
 <dd class="defbody">
-Information that is requested by the user. An example is <a id="idx:statistics0:845"></a><a class="pred" href="statistics.html#statistics/0">statistics/0</a>.</dd>
+Information that is requested by the user. An example is <a id="idx:statistics0:846"></a><a class="pred" href="statistics.html#statistics/0">statistics/0</a>.</dd>
 <dt><strong>informational</strong></dt>
 <dd class="defbody">
 Typically messages of events and progress that are considered useful to 
@@ -312,7 +312,7 @@ to <code>silent</code>.</dd>
 <dt><strong>silent</strong></dt>
 <dd class="defbody">
 Message that is normally not printed. Applications may define
-<a id="idx:messagehook3:846"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
+<a id="idx:messagehook3:847"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
 to act upon such messages.</dd>
 <dt><strong>trace</strong></dt>
 <dd class="defbody">
@@ -320,24 +320,24 @@ Messages from the (command line) tracer.</dd>
 <dt><strong>warning</strong></dt>
 <dd class="defbody">
 The message indicates something dubious that is not considered fatal. 
-For example, discontiguous predicates (see <a id="idx:discontiguous1:847"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a>). 
+For example, discontiguous predicates (see <a id="idx:discontiguous1:848"></a><a class="pred" href="dynamic.html#discontiguous/1">discontiguous/1</a>). 
 A warning message causes the process to halt with status 1 if the Prolog 
 flag
 <a class="flag" href="flags.html#flag:on_warning">on_warning</a> is set 
-to <code>halt</code> and the message is not intercepted by <a id="idx:messagehook3:848"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
+to <code>halt</code> and the message is not intercepted by <a id="idx:messagehook3:849"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
 Not intercepted warning messages increment the <code>warnings</code> key 
-for <a id="idx:statistics2:849"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a>.
+for <a id="idx:statistics2:850"></a><a class="pred" href="builtin-statistics.html#statistics/2">statistics/2</a>.
 </dd>
 </dl>
 
-<p>The predicate <a id="idx:printmessage2:850"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<p>The predicate <a id="idx:printmessage2:851"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 first translates the <var>Term</var> into a list of&lsquo;message lines' 
-(see <a id="idx:printmessagelines3:851"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a> 
-for details). Next, it calls the hook <a id="idx:messagehook3:852"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
-to allow the user to intercept the message. If <a id="idx:messagehook3:853"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
+(see <a id="idx:printmessagelines3:852"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a> 
+for details). Next, it calls the hook <a id="idx:messagehook3:853"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
+to allow the user to intercept the message. If <a id="idx:messagehook3:854"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a> 
 fails it prints the message unless <var>Kind</var> is <code>silent</code>.
 
-<p>The <a id="idx:printmessage2:854"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+<p>The <a id="idx:printmessage2:855"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
 predicate and its rules are in the file
 <code>&lt;<var>plhome</var>&gt;/boot/messages.pl</code>, which may be 
 inspected for more information on the error messages and related error 
@@ -349,11 +349,11 @@ prolog:message//1. See
 <a class="sec" href="printmsg.html#sec:4.11.1">section 4.11.1</a> for a 
 deeper discussion and examples.
 
-<p>See also <a id="idx:messagetostring2:855"></a><a class="pred" href="printmsg.html#message_to_string/2">message_to_string/2</a>.</dd>
+<p>See also <a id="idx:messagetostring2:856"></a><a class="pred" href="printmsg.html#message_to_string/2">message_to_string/2</a>.</dd>
 <dt class="pubdef"><a id="print_message_lines/3"><strong>print_message_lines</strong>(<var>+Stream, 
 +Prefix, +Lines</var>)</a></dt>
 <dd class="defbody">
-Print a message (see <a id="idx:printmessage2:856"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>) 
+Print a message (see <a id="idx:printmessage2:857"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>) 
 that has been translated to a list of message elements. The elements of 
 this list are:
 
@@ -361,11 +361,11 @@ this list are:
 <dt><strong>&lt;<var>Format</var>&gt;-&lt;<var>Args</var>&gt;</strong></dt>
 <dd class="defbody">
 Where <var>Format</var> is an atom and <var>Args</var> is a list of 
-format arguments. Handed to <a id="idx:format3:857"></a><a class="pred" href="format.html#format/3">format/3</a>.
+format arguments. Handed to <a id="idx:format3:858"></a><a class="pred" href="format.html#format/3">format/3</a>.
 </dd>
 <dt><strong>flush</strong></dt>
 <dd class="defbody">
-If this appears as the last element, <var>Stream</var> is flushed (see <a id="idx:flushoutput1:858"></a><a class="pred" href="chario.html#flush_output/1">flush_output/1</a>) 
+If this appears as the last element, <var>Stream</var> is flushed (see <a id="idx:flushoutput1:859"></a><a class="pred" href="chario.html#flush_output/1">flush_output/1</a>) 
 and no final newline is generated. This is combined with a subsequent 
 message that starts with
 <code>at_same_line</code> to complete the line.
@@ -373,12 +373,12 @@ message that starts with
 <dt><strong>at_same_line</strong></dt>
 <dd class="defbody">
 If this appears as first element, no prefix is printed for the first 
-line and the line position is not forced to 0 (see <a id="idx:format1:859"></a><a class="pred" href="format.html#format/1">format/1</a>, <code>~N</code>).
+line and the line position is not forced to 0 (see <a id="idx:format1:860"></a><a class="pred" href="format.html#format/1">format/1</a>, <code>~N</code>).
 </dd>
 <dt><strong>ansi</strong>(<var>+Attributes, +Format, +Args</var>)</dt>
 <dd class="defbody">
 This message may be intercepted by means of the hook
-<a id="idx:prologmessagelineelement2:860"></a><a class="pred" href="printmsg.html#prolog:message_line_element/2">prolog:message_line_element/2</a>. 
+<a id="idx:prologmessagelineelement2:861"></a><a class="pred" href="printmsg.html#prolog:message_line_element/2">prolog:message_line_element/2</a>. 
 The library <code>library(ansi_term)</code> implements this hook to 
 achieve coloured output. If it is not intercepted it invokes <code>format(Stream, 
 Format, Args)</code>.
@@ -409,32 +409,32 @@ to colour entire messages.
 </dd>
 <dt><strong>&lt;<var>Format</var>&gt;</strong></dt>
 <dd class="defbody">
-Handed to <a id="idx:format3:861"></a><a class="pred" href="format.html#format/3">format/3</a> 
+Handed to <a id="idx:format3:862"></a><a class="pred" href="format.html#format/3">format/3</a> 
 as <code>format(Stream, Format,[])</code>. Deprecated because it is 
 ambiguous if <var>Format</var> collides with one of the atomic commands.
 </dd>
 </dl>
 
-<p>See also <a id="idx:printmessage2:862"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
-and <a id="idx:messagehook3:863"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>.</dd>
+<p>See also <a id="idx:printmessage2:863"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a> 
+and <a id="idx:messagehook3:864"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>.</dd>
 <dt class="pubdef"><a id="message_hook/3"><strong>message_hook</strong>(<var>+Term, 
 +Kind, +Lines</var>)</a></dt>
 <dd class="defbody">
 Hook predicate that may be defined in the module <code>user</code> to 
-intercept messages from <a id="idx:printmessage2:864"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. <var>Term</var> 
-and <var>Kind</var> are the same as passed to <a id="idx:printmessage2:865"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. <var>Lines</var> 
-is a list of format statements as described with <a id="idx:printmessagelines3:866"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a>. 
+intercept messages from <a id="idx:printmessage2:865"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. <var>Term</var> 
+and <var>Kind</var> are the same as passed to <a id="idx:printmessage2:866"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. <var>Lines</var> 
+is a list of format statements as described with <a id="idx:printmessagelines3:867"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a>. 
 See also
-<a id="idx:messagetostring2:867"></a><a class="pred" href="printmsg.html#message_to_string/2">message_to_string/2</a>.
+<a id="idx:messagetostring2:868"></a><a class="pred" href="printmsg.html#message_to_string/2">message_to_string/2</a>.
 
 <p>This predicate must be defined dynamic and multifile to allow other 
 modules defining clauses for it too.</dd>
 <dt class="pubdef"><a id="thread_message_hook/3"><strong>thread_message_hook</strong>(<var>+Term, 
 +Kind, +Lines</var>)</a></dt>
 <dd class="defbody">
-As <a id="idx:messagehook3:868"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>, 
-but this predicate is local to the calling thread (see <a id="idx:threadlocal1:869"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>). 
-This hook is called <em>before</em> <a id="idx:messagehook3:870"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
+As <a id="idx:messagehook3:869"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>, 
+but this predicate is local to the calling thread (see <a id="idx:threadlocal1:870"></a><a class="pred" href="threadcom.html#thread_local/1">thread_local/1</a>). 
+This hook is called <em>before</em> <a id="idx:messagehook3:871"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
 The&lsquo;pre-hook' is indented to catch messages they may be produced 
 by calling some goal without affecting other threads.</dd>
 <dt class="pubdef"><a id="message_property/2"><strong>message_property</strong>(<var>+Kind, 
@@ -446,7 +446,7 @@ they are displayed. The following properties are defined:
 <dl class="latex">
 <dt><strong>color</strong>(<var>-Attributes</var>)</dt>
 <dd class="defbody">
-Print message using ANSI terminal attributes. See <a id="idx:ansiformat3:871"></a><a class="pred" href="ansiterm.html#ansi_format/3">ansi_format/3</a> 
+Print message using ANSI terminal attributes. See <a id="idx:ansiformat3:872"></a><a class="pred" href="ansiterm.html#ansi_format/3">ansi_format/3</a> 
 for details. Here is an example, printing help messages in blue:
 
 <pre class="code">
@@ -458,7 +458,7 @@ user:message_property(help, color([fg(blue)])).
 </dd>
 <dt><strong>prefix</strong>(<var>-Prefix</var>)</dt>
 <dd class="defbody">
-Prefix printed before each line. This argument is handed to <a id="idx:format3:872"></a><a class="pred" href="format.html#format/3">format/3</a>. 
+Prefix printed before each line. This argument is handed to <a id="idx:format3:873"></a><a class="pred" href="format.html#format/3">format/3</a>. 
 The default is <code>'~N'</code>. For example, messages of kind
 <code>warning</code> use <code>'~NWarning: '</code>.</dd>
 <dt><strong>tag</strong>(<var>-Tag</var>)</dt>
@@ -495,7 +495,7 @@ wait.
 +Term</var>)</a></dt>
 <dd class="defbody">
 This hook is called to print the individual elements of a message from
-<a id="idx:printmessagelines3:873"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a>. 
+<a id="idx:printmessagelines3:874"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a>. 
 This hook is used by e.g., library
 <code>library(ansi_term)</code> to colour messages on ANSI-capable 
 terminals.</dd>
@@ -515,12 +515,12 @@ Translates a message term into a string object (see <a class="sec" href="string.
 <dt class="pubdef"><a id="version/0"><strong>version</strong></a></dt>
 <dd class="defbody">
 Write the SWI-Prolog banner message as well as additional messages 
-registered using <a id="idx:version1:874"></a><a class="pred" href="printmsg.html#version/1">version/1</a>. 
+registered using <a id="idx:version1:875"></a><a class="pred" href="printmsg.html#version/1">version/1</a>. 
 This is the default <em>initialization goal</em> which can be modified 
 using <strong>-g</strong>.</dd>
 <dt class="pubdef"><a id="version/1"><strong>version</strong>(<var>+Message</var>)</a></dt>
 <dd class="defbody">
-Register additional messages to be printed by <a id="idx:version0:875"></a><a class="pred" href="printmsg.html#version/0">version/0</a>. 
+Register additional messages to be printed by <a id="idx:version0:876"></a><a class="pred" href="printmsg.html#version/0">version/0</a>. 
 Each registered message is handed to the message translation DCG and can 
 thus be defined using the hook prolog:message//1. If not defined, it is 
 simply printed.
@@ -532,17 +532,17 @@ from libraries</span></a></h3>
 
 <a id="sec:libprintmsg"></a>
 
-<p>Libraries should <em>not</em> use <a id="idx:format3:876"></a><a class="pred" href="format.html#format/3">format/3</a> 
+<p>Libraries should <em>not</em> use <a id="idx:format3:877"></a><a class="pred" href="format.html#format/3">format/3</a> 
 or other output predicates directly. Libraries that print informational 
 output directly to the console are hard to use from code that depend on 
 your textual output, such as a CGI script. The predicates in <a class="sec" href="printmsg.html#sec:4.11">section 
 4.11</a> define the API for dealing with messages. The idea behind this 
 is that a library that wants to provide information about its status, 
-progress, events or problems calls <a id="idx:printmessage2:877"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+progress, events or problems calls <a id="idx:printmessage2:878"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
 The first argument is the
-<em>level</em>. The supported levels are described with <a id="idx:printmessage2:878"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
+<em>level</em>. The supported levels are described with <a id="idx:printmessage2:879"></a><a class="pred" href="printmsg.html#print_message/2">print_message/2</a>. 
 Libraries typically use <code>informational</code> and <code>warning</code>, 
-while libraries should use exceptions for errors (see <a id="idx:throw1:879"></a><a class="pred" href="exception.html#throw/1">throw/1</a>, <a id="idx:typeerror2:880"></a><a class="pred" href="error.html#type_error/2">type_error/2</a>, 
+while libraries should use exceptions for errors (see <a id="idx:throw1:880"></a><a class="pred" href="exception.html#throw/1">throw/1</a>, <a id="idx:typeerror2:881"></a><a class="pred" href="error.html#type_error/2">type_error/2</a>, 
 etc.).
 
 <p>The second argument is an arbitrary Prolog term that carries the 
@@ -553,7 +553,7 @@ information in a different way (e.g., to translate progress messages
 into a progress bar).
 
 <p>For example, suppose we have a library that must download data from 
-the Internet (e.g., based on <a id="idx:httpopen3:881"></a><span class="pred-ext">http_open/3</span>). 
+the Internet (e.g., based on <a id="idx:httpopen3:882"></a><span class="pred-ext">http_open/3</span>). 
 The library wants to print the progress after each downloaded file. The 
 code below is a good skeleton:
 
@@ -572,7 +572,7 @@ else. Notably, the application may come with several rule sets for
 different languages. This, and the user-hook example below are the 
 reason to represent the message as a compound term rather than a string. 
 This is similar to using message numbers in non-symbolic languages. The 
-documentation of <a id="idx:printmessagelines3:882"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a> 
+documentation of <a id="idx:printmessagelines3:883"></a><a class="pred" href="printmsg.html#print_message_lines/3">print_message_lines/3</a> 
 describes the elements that may appear in the output list.
 
 <pre class="code">
@@ -584,7 +584,7 @@ prolog:message(download_url(URL, I, Total)) --&gt;
         [ 'Downloaded ~w; ~D from ~D (~d%)'-[URL, I, Total, Perc] ].
 </pre>
 
-<p>A <em>user</em> of the library may define rules for <a id="idx:messagehook3:883"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
+<p>A <em>user</em> of the library may define rules for <a id="idx:messagehook3:884"></a><a class="pred" href="printmsg.html#message_hook/3">message_hook/3</a>. 
 The rule below acts on the message content. Other applications can act 
 on the message level and, for example, popup a message box for warnings 
 and errors.

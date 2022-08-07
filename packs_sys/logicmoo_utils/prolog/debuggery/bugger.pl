@@ -1179,6 +1179,7 @@ nodebugx(X):-
 debugging_logicmoo(Mask):- logicmoo_topic(Mask,Topic),prolog_debug:debugging(Topic, TF, _),!,TF=true.
 
 debugging_logicmoo_setting(_,true,[user_error]):- tracing.
+:- export(debugging_logicmoo_setting/3).
 :- multifile(prolog_debug:debugging/3).
 :- dynamic(prolog_debug:debugging/3).
 :- asserta((prolog_debug:debugging(X,Y,Z):-debugging_logicmoo_setting(X,Y,Z))).
@@ -3258,4 +3259,5 @@ logicmoo_bugger_loaded.
 % :- mpred_trace_childs(prolog_ecall_fa/5).
 % :- mpred_trace_childs(with_each/3).
 
+:- fixup_module_exports_now.
 

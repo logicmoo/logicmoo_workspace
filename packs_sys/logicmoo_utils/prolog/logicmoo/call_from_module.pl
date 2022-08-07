@@ -11,7 +11,10 @@
 % ===================================================================
 */
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/logicmoo_util_preddefs.pl
-:- module(call_from,
+:- module(call_from,[]).
+
+:- define_into_module(
+
           [ call_if_defined/1,
             convert_to_dynamic/1,
             convert_to_dynamic/3,

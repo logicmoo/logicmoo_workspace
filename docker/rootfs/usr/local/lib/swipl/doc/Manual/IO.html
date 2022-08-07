@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.17</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.17</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -239,15 +239,15 @@ and output</span></a></h2>
 <a id="sec:IO"></a>
 
 <p>SWI-Prolog provides two different packages for input and output. The 
-native I/O system is based on the ISO standard predicates <a id="idx:open3:1127"></a><a class="pred" href="IO.html#open/3">open/3</a>,
-<a id="idx:close1:1128"></a><a class="pred" href="IO.html#close/1">close/1</a> 
+native I/O system is based on the ISO standard predicates <a id="idx:open3:1128"></a><a class="pred" href="IO.html#open/3">open/3</a>,
+<a id="idx:close1:1129"></a><a class="pred" href="IO.html#close/1">close/1</a> 
 and friends.<sup class="fn">94<span class="fn-text">Actually based on 
 Quintus Prolog, providing this interface before the ISO standard 
 existed.</span></sup> Being more widely portable and equipped with a 
 clearer and more robust specification, new code is encouraged to use 
 these predicates for manipulation of I/O streams.
 
-<p><a class="sec" href="IO.html#sec:4.17.3">Section 4.17.3</a> describes <a id="idx:tell1:1129"></a><a class="pred" href="IO.html#tell/1">tell/1</a>, <a id="idx:see1:1130"></a><a class="pred" href="IO.html#see/1">see/1</a> 
+<p><a class="sec" href="IO.html#sec:4.17.3">Section 4.17.3</a> describes <a id="idx:tell1:1130"></a><a class="pred" href="IO.html#tell/1">tell/1</a>, <a id="idx:see1:1131"></a><a class="pred" href="IO.html#see/1">see/1</a> 
 and friends, providing I/O in the spirit of the traditional Edinburgh 
 standard. These predicates are layered on top of the ISO predicates. 
 Both packages are fully integrated; the user may switch freely between 
@@ -269,34 +269,34 @@ initially bound to the standard operating system I/O streams (<em>stdin</em>,
 handles 0,&nbsp;1 and&nbsp;2). These aliases may be re-bound, for 
 example if standard I/O refers to a window such as in the <b>swipl-win.exe</b> 
 GUI executable for Windows. They can be re-bound by the user using
-<a id="idx:setprologIO3:1131"></a><a class="pred" href="IO.html#set_prolog_IO/3">set_prolog_IO/3</a> 
-and <a id="idx:setstream2:1132"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
+<a id="idx:setprologIO3:1132"></a><a class="pred" href="IO.html#set_prolog_IO/3">set_prolog_IO/3</a> 
+and <a id="idx:setstream2:1133"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
 by setting the alias of a stream (e.g,
 <code>set_stream(S, alias(user_output))</code>). An example of rebinding 
 can be found in library <code>library(prolog_server)</code>, providing a <b>telnet</b> 
 service. The aliases <code>current_input</code> and <code>current_output</code> 
 define the source and destination for predicates that do not take a 
-stream argument (e.g., <a id="idx:read1:1133"></a><a class="pred" href="termrw.html#read/1">read/1</a>, <a id="idx:write1:1134"></a><a class="pred" href="termrw.html#write/1">write/1</a>, <a id="idx:getcode1:1135"></a><a class="pred" href="chario.html#get_code/1">get_code/1</a>, 
+stream argument (e.g., <a id="idx:read1:1134"></a><a class="pred" href="termrw.html#read/1">read/1</a>, <a id="idx:write1:1135"></a><a class="pred" href="termrw.html#write/1">write/1</a>, <a id="idx:getcode1:1136"></a><a class="pred" href="chario.html#get_code/1">get_code/1</a>, 
 ... ). Initially, these are bound to the same stream as <code>user_input</code> 
 and
-<code>user_error</code>. They are re-bound by <a id="idx:see1:1136"></a><a class="pred" href="IO.html#see/1">see/1</a>, <a id="idx:tell1:1137"></a><a class="pred" href="IO.html#tell/1">tell/1</a>, <a id="idx:setinput1:1138"></a><a class="pred" href="IO.html#set_input/1">set_input/1</a> 
+<code>user_error</code>. They are re-bound by <a id="idx:see1:1137"></a><a class="pred" href="IO.html#see/1">see/1</a>, <a id="idx:tell1:1138"></a><a class="pred" href="IO.html#tell/1">tell/1</a>, <a id="idx:setinput1:1139"></a><a class="pred" href="IO.html#set_input/1">set_input/1</a> 
 and
-<a id="idx:setoutput1:1139"></a><a class="pred" href="IO.html#set_output/1">set_output/1</a>. 
-The <code>current_output</code> stream is also temporary re-bound by <a id="idx:withoutputto2:1140"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a> 
-or <a id="idx:format3:1141"></a><a class="pred" href="format.html#format/3">format/3</a> 
+<a id="idx:setoutput1:1140"></a><a class="pred" href="IO.html#set_output/1">set_output/1</a>. 
+The <code>current_output</code> stream is also temporary re-bound by <a id="idx:withoutputto2:1141"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a> 
+or <a id="idx:format3:1142"></a><a class="pred" href="format.html#format/3">format/3</a> 
 using e.g.,
 <code>format(atom(A), ...</code>. Note that code which explicitly writes 
 to the streams <code>user_output</code> and <code>user_error</code> will 
-not be redirected by <a id="idx:withoutputto2:1142"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
+not be redirected by <a id="idx:withoutputto2:1143"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
 
 <p><b>Compatibility</b> 
 
 <p>Note that the ISO standard only defines the <code>user_*</code> 
-streams. The&lsquo;current' streams can be accessed using <a id="idx:currentinput1:1143"></a><a class="pred" href="IO.html#current_input/1">current_input/1</a> 
+streams. The&lsquo;current' streams can be accessed using <a id="idx:currentinput1:1144"></a><a class="pred" href="IO.html#current_input/1">current_input/1</a> 
 and
-<a id="idx:currentoutput1:1144"></a><a class="pred" href="IO.html#current_output/1">current_output/1</a>. 
+<a id="idx:currentoutput1:1145"></a><a class="pred" href="IO.html#current_output/1">current_output/1</a>. 
 For example, an ISO compatible implementation of
-<a id="idx:write1:1145"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
+<a id="idx:write1:1146"></a><a class="pred" href="termrw.html#write/1">write/1</a> 
 is
 
 <pre class="code">
@@ -315,7 +315,7 @@ Input and Output Streams</span></a></h3>
 <a id="sec:isoIO"></a>
 
 <p>The predicates described in this section provide ISO compliant I/O, 
-where streams are explicitly created using the predicate <a id="idx:open3:1146"></a><a class="pred" href="IO.html#open/3">open/3</a>. 
+where streams are explicitly created using the predicate <a id="idx:open3:1147"></a><a class="pred" href="IO.html#open/3">open/3</a>. 
 The resulting stream identifier is then passed as a parameter to the 
 reading and writing predicates to specify the source or destination of 
 the data.
@@ -323,18 +323,18 @@ the data.
 <p>This schema is not vulnerable to filename and stream ambiguities as 
 well as changes to the working directory. On the other hand, using the 
 notion of current-I/O simplifies reusability of code without the need to 
-pass arguments around. E.g., see <a id="idx:withoutputto2:1147"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
+pass arguments around. E.g., see <a id="idx:withoutputto2:1148"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
 
 <p>SWI-Prolog streams are, compatible with the ISO standard, either 
 input or output streams. To accommodate portability to other systems, a 
 pair of streams can be packed into a <em>stream-pair</em>. See
-<a id="idx:streampair3:1148"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a> 
+<a id="idx:streampair3:1149"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a> 
 for details.
 
 <p>SWI-Prolog stream handles are unique symbols that have no syntactical 
 representation. They are written as <code>&lt;stream&gt;(hex-number)</code>, 
-which is not valid input for <a id="idx:read1:1149"></a><a class="pred" href="termrw.html#read/1">read/1</a>. 
-They are realised using a <em>blob</em> of type <code>stream</code> (see <a id="idx:blob2:1150"></a><a class="pred" href="typetest.html#blob/2">blob/2</a> 
+which is not valid input for <a id="idx:read1:1150"></a><a class="pred" href="termrw.html#read/1">read/1</a>. 
+They are realised using a <em>blob</em> of type <code>stream</code> (see <a id="idx:blob2:1151"></a><a class="pred" href="typetest.html#blob/2">blob/2</a> 
 and <a class="sec" href="foreigninclude.html#sec:12.4.8">section 12.4.8</a>).
 
 <dl class="latex">
@@ -368,26 +368,26 @@ is executed directly and therefore shell syntax such as redirecting
 (using e.g., <code>&gt;</code> <var>file</var>) does not work. Use of 
 the
 <code>pipe(Command)</code> feature is deprecated. The predicate
-<a id="idx:processcreate3:1151"></a><span class="pred-ext">process_create/3</span> 
+<a id="idx:processcreate3:1152"></a><span class="pred-ext">process_create/3</span> 
 from <code>library(process)</code> provides a richer and more portable 
 alternative for interacting with processes including handling all three 
 standard streams.
 
 <p>If <var>SrcDest</var> is an <em>IRI</em>, i.e., starts with
 &lt;<var>scheme</var>&gt;<code>://</code>, where &lt;<var>scheme</var>&gt; 
-is a non-empty sequence of lowercase ASCII letters <a id="idx:open3:1152"></a><a class="pred" href="IO.html#open/3">open/3</a>,4 
-calls hooks registered by <a id="idx:registeririscheme3:1153"></a><a class="pred" href="IO.html#register_iri_scheme/3">register_iri_scheme/3</a>. 
+is a non-empty sequence of lowercase ASCII letters <a id="idx:open3:1153"></a><a class="pred" href="IO.html#open/3">open/3</a>,4 
+calls hooks registered by <a id="idx:registeririscheme3:1154"></a><a class="pred" href="IO.html#register_iri_scheme/3">register_iri_scheme/3</a>. 
 Currently the only predefined IRI scheme is <code>res</code>, providing 
 access to the <em>resource database</em>. See
 <a class="sec" href="program-resources.html#sec:13.4">section 13.4</a>.
 
-<p>The following <var>Options</var> are recognised by <a id="idx:open4:1154"></a><a class="pred" href="IO.html#open/4">open/4</a>:
+<p>The following <var>Options</var> are recognised by <a id="idx:open4:1155"></a><a class="pred" href="IO.html#open/4">open/4</a>:
 
 <dl class="latex">
 <dt><strong>alias</strong>(<var>Atom</var>)</dt>
 <dd class="defbody">
 Gives the stream a name. Below is an example. Be careful with this 
-option as stream names are global. See also <a id="idx:setstream2:1155"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.
+option as stream names are global. See also <a id="idx:setstream2:1156"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.
 
 <pre class="code">
 ?- open(data, read, Fd, [alias(input)]).
@@ -402,7 +402,7 @@ option as stream names are global. See also <a id="idx:setstream2:1155"></a><a c
 <dd class="defbody">
 Check for a BOM (<em>Byte Order Marker</em>) or write one. If omitted, 
 the default is <code>true</code> for mode <code>read</code> and
-<code>false</code> for mode <code>write</code>. See also <a id="idx:streamproperty2:1156"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+<code>false</code> for mode <code>write</code>. See also <a id="idx:streamproperty2:1157"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
 and especially <a class="sec" href="widechars.html#sec:2.19.1.1">section 
 2.19.1.1</a> for a discussion of this feature.</dd>
 <dt><strong>buffer</strong>(<var>Buffering</var>)</dt>
@@ -411,12 +411,12 @@ Defines output buffering. The atom <code>full</code> (default) defines
 full buffering, <code>line</code> buffering by line, and <code>false</code> 
 implies the stream is fully unbuffered. Smaller buffering is useful if 
 another process or the user is waiting for the output as it is being 
-produced. See also <a id="idx:flushoutput01:1157"></a><a class="pred" href="chario.html#flush_output/0">flush_output/[0,1]</a>. 
+produced. See also <a id="idx:flushoutput01:1158"></a><a class="pred" href="chario.html#flush_output/0">flush_output/[0,1]</a>. 
 This option is not an ISO option.</dd>
 <dt><strong>close_on_abort</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
 If <code>true</code> (default), the stream is closed on an abort (see
-<a id="idx:abort0:1158"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>). 
+<a id="idx:abort0:1159"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>). 
 If <code>false</code>, the stream is not closed. If it is an output 
 stream, however, it will be flushed. Useful for logfiles and if the 
 stream is associated to a process (using the <code>pipe/1</code> 
@@ -469,8 +469,8 @@ For details on encoding issues, see <a class="sec" href="widechars.html#sec:2.19
 <dt><strong>eof_action</strong>(<var>Action</var>)</dt>
 <dd class="defbody">
 Defines what happens if the end of the input stream is reached. The 
-default value for Action is <code>eof_code</code>, which makes <a id="idx:get01:1159"></a><a class="pred" href="chario.html#get0/1">get0/1</a> 
-and friends return -1, and <a id="idx:read1:1160"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+default value for Action is <code>eof_code</code>, which makes <a id="idx:get01:1160"></a><a class="pred" href="chario.html#get0/1">get0/1</a> 
+and friends return -1, and <a id="idx:read1:1161"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
 and friends return the atom
 <code>end_of_file</code>. Repetitive reading keeps yielding the same 
 result. Action <code>error</code> is like <code>eof_code</code>, but 
@@ -479,7 +479,7 @@ Prolog will examine the file again and return more data if the file has
 grown.</dd>
 <dt><strong>locale</strong>(<var>+Locale</var>)</dt>
 <dd class="defbody">
-Set the locale that is used by notably <a id="idx:format2:1161"></a><a class="pred" href="format.html#format/2">format/2</a> 
+Set the locale that is used by notably <a id="idx:format2:1162"></a><a class="pred" href="format.html#format/2">format/2</a> 
 for output on this stream. See <a class="sec" href="locale.html#sec:4.23">section 
 4.23</a>.</dd>
 <dt><strong>lock</strong>(<var>LockingMode</var>)</dt>
@@ -505,7 +505,7 @@ page before trusting your locks!
 Set end-of-line processing for the stream. <var>Mode</var> is one of
 <code>posix</code>, <code>dos</code> or <code>detect</code>. This option 
 is ignored for binary streams. Using <code>detect</code> on an <em>output 
-stream</em> raises an exception. See also <a id="idx:setstream2:1162"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
+stream</em> raises an exception. See also <a id="idx:setstream2:1163"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
 <dt><strong>type</strong>(<var>Type</var>)</dt>
 <dd class="defbody">
 Using type <code>text</code> (default), Prolog will write a text file in 
@@ -527,7 +527,7 @@ All streams connected to a file may be repositioned.</dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="open/3"><strong>open</strong>(<var>+SrcDest, 
 +Mode, --Stream</var>)</a></dt>
 <dd class="defbody">
-Equivalent to <a id="idx:open4:1163"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+Equivalent to <a id="idx:open4:1164"></a><a class="pred" href="IO.html#open/4">open/4</a> 
 with an empty option list.</dd>
 <dt class="pubdef"><a id="open_null_stream/1"><strong>open_null_stream</strong>(<var>--Stream</var>)</a></dt>
 <dd class="defbody">
@@ -553,13 +553,13 @@ write_length(Term, Len) :-
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="close/1"><strong>close</strong>(<var>+Stream</var>)</a></dt>
 <dd class="defbody">
 Close the specified stream. If <var>Stream</var> is not open, an 
-existence error is raised. See <a id="idx:streampair3:1164"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a> 
+existence error is raised. See <a id="idx:streampair3:1165"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a> 
 for the implications of closing a
 <em>stream pair</em>.
 
 <p>If the closed stream is the current input, output or error stream, 
 the stream alias is bound to the initial standard I/O streams of the 
-process. Calling <a id="idx:close1:1165"></a><a class="pred" href="IO.html#close/1">close/1</a> 
+process. Calling <a id="idx:close1:1166"></a><a class="pred" href="IO.html#close/1">close/1</a> 
 on the initial standard I/O streams of the process is a no-op for an 
 input stream and flushes an output stream without closing it.<sup class="fn">97<span class="fn-text">This 
 behaviour was defined with purely interactive usage of Prolog in mind. 
@@ -592,7 +592,7 @@ does not give other aliases.</span></sup></dd>
 <dd class="defbody">
 SWI-Prolog extension to query the buffering mode of this stream.
 <var>Buffering</var> is one of <code>full</code>, <code>line</code> or <code>false</code>. 
-See also <a id="idx:open4:1166"></a><a class="pred" href="IO.html#open/4">open/4</a>.</dd>
+See also <a id="idx:open4:1167"></a><a class="pred" href="IO.html#open/4">open/4</a>.</dd>
 <dt><strong>buffer_size</strong>(<var>Integer</var>)</dt>
 <dd class="defbody">
 SWI-Prolog extension to query the size of the I/O buffer associated to a 
@@ -605,7 +605,7 @@ opening the stream. See <a class="sec" href="widechars.html#sec:2.19.1.1">sectio
 2.19.1.1</a> for details.</dd>
 <dt><strong>close_on_abort</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
-Determine whether or not <a id="idx:abort0:1167"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a> 
+Determine whether or not <a id="idx:abort0:1168"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a> 
 closes the stream. By default streams are closed.</dd>
 <dt><strong>close_on_exec</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
@@ -624,12 +624,12 @@ SWI-Prolog.</dd>
 If <var>Stream</var> is an input stream, unify <var>E</var> with one of 
 the atoms <code>not</code>, <code>at</code> or <code>past</code>. See 
 also
-<a id="idx:atendofstream01:1168"></a><a class="pred" href="chario.html#at_end_of_stream/0">at_end_of_stream/[0,1]</a>.</dd>
+<a id="idx:atendofstream01:1169"></a><a class="pred" href="chario.html#at_end_of_stream/0">at_end_of_stream/[0,1]</a>.</dd>
 <dt><strong>eof_action</strong>(<var>A</var>)</dt>
 <dd class="defbody">
 Unify <var>A</var> with one of <code>eof_code</code>, <code>reset</code> 
 or
-<code>error</code>. See <a id="idx:open4:1169"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+<code>error</code>. See <a id="idx:open4:1170"></a><a class="pred" href="IO.html#open/4">open/4</a> 
 for details.</dd>
 <dt><strong>file_name</strong>(<var>Atom</var>)</dt>
 <dd class="defbody">
@@ -651,7 +651,7 @@ True when <var>Locale</var> is the current locale associated with the
 stream. See <a class="sec" href="locale.html#sec:4.23">section 4.23</a>.</dd>
 <dt><strong>mode</strong>(<var>IOMode</var>)</dt>
 <dd class="defbody">
-Unify <var>IOMode</var> to the mode given to <a id="idx:open4:1170"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+Unify <var>IOMode</var> to the mode given to <a id="idx:open4:1171"></a><a class="pred" href="IO.html#open/4">open/4</a> 
 for opening the stream. Values are: <code>read</code>, <code>write</code>, <code>append</code> 
 and the SWI-Prolog extension <code>update</code>.</dd>
 <dt><strong>newline</strong>(<var>NewlineMode</var>)</dt>
@@ -674,12 +674,12 @@ or
 <dd class="defbody">
 Unify <var>Pos</var> with the current stream position. A stream position 
 is an opaque term whose fields can be extracted using
-<a id="idx:streampositiondata3:1171"></a><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a>. 
-See also <a id="idx:setstreamposition2:1172"></a><a class="pred" href="IO.html#set_stream_position/2">set_stream_position/2</a>.</dd>
+<a id="idx:streampositiondata3:1172"></a><a class="pred" href="IO.html#stream_position_data/3">stream_position_data/3</a>. 
+See also <a id="idx:setstreamposition2:1173"></a><a class="pred" href="IO.html#set_stream_position/2">set_stream_position/2</a>.</dd>
 <dt><strong>reposition</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
 Unify <var>Bool</var> with <var>true</var> if the position of the stream 
-can be set (see <a id="idx:seek4:1173"></a><a class="pred" href="IO.html#seek/4">seek/4</a>). 
+can be set (see <a id="idx:seek4:1174"></a><a class="pred" href="IO.html#seek/4">seek/4</a>). 
 It is assumed the position can be set if the stream has a <em>seek-function</em> 
 and is not based on a POSIX file descriptor that is not associated to a 
 regular file.</dd>
@@ -695,11 +695,11 @@ character entity). The initial mode is <code>unicode</code> for the user
 streams and
 <code>error</code> for all other streams. See also <a class="sec" href="widechars.html#sec:2.19.1">section 
 2.19.1</a> and
-<a id="idx:setstream2:1174"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
+<a id="idx:setstream2:1175"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
 <dt><strong>timeout</strong>(<var>-Time</var>)</dt>
 <dd class="defbody">
 <var>Time</var> is the timeout currently associated with the stream. See
-<a id="idx:setstream2:1175"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
+<a id="idx:setstream2:1176"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
 with the same option. If no timeout is specified,
 <var>Time</var> is unified to the atom <code>infinite</code>.</dd>
 <dt><strong>type</strong>(<var>Type</var>)</dt>
@@ -708,7 +708,7 @@ Unify <var>Type</var> with <code>text</code> or <code>binary</code>.</dd>
 <dt><strong>tty</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
 This property is reported with <var>Bool</var> equal to <code>true</code> 
-if the stream is associated with a terminal. See also <a id="idx:setstream2:1176"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
+if the stream is associated with a terminal. See also <a id="idx:setstream2:1177"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>.</dd>
 <dt><strong>write_errors</strong>(<var>Atom</var>)</dt>
 <dd class="defbody">
 <var>Atom</var> is one of <code>error</code> (default) or <code>ignore</code>. 
@@ -722,7 +722,7 @@ cases write errors may be ignored on <code>user_error</code>.
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="current_stream/3"><strong>current_stream</strong>(<var>?Object, 
 ?Mode, ?Stream</var>)</a></dt>
 <dd class="defbody">
-The predicate <a id="idx:currentstream3:1177"></a><a class="pred" href="IO.html#current_stream/3">current_stream/3</a> 
+The predicate <a id="idx:currentstream3:1178"></a><a class="pred" href="IO.html#current_stream/3">current_stream/3</a> 
 is used to access the status of a stream as well as to generate all open 
 streams. <var>Object</var> is the name of the file opened if the stream 
 refers to an open file, an integer file descriptor if the stream 
@@ -731,7 +731,7 @@ if the stream refers to some other object.
 <var>Mode</var> is one of <code>read</code> or <code>write</code>.
 
 <p>This predicate is deprecated. New code should use the ISO predicate
-<a id="idx:streamproperty2:1178"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>.</dd>
+<a id="idx:streamproperty2:1179"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>.</dd>
 <dt class="pubdef"><a id="is_stream/1"><strong>is_stream</strong>(<var>+Term</var>)</a></dt>
 <dd class="defbody">
 True if <var>Term</var> is a stream name or valid stream handle. This 
@@ -751,7 +751,7 @@ both on streams and stream pairs.
 
 <p>Stream-pairs can be used by all I/O operations on streams, where the 
 operation selects the appropriate member of the pair. The predicate
-<a id="idx:close1:1179"></a><a class="pred" href="IO.html#close/1">close/1</a> 
+<a id="idx:close1:1180"></a><a class="pred" href="IO.html#close/1">close/1</a> 
 closes the still open streams of the pair.<sup class="fn">98<span class="fn-text">As 
 of version 7.1.19, it is allowed to close one of the members of the 
 stream directly and close the pair later.</span></sup> The output stream 
@@ -762,17 +762,17 @@ if both streams were closed successfully.</dd>
 +Pos</var>)</a></dt>
 <dd class="defbody">
 Set the current position of <var>Stream</var> to <var>Pos</var>. <var>Pos</var> 
-is a term as returned by <a id="idx:streamproperty2:1180"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
-using the <code>position(Pos)</code> property. See also <a id="idx:seek4:1181"></a><a class="pred" href="IO.html#seek/4">seek/4</a>.</dd>
+is a term as returned by <a id="idx:streamproperty2:1181"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+using the <code>position(Pos)</code> property. See also <a id="idx:seek4:1182"></a><a class="pred" href="IO.html#seek/4">seek/4</a>.</dd>
 <dt class="pubdef"><a id="stream_position_data/3"><strong>stream_position_data</strong>(<var>?Field, 
 +Pos, -Data</var>)</a></dt>
 <dd class="defbody">
-Extracts information from the opaque stream position term as returned by <a id="idx:streamproperty2:1182"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+Extracts information from the opaque stream position term as returned by <a id="idx:streamproperty2:1183"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
 requesting the <code>position(Pos)</code> property.
 <var>Field</var> is one of <code>line_count</code>, <code>line_position</code>,
-<code>char_count</code> or <code>byte_count</code>. See also <a id="idx:linecount2:1183"></a><a class="pred" href="streamstat.html#line_count/2">line_count/2</a>,
-<a id="idx:lineposition2:1184"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a>, <a id="idx:charactercount2:1185"></a><a class="pred" href="streamstat.html#character_count/2">character_count/2</a> 
-and <a id="idx:bytecount2:1186"></a><a class="pred" href="streamstat.html#byte_count/2">byte_count/2</a>.<sup class="fn">99<span class="fn-text">Introduced 
+<code>char_count</code> or <code>byte_count</code>. See also <a id="idx:linecount2:1184"></a><a class="pred" href="streamstat.html#line_count/2">line_count/2</a>,
+<a id="idx:lineposition2:1185"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a>, <a id="idx:charactercount2:1186"></a><a class="pred" href="streamstat.html#character_count/2">character_count/2</a> 
+and <a id="idx:bytecount2:1187"></a><a class="pred" href="streamstat.html#byte_count/2">byte_count/2</a>.<sup class="fn">99<span class="fn-text">Introduced 
 in version 5.6.4 after extending the position term with a byte count. 
 Compatible with SICStus Prolog.</span></sup></dd>
 <dt class="pubdef"><a id="seek/4"><strong>seek</strong>(<var>+Stream, 
@@ -788,17 +788,17 @@ offset, relative to the start of the stream.
 text files using 2-byte Unicode encoding (2 bytes) or <em>wchar</em> 
 encoding (sizeof(wchar_t)). The latter guarantees comfortable 
 interaction with wide-character text objects. Otherwise, the use of
-<a id="idx:seek4:1187"></a><a class="pred" href="IO.html#seek/4">seek/4</a> 
-on non-binary files (see <a id="idx:open4:1188"></a><a class="pred" href="IO.html#open/4">open/4</a>) 
+<a id="idx:seek4:1188"></a><a class="pred" href="IO.html#seek/4">seek/4</a> 
+on non-binary files (see <a id="idx:open4:1189"></a><a class="pred" href="IO.html#open/4">open/4</a>) 
 is of limited use, especially when using multi-byte text encodings (e.g. UTF-8) 
 or multi-byte newline files (e.g. DOS/Windows). On text files, 
-SWI-Prolog offers reliable backup to an old position using <a id="idx:streamproperty2:1189"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+SWI-Prolog offers reliable backup to an old position using <a id="idx:streamproperty2:1190"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
 and
-<a id="idx:setstreamposition2:1190"></a><a class="pred" href="IO.html#set_stream_position/2">set_stream_position/2</a>. 
+<a id="idx:setstreamposition2:1191"></a><a class="pred" href="IO.html#set_stream_position/2">set_stream_position/2</a>. 
 Skipping <var>N</var> character codes is achieved calling
-<a id="idx:getcode2:1191"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> <var>N</var> 
-times or using <a id="idx:copystreamdata3:1192"></a><a class="pred" href="chario.html#copy_stream_data/3">copy_stream_data/3</a>, 
-directing the output to a null stream (see <a id="idx:opennullstream1:1193"></a><a class="pred" href="IO.html#open_null_stream/1">open_null_stream/1</a>). 
+<a id="idx:getcode2:1192"></a><a class="pred" href="chario.html#get_code/2">get_code/2</a> <var>N</var> 
+times or using <a id="idx:copystreamdata3:1193"></a><a class="pred" href="chario.html#copy_stream_data/3">copy_stream_data/3</a>, 
+directing the output to a null stream (see <a id="idx:opennullstream1:1194"></a><a class="pred" href="IO.html#open_null_stream/1">open_null_stream/1</a>). 
 If the seek modifies the current location, the line number and character 
 position in the line are set to 0.
 
@@ -806,32 +806,32 @@ position in the line are set to 0.
 is raised. If applying the offset would result in a file position less 
 than zero, a <code>domain_error</code> is raised. Behaviour when seeking 
 to positions beyond the size of the underlying object depend on the 
-object and possibly the operating system. The predicate <a id="idx:seek4:1194"></a><a class="pred" href="IO.html#seek/4">seek/4</a> 
+object and possibly the operating system. The predicate <a id="idx:seek4:1195"></a><a class="pred" href="IO.html#seek/4">seek/4</a> 
 is compatible with Quintus Prolog, though the error conditions and 
-signalling is ISO compliant. See also <a id="idx:streamproperty2:1195"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
-and <a id="idx:setstreamposition2:1196"></a><a class="pred" href="IO.html#set_stream_position/2">set_stream_position/2</a>.</dd>
+signalling is ISO compliant. See also <a id="idx:streamproperty2:1196"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+and <a id="idx:setstreamposition2:1197"></a><a class="pred" href="IO.html#set_stream_position/2">set_stream_position/2</a>.</dd>
 <dt class="pubdef"><a id="set_stream/2"><strong>set_stream</strong>(<var>+Stream, 
 +Attribute</var>)</a></dt>
 <dd class="defbody">
 Modify an attribute of an existing stream. <var>Attribute</var> 
-specifies the stream property to set. If stream is a <em>pair</em> (see <a id="idx:streampair3:1197"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a>) 
+specifies the stream property to set. If stream is a <em>pair</em> (see <a id="idx:streampair3:1198"></a><a class="pred" href="IO.html#stream_pair/3">stream_pair/3</a>) 
 both streams are modified, unless the property is only meaningful on one 
 of the streams or setting both is not meaningful. In particular,
 <code>eof_action</code> only applies to the <em>read</em> stream,
 <code>representation_errors</code> only applies to the <em>write</em> 
 stream and trying to set <code>alias</code> or <code>line_position</code> 
 on a pair results in a <code>permission_error</code> exception. See also
-<a id="idx:streamproperty2:1198"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
-and <a id="idx:open4:1199"></a><a class="pred" href="IO.html#open/4">open/4</a>.
+<a id="idx:streamproperty2:1199"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+and <a id="idx:open4:1200"></a><a class="pred" href="IO.html#open/4">open/4</a>.
 
 <dl class="latex">
 <dt><strong>alias</strong>(<var>AliasName</var>)</dt>
 <dd class="defbody">
 Set the alias of an already created stream. If <var>AliasName</var> is 
 the name of one of the standard streams, this stream is rebound. Thus, <code>set_stream(S, 
-current_input)</code> is the same as <a id="idx:setinput1:1200"></a><a class="pred" href="IO.html#set_input/1">set_input/1</a>, 
+current_input)</code> is the same as <a id="idx:setinput1:1201"></a><a class="pred" href="IO.html#set_input/1">set_input/1</a>, 
 and by setting the alias of a stream to <code>user_input</code>, etc., 
-all user terminal input is read from this stream. See also <a id="idx:interactor0:1201"></a><a class="pred" href="thutil.html#interactor/0">interactor/0</a>.</dd>
+all user terminal input is read from this stream. See also <a id="idx:interactor0:1202"></a><a class="pred" href="thutil.html#interactor/0">interactor/0</a>.</dd>
 <dt><strong>buffer</strong>(<var>Buffering</var>)</dt>
 <dd class="defbody">
 Set the buffering mode of an already created stream. Buffering is one of <code>full</code>, <code>line</code> 
@@ -842,11 +842,11 @@ Set the size of the I/O buffer of the underlying stream to <var>Size</var>
 bytes.</dd>
 <dt><strong>close_on_abort</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
-Determine whether or not the stream is closed by <a id="idx:abort0:1202"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>. 
+Determine whether or not the stream is closed by <a id="idx:abort0:1203"></a><a class="pred" href="toplevel.html#abort/0">abort/0</a>. 
 By default, streams are closed.</dd>
 <dt><strong>close_on_exec</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
-Set the <code>close_on_exec</code> property. See <a id="idx:streamproperty2:1203"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>.</dd>
+Set the <code>close_on_exec</code> property. See <a id="idx:streamproperty2:1204"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>.</dd>
 <dt><strong>encoding</strong>(<var>Atom</var>)</dt>
 <dd class="defbody">
 Defines the mapping between bytes and character codes used for the 
@@ -873,8 +873,8 @@ Set the line position attribute of the stream. This feature is intended
 to correct position management of the stream after sending a terminal 
 escape sequence (e.g., setting ANSI character attributes). Setting this 
 attribute raises a permission error if the stream does not record 
-positions. See <a id="idx:lineposition2:1204"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a> 
-and <a id="idx:streamproperty2:1205"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+positions. See <a id="idx:lineposition2:1205"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a> 
+and <a id="idx:streamproperty2:1206"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
 (property <code>position</code>).</dd>
 <dt><strong>locale</strong>(<var>+Locale</var>)</dt>
 <dd class="defbody">
@@ -883,7 +883,7 @@ Change the locale of the stream. See <a class="sec" href="locale.html#sec:4.23">
 <dt><strong>newline</strong>(<var>NewlineMode</var>)</dt>
 <dd class="defbody">
 Set input or output translation for newlines. See corresponding
-<a id="idx:streamproperty2:1206"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+<a id="idx:streamproperty2:1207"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
 for details. In addition to the detected modes, an input stream can be 
 set in mode <code>detect</code>. It will be set to <code>dos</code> if a <code>\r</code> 
 character was removed.</dd>
@@ -892,9 +892,9 @@ character was removed.</dd>
 This option can be used to make streams generate an exception if it 
 takes longer than <var>Seconds</var> before any new data arrives at the 
 stream. The value <var>infinite</var> (default) makes the stream block 
-indefinitely. Like <a id="idx:waitforinput3:1207"></a><a class="pred" href="streamstat.html#wait_for_input/3">wait_for_input/3</a>, 
+indefinitely. Like <a id="idx:waitforinput3:1208"></a><a class="pred" href="streamstat.html#wait_for_input/3">wait_for_input/3</a>, 
 this call only applies to streams that support the select() system call. 
-For further information about timeout handling, see <a id="idx:waitforinput3:1208"></a><a class="pred" href="streamstat.html#wait_for_input/3">wait_for_input/3</a>. 
+For further information about timeout handling, see <a id="idx:waitforinput3:1209"></a><a class="pred" href="streamstat.html#wait_for_input/3">wait_for_input/3</a>. 
 The exception is of the form
 <blockquote>
 <code>error(<code>timeout_error(read, Stream)</code>, _)</code>
@@ -903,20 +903,20 @@ The exception is of the form
 <dt><strong>type</strong>(<var>Type</var>)</dt>
 <dd class="defbody">
 Set the type of the stream to one of <code>text</code> or <code>binary</code>. 
-See also <a id="idx:open4:1209"></a><a class="pred" href="IO.html#open/4">open/4</a> 
+See also <a id="idx:open4:1210"></a><a class="pred" href="IO.html#open/4">open/4</a> 
 and the <code>encoding</code> property of streams. Switching to <code>binary</code> 
 sets the encoding to <code>octet</code>. Switching to
 <code>text</code> sets the encoding to the default text encoding.</dd>
 <dt><strong>record_position</strong>(<var>Bool</var>)</dt>
 <dd class="defbody">
-Do/do not record the line count and line position (see <a id="idx:linecount2:1210"></a><a class="pred" href="streamstat.html#line_count/2">line_count/2</a> 
-and <a id="idx:lineposition2:1211"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a>). 
+Do/do not record the line count and line position (see <a id="idx:linecount2:1211"></a><a class="pred" href="streamstat.html#line_count/2">line_count/2</a> 
+and <a id="idx:lineposition2:1212"></a><a class="pred" href="streamstat.html#line_position/2">line_position/2</a>). 
 Calling <code>set_stream(S, record_position(true))</code> resets the 
 position the start of line&nbsp;1.</dd>
 <dt><strong>representation_errors</strong>(<var>Mode</var>)</dt>
 <dd class="defbody">
 Change the behaviour when writing characters to the stream that cannot 
-be represented by the encoding. See also <a id="idx:streamproperty2:1212"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
+be represented by the encoding. See also <a id="idx:streamproperty2:1213"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a> 
 and
 <a class="sec" href="widechars.html#sec:2.19.1">section 2.19.1</a>.</dd>
 <dt><strong>tty</strong>(<var>Bool</var>)</dt>
@@ -924,7 +924,7 @@ and
 Modify whether Prolog thinks there is a terminal (i.e. human 
 interaction) connected to this stream. On Unix systems the initial value 
 comes from isatty(). On Windows, the initial user streams are supposed 
-to be associated to a terminal. See also <a id="idx:streamproperty2:1213"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>.
+to be associated to a terminal. See also <a id="idx:streamproperty2:1214"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>.
 </dd>
 </dl>
 
@@ -942,8 +942,8 @@ destination and linked to <code>user_error</code>. Otherwise <var>Error</var>
 is used for
 <code>user_error</code>. Output buffering for <var>Out</var> is set to
 <code>line</code> and buffering on <var>Error</var> is disabled. See 
-also <a id="idx:prolog0:1214"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
-and <a id="idx:setstream2:1215"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>. 
+also <a id="idx:prolog0:1215"></a><a class="pred" href="toplevel.html#prolog/0">prolog/0</a> 
+and <a id="idx:setstream2:1216"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a>. 
 The <em>clib</em> package provides the library <code>library(prolog_server)</code>, 
 creating a TCP/IP server for creating an interactive session to Prolog.</dd>
 <dt class="pubdef"><a id="set_system_IO/3"><strong>set_system_IO</strong>(<var>+In, 
@@ -961,13 +961,13 @@ disabled. The operating system I/O streams are shared across all
 threads. The three streams must be related to a <em>file descriptor</em> 
 or a
 <code>domain_error</code> <code>file_stream</code> is raised. See also
-<a id="idx:streamproperty2:1216"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>, 
+<a id="idx:streamproperty2:1217"></a><a class="pred" href="IO.html#stream_property/2">stream_property/2</a>, 
 property <code>file_no(Fd)</code>.
 
-<p>Where <a id="idx:setprologIO3:1217"></a><a class="pred" href="IO.html#set_prolog_IO/3">set_prolog_IO/3</a> 
+<p>Where <a id="idx:setprologIO3:1218"></a><a class="pred" href="IO.html#set_prolog_IO/3">set_prolog_IO/3</a> 
 rebinds the Prolog streams <code>user_input</code>,
 <code>user_output</code> and <code>user_error</code> for a specific 
-thread providing a private interactive session, <a id="idx:setsystemIO3:1218"></a><a class="pred" href="IO.html#set_system_IO/3">set_system_IO/3</a> 
+thread providing a private interactive session, <a id="idx:setsystemIO3:1219"></a><a class="pred" href="IO.html#set_system_IO/3">set_system_IO/3</a> 
 rebinds the shared console I/O and also captures Prolog kernel events 
 (e.g., low-level debug messages, unexpected events) as well as messages 
 from foreign libraries that are directly written to <code>stdout</code> 
@@ -989,11 +989,11 @@ I/O</span></a></h3>
 compatible with Edinburgh DEC-10 and C-Prolog. The reading and writing 
 predicates refer to, resp., the <em>current</em> input and output 
 streams. Initially these streams are connected to the terminal. The 
-current output stream is changed using <a id="idx:tell1:1219"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
-or <a id="idx:append1:1220"></a><a class="pred" href="IO.html#append/1">append/1</a>. 
-The current input stream is changed using <a id="idx:see1:1221"></a><a class="pred" href="IO.html#see/1">see/1</a>. 
-The stream's current value can be obtained using <a id="idx:telling1:1222"></a><a class="pred" href="IO.html#telling/1">telling/1</a> 
-for output and <a id="idx:seeing1:1223"></a><a class="pred" href="IO.html#seeing/1">seeing/1</a> 
+current output stream is changed using <a id="idx:tell1:1220"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
+or <a id="idx:append1:1221"></a><a class="pred" href="IO.html#append/1">append/1</a>. 
+The current input stream is changed using <a id="idx:see1:1222"></a><a class="pred" href="IO.html#see/1">see/1</a>. 
+The stream's current value can be obtained using <a id="idx:telling1:1223"></a><a class="pred" href="IO.html#telling/1">telling/1</a> 
+for output and <a id="idx:seeing1:1224"></a><a class="pred" href="IO.html#seeing/1">seeing/1</a> 
 for input.
 
 <p>Source and destination are either a file, <code>user</code>, or a 
@@ -1033,7 +1033,7 @@ collect_wd([C|R]) :-
 collect_wd([]).
 </pre>
 
-<p>The effect of <a id="idx:tell1:1224"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
+<p>The effect of <a id="idx:tell1:1225"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
 is not undone on backtracking, and since the stream handle is not 
 specified explicitly in further I/O operations when using 
 Edinburgh-style I/O, you may write to unintended streams more easily 
@@ -1046,8 +1046,8 @@ writes both "a" and "b" into the file&lsquo;out' :
 
 <h4>Compatibility notes</h4>
 
-<p>Unlike Edinburgh Prolog systems, <a id="idx:telling1:1225"></a><a class="pred" href="IO.html#telling/1">telling/1</a> 
-and <a id="idx:seeing1:1226"></a><a class="pred" href="IO.html#seeing/1">seeing/1</a> 
+<p>Unlike Edinburgh Prolog systems, <a id="idx:telling1:1226"></a><a class="pred" href="IO.html#telling/1">telling/1</a> 
+and <a id="idx:seeing1:1227"></a><a class="pred" href="IO.html#seeing/1">seeing/1</a> 
 do not return the filename of the current input/output but rather the 
 stream identifier, to ensure the design pattern below works under all 
 circumstances:<sup class="fn">102<span class="fn-text">Filenames can be 
@@ -1061,15 +1061,15 @@ ambiguous and SWI-Prolog streams can refer to much more than just files.</span><
         ...,
 </pre>
 
-<p>The predicates <a id="idx:tell1:1227"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
-and <a id="idx:see1:1228"></a><a class="pred" href="IO.html#see/1">see/1</a> 
+<p>The predicates <a id="idx:tell1:1228"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
+and <a id="idx:see1:1229"></a><a class="pred" href="IO.html#see/1">see/1</a> 
 first check for <code>user</code>, the
 <code>pipe(command)</code> and a stream handle. Otherwise, if the 
 argument is an atom it is first compared to open streams associated to a 
 file with <em>exactly</em> the same name. If such a stream exists, 
 created using
-<a id="idx:tell1:1229"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
-or <a id="idx:see1:1230"></a><a class="pred" href="IO.html#see/1">see/1</a>, 
+<a id="idx:tell1:1230"></a><a class="pred" href="IO.html#tell/1">tell/1</a> 
+or <a id="idx:see1:1231"></a><a class="pred" href="IO.html#see/1">see/1</a>, 
 output (input) is switched to the open stream. Otherwise a file with the 
 specified name is opened.
 
@@ -1084,33 +1084,33 @@ consider using the ISO I/O predicates defined in <a class="sec" href="IO.html#se
 <dt class="pubdef"><a id="see/1"><strong>see</strong>(<var>+SrcDest</var>)</a></dt>
 <dd class="defbody">
 Open <var>SrcDest</var> for reading and make it the current input (see
-<a id="idx:setinput1:1231"></a><a class="pred" href="IO.html#set_input/1">set_input/1</a>). 
+<a id="idx:setinput1:1232"></a><a class="pred" href="IO.html#set_input/1">set_input/1</a>). 
 If <var>SrcDest</var> is a stream handle, just make this stream the 
 current input. See the introduction of <a class="sec" href="IO.html#sec:4.17.3">section 
 4.17.3</a> for details.</dd>
 <dt class="pubdef"><a id="tell/1"><strong>tell</strong>(<var>+SrcDest</var>)</a></dt>
 <dd class="defbody">
 Open <var>SrcDest</var> for writing and make it the current output (see
-<a id="idx:setoutput1:1232"></a><a class="pred" href="IO.html#set_output/1">set_output/1</a>). 
+<a id="idx:setoutput1:1233"></a><a class="pred" href="IO.html#set_output/1">set_output/1</a>). 
 If <var>SrcDest</var> is a stream handle, just make this stream the 
 current output. See the introduction of <a class="sec" href="IO.html#sec:4.17.3">section 
 4.17.3</a> for details.</dd>
 <dt class="pubdef"><a id="append/1"><strong>append</strong>(<var>+File</var>)</a></dt>
 <dd class="defbody">
-Similar to <a id="idx:tell1:1233"></a><a class="pred" href="IO.html#tell/1">tell/1</a>, 
+Similar to <a id="idx:tell1:1234"></a><a class="pred" href="IO.html#tell/1">tell/1</a>, 
 but positions the file pointer at the end of <var>File</var> rather than 
 truncating an existing file. The pipe construct is not accepted by this 
 predicate.</dd>
 <dt class="pubdef"><a id="seeing/1"><strong>seeing</strong>(<var>?SrcDest</var>)</a></dt>
 <dd class="defbody">
-Same as <a id="idx:currentinput1:1234"></a><a class="pred" href="IO.html#current_input/1">current_input/1</a>, 
+Same as <a id="idx:currentinput1:1235"></a><a class="pred" href="IO.html#current_input/1">current_input/1</a>, 
 except that <code>user</code> is returned if the current input is the 
 stream <code>user_input</code> to improve compatibility with traditional 
 Edinburgh I/O. See the introduction of
 <a class="sec" href="IO.html#sec:4.17.3">section 4.17.3</a> for details.</dd>
 <dt class="pubdef"><a id="telling/1"><strong>telling</strong>(<var>?SrcDest</var>)</a></dt>
 <dd class="defbody">
-Same as <a id="idx:currentoutput1:1235"></a><a class="pred" href="IO.html#current_output/1">current_output/1</a>, 
+Same as <a id="idx:currentoutput1:1236"></a><a class="pred" href="IO.html#current_output/1">current_output/1</a>, 
 except that <code>user</code> is returned if the current output is the 
 stream <code>user_output</code> to improve compatibility with 
 traditional Edinburgh I/O. See the introduction of
@@ -1143,7 +1143,7 @@ read, Stream), set_input(Stream)</code> is equivalent to <code>see(file)</code>.
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="set_output/1"><strong>set_output</strong>(<var>+Stream</var>)</a></dt>
 <dd class="defbody">
 Set the current output stream to become <var>Stream</var>. See also
-<a id="idx:withoutputto2:1236"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
+<a id="idx:withoutputto2:1237"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a>.
 </dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="current_input/1"><strong>current_input</strong>(<var>-Stream</var>)</a></dt>
 <dd class="defbody">
@@ -1165,13 +1165,13 @@ IRI schemas</span></a></h3>
 <em>IRIs</em>. An IRI starts with &lt;<var>scheme</var>&gt;<code>://</code>, 
 where &lt;<var>scheme</var>&gt; is a non-empty sequence of lowercase 
 ASCII letters. After detecting the scheme the file manipulation 
-predicates call a hook that is registered using <a id="idx:registeririscheme3:1237"></a><a class="pred" href="IO.html#register_iri_scheme/3">register_iri_scheme/3</a>.
+predicates call a hook that is registered using <a id="idx:registeririscheme3:1238"></a><a class="pred" href="IO.html#register_iri_scheme/3">register_iri_scheme/3</a>.
 
 <p>Hooking the file operations using extensible IRI schemas allows us to 
 place any resource that is accessed through Prolog I/O predicates on 
 arbitrary devices such as web servers or the ZIP archive used to store 
 program resources (see <a class="sec" href="saved-states.html#sec:13.2">section 
-13.2</a>). This is typically combined with <a id="idx:filesearchpath2:1238"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
+13.2</a>). This is typically combined with <a id="idx:filesearchpath2:1239"></a><a class="pred" href="consulting.html#file_search_path/2">file_search_path/2</a> 
 declarations to switch between accessing a set of resources from local 
 files, from the program resource database, from a web-server, etc.
 
@@ -1181,7 +1181,7 @@ files, from the program resource database, from a web-server, etc.
 <dd class="defbody">
 Register <var>Hook</var> to be called by all file handling predicates if 
 a name that starts with <var>Scheme</var>:// is encountered. The
-<var>Hook</var> is called by <a id="idx:call4:1239"></a><span class="pred-ext">call/4</span> 
+<var>Hook</var> is called by <a id="idx:call4:1240"></a><span class="pred-ext">call/4</span> 
 using the <em>operation</em>, the
 <var>IRI</var> and a term that receives the <i>result</i> of the 
 operation. The following operations are defined:
@@ -1189,22 +1189,22 @@ operation. The following operations are defined:
 <dl class="latex">
 <dt><strong>open</strong>(<var>Mode,Options</var>)</dt>
 <dd class="defbody">
-Called by <a id="idx:open3:1240"></a><a class="pred" href="IO.html#open/3">open/3</a>,4. 
+Called by <a id="idx:open3:1241"></a><a class="pred" href="IO.html#open/3">open/3</a>,4. 
 The result argument must be unified with a stream.</dd>
 <dt><strong>access</strong>(<var>Mode</var>)</dt>
 <dd class="defbody">
-Called by <a id="idx:accessfile2:1241"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>, <a id="idx:existsfile1:1242"></a><a class="pred" href="files.html#exists_file/1">exists_file/1</a> 
+Called by <a id="idx:accessfile2:1242"></a><a class="pred" href="files.html#access_file/2">access_file/2</a>, <a id="idx:existsfile1:1243"></a><a class="pred" href="files.html#exists_file/1">exists_file/1</a> 
 (<var>Mode</var> is <code>file</code>) and
-<a id="idx:existsdirectory1:1243"></a><a class="pred" href="files.html#exists_directory/1">exists_directory/1</a> 
+<a id="idx:existsdirectory1:1244"></a><a class="pred" href="files.html#exists_directory/1">exists_directory/1</a> 
 (<var>Mode</var> is <code>directory</code>). The result argument must be 
 unified with a boolean.</dd>
 <dt><strong>time</strong></dt>
 <dd class="defbody">
-Called by <a id="idx:timefile2:1244"></a><a class="pred" href="files.html#time_file/2">time_file/2</a>. 
+Called by <a id="idx:timefile2:1245"></a><a class="pred" href="files.html#time_file/2">time_file/2</a>. 
 The result must be unified with a time stamp.</dd>
 <dt><strong>size</strong></dt>
 <dd class="defbody">
-Called by <a id="idx:sizefile2:1245"></a><a class="pred" href="files.html#size_file/2">size_file/2</a>. 
+Called by <a id="idx:sizefile2:1246"></a><a class="pred" href="files.html#size_file/2">size_file/2</a>. 
 The result must be unified with an integer representing the size in 
 bytes.
 </dd>
@@ -1222,13 +1222,13 @@ onto atoms, code-lists, etc.</span></a></h3>
 <dt class="pubdef"><a id="with_output_to/2"><strong>with_output_to</strong>(<var>+Output, 
 :Goal</var>)</a></dt>
 <dd class="defbody">
-Run <var>Goal</var> as <a id="idx:once1:1246"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
+Run <var>Goal</var> as <a id="idx:once1:1247"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
 while characters written to the current output are sent to <var>Output</var>. 
 The predicate is SWI-Prolog-specific, inspired by various posts to the 
 mailinglist. It provides a flexible replacement for predicates such as 
-sformat/3 , <a id="idx:swritef3:1247"></a><a class="pred" href="format.html#swritef/3">swritef/3</a>,
-<a id="idx:termtoatom2:1248"></a><a class="pred" href="manipatom.html#term_to_atom/2">term_to_atom/2</a>, <a id="idx:atomnumber2:1249"></a><a class="pred" href="manipatom.html#atom_number/2">atom_number/2</a> 
-converting numbers to atoms, etc. The predicate <a id="idx:format3:1250"></a><a class="pred" href="format.html#format/3">format/3</a> 
+sformat/3 , <a id="idx:swritef3:1248"></a><a class="pred" href="format.html#swritef/3">swritef/3</a>,
+<a id="idx:termtoatom2:1249"></a><a class="pred" href="manipatom.html#term_to_atom/2">term_to_atom/2</a>, <a id="idx:atomnumber2:1250"></a><a class="pred" href="manipatom.html#atom_number/2">atom_number/2</a> 
+converting numbers to atoms, etc. The predicate <a id="idx:format3:1251"></a><a class="pred" href="format.html#format/3">format/3</a> 
 accepts the same terms as output argument.
 
 <p>Applications should generally avoid creating atoms by breaking and 
@@ -1250,7 +1250,7 @@ X = [104, 101, 108, 108, 111]
 <p><var>Output</var> takes one of the shapes below. Except for the 
 first, the system creates a temporary stream using the <code>wchar_t</code> 
 internal encoding that points at a memory buffer. The encoding cannot be 
-changed and an attempt to call <a id="idx:setstream2:1251"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
+changed and an attempt to call <a id="idx:setstream2:1252"></a><a class="pred" href="IO.html#set_stream/2">set_stream/2</a> 
 using <code>encoding(Encoding)</code> results in a <code>permission_error</code> 
 exception.
 
@@ -1258,9 +1258,9 @@ exception.
 <dt><b>A Stream handle or alias</b></dt>
 <dd class="defbody">
 Temporarily switch current output to the given stream. Redirection using
-<a id="idx:withoutputto2:1252"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a> 
+<a id="idx:withoutputto2:1253"></a><a class="pred" href="IO.html#with_output_to/2">with_output_to/2</a> 
 guarantees the original output is restored, also if
-<var>Goal</var> fails or raises an exception. See also <a id="idx:callcleanup2:1253"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a>.</dd>
+<var>Goal</var> fails or raises an exception. See also <a id="idx:callcleanup2:1254"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a>.</dd>
 <dt><strong>atom</strong>(<var>-Atom</var>)</dt>
 <dd class="defbody">
 Create an atom from the emitted characters. Please note the remark 
@@ -1272,14 +1272,14 @@ Create a string object as defined in <a class="sec" href="string.html#sec:5.2">s
 <dt><strong>codes</strong>(<var>-Codes</var>)</dt>
 <dd class="defbody">
 Create a list of character codes from the emitted characters, similar to
-<a id="idx:atomcodes2:1254"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>.</dd>
+<a id="idx:atomcodes2:1255"></a><a class="pred" href="manipatom.html#atom_codes/2">atom_codes/2</a>.</dd>
 <dt><strong>codes</strong>(<var>-Codes, -Tail</var>)</dt>
 <dd class="defbody">
 Create a list of character codes as a difference list.</dd>
 <dt><strong>chars</strong>(<var>-Chars</var>)</dt>
 <dd class="defbody">
 Create a list of one-character atoms from the emitted characters, 
-similar to <a id="idx:atomchars2:1255"></a><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a>.</dd>
+similar to <a id="idx:atomchars2:1256"></a><a class="pred" href="manipatom.html#atom_chars/2">atom_chars/2</a>.</dd>
 <dt><strong>chars</strong>(<var>-Chars, -Tail</var>)</dt>
 <dd class="defbody">
 Create a list of one-character atoms as a difference list.
@@ -1300,20 +1300,20 @@ variables. Library <code>library(fastrw)</code> is a SICSTus/Ciao
 compatible library that extends the core primitives described below.
 
 <p>The binary representation the same as used by <a class="func" href="foreigninclude.html#PL_record_external()">PL_record_external()</a>. 
-The use of these primitives instead of using <a id="idx:writecanonical2:1256"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a> 
+The use of these primitives instead of using <a id="idx:writecanonical2:1257"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a> 
 has advantages and disadvantages. Below are the main considerations:
 
 <p>
 <ul class="latex">
-<li>Using <a id="idx:writecanonical2:1257"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a> 
+<li>Using <a id="idx:writecanonical2:1258"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a> 
 allows or exchange of terms with other Prolog systems. The format is 
 stable and, as it is text based, it can be inspected and corrected.
 <li>Using the binary format improves the performance roughly 3 times.
 <li>The size of both representations is comparable.
 <li>The binary format can deal with cycles, sharing and attributes. 
-Special precautions are needed to transfer such terms using <a id="idx:writecanonical2:1258"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a>. 
-See <a id="idx:termfactorized3:1259"></a><a class="pred" href="terms.html#term_factorized/3">term_factorized/3</a> 
-and <a id="idx:copyterm3:1260"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>.
+Special precautions are needed to transfer such terms using <a id="idx:writecanonical2:1259"></a><a class="pred" href="termrw.html#write_canonical/2">write_canonical/2</a>. 
+See <a id="idx:termfactorized3:1260"></a><a class="pred" href="terms.html#term_factorized/3">term_factorized/3</a> 
+and <a id="idx:copyterm3:1261"></a><a class="pred" href="attvar.html#copy_term/3">copy_term/3</a>.
 <li>In the current version, reading the binary format has only 
 incomplete consistency checks. This implies a user must be able to <b>trust 
 the source</b> as crafted messages may compromise the reading Prolog 
@@ -1336,7 +1336,7 @@ stream.</dd>
 <dd class="defbody">
 Read <var>Term</var> using the fast serialization format from the
 <var>Input</var> stream. <var>Input</var> <em>must</em> be a binary 
-stream.<sup class="fn">bug<span class="fn-text">The predicate <a id="idx:fastread2:1261"></a><a class="pred" href="IO.html#fast_read/2">fast_read/2</a> 
+stream.<sup class="fn">bug<span class="fn-text">The predicate <a id="idx:fastread2:1262"></a><a class="pred" href="IO.html#fast_read/2">fast_read/2</a> 
 may crash on arbitrary input.</span></sup>
 </dd>
 </dl>

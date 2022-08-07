@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.27</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.27</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -265,10 +265,10 @@ If
 =&lt;<var>High</var></var>. When <var>Value</var> is a variable it is 
 successively bound to all integers between <var>Low</var> and <var>High</var>. 
 If <var>High</var> is <code>inf</code> or
-<code>infinite</code><sup class="fn">118<span class="fn-text">We prefer <code>infinite</code>, 
+<code>infinite</code><sup class="fn">119<span class="fn-text">We prefer <code>infinite</code>, 
 but some other Prolog systems already use <code>inf</code> for infinity; 
 we accept both for the time being.</span></sup>
-<a id="idx:between3:1553"></a><a class="pred" href="arith.html#between/3">between/3</a> 
+<a id="idx:between3:1556"></a><a class="pred" href="arith.html#between/3">between/3</a> 
 is true iff <var><var>Value</var> &gt;=<var>Low</var></var>, a feature 
 that is particularly interesting for generating integers from a certain 
 value.</dd>
@@ -279,10 +279,10 @@ True if <var><var>Int2</var> = <var>Int1</var> + 1</var> and <var><var>Int1</var
 &gt;= 0</var>. At least one of the arguments must be instantiated to a 
 natural number. This predicate raises the domain error <code>not_less_than_zero</code> 
 if called with a negative integer. E.g. <code>succ(X, 0)</code> fails 
-silently and <code>succ(X, -1)</code> raises a domain error.<sup class="fn">119<span class="fn-text">The 
+silently and <code>succ(X, -1)</code> raises a domain error.<sup class="fn">120<span class="fn-text">The 
 behaviour to deal with natural numbers only was defined by Richard 
 O'Keefe to support the common count-down-to-zero in a natural way. Up to 
-5.1.8, <a id="idx:succ2:1554"></a><a class="pred" href="arith.html#succ/2">succ/2</a> 
+5.1.8, <a id="idx:succ2:1557"></a><a class="pred" href="arith.html#succ/2">succ/2</a> 
 also accepted negative integers.</span></sup></dd>
 <dt class="pubdef"><a id="plus/3"><strong>plus</strong>(<var>?Int1, 
 ?Int2, ?Int3</var>)</a></dt>
@@ -298,7 +298,7 @@ and
 for exploiting the fact that the low level implementation for computing 
 the quotient also produces the remainder. Timing confirms that this 
 predicate is almost twice as fast as performing the steps independently. 
-Semantically, <a id="idx:divmod4:1555"></a><a class="pred" href="arith.html#divmod/4">divmod/4</a> 
+Semantically, <a id="idx:divmod4:1558"></a><a class="pred" href="arith.html#divmod/4">divmod/4</a> 
 is defined as below.
 
 <pre class="code">
@@ -314,7 +314,7 @@ versions.</dd>
 +I, -Root, -Remainder</var>)</a></dt>
 <dd class="defbody">
 True when <var>Root ** N + Remainder = I</var>. <var>N</var> and <var>I</var> 
-must be integers.<sup class="fn">120<span class="fn-text">This predicate 
+must be integers.<sup class="fn">121<span class="fn-text">This predicate 
 was suggested by Markus Triska. The final name and argument order is by 
 Richard O'Keefe. The decision to include the remainder is by Jan 
 Wielemaker. Including the remainder makes this predicate about twice as 
@@ -344,7 +344,7 @@ purpose arithmetic</span></a></h3>
 <a id="sec:arithpreds"></a>
 
 <p>The general arithmetic predicates are optionally compiled (see
-<a id="idx:setprologflag2:1556"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
+<a id="idx:setprologflag2:1559"></a><a class="pred" href="flags.html#set_prolog_flag/2">set_prolog_flag/2</a> 
 and the <strong>-O</strong> command line option). Compiled arithmetic 
 reduces global stack requirements and improves performance. 
 Unfortunately compiled arithmetic cannot be traced, which is why it is 
@@ -376,7 +376,7 @@ Expr2</var>.</dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="is/2"><var>-Number</var> <strong>is</strong> <var>+Expr</var></a></dt>
 <dd class="defbody">
 True when <var>Number</var> is the value to which <var>Expr</var> 
-evaluates. Typically, <a id="idx:is2:1557"></a><a class="pred" href="arith.html#is/2">is/2</a> 
+evaluates. Typically, <a id="idx:is2:1560"></a><a class="pred" href="arith.html#is/2">is/2</a> 
 should be used with unbound left operand. If equality is to be tested, <a class="pred" href="arith.html#=:=/2">=:=/2</a> 
 should be used. For example:
 
@@ -393,14 +393,14 @@ types</span></a></h4>
 
 <a id="sec:artypes"></a>
 
-<p><a id="idx:integerunbounded:1558"></a><a id="idx:rationalnumber:1559"></a><a id="idx:numberrational:1560"></a>SWI-Prolog 
+<p><a id="idx:integerunbounded:1561"></a><a id="idx:rationalnumber:1562"></a><a id="idx:numberrational:1563"></a>SWI-Prolog 
 defines the following numeric types:
 
 <p>
 <ul class="latex">
 <li><i>integer</i><br>
 If SWI-Prolog is built using the <em>GNU multiple precision arithmetic 
-library</em> <a id="idx:GMP:1561"></a>(GMP), integer arithmetic is <em>unbounded</em>, 
+library</em> <a id="idx:GMP:1564"></a>(GMP), integer arithmetic is <em>unbounded</em>, 
 which means that the size of integers is limited by available memory 
 only. Without GMP, SWI-Prolog integers are 64-bits, regardless of the 
 native integer size of the platform. The type of integer support can be 
@@ -420,9 +420,9 @@ as serialised GNU MPZ structures on the global stack.
 <li><i>rational number</i><br>
 Rational numbers (<var>Q</var>) are quotients of two integers (<var>N/M</var>). 
 Rational arithmetic is only provided if GMP is used (see above). 
-Rational numbers satisfy the type tests <a id="idx:rational1:1562"></a><a class="pred" href="typetest.html#rational/1">rational/1</a>, <a id="idx:number1:1563"></a><a class="pred" href="typetest.html#number/1">number/1</a> 
-and <a id="idx:atomic1:1564"></a><a class="pred" href="typetest.html#atomic/1">atomic/1</a> 
-and may satisfy the type test <a id="idx:integer1:1565"></a><a class="pred" href="typetest.html#integer/1">integer/1</a>, 
+Rational numbers satisfy the type tests <a id="idx:rational1:1565"></a><a class="pred" href="typetest.html#rational/1">rational/1</a>, <a id="idx:number1:1566"></a><a class="pred" href="typetest.html#number/1">number/1</a> 
+and <a id="idx:atomic1:1567"></a><a class="pred" href="typetest.html#atomic/1">atomic/1</a> 
+and may satisfy the type test <a id="idx:integer1:1568"></a><a class="pred" href="typetest.html#integer/1">integer/1</a>, 
 i.e., integers are considered rational numbers. Rational numbers are 
 always kept in <em>canonical representation</em>, which means <var>M</var> 
 is positive and <var>N</var> and <var>M</var> have no common divisors. 
@@ -464,7 +464,7 @@ Support for rational numbers depends on the Prolog flag
 <a class="flag" href="flags.html#flag:prefer_rationals">prefer_rationals</a>. 
 If this is <code>true</code> (default), the number division function (<a class="function" href="arith.html#f-//2">//2</a>) 
 and exponentiation function (<a class="function" href="arith.html#f-^/2">^/2</a>) 
-generate a rational number on integer and rational arguments and <a id="idx:read1:1566"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
+generate a rational number on integer and rational arguments and <a id="idx:read1:1569"></a><a class="pred" href="termrw.html#read/1">read/1</a> 
 and friends read <code>[-+][0-9_ ]+/[0-9_ ]+</code> into a rational 
 number. See also <a class="sec" href="syntax.html#sec:2.16.1.6">section 
 2.16.1.6</a>. Here are some examples.
@@ -484,7 +484,7 @@ the original float. Please check the documentation of these functions
 for details and examples.
 
 <p>Rational numbers can be printed as decimal numbers with arbitrary 
-precision using the <a id="idx:format3:1567"></a><a class="pred" href="format.html#format/3">format/3</a> 
+precision using the <a id="idx:format3:1570"></a><a class="pred" href="format.html#format/3">format/3</a> 
 floating point conversion:
 
 <pre class="code">
@@ -758,7 +758,7 @@ Integer division, defined as <var>Result</var> is <var>rnd_I</var>(<var>Expr1</v
 . The function <var>rnd_I</var> is the default rounding used by the C 
 compiler and available through the Prolog flag
 <a class="flag" href="flags.html#flag:integer_rounding_function">integer_rounding_function</a>. 
-In the C99 standard, C-rounding is defined as <code>towards_zero</code>.<sup class="fn">121<span class="fn-text">Future 
+In the C99 standard, C-rounding is defined as <code>towards_zero</code>.<sup class="fn">122<span class="fn-text">Future 
 versions might guarantee rounding towards zero.</span></sup></dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="f-div/2"><strong>div</strong>(<var>+IntExpr1, 
 +IntExpr2</var>)</a></dt>
@@ -884,7 +884,7 @@ Evaluate to the smaller of <var>Expr1</var> and <var>Expr2</var>. See
 description of type handling.</dd>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="f-./2"><strong>.</strong>(<var>+Char,[]</var>)</a></dt>
 <dd class="defbody">
-A list of one element evaluates to the character code of this element.<sup class="fn">122<span class="fn-text">The 
+A list of one element evaluates to the character code of this element.<sup class="fn">123<span class="fn-text">The 
 function is documented as <code><code>.</code>/2</code>. Using 
 SWI-Prolog v7 and later the actual functor is <code><code>[|]</code>/2</code>.</span></sup> 
 This implies <code>"a"</code> evaluates to the character code of the 
@@ -899,7 +899,7 @@ is set to one of
 <code>codes</code>, <code>chars</code> or <code>string</code>.
 
 <p>Getting access to character codes this way originates from DEC10 
-Prolog. ISO has the <code>0'a</code> syntax and the predicate <a id="idx:charcode2:1568"></a><a class="pred" href="manipatom.html#char_code/2">char_code/2</a>. 
+Prolog. ISO has the <code>0'a</code> syntax and the predicate <a id="idx:charcode2:1571"></a><a class="pred" href="manipatom.html#char_code/2">char_code/2</a>. 
 Future versions may drop support for <code>X is "a"</code>.</dd>
 <dt class="pubdef"><a id="f-random/1"><strong>random</strong>(<var>+IntExpr</var>)</a></dt>
 <dd class="defbody">
@@ -909,17 +909,17 @@ unbounded arithmetic (default) it uses the GMP library random functions.
 In this case, each thread keeps its own random state. The default 
 algorithm is the <em>Mersenne Twister</em> algorithm. The seed is set 
 when the first random number in a thread is generated. If available, it 
-is set from <code>/dev/random</code>.<sup class="fn">123<span class="fn-text">On 
+is set from <code>/dev/random</code>.<sup class="fn">124<span class="fn-text">On 
 Windows the state is initialised from CryptGenRandom().</span></sup> 
 Otherwise it is set from the system clock. If unbounded arithmetic is 
 not supported, random numbers are shared between threads and the seed is 
-initialised from the clock when SWI-Prolog was started. The predicate <a id="idx:setrandom1:1569"></a><a class="pred" href="miscarith.html#set_random/1">set_random/1</a> 
+initialised from the clock when SWI-Prolog was started. The predicate <a id="idx:setrandom1:1572"></a><a class="pred" href="miscarith.html#set_random/1">set_random/1</a> 
 can be used to control the random number generator.
 
 <p><b>Warning!</b> Although properly seeded (if supported on the OS), 
 the Mersenne Twister algorithm does <em>not</em> produce 
 cryptographically secure random numbers. To generate cryptographically 
-secure random numbers, use <a id="idx:cryptonrandombytes2:1570"></a><span class="pred-ext">crypto_n_random_bytes/2</span> 
+secure random numbers, use <a id="idx:cryptonrandombytes2:1573"></a><span class="pred-ext">crypto_n_random_bytes/2</span> 
 from library <code>library(crypto)</code> provided by the <code>ssl</code> 
 package.</dd>
 <dt class="pubdef"><a id="f-random_float/0"><strong>random_float</strong></a></dt>
@@ -931,7 +931,7 @@ also apply for <a class="function" href="arith.html#f-random_float/0">random_flo
 Note that both sides of the domain are <em>open</em>. This avoids 
 evaluation errors on, e.g., <a class="function" href="arith.html#f-log/1">log/1</a> 
 or <a class="function" href="arith.html#f-//2">//2</a> while no 
-practical application can expect 0.0.<sup class="fn">124<span class="fn-text">Richard 
+practical application can expect 0.0.<sup class="fn">125<span class="fn-text">Richard 
 O'Keefe said: &ldquo;If you <em>are</em> generating IEEE doubles with 
 the claimed uniformity, then 0 has a 1 in <var>2^53 = 1 in 
 9,007,199,254,740,992</var> chance of turning up. No program that 
@@ -956,7 +956,7 @@ Same as <a class="function" href="arith.html#f-round/1">round/1</a>
 <dd class="defbody">
 Translate the result to a floating point number. Normally, Prolog will 
 use integers whenever possible. When used around the 2nd argument of
-<a id="idx:is2:1571"></a><a class="pred" href="arith.html#is/2">is/2</a>, 
+<a id="idx:is2:1574"></a><a class="pred" href="arith.html#is/2">is/2</a>, 
 the result will be returned as a floating point number. In other 
 contexts, the operation has no effect.</dd>
 <dt class="pubdef"><a id="f-rational/1"><strong>rational</strong>(<var>+Expr</var>)</a></dt>
@@ -990,10 +990,10 @@ is Inf.</dd>
 Convert the <var>Expr</var> to a rational number or integer. The 
 function is similar to <a class="function" href="arith.html#f-rational/1">rational/1</a>, 
 but the result is only accurate within the rounding error of floating 
-point numbers, generally producing a much smaller denominator.<sup class="fn">125<span class="fn-text">The 
+point numbers, generally producing a much smaller denominator.<sup class="fn">126<span class="fn-text">The 
 names <a class="function" href="arith.html#f-rational/1">rational/1</a> 
 and <a class="function" href="arith.html#f-rationalize/1">rationalize/1</a> 
-as well as their semantics are inspired by Common Lisp.</span></sup><sup class="fn">126<span class="fn-text">The 
+as well as their semantics are inspired by Common Lisp.</span></sup><sup class="fn">127<span class="fn-text">The 
 implementation of rationalize as well as converting a rational number 
 into a float is copied from ECLiPSe and covered by the <i>Cisco-style 
 Mozilla Public License Version 1.1</i>.</span></sup>
@@ -1240,7 +1240,7 @@ unbounded integer support. This formula is required for Diffie-Hellman
 key-exchange, a technique where two parties can establish a secret key 
 over a public network.
 <var>IntExprBase</var> and <var>IntExprExp</var> must be non-negative (<var>&gt;=0</var>),
-<var>IntExprMod</var> must be positive (<var>&gt;0</var>).<sup class="fn">127<span class="fn-text">The 
+<var>IntExprMod</var> must be positive (<var>&gt;0</var>).<sup class="fn">128<span class="fn-text">The 
 underlying GMP mpz_powm() function allows negative values under some 
 conditions. As the conditions are expensive to pre-compute, error 
 handling from GMP is non-trivial and negative values are not needed for 
@@ -1248,7 +1248,7 @@ Diffie-Hellman key-exchange we do not support these.</span></sup></dd>
 <dt class="pubdef"><a id="f-lgamma/1"><strong>lgamma</strong>(<var>+Expr</var>)</a></dt>
 <dd class="defbody">
 Return the natural logarithm of the absolute value of the Gamma 
-function.<sup class="fn">128<span class="fn-text">Some interfaces also 
+function.<sup class="fn">129<span class="fn-text">Some interfaces also 
 provide the sign of the Gamma function. We cannot do that in an 
 arithmetic function. Future versions may provide a <em>predicate</em> 
 lgamma/3 that returns both the value and the sign.</span></sup></dd>
@@ -1287,8 +1287,8 @@ Evaluate to <em>Not a Number</em>. See <a class="sec" href="syntax.html#sec:2.16
 <dt class="pubdef"><a id="f-cputime/0"><strong>cputime</strong></a></dt>
 <dd class="defbody">
 Evaluate to a floating point number expressing the <span style="font-variant:small-caps">CPU</span> 
-time (in seconds) used by Prolog up till now. See also <a id="idx:statistics2:1572"></a><a class="pred" href="statistics.html#statistics/2">statistics/2</a> 
-and <a id="idx:time1:1573"></a><a class="pred" href="statistics.html#time/1">time/1</a>.</dd>
+time (in seconds) used by Prolog up till now. See also <a id="idx:statistics2:1575"></a><a class="pred" href="builtin-statistics.html#statistics/2">statistics/2</a> 
+and <a id="idx:time1:1576"></a><a class="pred" href="statistics.html#time/1">time/1</a>.</dd>
 <dt class="pubdef"><a id="f-eval/1"><strong>eval</strong>(<var>+Expr</var>)</a></dt>
 <dd class="defbody">
 Evaluate <var>Expr</var>. Although ISO standard dictates that&lsquo;<var>A</var>=1+2, <var>B</var> 
@@ -1296,7 +1296,7 @@ is
 <var>A</var>&rsquo;works and unifies <var>B</var> to 3, it is widely 
 felt that source level variables in arithmetic expressions should have 
 been limited to numbers. In this view the eval function can be used to 
-evaluate arbitrary expressions.<sup class="fn">129<span class="fn-text">The <a class="function" href="arith.html#f-eval/1">eval/1</a> 
+evaluate arbitrary expressions.<sup class="fn">130<span class="fn-text">The <a class="function" href="arith.html#f-eval/1">eval/1</a> 
 function was first introduced by ECLiPSe and is under consideration for 
 YAP.</span></sup>
 </dd>
@@ -1338,7 +1338,7 @@ integers. The result is equivalent to <code>(IntExprV &gt;&gt; IntExprI)/\1</cod
 but more efficient because materialization of the shifted value is 
 avoided. Future versions will optimise <code>(IntExprV &gt;&gt; IntExprI)/\1</code> 
 to a call to <a class="function" href="arith.html#f-getbit/2">getbit/2</a>, 
-providing both portability and performance.<sup class="fn">130<span class="fn-text">This 
+providing both portability and performance.<sup class="fn">131<span class="fn-text">This 
 issue was fiercely debated at the ISO standard mailinglist. The name <i>getbit</i> 
 was selected for compatibility with ECLiPSe, the only system providing 
 this support. Richard O'Keefe disliked the name and argued that 

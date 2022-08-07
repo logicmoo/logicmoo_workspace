@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -253,9 +253,9 @@ together with Paul Tarau and Paulo Moura.
 10</a>). An engine is a Prolog virtual machine that has its own stacks 
 and (virtual) machine state. Unlike normal Prolog threads though, they 
 are not associated with an operating system thread. Instead, you <em>ask</em> 
-an engine for a next answer (<a id="idx:enginenext2:2425"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>). 
+an engine for a next answer (<a id="idx:enginenext2:2429"></a><a class="pred" href="engine-predicates.html#engine_next/2">engine_next/2</a>). 
 Asking an engine for the next answer attaches the engine to the calling 
-operating system thread and cause it to run until the engine calls <a id="idx:engineyield1:2426"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
+operating system thread and cause it to run until the engine calls <a id="idx:engineyield1:2430"></a><a class="pred" href="engine-predicates.html#engine_yield/1">engine_yield/1</a> 
 or its associated goal completes with an answer, failure or an 
 exception. After the engine yields or completes, it is detached from the 
 operating system thread and the answer term is made available to the 

@@ -7,12 +7,12 @@
 :- if(current_module(trill)).
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
-
+:- use_module(library(pengines)).
 
 menu :- write_menu('i').
 write_menu(Mode):-
-  get_current_test(TestID),
-  print_single_test(TestID),
+  get_current_test(TestID),!,
+  print_single_test(TestID),!,
   format('~N\n    With selected test: ~q ~n~n',[TestID]),
   menu_options(Mode).
 
@@ -68,12 +68,12 @@ list_of_tests(S):- findall(F,find_tests(F),L),sort(L,S).
 show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
 
   % ignore((read_line_to_string(user_input,Sel),atom_number(Sel,Num))),
-
   
 my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
 my_submenu_call(E):- catch(ignore(locally(set_prolog_flag(gc,false),E)),_,true).
    
 
+read_menu_chars(_Start,_SelMax,Out):- pengine_self(_Id),!,read(Out).
 read_menu_chars(Start,SelMax,Out):-
   get_single_key_code(Codes), atom_codes(Key,Codes),
   append_num_code(Start,SelMax,Key,Out).
@@ -237,7 +237,7 @@ next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set
 is_valid_testname(TestID):- kaggle_arc(TestID,_,_,_).
 get_current_test(TestID):- nb_current(test_name,TestID),is_valid_testname(TestID),!.
 get_current_test(TestID):- get_next_test(TestID,_),!.
-%get_current_test(v(fe9372f3)).
+get_current_test(v(fe9372f3)).
 get_next_test(TestID,NextID):- get_current_suite_testnames(List), next_in_list(TestID,List,NextID).
 get_previous_test(TestID,PrevID):-  get_current_suite_testnames(List), prev_in_list(TestID,List,PrevID).
 next_in_list(TestID,List,Next):- append(_,[TestID,Next|_],List)-> true; List=[Next|_].
@@ -246,7 +246,9 @@ prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(
 %v(f9d67f8b)
 :- export(load_last_test_name/0).
 load_last_test_name:- 
-  ignore(notrace((exists_file(current_test),setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),nb_setval(test_name,TestID))),close(O))))).
+  notrace((exists_file(current_test),setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),nb_setval(test_name,TestID))),close(O)))),!.
+load_last_test_name:- set_current_test(v(fe9372f3)).
+
 save_last_test_name:- 
   ignore(notrace((nb_current(test_name,TestID), tell(current_test),format('~n~q.~n',[TestID]),told))).
 
@@ -304,7 +306,7 @@ new_test_pair(PairName):-
   retractall(is_grid_id(PairName*_,_)),
   retractall(is_grid_id(PairName,_)),!.
 
-human_test:- solve_test.
+human_test:- solve_test_trial(human).
 fully_test:- print_test, !, train_test, !, solve_test, !.
 run_next_test:- notrace(next_test), fully_test.
 
@@ -375,7 +377,7 @@ arc_test_name(TestID):- kaggle_arc(TestID,trn+0,_,_).
 
 some_task_info(TestID,III):- more_task_info(TestID,III).
 some_task_info(X,[keypad]):- key_pad_tests(X). 
-some_task_info(TestID,III):- user:fav(TestID,III).
+some_task_info(TestID,III):- fav(TestID,III).
 
 %:- dynamic(task_info_cache/2).
 %:- retractall(task_info_cache/2).
@@ -654,7 +656,11 @@ one_obj(I,I):- is_group(I),!.
 one_obj(I,I).
 
 is_fti_step(uncolorize).
-uncolorize(VM):- put_attr(FG,ci,fg(_)),set_all_fg_colors(FG,VM.grid,UCGRID),set_vm_grid(VM,UCGRID),set_all_fg_colors(FG,VM.objs,UCOBJS),set(VM.objs)=UCOBJS.
+uncolorize(VM):- put_attr(FG,ci,fg(_)),
+  set_all_fg_colors(FG,VM.grid,UCGRID),
+  set_vm_grid(VM,UCGRID),
+  set_all_fg_colors(FG,VM.objs,UCOBJS),
+  set(VM.objs)=UCOBJS.
 uncolorize(I,O):- set_all_fg_colors(fg,I,O).
 %resize_grid(_H,_V,List,_,List):- is_list(List).
 %resize_grid(H,V,Color,_,NewGrid):- make_grid(H,V,Grid),replace_grid_point(1,1,Color,_,Grid,NewGrid),nop(set_bgc(Color)).
@@ -704,8 +710,8 @@ kaggle_arc(v(Name), TypeI, In, Out):-
 
 fix_test_name(V,VV,_):- var(V),!,VV=V.
 fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=E.
-fix_test_name(Tried*ExampleNum*_,Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
-fix_test_name(Tried*ExampleNum,  Fixed,ExampleNum):- !, fix_id(Tried,Fixed).
+fix_test_name(Tried*Example+Num*_,Fixed,Example+Num):- !, fix_id(Tried,Fixed).
+fix_test_name(Tried*Example+Num,  Fixed,Example+Num):- !, fix_id(Tried,Fixed).
 fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
 
 fix_id(Tried,   Tried):- var(Tried),!.
@@ -713,10 +719,10 @@ fix_id(X,_):- is_cpoint(X),!,fail.
 fix_id(X,_):- is_list(X),maplist(is_cpoint,X),!,fail.
 fix_id(o_i_d(X,_),Fixed):-  !, fix_id(X,Fixed).
 fix_id(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
-fix_id(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
-fix_id(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
-fix_id(t(Tried),v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
-fix_id(v(Tried),t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
+fix_id(Tried,t(Tried)):- atom(Tried), kaggle_arc(t(Tried),_,_,_),!.
+fix_id(Tried,v(Tried)):- atom(Tried), kaggle_arc(v(Tried),_,_,_),!.
+fix_id(t(Tried),v(Tried)):- atom(Tried), kaggle_arc(v(Tried),_,_,_),!.
+fix_id(v(Tried),t(Tried)):-atom(Tried), kaggle_arc(t(Tried),_,_,_),!.
 %fix_id(Tried,Fixed):- !, fail,compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_id(E,Fixed),!.
 
 

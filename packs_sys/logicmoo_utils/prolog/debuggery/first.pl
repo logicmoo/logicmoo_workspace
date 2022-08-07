@@ -153,7 +153,6 @@ cfunctor(A,B,C):- compound(A)->compound_name_arity(A,B,C);functor(A,B,C).
 %:- system:reexport(library(must_sanity)).
 
 
-% :- abolish(system:nop/1),asserta(system:nop(_)).
 
 getenv_safe(Name,ValueO,Default):-
    (getenv(Name,RV)->Value=RV;Value=Default),

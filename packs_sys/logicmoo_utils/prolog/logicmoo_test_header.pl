@@ -1,6 +1,8 @@
 % This file is mostly all inside if/endifs so it doesnt interfere with `module/2`
 :- if((set_stream(current_output,tty(true)))).  :- endif.
 
+:- dumpST.
+
 :- if((
  %set_prolog_flag(debug, true),
  %set_prolog_flag(gc, false),

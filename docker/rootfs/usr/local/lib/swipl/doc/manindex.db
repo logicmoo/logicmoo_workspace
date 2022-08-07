@@ -150,11 +150,11 @@ i(f(/(epsilon,0)),"Evaluate to the difference between the float 1.0 and the firs
 i(f(/(inf,0)),"Evaluate to positive infinity.",swi_man_manual('arith.html'),manual,61680).
 i(f(/(nan,0)),"Evaluate to Not a Number.",swi_man_manual('arith.html'),manual,62033).
 i(f(/(cputime,0)),"Evaluate to a floating point number expressing the CPU time (in seconds) used by Prolog up till now.",swi_man_manual('arith.html'),manual,62304).
-i(f(/(eval,1)),"Evaluate Expr.",swi_man_manual('arith.html'),manual,62751).
-i(f(/(msb,1)),"Return the largest integer N such that (IntExpr >> N) /\\ 1 =:= 1.",swi_man_manual('arith.html'),manual,63935).
-i(f(/(lsb,1)),"Return the smallest integer N such that (IntExpr >> N) /\\ 1 =:= 1.",swi_man_manual('arith.html'),manual,64338).
-i(f(/(popcount,1)),"Return the number of 1s in the binary representation of the non-negative integer IntExpr.",swi_man_manual('arith.html'),manual,64743).
-i(f(/(getbit,2)),"Evaluates to the bit value (0 or 1) of the IntExprI-th bit of IntExprV.",swi_man_manual('arith.html'),manual,64967).
+i(f(/(eval,1)),"Evaluate Expr.",swi_man_manual('arith.html'),manual,62759).
+i(f(/(msb,1)),"Return the largest integer N such that (IntExpr >> N) /\\ 1 =:= 1.",swi_man_manual('arith.html'),manual,63943).
+i(f(/(lsb,1)),"Return the smallest integer N such that (IntExpr >> N) /\\ 1 =:= 1.",swi_man_manual('arith.html'),manual,64346).
+i(f(/(popcount,1)),"Return the number of 1s in the binary representation of the non-negative integer IntExpr.",swi_man_manual('arith.html'),manual,64751).
+i(f(/(getbit,2)),"Evaluates to the bit value (0 or 1) of the IntExprI-th bit of IntExprV.",swi_man_manual('arith.html'),manual,64975).
 i(section(2,'A.4','sec:assoc'),"library(assoc): Association lists",swi_man_manual('assoc.html'),manual,3514).
 i(section(3,'A.4.1','sec:assoc-introduction'),"Introduction",swi_man_manual('assoc.html'),manual,3842).
 i(section(3,'A.4.2','sec:assoc-creation'),"Creating association lists",swi_man_manual('assoc.html'),manual,5180).
@@ -267,7 +267,7 @@ i(/(unlisten,3),"Deregister all entries created with listen/3 whose Listener, Te
 i(/(listening,3),"Examine the current listeners.",swi_man_manual('broadcast.html'),manual,9080).
 i(section(1,'4','sec:builtin'),"Built-in Predicates",swi_man_manual('builtin.html'),manual,3509).
 i(section(2,'4.29','sec:builtinlist'),"Built-in list operations",swi_man_manual('builtinlist.html'),manual,3529).
-i(/(is_list,1),"True if Term is bound to the empty list ([]) or a compound term with name‘[|]’132The traditional list functor name is the dot (’.').",swi_man_manual('builtinlist.html'),manual,3966).
+i(/(is_list,1),"True if Term is bound to the empty list ([]) or a compound term with name‘[|]’133The traditional list functor name is the dot (’.').",swi_man_manual('builtinlist.html'),manual,3966).
 i(/(memberchk,2),"True when Elem is an element of List.",swi_man_manual('builtinlist.html'),manual,5566).
 i(/(length,2),"True if Length represents the number of elements in List.",swi_man_manual('builtinlist.html'),manual,6735).
 i(/(sort,2),"True if Sorted can be unified with a list holding the elements of List, sorted to the standard order of terms (see section 4.6).",swi_man_manual('builtinlist.html'),manual,8353).
@@ -275,6 +275,8 @@ i(/(sort,4),"True when Sorted can be unified with a list holding the element of 
 i(/(msort,2),"Equivalent to sort/2, but does not remove duplicates.",swi_man_manual('builtinlist.html'),manual,13349).
 i(/(keysort,2),"Sort a list of pairs.",swi_man_manual('builtinlist.html'),manual,13688).
 i(/(predsort,3),"Sorts similar to sort/2, but determines the order of two terms by calling Pred(-Delta, +E1, +E2) .",swi_man_manual('builtinlist.html'),manual,14994).
+i(section(2,'4.41','sec:builtin-statistics'),"Obtaining Runtime Statistics",swi_man_manual('builtin-statistics.html'),manual,3535).
+i(/(statistics,2),"Unify system statistics determined by Key with Value.",swi_man_manual('builtin-statistics.html'),manual,4044).
 i(section(2,'4.26','sec:charconv'),"Character Conversion",swi_man_manual('charconv.html'),manual,3515).
 i(/(char_conversion,2),"Define that term input (see read_term/3) maps each character read as CharIn to the character CharOut.",swi_man_manual('charconv.html'),manual,3813).
 i(/(current_char_conversion,2),"Queries the current character conversion table.",swi_man_manual('charconv.html'),manual,4601).
@@ -341,15 +343,15 @@ i(/(with_output_to_chars,3),"Run Goal as with once/1.",swi_man_manual('charsio.h
 i(/(with_output_to_chars,4),"Same as with_output_to_chars/3 using an explicit stream.",swi_man_manual('charsio.html'),manual,8614).
 i(section(2,'4.24','sec:chartype'),"Character properties",swi_man_manual('chartype.html'),manual,3517).
 i(/(char_type,2),"Tests or generates alternative Types or Chars.",swi_man_manual('chartype.html'),manual,4305).
-i(/(code_type,2),"As char_type/2, but uses character codes rather than one-character atoms.",swi_man_manual('chartype.html'),manual,10765).
-i(section(3,'4.24.1','sec:case'),"Case conversion",swi_man_manual('chartype.html'),manual,11600).
-i(/(downcase_atom,2),"Converts the characters of AnyCase into lowercase as char_type/2 does (i.e.",swi_man_manual('chartype.html'),manual,12175).
-i(/(upcase_atom,2),"Converts, similar to downcase_atom/2, an atom to uppercase.",swi_man_manual('chartype.html'),manual,12646).
-i(section(3,'4.24.2','sec:whitespace'),"White space normalization",swi_man_manual('chartype.html'),manual,12949).
-i(/(normalize_space,2),"Normalize white space in In.",swi_man_manual('chartype.html'),manual,13143).
-i(section(3,'4.24.3','sec:collate'),"Language-specific comparison",swi_man_manual('chartype.html'),manual,13745).
-i(/(collation_key,2),"Create a Key from Atom for locale-specific comparison.",swi_man_manual('chartype.html'),manual,14131).
-i(/(locale_sort,2),"Sort a list of atoms using the current locale.",swi_man_manual('chartype.html'),manual,15203).
+i(/(code_type,2),"As char_type/2, but uses character codes rather than one-character atoms.",swi_man_manual('chartype.html'),manual,11200).
+i(section(3,'4.24.1','sec:case'),"Case conversion",swi_man_manual('chartype.html'),manual,12035).
+i(/(downcase_atom,2),"Converts the characters of AnyCase into lowercase as char_type/2 does (i.e.",swi_man_manual('chartype.html'),manual,12610).
+i(/(upcase_atom,2),"Converts, similar to downcase_atom/2, an atom to uppercase.",swi_man_manual('chartype.html'),manual,13081).
+i(section(3,'4.24.2','sec:whitespace'),"White space normalization",swi_man_manual('chartype.html'),manual,13384).
+i(/(normalize_space,2),"Normalize white space in In.",swi_man_manual('chartype.html'),manual,13578).
+i(section(3,'4.24.3','sec:collate'),"Language-specific comparison",swi_man_manual('chartype.html'),manual,14180).
+i(/(collation_key,2),"Create a Key from Atom for locale-specific comparison.",swi_man_manual('chartype.html'),manual,14566).
+i(/(locale_sort,2),"Sort a list of atoms using the current locale.",swi_man_manual('chartype.html'),manual,15638).
 i(section(2,'A.7','sec:check'),"library(check): Consistency checking",swi_man_manual('check.html'),manual,3508).
 i(/(check,0),"Run all consistency checks defined by checker/2.",swi_man_manual('check.html'),manual,4381).
 i(/(list_undefined,0),"Report undefined predicates.",swi_man_manual('check.html'),manual,5249).
@@ -684,25 +686,25 @@ i(section(3,'4.14.4','sec:trie'),"Tries",swi_man_manual('db.html'),manual,40347)
 i(/(trie_new,1),"Create a new trie and unify Trie with a handle to the trie.",swi_man_manual('db.html'),manual,41612).
 i(/(trie_destroy,1),"Destroy Trie.",swi_man_manual('db.html'),manual,41884).
 i(/(is_trie,1),"True when Trie is a trie object.",swi_man_manual('db.html'),manual,42216).
-i(/(current_trie,1),"True if Trie is a currently existing trie.",swi_man_manual('db.html'),manual,42522).
-i(/(trie_insert,2),"Insert the term Key into Trie.",swi_man_manual('db.html'),manual,42958).
-i(/(trie_insert,3),"Insert the term Key into Trie and associate it with Value.",swi_man_manual('db.html'),manual,43399).
-i(/(trie_update,3),"As trie_insert/3, but if Key is in Trie, its associated value is updated.",swi_man_manual('db.html'),manual,43896).
-i(/(trie_insert,4),"As trie_insert/3, returning a handle to the trie node.",swi_man_manual('db.html'),manual,44222).
-i(/(trie_delete,3),"Delete Key from Trie if the value associated with Key unifies with Value.",swi_man_manual('db.html'),manual,44700).
-i(/(trie_lookup,3),"True if the term Key is in Trie and associated with Value.",swi_man_manual('db.html'),manual,44957).
-i(/(trie_term,2),"True when Term is a copy of the term associated with Handle.",swi_man_manual('db.html'),manual,45188).
-i(/(trie_gen,2),"True when Key is a member of Trie.",swi_man_manual('db.html'),manual,45621).
-i(/(trie_gen,3),"True when Key is associated with Value in Trie.",swi_man_manual('db.html'),manual,45963).
-i(/(trie_gen_compiled,2),"Similar to trie_gen/3, but uses a compiled representation of Trie.",swi_man_manual('db.html'),manual,46534).
-i(/(trie_gen_compiled,3),"Similar to trie_gen/3, but uses a compiled representation of Trie.",swi_man_manual('db.html'),manual,46534).
-i(/(trie_property,2),"True if Trie exists with Property.",swi_man_manual('db.html'),manual,47494).
-i(section(3,'4.14.5','sec:update'),"Update view",swi_man_manual('db.html'),manual,50468).
-i(section(3,'4.14.6','sec:hashterm'),"Indexing databases",swi_man_manual('db.html'),manual,52093).
-i(/(term_hash,2),"If Term is a ground term (see ground/1), HashKey is unified with a positive integer value that may be used as a hash key to the value.",swi_man_manual('db.html'),manual,53692).
-i(/(term_hash,4),"As term_hash/2, but only considers Term to the specified Depth.",swi_man_manual('db.html'),manual,55009).
-i(/(variant_sha1,2),"Compute a SHA1-hash from Term.",swi_man_manual('db.html'),manual,55820).
-i(/(variant_hash,2),"Similar to variant_sha1/2, but using a non-cryptographic hash and produces an integer result like term_hash/2.",swi_man_manual('db.html'),manual,57387).
+i(/(current_trie,1),"True if Trie is a currently existing trie.",swi_man_manual('db.html'),manual,42523).
+i(/(trie_insert,2),"Insert the term Key into Trie.",swi_man_manual('db.html'),manual,42959).
+i(/(trie_insert,3),"Insert the term Key into Trie and associate it with Value.",swi_man_manual('db.html'),manual,43400).
+i(/(trie_update,3),"As trie_insert/3, but if Key is in Trie, its associated value is updated.",swi_man_manual('db.html'),manual,43897).
+i(/(trie_insert,4),"As trie_insert/3, returning a handle to the trie node.",swi_man_manual('db.html'),manual,44223).
+i(/(trie_delete,3),"Delete Key from Trie if the value associated with Key unifies with Value.",swi_man_manual('db.html'),manual,44701).
+i(/(trie_lookup,3),"True if the term Key is in Trie and associated with Value.",swi_man_manual('db.html'),manual,44958).
+i(/(trie_term,2),"True when Term is a copy of the term associated with Handle.",swi_man_manual('db.html'),manual,45189).
+i(/(trie_gen,2),"True when Key is a member of Trie.",swi_man_manual('db.html'),manual,45622).
+i(/(trie_gen,3),"True when Key is associated with Value in Trie.",swi_man_manual('db.html'),manual,45964).
+i(/(trie_gen_compiled,2),"Similar to trie_gen/3, but uses a compiled representation of Trie.",swi_man_manual('db.html'),manual,46535).
+i(/(trie_gen_compiled,3),"Similar to trie_gen/3, but uses a compiled representation of Trie.",swi_man_manual('db.html'),manual,46535).
+i(/(trie_property,2),"True if Trie exists with Property.",swi_man_manual('db.html'),manual,47495).
+i(section(3,'4.14.5','sec:update'),"Update view",swi_man_manual('db.html'),manual,50469).
+i(section(3,'4.14.6','sec:hashterm'),"Indexing databases",swi_man_manual('db.html'),manual,52094).
+i(/(term_hash,2),"If Term is a ground term (see ground/1), HashKey is unified with a positive integer value that may be used as a hash key to the value.",swi_man_manual('db.html'),manual,53693).
+i(/(term_hash,4),"As term_hash/2, but only considers Term to the specified Depth.",swi_man_manual('db.html'),manual,55010).
+i(/(variant_sha1,2),"Compute a SHA1-hash from Term.",swi_man_manual('db.html'),manual,55821).
+i(/(variant_hash,2),"Similar to variant_sha1/2, but using a non-cryptographic hash and produces an integer result like term_hash/2.",swi_man_manual('db.html'),manual,57388).
 i(section(2,'4.13','sec:DCG'),"DCG Grammar rules",swi_man_manual('DCG.html'),manual,3503).
 i(/(phrase,2),"Equivalent to phrase(DCGBody, InputList, []).",swi_man_manual('DCG.html'),manual,5502).
 i(/(phrase,3),"True when DCGBody applies to the difference List/Rest.",swi_man_manual('DCG.html'),manual,5708).
@@ -720,10 +722,10 @@ i(/(dde_unregister_service,1),"Stop responding to Service.",swi_man_manual('DDE.
 i(/(dde_current_service,2),"Find currently registered services and the topics served on them.",swi_man_manual('DDE.html'),manual,9755).
 i(/(dde_current_connection,2),"Find currently open conversations.",swi_man_manual('DDE.html'),manual,9973).
 i(section(2,'13.5','sec:debug-deployed-systems'),"Debugging and updating deployed systems",swi_man_manual('debug-deployed-systems.html'),manual,3545).
-i(section(2,'4.40','sec:debug-determinism'),"Debugging and declaring determinism",swi_man_manual('debug-determinism.html'),manual,3523).
-i(/(det,1),"Declare a number of predicates as det, deterministic.",swi_man_manual('debug-determinism.html'),manual,5364).
-i(/($,0),"The $/0 constructs acts similar to the !/0, but in addition declares that the remainder of the clause body shall succeed deterministically.",swi_man_manual('debug-determinism.html'),manual,6400).
-i(/($,1),"Verify that Goal succeeds deterministically.",swi_man_manual('debug-determinism.html'),manual,7103).
+i(section(2,'4.40','sec:debug-determinism'),"Debugging and declaring determinism",swi_man_manual('debug-determinism.html'),manual,3539).
+i(/(det,1),"Declare a number of predicates as det, deterministic.",swi_man_manual('debug-determinism.html'),manual,5380).
+i(/($,0),"The $/0 constructs acts similar to the !/0, but in addition declares that the remainder of the clause body shall succeed deterministically.",swi_man_manual('debug-determinism.html'),manual,6416).
+i(/($,1),"Verify that Goal succeeds deterministically.",swi_man_manual('debug-determinism.html'),manual,7119).
 i(section(2,'4.39','sec:debugger'),"Debugging and Tracing Programs",swi_man_manual('debugger.html'),manual,3537).
 i(/(trace,0),"Start the tracer.",swi_man_manual('debugger.html'),manual,4152).
 i(/(tracing,0),"True if the tracer is currently switched on.",swi_man_manual('debugger.html'),manual,4558).
@@ -922,8 +924,8 @@ i(section(2,'13.7','sec:findappfile'),"Finding Application files",swi_man_manual
 i(section(2,'12.6','sec:findhome'),"The Prolog‘home' directory",swi_man_manual('findhome.html'),manual,3515).
 i(section(2,'2.12','sec:flags'),"Environment Control (Prolog flags)",swi_man_manual('flags.html'),manual,3519).
 i(/(current_prolog_flag,2),"The predicate current_prolog_flag/2 defines an interface to installation features: options compiled in, version, home, etc.",swi_man_manual('flags.html'),manual,4323).
-i(/(set_prolog_flag,2),"Define a new Prolog flag or change its value.",swi_man_manual('flags.html'),manual,94752).
-i(/(create_prolog_flag,3),"Create a new Prolog flag.",swi_man_manual('flags.html'),manual,96383).
+i(/(set_prolog_flag,2),"Define a new Prolog flag or change its value.",swi_man_manual('flags.html'),manual,94694).
+i(/(create_prolog_flag,3),"Create a new Prolog flag.",swi_man_manual('flags.html'),manual,96325).
 i(section(2,'4.31','sec:forall2'),"Forall",swi_man_manual('forall2.html'),manual,3523).
 i(/(forall,2),"For all alternative bindings of Cond, Action can be proven.",swi_man_manual('forall2.html'),manual,3687).
 i(section(1,'12','sec:foreign'),"Foreign Language Interface",swi_man_manual('foreign.html'),manual,3537).
@@ -945,253 +947,255 @@ i(section(3,'12.4.2','sec:foreign-atoms'),"Atoms and functors",swi_man_manual('f
 i(c('PL_new_atom'),"Return an atom handle for the given C-string.",swi_man_manual('foreigninclude.html'),manual,23718).
 i(c('PL_new_atom_mbchars'),"This function generalizes PL_new_atom() and PL_new_atom_nchars() while allowing for multiple encodings.",swi_man_manual('foreigninclude.html'),manual,25657).
 i(c('PL_atom_chars'),"Deprecated.",swi_man_manual('foreigninclude.html'),manual,26291).
-i(c('PL_new_functor'),"Returns a functor identifier, a handle for the name/arity pair.",swi_man_manual('foreigninclude.html'),manual,27398).
-i(c('PL_functor_name'),"Return an atom representing the name of the given functor.",swi_man_manual('foreigninclude.html'),manual,27701).
-i(c('PL_functor_arity'),"Return the arity of the given functor.",swi_man_manual('foreigninclude.html'),manual,27917).
-i(section(4,'12.4.2.1','sec:atomgc'),"Atoms and atom garbage collection",swi_man_manual('foreigninclude.html'),manual,28125).
-i(c('PL_register_atom'),"Increment the reference count of the atom by one.",swi_man_manual('foreigninclude.html'),manual,28858).
-i(c('PL_unregister_atom'),"Decrement the reference count of the atom.",swi_man_manual('foreigninclude.html'),manual,29372).
-i(section(3,'12.4.3','sec:foreign-term-analysis'),"Analysing Terms via the Foreign Interface",swi_man_manual('foreigninclude.html'),manual,30077).
-i(section(4,'12.4.3.1','sec:foreign-term-type'),"Testing the type of a term",swi_man_manual('foreigninclude.html'),manual,31109).
-i(c('PL_term_type'),"Obtain the type of a term, which should be a term returned by one of the other interface predicates or passed as an argument.",swi_man_manual('foreigninclude.html'),manual,31322).
-i(c('PL_is_variable'),"Returns non-zero if term is a variable.",swi_man_manual('foreigninclude.html'),manual,34084).
-i(c('PL_is_ground'),"Returns non-zero if term is a ground term.",swi_man_manual('foreigninclude.html'),manual,34280).
-i(c('PL_is_atom'),"Returns non-zero if term is an atom.",swi_man_manual('foreigninclude.html'),manual,34603).
-i(c('PL_is_string'),"Returns non-zero if term is a string.",swi_man_manual('foreigninclude.html'),manual,34788).
-i(c('PL_is_integer'),"Returns non-zero if term is an integer.",swi_man_manual('foreigninclude.html'),manual,34978).
-i(c('PL_is_rational'),"Returns non-zero if term is a rational number (P/Q).",swi_man_manual('foreigninclude.html'),manual,35172).
-i(c('PL_is_float'),"Returns non-zero if term is a float.",swi_man_manual('foreigninclude.html'),manual,35747).
-i(c('PL_is_callable'),"Returns non-zero if term is a callable term.",swi_man_manual('foreigninclude.html'),manual,36081).
-i(c('PL_is_compound'),"Returns non-zero if term is a compound term.",swi_man_manual('foreigninclude.html'),manual,36394).
-i(c('PL_is_functor'),"Returns non-zero if term is compound and its functor is functor.",swi_man_manual('foreigninclude.html'),manual,36595).
-i(c('PL_is_list'),"Returns non-zero if term is a compound term using the list constructor or the list terminator.",swi_man_manual('foreigninclude.html'),manual,37013).
-i(c('PL_is_pair'),"Returns non-zero if term is a compound term using the list constructor.",swi_man_manual('foreigninclude.html'),manual,37422).
-i(c('PL_is_dict'),"Returns non-zero if term is a dict.",swi_man_manual('foreigninclude.html'),manual,37808).
-i(c('PL_is_atomic'),"Returns non-zero if term is atomic (not a variable or compound).",swi_man_manual('foreigninclude.html'),manual,38165).
-i(c('PL_is_number'),"Returns non-zero if term is an rational (including integers) or float.",swi_man_manual('foreigninclude.html'),manual,38383).
-i(c('PL_is_acyclic'),"Returns non-zero if term is acyclic (i.e.",swi_man_manual('foreigninclude.html'),manual,38607).
-i(section(4,'12.4.3.2','sec:foreign-extract-from-term'),"Reading data from a term",swi_man_manual('foreigninclude.html'),manual,38830).
-i(c('PL_get_atom'),"If t is an atom, store the unique atom identifier over a.",swi_man_manual('foreigninclude.html'),manual,39268).
-i(c('PL_get_atom_chars'),"If t is an atom, store a pointer to a 0-terminated C-string in s.",swi_man_manual('foreigninclude.html'),manual,40040).
-i(c('PL_get_string_chars'),"If t is a string object, store a pointer to a 0-terminated C-string in s and the length of the string in len.",swi_man_manual('foreigninclude.html'),manual,40506).
-i(c('PL_get_chars'),"Convert the argument term t to a 0-terminated C-string.",swi_man_manual('foreigninclude.html'),manual,41037).
-i(c('PL_get_list_chars'),"Same as PL_get_chars(l, s, CVT_LIST|flags), provided flags contains none of the CVT_* flags.",swi_man_manual('foreigninclude.html'),manual,45285).
-i(c('PL_get_integer'),"If t is a Prolog integer, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,45694).
-i(c('PL_get_long'),"If t is a Prolog integer that can be represented as a long, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,46167).
-i(c('PL_get_int64'),"If t is a Prolog integer or float that can be represented as a int64_t, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,46739).
-i(c('PL_get_uint64'),"If t is a Prolog integer that can be represented as a uint64_t, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,47029).
-i(c('PL_get_intptr'),"Get an integer that is at least as wide as a pointer.",swi_man_manual('foreigninclude.html'),manual,47420).
-i(c('PL_get_bool'),"If t has the value true or false, set val to the C constant TRUE or FALSE and return success, otherwise return failure.",swi_man_manual('foreigninclude.html'),manual,47919).
-i(c('PL_get_pointer'),"In the current system, pointers are represented by Prolog integers, but need some manipulation to make sure they do not get truncated due to the limited Prolog integer range.",swi_man_manual('foreigninclude.html'),manual,48269).
-i(c('PL_get_float'),"If t is a float, integer or rational number, its value is assigned over f.",swi_man_manual('foreigninclude.html'),manual,48852).
-i(c('PL_get_functor'),"If t is compound or an atom, the Prolog representation of the name-arity pair will be assigned over f.",swi_man_manual('foreigninclude.html'),manual,49233).
-i(c('PL_get_name_arity'),"If t is compound or an atom, the functor name will be assigned over name and the arity over arity.",swi_man_manual('foreigninclude.html'),manual,49703).
-i(c('PL_get_compound_name_arity'),"If t is compound term, the functor name will be assigned over name and the arity over arity.",swi_man_manual('foreigninclude.html'),manual,50277).
-i(c('PL_get_module'),"If t is an atom, the system will look up or create the corresponding module and assign an opaque pointer to it over module.",swi_man_manual('foreigninclude.html'),manual,50766).
-i(c('PL_get_arg'),"If t is compound and index is between 1 and arity (inclusive), assign a with a term reference to the argument.",swi_man_manual('foreigninclude.html'),manual,51076).
-i(c('PL_get_dict_key'),"If dict is a dict, get the associated value in value.",swi_man_manual('foreigninclude.html'),manual,51762).
-i(section(4,'12.4.3.3','sec:foreign-text-with-length'),"Exchanging text using length and string",swi_man_manual('foreigninclude.html'),manual,52140).
-i(c('PL_get_atom_nchars'),"See PL_get_atom_chars().",swi_man_manual('foreigninclude.html'),manual,52755).
-i(c('PL_get_list_nchars'),"See PL_get_list_chars().",swi_man_manual('foreigninclude.html'),manual,53027).
-i(c('PL_get_nchars'),"See PL_get_chars().",swi_man_manual('foreigninclude.html'),manual,53299).
-i(c('PL_put_atom_nchars'),"See PL_put_atom_chars().",swi_man_manual('foreigninclude.html'),manual,53571).
-i(c('PL_put_string_nchars'),"See PL_put_string_chars().",swi_man_manual('foreigninclude.html'),manual,53847).
-i(c('PL_put_list_ncodes'),"See PL_put_list_codes().",swi_man_manual('foreigninclude.html'),manual,54131).
-i(c('PL_put_list_nchars'),"See PL_put_list_chars().",swi_man_manual('foreigninclude.html'),manual,54347).
-i(c('PL_unify_atom_nchars'),"See PL_unify_atom_chars().",swi_man_manual('foreigninclude.html'),manual,54623).
-i(c('PL_unify_string_nchars'),"See PL_unify_string_chars().",swi_man_manual('foreigninclude.html'),manual,54907).
-i(c('PL_unify_list_ncodes'),"See PL_unify_codes().",swi_man_manual('foreigninclude.html'),manual,55199).
-i(c('PL_unify_list_nchars'),"See PL_unify_list_chars().",swi_man_manual('foreigninclude.html'),manual,55416).
-i(c('PL_new_atom_nchars'),"Create a new atom as PL_new_atom(), but using the given length and characters.",swi_man_manual('foreigninclude.html'),manual,55817).
-i(c('PL_atom_nchars'),"Extract the text and length of an atom.",swi_man_manual('foreigninclude.html'),manual,56230).
-i(section(4,'12.4.3.4','sec:foreign-unicode'),"Wide-character versions",swi_man_manual('foreigninclude.html'),manual,56451).
-i(c('PL_new_atom_wchars'),"Create atom from wide-character string as PL_new_atom_nchars() does for ISO-Latin-1 strings.",swi_man_manual('foreigninclude.html'),manual,57304).
-i(c('PL_atom_wchars'),"Extract characters from a wide-character atom.",swi_man_manual('foreigninclude.html'),manual,57835).
-i(c('PL_get_wchars'),"Wide-character version of PL_get_chars().",swi_man_manual('foreigninclude.html'),manual,58412).
-i(c('PL_unify_wchars'),"Unify t with a textual representation of the C wide-character array s.",swi_man_manual('foreigninclude.html'),manual,58999).
-i(c('PL_unify_wchars_diff'),"Difference list version of PL_unify_wchars(), only supporting the types PL_CODE_LIST and PL_CHAR_LIST.",swi_man_manual('foreigninclude.html'),manual,59467).
-i(section(4,'12.4.3.5','sec:foreign-read-list'),"Reading a list",swi_man_manual('foreigninclude.html'),manual,60214).
-i(c('PL_get_list'),"If l is a list and not the empty list, assign a term reference to the head to h and to the tail to t.",swi_man_manual('foreigninclude.html'),manual,61181).
-i(c('PL_get_head'),"If l is a list and not the empty list, assign a term reference to the head to h.",swi_man_manual('foreigninclude.html'),manual,61482).
-i(c('PL_get_tail'),"If l is a list and not the empty list, assign a term reference to the tail to t.",swi_man_manual('foreigninclude.html'),manual,61740).
-i(c('PL_get_nil'),"Succeeds if l represents the list termination constant.",swi_man_manual('foreigninclude.html'),manual,61998).
-i(c('PL_skip_list'),"This is a multi-purpose function to deal with lists.",swi_man_manual('foreigninclude.html'),manual,62206).
-i(section(4,'12.4.3.6','sec:foreign-write'),"An example: defining write/1 in C",swi_man_manual('foreigninclude.html'),manual,63779).
-i(section(3,'12.4.4','sec:foreign-term-construct'),"Constructing Terms",swi_man_manual('foreigninclude.html'),manual,65417).
-i(c('PL_put_variable'),"Put a fresh variable in the term, resetting the term reference to its initial state.",swi_man_manual('foreigninclude.html'),manual,66276).
-i(c('PL_put_atom'),"Put an atom in the term reference from a handle.",swi_man_manual('foreigninclude.html'),manual,66623).
-i(c('PL_put_bool'),"Put one of the atoms true or false in the term reference See also PL_put_atom(), PL_unify_bool() and PL_get_bool().",swi_man_manual('foreigninclude.html'),manual,66995).
-i(c('PL_put_chars'),"New function to deal with setting a term from a char* with various encodings.",swi_man_manual('foreigninclude.html'),manual,67477).
-i(c('PL_put_atom_chars'),"Put an atom in the term reference constructed from the zero-terminated string.",swi_man_manual('foreigninclude.html'),manual,68390).
-i(c('PL_put_string_chars'),"Put a zero-terminated string in the term reference.",swi_man_manual('foreigninclude.html'),manual,68720).
-i(c('PL_put_string_nchars'),"Put a string, represented by a length/start pointer pair in the term reference.",swi_man_manual('foreigninclude.html'),manual,69080).
-i(c('PL_put_list_chars'),"Put a list of ASCII values in the term reference.",swi_man_manual('foreigninclude.html'),manual,69521).
-i(c('PL_put_integer'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,69746).
-i(c('PL_put_int64'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,69948).
-i(c('PL_put_uint64'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,70149).
-i(c('PL_put_pointer'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,70573).
-i(c('PL_put_float'),"Put a floating-point value in the term reference.",swi_man_manual('foreigninclude.html'),manual,70944).
-i(c('PL_put_functor'),"Create a new compound term from functor and bind t to this term.",swi_man_manual('foreigninclude.html'),manual,71149).
-i(c('PL_put_list'),"As PL_put_functor(), using the list-cell functor.",swi_man_manual('foreigninclude.html'),manual,71668).
-i(c('PL_put_nil'),"Put the list terminator constant in l.",swi_man_manual('foreigninclude.html'),manual,72147).
-i(c('PL_put_term'),"Make t1 point to the same term as t2.",swi_man_manual('foreigninclude.html'),manual,72670).
-i(c('PL_cons_functor'),"Create a term whose arguments are filled from a variable argument list holding the same number of term_t objects as the arity of the functor.",swi_man_manual('foreigninclude.html'),manual,73093).
-i(c('PL_cons_functor_v'),"Create a compound term like PL_cons_functor(), but a0 is an array of term references as returned by PL_new_term_refs().",swi_man_manual('foreigninclude.html'),manual,73974).
-i(c('PL_cons_list'),"Create a list (cons-) cell in l from the head h and tail t.",swi_man_manual('foreigninclude.html'),manual,74504).
-i(c('PL_put_dict'),"Create a dict from a tag and vector of atom-value pairs and put the result in h.",swi_man_manual('foreigninclude.html'),manual,75340).
-i(section(3,'12.4.5','sec:foreign-unify'),"Unifying data",swi_man_manual('foreigninclude.html'),manual,76269).
-i(c('PL_unify'),"Unify two Prolog terms and return TRUE on success.",swi_man_manual('foreigninclude.html'),manual,77874).
-i(c('PL_unify_atom'),"Unify t with the atom a and return non-zero on success.",swi_man_manual('foreigninclude.html'),manual,79884).
-i(c('PL_unify_bool'),"Unify t with either true or false.",swi_man_manual('foreigninclude.html'),manual,80120).
-i(c('PL_unify_chars'),"New function to deal with unification of char* with various encodings to a Prolog representation.",swi_man_manual('foreigninclude.html'),manual,80346).
-i(c('PL_unify_atom_chars'),"Unify t with an atom created from chars and return non-zero on success.",swi_man_manual('foreigninclude.html'),manual,81523).
-i(c('PL_unify_list_chars'),"Unify t with a list of ASCII characters constructed from chars.",swi_man_manual('foreigninclude.html'),manual,81796).
-i(c('PL_unify_string_chars'),"Unify t with a Prolog string object created from the zero-terminated string chars.",swi_man_manual('foreigninclude.html'),manual,82060).
-i(c('PL_unify_integer'),"Unify t with a Prolog integer from n.",swi_man_manual('foreigninclude.html'),manual,82483).
-i(c('PL_unify_int64'),"Unify t with a Prolog integer from n.",swi_man_manual('foreigninclude.html'),manual,82709).
-i(c('PL_unify_uint64'),"Unify t with a Prolog integer from n.",swi_man_manual('foreigninclude.html'),manual,82930).
-i(c('PL_unify_float'),"Unify t with a Prolog float from f.",swi_man_manual('foreigninclude.html'),manual,83362).
-i(c('PL_unify_pointer'),"Unify t with a Prolog integer describing the pointer.",swi_man_manual('foreigninclude.html'),manual,83580).
-i(c('PL_unify_functor'),"If t is a compound term with the given functor, just succeed.",swi_man_manual('foreigninclude.html'),manual,83987).
-i(c('PL_unify_compound'),"If t is a compound term with the given functor, just succeed.",swi_man_manual('foreigninclude.html'),manual,84562).
-i(c('PL_unify_list'),"Unify l with a list-cell (./2).",swi_man_manual('foreigninclude.html'),manual,85156).
-i(c('PL_unify_nil'),"Unify l with the atom [].",swi_man_manual('foreigninclude.html'),manual,86609).
-i(c('PL_unify_arg'),"Unifies the index-th argument (1-based) of t with a.",swi_man_manual('foreigninclude.html'),manual,86818).
-i(c('PL_unify_term'),"Unify t with a (normally) compound term.",swi_man_manual('foreigninclude.html'),manual,87070).
-i(c('PL_chars_to_term'),"Parse the string chars and put the resulting Prolog term into t.",swi_man_manual('foreigninclude.html'),manual,94952).
-i(c('PL_wchars_to_term'),"Wide character version of PL_chars_to_term().",swi_man_manual('foreigninclude.html'),manual,96504).
-i(c('PL_quote'),"Return a quoted version of string.",swi_man_manual('foreigninclude.html'),manual,96796).
-i(section(3,'12.4.6','sec:cerror'),"Convenient functions to generate Prolog exceptions",swi_man_manual('foreigninclude.html'),manual,97604).
-i(c('PL_get_atom_ex'),"As PL_get_atom(), but raises a type or instantiation error if t is not an atom.",swi_man_manual('foreigninclude.html'),manual,98619).
-i(c('PL_get_integer_ex'),"As PL_get_integer(), but raises a type or instantiation error if t is not an integer, or a representation error if the Prolog integer does not fit in a C int.",swi_man_manual('foreigninclude.html'),manual,98931).
-i(c('PL_get_long_ex'),"As PL_get_long(), but raises a type or instantiation error if t is not an atom, or a representation error if the Prolog integer does not fit in a C long.",swi_man_manual('foreigninclude.html'),manual,99342).
-i(c('PL_get_int64_ex'),"As PL_get_int64(), but raises a type or instantiation error if t is not an integer, or a representation error if the Prolog integer does not fit in a C int64_t.",swi_man_manual('foreigninclude.html'),manual,99740).
-i(c('PL_get_uint64_ex'),"As PL_get_uint64(), but raises a type, domain or instantiation error if t is not an integer or t is less than zero, or a representation error if the Prolog integer does not fit in a C int64_t.",swi_man_manual('foreigninclude.html'),manual,100151).
-i(c('PL_get_intptr_ex'),"As PL_get_intptr(), but raises a type or instantiation error if t is not an atom, or a representation error if the Prolog integer does not fit in a C intptr_t.",swi_man_manual('foreigninclude.html'),manual,100609).
-i(c('PL_get_size_ex'),"As PL_get_size(), but raises a type or instantiation error if t is not an atom, or a representation error if the Prolog integer does not fit in a C size_t.",swi_man_manual('foreigninclude.html'),manual,101023).
-i(c('PL_get_bool_ex'),"As PL_get_bool(), but raises a type or instantiation error if t is not an boolean.",swi_man_manual('foreigninclude.html'),manual,101370).
-i(c('PL_get_float_ex'),"As PL_get_float(), but raises a type or instantiation error if t is not a float.",swi_man_manual('foreigninclude.html'),manual,101682).
-i(c('PL_get_char_ex'),"Get a character code from t, where t is either an integer or an atom with length one.",swi_man_manual('foreigninclude.html'),manual,101998).
-i(c('PL_get_pointer_ex'),"As PL_get_pointer(), but raises a type or instantiation error if t is not a pointer.",swi_man_manual('foreigninclude.html'),manual,102432).
-i(c('PL_get_list_ex'),"As PL_get_list(), but raises a type or instantiation error if t is not a list.",swi_man_manual('foreigninclude.html'),manual,102761).
-i(c('PL_get_nil_ex'),"As PL_get_nil(), but raises a type or instantiation error if t is not the empty list.",swi_man_manual('foreigninclude.html'),manual,103081).
-i(c('PL_unify_list_ex'),"As PL_unify_list(), but raises a type error if t is not a variable, list-cell or the empty list.",swi_man_manual('foreigninclude.html'),manual,103385).
-i(c('PL_unify_nil_ex'),"As PL_unify_nil(), but raises a type error if t is not a variable, list-cell or the empty list.",swi_man_manual('foreigninclude.html'),manual,103730).
-i(c('PL_unify_bool_ex'),"As PL_unify_bool(), but raises a type error if t is not a variable or a boolean.",swi_man_manual('foreigninclude.html'),manual,104051).
-i(c('PL_instantiation_error'),"Raise instantiation_error.",swi_man_manual('foreigninclude.html'),manual,104850).
-i(c('PL_uninstantiation_error'),"Raise uninstantiation_error(culprit).",swi_man_manual('foreigninclude.html'),manual,105289).
-i(c('PL_representation_error'),"Raise representation_error(resource).",swi_man_manual('foreigninclude.html'),manual,105820).
-i(c('PL_type_error'),"Raise type_error(expected, culprit).",swi_man_manual('foreigninclude.html'),manual,106180).
-i(c('PL_domain_error'),"Raise domain_error(expected, culprit).",swi_man_manual('foreigninclude.html'),manual,106505).
-i(c('PL_existence_error'),"Raise existence_error(type, culprit).",swi_man_manual('foreigninclude.html'),manual,106842).
-i(c('PL_permission_error'),"Raise permission_error(operation, type, culprit).",swi_man_manual('foreigninclude.html'),manual,107174).
-i(c('PL_resource_error'),"Raise resource_error(resource).",swi_man_manual('foreigninclude.html'),manual,107562).
-i(c('PL_syntax_error'),"Raise syntax_error(message).",swi_man_manual('foreigninclude.html'),manual,107887).
-i(section(3,'12.4.7','sec:foreign-serialize'),"Serializing and deserializing Prolog terms",swi_man_manual('foreigninclude.html'),manual,108224).
-i(c('PL_put_term_from_chars'),"Parse the text from the C-string s holding len bytes and put the resulting term in t.",swi_man_manual('foreigninclude.html'),manual,108449).
-i(section(3,'12.4.8','sec:blob'),"BLOBS: Using atoms to store arbitrary binary data",swi_man_manual('foreigninclude.html'),manual,109535).
-i(section(4,'12.4.8.1','sec:blobtype'),"Defining a BLOB type",swi_man_manual('foreigninclude.html'),manual,113599).
-i(c('PL_unregister_blob_type'),"Unlink the blob type from the registered type and transform the type of possible living blobs to unregistered, avoiding further reference to the type structure, functions referred by it, as well as the data.",swi_man_manual('foreigninclude.html'),manual,120672).
-i(section(4,'12.4.8.2','sec:blobaccess'),"Accessing blobs",swi_man_manual('foreigninclude.html'),manual,121389).
-i(c('PL_is_blob'),"Succeeds if t refers to a blob, in which case type is filled with the type of the blob.",swi_man_manual('foreigninclude.html'),manual,121824).
-i(c('PL_unify_blob'),"Unify t to a blob constructed from the given data and associated with the given type.",swi_man_manual('foreigninclude.html'),manual,122093).
-i(c('PL_put_blob'),"Store the described blob in t.",swi_man_manual('foreigninclude.html'),manual,123778).
-i(c('PL_get_blob'),"If t holds a blob or atom, get the data and type and return TRUE.",swi_man_manual('foreigninclude.html'),manual,124491).
-i(c('PL_blob_data'),"Get the data and type associated to a blob.",swi_man_manual('foreigninclude.html'),manual,124904).
-i(section(3,'12.4.9','sec:gmpforeign'),"Exchanging GMP numbers",swi_man_manual('foreigninclude.html'),manual,126003).
-i(c('PL_get_mpz'),"If t represents an integer, mpz is filled with the value and the function returns TRUE.",swi_man_manual('foreigninclude.html'),manual,127875).
-i(c('PL_get_mpq'),"If t is an integer or rational number (term rdiv/2), mpq is filled with the normalised rational number and the function returns TRUE.",swi_man_manual('foreigninclude.html'),manual,128398).
-i(c('PL_unify_mpz'),"Unify t with the integer value represented by mpz and return TRUE on success.",swi_man_manual('foreigninclude.html'),manual,128989).
-i(c('PL_unify_mpq'),"Unify t with a rational number represented by mpq and return TRUE on success.",swi_man_manual('foreigninclude.html'),manual,129303).
-i(section(3,'12.4.10','sec:calling-prolog-from-c'),"Calling Prolog from C",swi_man_manual('foreigninclude.html'),manual,129704).
-i(section(4,'12.4.10.1','sec:foreign-predicate-handle'),"Predicate references",swi_man_manual('foreigninclude.html'),manual,130851).
-i(c('PL_pred'),"Return a handle to a predicate for the specified name/arity in the given module.",swi_man_manual('foreigninclude.html'),manual,131350).
-i(c('PL_predicate'),"Same as PL_pred(), but provides a more convenient interface to the C programmer.",swi_man_manual('foreigninclude.html'),manual,131788).
-i(c('PL_predicate_info'),"Return information on the predicate p.",swi_man_manual('foreigninclude.html'),manual,132118).
-i(section(4,'12.4.10.2','sec:foreign-create-query'),"Initiating a query from C",swi_man_manual('foreigninclude.html'),manual,132928).
-i(c('PL_open_query'),"Opens a query and returns an identifier for it.",swi_man_manual('foreigninclude.html'),manual,133908).
-i(c('PL_next_solution'),"Generate the first (next) solution for the given query.",swi_man_manual('foreigninclude.html'),manual,138933).
-i(c('PL_cut_query'),"Discards the query, but does not delete any of the data created by the query.",swi_man_manual('foreigninclude.html'),manual,139367).
-i(c('PL_close_query'),"As PL_cut_query(), but all data and bindings created by the query are destroyed.",swi_man_manual('foreigninclude.html'),manual,140223).
-i(c('PL_current_query'),"Returns the query id of of the current query or 0 if the current thread is not executing any queries.",swi_man_manual('foreigninclude.html'),manual,140516).
-i(c('PL_query_engine'),"Return the engine to which qid belongs.",swi_man_manual('foreigninclude.html'),manual,140781).
-i(c('PL_call_predicate'),"Shorthand for PL_open_query(), PL_next_solution(), PL_cut_query(), generating a single solution.",swi_man_manual('foreigninclude.html'),manual,141199).
-i(c('PL_call'),"Call term t just like the Prolog predicate once/1.",swi_man_manual('foreigninclude.html'),manual,141919).
-i(section(3,'12.4.11','sec:foreign-discard-term-t'),"Discarding Data",swi_man_manual('foreigninclude.html'),manual,142567).
-i(c('PL_open_foreign_frame'),"Create a foreign frame, holding a mark that allows the system to undo bindings and destroy data created after it, as well as providing the environment for creating term references.",swi_man_manual('foreigninclude.html'),manual,143235).
-i(c('PL_close_foreign_frame'),"Discard all term references created after the frame was opened.",swi_man_manual('foreigninclude.html'),manual,143649).
-i(c('PL_discard_foreign_frame'),"Same as PL_close_foreign_frame(), but also undo all bindings made since the open and destroy all Prolog data.",swi_man_manual('foreigninclude.html'),manual,144014).
-i(c('PL_rewind_foreign_frame'),"Undo all bindings and discard all term references created since the frame was created, but do not pop the frame.",swi_man_manual('foreigninclude.html'),manual,144368).
-i(section(3,'12.4.12','sec:foreign-strings'),"String buffering",swi_man_manual('foreigninclude.html'),manual,145460).
-i(c('PL_STRINGS_MARK'),"These macros must be paired and create a C block ({...}).",swi_man_manual('foreigninclude.html'),manual,146791).
-i(c('PL_STRINGS_RELEASE'),"These macros must be paired and create a C block ({...}).",swi_man_manual('foreigninclude.html'),manual,146791).
-i(section(3,'12.4.13','sec:foreign-modules'),"Foreign Code and Modules",swi_man_manual('foreigninclude.html'),manual,147784).
-i(c('PL_context'),"Return the module identifier of the context module of the currently active foreign predicate.",swi_man_manual('foreigninclude.html'),manual,148109).
-i(c('PL_strip_module'),"Utility function.",swi_man_manual('foreigninclude.html'),manual,148340).
-i(c('PL_module_name'),"Return the name of module as an atom.",swi_man_manual('foreigninclude.html'),manual,149604).
-i(c('PL_new_module'),"Find an existing module or create a new module with the name name.",swi_man_manual('foreigninclude.html'),manual,149812).
-i(section(3,'12.4.14','sec:foreign-exceptions'),"Prolog exceptions in foreign code",swi_man_manual('foreigninclude.html'),manual,150055).
-i(c('PL_raise_exception'),"Generate an exception (as throw/1) and return FALSE.",swi_man_manual('foreigninclude.html'),manual,153816).
-i(c('PL_throw'),"Similar to PL_raise_exception(), but returns using the C longjmp() function to the innermost PL_next_solution().",swi_man_manual('foreigninclude.html'),manual,156359).
-i(c('PL_exception'),"If PL_next_solution() fails, this can be due to normal failure of the Prolog call, or because an exception was raised using throw/1.",swi_man_manual('foreigninclude.html'),manual,156832).
-i(c('PL_clear_exception'),"Tells Prolog that the encountered exception must be ignored.",swi_man_manual('foreigninclude.html'),manual,157829).
-i(section(3,'12.4.15','sec:csignal'),"Catching Signals (Software Interrupts)",swi_man_manual('foreigninclude.html'),manual,158403).
-i(c('PL_sigaction'),"Install or query the status for signal sig.",swi_man_manual('foreigninclude.html'),manual,159403).
-i(c('PL_signal'),"This function is equivalent to the BSD-Unix signal() function, regardless of the platform used.",swi_man_manual('foreigninclude.html'),manual,160928).
-i(c('PL_raise'),"Register sig for synchronous handling by Prolog.",swi_man_manual('foreigninclude.html'),manual,162892).
-i(c('PL_handle_signals'),"Handle any signals pending from PL_raise().",swi_man_manual('foreigninclude.html'),manual,163380).
-i(c('PL_get_signum_ex'),"Extract a signal specification from a Prolog term and store as an integer signal number in sig.",swi_man_manual('foreigninclude.html'),manual,164263).
-i(section(3,'12.4.16','sec:foreign-misc'),"Miscellaneous",swi_man_manual('foreigninclude.html'),manual,164811).
-i(section(4,'12.4.16.1','sec:foreign-compare'),"Term Comparison",swi_man_manual('foreigninclude.html'),manual,164982).
-i(c('PL_compare'),"Compares two terms using the standard order of terms and returns -1, 0 or 1.",swi_man_manual('foreigninclude.html'),manual,165182).
-i(c('PL_same_compound'),"Yields TRUE if t1 and t2 refer to physically the same compound term and FALSE otherwise.",swi_man_manual('foreigninclude.html'),manual,165513).
-i(section(4,'12.4.16.2','sec:foreign-recorded'),"Recorded database",swi_man_manual('foreigninclude.html'),manual,165826).
-i(c('PL_record'),"Record the term t into the Prolog database as recorda/3 and return an opaque handle to the term.",swi_man_manual('foreigninclude.html'),manual,167025).
-i(c('PL_duplicate_record'),"Return a duplicate of record.",swi_man_manual('foreigninclude.html'),manual,167614).
-i(c('PL_recorded'),"Copy a recorded term back to the Prolog stack.",swi_man_manual('foreigninclude.html'),manual,167920).
-i(c('PL_erase'),"Remove the recorded term from the Prolog database, reclaiming all associated memory resources.",swi_man_manual('foreigninclude.html'),manual,168501).
-i(c('PL_record_external'),"Record the term t into the Prolog database as recorda/3 and return an opaque handle to the term.",swi_man_manual('foreigninclude.html'),manual,170147).
-i(c('PL_recorded_external'),"Copy a recorded term back to the Prolog stack.",swi_man_manual('foreigninclude.html'),manual,171164).
-i(c('PL_erase_external'),"Remove the recorded term from the Prolog database, reclaiming all associated memory resources.",swi_man_manual('foreigninclude.html'),manual,171674).
-i(section(4,'12.4.16.3','sec:foreign-db'),"Database",swi_man_manual('foreigninclude.html'),manual,171939).
-i(c('PL_assert'),"Provides direct access to asserta/1 and assertz/1 by asserting t into the database in the module m.",swi_man_manual('foreigninclude.html'),manual,172121).
-i(section(4,'12.4.16.4','sec:cfilenames'),"Getting file names",swi_man_manual('foreigninclude.html'),manual,175667).
-i(c('PL_get_file_name'),"Translate a Prolog term into a file name.",swi_man_manual('foreigninclude.html'),manual,176308).
-i(c('PL_get_file_nameW'),"Same as PL_get_file_name(), but returns the filename as a wide-character string.",swi_man_manual('foreigninclude.html'),manual,178158).
-i(section(4,'12.4.16.5','sec:cprologflags'),"Dealing with Prolog flags from C",swi_man_manual('foreigninclude.html'),manual,178716).
-i(c('PL_set_prolog_flag'),"Set/create a Prolog flag from C.",swi_man_manual('foreigninclude.html'),manual,179454).
-i(c('PL_current_prolog_flag'),"Retrieve the value of a Prolog flag from C.",swi_man_manual('foreigninclude.html'),manual,180623).
-i(section(3,'12.4.17','sec:foreign-print-warning'),"Errors and warnings",swi_man_manual('foreigninclude.html'),manual,182242).
-i(c('PL_warning'),"Print an error message starting with‘[WARNING: ’, followed by the output from format, followed by a‘]’and a newline.",swi_man_manual('foreigninclude.html'),manual,182871).
-i(section(3,'12.4.18','sec:foreign-control-prolog'),"Environment Control from Foreign Code",swi_man_manual('foreigninclude.html'),manual,183352).
-i(c('PL_action'),"Perform some action on the Prolog system.",swi_man_manual('foreigninclude.html'),manual,183584).
-i(c('PL_version_info'),"Query version information.",swi_man_manual('foreigninclude.html'),manual,186929).
-i(section(3,'12.4.19','sec:foreign-query'),"Querying Prolog",swi_man_manual('foreigninclude.html'),manual,189075).
-i(c('PL_query'),"Obtain status information on the Prolog system.",swi_man_manual('foreigninclude.html'),manual,189267).
-i(section(3,'12.4.20','sec:foreign-register-predicate'),"Registering Foreign Predicates",swi_man_manual('foreigninclude.html'),manual,191286).
-i(c('PL_register_foreign_in_module'),"Register the C function f to implement a Prolog predicate.",swi_man_manual('foreigninclude.html'),manual,191519).
-i(c('PL_register_foreign'),"Same as PL_register_foreign_in_module(), passing NULL for the module.",swi_man_manual('foreigninclude.html'),manual,195616).
-i(c('PL_register_extensions_in_module'),"Register a series of predicates from an array of definitions of the type PL_extension in the given module.",swi_man_manual('foreigninclude.html'),manual,196008).
-i(c('PL_register_extensions'),"Same as PL_register_extensions_in_module() using NULL for the module argument.",swi_man_manual('foreigninclude.html'),manual,197395).
-i(section(3,'12.4.21','sec:foreign-hooks'),"Foreign Code Hooks",swi_man_manual('foreigninclude.html'),manual,197765).
-i(c('PL_dispatch_hook'),"If this hook is not NULL, this function is called when reading from the terminal.",swi_man_manual('foreigninclude.html'),manual,198023).
-i(c('PL_abort_hook'),"Install a hook when abort/0 is executed.",swi_man_manual('foreigninclude.html'),manual,198700).
-i(c('PL_abort_unhook'),"Remove a hook installed with PL_abort_hook().",swi_man_manual('foreigninclude.html'),manual,199388).
-i(c('PL_on_halt'),"Register the function f to be called if SWI-Prolog is halted.",swi_man_manual('foreigninclude.html'),manual,199737).
-i(c('PL_exit_hook'),"Similar to PL_on_halt(), but the hooks are executed by PL_halt() instead of PL_cleanup() just before calling exit().",swi_man_manual('foreigninclude.html'),manual,201096).
-i(c('PL_agc_hook'),"Register a hook with the atom-garbage collector (see garbage_collect_atoms/0) that is called on any atom that is reclaimed.",swi_man_manual('foreigninclude.html'),manual,201566).
-i(section(3,'12.4.22','sec:foreigndata'),"Storing foreign data",swi_man_manual('foreigninclude.html'),manual,202720).
-i(section(4,'12.4.22.1','sec:foreign-store-data'),"Examples for storing foreign data",swi_man_manual('foreigninclude.html'),manual,206644).
-i(section(3,'12.4.23','sec:embedded'),"Embedding SWI-Prolog in other applications",swi_man_manual('foreigninclude.html'),manual,210831).
-i(c('PL_initialise'),"Initialises the SWI-Prolog heap and stacks, restores the Prolog state, loads the system and personal initialisation files, runs the initialization/1 hooks and finally runs the initialization goals registered using -g goal.",swi_man_manual('foreigninclude.html'),manual,212519).
-i(c('PL_winitialise'),"Wide character version of PL_initialise().",swi_man_manual('foreigninclude.html'),manual,215492).
-i(c('PL_is_initialised'),"Test whether the Prolog engine is already initialised.",swi_man_manual('foreigninclude.html'),manual,215825).
-i(c('PL_set_resource_db_mem'),"This function must be called at most once and before calling PL_initialise().",swi_man_manual('foreigninclude.html'),manual,216400).
-i(c('PL_toplevel'),"Runs the goal of the -t toplevel switch (default prolog/0) and returns 1 if successful, 0 otherwise.",swi_man_manual('foreigninclude.html'),manual,219774).
-i(c('PL_cleanup'),"This function may be called instead of PL_halt() to cleanup Prolog without exitting the process.",swi_man_manual('foreigninclude.html'),manual,220117).
-i(c('PL_cleanup_fork'),"Stop intervaltimer that may be running on behalf of profile/1.",swi_man_manual('foreigninclude.html'),manual,223207).
-i(c('PL_halt'),"Clean up the Prolog environment using PL_cleanup() and if successful call exit() with the status argument.",swi_man_manual('foreigninclude.html'),manual,223769).
-i(section(4,'12.4.23.1','sec:sigembedded'),"Threading, Signals and embedded Prolog",swi_man_manual('foreigninclude.html'),manual,224211).
+i(c('PL_new_functor'),"Returns a functor identifier, a handle for the name/arity pair.",swi_man_manual('foreigninclude.html'),manual,27413).
+i(c('PL_functor_name'),"Return an atom representing the name of the given functor.",swi_man_manual('foreigninclude.html'),manual,27716).
+i(c('PL_functor_arity'),"Return the arity of the given functor.",swi_man_manual('foreigninclude.html'),manual,27932).
+i(section(4,'12.4.2.1','sec:atomgc'),"Atoms and atom garbage collection",swi_man_manual('foreigninclude.html'),manual,28140).
+i(c('PL_register_atom'),"Increment the reference count of the atom by one.",swi_man_manual('foreigninclude.html'),manual,28873).
+i(c('PL_unregister_atom'),"Decrement the reference count of the atom.",swi_man_manual('foreigninclude.html'),manual,29387).
+i(section(3,'12.4.3','sec:foreign-term-analysis'),"Analysing Terms via the Foreign Interface",swi_man_manual('foreigninclude.html'),manual,30092).
+i(section(4,'12.4.3.1','sec:foreign-term-type'),"Testing the type of a term",swi_man_manual('foreigninclude.html'),manual,31124).
+i(c('PL_term_type'),"Obtain the type of a term, which should be a term returned by one of the other interface predicates or passed as an argument.",swi_man_manual('foreigninclude.html'),manual,31337).
+i(c('PL_is_variable'),"Returns non-zero if term is a variable.",swi_man_manual('foreigninclude.html'),manual,34099).
+i(c('PL_is_ground'),"Returns non-zero if term is a ground term.",swi_man_manual('foreigninclude.html'),manual,34295).
+i(c('PL_is_atom'),"Returns non-zero if term is an atom.",swi_man_manual('foreigninclude.html'),manual,34618).
+i(c('PL_is_string'),"Returns non-zero if term is a string.",swi_man_manual('foreigninclude.html'),manual,34803).
+i(c('PL_is_integer'),"Returns non-zero if term is an integer.",swi_man_manual('foreigninclude.html'),manual,34993).
+i(c('PL_is_rational'),"Returns non-zero if term is a rational number (P/Q).",swi_man_manual('foreigninclude.html'),manual,35187).
+i(c('PL_is_float'),"Returns non-zero if term is a float.",swi_man_manual('foreigninclude.html'),manual,35762).
+i(c('PL_is_callable'),"Returns non-zero if term is a callable term.",swi_man_manual('foreigninclude.html'),manual,36096).
+i(c('PL_is_compound'),"Returns non-zero if term is a compound term.",swi_man_manual('foreigninclude.html'),manual,36409).
+i(c('PL_is_functor'),"Returns non-zero if term is compound and its functor is functor.",swi_man_manual('foreigninclude.html'),manual,36610).
+i(c('PL_is_list'),"Returns non-zero if term is a compound term using the list constructor or the list terminator.",swi_man_manual('foreigninclude.html'),manual,37028).
+i(c('PL_is_pair'),"Returns non-zero if term is a compound term using the list constructor.",swi_man_manual('foreigninclude.html'),manual,37437).
+i(c('PL_is_dict'),"Returns non-zero if term is a dict.",swi_man_manual('foreigninclude.html'),manual,37823).
+i(c('PL_is_atomic'),"Returns non-zero if term is atomic (not a variable or compound).",swi_man_manual('foreigninclude.html'),manual,38180).
+i(c('PL_is_number'),"Returns non-zero if term is an rational (including integers) or float.",swi_man_manual('foreigninclude.html'),manual,38398).
+i(c('PL_is_acyclic'),"Returns non-zero if term is acyclic (i.e.",swi_man_manual('foreigninclude.html'),manual,38622).
+i(section(4,'12.4.3.2','sec:foreign-extract-from-term'),"Reading data from a term",swi_man_manual('foreigninclude.html'),manual,38845).
+i(c('PL_get_atom'),"If t is an atom, store the unique atom identifier over a.",swi_man_manual('foreigninclude.html'),manual,39283).
+i(c('PL_get_atom_chars'),"If t is an atom, store a pointer to a 0-terminated C-string in s.",swi_man_manual('foreigninclude.html'),manual,40055).
+i(c('PL_get_string_chars'),"If t is a string object, store a pointer to a 0-terminated C-string in s and the length of the string in len.",swi_man_manual('foreigninclude.html'),manual,40521).
+i(c('PL_get_chars'),"Convert the argument term t to a 0-terminated C-string.",swi_man_manual('foreigninclude.html'),manual,41052).
+i(c('PL_get_list_chars'),"Same as PL_get_chars(l, s, CVT_LIST|flags), provided flags contains none of the CVT_* flags.",swi_man_manual('foreigninclude.html'),manual,45300).
+i(c('PL_get_integer'),"If t is a Prolog integer, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,45709).
+i(c('PL_get_long'),"If t is a Prolog integer that can be represented as a long, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,46182).
+i(c('PL_get_int64'),"If t is a Prolog integer or float that can be represented as a int64_t, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,46754).
+i(c('PL_get_uint64'),"If t is a Prolog integer that can be represented as a uint64_t, assign its value over i.",swi_man_manual('foreigninclude.html'),manual,47044).
+i(c('PL_get_intptr'),"Get an integer that is at least as wide as a pointer.",swi_man_manual('foreigninclude.html'),manual,47435).
+i(c('PL_get_bool'),"If t has the value true or false, set val to the C constant TRUE or FALSE and return success, otherwise return failure.",swi_man_manual('foreigninclude.html'),manual,47934).
+i(c('PL_get_pointer'),"In the current system, pointers are represented by Prolog integers, but need some manipulation to make sure they do not get truncated due to the limited Prolog integer range.",swi_man_manual('foreigninclude.html'),manual,48284).
+i(c('PL_get_float'),"If t is a float, integer or rational number, its value is assigned over f.",swi_man_manual('foreigninclude.html'),manual,48867).
+i(c('PL_get_functor'),"If t is compound or an atom, the Prolog representation of the name-arity pair will be assigned over f.",swi_man_manual('foreigninclude.html'),manual,49248).
+i(c('PL_get_name_arity'),"If t is compound or an atom, the functor name will be assigned over name and the arity over arity.",swi_man_manual('foreigninclude.html'),manual,49718).
+i(c('PL_get_compound_name_arity'),"If t is compound term, the functor name will be assigned over name and the arity over arity.",swi_man_manual('foreigninclude.html'),manual,50292).
+i(c('PL_get_module'),"If t is an atom, the system will look up or create the corresponding module and assign an opaque pointer to it over module.",swi_man_manual('foreigninclude.html'),manual,50781).
+i(c('PL_get_arg'),"If t is compound and index is between 1 and arity (inclusive), assign a with a term reference to the argument.",swi_man_manual('foreigninclude.html'),manual,51091).
+i(c('PL_get_dict_key'),"If dict is a dict, get the associated value in value.",swi_man_manual('foreigninclude.html'),manual,51777).
+i(section(4,'12.4.3.3','sec:foreign-text-with-length'),"Exchanging text using length and string",swi_man_manual('foreigninclude.html'),manual,52155).
+i(c('PL_get_atom_nchars'),"See PL_get_atom_chars().",swi_man_manual('foreigninclude.html'),manual,52770).
+i(c('PL_get_list_nchars'),"See PL_get_list_chars().",swi_man_manual('foreigninclude.html'),manual,53042).
+i(c('PL_get_nchars'),"See PL_get_chars().",swi_man_manual('foreigninclude.html'),manual,53314).
+i(c('PL_put_atom_nchars'),"See PL_put_atom_chars().",swi_man_manual('foreigninclude.html'),manual,53586).
+i(c('PL_put_string_nchars'),"See PL_put_string_chars().",swi_man_manual('foreigninclude.html'),manual,53862).
+i(c('PL_put_list_ncodes'),"See PL_put_list_codes().",swi_man_manual('foreigninclude.html'),manual,54146).
+i(c('PL_put_list_nchars'),"See PL_put_list_chars().",swi_man_manual('foreigninclude.html'),manual,54362).
+i(c('PL_unify_atom_nchars'),"See PL_unify_atom_chars().",swi_man_manual('foreigninclude.html'),manual,54638).
+i(c('PL_unify_string_nchars'),"See PL_unify_string_chars().",swi_man_manual('foreigninclude.html'),manual,54922).
+i(c('PL_unify_list_ncodes'),"See PL_unify_codes().",swi_man_manual('foreigninclude.html'),manual,55214).
+i(c('PL_unify_list_nchars'),"See PL_unify_list_chars().",swi_man_manual('foreigninclude.html'),manual,55431).
+i(c('PL_new_atom_nchars'),"Create a new atom as PL_new_atom(), but using the given length and characters.",swi_man_manual('foreigninclude.html'),manual,55832).
+i(c('PL_atom_nchars'),"Extract the text and length of an atom.",swi_man_manual('foreigninclude.html'),manual,56245).
+i(section(4,'12.4.3.4','sec:foreign-unicode'),"Wide-character versions",swi_man_manual('foreigninclude.html'),manual,56466).
+i(c('PL_new_atom_wchars'),"Create atom from wide-character string as PL_new_atom_nchars() does for ISO-Latin-1 strings.",swi_man_manual('foreigninclude.html'),manual,57319).
+i(c('PL_atom_wchars'),"Extract characters from a wide-character atom.",swi_man_manual('foreigninclude.html'),manual,57850).
+i(c('PL_get_wchars'),"Wide-character version of PL_get_chars().",swi_man_manual('foreigninclude.html'),manual,58427).
+i(c('PL_unify_wchars'),"Unify t with a textual representation of the C wide-character array s.",swi_man_manual('foreigninclude.html'),manual,59014).
+i(c('PL_unify_wchars_diff'),"Difference list version of PL_unify_wchars(), only supporting the types PL_CODE_LIST and PL_CHAR_LIST.",swi_man_manual('foreigninclude.html'),manual,59482).
+i(section(4,'12.4.3.5','sec:foreign-read-list'),"Reading a list",swi_man_manual('foreigninclude.html'),manual,60229).
+i(c('PL_get_list'),"If l is a list and not the empty list, assign a term reference to the head to h and to the tail to t.",swi_man_manual('foreigninclude.html'),manual,61196).
+i(c('PL_get_head'),"If l is a list and not the empty list, assign a term reference to the head to h.",swi_man_manual('foreigninclude.html'),manual,61497).
+i(c('PL_get_tail'),"If l is a list and not the empty list, assign a term reference to the tail to t.",swi_man_manual('foreigninclude.html'),manual,61755).
+i(c('PL_get_nil'),"Succeeds if l represents the list termination constant.",swi_man_manual('foreigninclude.html'),manual,62013).
+i(c('PL_skip_list'),"This is a multi-purpose function to deal with lists.",swi_man_manual('foreigninclude.html'),manual,62221).
+i(section(4,'12.4.3.6','sec:foreign-options'),"Processing option lists and dicts",swi_man_manual('foreigninclude.html'),manual,63794).
+i(c('PL_scan_options'),"Process an option list as we find with, e.g., write_term/2 and many other builtin predicates.",swi_man_manual('foreigninclude.html'),manual,64010).
+i(section(4,'12.4.3.7','sec:foreign-write'),"An example: defining write/1 in C",swi_man_manual('foreigninclude.html'),manual,68590).
+i(section(3,'12.4.4','sec:foreign-term-construct'),"Constructing Terms",swi_man_manual('foreigninclude.html'),manual,70228).
+i(c('PL_put_variable'),"Put a fresh variable in the term, resetting the term reference to its initial state.",swi_man_manual('foreigninclude.html'),manual,71087).
+i(c('PL_put_atom'),"Put an atom in the term reference from a handle.",swi_man_manual('foreigninclude.html'),manual,71434).
+i(c('PL_put_bool'),"Put one of the atoms true or false in the term reference See also PL_put_atom(), PL_unify_bool() and PL_get_bool().",swi_man_manual('foreigninclude.html'),manual,71806).
+i(c('PL_put_chars'),"New function to deal with setting a term from a char* with various encodings.",swi_man_manual('foreigninclude.html'),manual,72288).
+i(c('PL_put_atom_chars'),"Put an atom in the term reference constructed from the zero-terminated string.",swi_man_manual('foreigninclude.html'),manual,73201).
+i(c('PL_put_string_chars'),"Put a zero-terminated string in the term reference.",swi_man_manual('foreigninclude.html'),manual,73531).
+i(c('PL_put_string_nchars'),"Put a string, represented by a length/start pointer pair in the term reference.",swi_man_manual('foreigninclude.html'),manual,73891).
+i(c('PL_put_list_chars'),"Put a list of ASCII values in the term reference.",swi_man_manual('foreigninclude.html'),manual,74332).
+i(c('PL_put_integer'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,74557).
+i(c('PL_put_int64'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,74759).
+i(c('PL_put_uint64'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,74960).
+i(c('PL_put_pointer'),"Put a Prolog integer in the term reference.",swi_man_manual('foreigninclude.html'),manual,75384).
+i(c('PL_put_float'),"Put a floating-point value in the term reference.",swi_man_manual('foreigninclude.html'),manual,75755).
+i(c('PL_put_functor'),"Create a new compound term from functor and bind t to this term.",swi_man_manual('foreigninclude.html'),manual,75960).
+i(c('PL_put_list'),"As PL_put_functor(), using the list-cell functor.",swi_man_manual('foreigninclude.html'),manual,76479).
+i(c('PL_put_nil'),"Put the list terminator constant in l.",swi_man_manual('foreigninclude.html'),manual,76958).
+i(c('PL_put_term'),"Make t1 point to the same term as t2.",swi_man_manual('foreigninclude.html'),manual,77481).
+i(c('PL_cons_functor'),"Create a term whose arguments are filled from a variable argument list holding the same number of term_t objects as the arity of the functor.",swi_man_manual('foreigninclude.html'),manual,77904).
+i(c('PL_cons_functor_v'),"Create a compound term like PL_cons_functor(), but a0 is an array of term references as returned by PL_new_term_refs().",swi_man_manual('foreigninclude.html'),manual,78785).
+i(c('PL_cons_list'),"Create a list (cons-) cell in l from the head h and tail t.",swi_man_manual('foreigninclude.html'),manual,79315).
+i(c('PL_put_dict'),"Create a dict from a tag and vector of atom-value pairs and put the result in h.",swi_man_manual('foreigninclude.html'),manual,80151).
+i(section(3,'12.4.5','sec:foreign-unify'),"Unifying data",swi_man_manual('foreigninclude.html'),manual,81080).
+i(c('PL_unify'),"Unify two Prolog terms and return TRUE on success.",swi_man_manual('foreigninclude.html'),manual,82685).
+i(c('PL_unify_atom'),"Unify t with the atom a and return non-zero on success.",swi_man_manual('foreigninclude.html'),manual,84695).
+i(c('PL_unify_bool'),"Unify t with either true or false.",swi_man_manual('foreigninclude.html'),manual,84931).
+i(c('PL_unify_chars'),"New function to deal with unification of char* with various encodings to a Prolog representation.",swi_man_manual('foreigninclude.html'),manual,85157).
+i(c('PL_unify_atom_chars'),"Unify t with an atom created from chars and return non-zero on success.",swi_man_manual('foreigninclude.html'),manual,86334).
+i(c('PL_unify_list_chars'),"Unify t with a list of ASCII characters constructed from chars.",swi_man_manual('foreigninclude.html'),manual,86607).
+i(c('PL_unify_string_chars'),"Unify t with a Prolog string object created from the zero-terminated string chars.",swi_man_manual('foreigninclude.html'),manual,86871).
+i(c('PL_unify_integer'),"Unify t with a Prolog integer from n.",swi_man_manual('foreigninclude.html'),manual,87294).
+i(c('PL_unify_int64'),"Unify t with a Prolog integer from n.",swi_man_manual('foreigninclude.html'),manual,87520).
+i(c('PL_unify_uint64'),"Unify t with a Prolog integer from n.",swi_man_manual('foreigninclude.html'),manual,87741).
+i(c('PL_unify_float'),"Unify t with a Prolog float from f.",swi_man_manual('foreigninclude.html'),manual,88173).
+i(c('PL_unify_pointer'),"Unify t with a Prolog integer describing the pointer.",swi_man_manual('foreigninclude.html'),manual,88391).
+i(c('PL_unify_functor'),"If t is a compound term with the given functor, just succeed.",swi_man_manual('foreigninclude.html'),manual,88798).
+i(c('PL_unify_compound'),"If t is a compound term with the given functor, just succeed.",swi_man_manual('foreigninclude.html'),manual,89373).
+i(c('PL_unify_list'),"Unify l with a list-cell (./2).",swi_man_manual('foreigninclude.html'),manual,89967).
+i(c('PL_unify_nil'),"Unify l with the atom [].",swi_man_manual('foreigninclude.html'),manual,91420).
+i(c('PL_unify_arg'),"Unifies the index-th argument (1-based) of t with a.",swi_man_manual('foreigninclude.html'),manual,91629).
+i(c('PL_unify_term'),"Unify t with a (normally) compound term.",swi_man_manual('foreigninclude.html'),manual,91881).
+i(c('PL_chars_to_term'),"Parse the string chars and put the resulting Prolog term into t.",swi_man_manual('foreigninclude.html'),manual,99763).
+i(c('PL_wchars_to_term'),"Wide character version of PL_chars_to_term().",swi_man_manual('foreigninclude.html'),manual,101315).
+i(c('PL_quote'),"Return a quoted version of string.",swi_man_manual('foreigninclude.html'),manual,101607).
+i(section(3,'12.4.6','sec:cerror'),"Convenient functions to generate Prolog exceptions",swi_man_manual('foreigninclude.html'),manual,102415).
+i(c('PL_get_atom_ex'),"As PL_get_atom(), but raises a type or instantiation error if t is not an atom.",swi_man_manual('foreigninclude.html'),manual,103430).
+i(c('PL_get_integer_ex'),"As PL_get_integer(), but raises a type or instantiation error if t is not an integer, or a representation error if the Prolog integer does not fit in a C int.",swi_man_manual('foreigninclude.html'),manual,103742).
+i(c('PL_get_long_ex'),"As PL_get_long(), but raises a type or instantiation error if t is not an atom, or a representation error if the Prolog integer does not fit in a C long.",swi_man_manual('foreigninclude.html'),manual,104153).
+i(c('PL_get_int64_ex'),"As PL_get_int64(), but raises a type or instantiation error if t is not an integer, or a representation error if the Prolog integer does not fit in a C int64_t.",swi_man_manual('foreigninclude.html'),manual,104551).
+i(c('PL_get_uint64_ex'),"As PL_get_uint64(), but raises a type, domain or instantiation error if t is not an integer or t is less than zero, or a representation error if the Prolog integer does not fit in a C int64_t.",swi_man_manual('foreigninclude.html'),manual,104962).
+i(c('PL_get_intptr_ex'),"As PL_get_intptr(), but raises a type or instantiation error if t is not an atom, or a representation error if the Prolog integer does not fit in a C intptr_t.",swi_man_manual('foreigninclude.html'),manual,105420).
+i(c('PL_get_size_ex'),"As PL_get_size(), but raises a type or instantiation error if t is not an atom, or a representation error if the Prolog integer does not fit in a C size_t.",swi_man_manual('foreigninclude.html'),manual,105834).
+i(c('PL_get_bool_ex'),"As PL_get_bool(), but raises a type or instantiation error if t is not an boolean.",swi_man_manual('foreigninclude.html'),manual,106181).
+i(c('PL_get_float_ex'),"As PL_get_float(), but raises a type or instantiation error if t is not a float.",swi_man_manual('foreigninclude.html'),manual,106493).
+i(c('PL_get_char_ex'),"Get a character code from t, where t is either an integer or an atom with length one.",swi_man_manual('foreigninclude.html'),manual,106809).
+i(c('PL_get_pointer_ex'),"As PL_get_pointer(), but raises a type or instantiation error if t is not a pointer.",swi_man_manual('foreigninclude.html'),manual,107243).
+i(c('PL_get_list_ex'),"As PL_get_list(), but raises a type or instantiation error if t is not a list.",swi_man_manual('foreigninclude.html'),manual,107572).
+i(c('PL_get_nil_ex'),"As PL_get_nil(), but raises a type or instantiation error if t is not the empty list.",swi_man_manual('foreigninclude.html'),manual,107892).
+i(c('PL_unify_list_ex'),"As PL_unify_list(), but raises a type error if t is not a variable, list-cell or the empty list.",swi_man_manual('foreigninclude.html'),manual,108196).
+i(c('PL_unify_nil_ex'),"As PL_unify_nil(), but raises a type error if t is not a variable, list-cell or the empty list.",swi_man_manual('foreigninclude.html'),manual,108541).
+i(c('PL_unify_bool_ex'),"As PL_unify_bool(), but raises a type error if t is not a variable or a boolean.",swi_man_manual('foreigninclude.html'),manual,108862).
+i(c('PL_instantiation_error'),"Raise instantiation_error.",swi_man_manual('foreigninclude.html'),manual,109661).
+i(c('PL_uninstantiation_error'),"Raise uninstantiation_error(culprit).",swi_man_manual('foreigninclude.html'),manual,110100).
+i(c('PL_representation_error'),"Raise representation_error(resource).",swi_man_manual('foreigninclude.html'),manual,110631).
+i(c('PL_type_error'),"Raise type_error(expected, culprit).",swi_man_manual('foreigninclude.html'),manual,110991).
+i(c('PL_domain_error'),"Raise domain_error(expected, culprit).",swi_man_manual('foreigninclude.html'),manual,111316).
+i(c('PL_existence_error'),"Raise existence_error(type, culprit).",swi_man_manual('foreigninclude.html'),manual,111653).
+i(c('PL_permission_error'),"Raise permission_error(operation, type, culprit).",swi_man_manual('foreigninclude.html'),manual,111985).
+i(c('PL_resource_error'),"Raise resource_error(resource).",swi_man_manual('foreigninclude.html'),manual,112373).
+i(c('PL_syntax_error'),"Raise syntax_error(message).",swi_man_manual('foreigninclude.html'),manual,112698).
+i(section(3,'12.4.7','sec:foreign-serialize'),"Serializing and deserializing Prolog terms",swi_man_manual('foreigninclude.html'),manual,113035).
+i(c('PL_put_term_from_chars'),"Parse the text from the C-string s holding len bytes and put the resulting term in t.",swi_man_manual('foreigninclude.html'),manual,113260).
+i(section(3,'12.4.8','sec:blob'),"BLOBS: Using atoms to store arbitrary binary data",swi_man_manual('foreigninclude.html'),manual,114346).
+i(section(4,'12.4.8.1','sec:blobtype'),"Defining a BLOB type",swi_man_manual('foreigninclude.html'),manual,118621).
+i(c('PL_unregister_blob_type'),"Unlink the blob type from the registered type and transform the type of possible living blobs to unregistered, avoiding further reference to the type structure, functions referred by it, as well as the data.",swi_man_manual('foreigninclude.html'),manual,127017).
+i(section(4,'12.4.8.2','sec:blobaccess'),"Accessing blobs",swi_man_manual('foreigninclude.html'),manual,127734).
+i(c('PL_is_blob'),"Succeeds if t refers to a blob, in which case type is filled with the type of the blob.",swi_man_manual('foreigninclude.html'),manual,128169).
+i(c('PL_unify_blob'),"Unify t to a blob constructed from the given data and associated with the given type.",swi_man_manual('foreigninclude.html'),manual,128438).
+i(c('PL_put_blob'),"Store the described blob in t.",swi_man_manual('foreigninclude.html'),manual,130123).
+i(c('PL_get_blob'),"If t holds a blob or atom, get the data and type and return TRUE.",swi_man_manual('foreigninclude.html'),manual,130836).
+i(c('PL_blob_data'),"Get the data and type associated to a blob.",swi_man_manual('foreigninclude.html'),manual,131249).
+i(section(3,'12.4.9','sec:gmpforeign'),"Exchanging GMP numbers",swi_man_manual('foreigninclude.html'),manual,132348).
+i(c('PL_get_mpz'),"If t represents an integer, mpz is filled with the value and the function returns TRUE.",swi_man_manual('foreigninclude.html'),manual,134220).
+i(c('PL_get_mpq'),"If t is an integer or rational number (term rdiv/2), mpq is filled with the normalised rational number and the function returns TRUE.",swi_man_manual('foreigninclude.html'),manual,134743).
+i(c('PL_unify_mpz'),"Unify t with the integer value represented by mpz and return TRUE on success.",swi_man_manual('foreigninclude.html'),manual,135334).
+i(c('PL_unify_mpq'),"Unify t with a rational number represented by mpq and return TRUE on success.",swi_man_manual('foreigninclude.html'),manual,135648).
+i(section(3,'12.4.10','sec:calling-prolog-from-c'),"Calling Prolog from C",swi_man_manual('foreigninclude.html'),manual,136049).
+i(section(4,'12.4.10.1','sec:foreign-predicate-handle'),"Predicate references",swi_man_manual('foreigninclude.html'),manual,137196).
+i(c('PL_pred'),"Return a handle to a predicate for the specified name/arity in the given module.",swi_man_manual('foreigninclude.html'),manual,137695).
+i(c('PL_predicate'),"Same as PL_pred(), but provides a more convenient interface to the C programmer.",swi_man_manual('foreigninclude.html'),manual,138133).
+i(c('PL_predicate_info'),"Return information on the predicate p.",swi_man_manual('foreigninclude.html'),manual,138463).
+i(section(4,'12.4.10.2','sec:foreign-create-query'),"Initiating a query from C",swi_man_manual('foreigninclude.html'),manual,139273).
+i(c('PL_open_query'),"Opens a query and returns an identifier for it.",swi_man_manual('foreigninclude.html'),manual,140253).
+i(c('PL_next_solution'),"Generate the first (next) solution for the given query.",swi_man_manual('foreigninclude.html'),manual,145278).
+i(c('PL_cut_query'),"Discards the query, but does not delete any of the data created by the query.",swi_man_manual('foreigninclude.html'),manual,145712).
+i(c('PL_close_query'),"As PL_cut_query(), but all data and bindings created by the query are destroyed.",swi_man_manual('foreigninclude.html'),manual,146568).
+i(c('PL_current_query'),"Returns the query id of of the current query or 0 if the current thread is not executing any queries.",swi_man_manual('foreigninclude.html'),manual,146861).
+i(c('PL_query_engine'),"Return the engine to which qid belongs.",swi_man_manual('foreigninclude.html'),manual,147126).
+i(c('PL_call_predicate'),"Shorthand for PL_open_query(), PL_next_solution(), PL_cut_query(), generating a single solution.",swi_man_manual('foreigninclude.html'),manual,147544).
+i(c('PL_call'),"Call term t just like the Prolog predicate once/1.",swi_man_manual('foreigninclude.html'),manual,148264).
+i(section(3,'12.4.11','sec:foreign-discard-term-t'),"Discarding Data",swi_man_manual('foreigninclude.html'),manual,148912).
+i(c('PL_open_foreign_frame'),"Create a foreign frame, holding a mark that allows the system to undo bindings and destroy data created after it, as well as providing the environment for creating term references.",swi_man_manual('foreigninclude.html'),manual,149580).
+i(c('PL_close_foreign_frame'),"Discard all term references created after the frame was opened.",swi_man_manual('foreigninclude.html'),manual,149994).
+i(c('PL_discard_foreign_frame'),"Same as PL_close_foreign_frame(), but also undo all bindings made since the open and destroy all Prolog data.",swi_man_manual('foreigninclude.html'),manual,150359).
+i(c('PL_rewind_foreign_frame'),"Undo all bindings and discard all term references created since the frame was created, but do not pop the frame.",swi_man_manual('foreigninclude.html'),manual,150713).
+i(section(3,'12.4.12','sec:foreign-strings'),"String buffering",swi_man_manual('foreigninclude.html'),manual,151805).
+i(c('PL_STRINGS_MARK'),"These macros must be paired and create a C block ({...}).",swi_man_manual('foreigninclude.html'),manual,153136).
+i(c('PL_STRINGS_RELEASE'),"These macros must be paired and create a C block ({...}).",swi_man_manual('foreigninclude.html'),manual,153136).
+i(section(3,'12.4.13','sec:foreign-modules'),"Foreign Code and Modules",swi_man_manual('foreigninclude.html'),manual,154129).
+i(c('PL_context'),"Return the module identifier of the context module of the currently active foreign predicate.",swi_man_manual('foreigninclude.html'),manual,154454).
+i(c('PL_strip_module'),"Utility function.",swi_man_manual('foreigninclude.html'),manual,154685).
+i(c('PL_module_name'),"Return the name of module as an atom.",swi_man_manual('foreigninclude.html'),manual,155949).
+i(c('PL_new_module'),"Find an existing module or create a new module with the name name.",swi_man_manual('foreigninclude.html'),manual,156157).
+i(section(3,'12.4.14','sec:foreign-exceptions'),"Prolog exceptions in foreign code",swi_man_manual('foreigninclude.html'),manual,156400).
+i(c('PL_raise_exception'),"Generate an exception (as throw/1) and return FALSE.",swi_man_manual('foreigninclude.html'),manual,160161).
+i(c('PL_throw'),"Similar to PL_raise_exception(), but returns using the C longjmp() function to the innermost PL_next_solution().",swi_man_manual('foreigninclude.html'),manual,162704).
+i(c('PL_exception'),"If PL_next_solution() fails, this can be due to normal failure of the Prolog call, or because an exception was raised using throw/1.",swi_man_manual('foreigninclude.html'),manual,163177).
+i(c('PL_clear_exception'),"Tells Prolog that the encountered exception must be ignored.",swi_man_manual('foreigninclude.html'),manual,164174).
+i(section(3,'12.4.15','sec:csignal'),"Catching Signals (Software Interrupts)",swi_man_manual('foreigninclude.html'),manual,164748).
+i(c('PL_sigaction'),"Install or query the status for signal sig.",swi_man_manual('foreigninclude.html'),manual,165748).
+i(c('PL_signal'),"This function is equivalent to the BSD-Unix signal() function, regardless of the platform used.",swi_man_manual('foreigninclude.html'),manual,167273).
+i(c('PL_raise'),"Register sig for synchronous handling by Prolog.",swi_man_manual('foreigninclude.html'),manual,169237).
+i(c('PL_handle_signals'),"Handle any signals pending from PL_raise().",swi_man_manual('foreigninclude.html'),manual,169725).
+i(c('PL_get_signum_ex'),"Extract a signal specification from a Prolog term and store as an integer signal number in sig.",swi_man_manual('foreigninclude.html'),manual,170608).
+i(section(3,'12.4.16','sec:foreign-misc'),"Miscellaneous",swi_man_manual('foreigninclude.html'),manual,171156).
+i(section(4,'12.4.16.1','sec:foreign-compare'),"Term Comparison",swi_man_manual('foreigninclude.html'),manual,171327).
+i(c('PL_compare'),"Compares two terms using the standard order of terms and returns -1, 0 or 1.",swi_man_manual('foreigninclude.html'),manual,171527).
+i(c('PL_same_compound'),"Yields TRUE if t1 and t2 refer to physically the same compound term and FALSE otherwise.",swi_man_manual('foreigninclude.html'),manual,171858).
+i(section(4,'12.4.16.2','sec:foreign-recorded'),"Recorded database",swi_man_manual('foreigninclude.html'),manual,172171).
+i(c('PL_record'),"Record the term t into the Prolog database as recorda/3 and return an opaque handle to the term.",swi_man_manual('foreigninclude.html'),manual,173370).
+i(c('PL_duplicate_record'),"Return a duplicate of record.",swi_man_manual('foreigninclude.html'),manual,173959).
+i(c('PL_recorded'),"Copy a recorded term back to the Prolog stack.",swi_man_manual('foreigninclude.html'),manual,174265).
+i(c('PL_erase'),"Remove the recorded term from the Prolog database, reclaiming all associated memory resources.",swi_man_manual('foreigninclude.html'),manual,174846).
+i(c('PL_record_external'),"Record the term t into the Prolog database as recorda/3 and return an opaque handle to the term.",swi_man_manual('foreigninclude.html'),manual,176492).
+i(c('PL_recorded_external'),"Copy a recorded term back to the Prolog stack.",swi_man_manual('foreigninclude.html'),manual,177509).
+i(c('PL_erase_external'),"Remove the recorded term from the Prolog database, reclaiming all associated memory resources.",swi_man_manual('foreigninclude.html'),manual,178019).
+i(section(4,'12.4.16.3','sec:foreign-db'),"Database",swi_man_manual('foreigninclude.html'),manual,178284).
+i(c('PL_assert'),"Provides direct access to asserta/1 and assertz/1 by asserting t into the database in the module m.",swi_man_manual('foreigninclude.html'),manual,178466).
+i(section(4,'12.4.16.4','sec:cfilenames'),"Getting file names",swi_man_manual('foreigninclude.html'),manual,182012).
+i(c('PL_get_file_name'),"Translate a Prolog term into a file name.",swi_man_manual('foreigninclude.html'),manual,182653).
+i(c('PL_get_file_nameW'),"Same as PL_get_file_name(), but returns the filename as a wide-character string.",swi_man_manual('foreigninclude.html'),manual,184503).
+i(section(4,'12.4.16.5','sec:cprologflags'),"Dealing with Prolog flags from C",swi_man_manual('foreigninclude.html'),manual,185061).
+i(c('PL_set_prolog_flag'),"Set/create a Prolog flag from C.",swi_man_manual('foreigninclude.html'),manual,185799).
+i(c('PL_current_prolog_flag'),"Retrieve the value of a Prolog flag from C.",swi_man_manual('foreigninclude.html'),manual,186968).
+i(section(3,'12.4.17','sec:foreign-print-warning'),"Errors and warnings",swi_man_manual('foreigninclude.html'),manual,188587).
+i(c('PL_warning'),"Print an error message starting with‘[WARNING: ’, followed by the output from format, followed by a‘]’and a newline.",swi_man_manual('foreigninclude.html'),manual,189216).
+i(section(3,'12.4.18','sec:foreign-control-prolog'),"Environment Control from Foreign Code",swi_man_manual('foreigninclude.html'),manual,189697).
+i(c('PL_action'),"Perform some action on the Prolog system.",swi_man_manual('foreigninclude.html'),manual,189929).
+i(c('PL_version_info'),"Query version information.",swi_man_manual('foreigninclude.html'),manual,193274).
+i(section(3,'12.4.19','sec:foreign-query'),"Querying Prolog",swi_man_manual('foreigninclude.html'),manual,195420).
+i(c('PL_query'),"Obtain status information on the Prolog system.",swi_man_manual('foreigninclude.html'),manual,195612).
+i(section(3,'12.4.20','sec:foreign-register-predicate'),"Registering Foreign Predicates",swi_man_manual('foreigninclude.html'),manual,197631).
+i(c('PL_register_foreign_in_module'),"Register the C function f to implement a Prolog predicate.",swi_man_manual('foreigninclude.html'),manual,197864).
+i(c('PL_register_foreign'),"Same as PL_register_foreign_in_module(), passing NULL for the module.",swi_man_manual('foreigninclude.html'),manual,201961).
+i(c('PL_register_extensions_in_module'),"Register a series of predicates from an array of definitions of the type PL_extension in the given module.",swi_man_manual('foreigninclude.html'),manual,202353).
+i(c('PL_register_extensions'),"Same as PL_register_extensions_in_module() using NULL for the module argument.",swi_man_manual('foreigninclude.html'),manual,203740).
+i(section(3,'12.4.21','sec:foreign-hooks'),"Foreign Code Hooks",swi_man_manual('foreigninclude.html'),manual,204110).
+i(c('PL_dispatch_hook'),"If this hook is not NULL, this function is called when reading from the terminal.",swi_man_manual('foreigninclude.html'),manual,204368).
+i(c('PL_abort_hook'),"Install a hook when abort/0 is executed.",swi_man_manual('foreigninclude.html'),manual,205045).
+i(c('PL_abort_unhook'),"Remove a hook installed with PL_abort_hook().",swi_man_manual('foreigninclude.html'),manual,205733).
+i(c('PL_on_halt'),"Register the function f to be called if SWI-Prolog is halted.",swi_man_manual('foreigninclude.html'),manual,206082).
+i(c('PL_exit_hook'),"Similar to PL_on_halt(), but the hooks are executed by PL_halt() instead of PL_cleanup() just before calling exit().",swi_man_manual('foreigninclude.html'),manual,207441).
+i(c('PL_agc_hook'),"Register a hook with the atom-garbage collector (see garbage_collect_atoms/0) that is called on any atom that is reclaimed.",swi_man_manual('foreigninclude.html'),manual,207911).
+i(section(3,'12.4.22','sec:foreigndata'),"Storing foreign data",swi_man_manual('foreigninclude.html'),manual,209065).
+i(section(4,'12.4.22.1','sec:foreign-store-data'),"Examples for storing foreign data",swi_man_manual('foreigninclude.html'),manual,212989).
+i(section(3,'12.4.23','sec:embedded'),"Embedding SWI-Prolog in other applications",swi_man_manual('foreigninclude.html'),manual,217176).
+i(c('PL_initialise'),"Initialises the SWI-Prolog heap and stacks, restores the Prolog state, loads the system and personal initialisation files, runs the initialization/1 hooks and finally runs the initialization goals registered using -g goal.",swi_man_manual('foreigninclude.html'),manual,218864).
+i(c('PL_winitialise'),"Wide character version of PL_initialise().",swi_man_manual('foreigninclude.html'),manual,221837).
+i(c('PL_is_initialised'),"Test whether the Prolog engine is already initialised.",swi_man_manual('foreigninclude.html'),manual,222170).
+i(c('PL_set_resource_db_mem'),"This function must be called at most once and before calling PL_initialise().",swi_man_manual('foreigninclude.html'),manual,222745).
+i(c('PL_toplevel'),"Runs the goal of the -t toplevel switch (default prolog/0) and returns 1 if successful, 0 otherwise.",swi_man_manual('foreigninclude.html'),manual,226119).
+i(c('PL_cleanup'),"This function may be called instead of PL_halt() to cleanup Prolog without exitting the process.",swi_man_manual('foreigninclude.html'),manual,226462).
+i(c('PL_cleanup_fork'),"Stop intervaltimer that may be running on behalf of profile/1.",swi_man_manual('foreigninclude.html'),manual,229552).
+i(c('PL_halt'),"Clean up the Prolog environment using PL_cleanup() and if successful call exit() with the status argument.",swi_man_manual('foreigninclude.html'),manual,230114).
+i(section(4,'12.4.23.1','sec:sigembedded'),"Threading, Signals and embedded Prolog",swi_man_manual('foreigninclude.html'),manual,230556).
 i(section(2,'12.2','sec:foreignlink'),"Linking Foreign Modules",swi_man_manual('foreignlink.html'),manual,3541).
 i(section(3,'12.2.1','sec:foreign-linking'),"What linking is provided?",swi_man_manual('foreignlink.html'),manual,4757).
 i(section(3,'12.2.2','sec:foreign-linking-options'),"What kind of loading should I be using?",swi_man_manual('foreignlink.html'),manual,5660).
@@ -1205,13 +1209,12 @@ i(/(unload_foreign_library,1),"Unload a shared object or DLL.",swi_man_manual('f
 i(/(unload_foreign_library,2),"Unload a shared object or DLL.",swi_man_manual('foreignlink.html'),manual,12350).
 i(/(current_foreign_library,2),"Query currently loaded shared libraries.",swi_man_manual('foreignlink.html'),manual,12933).
 i(/(reload_foreign_libraries,0),"Reload all foreign libraries loaded (after restore of a state created using qsave_program/2.",swi_man_manual('foreignlink.html'),manual,13131).
-i(/(win_add_dll_directory,1),"Add AbsDir to the directories where dependent DLLs are searched on Windows systems.",swi_man_manual('foreignlink.html'),manual,13417).
-i(section(3,'12.2.4','sec:sharedobj'),"Low-level operations on shared libraries",swi_man_manual('foreignlink.html'),manual,13857).
-i(/(open_shared_object,2),"File is the name of a shared object file (DLL in MS-Windows).",swi_man_manual('foreignlink.html'),manual,14557).
-i(/(open_shared_object,3),"As open_shared_object/2, but allows for additional flags to be passed.",swi_man_manual('foreignlink.html'),manual,15362).
-i(/(close_shared_object,1),"Detach the shared object identified by Handle.",swi_man_manual('foreignlink.html'),manual,16148).
-i(/(call_shared_object_function,2),"Call the named function in the loaded shared library.",swi_man_manual('foreignlink.html'),manual,16347).
-i(section(3,'12.2.5','sec:static-linking'),"Static Linking",swi_man_manual('foreignlink.html'),manual,16824).
+i(section(3,'12.2.4','sec:sharedobj'),"Low-level operations on shared libraries",swi_man_manual('foreignlink.html'),manual,13428).
+i(/(open_shared_object,2),"File is the name of a shared object file (DLL in MS-Windows).",swi_man_manual('foreignlink.html'),manual,14128).
+i(/(open_shared_object,3),"As open_shared_object/2, but allows for additional flags to be passed.",swi_man_manual('foreignlink.html'),manual,14933).
+i(/(close_shared_object,1),"Detach the shared object identified by Handle.",swi_man_manual('foreignlink.html'),manual,15719).
+i(/(call_shared_object_function,2),"Call the named function in the loaded shared library.",swi_man_manual('foreignlink.html'),manual,15918).
+i(section(3,'12.2.5','sec:static-linking'),"Static Linking",swi_man_manual('foreignlink.html'),manual,16395).
 i(section(2,'12.8','sec:foreignnotes'),"Notes on Using Foreign Code",swi_man_manual('foreignnotes.html'),manual,3537).
 i(section(3,'12.8.1','sec:foreign-debug'),"Foreign debugging functions",swi_man_manual('foreignnotes.html'),manual,3717).
 i(c('PL_backtrace'),"Dump a Prolog backtrace to the user_error stream.",swi_man_manual('foreignnotes.html'),manual,4442).
@@ -1244,74 +1247,75 @@ i(section(2,'12.1','sec:foreignoverview'),"Overview of the Interface",swi_man_ma
 i(section(2,'12.9','sec:foreign-streams'),"Foreign access to Prolog IO streams",swi_man_manual('foreign-streams.html'),manual,3525).
 i(section(3,'12.9.1','sec:foreign-get-iostream'),"Get IO stream handles",swi_man_manual('foreign-streams.html'),manual,5334).
 i(c('PL_get_stream'),"Get a stream handle from the Prolog term t.",swi_man_manual('foreign-streams.html'),manual,6060).
-i(c('PL_acquire_stream'),"Obtain ownership of s and return s.",swi_man_manual('foreign-streams.html'),manual,7328).
-i(c('PL_release_stream'),"Give up ownership acquired using PL_acquire_stream() or PL_get_stream().",swi_man_manual('foreign-streams.html'),manual,7971).
-i(section(3,'12.9.2','sec:foreign-create-iostream'),"Creating an IO stream",swi_man_manual('foreign-streams.html'),manual,8873).
-i(c('Snew'),"Create an IOSTREAM* from a handle, flags and a block of callback functions.",swi_man_manual('foreign-streams.html'),manual,14798).
-i(c('Sopen_pipe'),"Start a process from command and connect the input or output to the returned stream.",swi_man_manual('foreign-streams.html'),manual,17544).
-i(c('Sopenmem'),"Open a memory area as a stream.",swi_man_manual('foreign-streams.html'),manual,18081).
-i(c('Sfree'),"This function must be used to free objects that are allocated by the stream interface.",swi_man_manual('foreign-streams.html'),manual,19372).
-i(c('PL_unify_stream'),"Unify t with a blob that points at s.",swi_man_manual('foreign-streams.html'),manual,19881).
-i(section(3,'12.9.3','sec:iostream-functions'),"Interacting with foreign streams",swi_man_manual('foreign-streams.html'),manual,20494).
-i(c('Sset_timeout'),"Set the timeout on an input stream to milliseconds.",swi_man_manual('foreign-streams.html'),manual,20711).
-i(c('Sunit_size'),"Returns the size of a code unit in bytes depending on the stream's encoding.",swi_man_manual('foreign-streams.html'),manual,21130).
-i(c('Sputc'),"Emit a byte to s.",swi_man_manual('foreign-streams.html'),manual,21583).
-i(c('Sgetc'),"Read a byte from s.",swi_man_manual('foreign-streams.html'),manual,21958).
-i(c('Sfgetc'),"Function equivalent to Sgetc().",swi_man_manual('foreign-streams.html'),manual,22516).
-i(c('Sungetc'),"Put a byte back into the input buffer.",swi_man_manual('foreign-streams.html'),manual,22739).
-i(c('Sputcode'),"Emit a Unicode code point to s.",swi_man_manual('foreign-streams.html'),manual,23136).
-i(c('Sgetcode'),"Read a Unicode code point from s.",swi_man_manual('foreign-streams.html'),manual,24184).
-i(c('Speekcode'),"As Sgetcode(), but leaves the character in the input buffer and does not update the stream position.",swi_man_manual('foreign-streams.html'),manual,24710).
-i(c('Sputw'),"Reads/writes an integer in native byte order.",swi_man_manual('foreign-streams.html'),manual,25079).
-i(c('Sgetw'),"Reads/writes an integer in native byte order.",swi_man_manual('foreign-streams.html'),manual,25079).
-i(c('Sfread'),"Emulations of the POSIX fread() and fwrite() calls for Prolog streams.",swi_man_manual('foreign-streams.html'),manual,25384).
-i(c('Sfwrite'),"Emulations of the POSIX fread() and fwrite() calls for Prolog streams.",swi_man_manual('foreign-streams.html'),manual,25384).
-i(c('Sfeof'),"Returns non-zero if the stream is at the end.",swi_man_manual('foreign-streams.html'),manual,26168).
-i(c('Sfpasteof'),"Returns non-zero when a read operation was performed after signalling end-of-file.",swi_man_manual('foreign-streams.html'),manual,26556).
-i(c('Ssetlocale'),"Change the locale associated with a stream.",swi_man_manual('foreign-streams.html'),manual,27003).
-i(c('Sflush'),"Flush buffered output, returning 0 on success and -1 after a (write) error occurred.",swi_man_manual('foreign-streams.html'),manual,27403).
-i(c('Ssize'),"Returns the size in bytes of the object associated to the stream or -1 if this is not known.",swi_man_manual('foreign-streams.html'),manual,27746).
-i(c('Sseek'),"Reposition the file pointer in the object associated to s, returning 0 on success and -1 otherwise.",swi_man_manual('foreign-streams.html'),manual,27977).
-i(c('Sseek64'),"Reposition the file pointer in the object associated to s, returning 0 on success and -1 otherwise.",swi_man_manual('foreign-streams.html'),manual,27977).
-i(c('Stell'),"Return the current position in the stream.",swi_man_manual('foreign-streams.html'),manual,28829).
-i(c('Stell64'),"Return the current position in the stream.",swi_man_manual('foreign-streams.html'),manual,28829).
-i(c('Sclose'),"Close the stream.",swi_man_manual('foreign-streams.html'),manual,29253).
-i(c('Sgcclose'),"As Sclose(), but intended to be used from the atom garbage collector if a stream is closed because it is garbage.",swi_man_manual('foreign-streams.html'),manual,30039).
-i(c('Sfgets'),"Read a line of input as a sequence of bytes.",swi_man_manual('foreign-streams.html'),manual,31268).
-i(c('Sgets'),"Shorthand for Sfgets(buf, Slinesize, Sinput).",swi_man_manual('foreign-streams.html'),manual,31803).
-i(c('Sread_pending'),"Return the data buffered on an input stream.",swi_man_manual('foreign-streams.html'),manual,32203).
-i(c('Spending'),"Return the number of bytes that can be read from s without blocking.",swi_man_manual('foreign-streams.html'),manual,32884).
-i(c('Sfputs'),"Emit a 0-terminated C string.",swi_man_manual('foreign-streams.html'),manual,33282).
-i(c('Sputs'),"Equivalent to Sfputs(q, Soutput).",swi_man_manual('foreign-streams.html'),manual,33576).
-i(c('Sfprintf'),"Similar to POSIX fprintf().",swi_man_manual('foreign-streams.html'),manual,33816).
-i(c('Sprintf'),"Similar to Sfprintf(), printing to Soutput",swi_man_manual('foreign-streams.html'),manual,36058).
-i(c('Svprintf'),"Variadic argument list version of Sfprintf().",swi_man_manual('foreign-streams.html'),manual,36317).
-i(c('Ssprintf'),"Print to a C string.",swi_man_manual('foreign-streams.html'),manual,36591).
-i(c('Ssnprintf'),"Print to a C string, emitting a maximum of size bytes.",swi_man_manual('foreign-streams.html'),manual,36868).
-i(c('Svsprintf'),"Variadic argument list version of Ssprintf().",swi_man_manual('foreign-streams.html'),manual,37278).
-i(c('Svsnprintf'),"Variadic argument list version of Ssnprintf().",swi_man_manual('foreign-streams.html'),manual,37653).
-i(c('Sdprintf'),"Print to Serror.",swi_man_manual('foreign-streams.html'),manual,37944).
-i(c('Svdprintf'),"Variadic argument list version of Sdprintf().",swi_man_manual('foreign-streams.html'),manual,38194).
-i(c('Slock'),"Low level versions that perform only the (un)locking part of PL_acquire_stream() and PL_release_stream().",swi_man_manual('foreign-streams.html'),manual,38457).
-i(c('StryLock'),"Low level versions that perform only the (un)locking part of PL_acquire_stream() and PL_release_stream().",swi_man_manual('foreign-streams.html'),manual,38457).
-i(c('Sunlock'),"Low level versions that perform only the (un)locking part of PL_acquire_stream() and PL_release_stream().",swi_man_manual('foreign-streams.html'),manual,38457).
-i(c('Sfileno'),"If the stream is associated to a POSIX file handle, return this handle.",swi_man_manual('foreign-streams.html'),manual,39057).
-i(c('Swinsock'),"Windows only.",swi_man_manual('foreign-streams.html'),manual,39289).
-i(c('Sclosehook'),"Register a hook function to be called by Sclose() just before the stream is deallocated.",swi_man_manual('foreign-streams.html'),manual,39568).
-i(c('Sset_filter'),"Register filter as a stream that reads from or writes to the stream parent.",swi_man_manual('foreign-streams.html'),manual,40019).
-i(c('Ssetbuffer'),"Set the input or output buffer for s to size.",swi_man_manual('foreign-streams.html'),manual,40286).
-i(section(3,'12.9.4','sec:iostream-errors'),"Foreign stream error handling",swi_man_manual('foreign-streams.html'),manual,40768).
-i(c('Sferror'),"Returns TRUE if the stream is in an error condition, FALSE if the stream is valid and in normal condition and -1 if the stream is invalid.",swi_man_manual('foreign-streams.html'),manual,40976).
-i(c('Sclearerr'),"Clear the error state of a stream.",swi_man_manual('foreign-streams.html'),manual,41279).
-i(c('Sseterr'),"Set an error or warning state on the stream.",swi_man_manual('foreign-streams.html'),manual,41535).
-i(c('Sset_exception'),"Associate a Prolog exception term with the stream or clear the associated exception if ex is 0 and set/clear the SIO_FERR condition on the stream.",swi_man_manual('foreign-streams.html'),manual,42030).
-i(section(3,'12.9.5','sec:iostream-encoding'),"Foreign stream encoding",swi_man_manual('foreign-streams.html'),manual,42517).
-i(c('Ssetenc'),"Set the encoding for s to new_enc and, if old_enc is not NULL, return the old encoding.",swi_man_manual('foreign-streams.html'),manual,44127).
-i(c('ScheckBOM'),"This function may be called on a buffered input stream immediately after opening the stream.",swi_man_manual('foreign-streams.html'),manual,44720).
-i(c('SwriteBOM'),"This function writes a Byte Order Mark (BOM) to s and should be called immediately after opening a stream for writing.",swi_man_manual('foreign-streams.html'),manual,45227).
-i(c('Scanrepresent'),"Returns 0 if the encoding of s can represent the code point c and -1 otherwise.",swi_man_manual('foreign-streams.html'),manual,45784).
-i(section(3,'12.9.6','sec:iostream-newline'),"Foreign stream line endings",swi_man_manual('foreign-streams.html'),manual,46053).
-i(section(3,'12.9.7','sec:iostream-position'),"Foreign stream position information",swi_man_manual('foreign-streams.html'),manual,47363).
+i(c('PL_get_stream_from_blob'),"Same as PL_get_stream(), but operates directly on the blob b.",swi_man_manual('foreign-streams.html'),manual,7328).
+i(c('PL_acquire_stream'),"Obtain ownership of s and return s.",swi_man_manual('foreign-streams.html'),manual,7847).
+i(c('PL_release_stream'),"Give up ownership acquired using PL_acquire_stream() or PL_get_stream().",swi_man_manual('foreign-streams.html'),manual,8490).
+i(section(3,'12.9.2','sec:foreign-create-iostream'),"Creating an IO stream",swi_man_manual('foreign-streams.html'),manual,9392).
+i(c('Snew'),"Create an IOSTREAM* from a handle, flags and a block of callback functions.",swi_man_manual('foreign-streams.html'),manual,15317).
+i(c('Sopen_pipe'),"Start a process from command and connect the input or output to the returned stream.",swi_man_manual('foreign-streams.html'),manual,18063).
+i(c('Sopenmem'),"Open a memory area as a stream.",swi_man_manual('foreign-streams.html'),manual,18600).
+i(c('Sfree'),"This function must be used to free objects that are allocated by the stream interface.",swi_man_manual('foreign-streams.html'),manual,19891).
+i(c('PL_unify_stream'),"Unify t with a blob that points at s.",swi_man_manual('foreign-streams.html'),manual,20400).
+i(section(3,'12.9.3','sec:iostream-functions'),"Interacting with foreign streams",swi_man_manual('foreign-streams.html'),manual,21013).
+i(c('Sset_timeout'),"Set the timeout on an input stream to milliseconds.",swi_man_manual('foreign-streams.html'),manual,21230).
+i(c('Sunit_size'),"Returns the size of a code unit in bytes depending on the stream's encoding.",swi_man_manual('foreign-streams.html'),manual,21649).
+i(c('Sputc'),"Emit a byte to s.",swi_man_manual('foreign-streams.html'),manual,22102).
+i(c('Sgetc'),"Read a byte from s.",swi_man_manual('foreign-streams.html'),manual,22477).
+i(c('Sfgetc'),"Function equivalent to Sgetc().",swi_man_manual('foreign-streams.html'),manual,23035).
+i(c('Sungetc'),"Put a byte back into the input buffer.",swi_man_manual('foreign-streams.html'),manual,23258).
+i(c('Sputcode'),"Emit a Unicode code point to s.",swi_man_manual('foreign-streams.html'),manual,23655).
+i(c('Sgetcode'),"Read a Unicode code point from s.",swi_man_manual('foreign-streams.html'),manual,24703).
+i(c('Speekcode'),"As Sgetcode(), but leaves the character in the input buffer and does not update the stream position.",swi_man_manual('foreign-streams.html'),manual,25229).
+i(c('Sputw'),"Reads/writes an integer in native byte order.",swi_man_manual('foreign-streams.html'),manual,25598).
+i(c('Sgetw'),"Reads/writes an integer in native byte order.",swi_man_manual('foreign-streams.html'),manual,25598).
+i(c('Sfread'),"Emulations of the POSIX fread() and fwrite() calls for Prolog streams.",swi_man_manual('foreign-streams.html'),manual,25903).
+i(c('Sfwrite'),"Emulations of the POSIX fread() and fwrite() calls for Prolog streams.",swi_man_manual('foreign-streams.html'),manual,25903).
+i(c('Sfeof'),"Returns non-zero if the stream is at the end.",swi_man_manual('foreign-streams.html'),manual,26687).
+i(c('Sfpasteof'),"Returns non-zero when a read operation was performed after signalling end-of-file.",swi_man_manual('foreign-streams.html'),manual,27075).
+i(c('Ssetlocale'),"Change the locale associated with a stream.",swi_man_manual('foreign-streams.html'),manual,27522).
+i(c('Sflush'),"Flush buffered output, returning 0 on success and -1 after a (write) error occurred.",swi_man_manual('foreign-streams.html'),manual,27922).
+i(c('Ssize'),"Returns the size in bytes of the object associated to the stream or -1 if this is not known.",swi_man_manual('foreign-streams.html'),manual,28265).
+i(c('Sseek'),"Reposition the file pointer in the object associated to s, returning 0 on success and -1 otherwise.",swi_man_manual('foreign-streams.html'),manual,28496).
+i(c('Sseek64'),"Reposition the file pointer in the object associated to s, returning 0 on success and -1 otherwise.",swi_man_manual('foreign-streams.html'),manual,28496).
+i(c('Stell'),"Return the current position in the stream.",swi_man_manual('foreign-streams.html'),manual,29348).
+i(c('Stell64'),"Return the current position in the stream.",swi_man_manual('foreign-streams.html'),manual,29348).
+i(c('Sclose'),"Close the stream.",swi_man_manual('foreign-streams.html'),manual,29772).
+i(c('Sgcclose'),"As Sclose(), but intended to be used from the atom garbage collector if a stream is closed because it is garbage.",swi_man_manual('foreign-streams.html'),manual,30558).
+i(c('Sfgets'),"Read a line of input as a sequence of bytes.",swi_man_manual('foreign-streams.html'),manual,31787).
+i(c('Sgets'),"Shorthand for Sfgets(buf, Slinesize, Sinput).",swi_man_manual('foreign-streams.html'),manual,32322).
+i(c('Sread_pending'),"Return the data buffered on an input stream.",swi_man_manual('foreign-streams.html'),manual,32722).
+i(c('Spending'),"Return the number of bytes that can be read from s without blocking.",swi_man_manual('foreign-streams.html'),manual,33403).
+i(c('Sfputs'),"Emit a 0-terminated C string.",swi_man_manual('foreign-streams.html'),manual,33801).
+i(c('Sputs'),"Equivalent to Sfputs(q, Soutput).",swi_man_manual('foreign-streams.html'),manual,34095).
+i(c('Sfprintf'),"Similar to POSIX fprintf().",swi_man_manual('foreign-streams.html'),manual,34335).
+i(c('Sprintf'),"Similar to Sfprintf(), printing to Soutput",swi_man_manual('foreign-streams.html'),manual,36577).
+i(c('Svprintf'),"Variadic argument list version of Sfprintf().",swi_man_manual('foreign-streams.html'),manual,36836).
+i(c('Ssprintf'),"Print to a C string.",swi_man_manual('foreign-streams.html'),manual,37110).
+i(c('Ssnprintf'),"Print to a C string, emitting a maximum of size bytes.",swi_man_manual('foreign-streams.html'),manual,37387).
+i(c('Svsprintf'),"Variadic argument list version of Ssprintf().",swi_man_manual('foreign-streams.html'),manual,37797).
+i(c('Svsnprintf'),"Variadic argument list version of Ssnprintf().",swi_man_manual('foreign-streams.html'),manual,38172).
+i(c('Sdprintf'),"Print to Serror.",swi_man_manual('foreign-streams.html'),manual,38463).
+i(c('Svdprintf'),"Variadic argument list version of Sdprintf().",swi_man_manual('foreign-streams.html'),manual,38713).
+i(c('Slock'),"Low level versions that perform only the (un)locking part of PL_acquire_stream() and PL_release_stream().",swi_man_manual('foreign-streams.html'),manual,38976).
+i(c('StryLock'),"Low level versions that perform only the (un)locking part of PL_acquire_stream() and PL_release_stream().",swi_man_manual('foreign-streams.html'),manual,38976).
+i(c('Sunlock'),"Low level versions that perform only the (un)locking part of PL_acquire_stream() and PL_release_stream().",swi_man_manual('foreign-streams.html'),manual,38976).
+i(c('Sfileno'),"If the stream is associated to a POSIX file handle, return this handle.",swi_man_manual('foreign-streams.html'),manual,39576).
+i(c('Swinsock'),"Windows only.",swi_man_manual('foreign-streams.html'),manual,39808).
+i(c('Sclosehook'),"Register a hook function to be called by Sclose() just before the stream is deallocated.",swi_man_manual('foreign-streams.html'),manual,40087).
+i(c('Sset_filter'),"Register filter as a stream that reads from or writes to the stream parent.",swi_man_manual('foreign-streams.html'),manual,40538).
+i(c('Ssetbuffer'),"Set the input or output buffer for s to size.",swi_man_manual('foreign-streams.html'),manual,40805).
+i(section(3,'12.9.4','sec:iostream-errors'),"Foreign stream error handling",swi_man_manual('foreign-streams.html'),manual,41287).
+i(c('Sferror'),"Returns TRUE if the stream is in an error condition, FALSE if the stream is valid and in normal condition and -1 if the stream is invalid.",swi_man_manual('foreign-streams.html'),manual,41495).
+i(c('Sclearerr'),"Clear the error state of a stream.",swi_man_manual('foreign-streams.html'),manual,41798).
+i(c('Sseterr'),"Set an error or warning state on the stream.",swi_man_manual('foreign-streams.html'),manual,42054).
+i(c('Sset_exception'),"Associate a Prolog exception term with the stream or clear the associated exception if ex is 0 and set/clear the SIO_FERR condition on the stream.",swi_man_manual('foreign-streams.html'),manual,42549).
+i(section(3,'12.9.5','sec:iostream-encoding'),"Foreign stream encoding",swi_man_manual('foreign-streams.html'),manual,43036).
+i(c('Ssetenc'),"Set the encoding for s to new_enc and, if old_enc is not NULL, return the old encoding.",swi_man_manual('foreign-streams.html'),manual,44646).
+i(c('ScheckBOM'),"This function may be called on a buffered input stream immediately after opening the stream.",swi_man_manual('foreign-streams.html'),manual,45239).
+i(c('SwriteBOM'),"This function writes a Byte Order Mark (BOM) to s and should be called immediately after opening a stream for writing.",swi_man_manual('foreign-streams.html'),manual,45746).
+i(c('Scanrepresent'),"Returns 0 if the encoding of s can represent the code point c and -1 otherwise.",swi_man_manual('foreign-streams.html'),manual,46303).
+i(section(3,'12.9.6','sec:iostream-newline'),"Foreign stream line endings",swi_man_manual('foreign-streams.html'),manual,46572).
+i(section(3,'12.9.7','sec:iostream-position'),"Foreign stream position information",swi_man_manual('foreign-streams.html'),manual,47882).
 i(section(2,'10.6','sec:foreignthread'),"Multithreaded mixed C and Prolog applications",swi_man_manual('foreignthread.html'),manual,3513).
 i(section(3,'10.6.1','sec:threadoneone'),"A Prolog thread for each native thread (one-to-one)",swi_man_manual('foreignthread.html'),manual,5009).
 i(c('PL_thread_self'),"Returns the integer Prolog identifier of the engine or -1 if the calling thread has no Prolog engine.",swi_man_manual('foreignthread.html'),manual,5949).
@@ -1415,7 +1419,7 @@ i(/(incr_invalidate_calls,1),"Invalidate all tables for subgoals of Goal as well
 i(/(incr_invalidate_call,1),"This is the XSB name, but the manual says incr_invalidate_calls/1 and the comment with the code suggests this is misnamed.",swi_man_manual('increval.html'),manual,6270).
 i(/(incr_table_update,0),"Updated all invalid tables",swi_man_manual('increval.html'),manual,6799).
 i(/(incr_propagate_calls,1),"Activate the monotonic answer propagation similarly to when a new fact is asserted for a monotonic dynamic predicate.",swi_man_manual('increval.html'),manual,6943).
-i(section(0,'0','Manual/index.html'),"SWI-Prolog 8.5.12 Reference Manual",swi_man_manual('index.html'),manual,3281).
+i(section(0,'0','Manual/index.html'),"SWI-Prolog 8.5.15 Reference Manual",swi_man_manual('index.html'),manual,3281).
 i(section(2,'2.2','sec:initfile'),"The user's initialisation file",swi_man_manual('initfile.html'),manual,3522).
 i(section(2,'2.3','sec:initgoal'),"Initialisation files and goals",swi_man_manual('initgoal.html'),manual,3516).
 i(section(2,'A.21','sec:intercept'),"library(intercept): Intercept and signal interface",swi_man_manual('intercept.html'),manual,3519).
@@ -1515,29 +1519,29 @@ i(section(3,'F.2.32','sec:summary-lib-persistency'),"library(persistency)",swi_m
 i(section(3,'F.2.33','sec:summary-lib-portraytext'),"library(portraytext)",swi_man_manual('library.html'),manual,68005).
 i(section(3,'F.2.34','sec:summary-lib-predicate_options'),"library(predicate_options)",swi_man_manual('library.html'),manual,68830).
 i(section(3,'F.2.35','sec:summary-lib-prologdebug'),"library(prologdebug)",swi_man_manual('library.html'),manual,71021).
-i(section(3,'F.2.36','sec:summary-lib-prologjiti'),"library(prologjiti)",swi_man_manual('library.html'),manual,72189).
-i(section(3,'F.2.37','sec:summary-lib-prologpack'),"library(prologpack)",swi_man_manual('library.html'),manual,72711).
-i(section(3,'F.2.38','sec:summary-lib-prologxref'),"library(prologxref)",swi_man_manual('library.html'),manual,75084).
-i(section(3,'F.2.39','sec:summary-lib-pairs'),"library(pairs)",swi_man_manual('library.html'),manual,76447).
-i(section(3,'F.2.40','sec:summary-lib-pio'),"library(pio)",swi_man_manual('library.html'),manual,77546).
-i(section(4,'F.2.40.1','sec:summary-lib-pure-input'),"library(pure_input)",swi_man_manual('library.html'),manual,77716).
-i(section(3,'F.2.41','sec:summary-lib-random'),"library(random)",swi_man_manual('library.html'),manual,79079).
-i(section(3,'F.2.42','sec:summary-lib-rbtrees'),"library(rbtrees)",swi_man_manual('library.html'),manual,81648).
-i(section(3,'F.2.43','sec:summary-lib-readutil'),"library(readutil)",swi_man_manual('library.html'),manual,87182).
-i(section(3,'F.2.44','sec:summary-lib-record'),"library(record)",swi_man_manual('library.html'),manual,88674).
-i(section(3,'F.2.45','sec:summary-lib-registry'),"library(registry)",swi_man_manual('library.html'),manual,88988).
-i(section(3,'F.2.46','sec:summary-lib-settings'),"library(settings)",swi_man_manual('library.html'),manual,90313).
-i(section(3,'F.2.47','sec:summary-lib-simplex'),"library(simplex)",swi_man_manual('library.html'),manual,92727).
-i(section(3,'F.2.48','sec:summary-lib-statistics'),"library(statistics)",swi_man_manual('library.html'),manual,94361).
-i(section(3,'F.2.49','sec:summary-lib-terms'),"library(terms)",swi_man_manual('library.html'),manual,96243).
-i(section(3,'F.2.50','sec:summary-lib-ugraphs'),"library(ugraphs)",swi_man_manual('library.html'),manual,99186).
-i(section(3,'F.2.51','sec:summary-lib-url'),"library(url)",swi_man_manual('library.html'),manual,104540).
-i(section(3,'F.2.52','sec:summary-lib-www_browser'),"library(www_browser)",swi_man_manual('library.html'),manual,106125).
-i(section(3,'F.2.53','sec:summary-lib-solution_sequences'),"library(solution_sequences)",swi_man_manual('library.html'),manual,106858).
-i(section(3,'F.2.54','sec:summary-lib-thread'),"library(thread)",swi_man_manual('library.html'),manual,108570).
-i(section(3,'F.2.55','sec:summary-lib-thread_pool'),"library(thread_pool)",swi_man_manual('library.html'),manual,110259).
-i(section(3,'F.2.56','sec:summary-lib-varnumbers'),"library(varnumbers)",swi_man_manual('library.html'),manual,111621).
-i(section(3,'F.2.57','sec:summary-lib-yall'),"library(yall)",swi_man_manual('library.html'),manual,112787).
+i(section(3,'F.2.36','sec:summary-lib-prologjiti'),"library(prologjiti)",swi_man_manual('library.html'),manual,72159).
+i(section(3,'F.2.37','sec:summary-lib-prologpack'),"library(prologpack)",swi_man_manual('library.html'),manual,72681).
+i(section(3,'F.2.38','sec:summary-lib-prologxref'),"library(prologxref)",swi_man_manual('library.html'),manual,75054).
+i(section(3,'F.2.39','sec:summary-lib-pairs'),"library(pairs)",swi_man_manual('library.html'),manual,76417).
+i(section(3,'F.2.40','sec:summary-lib-pio'),"library(pio)",swi_man_manual('library.html'),manual,77516).
+i(section(4,'F.2.40.1','sec:summary-lib-pure-input'),"library(pure_input)",swi_man_manual('library.html'),manual,77686).
+i(section(3,'F.2.41','sec:summary-lib-random'),"library(random)",swi_man_manual('library.html'),manual,79049).
+i(section(3,'F.2.42','sec:summary-lib-rbtrees'),"library(rbtrees)",swi_man_manual('library.html'),manual,81618).
+i(section(3,'F.2.43','sec:summary-lib-readutil'),"library(readutil)",swi_man_manual('library.html'),manual,87152).
+i(section(3,'F.2.44','sec:summary-lib-record'),"library(record)",swi_man_manual('library.html'),manual,88644).
+i(section(3,'F.2.45','sec:summary-lib-registry'),"library(registry)",swi_man_manual('library.html'),manual,88958).
+i(section(3,'F.2.46','sec:summary-lib-settings'),"library(settings)",swi_man_manual('library.html'),manual,90283).
+i(section(3,'F.2.47','sec:summary-lib-simplex'),"library(simplex)",swi_man_manual('library.html'),manual,92697).
+i(section(3,'F.2.48','sec:summary-lib-statistics'),"library(statistics)",swi_man_manual('library.html'),manual,94331).
+i(section(3,'F.2.49','sec:summary-lib-terms'),"library(terms)",swi_man_manual('library.html'),manual,96213).
+i(section(3,'F.2.50','sec:summary-lib-ugraphs'),"library(ugraphs)",swi_man_manual('library.html'),manual,99156).
+i(section(3,'F.2.51','sec:summary-lib-url'),"library(url)",swi_man_manual('library.html'),manual,104510).
+i(section(3,'F.2.52','sec:summary-lib-www_browser'),"library(www_browser)",swi_man_manual('library.html'),manual,106095).
+i(section(3,'F.2.53','sec:summary-lib-solution_sequences'),"library(solution_sequences)",swi_man_manual('library.html'),manual,106828).
+i(section(3,'F.2.54','sec:summary-lib-thread'),"library(thread)",swi_man_manual('library.html'),manual,108540).
+i(section(3,'F.2.55','sec:summary-lib-thread_pool'),"library(thread_pool)",swi_man_manual('library.html'),manual,110229).
+i(section(3,'F.2.56','sec:summary-lib-varnumbers'),"library(varnumbers)",swi_man_manual('library.html'),manual,111591).
+i(section(3,'F.2.57','sec:summary-lib-yall'),"library(yall)",swi_man_manual('library.html'),manual,112757).
 i(section(1,'E','sec:license'),"SWI-Prolog License Conditions and Tools",swi_man_manual('license.html'),manual,3503).
 i(section(2,'2.20','sec:limits'),"System limits",swi_man_manual('limits.html'),manual,3517).
 i(section(3,'2.20.1','sec:memlimit'),"Limits on memory areas",swi_man_manual('limits.html'),manual,3671).
@@ -1652,10 +1656,10 @@ i(/(copy_term,4),"Similar to copy_term/2, but only rename the variables in VarsI
 i(/(copy_term_nat,4),"As copy_term/4, using the attributed variable semantics of copy_term_nat/2.",swi_man_manual('manipterm.html'),manual,21526).
 i(section(3,'4.21.1','sec:setarg'),"Non-logical operations on terms",swi_man_manual('manipterm.html'),manual,22230).
 i(/(setarg,3),"Extra-logical predicate.",swi_man_manual('manipterm.html'),manual,22876).
-i(/(nb_setarg,3),"Assigns the Arg-th argument of the compound term Term with the given Value as setarg/3, but on backtracking the assignment is not reversed.",swi_man_manual('manipterm.html'),manual,24532).
-i(/(nb_linkarg,3),"As nb_setarg/3, but like nb_linkval/2 it does not duplicate Value.",swi_man_manual('manipterm.html'),manual,26342).
-i(/(duplicate_term,2),"Version of copy_term/2 that also copies ground terms and therefore ensures that destructive modification using setarg/3 does not affect the copy.",swi_man_manual('manipterm.html'),manual,26897).
-i(/(same_term,2),"True if T1 and T2 are equivalent and will remain equivalent, even if setarg/3 is used on either of them.",swi_man_manual('manipterm.html'),manual,27746).
+i(/(nb_setarg,3),"Assigns the Arg-th argument of the compound term Term with the given Value as setarg/3, but on backtracking the assignment is not reversed.",swi_man_manual('manipterm.html'),manual,24956).
+i(/(nb_linkarg,3),"As nb_setarg/3, but like nb_linkval/2 it does not duplicate Value.",swi_man_manual('manipterm.html'),manual,26766).
+i(/(duplicate_term,2),"Version of copy_term/2 that also copies ground terms and therefore ensures that destructive modification using setarg/3 does not affect the copy.",swi_man_manual('manipterm.html'),manual,27321).
+i(/(same_term,2),"True if T1 and T2 are equivalent and will remain equivalent, even if setarg/3 is used on either of them.",swi_man_manual('manipterm.html'),manual,28170).
 i(section(2,'4.43','sec:memory'),"Memory Management",swi_man_manual('memory.html'),manual,3507).
 i(section(3,'4.43.1','sec:gc'),"Garbage collection",swi_man_manual('memory.html'),manual,3665).
 i(/(garbage_collect,0),"Invoke the global and trail stack garbage collector.",swi_man_manual('memory.html'),manual,3836).
@@ -1738,7 +1742,7 @@ i(/(explain,1),"Give an explanation on Term.",swi_man_manual('online-help.html')
 i(/(explain,2),"True when Explanation is an explanation of Term.",swi_man_manual('online-help.html'),manual,10267).
 i(section(2,'4.25','sec:operators'),"Operators",swi_man_manual('operators.html'),manual,3519).
 i(/(op,3),"Declare Name to be an operator of type Type with precedence Precedence.",swi_man_manual('operators.html'),manual,7069).
-i(/(current_op,3),"True if Name is currently defined as an operator of type Type with precedence Precedence.",swi_man_manual('operators.html'),manual,13394).
+i(/(current_op,3),"True if Name is currently defined as an operator of type Type with precedence Precedence.",swi_man_manual('operators.html'),manual,13431).
 i(section(2,'F.4','sec:opsummary'),"Operators",swi_man_manual('opsummary.html'),manual,3532).
 i(section(2,'A.29','sec:option'),"library(option): Option list processing",swi_man_manual('option.html'),manual,3515).
 i(/(option,3),"Get an Option from OptionList.",swi_man_manual('option.html'),manual,6142).
@@ -1859,27 +1863,27 @@ i(/(derived_predicate_options,1),"Derive predicate option declarations for a mod
 i(section(2,'F.1','sec:predsummary'),"Predicates",swi_man_manual('predsummary.html'),manual,3514).
 i(section(2,'4.11','sec:printmsg'),"Printing messages",swi_man_manual('printmsg.html'),manual,3517).
 i(/(print_message,2),"The predicate print_message/2 is used by the system and libraries to print messages.",swi_man_manual('printmsg.html'),manual,4769).
-i(/(print_message_lines,3),"Print a message (see print_message/2) that has been translated to a list of message elements.",swi_man_manual('printmsg.html'),manual,10390).
-i(/(message_hook,3),"Hook predicate that may be defined in the module user to intercept messages from print_message/2.",swi_man_manual('printmsg.html'),manual,13817).
-i(/(thread_message_hook,3),"As message_hook/3, but this predicate is local to the calling thread (see thread_local/1).",swi_man_manual('printmsg.html'),manual,14763).
-i(/(message_property,2),"This hook can be used to define additional message kinds and the way they are displayed.",swi_man_manual('printmsg.html'),manual,15458).
-i(:(prolog,/(message_line_element,2)),"This hook is called to print the individual elements of a message from print_message_lines/3.",swi_man_manual('printmsg.html'),manual,17531).
-i(:(prolog,/(message_prefix_hook,2)),"This hook is called to add context to the message prefix.",swi_man_manual('printmsg.html'),manual,18007).
-i(/(message_to_string,2),"Translates a message term into a string object (see section 5.2).",swi_man_manual('printmsg.html'),manual,18468).
-i(/(version,0),"Write the SWI-Prolog banner message as well as additional messages registered using version/1.",swi_man_manual('printmsg.html'),manual,18726).
-i(/(version,1),"Register additional messages to be printed by version/0.",swi_man_manual('printmsg.html'),manual,19099).
-i(section(3,'4.11.1','sec:libprintmsg'),"Printing from libraries",swi_man_manual('printmsg.html'),manual,19529).
-i(section(2,'4.42','sec:profile'),"Execution profiling",swi_man_manual('profile.html'),manual,3519).
-i(section(3,'4.42.1','sec:profiling-predicates'),"Profiling predicates",swi_man_manual('profile.html'),manual,4509).
-i(/(profile,1),"Execute Goal just like once/1, collecting profiling statistics, and call show_profile([]).",swi_man_manual('profile.html'),manual,4790).
-i(/(profile,2),"Execute Goal just like once/1.",swi_man_manual('profile.html'),manual,5205).
-i(/(show_profile,1),"This predicate first calls prolog:show_profile_hook/1.",swi_man_manual('profile.html'),manual,6341).
-i(/(profiler,2),"Query or change the status of the profiler.",swi_man_manual('profile.html'),manual,7142).
-i(/(reset_profiler,0),"Switches the profiler to false and clears all collected statistics.",swi_man_manual('profile.html'),manual,7761).
-i(/(noprofile,1),"Declares the predicate Name/Arity to be invisible to the profiler.",swi_man_manual('profile.html'),manual,7954).
-i(section(3,'4.42.2','sec:pceprofile'),"Visualizing profiling data",swi_man_manual('profile.html'),manual,8630).
-i(section(3,'4.42.3','sec:profilegather'),"Information gathering",swi_man_manual('profile.html'),manual,11509).
-i(section(4,'4.42.3.1','sec:winprofile'),"Profiling in the Windows Implementation",swi_man_manual('profile.html'),manual,13727).
+i(/(print_message_lines,3),"Print a message (see print_message/2) that has been translated to a list of message elements.",swi_man_manual('printmsg.html'),manual,10406).
+i(/(message_hook,3),"Hook predicate that may be defined in the module user to intercept messages from print_message/2.",swi_man_manual('printmsg.html'),manual,13833).
+i(/(thread_message_hook,3),"As message_hook/3, but this predicate is local to the calling thread (see thread_local/1).",swi_man_manual('printmsg.html'),manual,14779).
+i(/(message_property,2),"This hook can be used to define additional message kinds and the way they are displayed.",swi_man_manual('printmsg.html'),manual,15474).
+i(:(prolog,/(message_line_element,2)),"This hook is called to print the individual elements of a message from print_message_lines/3.",swi_man_manual('printmsg.html'),manual,17547).
+i(:(prolog,/(message_prefix_hook,2)),"This hook is called to add context to the message prefix.",swi_man_manual('printmsg.html'),manual,18023).
+i(/(message_to_string,2),"Translates a message term into a string object (see section 5.2).",swi_man_manual('printmsg.html'),manual,18484).
+i(/(version,0),"Write the SWI-Prolog banner message as well as additional messages registered using version/1.",swi_man_manual('printmsg.html'),manual,18742).
+i(/(version,1),"Register additional messages to be printed by version/0.",swi_man_manual('printmsg.html'),manual,19115).
+i(section(3,'4.11.1','sec:libprintmsg'),"Printing from libraries",swi_man_manual('printmsg.html'),manual,19545).
+i(section(2,'4.42','sec:profile'),"Execution profiling",swi_man_manual('profile.html'),manual,3535).
+i(section(3,'4.42.1','sec:profiling-predicates'),"Profiling predicates",swi_man_manual('profile.html'),manual,4525).
+i(/(profile,1),"Execute Goal just like once/1, collecting profiling statistics, and call show_profile([]).",swi_man_manual('profile.html'),manual,4806).
+i(/(profile,2),"Execute Goal just like once/1.",swi_man_manual('profile.html'),manual,5221).
+i(/(show_profile,1),"This predicate first calls prolog:show_profile_hook/1.",swi_man_manual('profile.html'),manual,6357).
+i(/(profiler,2),"Query or change the status of the profiler.",swi_man_manual('profile.html'),manual,7158).
+i(/(reset_profiler,0),"Switches the profiler to false and clears all collected statistics.",swi_man_manual('profile.html'),manual,7777).
+i(/(noprofile,1),"Declares the predicate Name/Arity to be invisible to the profiler.",swi_man_manual('profile.html'),manual,7970).
+i(section(3,'4.42.2','sec:pceprofile'),"Visualizing profiling data",swi_man_manual('profile.html'),manual,8646).
+i(section(3,'4.42.3','sec:profilegather'),"Information gathering",swi_man_manual('profile.html'),manual,11525).
+i(section(4,'4.42.3.1','sec:winprofile'),"Profiling in the Windows Implementation",swi_man_manual('profile.html'),manual,13743).
 i(section(2,'13.4','sec:program-resources'),"Using program resources",swi_man_manual('program-resources.html'),manual,3571).
 i(section(3,'13.4.1','sec:res-files'),"Resources as files",swi_man_manual('program-resources.html'),manual,4935).
 i(section(3,'13.4.2','sec:res-resources'),"Access resources using open_resource",swi_man_manual('program-resources.html'),manual,7743).
@@ -1902,9 +1906,9 @@ i(/(spy,1),"Set/clear spy-points.",swi_man_manual('prologdebug.html'),manual,439
 i(/(nospy,1),"Set/clear spy-points.",swi_man_manual('prologdebug.html'),manual,4397).
 i(/(nospyall,0),"Set/clear spy-points.",swi_man_manual('prologdebug.html'),manual,4397).
 i(/(debugging,0),"Report current status of the debugger.",swi_man_manual('prologdebug.html'),manual,5485).
-i(/(trap,1),"Install a trap on error(Formal, Context) exceptions that unify with Exception.",swi_man_manual('prologdebug.html'),manual,5660).
-i(/(notrap,1),"Install a trap on error(Formal, Context) exceptions that unify with Exception.",swi_man_manual('prologdebug.html'),manual,5660).
-i(/(exception_hook,4),"Trap exceptions and consider whether or not to start the tracer.",swi_man_manual('prologdebug.html'),manual,6830).
+i(/(trap,1),"Install a trap on error(Formal, Context) exceptions that unify.",swi_man_manual('prologdebug.html'),manual,5660).
+i(/(notrap,1),"Install a trap on error(Formal, Context) exceptions that unify.",swi_man_manual('prologdebug.html'),manual,5660).
+i(/(exception_hook,4),"Trap exceptions and consider whether or not to start the tracer.",swi_man_manual('prologdebug.html'),manual,7281).
 i(section(2,'B.7','sec:prolog-event'),"Prolog events",swi_man_manual('prolog-event.html'),manual,3520).
 i(/(prolog_listen,2),"Call Closure if an event that matches Channel happens inside Prolog.",swi_man_manual('prolog-event.html'),manual,4065).
 i(/(prolog_listen,3),"Call Closure if an event that matches Channel happens inside Prolog.",swi_man_manual('prolog-event.html'),manual,4065).
@@ -2126,18 +2130,18 @@ i(/(rule,2),"True when Rule is a rule/clause that implements Head.",swi_man_manu
 i(/(rule,3),"True when Rule is a rule/clause that implements Head.",swi_man_manual('ssu.html'),manual,14812).
 i(section(3,'5.6.3','sec:ssu-future'),"SSU: Future considerations",swi_man_manual('ssu.html'),manual,15313).
 i(section(2,'13.3','sec:state-initialization'),"State initialization",swi_man_manual('state-initialization.html'),manual,3545).
-i(section(2,'A.48','sec:statistics'),"library(statistics): Get information about resource usage",swi_man_manual('statistics.html'),manual,3535).
-i(/(statistics,0),"Print information about resource usage using print_message/2.",swi_man_manual('statistics.html'),manual,4110).
-i(/(statistics,1),"Stats is a dict representing the same information as statistics/0.",swi_man_manual('statistics.html'),manual,4549).
-i(/(thread_statistics,2),"Obtain statistical information about a single thread.",swi_man_manual('statistics.html'),manual,5160).
-i(/(time,1),"Execute Goal, reporting statistics to the user.",swi_man_manual('statistics.html'),manual,5630).
-i(/(call_time,2),"Call Goal as call/1, unifying Time with a dict that provides information on the resource usage.",swi_man_manual('statistics.html'),manual,6666).
-i(/(call_time,3),"Call Goal as call/1, unifying Time with a dict that provides information on the resource usage.",swi_man_manual('statistics.html'),manual,6666).
-i(/(profile,1),"Run Goal under the execution profiler.",swi_man_manual('statistics.html'),manual,7443).
-i(/(profile,2),"Run Goal under the execution profiler.",swi_man_manual('statistics.html'),manual,7443).
-i(/(show_profile,1),"Display last collected profiling data.",swi_man_manual('statistics.html'),manual,8231).
-i(/(profile_data,1),"Gather all relevant data from profiler.",swi_man_manual('statistics.html'),manual,8769).
-i(/(profile_procedure_data,2),"Collect data for Pred.",swi_man_manual('statistics.html'),manual,10165).
+i(section(2,'A.48','sec:statistics'),"library(statistics): Get information about resource usage",swi_man_manual('statistics.html'),manual,3517).
+i(/(statistics,0),"Print information about resource usage using print_message/2.",swi_man_manual('statistics.html'),manual,4092).
+i(/(statistics,1),"Stats is a dict representing the same information as statistics/0.",swi_man_manual('statistics.html'),manual,4539).
+i(/(thread_statistics,2),"Obtain statistical information about a single thread.",swi_man_manual('statistics.html'),manual,5158).
+i(/(time,1),"Execute Goal, reporting statistics to the user.",swi_man_manual('statistics.html'),manual,5628).
+i(/(call_time,2),"Call Goal as call/1, unifying Time with a dict that provides information on the resource usage.",swi_man_manual('statistics.html'),manual,6672).
+i(/(call_time,3),"Call Goal as call/1, unifying Time with a dict that provides information on the resource usage.",swi_man_manual('statistics.html'),manual,6672).
+i(/(profile,1),"Run Goal under the execution profiler.",swi_man_manual('statistics.html'),manual,7449).
+i(/(profile,2),"Run Goal under the execution profiler.",swi_man_manual('statistics.html'),manual,7449).
+i(/(show_profile,1),"Display last collected profiling data.",swi_man_manual('statistics.html'),manual,8237).
+i(/(profile_data,1),"Gather all relevant data from profiler.",swi_man_manual('statistics.html'),manual,8775).
+i(/(profile_procedure_data,2),"Collect data for Pred.",swi_man_manual('statistics.html'),manual,10171).
 i(section(2,'1.2','sec:status'),"Status and releases",swi_man_manual('status.html'),manual,3524).
 i(section(2,'4.18','sec:streamstat'),"Status of streams",swi_man_manual('streamstat.html'),manual,3503).
 i(/(wait_for_input,3),"Wait for input on one of the streams in ListOfStreams and return a list of streams on which input is available in ReadyList.",swi_man_manual('streamstat.html'),manual,3685).
@@ -2154,26 +2158,27 @@ i(/(term_string,2),"Bi-directional conversion between a term and a string.",swi_
 i(/(term_string,3),"As term_string/2, passing Options to either read_term/2 or write_term/2.",swi_man_manual('string.html'),manual,13418).
 i(/(string_chars,2),"Bi-directional conversion between a string and a list of characters.",swi_man_manual('string.html'),manual,14037).
 i(/(string_codes,2),"Bi-directional conversion between a string and a list of character codes.",swi_man_manual('string.html'),manual,14414).
-i(/(text_to_string,2),"Converts Text to a string.",swi_man_manual('string.html'),manual,14681).
-i(/(string_length,2),"Unify Length with the number of characters in String.",swi_man_manual('string.html'),manual,15079).
-i(/(string_code,3),"True when Code represents the character at the 1-based Index position in String.",swi_man_manual('string.html'),manual,15621).
-i(/(get_string_code,3),"Semi-deterministic version of string_code/3.",swi_man_manual('string.html'),manual,16337).
-i(/(string_concat,3),"Similar to atom_concat/3, but the unbound argument will be unified with a string object rather than an atom.",swi_man_manual('string.html'),manual,16857).
-i(/(split_string,4),"Break String into SubStrings.",swi_man_manual('string.html'),manual,17677).
-i(/(sub_string,5),"This predicate is functionally equivalent to sub_atom/5, but operates on strings.",swi_man_manual('string.html'),manual,19571).
-i(/(atomics_to_string,2),"List is a list of strings, atoms, or number types.",swi_man_manual('string.html'),manual,20425).
-i(/(atomics_to_string,3),"Creates a string just like atomics_to_string/2, but inserts Separator between each pair of inputs.",swi_man_manual('string.html'),manual,20805).
-i(/(string_upper,2),"Convert String to upper case and unify the result with UpperCase.",swi_man_manual('string.html'),manual,21280).
-i(/(string_lower,2),"Convert String to lower case and unify the result with LowerCase.",swi_man_manual('string.html'),manual,21508).
-i(/(read_string,3),"Read at most Length characters from Stream and return them in the string String.",swi_man_manual('string.html'),manual,21735).
-i(/(read_string,5),"Read a string from Stream, providing functionality similar to split_string/4.",swi_man_manual('string.html'),manual,22229).
-i(/(open_string,2),"True when Stream is an input stream that accesses the content of String.",swi_man_manual('string.html'),manual,24168).
-i(section(3,'5.2.3','sec:ext-dquotes-motivation'),"Why has the representation of double quoted text changed?",swi_man_manual('string.html'),manual,24783).
-i(section(3,'5.2.4','sec:ext-dquotes-port'),"Adapting code for double quoted strings",swi_man_manual('string.html'),manual,27289).
-i(section(3,'5.2.5','sec:ext-dquotes-port-predicates'),"Predicates to support adapting code for double quoted strings",swi_man_manual('string.html'),manual,30286).
-i(/(list_strings,0),"This predicate may be used to assess compatibility issues due to the representation of double quoted text as string objects.",swi_man_manual('string.html'),manual,30760).
-i(:(check,/(string_predicate,1)),"Declare that PredicateIndicator has clauses that contain strings, but that this is safe.",swi_man_manual('string.html'),manual,32937).
-i(:(check,/(valid_string_goal,1)),"Declare that calls to Goal are safe.",swi_man_manual('string.html'),manual,33657).
+i(/(string_bytes,3),"True when the (Unicode) String is represented by Bytes in Encoding.",swi_man_manual('string.html'),manual,14681).
+i(/(text_to_string,2),"Converts Text to a string.",swi_man_manual('string.html'),manual,15952).
+i(/(string_length,2),"Unify Length with the number of characters in String.",swi_man_manual('string.html'),manual,16350).
+i(/(string_code,3),"True when Code represents the character at the 1-based Index position in String.",swi_man_manual('string.html'),manual,16892).
+i(/(get_string_code,3),"Semi-deterministic version of string_code/3.",swi_man_manual('string.html'),manual,17608).
+i(/(string_concat,3),"Similar to atom_concat/3, but the unbound argument will be unified with a string object rather than an atom.",swi_man_manual('string.html'),manual,18128).
+i(/(split_string,4),"Break String into SubStrings.",swi_man_manual('string.html'),manual,18948).
+i(/(sub_string,5),"This predicate is functionally equivalent to sub_atom/5, but operates on strings.",swi_man_manual('string.html'),manual,20842).
+i(/(atomics_to_string,2),"List is a list of strings, atoms, or number types.",swi_man_manual('string.html'),manual,21696).
+i(/(atomics_to_string,3),"Creates a string just like atomics_to_string/2, but inserts Separator between each pair of inputs.",swi_man_manual('string.html'),manual,22076).
+i(/(string_upper,2),"Convert String to upper case and unify the result with UpperCase.",swi_man_manual('string.html'),manual,22551).
+i(/(string_lower,2),"Convert String to lower case and unify the result with LowerCase.",swi_man_manual('string.html'),manual,22779).
+i(/(read_string,3),"Read at most Length characters from Stream and return them in the string String.",swi_man_manual('string.html'),manual,23006).
+i(/(read_string,5),"Read a string from Stream, providing functionality similar to split_string/4.",swi_man_manual('string.html'),manual,23500).
+i(/(open_string,2),"True when Stream is an input stream that accesses the content of String.",swi_man_manual('string.html'),manual,25439).
+i(section(3,'5.2.3','sec:ext-dquotes-motivation'),"Why has the representation of double quoted text changed?",swi_man_manual('string.html'),manual,26054).
+i(section(3,'5.2.4','sec:ext-dquotes-port'),"Adapting code for double quoted strings",swi_man_manual('string.html'),manual,28560).
+i(section(3,'5.2.5','sec:ext-dquotes-port-predicates'),"Predicates to support adapting code for double quoted strings",swi_man_manual('string.html'),manual,31557).
+i(/(list_strings,0),"This predicate may be used to assess compatibility issues due to the representation of double quoted text as string objects.",swi_man_manual('string.html'),manual,32031).
+i(:(check,/(string_predicate,1)),"Declare that PredicateIndicator has clauses that contain strings, but that this is safe.",swi_man_manual('string.html'),manual,34208).
+i(:(check,/(valid_string_goal,1)),"Declare that calls to Goal are safe.",swi_man_manual('string.html'),manual,34928).
 i(section(2,'A.49','sec:strings'),"library(strings): String utilities",swi_man_manual('strings.html'),manual,3521).
 i(/(string,4),"Implements the quasi quotation syntax string.",swi_man_manual('strings.html'),manual,5647).
 i(/(interpolate_string,4),"Establish a string from a template by replacing patterns.",swi_man_manual('strings.html'),manual,6879).
@@ -2195,7 +2200,7 @@ i(section(4,'2.16.1.6','sec:syntax-rational-numbers'),"Rational number syntax",s
 i(section(4,'2.16.1.7','sec:floatsyntax'),"NaN and Infinity floats and their syntax",swi_man_manual('syntax.html'),manual,18381).
 i(section(4,'2.16.1.8','sec:varprefix'),"Force only underscore to introduce a variable",swi_man_manual('syntax.html'),manual,20078).
 i(section(4,'2.16.1.9','sec:unicodesyntax'),"Unicode Prolog source",swi_man_manual('syntax.html'),manual,21565).
-i(section(4,'2.16.1.10','sec:singleton'),"Singleton variable checking",swi_man_manual('syntax.html'),manual,24342).
+i(section(4,'2.16.1.10','sec:singleton'),"Singleton variable checking",swi_man_manual('syntax.html'),manual,25354).
 i(section(2,'4.35','sec:system'),"Operating System Interaction",swi_man_manual('system.html'),manual,3503).
 i(/(shell,1),"Equivalent to‘shell(Command, 0)’.",swi_man_manual('system.html'),manual,4086).
 i(/(shell,2),"Execute Command on the operating system.",swi_man_manual('system.html'),manual,4360).
@@ -2210,7 +2215,7 @@ i(/(win_shell,2),"Same as win_shell(Operation, File, normal).",swi_man_manual('s
 i(/(win_registry_get_value,3),"Windows only.",swi_man_manual('system.html'),manual,12568).
 i(/(win_folder,2),"True if Name is the Windows‘CSIDL' of Directory.",swi_man_manual('system.html'),manual,13657).
 i(/(win_add_dll_directory,1),"This predicate adds a directory to the search path for dependent DLL files.",swi_man_manual('system.html'),manual,14373).
-i(/(win_add_dll_directory,2),"This predicate adds a directory to the search path for dependent DLL files.",swi_man_manual('system.html'),manual,15394).
+i(/(win_add_dll_directory,2),"This predicate adds a directory to the search path for dependent DLL files.",swi_man_manual('system.html'),manual,15488).
 i(/(win_remove_dll_directory,1),"Remove a DLL search directory installed using win_add_dll_directory/2.",swi_man_manual('system.html'),manual,17096).
 i(/(win_process_modules,1),"This predicate is a wrapper around EnumProcessModules().",swi_man_manual('system.html'),manual,17422).
 i(/(win_get_user_preferred_ui_languages,2),"Unifies Languages with a list of the user preferred languages (Windows Display Languages) in order of preference.",swi_man_manual('system.html'),manual,18346).
@@ -2293,28 +2298,28 @@ i(section(3,'7.9.2','sec:tabling-shared-status'),"Status and future of shared ta
 i(section(2,'7.5','sec:tabling-subsumptive'),"Variant and subsumptive tabling",swi_man_manual('tabling-subsumptive.html'),manual,3508).
 i(section(2,'4.20','sec:termrw'),"Term reading and writing",swi_man_manual('termrw.html'),manual,3517).
 i(/(write_term,2),"The predicate write_term/2 is the generic form of all Prolog term-write predicates.",swi_man_manual('termrw.html'),manual,4506).
-i(/(write_term,3),"As write_term/2, but output is sent to Stream rather than the current output.",swi_man_manual('termrw.html'),manual,19499).
-i(/(write_length,3),"True when Length is the number of characters emitted for write_term(Term, Options).",swi_man_manual('termrw.html'),manual,19849).
-i(/(write_canonical,1),"Write Term on the current output stream using standard parenthesised prefix notation (i.e., ignoring operator declarations).",swi_man_manual('termrw.html'),manual,20617).
-i(/(write_canonical,2),"Write Term in canonical form on Stream.",swi_man_manual('termrw.html'),manual,21980).
-i(/(write,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,22218).
-i(/(write,2),"Write Term to Stream.",swi_man_manual('termrw.html'),manual,22458).
-i(/(writeq,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,22658).
-i(/(writeq,2),"Write Term to Stream, inserting quotes.",swi_man_manual('termrw.html'),manual,23140).
-i(/(writeln,1),"Equivalent to write(Term), nl.",swi_man_manual('termrw.html'),manual,23360).
-i(/(writeln,2),"Equivalent to write(Stream, Term), nl(Stream).",swi_man_manual('termrw.html'),manual,23635).
-i(/(print,1),"Print a term for debugging purposes.",swi_man_manual('termrw.html'),manual,23936).
-i(/(print,2),"Print Term to Stream.",swi_man_manual('termrw.html'),manual,25855).
-i(/(portray,1),"A dynamic predicate, which can be defined by the user to change the behaviour of print/1 on (sub)terms.",swi_man_manual('termrw.html'),manual,26020).
-i(/(read,1),"Read the next Prolog term from the current input stream and unify it with Term.",swi_man_manual('termrw.html'),manual,26943).
-i(/(read,2),"Read the next Prolog term from Stream.",swi_man_manual('termrw.html'),manual,28188).
-i(/(read_clause,3),"Equivalent to read_term/3, but sets options according to the current compilation context and optionally processes comments.",swi_man_manual('termrw.html'),manual,28596).
-i(/(read_term,2),"Read a term from the current input stream and unify the term with Term.",swi_man_manual('termrw.html'),manual,30853).
-i(/(read_term,3),"Read term with options from Stream.",swi_man_manual('termrw.html'),manual,43160).
-i(/(read_term_from_atom,3),"Use read_term/3 to read the next term from Atom.",swi_man_manual('termrw.html'),manual,43480).
-i(/(read_term_with_history,2),"Read a term while providing history substitutions.",swi_man_manual('termrw.html'),manual,44097).
-i(/(prompt,2),"Set prompt associated with reading from the user_input stream.",swi_man_manual('termrw.html'),manual,46584).
-i(/(prompt1,1),"Sets the prompt for the next line to be read.",swi_man_manual('termrw.html'),manual,47941).
+i(/(write_term,3),"As write_term/2, but output is sent to Stream rather than the current output.",swi_man_manual('termrw.html'),manual,19900).
+i(/(write_length,3),"True when Length is the number of characters emitted for write_term(Term, Options).",swi_man_manual('termrw.html'),manual,20250).
+i(/(write_canonical,1),"Write Term on the current output stream using standard parenthesised prefix notation (i.e., ignoring operator declarations).",swi_man_manual('termrw.html'),manual,21018).
+i(/(write_canonical,2),"Write Term in canonical form on Stream.",swi_man_manual('termrw.html'),manual,22381).
+i(/(write,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,22619).
+i(/(write,2),"Write Term to Stream.",swi_man_manual('termrw.html'),manual,22859).
+i(/(writeq,1),"Write Term to the current output, using brackets and operators where appropriate.",swi_man_manual('termrw.html'),manual,23059).
+i(/(writeq,2),"Write Term to Stream, inserting quotes.",swi_man_manual('termrw.html'),manual,23541).
+i(/(writeln,1),"Equivalent to write(Term), nl.",swi_man_manual('termrw.html'),manual,23761).
+i(/(writeln,2),"Equivalent to write(Stream, Term), nl(Stream).",swi_man_manual('termrw.html'),manual,24036).
+i(/(print,1),"Print a term for debugging purposes.",swi_man_manual('termrw.html'),manual,24337).
+i(/(print,2),"Print Term to Stream.",swi_man_manual('termrw.html'),manual,26256).
+i(/(portray,1),"A dynamic predicate, which can be defined by the user to change the behaviour of print/1 on (sub)terms.",swi_man_manual('termrw.html'),manual,26421).
+i(/(read,1),"Read the next Prolog term from the current input stream and unify it with Term.",swi_man_manual('termrw.html'),manual,27344).
+i(/(read,2),"Read the next Prolog term from Stream.",swi_man_manual('termrw.html'),manual,28589).
+i(/(read_clause,3),"Equivalent to read_term/3, but sets options according to the current compilation context and optionally processes comments.",swi_man_manual('termrw.html'),manual,28997).
+i(/(read_term,2),"Read a term from the current input stream and unify the term with Term.",swi_man_manual('termrw.html'),manual,31254).
+i(/(read_term,3),"Read term with options from Stream.",swi_man_manual('termrw.html'),manual,43561).
+i(/(read_term_from_atom,3),"Use read_term/3 to read the next term from Atom.",swi_man_manual('termrw.html'),manual,43881).
+i(/(read_term_with_history,2),"Read a term while providing history substitutions.",swi_man_manual('termrw.html'),manual,44498).
+i(/(prompt,2),"Set prompt associated with reading from the user_input stream.",swi_man_manual('termrw.html'),manual,46985).
+i(/(prompt1,1),"Sets the prompt for the next line to be read.",swi_man_manual('termrw.html'),manual,48342).
 i(section(2,'A.53','sec:terms'),"library(terms): Term manipulation",swi_man_manual('terms.html'),manual,3511).
 i(/(term_size,2),"True if Size is the size in cells occupied by Term on the global (term) stack.",swi_man_manual('terms.html'),manual,4043).
 i(/(variant,2),"Same as SWI-Prolog Term1 =@= Term2.",swi_man_manual('terms.html'),manual,4773).
@@ -2336,7 +2341,7 @@ i(section(2,'10.2','sec:thmonitor'),"Monitoring threads",swi_man_manual('thmonit
 i(/(is_thread,1),"True if Term is a handle to an existing thread.",swi_man_manual('thmonitor.html'),manual,4330).
 i(/(thread_property,2),"True if thread Id has Property.",swi_man_manual('thmonitor.html'),manual,4508).
 i(/(thread_statistics,3),"Obtains statistical information on thread Id as statistics/2 does in single-threaded applications.",swi_man_manual('thmonitor.html'),manual,9053).
-i(/(mutex_statistics,0),"Print usage statistics on internal mutexes and mutexes associated with dynamic predicates.",swi_man_manual('thmonitor.html'),manual,10271).
+i(/(mutex_statistics,0),"Print usage statistics on internal mutexes and mutexes associated with dynamic predicates.",swi_man_manual('thmonitor.html'),manual,10295).
 i(section(2,'10.3','sec:threadcom'),"Thread communication",swi_man_manual('threadcom.html'),manual,3525).
 i(section(3,'10.3.1','sec:msgqueue'),"Message queues",swi_man_manual('threadcom.html'),manual,3692).
 i(/(thread_send_message,2),"Place Term in the given queue or default queue of the indicated thread (which can even be the message queue of itself, see thread_self/1).",swi_man_manual('threadcom.html'),manual,4766).
@@ -2501,8 +2506,8 @@ i(/(delays_residual_program,2),"Program is a list of clauses that represents the
 i(section(3,'7.6.1','sec:wfs-toplevel'),"Well founded semantics and the toplevel",swi_man_manual('WFS.html'),manual,11458).
 i(section(2,'6.1','sec:whymodules'),"Why Use Modules?",swi_man_manual('whymodules.html'),manual,3518).
 i(section(2,'2.19','sec:widechars'),"Wide character support",swi_man_manual('widechars.html'),manual,3515).
-i(section(3,'2.19.1','sec:encoding'),"Wide character encodings on streams",swi_man_manual('widechars.html'),manual,5296).
-i(section(4,'2.19.1.1','sec:bom'),"BOM: Byte Order Mark",swi_man_manual('widechars.html'),manual,10138).
+i(section(3,'2.19.1','sec:encoding'),"Wide character encodings on streams",swi_man_manual('widechars.html'),manual,6073).
+i(section(4,'2.19.1.1','sec:bom'),"BOM: Byte Order Mark",swi_man_manual('widechars.html'),manual,11580).
 i(section(2,'A.27','sec:wwwbrowser'),"library(www_browser): Open a URL in the users browser",swi_man_manual('wwwbrowser.html'),manual,3511).
 i(/(www_open_url,1),"Open URL in running version of the users' browser or start a new browser.",swi_man_manual('wwwbrowser.html'),manual,4107).
 i(/(known_browser,2),"True if browser FileBaseName has a remote protocol compatible to Compatible.",swi_man_manual('wwwbrowser.html'),manual,5178).
@@ -3337,60 +3342,60 @@ i(/(turtle_pn_local,1),"True if Atom is a valid Turtle PN_LOCAL name.",swi_man_p
 i(/(turtle_write_quoted_string,2),"Same as turtle_write_quoted_string(Out, Value, false), writing a string with only a single \".",swi_man_packages('semweb.html'),packages,169145).
 i(/(turtle_write_uri,2),"Write a URI as <...>",swi_man_packages('semweb.html'),packages,169513).
 i(/('rdf_db:rdf_load_stream',3),"(Turtle clauses)",swi_man_packages('semweb.html'),packages,169729).
-i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,169984).
-i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,170294).
-i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,170626).
-i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,171310).
-i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,172157).
-i(section(2,'6','sec:rdfntriples'),"library(semweb/rdf_ntriples): Process files in the RDF N-Triples format",swi_man_packages('semweb.html'),packages,176494).
-i(/(read_ntriple,2),"Read the next triple from Stream as Triple.",swi_man_packages('semweb.html'),packages,177543).
-i(/(read_nquad,2),"Read the next quad from Stream as Quad.",swi_man_packages('semweb.html'),packages,178285).
-i(/(read_ntuple,2),"Read the next triple or quad from Stream as Tuple.",swi_man_packages('semweb.html'),packages,179017).
-i(/(rdf_read_ntriples,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179576).
-i(/(rdf_read_nquads,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179576).
-i(/(rdf_process_ntriples,3),"Call-back interface, compatible with the other triple readers.",swi_man_packages('semweb.html'),packages,181349).
-i(/('rdf_db:rdf_load_stream',3),"Plugin rule that supports loading the ntriples and nquads formats.",swi_man_packages('semweb.html'),packages,182038).
-i(/('rdf_db:rdf_file_type',2),"Bind the ntriples reader to files with the extensions nt, ntriples and nquads.",swi_man_packages('semweb.html'),packages,182378).
-i(section(2,'7','sec:rdfa'),"library(semweb/rdfa): Extract RDF from an HTML or XML DOM",swi_man_packages('semweb.html'),packages,182734).
-i(/(read_rdfa,3),"True when Triples is a list of rdf(S,P,O) triples extracted from Input.",swi_man_packages('semweb.html'),packages,183670).
-i(/(xml_rdfa,3),"True when RDF is a list of rdf(S,P,O) terms extracted from DOM according to the RDFa specification.",swi_man_packages('semweb.html'),packages,184363).
-i(/('rdf_db:rdf_load_stream',3),"Register library(semweb/rdfa) as loader for HTML RDFa files.",swi_man_packages('semweb.html'),packages,185292).
-i(section(2,'8','sec:rdfs'),"library(semweb/rdfs): RDFS related queries",swi_man_packages('semweb.html'),packages,185776).
-i(section(3,'8.1','sec:semweb-rdfs-classes'),"Hierarchy and class-individual relations",swi_man_packages('semweb.html'),packages,187140).
-i(/(rdfs_subproperty_of,2),"True if SubProperty is equal to Property or Property can be reached from SubProperty following the rdfs:subPropertyOf relation.",swi_man_packages('semweb.html'),packages,187680).
-i(/(rdfs_subclass_of,2),"True if SubClass is equal to Class or Class can be reached from SubClass following the rdfs:subClassOf relation.",swi_man_packages('semweb.html'),packages,188593).
-i(/(rdfs_class_property,2),"True if the domain of Property includes Class.",swi_man_packages('semweb.html'),packages,189090).
-i(/(rdfs_individual_of,2),"True if Resource is an indivisual of Class.",swi_man_packages('semweb.html'),packages,189367).
-i(section(3,'8.2','sec:semweb-rdfs-containers'),"Collections and Containers",swi_man_packages('semweb.html'),packages,189848).
-i(/(rdfs_member,2),"Test or generate the members of Set.",swi_man_packages('semweb.html'),packages,190303).
-i(/(rdfs_list_to_prolog_list,2),"Convert Set, which must be an individual of rdf:List into a Prolog list of objects.",swi_man_packages('semweb.html'),packages,190582).
-i(/(rdfs_assert_list,2),"Equivalent to rdfs_assert_list/3 using DB = user.",swi_man_packages('semweb.html'),packages,190847).
-i(/(rdfs_assert_list,3),"If List is a list of resources, create an RDF list Resource that reflects these resources.",swi_man_packages('semweb.html'),packages,191149).
-i(section(2,'9','sec:rdflib'),"Managing RDF input files",swi_man_packages('semweb.html'),packages,191637).
-i(section(3,'9.1','sec:semweb-rdf-manifest'),"The Manifest file",swi_man_packages('semweb.html'),packages,192617).
-i(section(4,'9.1.1','sec:semweb-void'),"Support for the VoID and VANN vocabularies",swi_man_packages('semweb.html'),packages,196879).
-i(section(4,'9.1.2','sec:semweb-find-manifest'),"Finding manifest files",swi_man_packages('semweb.html'),packages,198908).
-i(/(rdf_attach_library,1),"Load meta-data on RDF repositories from FileOrDirectory.",swi_man_packages('semweb.html'),packages,199291).
-i(/(rdf_list_library,0),"List the available resources in the library.",swi_man_packages('semweb.html'),packages,200233).
-i(/(rdf_list_library,1),"Same as rdf_list_library(Id,[]).",swi_man_packages('semweb.html'),packages,201313).
-i(/(rdf_list_library,2),"Lists the resources that will be loaded if Id is handed to rdf_load_library/2.",swi_man_packages('semweb.html'),packages,201490).
-i(/(rdf_load_library,2),"Load the given library.",swi_man_packages('semweb.html'),packages,202361).
-i(section(3,'9.2','sec:usage'),"Usage scenarios",swi_man_packages('semweb.html'),packages,202761).
-i(section(4,'9.2.1','sec:semweb-manifest-resources'),"Referencing resources",swi_man_packages('semweb.html'),packages,205710).
-i(section(3,'9.3','sec:semweb-rdflib-example'),"Putting it all together",swi_man_packages('semweb.html'),packages,208150).
-i(section(3,'9.4','sec:w3cmanifest'),"Example: A metadata file for W3C WordNet",swi_man_packages('semweb.html'),packages,209412).
-i(section(2,'10','sec:sparqlclient'),"library(semweb/sparql_client): SPARQL client library",swi_man_packages('semweb.html'),packages,213191).
-i(/(sparql_query,3),"Execute a SPARQL query on an HTTP SPARQL endpoint.",swi_man_packages('semweb.html'),packages,214257).
-i(/(sparql_set_server,1),"Set sparql server default options.",swi_man_packages('semweb.html'),packages,216823).
-i(/(sparql_read_xml_result,2),"Specs from http://www.w3.org/TR/rdf-sparql-XMLres/.",swi_man_packages('semweb.html'),packages,217295).
-i(/(sparql_read_json_result,2),"The returned Result term is of the format: select(VarNames, Rows)Where VarNames is a term v(Name, ...) and Rows is a list of row(....) containing the column values in the same order as the variable names.",swi_man_packages('semweb.html'),packages,218075).
-i(section(2,'11','sec:rdfcompare'),"library(semweb/rdf_compare): Compare RDF graphs",swi_man_packages('semweb.html'),packages,218959).
-i(/(rdf_equal_graphs,3),"True if GraphA and GraphB are the same under Substition.",swi_man_packages('semweb.html'),packages,219534).
-i(section(2,'12','sec:rdfportray'),"library(semweb/rdf_portray): Portray RDF resources",swi_man_packages('semweb.html'),packages,220532).
-i(/(rdf_portray_as,1),"Set the style used to portray resources.",swi_man_packages('semweb.html'),packages,221606).
-i(/(rdf_portray_lang,1),"If Lang is a list, set the list or preferred languages.",swi_man_packages('semweb.html'),packages,222533).
-i(section(2,'13','sec:semweb-related-packages'),"Related packages",swi_man_packages('semweb.html'),packages,222855).
-i(section(2,'14','sec:semweb-version3'),"Version 3 release notes",swi_man_packages('semweb.html'),packages,223851).
+i(/(rdf_save_canonical_trig,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,169984).
+i(/(rdf_save_trig,2),"Save multiple RDF graphs into a TriG file.",swi_man_packages('semweb.html'),packages,170316).
+i(/(rdf_save_canonical_turtle,2),"Save triples in a canonical format.",swi_man_packages('semweb.html'),packages,171000).
+i(/(rdf_save_turtle,2),"Save an RDF graph as Turtle.",swi_man_packages('semweb.html'),packages,171847).
+i(/(rdf_save_ntriples,2),"Save RDF using ntriples format.",swi_man_packages('semweb.html'),packages,176174).
+i(section(2,'6','sec:rdfntriples'),"library(semweb/rdf_ntriples): Process files in the RDF N-Triples format",swi_man_packages('semweb.html'),packages,176495).
+i(/(read_ntriple,2),"Read the next triple from Stream as Triple.",swi_man_packages('semweb.html'),packages,177544).
+i(/(read_nquad,2),"Read the next quad from Stream as Quad.",swi_man_packages('semweb.html'),packages,178286).
+i(/(read_ntuple,2),"Read the next triple or quad from Stream as Tuple.",swi_man_packages('semweb.html'),packages,179018).
+i(/(rdf_read_ntriples,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179577).
+i(/(rdf_read_nquads,3),"True when Triples/Quads is a list of triples/quads from Input.",swi_man_packages('semweb.html'),packages,179577).
+i(/(rdf_process_ntriples,3),"Call-back interface, compatible with the other triple readers.",swi_man_packages('semweb.html'),packages,181350).
+i(/('rdf_db:rdf_load_stream',3),"Plugin rule that supports loading the ntriples and nquads formats.",swi_man_packages('semweb.html'),packages,182039).
+i(/('rdf_db:rdf_file_type',2),"Bind the ntriples reader to files with the extensions nt, ntriples and nquads.",swi_man_packages('semweb.html'),packages,182379).
+i(section(2,'7','sec:rdfa'),"library(semweb/rdfa): Extract RDF from an HTML or XML DOM",swi_man_packages('semweb.html'),packages,182735).
+i(/(read_rdfa,3),"True when Triples is a list of rdf(S,P,O) triples extracted from Input.",swi_man_packages('semweb.html'),packages,183671).
+i(/(xml_rdfa,3),"True when RDF is a list of rdf(S,P,O) terms extracted from DOM according to the RDFa specification.",swi_man_packages('semweb.html'),packages,184364).
+i(/('rdf_db:rdf_load_stream',3),"Register library(semweb/rdfa) as loader for HTML RDFa files.",swi_man_packages('semweb.html'),packages,185293).
+i(section(2,'8','sec:rdfs'),"library(semweb/rdfs): RDFS related queries",swi_man_packages('semweb.html'),packages,185777).
+i(section(3,'8.1','sec:semweb-rdfs-classes'),"Hierarchy and class-individual relations",swi_man_packages('semweb.html'),packages,187141).
+i(/(rdfs_subproperty_of,2),"True if SubProperty is equal to Property or Property can be reached from SubProperty following the rdfs:subPropertyOf relation.",swi_man_packages('semweb.html'),packages,187681).
+i(/(rdfs_subclass_of,2),"True if SubClass is equal to Class or Class can be reached from SubClass following the rdfs:subClassOf relation.",swi_man_packages('semweb.html'),packages,188594).
+i(/(rdfs_class_property,2),"True if the domain of Property includes Class.",swi_man_packages('semweb.html'),packages,189091).
+i(/(rdfs_individual_of,2),"True if Resource is an indivisual of Class.",swi_man_packages('semweb.html'),packages,189368).
+i(section(3,'8.2','sec:semweb-rdfs-containers'),"Collections and Containers",swi_man_packages('semweb.html'),packages,189849).
+i(/(rdfs_member,2),"Test or generate the members of Set.",swi_man_packages('semweb.html'),packages,190304).
+i(/(rdfs_list_to_prolog_list,2),"Convert Set, which must be an individual of rdf:List into a Prolog list of objects.",swi_man_packages('semweb.html'),packages,190583).
+i(/(rdfs_assert_list,2),"Equivalent to rdfs_assert_list/3 using DB = user.",swi_man_packages('semweb.html'),packages,190848).
+i(/(rdfs_assert_list,3),"If List is a list of resources, create an RDF list Resource that reflects these resources.",swi_man_packages('semweb.html'),packages,191150).
+i(section(2,'9','sec:rdflib'),"Managing RDF input files",swi_man_packages('semweb.html'),packages,191638).
+i(section(3,'9.1','sec:semweb-rdf-manifest'),"The Manifest file",swi_man_packages('semweb.html'),packages,192618).
+i(section(4,'9.1.1','sec:semweb-void'),"Support for the VoID and VANN vocabularies",swi_man_packages('semweb.html'),packages,196880).
+i(section(4,'9.1.2','sec:semweb-find-manifest'),"Finding manifest files",swi_man_packages('semweb.html'),packages,198909).
+i(/(rdf_attach_library,1),"Load meta-data on RDF repositories from FileOrDirectory.",swi_man_packages('semweb.html'),packages,199292).
+i(/(rdf_list_library,0),"List the available resources in the library.",swi_man_packages('semweb.html'),packages,200234).
+i(/(rdf_list_library,1),"Same as rdf_list_library(Id,[]).",swi_man_packages('semweb.html'),packages,201314).
+i(/(rdf_list_library,2),"Lists the resources that will be loaded if Id is handed to rdf_load_library/2.",swi_man_packages('semweb.html'),packages,201491).
+i(/(rdf_load_library,2),"Load the given library.",swi_man_packages('semweb.html'),packages,202362).
+i(section(3,'9.2','sec:usage'),"Usage scenarios",swi_man_packages('semweb.html'),packages,202762).
+i(section(4,'9.2.1','sec:semweb-manifest-resources'),"Referencing resources",swi_man_packages('semweb.html'),packages,205711).
+i(section(3,'9.3','sec:semweb-rdflib-example'),"Putting it all together",swi_man_packages('semweb.html'),packages,208151).
+i(section(3,'9.4','sec:w3cmanifest'),"Example: A metadata file for W3C WordNet",swi_man_packages('semweb.html'),packages,209413).
+i(section(2,'10','sec:sparqlclient'),"library(semweb/sparql_client): SPARQL client library",swi_man_packages('semweb.html'),packages,213192).
+i(/(sparql_query,3),"Execute a SPARQL query on an HTTP SPARQL endpoint.",swi_man_packages('semweb.html'),packages,214258).
+i(/(sparql_set_server,1),"Set sparql server default options.",swi_man_packages('semweb.html'),packages,216824).
+i(/(sparql_read_xml_result,2),"Specs from http://www.w3.org/TR/rdf-sparql-XMLres/.",swi_man_packages('semweb.html'),packages,217296).
+i(/(sparql_read_json_result,2),"The returned Result term is of the format: select(VarNames, Rows)Where VarNames is a term v(Name, ...) and Rows is a list of row(....) containing the column values in the same order as the variable names.",swi_man_packages('semweb.html'),packages,218076).
+i(section(2,'11','sec:rdfcompare'),"library(semweb/rdf_compare): Compare RDF graphs",swi_man_packages('semweb.html'),packages,218960).
+i(/(rdf_equal_graphs,3),"True if GraphA and GraphB are the same under Substition.",swi_man_packages('semweb.html'),packages,219535).
+i(section(2,'12','sec:rdfportray'),"library(semweb/rdf_portray): Portray RDF resources",swi_man_packages('semweb.html'),packages,220533).
+i(/(rdf_portray_as,1),"Set the style used to portray resources.",swi_man_packages('semweb.html'),packages,221607).
+i(/(rdf_portray_lang,1),"If Lang is a list, set the list or preferred languages.",swi_man_packages('semweb.html'),packages,222534).
+i(section(2,'13','sec:semweb-related-packages'),"Related packages",swi_man_packages('semweb.html'),packages,222856).
+i(section(2,'14','sec:semweb-version3'),"Version 3 release notes",swi_man_packages('semweb.html'),packages,223852).
 i(section(0,'0','packages/protobufs.html'),"Google's Protocol Buffers Library",swi_man_packages('protobufs.html'),packages,2785).
 i(section(2,'1','sec:protobufs-main'),"Google's Protocol Buffers",swi_man_packages('protobufs.html'),packages,6616).
 i(section(3,'1.1','sec:protobufs-overview'),"Overview",swi_man_packages('protobufs.html'),packages,6795).
@@ -3590,25 +3595,6 @@ i(/(re_replace,5),"Replace matches of the regular expression Pattern in String w
 i(/(re_compile,3),"Compiles Pattern to a Regex blob of type regex (see blob/2).",swi_man_packages('pcre.html'),packages,19336).
 i(/(re_flush,0),"Clean pattern and replacement caches.",swi_man_packages('pcre.html'),packages,29388).
 i(/(re_config,1),"Extract configuration information from the pcre library.",swi_man_packages('pcre.html'),packages,29647).
-i(section(0,'0','packages/libedit.html'),"SWI-Prolog binding to BSD libedit",swi_man_packages('libedit.html'),packages,2785).
-i(section(2,'1','sec:editline'),"library(editline): BSD libedit based command line editing",swi_man_packages('libedit.html'),packages,3472).
-i(/(el_wrap,0),"Enable using editline on the standard user streams if user_input is connected to a terminal.",swi_man_packages('libedit.html'),packages,3934).
-i(/(el_wrap,4),"Enable editline on the stream-triple <In,Out,Error>.",swi_man_packages('libedit.html'),packages,4514).
-i(/(el_setup,1),"This hooks is called as forall(el_setup(Input), true) after the input stream has been wrapped, the default Prolog commands have been added and the default user setup file has been sourced using el_source/2.",swi_man_packages('libedit.html'),packages,5111).
-i(/(el_wrapped,1),"True if In is a stream wrapped by el_wrap/3.",swi_man_packages('libedit.html'),packages,5608).
-i(/(el_unwrap,1),"Remove the libedit wrapper for In and the related output and error streams.",swi_man_packages('libedit.html'),packages,5859).
-i(/(el_source,2),"Initialise editline by reading the contents of File.",swi_man_packages('libedit.html'),packages,6304).
-i(/(el_bind,2),"Invoke the libedit bind command with the given arguments.",swi_man_packages('libedit.html'),packages,6597).
-i(/(el_addfn,4),"Add a new command to the command line editor associated with Input.",swi_man_packages('libedit.html'),packages,7426).
-i(/(el_line,2),"Fetch the currently buffered input line.",swi_man_packages('libedit.html'),packages,9430).
-i(/(el_cursor,2),"Move the cursor Move character forwards (positive) or backwards (negative).",swi_man_packages('libedit.html'),packages,9838).
-i(/(el_insertstr,2),"Insert Text at the cursor.",swi_man_packages('libedit.html'),packages,10115).
-i(/(el_deletestr,2),"Delete Count characters before the cursor.",swi_man_packages('libedit.html'),packages,10329).
-i(/(el_history,2),"Perform a generic action on the history.",swi_man_packages('libedit.html'),packages,10560).
-i(/(el_history_events,2),"Unify Events with a list of pairs of the form Num-String, where Num is the event number and String is the associated string without terminating newline.",swi_man_packages('libedit.html'),packages,11272).
-i(/(el_add_history,2),"Add a line to the command line history.",swi_man_packages('libedit.html'),packages,11669).
-i(/(el_read_history,2),"Read the history saved using el_write_history/2.",swi_man_packages('libedit.html'),packages,11891).
-i(/(el_write_history,2),"Save editline history to File.",swi_man_packages('libedit.html'),packages,12329).
 i(section(0,'0','packages/ssl.html'),"SWI-Prolog SSL Interface",swi_man_packages('ssl.html'),packages,2776).
 i(section(2,'1','sec:ssl-intro'),"Introduction",swi_man_packages('ssl.html'),packages,9022).
 i(section(2,'2','sec:ssl'),"library(ssl): Secure Socket Layer (SSL) library",swi_man_packages('ssl.html'),packages,11054).

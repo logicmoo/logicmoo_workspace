@@ -15,6 +15,7 @@
 % :-swi_module(user). 
 :-swi_module(modPut, []).
 
+
 :- include(prologmud(mud_header)).
 
 % :- register_module_type (mtCommand).

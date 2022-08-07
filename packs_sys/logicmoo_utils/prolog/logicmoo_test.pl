@@ -11,7 +11,10 @@
 % ===================================================================
 */
 :- if((prolog_load_context(source,File),prolog_load_context(file,File));current_prolog_flag(xref,true)).
-:- module(logicmoo_test,
+:- module(logicmoo_test,[]).
+:-endif.
+
+:- define_into_module(
    [mpred_test/1,    
     run_junit_tests/0,
     must_ex/1,
@@ -21,9 +24,10 @@
     %echo_source_file_no_catchup/1,
     run_tests_and_halt/0,
     run_tests_and_halt/1]).
-:- endif.                             
+                      
 
 :- use_module('../prolog/logicmoo_common').
+:- use_module('../prolog/echo_source_files').
 
 :- system:use_module(library(must_trace)).
 :- use_module(library(prolog_stack)).
@@ -473,7 +477,7 @@ warn_fail_TODO(G):- dmsg_pretty(:-warn_fail_TODO(G)).
 
 system:test_src(Src):- (current_prolog_flag(test_src,Src), Src\==[]);j_u:junit_prop(testsuite,file,Src).
 system:is_junit_test:- getenv('JUNIT_PACKAGE',_),!.
-system:is_junit_test:- system:is_junit_test_file.
+%system:is_junit_test:- system:is_junit_test_file.
 system:is_junit_test_file:- test_src(Src), prolog_load_context(file,Src),!.
 
 skip_warning(T):- \+ callable(T),!,fail.
@@ -665,6 +669,7 @@ test_completed_exit(_):- ttyflush,fail.
 test_completed_exit(_):- explain_junit_results,fail.
 test_completed_exit(_):- ttyflush,fail.
 test_completed_exit(N):- dmsg_pretty(test_completed_exit(N)),fail.
+test_completed_exit(_):- dumpST,fail.
 test_completed_exit(_):- ttyflush,fail.
 test_completed_exit(_):- current_prolog_flag(test_completed,MGoal), strip_module(MGoal,M,Goal), Goal\=[], 
    Goal\==test_completed,  callable(Goal), call(M:Goal). 

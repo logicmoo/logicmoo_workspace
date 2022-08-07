@@ -23,6 +23,8 @@
 :- multifile(baseKB:agent_action_queue/3).
 :- dynamic(baseKB:agent_action_queue/3).
 
+:- set_prolog_flag(gc,true).
+
 :- thread_local(t_l:disable_px/0).
 :- retractall(t_l:disable_px).
 
@@ -680,8 +682,8 @@ prologHybrid(mudAtLoc,2).
 prologHybrid(mudColor/2).
 prologHybrid(mudHealth,2).
 prologHybrid(mudMaterial/2).
-prologHybrid(mudNeedsLook,2).
-:- kb_global(baseKB:mudNeedsLook/2).
+%:- kb_global(baseKB:mudNeedsLook/2).
+%prologHybrid(mudNeedsLook,2).
 prologHybrid(mudNeedsLook/2,[completeExtentAsserted]).
 prologHybrid(mudShape/2).
 prologHybrid(mudSize/2).
@@ -1072,8 +1074,6 @@ genls(tPartofFurnature,tPartofObj).
 
 
 
-
-
 %(isa(I,Sub), disjointWith(Sub, Super)) ==> neg(isa(I,Super)).
 
 
@@ -1335,10 +1335,11 @@ Unsuccessful attempt by is a rulebook. [19]
 */
 
 
+/*
 :- dynamic(baseKB:mudNeedsLook/2).
 :- export(baseKB:mudNeedsLook/2).
 :- pfc_lib:import(baseKB:mudNeedsLook/2).
-
+*/
 
 prologBuiltin(onEachLoad/0).
 rtArgsVerbatum(onEachLoad).

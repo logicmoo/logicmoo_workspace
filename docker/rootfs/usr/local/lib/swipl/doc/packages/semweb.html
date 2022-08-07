@@ -3789,11 +3789,6 @@ Write a URI as <code>&lt;...&gt;</code></dd>
 +Stream, :Options</var>)</a></dt>
 <dd class="defbody">
 (Turtle clauses)</dd>
-<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_ntriples/2"><strong>rdf_save_ntriples</strong>(<var>+Spec, 
-:Options</var>)</a></dt>
-<dd class="defbody">
-Save RDF using ntriples format. The ntriples format is a subset of 
-Turtle, writing each triple fully qualified on its own line.</dd>
 <dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_canonical_trig/2"><strong>rdf_save_canonical_trig</strong>(<var>+Spec, 
 :Options</var>)</a></dt>
 <dd class="defbody">
@@ -3961,6 +3956,12 @@ triple_in(RDF, S,P,O,_G) :-
 <tr><td><var>Out</var> </td><td>is one of <code>stream(Stream)</code>, a 
 stream handle, a file-URL or an atom that denotes a filename. </td></tr>
 </table>
+</dd>
+<dt class="pubdef"><span class="pred-tag">[det]</span><a id="rdf_save_ntriples/2"><strong>rdf_save_ntriples</strong>(<var>+Spec, 
+:Options</var>)</a></dt>
+<dd class="defbody">
+Save RDF using ntriples format. The ntriples format is a subset of 
+Turtle, writing each triple fully qualified on its own line.
 </dd>
 </dl>
 

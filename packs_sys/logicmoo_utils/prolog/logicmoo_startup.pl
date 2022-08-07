@@ -18,46 +18,10 @@
 */
 
 % We save the name of the module loading this module
-:- module(logicmoo_startup,[
-          maybe_notrace/1,
-          if_file_exists/1,
-          absolute_startup_script/1,
-          before_boot/1,
-          during_boot/1,
-          after_boot/1,
-          sexport/1,
-          has_ran_once/1,
-          has_ran_once/2,
-          app_argv/1,
-          app_argv1/1,
-          app_argv_ok/1,
-          app_argv_off/1,
-          qsave_bin/1,
-          qsave_lm/1,
-          qsave_lm/0,
-          is_startup_file/1,
-          add_absolute_search_folder/2,
-          pack_upgrade_soft/1,
-          is_startup_script/1,
-          init_why/2,
-          define_into_module/2,
-          now_and_later/1,
-          only_runtime/1,
-          logicmoo_compiling_mud_server/0,
-          call_safely/1,
-          whenever/2,
-          whenever_flag_permits/2,
-          during_net_boot/1,
-          runtime_boot/1,
-          test_runtime_boot/1,
-          after_net_boot/1,
-          fixup_exports_system/0,
-          all_source_file_predicates_are_transparent/0,
-          all_source_file_predicates_are_transparent/2,
-          all_source_file_predicates_are_exported/0,
-          all_source_file_predicates_are_exported/2,
-          all_source_file_predicates_are_exported/4,
-          run_pending_inits/0]).
+:- module(logicmoo_startup,[]).
+:- export(define_into_module/1).
+:- meta_predicate(define_into_module(:)).
+define_into_module(S:List):- define_into_module(S:system,List).
 
 /** <module> Utility LOGICMOO_STARTUP
 This module manages logicmoo startup (adding history and tests, etc). 
@@ -97,25 +61,6 @@ in_lm_ws(MGoal):- getenv('LOGICMOO_WS',WS),!,
    setup_call_cleanup(cd(WS),(cd(prologmud_server),call(M:Goal)),cd(X)).
 in_lm_ws(MGoal):- strip_module(MGoal,M,Goal), call(M:Goal).
 
-:- meta_predicate(define_into_module(:,+)).
-define_into_module(S:M,List):- is_list(List),!,maplist(define_into_module_now_and_later(S,M),List).
-define_into_module(S:M,FA):- define_into_module_now_and_later(S,M,FA).
-
-define_into_module_now_and_later(A,B,C):- now_and_later(define_into_module_now(A,B,C)).
-
-define_into_module_now(S,[M],FA):-!,define_into_module_now(S,M,FA).
-define_into_module_now(S,[M,N],FA):-!,define_into_module_now(S,M,FA),define_into_module_now(S,N,FA).
-define_into_module_now(S,M,op(P,XFY,F)):-!,S:op(P,XFY,F),M:op(P,XFY,F).
-define_into_module_now(_,M,SM:FA):-!, define_into_module_now(SM,M,FA).
-define_into_module_now(S,M,F//A):-!, A2 is A+2,define_into_module_now(S,M,F/A2).
-define_into_module_now(S,M,F/A):-
- set_prolog_flag(access_level,system),
- %S:dynamic(F/A),
- S:export(F/A), S:module_transparent(F/A),
- notrace(catch((M:import(S:F/A)),_,true)),
- %ignore((\+ current_predicate(M:F/A), functor(P,F,A), M:assert(((M:P):- P)))),
- nop(module_transparent(M:F/A)).
-define_into_module_now(S,M,FA):- dumpST,format(user_error,'~N ~q ~n',[define_into_module_now(S,M,FA)]).
 :- module_transparent(sys:call_now/4).
 %sys:call_now(n,_TIM,_SM,_MGoal):-!.
 %sys:call_now(m,_TIM,_SM,_MGoal):-!.
@@ -144,6 +89,8 @@ dont_wl(X):- compound(X),compound_name_arity(X,F,_),(dont_wl(F);(arg(_,X,E),dont
 maybe_writeln(X):- dont_wl(X),!.
 maybe_writeln(_):- !.
 maybe_writeln(X):- writeln(X).
+
+
 
 
 :- if( \+ current_predicate(add_absolute_search_folder/2)).
@@ -1267,6 +1214,9 @@ lmconfig:never_export_named(_,attr_unify_hook,2).
 lmconfig:never_export_named(_,attribute_goals,3).
 lmconfig:never_export_named(_,project_attributes,2).
 lmconfig:never_export_named(_,attr_portray_hook,2).
+
+%lmconfig:never_export_named(system,_,_).
+%lmconfig:never_export_named(user,_,_).
 /*
 lmconfig:never_export_named(_,'/',2).
 lmconfig:never_export_named(_,'>>',2).
@@ -1279,6 +1229,7 @@ lmconfig:never_export_named(_,F,_):- atom_concat('$',_,F) ; atom_concat('__aux',
 
 lmconfig:never_reexport_named(_,goal_expansion,_).
 lmconfig:never_reexport_named(_,term_expansion,_).
+lmconfig:never_reexport_named(_,predicate_options,_).
 
 % lmconfig:never_export_named(_M,F,A):- current_predicate(user:F/A).
 
@@ -1545,16 +1496,112 @@ user:expand_query(Goal, _Expanded, Bindings, _ExpandedBindings):-        fail,
 
 :- module_transparent(fixup_exports/0).
 
-fixup_exports:-    
+fixup_exports:-
    all_source_file_predicates_are_exported,
    all_source_file_predicates_are_transparent.
 
 fixup_exports_system:-   (prolog_load_context(source,SF)-> reexport(SF) ; true).
 
+:- module_transparent(fixup_module_exports_now/0).
+fixup_module_exports_now:- 
+  fixup_module_exports_into_from(system).
+
+:- module_transparent(fixup_module_exports_into/1).
+fixup_module_exports_into(Into):- 
+  strip_module(_,From,_),
+  fixup_module_exports_into_from(Into,From).
+
+:- module_transparent(fixup_module_exports_into_from/2).
+fixup_module_exports_into_from(Into,From):- 
+  format('~N% ?- ~q. ~n',[fixup_module_exports_into_from(Into,From)]),
+  forall((predicate_property(From:P,defined), \+ predicate_property(From:P,imported_from(_))),    
+    (functor(P,F,A),From:define_into_module(From:Into,F/A))).
+
+:- meta_predicate(define_into_module(:,+)).
+define_into_module(_:From:Into,FA):- define_into_module_now_and_later(From,Into,FA).
+define_into_module(From:Into,FA):- define_into_module_now_and_later(From,Into,FA).
+
+define_into_module_now_and_later(A,B,C):- now_and_later(define_into_module_now(A,B,C)).
+
+define_into_module_now(_,Into,SM:FA):-!, define_into_module_now(SM,Into,FA).
+define_into_module_now(From,Into,[A]):-!, define_into_module_now(From,Into,A).
+define_into_module_now(From,Into,[A|B]):-!, define_into_module_now(From,Into,A),define_into_module_now(From,Into,B).
+define_into_module_now(From,Into,(A,B)):-!, define_into_module_now(From,Into,A),define_into_module_now(From,Into,B).
+
+define_into_module_now(From,[Into],FA):-!,define_into_module_now(From,Into,FA).
+define_into_module_now(From,[Into,N],FA):-!,define_into_module_now(From,Into,FA),define_into_module_now(From,N,FA).
+define_into_module_now(From,Into,op(P,XFY,F)):-!,From:op(P,XFY,F),Into:op(P,XFY,F).
+define_into_module_now(From,Into,F//A):- number(A), !, A2 is A+2,define_into_module_now(From,Into,F/A2).
+define_into_module_now(_,Into,F/A):- lmconfig:never_reexport_named(Into,F,A),!.
+define_into_module_now(_,Into,F/A):- lmconfig:never_export_named(Into,F,A),!.
+define_into_module_now(From,Into,F/A):-
+ set_prolog_flag(access_level,system),
+ %From:dynamic(F/A),
+ notrace(catch(From:export(F/A),_,true)),
+ notrace(catch(From:module_transparent(F/A),_,true)),
+ notrace(catch(Into:import(From:F/A),_,true)),
+ %ignore((\+ current_predicate(Into:F/A), functor(P,F,A), Into:assert(((Into:P):- P)))),
+ nop(module_transparent(Into:F/A)).
+define_into_module_now(From,Into,FA):- format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]),
+  dumpST,format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]).
+
+:- redefine_system_predicate(system:nop/1).
+:- abolish(system:nop/1),asserta(system:nop(_)).
+%! nop( :Goal) is det.
+%
+%  Comments out code without losing syntax
+%
+
+:- define_into_module(
+         [maybe_notrace/1,
+          if_file_exists/1,
+          absolute_startup_script/1,
+          before_boot/1,
+          during_boot/1,
+          after_boot/1,
+          sexport/1,
+          has_ran_once/1,
+          has_ran_once/2,
+          app_argv/1,
+          app_argv1/1,
+          app_argv_ok/1,
+          app_argv_off/1,
+          qsave_bin/1,
+          qsave_lm/1,
+          qsave_lm/0,
+          is_startup_file/1,
+          add_absolute_search_folder/2,
+          pack_upgrade_soft/1,
+          is_startup_script/1,
+          init_why/2,
+          define_into_module/2,
+          now_and_later/1,
+          only_runtime/1,
+          logicmoo_compiling_mud_server/0,
+          call_safely/1,
+          whenever/2,
+          fixup_module_exports_now/0,
+          whenever_flag_permits/2,
+          during_net_boot/1,
+          runtime_boot/1,
+          test_runtime_boot/1,
+          after_net_boot/1,
+          fixup_exports_system/0,
+          fixup_module_exports_into_from/2,
+          fixup_module_exports_into/1,
+          all_source_file_predicates_are_transparent/0,
+          all_source_file_predicates_are_transparent/2,
+          all_source_file_predicates_are_exported/0,
+          all_source_file_predicates_are_exported/2,
+          all_source_file_predicates_are_exported/4,
+          run_pending_inits/0]).
+
+
 :- fixup_exports.
 
 :- system:use_module(library(debuggery/bugger)).
-:- system:reexport(library(debuggery/bugger)).
+
+%:- system:reexport(library(debuggery/bugger)).
 
 %:- logicmoo_startup:use_module(library(option),[options/3]).
 

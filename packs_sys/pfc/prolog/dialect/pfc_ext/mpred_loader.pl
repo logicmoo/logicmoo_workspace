@@ -11,7 +11,7 @@
 :- if(current_prolog_flag(xref,true)).  % XREF
 :- module(mpred_loader,[]).
 :- endif.
-:- define_into_module(system,
+:- define_into_module(
           [ add_from_file/1,
           % unused_assertion/1,
           mpred_ops/0,

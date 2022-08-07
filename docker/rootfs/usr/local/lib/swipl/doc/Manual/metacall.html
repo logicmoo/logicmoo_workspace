@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<title>SWI-Prolog 8.5.12 Reference Manual: Section 4.8</title><link rel="home" href="index.html">
+<title>SWI-Prolog 8.5.15 Reference Manual: Section 4.8</title><link rel="home" href="index.html">
 <link rel="contents" href="Contents.html">
 <link rel="index" href="DocIndex.html">
 <link rel="summary" href="summary.html">
@@ -251,7 +251,7 @@ normal calls this search is done at compile time.
 Call <var>Goal</var>. This predicate is normally used for goals that are 
 not known at compile time. For example, the Prolog toplevel essentially 
 performs <code>read(Goal), call(Goal)</code>. Also a <em>meta</em> 
-predicates such as <a id="idx:ignore1:726"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
+predicates such as <a id="idx:ignore1:727"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
 are defined using call:
 
 <pre class="code">
@@ -259,9 +259,9 @@ ignore(Goal) :- call(Goal), !.
 ignore(_).
 </pre>
 
-<p>Note that a plain variable as a body term acts as <a id="idx:call1:727"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
+<p>Note that a plain variable as a body term acts as <a id="idx:call1:728"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
 and the above is equivalent to the code below. SWI-Prolog produces the 
-same code for these two progams and <a id="idx:listing1:728"></a><a class="pred" href="listing.html#listing/1">listing/1</a> 
+same code for these two progams and <a id="idx:listing1:729"></a><a class="pred" href="listing.html#listing/1">listing/1</a> 
 prints the program above.
 
 <pre class="code">
@@ -269,7 +269,7 @@ ignore(Goal) :- Goal, !.
 ignore(_).
 </pre>
 
-<p>Note that <a id="idx:call1:729"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
+<p>Note that <a id="idx:call1:730"></a><a class="pred" href="metacall.html#call/1">call/1</a> 
 restricts the scope of the cut (<a class="pred" href="control.html#!/0">!/0</a>). 
 A cut inside <var>Goal</var> only affects choice points created by <var>Goal</var>.</dd>
 <dt class="pubdef"><span class="pred-tag">[ISO]</span><a id="call/2"><strong>call</strong>(<var>:Goal, 
@@ -282,7 +282,7 @@ X)</code> will call <code>plus(1, 2, X)</code>, binding <var>X</var> to
 
 <p>The call/[2..] construct is handled by the compiler. The predicates 
 call/[2-8] are defined as real (meta-)predicates and are available to 
-inspection through <a id="idx:currentpredicate1:730"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a>, <a id="idx:predicateproperty2:731"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>, 
+inspection through <a id="idx:currentpredicate1:731"></a><a class="pred" href="examineprog.html#current_predicate/1">current_predicate/1</a>, <a id="idx:predicateproperty2:732"></a><a class="pred" href="examineprog.html#predicate_property/2">predicate_property/2</a>, 
 etc.<sup class="fn">72<span class="fn-text">Arities 2..8 are demanded by 
 ISO/IEC 13211-1:1995/Cor.2:2012.</span></sup> Higher arities are handled 
 by the compiler and runtime system, but the predicates are not 
@@ -314,13 +314,13 @@ once(Goal) :-
     call(Goal), !.
 </pre>
 
-<p><a id="idx:once1:732"></a><a class="pred" href="metacall.html#once/1">once/1</a> 
+<p><a id="idx:once1:733"></a><a class="pred" href="metacall.html#once/1">once/1</a> 
 can in many cases be replaced with <a class="pred" href="control.html#->/2">-&gt;/2</a>. 
 The only difference is how the cut behaves (see <a class="pred" href="control.html#!/0">!/0</a>). 
 The following two clauses below are identical. Be careful about the 
 interaction with
 <a class="pred" href="control.html#;/2">;/2</a>. The <code>library(apply_macros)</code> 
-library defines an inline expansion of <a id="idx:once1:733"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
+library defines an inline expansion of <a id="idx:once1:734"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
 mapping it to <code>(Goal-&gt;true;fail)</code>. Using the full 
 if-then-else constructs prevents its semantics from being changed when 
 embedded in a <a class="pred" href="control.html#;/2">;/2</a> 
@@ -334,7 +334,7 @@ disjunction.
 </dd>
 <dt class="pubdef"><a id="ignore/1"><strong>ignore</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
-Calls <var>Goal</var> as <a id="idx:once1:734"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
+Calls <var>Goal</var> as <a id="idx:once1:735"></a><a class="pred" href="metacall.html#once/1">once/1</a>, 
 but succeeds, regardless of whether
 <var>Goal</var> succeeded or not. Defined as:
 
@@ -349,7 +349,7 @@ ignore(_).
 +Limit, -Result</var>)</a></dt>
 <dd class="defbody">
 If <var>Goal</var> can be proven without recursion deeper than <var>Limit</var> 
-levels, <a id="idx:callwithdepthlimit3:735"></a><a class="pred" href="metacall.html#call_with_depth_limit/3">call_with_depth_limit/3</a> 
+levels, <a id="idx:callwithdepthlimit3:736"></a><a class="pred" href="metacall.html#call_with_depth_limit/3">call_with_depth_limit/3</a> 
 succeeds, binding <var>Result</var> to the deepest recursion level used 
 during the proof. Otherwise, <var>Result</var> is unified with <code>depth_limit_exceeded</code> 
 if the limit was exceeded during the proof, or the entire predicate 
@@ -357,9 +357,9 @@ fails if <var>Goal</var> fails without exceeding <var>Limit</var>.
 
 <p>The depth limit is guarded by the internal machinery. This may differ 
 from the depth computed based on a theoretical model. For example,
-<a id="idx:true0:736"></a><a class="pred" href="control.html#true/0">true/0</a> 
+<a id="idx:true0:737"></a><a class="pred" href="control.html#true/0">true/0</a> 
 is translated into an inline virtual machine instruction. Also,
-<a id="idx:repeat0:737"></a><a class="pred" href="control.html#repeat/0">repeat/0</a> 
+<a id="idx:repeat0:738"></a><a class="pred" href="control.html#repeat/0">repeat/0</a> 
 is not implemented as below, but as a non-deterministic foreign 
 predicate.
 
@@ -369,13 +369,13 @@ repeat :-
         repeat.
 </pre>
 
-<p>As a result, <a id="idx:callwithdepthlimit3:738"></a><a class="pred" href="metacall.html#call_with_depth_limit/3">call_with_depth_limit/3</a> 
+<p>As a result, <a id="idx:callwithdepthlimit3:739"></a><a class="pred" href="metacall.html#call_with_depth_limit/3">call_with_depth_limit/3</a> 
 may still loop infinitely on programs that should theoretically finish 
 in finite time. This problem can be cured by using Prolog equivalents to 
 such built-in predicates.
 
 <p>This predicate may be used for theorem provers to realise techniques 
-like <em>iterative deepening</em>. See also <a id="idx:callwithinferencelimit3:739"></a><a class="pred" href="metacall.html#call_with_inference_limit/3">call_with_inference_limit/3</a>. 
+like <em>iterative deepening</em>. See also <a id="idx:callwithinferencelimit3:740"></a><a class="pred" href="metacall.html#call_with_inference_limit/3">call_with_inference_limit/3</a>. 
 It was implemented after discussion with Steve Moyle
 <a class="url" href="mailto:smoyle@ermine.ox.ac.uk">smoyle@ermine.ox.ac.uk</a>.</dd>
 <dt class="pubdef"><a id="call_with_inference_limit/3"><strong>call_with_inference_limit</strong>(<var>:Goal, 
@@ -395,13 +395,13 @@ into its execution. After termination of <var>Goal</var>,
 <var>Result</var> is unified with the atom
 <code>inference_limit_exceeded</code>.
 <i>Otherwise</i>,
-<li>If <var>Goal</var> fails, <a id="idx:callwithinferencelimit3:740"></a><a class="pred" href="metacall.html#call_with_inference_limit/3">call_with_inference_limit/3</a> 
+<li>If <var>Goal</var> fails, <a id="idx:callwithinferencelimit3:741"></a><a class="pred" href="metacall.html#call_with_inference_limit/3">call_with_inference_limit/3</a> 
 fails.
 <li>If <var>Goal</var> succeeds <em>without a choice point</em>,
 <var>Result</var> is unified with <code><code>!</code></code>.
 <li>If <var>Goal</var> succeeds <em>with a choice point</em>,
 <var>Result</var> is unified with <code>true</code>.
-<li>If <var>Goal</var> throws an exception, <a id="idx:callwithinferencelimit3:741"></a><a class="pred" href="metacall.html#call_with_inference_limit/3">call_with_inference_limit/3</a> 
+<li>If <var>Goal</var> throws an exception, <a id="idx:callwithinferencelimit3:742"></a><a class="pred" href="metacall.html#call_with_inference_limit/3">call_with_inference_limit/3</a> 
 re-throws the exception.
 </ul>
 
@@ -410,13 +410,13 @@ that some primitive built-in predicates are compiled to virtual machine
 instructions for which inferences are not counted. The execution of 
 predicates defined in other languages (e.g., C, C++) count as a single 
 inference. This includes potentially expensive built-in predicates such 
-as <a id="idx:sort2:742"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>.
+as <a id="idx:sort2:743"></a><a class="pred" href="builtinlist.html#sort/2">sort/2</a>.
 
 <p>Calls to this predicate may be nested. An inner call that sets the 
 limit below the current is honoured. An inner call that would terminate 
 after the current limit does not change the effective limit. See also
-<a id="idx:callwithdepthlimit3:743"></a><a class="pred" href="metacall.html#call_with_depth_limit/3">call_with_depth_limit/3</a> 
-and <a id="idx:callwithtimelimit2:744"></a><span class="pred-ext">call_with_time_limit/2</span>.</dd>
+<a id="idx:callwithdepthlimit3:744"></a><a class="pred" href="metacall.html#call_with_depth_limit/3">call_with_depth_limit/3</a> 
+and <a id="idx:callwithtimelimit2:745"></a><span class="pred-ext">call_with_time_limit/2</span>.</dd>
 <dt class="pubdef"><a id="setup_call_cleanup/3"><strong>setup_call_cleanup</strong>(<var>:Setup, 
 :Goal, :Cleanup</var>)</a></dt>
 <dd class="defbody">
@@ -424,14 +424,14 @@ Calls <code>(once(Setup), Goal)</code>. If <var>Setup</var> succeeds, <var>Clean
 will be called exactly once after <var>Goal</var> is finished: either on 
 failure, deterministic success, commit, or an exception. The execution 
 of <var>Setup</var> is protected from asynchronous interrupts like
-<a id="idx:callwithtimelimit2:745"></a><span class="pred-ext">call_with_time_limit/2</span> 
-(package clib) or <a id="idx:threadsignal2:746"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>. 
+<a id="idx:callwithtimelimit2:746"></a><span class="pred-ext">call_with_time_limit/2</span> 
+(package clib) or <a id="idx:threadsignal2:747"></a><a class="pred" href="threadcom.html#thread_signal/2">thread_signal/2</a>. 
 In most uses,
 <var>Setup</var> will perform temporary side-effects required by <var>Goal</var> 
 that are finally undone by <var>Cleanup</var>.
 
 <p>Success or failure of <var>Cleanup</var> is ignored, and choice 
-points it created are destroyed (as <a id="idx:once1:747"></a><a class="pred" href="metacall.html#once/1">once/1</a>). 
+points it created are destroyed (as <a id="idx:once1:748"></a><a class="pred" href="metacall.html#once/1">once/1</a>). 
 If <var>Cleanup</var> throws an exception, this is executed as normal 
 while it was not triggered as the result of an exception the exception 
 is propagated as normal. If <var>Cleanup</var> was triggered by an 
@@ -460,14 +460,14 @@ term_in_stream(Term, In) :-
 
 <p>Note that it is impossible to implement this predicate in Prolog. The 
 closest approximation would be to read all terms into a list, close the 
-file and call <a id="idx:member2:748"></a><a class="pred" href="lists.html#member/2">member/2</a>. 
-Without <a id="idx:setupcallcleanup3:749"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
-there is no way to gain control if the choice point left by <a id="idx:repeat0:750"></a><a class="pred" href="control.html#repeat/0">repeat/0</a> 
+file and call <a id="idx:member2:749"></a><a class="pred" href="lists.html#member/2">member/2</a>. 
+Without <a id="idx:setupcallcleanup3:750"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+there is no way to gain control if the choice point left by <a id="idx:repeat0:751"></a><a class="pred" href="control.html#repeat/0">repeat/0</a> 
 is removed by a cut or an exception.
 
-<p><a id="idx:setupcallcleanup3:751"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+<p><a id="idx:setupcallcleanup3:752"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
 can also be used to test determinism of a goal, providing a portable 
-alternative to <a id="idx:deterministic1:752"></a><a class="pred" href="manipstack.html#deterministic/1">deterministic/1</a>:
+alternative to <a id="idx:deterministic1:753"></a><a class="pred" href="manipstack.html#deterministic/1">deterministic/1</a>:
 
 <pre class="code">
 ?- setup_call_cleanup(true,(X=1;X=2), Det=yes).
@@ -479,7 +479,7 @@ Det = yes ;
 </pre>
 
 <p>This predicate is under consideration for inclusion into the ISO 
-standard. For compatibility with other Prolog implementations see <a id="idx:callcleanup2:753"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a>.</dd>
+standard. For compatibility with other Prolog implementations see <a id="idx:callcleanup2:754"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a>.</dd>
 <dt class="pubdef"><a id="setup_call_catcher_cleanup/4"><strong>setup_call_catcher_cleanup</strong>(<var>:Setup, 
 :Goal, +Catcher, :Cleanup</var>)</a></dt>
 <dd class="defbody">
@@ -527,20 +527,20 @@ ERROR: Unhandled exception: Unknown message: ball
 <dd class="defbody">
 Same as <code>setup_call_cleanup(true, Goal, Cleanup)</code>. This is 
 provided for compatibility with a number of other Prolog implementations 
-only. Do not use <a id="idx:callcleanup2:754"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a> 
+only. Do not use <a id="idx:callcleanup2:755"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a> 
 if you perform side-effects prior to calling that will be undone by <var>Cleanup</var>. 
-Instead, use <a id="idx:setupcallcleanup3:755"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
+Instead, use <a id="idx:setupcallcleanup3:756"></a><a class="pred" href="metacall.html#setup_call_cleanup/3">setup_call_cleanup/3</a> 
 with an appropriate first argument to perform those side-effects.</dd>
 <dt class="pubdef"><span class="pred-tag">[deprecated]</span><a id="call_cleanup/3"><strong>call_cleanup</strong>(<var>:Goal, 
 +Catcher, :Cleanup</var>)</a></dt>
 <dd class="defbody">
 Same as <code>setup_call_catcher_cleanup(true, Goal, Catcher, Cleanup)</code>. 
-The same warning as for <a id="idx:callcleanup2:756"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a> 
+The same warning as for <a id="idx:callcleanup2:757"></a><a class="pred" href="metacall.html#call_cleanup/2">call_cleanup/2</a> 
 applies.</dd>
 <dt class="pubdef"><a id="undo/1"><strong>undo</strong>(<var>:Goal</var>)</a></dt>
 <dd class="defbody">
 Add <var>Goal</var> to the <em>trail</em>. <var>Goal</var> is executed 
-as <a id="idx:ignore1:757"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
+as <a id="idx:ignore1:758"></a><a class="pred" href="metacall.html#ignore/1">ignore/1</a> 
 on the first opportunity after backtracking to a point before the call 
 to <var>Goal</var>. This predicate is intended to make otherwise 
 persistent changes to the database or created by foreign procedures 
@@ -554,9 +554,9 @@ b_assertz(Term) :-
     undo(erase(Ref)).
 </pre>
 
-<p>Without <a id="idx:undo1:758"></a><a class="pred" href="metacall.html#undo/1">undo/1</a> 
+<p>Without <a id="idx:undo1:759"></a><a class="pred" href="metacall.html#undo/1">undo/1</a> 
 we can achieve something similar by leaving a choicepoint using the 
-almost portable<sup class="fn">75<span class="fn-text"><a id="idx:assertz2:759"></a><a class="pred" href="db.html#assertz/2">assertz/2</a> 
+almost portable<sup class="fn">75<span class="fn-text"><a id="idx:assertz2:760"></a><a class="pred" href="db.html#assertz/2">assertz/2</a> 
 is not part of the ISO standard but supported by multiple systems.</span></sup> 
 alternative below.
 
@@ -569,7 +569,7 @@ b_assertz(Term) :-
     ).
 </pre>
 
-<p>The <a id="idx:undo1:760"></a><a class="pred" href="metacall.html#undo/1">undo/1</a> 
+<p>The <a id="idx:undo1:761"></a><a class="pred" href="metacall.html#undo/1">undo/1</a> 
 based solution avoids leaving a choice point open and, more importantly, 
 keeps undoing the assert also if the choice point from the second 
 alternative is pruned.
@@ -590,7 +590,7 @@ If multiple goals raise an exception, the most urgent is preserved after
 all goals have been executed.
 
 <p>
-<li>It is not allowed for <var>Goal</var> to call <a id="idx:undo1:761"></a><a class="pred" href="metacall.html#undo/1">undo/1</a>. 
+<li>It is not allowed for <var>Goal</var> to call <a id="idx:undo1:762"></a><a class="pred" href="metacall.html#undo/1">undo/1</a>. 
 An attempt to do so results in a <code>permission_error</code> 
 exception.
 
@@ -599,8 +599,8 @@ exception.
 backtracks and therefore ensures <var>Goal</var> is called.
 </ul>
 
-<p>See also <a id="idx:snapshot1:762"></a><a class="pred" href="db.html#snapshot/1">snapshot/1</a> 
-and <a id="idx:transaction1:763"></a><a class="pred" href="db.html#transaction/1">transaction/1</a>.
+<p>See also <a id="idx:snapshot1:763"></a><a class="pred" href="db.html#snapshot/1">snapshot/1</a> 
+and <a id="idx:transaction1:764"></a><a class="pred" href="db.html#transaction/1">transaction/1</a>.
 </dd>
 </dl>
 

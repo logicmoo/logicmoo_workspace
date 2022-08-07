@@ -106,7 +106,7 @@ nonquietly_must_or_rtrace(MG):-
 lquietly(G):- /*quietly*/((G)).
 
 slow_trace:- stop_rtrace,nortrace,trace,wdmsg(slow_trace).
-on_x_rtrace(G):- catch(G,E,(dbginfo(E),rtrace(G),break)).
+on_x_rtrace_8ball(G):- catch(G,E,(dbginfo(E),rtrace(G),break)).
 
 
 

@@ -86,7 +86,7 @@ grid_object(Grid,mass(N),object(Points,Color)):-
 %:- expects_dialect(pfc).
 
 %:- include(library(pfc_syntax)).
-kaggle_arc_io(TestID,ExampleNum,IO,_)==>some_grid_id(TestID*ExampleNum*IO).
+%kaggle_arc_io(TestID,ExampleNum,IO,_)==>some_grid_id(TestID*ExampleNum*IO).
 
 :- fixup_exports.
 

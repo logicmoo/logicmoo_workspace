@@ -144,7 +144,7 @@ train_io_from_hint(TestID,ExampleNum,InVM):-
    (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
     gset(InVM.grid) = InGrid,
     gset(InVM.grid_out) = ExpectedOut,
-    do_sols_for("Do Training",InVM,TestID,ExampleNum))),
+    do_sols_for(_All,"Do Training",InVM,TestID,ExampleNum))),
   confirm_train_io_from_hint(TestID,ExampleNum).
 
 confirm_train_io_from_hint(TestID,ExampleNum):-
@@ -155,7 +155,7 @@ confirm_train_io_from_hint(TestID,ExampleNum):-
    (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
     gset(InVM.grid) = InGrid,
    % gset(InVM.grid_out) = ExpectedOut,
-    do_sols_for("Confirm Trained",InVM,TestID,ExampleNum))).
+    do_sols_for(_All,"Confirm Trained",InVM,TestID,ExampleNum))).
 
 
 learn_rule_o(out_out,_InVM,_OutVM):- !.
@@ -811,6 +811,11 @@ compute_shared_indivs(GN,Grid,SharedIndvs):-
    compute_unshared_indivs(With,OtherGrid,Unshared),
    individuate(Unshared,Grid,SharedIndvs).
 
+grid_shared_with(TestName*ExampleNum*in,TestName*ExampleNum*out):-!.
+grid_shared_with(TestName*ExampleNum*out,TestName*ExampleNum*in):-!.
+
+get_grid_and_name(In,Grid,GN):- is_grid(In),!,grid_to_id(Grid,GN).
+get_grid_and_name(In,Grid,GN):- into_grid(In,Grid),!,grid_to_id(Grid,GN).
 
 ensure_unshared_indivs(In,Unshared):-
    get_grid_and_name(In,Grid,GN),

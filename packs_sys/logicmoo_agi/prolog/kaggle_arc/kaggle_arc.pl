@@ -6,14 +6,14 @@
 */
 
 :- encoding(iso_latin_1).
-:- dynamic((fav/2,ap/1,apv/2)).
+:- dynamic((ap/1,apv/2)).
 :- dynamic(cmem/3).
 :- dynamic(grid_nums/1).
 :- dynamic(grid_nums/2).
 
-:- dynamic(fav/2).
-:- discontiguous(fav/2).
 :- multifile(fav/2).
+:- discontiguous(fav/2).
+:- dynamic(fav/2).
 
 
 :- dynamic(arc_test_property/3).
@@ -557,7 +557,7 @@ train_using_io(TestID,Trn,N1,DictIn,DictOut):-
   train_using_io(TestID,Trn,N2,DictMid,DictOut).
 train_using_io(_TestID,_Trn,_,DictInOut,DictInOut).
 
-:- thread_local(must_sanity:keep_going/0).
+%:- thread_local(keep_going/0).
 
 which_io0(i,in). which_io0(o,out).
 which_io(I,In):- which_io0(I,In),!.
@@ -664,6 +664,7 @@ print_testinfo(TestID):-
 % trials(learn). trials(clue).   
 trials(human). trials(sol).
 trials(dsl). trials(runDSL).
+trial_non_human(sol).
 
 sols_for(TaskID,Trial,TrialSol):- trials(Trial),once((Entry=..[Trial,Sol], task_info(TaskID,Sols),member(Entry,Sols))),
   append_trial(Trial,Sol,TrialSol).
@@ -675,23 +676,34 @@ append_trial(Trial,Sol,TrialSol):- listify(Sol,SolL),
 appended_trial(human,[learn_rule]).
 
 
-solve_test:- 
- make,
- my_menu_call((get_current_test(TestID), catch(solve_test(TestID,(tst+_)),E,wdmsg(E=solve_test(TestID,(tst+_)))))),!.
+
+solve_test:- forall(trial_non_human(Trial),solve_test_trial(Trial)).
+
+solve_test_trial(Trial):- mmake,
+ my_menu_call((get_current_test(TestID), catch(solve_test_trial(Trial,TestID,(tst+_)),E,wdmsg(E=solve_test_trial(Trial,TestID,(tst+_)))))),!.
 
 solve_test_training_too:- 
  solve_test,
- my_menu_call((get_current_test(TestID), catch(solve_test(TestID,(trn+A)),E,wdmsg(E=solve_test(TestID,(trn+A)))))),!.
+ my_menu_call((get_current_test(TestID), catch(solve_test_trial(Trial,TestID,(trn+A)),E,wdmsg(E=solve_test_trial(Trial,TestID,(trn+A)))))),!.
 
-solve_test(Name):- 
+
+solve_test(Name):- forall(trial_non_human(Trial),solve_test_trial(Trial,Name)).
+
+solve_test_trial(Trial,Name):- 
   fix_test_name(Name,TestID,ExampleNum),!, 
-  solve_test(TestID,ExampleNum).
+  solve_test_trial(Trial,TestID,ExampleNum).
 
 solve_test(TestID,ExampleNum):-
+  forall(trial_non_human(Trial),solve_test_trial(Trial,TestID,ExampleNum)).
+
+solve_test_trial(Trial,TestID,ExampleNum):-
  forall(kaggle_arc(TestID,ExampleNum,TestIn,ExpectedOut),
-   ignore(solve_test(TestID,ExampleNum,TestIn,ExpectedOut))).
+   ignore(solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut))).
 
 solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
+  forall(trial_non_human(Trial),solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut)).
+
+solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
    must_det_ll((    
     name_the_pair(TestID,ExampleNum,TestIn,ExpectedOut,PairName))),
    must_det_ll((    
@@ -715,11 +727,11 @@ solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
     %ptt(InVM),
     dash_chars, dash_chars,    
     %print_testinfo(TestID),
-    do_sols_for("Taking Test",InVM,TestID,ExampleNum))).
+    do_sols_for(Trial,"Taking Test",InVM,TestID,ExampleNum))).
 
     % find indiviuation one each side that creates the same number of changes
     
-do_sols_for(Why,InVM,TestID,ExampleNum) :-
+do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
  must_det_ll(( ptt("BEGIN!!!"+Why+TestID*ExampleNum), 
     kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
     forall(sols_for(TestID,Trial,SolutionProgram),
@@ -804,3 +816,5 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 
 :- ensure_loaded(kaggle_arc_simple).
 
+:- fixup_module_exports_now.  
+  

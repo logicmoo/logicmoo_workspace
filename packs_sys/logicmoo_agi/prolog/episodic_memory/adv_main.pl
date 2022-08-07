@@ -140,7 +140,7 @@ each_pre_clean_up:-
    garbage_collect_atoms,
    garbage_collect_clauses,
    garbage_collect,
-   set_prolog_flag(gc, false),
+   nop(set_prolog_flag(gc, false)),
    my_ttyflush)).
 
 main_once:-

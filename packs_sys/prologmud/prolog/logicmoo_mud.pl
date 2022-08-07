@@ -5,7 +5,7 @@
 % Douglas Miles
 
 */
-:- module(logicmoo_mud, [ensure_mud_startup/0]).
+:- module(logicmoo_mud, [ensure_mud_startup/0,start_runtime_mud/0]).
 
 % ==============================================
 % [Required] Load the Logicmoo User System
@@ -26,7 +26,11 @@ set_prologmud_home_dir:-
 :- assertion(exists_source(prologmud(mud_loader))).
 :- endif.
 
-% start_runtime_mud:-!.
+start_runtime_mud:- wdmsg("?-  start_runtime_mud_now . ").
+
+start_runtime_mud_now:- 
+  ensure_mud_startup,
+  start_runtime_mud_msu.
 % start_runtime_mud:- baseKB:lst, listing(mudAtLoc).
 
 % ensure_mud_startup:- !.
@@ -42,8 +46,8 @@ ensure_mud_startup:-
 
 
 :- if( \+ app_argv('--nomud')).
-:- ensure_mud_startup.
-%:- wdmsg('dont forget to ?- ensure_mud_startup. ').
+%:- ensure_mud_startup.
+:- wdmsg('dont forget to ?- start_runtime_mud.  % will first run ensure_mud_startup. ').
 :- endif.
 
 

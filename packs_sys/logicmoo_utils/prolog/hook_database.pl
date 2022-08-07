@@ -1,6 +1,6 @@
 % File: /opt/PrologMUD/pack/logicmoo_base/prolog/logicmoo/util/hook_database.pl
 :- module(hook_database,[]).
-:- define_into_module(system,          
+:- define_into_module(          
 [ ain/1,
   ain0/1,
   aina/1,

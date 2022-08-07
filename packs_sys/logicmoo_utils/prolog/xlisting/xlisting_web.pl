@@ -258,16 +258,21 @@ cp_menu:cp_menu(X,X).
 %cp_menu:cp_menu.
 :- endif.
 
+:- multifile((extra_cp_menu/0)).
+:- dynamic((extra_cp_menu//0)).
 :- export(extra_cp_menu//0).
-:- system:import(extra_cp_menu//0).
+%cp_menu:extra_cp_menu--> extra_cp_menu.
 
-extra_cp_menu -->  
+cp_menu:extra_cp_menu -->  
    { \+ (( httpd_wrapper:http_current_request(Request),member(request_uri(URI),Request), atom_contains(URI,pldoc))) },!,
    pldoc_search:doc_links([],[]).
-extra_cp_menu --> [].
+cp_menu:extra_cp_menu --> [].
+
 
 :- multifile(cp_menu:(cp_menu/2)).
 :- dynamic(cp_menu:(cp_menu/2)).
+:- multifile(cp_menu:(current_menu_item/2)).
+:- dynamic(cp_menu:(current_menu_item/2)).
 
 % handler_with_output_to 
 suppliment_cp_menu:- 
@@ -287,6 +292,7 @@ suppliment_cp_menu:-
     html(\ extra_cp_menu,B1,B)))).
 
 :- suppliment_cp_menu.
+
 
 :- dynamic(baseKB:param_default_value/2).
 :- kb_global(baseKB:param_default_value/2).
@@ -2879,7 +2885,7 @@ set_line_pos(Out,LP):-
 current_line_position(LP):-current_output(Out),current_line_position(Out,LP).
 
 :- kb_shared(baseKB:wid/3).
-
+:- asserta((baseKB:wid(_,_,_):-fail)).
 
 %% current_line_position( ?ARG1, ?ARG2) is det.
 %

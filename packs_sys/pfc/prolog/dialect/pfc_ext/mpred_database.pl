@@ -35,7 +35,7 @@ get_arity('//'(F , A),F,A2):-
 get_arity(M:FA,F,A):-atom(M),!,get_arity(FA,F,A).
 get_arity(FA,F,A):- get_functor(FA,F,A),must(A>0).
 
-:- define_into_module(system,[arity_no_bc/2]).
+:- define_into_module([arity_no_bc/2]).
 % arity_no_bc(F,A):- call_u(arity(F,A)).
 arity_no_bc(F,A):- clause_b(arity(F,A)).
 arity_no_bc(F,A):- clause_b(support_hilog(F,A)).
