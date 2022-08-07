@@ -816,5 +816,6 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 
 :- ensure_loaded(kaggle_arc_simple).
 
-:- fixup_module_exports_now.  
+%fixup_module_exports_into_from(system,muarc).
+%:- fixup_module_exports_now.  
   

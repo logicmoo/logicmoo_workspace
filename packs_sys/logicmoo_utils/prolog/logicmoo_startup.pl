@@ -90,14 +90,6 @@ maybe_writeln(X):- dont_wl(X),!.
 maybe_writeln(_):- !.
 maybe_writeln(X):- writeln(X).
 
-:- module_transparent(fixup_module_exports_now/0).
-fixup_module_exports_now:- prolog_load_context(module,M),
-  forall((predicate_property(M:P,defined), \+ predicate_property(M:P,imported_from(_))),    
-    (functor(P,F,A),define_into_module(system,F/A))).
-
-
-
-
 :- if( \+ current_predicate(add_absolute_search_folder/2)).
 
 name_to_files(Spec, Files) :-
