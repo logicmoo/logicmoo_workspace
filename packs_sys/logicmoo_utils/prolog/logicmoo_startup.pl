@@ -1509,7 +1509,7 @@ fixup_exports_system:-   (prolog_load_context(source,SF)-> reexport(SF) ; true).
 
 :- module_transparent(fixup_module_exports_now/0).
 fixup_module_exports_now:- 
-  fixup_module_exports_into_from(system).
+  fixup_module_exports_into(system).
 
 :- module_transparent(fixup_module_exports_into/1).
 fixup_module_exports_into(Into):- 
