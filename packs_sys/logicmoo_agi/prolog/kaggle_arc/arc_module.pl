@@ -1,9 +1,5 @@
 
-:- module(muarc,[]).
-
-:- ensure_loaded(kaggle_arc).
-
-:- fixup_exports.
+:- module(muarc,[do_forgotten_exports/0,do_forgotten_exports/1]).
 
 do_forgotten_exports(M):-  
   MP= (M:P),
@@ -15,8 +11,17 @@ do_forgotten_exports(M):-
     export(M:F/A)).
 
 do_forgotten_exports:- 
-   prolog_load_context(module,M), 
+   strip_module(_,M,_), 
    wdmsg(do_forgotten_exports(M)), 
    do_forgotten_exports(M).
 
+:- use_module(library(pfc_lib)).
+
+:- baseKB:ensure_loaded(kaggle_arc).
+%:- muarc:ensure_loaded(kaggle_arc).
+
 :- do_forgotten_exports.
+
+
+:- fixup_exports.
+

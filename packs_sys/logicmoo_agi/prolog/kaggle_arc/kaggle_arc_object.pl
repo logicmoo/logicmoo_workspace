@@ -34,7 +34,7 @@ grid_to_individual(GridIn,Obj):-
   grid_size(Grid,H,V),
   grid_to_points(Grid,H,V,Points),
   (Points==[]-> empty_grid_to_individual(H,V,Obj); 
-   (make_indiv_object(VM,[iz(grid)],Points,Obj))).
+  (make_indiv_object(VM,[iz(grid)],Points,Obj))).
 
 empty_grid_to_individual(H,V,Obj):-
   Iv is H + V*34,
@@ -128,22 +128,24 @@ make_point_object(VM,Overrides,C-Point,Obj):-
 globalpoints_maybe_bg(G,P):- globalpoints(G,P).
 globalpoints_include_bg(G,P):- localpoints_include_bg(G,P).
 
-make_indiv_object(VM,Overrides,LPoints,Obj):-
+make_indiv_object(VM,Overrides,LPoints,NewObj):-
+ must_det_ll((
   globalpoints_include_bg(LPoints,GPoints),
   sort_points(GPoints,Points),
   Objs = VM.objs,
-  Orig = _,
-  must_det_ll(((((select(Orig,Objs,Rest),same_globalpoints_ps_obj(Points,Orig)) 
-    -> (must_det_ll((override_object(Overrides,Orig,Obj), NEWOBJS = [Obj|Rest])))
-    ; must_det_ll((make_indiv_object_s(VM.id,VM.h,VM.v,Overrides,Points,Obj), NEWOBJS = [Obj|Objs])))))),
-  gset(VM.objs) = NEWOBJS.
+  Orig = _,!,
+  must_det_ll(((select(Orig,Objs,Rest),same_globalpoints_ps_obj(Points,Orig))
+    -> must_det_ll((override_object(Overrides,Orig,NewObj),print_grid(Orig), ROBJS = Rest))
+    ; must_det_ll((make_indiv_object_s(VM.id,VM.h,VM.v,Overrides,Points,NewObj), ROBJS = Objs)))),!,
+  NEW = [NewObj|ROBJS])),!,
+  set(VM.objs)=NEW.
 
 
 make_indiv_object_s(_ID,H,V,Overrides,Points,ObjO):- 
   points_range(Points,LoH,LoV,HiH,HiV,_HO,_VO),
   Width is HiH-LoH+1,
   Height is HiV-LoV+1,
-  %nb_current(test_pairname,ID),
+  %luser_getval(test_pairname,ID),
   Area is Width * Height,
   my_assertion(is_list([overrides|Overrides])),
   my_assertion(maplist(is_cpoint,Points)),
@@ -380,7 +382,7 @@ with_objprops(override,E,List,NewList):-
 
 
 aggregates(iz(_)).
-aggregates(z_o(_,_)).
+aggregates(o(_,_,_)).
 aggregates(birth(_)).
 aggregates(link(_,_,_)).
 aggregates(link(_,_)).
@@ -435,7 +437,7 @@ o_i_d(I,ID,Iv):- indv_props(I,L),member(o_i_d(ID,Iv),L),!.
 o_i_d(I,_,Iv):- indv_u_props(I,L),iv_for(L,Iv),!.
 o_i_d(I,ID,Fv):- into_obj(I,O),!,o_i_d(O,ID,Fv).
 o_i_d(I,ID,Iv):- trace_or_throw(missing(o_i_d(I,ID,Iv))).
-%o_i_d(_,ID,_Iv):- nb_current(test_pairname,ID).
+%o_i_d(_,ID,_Iv):- luser_getval(test_pairname,ID).
 
 mass(I,Count):- is_grid(I),!,globalpoints(I,Points), length(Points,Count),!.
 mass(I,X):- var_check(I,mass(I,X)).

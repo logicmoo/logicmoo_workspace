@@ -54,11 +54,11 @@
 
 mdwq(Q):- format(user_error,'~NMWQ: ~q~n',[Q]).
 
-:- meta_predicate mdwq_call(*).
+:- meta_predicate(mdwq_call(*)).
 mdwq_call(Q):- !, call(Q).
-mdwq_call(Q):- call(Q) *-> mdwq(success:Q); (mdwq(failed:Q),!,fail).
-:- export(mdwq_call/1).
-:- system:import(mdwq_call/1).
+%mdwq_call(Q):- call(Q) *-> mdwq(success:Q); (mdwq(failed:Q),!,fail).
+
+:- define_into_module(system,mdwq_call/1).
 
 :- create_prolog_flag(attr_pre_unify_hook,true,[keep(true)]).
 

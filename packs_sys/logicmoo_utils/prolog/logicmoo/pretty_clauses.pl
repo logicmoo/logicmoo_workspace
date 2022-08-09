@@ -22,6 +22,7 @@
          %  term_varnames/2,
    color_format_maybe/3,print_tree00/1,print_as_tree/1,current_print_write_options/1,mort/1,
    print_tree_with_final/2,
+   is_webui/0,
    print_tree_with_final/3]).
 :- multifile '$exported_op'/3. 
 :- multifile '$autoload'/3. 
@@ -59,6 +60,21 @@ etc.
 @license LGPL
 
 */
+
+:- define_into_module([
+ our_pengine_output/1,
+ pprint_tree/2,        % +Term, +Options
+           bfly_term//2,          % +Term, +Options
+           print_tree_nl/1,
+           guess_pretty/1,
+           term_is_ansi/1,
+           write_keeping_ansi/1,
+           make_pretty/2,
+         %  term_varnames/2,
+   color_format_maybe/3,print_tree00/1,print_as_tree/1,current_print_write_options/1,mort/1,
+   print_tree_with_final/2,
+   is_webui/0,
+   print_tree_with_final/3]).
 
 :- set_module(class(library)).
 
@@ -1118,6 +1134,8 @@ use_new.
 :- thread_local(bfly_tl:bfly_setting/2).
 %:- retractall(bfly_tl:bfly_setting(_,_)).
 
+:- export(ensure_pp/1).
+:- meta_predicate(ensure_pp(0)).
 ensure_pp(Goal):-  is_pp_set(Where), !, with_pp(Where,Goal).
 ensure_pp(Goal):-  toplevel_pp(Where), !, with_pp(Where,Goal).
 
@@ -1135,6 +1153,7 @@ should_print_mode_html(_).
 with_pp(plain,Goal):- !, with_pp(ansi,locally_tl(print_mode(plain),Goal)).
 with_pp(Mode,Goal):- quietly(with_pp0(Mode,Goal)).
 
+with_pp0(bfly,Goal):- in_pp(swish),!,with_pp0(swish,Goal).
 with_pp0(ansi,Goal):- \+ t_l:print_mode(plain), !, locally_tl(print_mode(plain),with_pp0(ansi,Goal)).
 with_pp0(Mode,Goal):- \+ t_l:print_mode(html), should_print_mode_html(Mode),!, locally_tl(print_mode(html),with_pp0(Mode,Goal)).
 with_pp0(Where,Goal):- \+ is_pp_set(Where), !,
@@ -1155,6 +1174,7 @@ write_bfly_html_0(S):- bfly_html_goal(write(S)).
 
 % actually_bfly(Goal):- flush_output, bfly_html_goal(Goal).
 actually_bfly(Goal):- bfly_html_goal((wots(S,set_pp(swish,Goal)),write_bfly_html_0(S))).
+:- export(actually_bfly/1).
 set_pp(Where,Goal):- 
    \+ in_pp(Where) 
    -> setup_call_cleanup(
@@ -1189,7 +1209,7 @@ with_real_pp(swish,swish,Goal):-wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 
 our_pengine_output(SO):- toplevel_pp(swish),!,pengines:pengine_output(SO),!.
 our_pengine_output(SO):- toplevel_pp(http),!,format('<pre>~w</pre>',[SO]).
-our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal(format('<pre>~w </pre>',[SO])).
+our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal((sformat(S,'<pre>~w </pre>',[SO]),print_raw_html_page(S))).
 our_pengine_output(SO):- ttyflush,format('our_pengine_output\n{~w}',[SO]),nl.
 
 

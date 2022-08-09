@@ -1038,7 +1038,7 @@ get_var_name_or_fake(T,VN):- term_to_atom(T,VN).
 variable_name(Var, Name) :- must(var(Var)),(get_attr(Var, vn, Name);var_property(Var,name(Name));get_attr(Var, varnames, Name)),!.
 
 :- export(get_varname_list_local/1).
-get_varname_list_local(Vs):- bugger:get_varname_list(Vs).
+get_varname_list_local(Vs):- get_varname_list(Vs).
 % get_var_name0(Var,Name):- attvar(Var),get_varname_list_local(Vs),format(atom(Name),'~W',[Var, [variable_names(Vs)]]).
 
 varname_of(Vs,Var,Name):- compound(Vs), Vs=[NV|VsL],  

@@ -8,8 +8,9 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+
 :- export(grid_part/2).
-grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(nb_current(example,ExampleNum)),!,
+grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(luser_getval(example,ExampleNum)),!,
   kaggle_arc_io(TestID,ExampleNum,_,Grid),
   grid_part(Grid,Info).
 
@@ -65,28 +66,6 @@ grid_object(Grid,mass(N),object(Points,Color)):-
   ColorHV4 = Color-HV4,
   findall(HV4,(member(ColorHV4,Rest),is_adjacent_point(HV1,_,HV5),is_adjacent_point(HV5,_,HV4)),AdjRest).
 
-:-  locally(set_prolog_flag(access_level,system),
- ((op(200,fy,'-'),op(300,fx,'-'),
- op(1190,xfx,('::::')),
- op(1180,xfx,('==>')),
- op(1170,xfx,'<==>'),
- op(1160,xfx,('<-')),
- op(1150,xfx,'=>'),
- op(1140,xfx,'<='),
- op(1130,xfx,'<=>'),
- op(600,yfx,'&'),
- op(600,yfx,'v'),
- op(350,xfx,'xor'),
- op(300,fx,'~'),
- op(300,fx,'-'),
- op(1199,fx,('==>'))))).
-
-%:- module(system).
-%:- use_module(library(pfc_lib)).
-%:- expects_dialect(pfc).
-
-%:- include(library(pfc_syntax)).
-%kaggle_arc_io(TestID,ExampleNum,IO,_)==>some_grid_id(TestID*ExampleNum*IO).
-
+:- ensure_loaded('kaggle_arc_fwd.pfc').
 :- fixup_exports.
 

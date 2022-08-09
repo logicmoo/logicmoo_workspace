@@ -14,7 +14,6 @@
 :- module(must_sanity,[]).
 :- endif.
 :- use_module(logicmoo_startup).
-
 :- define_into_module(          
    [
       must/1, % Goal must succeed at least once once
@@ -23,8 +22,7 @@
       sanity/1,  % like assertion but adds trace control
       %nop/1, % syntactic comment
       scce_orig/3,
-      must_or_rtrace/1,
-      xnotrace/1
+      must_or_rtrace/1
     ]).
 %:- endif.
 /** <module> Utility LOGICMOO_MUST_SANITY
@@ -120,6 +118,10 @@ must_or_rtrace((G1,Cut,G2)):- was_cut(Cut),!,must_or_rtrace(G1),!,must_or_rtrace
 must_or_rtrace((G1,G2)):- !,( catch(G1,Ex,mor_event(e(Ex,G1)))*->must_or_rtrace(G2);mor_event(f(G1))).
 must_or_rtrace(G):- catch(G,Ex,mor_event(e(Ex,G)))*-> true; mor_event(f(G)).
 
+%:- export(notrace/1).
+%:- meta_predicate(notrace(:)).
+%notrace(G):- call(G). 
+:- '$hide'(notrace/1).
 
 %must_or_rtrace_mep(M,E,G):- get_must_l(G,Must),!,call(Must).
 %must_or_rtrace_mep(M,E,G):- catch(G,Err,(dmsg(error_must_or_rtrace(Err)->G),ignore(rtrace(G)),throw(Err))) *->true; ftrace(G).
@@ -166,16 +168,13 @@ must_retry(Call):-
 must_keep_going(Goal):- 
  locally(set_prolog_flag(debug_on_error,false),
   ((catch(Goal,E,
-      xnotrace(((dumpST_error(sHOW_MUST_go_on_xI__xI__xI__xI__xI_(E,Goal)),ignore(rtrace(Goal)),badfood(Goal)))))
+      notrace(((dumpST_error(sHOW_MUST_go_on_xI__xI__xI__xI__xI_(E,Goal)),ignore(rtrace(Goal)),badfood(Goal)))))
             *-> true ;
-              xnotrace(dumpST_error(sHOW_MUST_go_on_failed_F__A__I__L_(Goal))),ignore(rtrace(Goal)),badfood(Goal)))).
+              notrace(dumpST_error(sHOW_MUST_go_on_failed_F__A__I__L_(Goal))),ignore(rtrace(Goal)),badfood(Goal)))).
 
 
 :- '$hide'(get_must/2).
 
-
-xnotrace(G):- call(G).
-:- '$hide'(xnotrace/1).
 
 %! sanity(:Goal) is det.
 %
@@ -297,7 +296,7 @@ scce_orig1(Setup,Goal,Cleanup):-
       ('$sig_atomic'(Cleanup),throw(E))). 
 
 scce_orig0(Setup0,Goal,Cleanup0):-
-  notrace((Cleanup = xnotrace('$sig_atomic'(Cleanup0)),Setup = xnotrace('$sig_atomic'(Setup0)))),
+  notrace((Cleanup = notrace('$sig_atomic'(Cleanup0)),Setup = notrace('$sig_atomic'(Setup0)))),
    \+ \+ Setup, !,
    (catch(Goal, E,(Cleanup,throw(E)))
       *-> (tracing->(deterministic(DET));deterministic(DET)); (Cleanup,!,fail)),
@@ -306,19 +305,23 @@ scce_orig0(Setup0,Goal,Cleanup0):-
 
 'my_set_predicate_attribute'(M:F/A,B,C):- functor(P,F,A),'my_set_predicate_attribute'(M:P,B,C),!.
 'my_set_predicate_attribute'(F/A,B,C):- functor(P,F,A),'my_set_predicate_attribute'(P,B,C),!.
-'my_set_predicate_attribute'(A,B,C):- current_prolog_flag(access_level,system),!,'$set_predicate_attribute'(A,B,C).
+
+'my_set_predicate_attribute'(A,B,C):-
+  current_prolog_flag(access_level,system),!,
+  'my_set_predicate_attribute2'(A,B,C).
 'my_set_predicate_attribute'(A,B,C):- 
   current_prolog_flag(access_level,Was),
-  redefine_system_predicate(A),
   setup_call_cleanup(set_prolog_flag(access_level,system),
-    '$set_predicate_attribute'(A,B,C),set_prolog_flag(access_level,Was)).
+    'my_set_predicate_attribute2'(A,B,C),set_prolog_flag(access_level,Was)).
+  
+'my_set_predicate_attribute2'(A,B,C):- 
+  redefine_system_predicate(A), '$set_predicate_attribute'(A,B,C),!.
 
 
 %:- '$hide'(scce_orig/3).
 %:- 'my_set_predicate_attribute'(scce_orig(_,_,_), hide_childs, true).
 
-:- '$hide'(xnotrace/1).
-:- 'my_set_predicate_attribute'(xnotrace/1, hide_childs, true).
+%:- 'my_set_predicate_attribute'(notrace/1, hide_childs, true).
 
 %:- '$hide'(system:setup_call_catcher_cleanup/4).
 %:- 'my_set_predicate_attribute'(system:setup_call_catcher_cleanup/4, hide_childs, false).

@@ -1,3 +1,14 @@
+The following represents 4 training pairs `InpG#->OutG#`
+from ARC shoved onto one grid...```|InpG1  InpG2|
+|InpG3  InpG4|
+   ^v^v
+|OutG1  OutG2|
+|OutG3  OutG4|```you then would remove one of the the training pairs like `InpG4->OutG4` and replace the input side with your input side of the testing pair  `EvalI`.  ```|InpG1  InpG2|
+|InpG3  EvalI|
+   ^v^v
+|OutG1  OutG2|
+|OutG3  ?Sol?|```From this you want to predict the corresponding sub change in the output side  `?Sol?`   also you can see the  `OutG1` thru `OutG3`  as a sanity check.  i am more or less describing more a NN version than a Transformer version.. i suppose in a transformer the first 7/8ths would be your prompt.. but hell of a long chain ... 25 times 7 to complete the last 25 tokens
+
 %unset_points(AR,B):- 
 %  set_local_points(AR,B).
 %unset_points(AR,B):- set_local_points(AR,B).

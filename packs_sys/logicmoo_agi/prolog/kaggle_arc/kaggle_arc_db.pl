@@ -258,7 +258,7 @@ pgt2(Obj):- Obj =
 
 %hv_cg_value(ID,C,H,V):- row_mem_nth(H,ID,V,C).
 
-has_index(CI):-  nb_current(CI,List),List\==[],is_list(List),!.
+has_index(CI):-  luser_getval(CI,List),List\==[],is_list(List),!.
 
 
 hv_member(HV,C,O):- is_grid(O),!,fail,globalpoints(O,Ps),hv_member(Ps,C,HV),!.

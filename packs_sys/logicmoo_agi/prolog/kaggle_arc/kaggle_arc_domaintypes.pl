@@ -246,6 +246,7 @@ is_printable_gridoid(G):- known_gridoid(G,R),!,nonvar(R),!.
 vm_grid(VM,VM.grid).
 vm_obj(VM,O):- member(O,VM.objs).
 
+:- export(is_grid/1).
 is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
 
 fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C), !, is_grid_cell(C).
@@ -288,11 +289,12 @@ is_point_obj(O,Color,Point):- is_object(O),v_hv(O,H,V), !, hv(H,V)==hv(1,1),
 
 
 
+:- export(set_bgc/1).
 :- nb_delete(grid_bgc).
 set_bgc(C):- atom(C),color_code(C,N),C\==N,!,set_bgc(N).
 set_bgc(C):- plain_var(C),nb_delete(grid_bgc).
-set_bgc(C):- nb_setval(grid_bgc,C),!.
-get_bgco(X):- nb_current(grid_bgc,X),X\==[],is_color_dat(X),!.
+set_bgc(C):- luser_setval(grid_bgc,C),!.
+get_bgco(X):- luser_getval(grid_bgc,X),X\==[],is_color_dat(X),!.
 :- set_bgc(black).
 
 get_bgc(X):- get_bgco(X),!.

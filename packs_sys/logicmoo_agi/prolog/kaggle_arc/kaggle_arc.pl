@@ -6,6 +6,7 @@
 */
 
 :- encoding(iso_latin_1).
+:- set_prolog_flag(arc_term_expansion, false).
 :- dynamic((ap/1,apv/2)).
 :- dynamic(cmem/3).
 :- dynamic(grid_nums/1).
@@ -14,7 +15,13 @@
 :- multifile(fav/2).
 :- discontiguous(fav/2).
 :- dynamic(fav/2).
+:- export(fav/2).
 
+
+:- dynamic(kaggle_arc/4).
+:- discontiguous(kaggle_arc/4).
+:- multifile(kaggle_arc/4).
+:- export(kaggle_arc/4).
 
 :- dynamic(arc_test_property/3).
 :- discontiguous(arc_test_property/3).
@@ -68,19 +75,22 @@ decl_pt(How,G):- nonvar(How),ground(G), !, my_assertz_if_new(decl_pt(How,G)).
 :- meta_predicate(fif(0,0)).
 fif(IF, THEN) :- (   call(IF) ->  call(THEN) ;   true ).
 :- meta_predicate(quietlyd(0)).
+:- export(quietlyd/1).
 quietlyd(G):- quietly(G),!.
 
+:- strip_module(_,M,_),abolish(system:muarc_mod/1),asserta(system:muarc_mod(M)).
 
 % COMMAND LINE ARC
 :- if(\+ current_module(logicmoo_arc)).
-  muarc_mod(user).
   :- set_prolog_flag(access_level,system).
-  :- dynamic(prolog:'$exported_op'/3).
-  :- assert((system:'$exported_op'(_,_,_):- fail)).
+  %:- dynamic(prolog:'$exported_op'/3).
+  %:- assert((system:'$exported_op'(_,_,_):- fail)).
   %:- multifile('$exported_op'/3).
-  :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
   :- SL  is 2_147_483_648*8*4, set_prolog_flag(stack_limit, SL ).
-  :- (getenv('DISPLAY',_) -> guitracer ; true).
+  :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
+  :- unsetenv('DISPLAY').
+%  :- (getenv('DISPLAY',_) -> guitracer ; true).
+%  :- noguitracer.
   :- set_prolog_flag(toplevel_print_anon,false).
   :- set_prolog_flag(toplevel_print_factorized,true).
     :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
@@ -101,15 +111,15 @@ quietlyd(G):- quietly(G),!.
 
 
 clsmake:- notrace((cls,!,update_changed_files,make)),!.
-% SWISH ARC
-:- else.
+
+:- else.  % SWISH ARC
+:- noguitracer.
 
 clsmake:- update_changed_files,!.
 
-  muarc_mod(muarc).
   :- if(current_module(trill)).
-  :- set_prolog_flag_until_eof(trill_term_expansion,false).
-  :- dynamic(muarc:ns4query/1).
+    :- set_prolog_flag_until_eof(trill_term_expansion,false).
+    :- dynamic(muarc:ns4query/1).
   :- endif.
 :- endif.
 
@@ -196,7 +206,11 @@ term_expansion_setter((Head:-Body),Out):-
    BodyCode = (Body, set_omember(How,Member,Obj,Var)),
    % goal_expansion_setter(BodyCode,Goal),
    expand_term((Head:- BodyCode),Out),!.
+
 %term_expansion_setter((Head:-Body),(Head:-GBody)):- goal_expansion_setter(Body,GBody),!.
+
+:- export(term_expansion_setter/2).
+:- system:import(term_expansion_setter/2).
 
 %goal_expansion(Goal,'.'(Training, Objs, Obj)):- Goal = ('.'(Training, Objs, A), Obj = V),  var(Obj).
 
@@ -224,6 +238,10 @@ goal_expansion_getter(Goal,Out):-
  maplist(goal_expansion_getter,Args,ArgsOut),
  compound_name_arguments(Out,F,ArgsOut).
 
+:- export(goal_expansion_getter/2).
+:- system:import(goal_expansion_getter/2).
+
+
 goal_expansion_setter(Goal,_):- \+ compound(Goal), !, fail.
 %goal_expansion_setter((G1,G2),(O1,O2)):- !, expand_goal(G1,O1), expand_goal(G2,O2),!.
 goal_expansion_setter(set_omember(A,B,C,D),set_omember(A,B,C,D)):-!.
@@ -249,6 +267,9 @@ goal_expansion_setter(Goal,Out):-
    get_setarg_p1(setarg,I,Goal,P1), is_setter_syntax(I,Obj,Member,Var,How),
    call(P1,Var),!,
    expand_goal((Goal,set_omember(How,Member,Obj,Var)),Out).
+
+:- export(goal_expansion_setter/2).
+:- system:import(goal_expansion_setter/2).
 
 
 
@@ -286,14 +307,16 @@ arc_setval(TT,N,V):- is_dict(TT),!, nb_set_dict(N,TT,V).
 arc_setval(TT,N,V):- (nb_rb_get_node(TT,N,Node)->nb_rb_set_node_value(Node,V);nb_rb_insert(TT,N,V)).
 
 
-system:term_expansion((Head:-Body),I,Out,O):- nonvar(I),  compound(Head), term_expansion_setter((Head:-Body),Out),(Head:-Body)=In,In\==Out,I=O,!,
- nop((print(term_expansion_setter(In-->Out)),nl)).
-
 /*
 system:term_expansion((Head:-Goal),I,(Head:-Out),O):- nonvar(I),  compound(Goal), 
  goal_expansion_setter(Goal,Out),Goal\=@=Out,I=O,!,
  nop((print(goal_expansion_getter(Goal-->Out)),nl)).
 */
+arc_term_expansion1((system:term_expansion((Head:-Body),I,Out,O):- 
+   nonvar(I),  compound(Head),      
+     term_expansion_setter((Head:-Body),Out),(Head:-Body)=In,In\==Out,I=O,!,
+     nop((print(term_expansion_setter(In-->Out)),nl)))).
+
 
 %system:goal_expansion(Goal,I,Out,O):- compound(Goal),goal_expansion_getter(Goal,Out),Goal\==Out,I=O,!, 
 %  ((print(goal_expansion_getter(Goal-->Out)),nl)).
@@ -301,9 +324,26 @@ system:term_expansion((Head:-Goal),I,(Head:-Out),O):- nonvar(I),  compound(Goal)
 %user:goal_expansion(Goal,I,Out,O):- compound(Goal),goal_expansion_getter(Goal,Out),Goal\==Out,I=O,!, 
 %  ((print(goal_expansion_getter(Goal-->Out)),nl)).
 
-goal_expansion(Goal,I,Out,O):- compound(Goal),goal_expansion_setter(Goal,Out),Goal\==Out,I=O,!, 
-  nop((print(goal_expansion_setter(Goal-->Out)),nl)).
+:- multifile(goal_expansion/4).
+:- dynamic(goal_expansion/4).
+arc_term_expansion1((goal_expansion(Goal,I,Out,O):-  
+   goal_expansion_setter(Goal,Out),Goal\==Out,I=O,!, 
+  nop((print(goal_expansion_setter(Goal-->Out)),nl)))).
 
+:- export(arc_term_expansions/1).
+arc_term_expansions(H:- (current_prolog_flag(arc_term_expansion, true), B)):-
+  arc_term_expansion1(H:-B).
+
+:- export(enable_arc_expansion/0).
+enable_arc_expansion:-
+ forall(arc_term_expansions(Rule),asserta_if_new(Rule)).
+
+:- export(disable_arc_expansion/0).
+disable_arc_expansion:-
+ forall(arc_term_expansions(Rule),forall(retract(Rule),true)).
+
+
+:- enable_arc_expansion.
 /*
  tests for term expander
 
@@ -317,7 +357,28 @@ doit(set(E.v)):- that.
 :- style_check(+singleton).
 */
 
+arc_user(ID):- catch((pengine:pengine_user(ID)),_,fail),!.
+arc_user(ID):- thread_self(ID).
 
+:- dynamic(arc_user_prop/3).
+
+luser_setval(N,V):- arc_user(ID),luser_setval(ID,N,V),!.
+luser_setval(ID,N,V):- nb_setval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
+
+luser_linkval(N,V):- arc_user(ID),luser_linkval(ID,N,V),!.
+luser_linkval(ID,N,V):- nb_linkval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
+
+luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
+luser_getval(ID,N,V):- thread_self(ID),!,nb_current(N,V).
+%luser_getval(ID,N,V):- !, ((arc_user_prop(ID,N,V);nb_current(N,V))*->true;arc_user_prop(global,N,V)).
+luser_getval(ID,N,V):- !,
+ (nb_current(N,V)*->true;
+  (arc_user_prop(ID,N,V)*->true;arc_user_prop(global,N,V))).
+/*
+luser_getval(ID,N,V):- 
+ (arc_user_prop(ID,N,V)*->true;
+  (nb_current(N,V))*->true;arc_user_prop(global,N,V)).
+*/
 
 %c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
 :- add_history1(fav2).
@@ -328,8 +389,10 @@ doit(set(E.v)):- that.
 :- add_history1(fav1).
 :- add_history1(fav3).
 
-:- multifile(regression_test/0).
-:- dynamic(regression_test/0).
+:- multifile(mregression_test/0).
+:- dynamic(mregression_test/0).
+
+:- set_prolog_flag(arc_term_expansion, true).
 
 %:- learn_shapes.
 :- ensure_loaded(kaggle_arc_utils).
@@ -425,17 +488,17 @@ run_arc_io(TestID,ExampleNum):-
   time(train_test(TestID)),
   time(solve_test(TestID,ExampleNum)).
 
-get_training(Training):- nb_current('$training_vm',Training),compound(Training),!.
+get_training(Training):- luser_getval('$training_vm',Training),compound(Training),!.
 get_training(Tree):- list_to_rbtree([p-q],T),!,ignore(Tree=T),!.
 get_training(Training):- must_det_ll(((
   get_current_test(TestID), make_training(TestID,Training), !,
-  nb_linkval('$training_vm',Training)))),!.
-set_training(Training):- nb_linkval('$training_vm',Training).
+  luser_linkval('$training_vm',Training)))),!.
+set_training(Training):- luser_linkval('$training_vm',Training).
 set_training(Prop,Value):- get_training(Training), gset(Training.Prop)=Value.
 get_training(Prop,Value):- get_training(Training), get_kov(Prop,Training,Value).
-set_vm(VM):- nb_linkval('$grid_vm',VM).
-get_vm(VM):- nb_current('$grid_vm',VM),!.
-get_vm(VM):- ndividuator,!,nb_current('$grid_vm',VM),!.
+set_vm(VM):- luser_linkval('$grid_vm',VM).
+get_vm(VM):- luser_getval('$grid_vm',VM),!.
+get_vm(VM):- ndividuator,!,luser_getval('$grid_vm',VM),!.
 
 set_vm(Prop,Value):- get_vm(VM),
  (get_kov1(Prop,VM,_) -> gset(VM.Prop) = Value ; 
@@ -514,7 +577,7 @@ train_test(TestID,P2):-
   print_testinfo(TestID),
   flag(indiv,_,0),
   %get_training(PrevPairEnv),
-  %nb_setval(prev_pairEnv,PrevPairEnv),
+  %luser_setval(prev_pairEnv,PrevPairEnv),
   %nb_delete('$training_vm'),
   %get_training(Training),
   %my_time(make_training_hints(TestID,Training,_HIDE_Dictation)),
@@ -609,8 +672,8 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    set(OutVM.grid_out)=In,
   maplist(must_det_ll,[
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
-  individuate(InVM),!,
-  individuate(OutVM)]),!,
+  individuate_c(InVM),!,
+  individuate_c(OutVM)]),!,
 
   InC = InVM.objs,
   OutC = OutVM.objs,
@@ -627,14 +690,14 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   dash_chars,dash_chars,dash_chars,dash_chars,
   show_pair_grid(cyan,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,
   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
-  nb_setval(no_rdot,true),
+  luser_setval(no_rdot,true),
   ((Removed==Added, Removed==[]) -> pt(yellow,nothing_removed_added(PairName)) ;
-   show_pair_diff_code(IOH,IOV,IOH,IOV,removed(PairName),added(PairName),PairName,Removed,Added)),
+    show_pair_diff_code(IOH,IOV,IOH,IOV,removed(PairName),added(PairName),PairName,Removed,Added)),
   ((RetainedIn==RetainedOut, RetainedIn==[]) -> pt(yellow,nothing_retained(PairName)) ;
-   show_pair_diff_code(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
+    show_pair_diff_code(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
   ((InC==OutC, InC==[]) -> pt(yellow,nothing_individuated(PairName)) ;
-   show_pair_diff_code(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!, 
-  nb_setval(no_rdot,false),
+    show_pair_diff_code(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!, 
+  luser_setval(no_rdot,false),
    % pt(OutC=InC),
 
    ignore(( learn_rule_o(ModeIn,InVM,OutVM))),
@@ -760,8 +823,8 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
    
 
 
-:- nb_linkval(test_rules,[rules]).
-:- nb_linkval(pair_rules,[rules]).
+:- luser_linkval(test_rules,[rules]).
+:- luser_linkval(pair_rules,[rules]).
   
 
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
@@ -795,8 +858,11 @@ reuse_a_b(A,B,AA):-
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
     (pt(same_object(GlyphA,GlyphB,How))))).
 
-test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_det_ll(Body)).
+test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_det_ll(Body)).
 :- add_history1(test_regressions).
+
+:- dynamic(muarc_2_mods/2).
+:- strip_module(_,M,_), prolog_load_context(module,MM), retractall(muarc_2_mods(_,_)), asserta(muarc_2_mods(M,MM)).
 
 %:- forall(ping_indiv_grid(X),atom_concat(X,Y
 :- fixup_exports.
@@ -805,17 +871,24 @@ test_regressions:- make, forall((clause(regression_test,Body),ptt(Body)),must_de
 %:- initialization(demo,main).
 %:- initialization(demo,after_load).
 :- add_history1((cls,make,demo)).
+:- muarc_mod(M), add_history1((module(M))).
 
-:- show_tests.
+%:- muarc_mod(M), M:show_tests.
 :- load_last_test_name.
 
 %user:portray(Grid):- quietly(arc_portray(Grid)),!.
-:- listing((addOptions)/2).
+%:- muarc_mod(M), M:listing((addOptions)/2).
 %:- xlisting((.)/3).
 %:- xlisting(user:'.'(_, _, _)).
 
+:- if(prolog_load_context(reload,false)).
+:- fixup_module_exports_into_from(system,baseKB).
+%:- fixup_module_exports_into_from(system,muarc).
+:- endif.
+
 :- ensure_loaded(kaggle_arc_simple).
 
-%fixup_module_exports_into_from(system,muarc).
+%:- set_prolog_flag(arc_term_expansion, false).
+
 %:- fixup_module_exports_now.  
   

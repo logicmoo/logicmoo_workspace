@@ -419,7 +419,7 @@ clear_training(TestID):-
       forall((clause(X,_,Ref),arg(1,X,E),E==TestID),
        erase(Ref)))))),
   nb_delete(grid_bgc),
-  nb_linkval(test_rules, [rules]),
+  luser_linkval(test_rules, [rules]),
   wno((clear_shape_lib(test), clear_shape_lib(noise), 
    retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
   nop(retractall(g2o(_,_))),!.
@@ -689,7 +689,7 @@ find_by_shape(Grid,Find,Founds):-
 align_founds(Founds,Founds).
 
 in_out(In,Out):-
-  nb_current(test_pairname,PairName),
+  luser_getval(test_pairname,PairName),
   into_gridnameA(In,PairName*in),
   into_gridnameA(Out,PairName*out).
 

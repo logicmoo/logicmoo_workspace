@@ -1509,6 +1509,7 @@ fixup_module_exports_into(Into):-
   fixup_module_exports_into_from(Into,From).
 
 :- module_transparent(fixup_module_exports_into_from/2).
+fixup_module_exports_into_from(_Into,From):- system == From, !.
 fixup_module_exports_into_from(Into,From):- 
   format('~N% ?- ~q. ~n',[fixup_module_exports_into_from(Into,From)]),
   forall((predicate_property(From:P,defined), \+ predicate_property(From:P,imported_from(_))),    
@@ -1520,26 +1521,32 @@ define_into_module(From:Into,FA):- define_into_module_now_and_later(From,Into,FA
 
 define_into_module_now_and_later(A,B,C):- now_and_later(define_into_module_now(A,B,C)).
 
-define_into_module_now(_,Into,SM:FA):-!, define_into_module_now(SM,Into,FA).
-define_into_module_now(From,Into,[A]):-!, define_into_module_now(From,Into,A).
-define_into_module_now(From,Into,[A|B]):-!, define_into_module_now(From,Into,A),define_into_module_now(From,Into,B).
-define_into_module_now(From,Into,(A,B)):-!, define_into_module_now(From,Into,A),define_into_module_now(From,Into,B).
 
-define_into_module_now(From,[Into],FA):-!,define_into_module_now(From,Into,FA).
-define_into_module_now(From,[Into,N],FA):-!,define_into_module_now(From,Into,FA),define_into_module_now(From,N,FA).
-define_into_module_now(From,Into,op(P,XFY,F)):-!,From:op(P,XFY,F),Into:op(P,XFY,F).
-define_into_module_now(From,Into,F//A):- number(A), !, A2 is A+2,define_into_module_now(From,Into,F/A2).
-define_into_module_now(_,Into,F/A):- lmconfig:never_reexport_named(Into,F,A),!.
-define_into_module_now(_,Into,F/A):- lmconfig:never_export_named(Into,F,A),!.
-define_into_module_now(From,Into,F/A):-
- set_prolog_flag(access_level,system),
+define_into_module_now(From,Into,SMFA):-
+ current_prolog_flag(access_level,Was),
+   setup_call_cleanup(set_prolog_flag(access_level,system),
+   define_into_module_now1(From,Into,SMFA),
+   set_prolog_flag(access_level,Was)).
+
+define_into_module_now1(_,Into,SM:FA):-!, define_into_module_now1(SM,Into,FA).
+define_into_module_now1(From,Into,[A]):-!, define_into_module_now1(From,Into,A).
+define_into_module_now1(From,Into,[A|B]):-!, define_into_module_now1(From,Into,A),define_into_module_now1(From,Into,B).
+define_into_module_now1(From,Into,(A,B)):-!, define_into_module_now1(From,Into,A),define_into_module_now1(From,Into,B).
+
+define_into_module_now1(From,[Into],FA):-!,define_into_module_now1(From,Into,FA).
+define_into_module_now1(From,[Into,N],FA):-!,define_into_module_now1(From,Into,FA),define_into_module_now1(From,N,FA).
+define_into_module_now1(From,Into,op(P,XFY,F)):-!,notrace(catch(From:op(P,XFY,F),_,true)),notrace(catch(Into:op(P,XFY,F),_,true)).
+define_into_module_now1(From,Into,F//A):- number(A), !, A2 is A+2,define_into_module_now1(From,Into,F/A2).
+define_into_module_now1(_,Into,F/A):- lmconfig:never_reexport_named(Into,F,A),!.
+define_into_module_now1(_,Into,F/A):- lmconfig:never_export_named(Into,F,A),!.
+define_into_module_now1(From,Into,F/A):-
  %From:dynamic(F/A),
- notrace(catch(From:export(F/A),_,true)),
- notrace(catch(From:module_transparent(F/A),_,true)),
- notrace(catch(Into:import(From:F/A),_,true)),
+ notrace(catch(From:export(From:F/A),_,true)),
+ notrace(catch(From:module_transparent(From:F/A),_,true)),
+ ((Into == From -> true ; notrace(catch(Into:import(From:F/A),_,true)))),
  %ignore((\+ current_predicate(Into:F/A), functor(P,F,A), Into:assert(((Into:P):- P)))),
  nop(module_transparent(Into:F/A)).
-define_into_module_now(From,Into,FA):- format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]),
+define_into_module_now1(From,Into,FA):- format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]),
   dumpST,format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]).
 
 :- redefine_system_predicate(system:nop/1).

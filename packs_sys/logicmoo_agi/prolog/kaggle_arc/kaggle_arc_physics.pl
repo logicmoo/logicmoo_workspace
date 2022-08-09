@@ -324,8 +324,8 @@ better_touched(Iv,Dirs,link(touched,Iv,Dirs)).
 
 touching_object(Dirs,O2,O1):- 
   O1\==O2,
-  has_prop(z_o(_,_),O1),
-  has_prop(z_o(_,_),O2),
+  has_prop(iz(shaped),O1),
+  has_prop(iz(shaped),O2),
   %\+ has_prop(birth(glyphic),O2),
   %\+ has_prop(birth(glyphic),O1),
   globalpoints(O1,Ps1),

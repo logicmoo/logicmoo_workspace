@@ -198,7 +198,7 @@ console_decide_action(Agent, Mem0, Mem1):-
  %thought(Agent, timestamp(T0), Mem0),
  %dbug1(read_pending_codes(In, Codes, Found, Missing)),
  % repeat,
- xnotrace((
+ notrace((
  ttyflush,
  agent_to_input(Agent, In),
  must_mw1(is_stream(In)),
@@ -289,7 +289,7 @@ decide_action(Agent, Mem0, Mem1) :-
  AgentIn == In,
  ensure_has_prompt(Agent),
  ttyflush,
- (tracing->catch(wait_for_input_safe([In], Found, 20.0), _, (nortrace, xnotrace, break));
+ (tracing->catch(wait_for_input_safe([In], Found, 20.0), _, (nortrace, break));
                  wait_for_input_safe([In], Found, 0.0)),
  Found \==[],
  console_decide_action(Agent, Mem0, Mem1), !.

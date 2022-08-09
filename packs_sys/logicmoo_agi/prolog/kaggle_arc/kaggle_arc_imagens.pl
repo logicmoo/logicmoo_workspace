@@ -367,7 +367,7 @@ print_shape_0(Shape):-
   pt(Grid), 
   %o_i_d(Shape,_Glyph,Iv),
   print_grid(H,V,Grid),!.
-  %locally(nb_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
+  %locally(luser_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
 
 show_shape_lib(Name):- make,
  pt(?- show_shape_lib(Name)),

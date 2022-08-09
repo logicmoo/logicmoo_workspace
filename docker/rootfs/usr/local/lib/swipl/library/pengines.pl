@@ -105,9 +105,9 @@ from Prolog or JavaScript.
 	    [http_handler/3,http_404/2,http_reply_file/3]).
 :- autoload(library(http/http_open),[http_open/3]).
 :- autoload(library(http/http_parameters),[http_parameters/2]).
-:- autoload(library(http/http_stream),[is_cgi_stream/1]).
 :- autoload(library(http/http_wrapper),[http_peer/2]).
 
+:- use_module(library(http/http_stream),[is_cgi_stream/1]).
 :- use_module(library(settings),[setting/2,setting/4]).
 :- use_module(library(http/http_json),
               [http_read_json_dict/2,reply_json/1]).
@@ -701,7 +701,7 @@ pengine_self(Id) :-
     current_pengine(Id, _Parent, Thread, _URL, _Application, _Destroy).
 
 pengine_parent(Parent) :-
-    nb_getval(pengine_parent, Parent).
+    nb_current(pengine_parent, Parent).
 
 pengine_thread(Pengine, Thread) :-
     current_pengine(Pengine, _Parent, Thread, _URL, _Application, _Destroy),
@@ -1217,7 +1217,7 @@ fix_streams :-
     fix_stream(current_output).
 
 fix_stream(Name) :-
-    is_cgi_stream(Name),
+   http_stream:is_cgi_stream(Name),
     !,
     debug(pengine(stream), '~w is a CGI stream!', [Name]),
     set_stream(user_output, alias(Name)).

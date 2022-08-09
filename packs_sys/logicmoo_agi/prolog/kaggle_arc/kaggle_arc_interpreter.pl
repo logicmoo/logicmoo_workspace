@@ -114,7 +114,7 @@ exp_call(_,E,E).
 
 run_dsl(VM,Prog,In,Out):- 
  ((var(VM)->get_training(VM);true)), 
-   nb_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
+   luser_linkval(dsl_pipe,In),run_dsl(VM,enact,Prog,In,Out).
 
 
 vm_grid(VM,Goal,In,Out):- In==VM,!,vm_grid(VM,Goal,VM.grid,Out).
@@ -183,10 +183,10 @@ run_dsl(VM,Mode,(H,Prog),In,Out):-!, run_dsl(VM,Mode,H,In,GridM), run_dsl(VM,Mod
 run_dsl(VM,Mode,doall(All),In,OutO):- !, run_dsl(VM,Mode,forall(All,true),In,OutO).
 run_dsl(VM,Mode,-->(All,Exec),In,Out):-!, run_dsl(VM,Mode,forall(All,Exec),In,Out).
 run_dsl(VM,Mode,forall(All,Exec),In,OutO):-!,  
- nb_linkval(dsl_pipe,In),
+ luser_linkval(dsl_pipe,In),
  forall(run_dsl(VM,Mode,All,dsl_pipe,Mid),
   (run_dsl(VM,enforce,Exec,Mid,Out),
-   nb_linkval(dsl_pipe,Out))),nb_current(dsl_pipe,OutO).
+   luser_linkval(dsl_pipe,Out))),luser_getval(dsl_pipe,OutO).
 
 run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In; true).
 
@@ -215,8 +215,8 @@ run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
 run_dsl(_VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
 
-run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((nb_current(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
-run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),nb_linkval(dsl_pipe,PipeOut).
+run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((luser_getval(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
+run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),luser_linkval(dsl_pipe,PipeOut).
 run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
 
 % prevents unneeded updates such as color/position settings
@@ -375,11 +375,11 @@ into_obj(G,O):- no_repeats(O,known_obj0(G,O)).
 
 o2g(Obj,Glyph):-  g2o(Glyph,Obj),!.
 o2g(Obj,NewGlyph):- o_i_d(Obj,ID,Old), int2glyph(Old,Glyph), 
- (nb_current(Glyph,O2) ->
+ (luser_getval(Glyph,O2) ->
 (O2=@=Obj->NewGlyph=Glyph; 
  ( flag(indiv,Iv,Iv+1),int2glyph(Iv,NewGlyph),
   subst001(Obj,o_i_d(ID,Old),o_i_d(ID,Iv),NewObj),
-  nb_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,nb_linkval(NewGlyph,Obj))),
+  luser_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,luser_linkval(NewGlyph,Obj))),
  my_asserta_if_new(g2o(NewGlyph,Obj)).
 
 o2c(Obj,Glyph):- color(Obj,Glyph),!.
@@ -392,8 +392,8 @@ print_ncolors(G,C):- sformat(F,'~q',[G]),color_print(C,F).
 
 :- dynamic(g2o/2).
 
-g2o(G,O):- var(G),!,nb_current(G,O),is_object(O).
-g2o(G,O):- atom(G),nb_current(G,O),is_object(O),!.
+g2o(G,O):- var(G),!,luser_getval(G,O),is_object(O).
+g2o(G,O):- atom(G),luser_getval(G,O),is_object(O),!.
 g2o(G,O):- integer(G),int2glyph(G,C),!,g2o(C,O),!.
 g2o(C,O):- compound(C), !, C= objFn(G,_), !, g2o(G,O).
 g2o(G,O):- atom(G),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
@@ -528,24 +528,24 @@ goal_expansion_query(Goal,Out):- compound(Goal),
 
 :- fixup_exports.
 
-goal_expansion(Goal,I,Out,O):-  var(I), \+ source_location(_,_),nb_current('$goal', Term),% writeq(Term=@=Goal),nl,
+goal_expansion(Goal,I,Out,O):-  var(I), \+ source_location(_,_),luser_getval('$goal', Term),% writeq(Term=@=Goal),nl,
   Goal=@=Term,
   (goal_expansion_query(Goal,Out)-> Goal\=@=Out),I=O.
 
 % ?- print_grid(gridFn(X)).
 %:- export(is_toplevel_query/2).
 %:- b_setval('$goal', []).
-:- nb_linkval('$goal', []).
+:- luser_linkval('$goal', []).
 %:- b_setval('$goal_expanded', []).
-:- nb_linkval('$goal_expanded', []).
+:- luser_linkval('$goal_expanded', []).
 expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
     % Have vars to expand and varnames are empty
-    nb_linkval('$goal', Goal),
+    luser_linkval('$goal', Goal),
     quietly((Bindings\==[],prolog_load_context(variable_names,Vs), Vs ==[])), % this prevents the loop
-    nb_linkval('$variable_names', Bindings),
+    luser_linkval('$variable_names', Bindings),
     debug(expand_query,'~q',[b_setval('$variable_names', Bindings)]),
     writeq(Goal+Bindings),nl,
     expand_query(Goal, Expanded, Bindings, ExpandedBindings),
-    nb_linkval('$goal_expanded', Expanded).    
+    luser_linkval('$goal_expanded', Expanded).    
 
 

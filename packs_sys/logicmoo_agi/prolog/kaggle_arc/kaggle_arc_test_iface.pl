@@ -78,7 +78,8 @@ read_menu_chars(Start,SelMax,Out):-
   get_single_key_code(Codes), atom_codes(Key,Codes),
   append_num_code(Start,SelMax,Key,Out).
 
-get_single_key_code([C|Codes]):- get_single_char(C), read_pending_codes(user_input,Codes, []).
+get_single_key_code(CCodes):- get_single_char(C), 
+  (  C== -1 -> (CCodes=`Q`) ; (read_pending_codes(user_input,Codes, []), [C|Codes]=CCodes)).
 
 /*
 get_single_key_code(Code):- get_single_char(C), into_key_codes([C],Code).
@@ -118,23 +119,26 @@ switch_test(TestID):- wqnl(['Swithing to test: ',TestID]),set_current_test(TestI
 
 
 :- dynamic(wants_exit_menu/0).
-interact:- list_of_tests(L), length(L,SelMax),
+interact:- list_of_tests(L), length(L,SelMax),!,
   repeat, format('~N Your menu(?) selection: '), 
   %get_single_char(Code), wdmsg(code=Code), char_code(Key,Code),  put_char(Key), 
    % with_tty_raw
    (once(read_menu_chars('',SelMax,Key))),
-   once((do_menu_key(Key))), retract(wants_exit).
+    writeq(Key),
+   once((do_menu_key(Key))), 
+   retract(wants_exit_menu),!.
 
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), assert(wants_exit_menu).
 do_menu_key('?'):- !, menu_options('i').
 do_menu_key('P'):- !, switch_grid_mode,print_test.
 do_menu_key('I'):- !, cls,!,ndividuator1.
 do_menu_key('G'):- !, cls,!,detect_supergrid1.
+do_menu_key(-1):- !, assert(wants_exit_menu).
 do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
 do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
   dmsg(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->true;(fail,trace,dumpST,rrtrace(Goal))))),!,
-   read_pending_codes(user_input,_,[]),!.
+   read_pending_codes(user_input,_Ignored,[]),!.
 
 do_menu_key(Key):- atom_length(Key,Len),Len>2,current_predicate(Key/0),!,my_submenu_call(Key).
 do_menu_key(Key):- atom_codes(Key,Codes), format("~N % Menu: didn't understand: '~w' ~q ~n",[Key,Codes]),once(mmake).
@@ -188,7 +192,7 @@ ndividuator1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids1(TestI
 ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,ig([complete],G)).
 test_grids(TestID,G):- ignore(get_current_test(TestID)), kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
-with_test_grids1(TestID,G,P):- ignore(nb_current(example,ExampleNum)),
+with_test_grids1(TestID,G,P):- ignore(luser_getval(example,ExampleNum)),
   forall((kaggle_arc_io(TestID,ExampleNum,IO,G),((ExampleNum*IO) \= ((tst+_)*out))),
   my_menu_call(P)).
 
@@ -202,16 +206,16 @@ restart_suite:-
 prev_suite:- once((get_current_test(TestID),get_current_suite_testnames([First|_]))),TestID\==First,!,restart_suite.
 prev_suite:- 
    findall(SN,test_suite_name(SN),List),
-   nb_current(test_order,X),
+   luser_getval(test_order,X),
    prev_in_list(X,List,N),
-   nb_setval(test_order,N),!,
+   luser_setval(test_order,N),!,
    wdmsg(switched(X-->N)),
    restart_suite.
 next_suite:- 
    findall(SN,test_suite_name(SN),List),
-   nb_current(test_order,X),
+   luser_getval(test_order,X),
    next_in_list(X,List,N),
-   nb_setval(test_order,N),!,
+   luser_setval(test_order,N),!,
    wdmsg(switched(X-->N)),
    restart_suite.
 
@@ -224,9 +228,9 @@ test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
 
 :- dynamic(cached_tests/2).
 %:- retractall(cached_tests(_,_)).
-:- nb_setval(test_order,sol_t).
+:- luser_setval(global,test_order,sol_t).
 get_current_suite_testnames(Set):-
-  nb_current(test_order,X),
+  luser_getval(test_order,X),
   current_suite_testnames(X,Set).
 
 current_suite_testnames(X,Set):- cached_tests(X,Set),!.  
@@ -235,7 +239,7 @@ current_suite_testnames(X,Set):- findall(ID,call(X,ID),List), my_list_to_set_var
 previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID).
 next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
 is_valid_testname(TestID):- kaggle_arc(TestID,_,_,_).
-get_current_test(TestID):- nb_current(test_name,TestID),is_valid_testname(TestID),!.
+get_current_test(TestID):- luser_getval(test_name,TestID),is_valid_testname(TestID),!.
 get_current_test(TestID):- get_next_test(TestID,_),!.
 get_current_test(v(fe9372f3)).
 get_next_test(TestID,NextID):- get_current_suite_testnames(List), next_in_list(TestID,List,NextID).
@@ -245,22 +249,23 @@ prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(
 
 %v(f9d67f8b)
 :- export(load_last_test_name/0).
-load_last_test_name:- 
-  notrace((exists_file(current_test),setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),nb_setval(test_name,TestID))),close(O)))),!.
-load_last_test_name:- set_current_test(v(fe9372f3)).
+system:load_last_test_name:- 
+  notrace((exists_file(current_test),setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),luser_setval(test_name,TestID))),close(O)))),!.
+system:load_last_test_name:- set_current_test(v(fe9372f3)).
 
-save_last_test_name:- 
-  ignore(notrace((nb_current(test_name,TestID), tell(current_test),format('~n~q.~n',[TestID]),told))).
+system:save_last_test_name:- notrace(catch(save_last_test_name_now,_,true)),!.
+system:save_last_test_name_now:- 
+  ignore(notrace((luser_getval(test_name,TestID), tell(current_test),format('~n~q.~n',[TestID]),told))).
 
 set_current_test(Name):-  
   ignore((fix_test_name(Name,TestID,_),is_valid_testname(TestID),really_set_current_test(TestID))).
 
 really_set_current_test(TestID):-
-   nb_setval(test_name,TestID),
-  (nb_current(last_test_name,WasTestID);WasTestID=[]),
+   luser_setval(test_name,TestID),
+  (luser_getval(last_test_name,WasTestID);WasTestID=[]),
   (WasTestID==TestID-> true ; new_current_test_info).
 
-some_current_example_num(TrnN):- nb_current(example,TrnN),!.
+some_current_example_num(TrnN):- luser_getval(example,TrnN),!.
 some_current_example_num(trn+1).
 
 next_pair:- 
@@ -269,7 +274,7 @@ next_pair:-
   N2 is N+1,
   trn_tst(Trn,Tst),
   (kaggle_arc(TestID,Trn+N2,_,_)-> ExampleNum=Trn+N2 ; ExampleNum=Tst+0),
-  nb_setval(example,ExampleNum),
+  luser_setval(example,ExampleNum),
   print_single_test(TestID*ExampleNum),!.
 
 prev_pair:- 
@@ -278,7 +283,7 @@ prev_pair:-
   N2 is N-1,
   trn_tst(Trn,Tst),
   (kaggle_arc(TestID,Trn+N2,_,_)-> ExampleNum=Trn+N2 ; ExampleNum=Tst+0),
-  nb_setval(example,ExampleNum),
+  luser_setval(example,ExampleNum),
   print_single_test(TestID*ExampleNum),!.
 
 
@@ -287,18 +292,19 @@ trn_tst(tst,trn).
 
 new_current_test_info:- 
   ignore((
-  nb_current(test_name,TestID),
+  %luser_getval(test_name,TestID),
+  get_current_test(TestID),
   dmsg(fav(TestID,[])),
-  nb_setval(example,tst+0),
-  nb_setval(last_test_name,TestID))),
+  luser_setval(example,tst+0),
+  luser_setval(last_test_name,TestID))),
   save_last_test_name,
   clear_training(TestID).
 
 new_test_pair(PairName):-
   %nb_delete(grid_bgc),
   clear_shape_lib(pair),clear_shape_lib(in),clear_shape_lib(out),
-  nb_setval(test_pairname,PairName),
-  nb_linkval(pair_rules, [rules]),
+  luser_setval(test_pairname,PairName),
+  luser_linkval(pair_rules, [rules]),
   retractall(is_shared_saved(PairName*_,_)),
   retractall(is_shared_saved(PairName,_)),
   retractall(is_unshared_saved(PairName*_,_)),
@@ -311,7 +317,8 @@ fully_test:- print_test, !, train_test, !, solve_test, !.
 run_next_test:- notrace(next_test), fully_test.
 
 info(_).
-demo:- make, interactive_test_menu.
+system:demo:- make, interactive_test_menu.
+:- export(demo/0).
 rat:- info("Run all tests"), run_all_tests.
 noninteractive_test(X):- time(ignore(forall(arc1(true,X),true))).
 
@@ -341,8 +348,8 @@ print_test(TName):-
 
 next_grid_mode(dots,dashes):-!.
 next_grid_mode(_,dots).
-switch_grid_mode:- (nb_current('$grid_mode',Dots);Dots=dots),next_grid_mode(Dots,Dashes),nb_setval('$grid_mode',Dashes).
-as_d_grid(In,In):- \+ nb_current('$grid_mode',dashes),!.
+switch_grid_mode:- (luser_getval('$grid_mode',Dots);Dots=dots),next_grid_mode(Dots,Dashes),luser_setval('$grid_mode',Dashes).
+as_d_grid(In,In):- \+ luser_getval('$grid_mode',dashes),!.
 as_d_grid(In,In1):- must_det_ll((subst001(In,black,wbg,In0), most_d_colors(In0,_CI,In1))),!.
 
 %print_test(TName):- !, parcCmt(TName).
@@ -351,7 +358,7 @@ print_qtest:- get_current_test(TestID),print_qtest(TestID).
 print_qtest(TestID):- !, print_single_test(TestID),!.
 print_qtest(TestID):-
     dash_chars,nl,nl,nl,dash_chars,
-     ignore(nb_current(example,ExampleNum)),
+     ignore(luser_getval(example,ExampleNum)),
      forall(kaggle_arc(TestID,ExampleNum,In,Out),
       ignore((
        as_d_grid(In,In1),as_d_grid(Out,Out1),
@@ -361,7 +368,7 @@ print_qtest(TestID):-
 
 print_single_test(TName):-
   fix_test_name(TName,TestID,ExampleNum),
-  ignore(nb_current(example,ExampleNum)),
+  ignore(luser_getval(example,ExampleNum)),
   kaggle_arc(TestID,ExampleNum,In,Out),
   once(in_out_name(ExampleNum,NameIn,NameOut)),
   as_d_grid(In,In1),as_d_grid(Out,Out1),
@@ -583,6 +590,19 @@ ratio_for0(Ratio,Out,In):- 0 is Out, !, Ratio is +0.0.
 ratio_for0(Ratio,Out,In):- catch(Ratio is rationalize(Out/In),error(evaluation_error(_zero_divisor),_),fail),!.
 ratio_for0(Ratio,Out,In):- catch(NRatio is rationalize(In/Out),error(evaluation_error(_zero_divisor),_),fail),!, Ratio is -NRatio.
 
+:- quasi_quotation_syntax(dictate_sourcecode).
+:- export(dictate_sourcecode/4).
+dictate_sourcecode(Content, _Vars, OutterVars, TP):-     
+    phrase_from_quasi_quotation(copy_qq(Chars), Content),    
+    atom_to_term(Chars,Sourcecode0,Vs0),
+    parse_expansions([],Vs0, Vs, Sourcecode0, Sourcecode),!,
+    maplist(share_vars(Vs),OutterVars),
+    \+ \+ ((  maplist(ignore_numvars,Vs),
+              numbervars(TP,0,_),
+              print(program=Sourcecode),nl,
+              maplist(print_prop_val,Vs))),
+    !, TP = source_buffer(Sourcecode, Vs).
+
 do_pair_dication(In,Out,_Vs):-   
  run_source_code(['In'=In, 'Out'=Out], _Vs,
 {|dictate_sourcecode||
@@ -734,7 +754,7 @@ print_eval0:- arc(v('009d5c81')).
 
 
 parc1:- parc1(6300*3). 
-parc1(OS):- clsmake,   nb_setval(test_name,[]),
+parc1(OS):- clsmake,   luser_setval(test_name,[]),
    open(tt,write,O,[encoding(text)]), parc0(OS), with_output_to(O,parc0(OS)), close(O).
 parc0(OS):-
  locally(set_prolog_flag(gc,true),forall(parc11(OS,_),true)).
@@ -786,4 +806,4 @@ color_sym(OS,C,Sym):- color_sym(OS,4,C,Sym).
 color_sym(_,_,C,Sym):- enum_colors(C),color_int(C,I),nth1(I,`ose=xt~+*zk>`,S),name(Sym,[S]).
 %color_sym(P*T,_,C,Sym):- enum_colors(C),color_int(C,I),S is P+I*T,name(Sym,[S]).
 
-:- fixup_exports.
+:- all_source_file_predicates_are_exported.

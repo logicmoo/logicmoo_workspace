@@ -38,7 +38,7 @@ detect_supergrid(TestID):- forall(kaggle_arc(TestID,ExampleNum,In,Out),detect_su
   color_print(magenta,call(((grid_hint(TestID))))).
 
 detect_supergrid1:- clsmake, get_current_test(TestID),detect_supergrid1(TestID).
-detect_supergrid1(TestID):- ignore(nb_current(example,ExampleNum)),
+detect_supergrid1(TestID):- ignore(luser_getval(example,ExampleNum)),
   forall(kaggle_arc(TestID,ExampleNum,In,Out),detect_supergrid(TestID,ExampleNum,In,Out)).
 
 color_subst([],[],[]):-!.

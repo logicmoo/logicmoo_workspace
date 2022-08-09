@@ -336,20 +336,19 @@ grid_to_2x2_objs(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult):-
   NewIndiv4s=[], 
   must_not_error(RepairedResultM=RepairedResult),
   addProgramStep(VM,Steps),!.
+  
+try_whole_grid_xforms(GridO):- try_whole_grid_xforms2(GridO),ignore(try_whole_grid_xforms1(GridO)).
+try_whole_grid_xforms(GridO):- try_whole_grid_xforms1(GridO),ignore(try_whole_grid_xforms2(GridO)).
 
-
-
-try_whole_grid_xforms(GridO):- 
+try_whole_grid_xforms1(GridO):- 
   flipV(GridO,FlipV),
   mapgrid(sometimes_assume(=),GridO,FlipV),
   flipH(GridO,FlipH),
-  mapgrid(sometimes_assume(=),GridO,FlipH).
-
-try_whole_grid_xforms(GridO):- 
+  mapgrid(sometimes_assume(=),GridO,FlipH),
   rot90(GridO,Rot90),
   mapgrid(sometimes_assume(=),GridO,Rot90).
 
-try_whole_grid_xforms(GridO):- 
+try_whole_grid_xforms2(GridO):- 
   grid_size(GridO,H,V),
   Vh is floor(V/2),
   Hh is floor(H/2),
@@ -408,8 +407,11 @@ repair_in_vm(P4,VM):-
   maplist(must_det_ll,[
 %  set_vm_obj(neededChanged,NeededChanged),
   set_vm_obj(changed,[iz(image)],Changed),
+  writeq(nc=NeededChanged),nl,nl,
   set_vm_obj(repaired,[iz(image)],RepairedPoints),
-  %gset(VM.can_repair) = false,
+  writeq(c=Changed),nl,nl,
+  %turned_to_black(NeededChanged,
+  %trace,  
   %set_vm_obj(grid,NeededChanged),
   %((print_side_by_side(silver,Grid,repair_in_vm,_,RepairedResult,P4))),
   %(Grid\=@=RepairedResult -> (set(VM.points) = []) ; true),
@@ -417,6 +419,7 @@ repair_in_vm(P4,VM):-
   set(VM.neededChanged)=NeededChanged,
   fif(NeededChanged\==[], 
          (make_indiv_object(VM,[iz(neededChanged),iz(invisible),iz(shaped)],NeededChanged,ColorObj),!,
+            set(VM.can_repair) = false,
             addInvObjects(VM,ColorObj))))),!.
 
 column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row). 
@@ -432,9 +435,9 @@ guess_to_unbind1(Grid,Color):- !, fail, select(Row1,Grid,Rows),member(Row2,Rows)
   C1=C4,C1\==black,Color=C1.
 
 repair_repeats(VM,Grid,RepairedResult,Did):- 
-  guess_to_unbind(Grid,Black), repair_repeats(Black,VM,Grid,RepairedResult,Did).
+  guess_to_unbind(Grid,Black), repair_repeats_c(Black,VM,Grid,RepairedResult,Did).
 
-repair_repeats(Black,VM,Grid,RepairedResult,[guess_to_unbind(Black)]):- 
+repair_repeats_c(Black,VM,Grid,RepairedResult,[guess_to_unbind(Black)]):- 
   repair_color_grid_repeats(Black,Grid,RepairedResult),
   ground(RepairedResult),
   (Grid\=@=RepairedResult -> (set(VM.points) = []) ; fail),!.
@@ -466,11 +469,14 @@ repair_grid_repeats1(_Limit,RepairedResult):- ground(RepairedResult),!.
 repair_grid_repeats1(Limit,RepairedResult):-  Limit>0,
   select(Row1,RepairedResult,More), \+ ground(Row1),
   member(Row2,More), Row1\=@=Row2, 
+  only_for_debug(copy_term(Row2,Row2C)),
   Row1=Row2,!,
+  only_for_debug((nl,writeq(Row2-->Row2C),nl,nl)),
   Limit2 is Limit-1,
   repair_grid_repeats1(Limit2,RepairedResult).
 repair_grid_repeats1(_Limit,_RepairedResult).
 
+only_for_debug(_).
 
 is_fti_step(fourway).
 fourway(VM):-  
@@ -503,7 +509,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   clip_and_rot(SXQ4,SYQ4,EXQ4,EYQ4,Grid,Q4R,Q4),
   clip_and_rot(SXQ4,SYQ2,EXQ4,EYQ2,Grid,Q1R,Q1),
   clip_and_rot(SXQ2,SYQ4,EXQ2,EYQ4,Grid,Q3R,Q3),
-  print_quadrants(orange,Q1,Q2,Q3,Q4),  
+  print_quadrants(orange,Q1,Q2,Q3,Q4),
 
   XLQ2 is EXQ2-SXQ2, YLQ2 is EYQ2-SYQ2,
   XLQ4 is EXQ4-SXQ4, YLQ4 is EYQ4-SYQ4,
@@ -558,18 +564,22 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   maplist(append_term(remObjects),Ordered,RemoveObjs),
   append(CCs,RemoveObjs,RemovalTrials),!,
 
-  trial_removal([same|RemovalTrials],G3,RemovalTrialUsed,GridO),
+  trial_removal([same|RemovalTrials],G3,RemovalTrialUsed,GridOS),
   %trial_removal([unbind_color(brown)],G3,RemovalTrialUsed,GridO))),
-  try_whole_grid_xforms(GridO),
-
+  try_whole_grid_xforms(GridOS),
+  =(GridOS,GridO),
   verify_symmetry(Test,GridO),
 
   maybe_set_vm(VM),
   gset(VM.can_repair) = false,
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
-  clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
+
   set_vm_obj(full_grid,[iz(image)],GridO),
+  clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
+  
+
+  
 
   gset(VM.points) = [],
   OriginalPoints = VM.points_o,

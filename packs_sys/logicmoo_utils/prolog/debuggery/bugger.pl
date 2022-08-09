@@ -227,11 +227,10 @@
 :- discontiguous '$autoload'/3.
 %:- system:reexport(library(must_sanity)).
 :- system:reexport(library(logicmoo/redo_locally)).
-module(_Skip,Exports):-
- maplist(export,Exports).
+:- system:reexport(library(debuggery/bugger)).
+module(_Skip,Exports):- maplist(export,Exports).
+
 :- include(library(must_sanity)).
-
-
 :- include(ucatch).
 /** <module> Utility LOGICMOO_DEBUGGERY
 This module supplies support for utilities, like DCG_must and must_trace, that allow for easier debugging.
@@ -1178,11 +1177,15 @@ nodebugx(X):-
 
 debugging_logicmoo(Mask):- logicmoo_topic(Mask,Topic),prolog_debug:debugging(Topic, TF, _),!,TF=true.
 
-debugging_logicmoo_setting(_,true,[user_error]):- tracing.
 :- export(debugging_logicmoo_setting/3).
+:- module_transparent(debugging_logicmoo_setting/3).
+debugging_logicmoo_setting(_,true,[user_error]):- tracing.
 :- multifile(prolog_debug:debugging/3).
 :- dynamic(prolog_debug:debugging/3).
-:- asserta((prolog_debug:debugging(X,Y,Z):-debugging_logicmoo_setting(X,Y,Z))).
+:- module_transparent(prolog_debug:debugging/3).
+
+:- asserta((prolog_debug:debugging(X,Y,Z):- current_predicate(debugging_logicmoo_setting/3),
+ predicate_property(bugger:debugging_logicmoo_setting(_,_,_),defined), debugging_logicmoo_setting(X,Y,Z))).
 :- asserta((prolog_debug:debugging(_,False,[]):- current_prolog_flag(nodebugx,true),!,False=false)).
 
 
@@ -2656,14 +2659,18 @@ cleanup_strings:-garbage_collect_atoms.
 %
 % Loading Module.
 %
+:- module_transparent(loading_module/2).
 loading_module(M,Why):- quietly(loading_module0(M,Why)).
 
+:- module_transparent(loading_module0/2).
+:- export(loading_module0/2).
 loading_module0(M,use_module(U)):- if_defined(parent_goal(_:catch(M:use_module(U),_,_),_)).
 loading_module0(M,ensure_loaded(U)):- if_defined(parent_goal(_:catch(M:ensure_loaded(U),_,_),_)).
 loading_module0(M,consult(F)):- if_defined(parent_goal(_:'$consult_file_2'(F,M,_,_,_),_)).
 loading_module0(M,source_location(F)):- source_location(F,_),source_file_property(F,module(M)).
 loading_module0(M,file(F)):- prolog_load_context(file,F),source_file_property(F,module(M)).
 loading_module0(M,source(F)):- prolog_load_context(source,F),source_file_property(F,module(M)).
+loading_module0(M,strip_module):- strip_module(_,M,_).
 loading_module0(M,prolog_load_context):- prolog_load_context(module,M).
 loading_module0(M,stream_property(F)):- stream_property(_X,file_name(F)),source_file_property(F,module(M)).
 loading_module0(M,source_context_module):- source_context_module(M).
@@ -2714,6 +2721,7 @@ caller_module2(Module,Skipped):- module_stack(Module,_), \+ arg(_,Skipped,Module
 %
 % Module Stack.
 %
+module_stack(M,strip_module):- strip_module(_,M,_).
 module_stack(M,prolog_load_context):- prolog_load_context(module, M).
 module_stack(M,'$current_typein_module'):- '$current_typein_module'(M).
 module_stack(M,of):- predicate_property(M:of(_,_),imported_from(func)).

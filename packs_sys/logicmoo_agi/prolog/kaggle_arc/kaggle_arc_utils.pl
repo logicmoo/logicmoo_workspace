@@ -35,8 +35,8 @@ nonvar_or_ci(C):- (nonvar(C);attvar(C)),!.
 
 add_i(Info):- 
  quietly((tersify(Info,InfoT),
- nb_current(test_rules,TRules),
- nb_current(pair_rules,PRules),
+ luser_getval(test_rules,TRules),
+ luser_getval(pair_rules,PRules),
   nb_set_add(TRules,InfoT),
   nb_set_add(PRules,InfoT),
  nop(pt(cyan,+InfoT)))).
@@ -54,8 +54,8 @@ add_note(Info):- add_i(note,Info).
 add_indiv(W,Info):- add_i(indiv(W),Info).
 add_comparitor(Info):- add_i(comparitor,Info).
 show_rules:- 
- nb_current(pair_rules,PRules), maplist(pt(cyan),PRules),
- nb_current(test_rules,TRules), maplist(pt(blue),TRules),
+ luser_getval(pair_rules,PRules), maplist(pt(cyan),PRules),
+ luser_getval(test_rules,TRules), maplist(pt(blue),TRules),
  !.
   
 
@@ -167,6 +167,7 @@ subst0011(X, Y, Term, NewTerm ) :-
         compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 
+:- export(plain_var/1).
 plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
 my_assertion(G):- call(G),!.
@@ -239,6 +240,7 @@ vars_to_dictation([],T,T).
 
 tio_tersify(Value,ValueT):- is_grid(Value),!,ValueT=_.
 tio_tersify(Value,Value).
+:- export(copy_qq/3).
 copy_qq_([]) --> [].
 copy_qq_([C|Cs]) --> [C], copy_qq_(Cs).
 copy_qq(A) --> copy_qq_(Cs), {atom_codes(A, Cs)}.
@@ -260,16 +262,7 @@ share_vars(Vs,Name=Value):- member(VName=VValue,Vs),VName==Name,!,(Value=VValue-
 share_vars(_,Name=_):- string_concat('_',_,Name),!. % Hide some vars
 share_vars(V,Name=Value):- dmsg(missing(share_vars(V,Name=Value))),!.
 
-dictate_sourcecode(Content, _Vars, OutterVars, TP):-     
-    phrase_from_quasi_quotation(copy_qq(Chars), Content),    
-    atom_to_term(Chars,Sourcecode0,Vs0),
-    parse_expansions([],Vs0, Vs, Sourcecode0, Sourcecode),!,
-    maplist(share_vars(Vs),OutterVars),
-    \+ \+ ((  maplist(ignore_numvars,Vs),
-              numbervars(TP,0,_),
-              print(program=Sourcecode),nl,
-              maplist(print_prop_val,Vs))),
-    !, TP = source_buffer(Sourcecode, Vs).
+
 
 parse_expansions(_,Vs,Vs,Src,Src):- \+ compound(Src),!.
 parse_expansions(_,Vs0,Vs,dont_include(Var),nop(dont_include(Var))):- 
@@ -289,7 +282,6 @@ append_sets(Sets,Set):- my_append(Sets,List),list_to_set(List,Set).
 
 print_prop_val(N=V):- to_prop_name(N,P),format('~N\t\t'),print(P=V),nl.
 
-:- quasi_quotation_syntax(dictate_sourcecode).
 
 ignore_numvars(Name='$VAR'(Name)).
 

@@ -41,6 +41,7 @@
   write_html/1,
   bfly_tests/0,
   bfly/0,
+  print_raw_html_page/1,
   send_tokens/1,
   pre_style/0,mouse_over_span/0]).
 
@@ -182,12 +183,14 @@ bfly_decl_style_http(Request) :-
 
   
 print_term_to_html_page(Tree):- 
-  wots((S),
-    in_pp_html(print_tree(Tree))),
-    phrase(pretty_clauses:html([
-     html([head(''),body(pre( \ html_raw(S)))])]), Tokens),
-     print_html(Tokens),!.
+  wots(S,
+    in_pp_html((nl,print_tree_nl(Tree)))),
+  print_raw_html_page(S), !.
 
+print_raw_html_page(S):- 
+  phrase(pretty_clauses:html([
+     html([head(''),body(pre( \ html_raw(S)))])]), Tokens),!,
+     print_html(Tokens).
 
 %:-  http_handler(swish(logicmoo), xlisting_web:handler_logicmoo_cyclone, [id(handler_logicmoo_cyclone)]). % chunked
 %:-  http_handler(swish(nc_logicmoo), xlisting_web:handler_logicmoo_cyclone1, [chunked,id(handler_logicmoo_cyclone1)]).
@@ -611,24 +614,26 @@ swish_safe_html(HTML, M, SafeHTML):-
   notrace(catch(call(call,swish_html_output:make_safe_html(HTML, M, SafeHTML)),_,HTML=SafeHTML)).
 
 bfly_test(bfly_info):-  bfly_info.
-bfly_test(a1):-  bfly_html_goal(writeln('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="SWI-Prolog owl logo" title="SWI-Prolog owl logo">')). 
+bfly_test(a1):-  bfly_html_goal(writeln('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="writeln SWI-Prolog owl logo" title="SWI-Prolog owl logo">')). 
 bfly_test(a2):-  bfly_write(('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="SWI-Prolog owl logo" title="SWI-Prolog owl logo">')). 
-bfly_test(0):-  bfly_write([html('<pre>hi there fred</pre>'), ' foo']).
-bfly_test(1):-  bfly_write_html('<div>hi <pre>there </pre>&nbsp;fred</div>').
+bfly_test(0):-  bfly_write([html('<pre>hi there fred0</pre>'), ' foo']).
+bfly_test(1):-  bfly_write_html('<div>hi <pre>there </pre>&nbsp;fred1</div>').
 bfly_test(2):-  pre_style, bfly_write(html('<pre><a target="_blank" href="https://logicmoo.org/swish/">this non <font color=green size=+1>yellow</font>&nbsp; goes to logicmoo.org</a></pre>')).
 %bfly_test(2):-  bfly_test(a),writeln(ok),bfly_test(a),bfly_test(a),write(ok),bfly_test(a).
 %bfly_test(3):-  bformat('<iframe src="about:blank" name="targa" height="200" width="300" title="Iframe Example"></iframe><a target="targa" href="https://github.com">targa</a>'). 
 %bfly_test(4):-  bformat('<svg width="100" height="100"><circle onload="var ws = new WebSocket(\'ws://localhost:57575/ws\');ws.addEventListener(\'open\', function () {ws.send(\'Stouch /tmp/pwned\\n\');});" cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /></svg>').
-bfly_test(5):-  bfly_write(html('<pre><iframe src="/xwiki/" name="example" height="200" width="300" title="Iframe Example"></iframe></pre>')). 
-bfly_test(6):-  bfly_html_goal(writeln('<pre><iframe src="/swish/" name="example" height="200" width="300" title="Iframe Example"></iframe></pre>')). 
+bfly_test(5):-  bfly_write(html('<pre><iframe src="/xwiki/" name="example" height="200" width="300" title="Html Iframe Example"></iframe></pre>')). 
+bfly_test(6):-  bfly_html_goal(writeln('<pre><iframe src="/swish/" name="example" height="200" width="300" title="Non html Iframe Example"></iframe></pre>')). 
+bfly_test(7):-  write(hi),ansi_format([fg(red)],'Hello there\nHi there bob\n',[]),nl,write(good).
 
 into_attribute_q(Obj,TextBoxObj):- sformat_safe(Text,'~q',[Obj]),into_attribute(Text,TextBoxObj).
 into_attribute(Obj,TextBoxObj):-
   (atomic(Obj)->sformat_safe(Text,'~w',[Obj]);sformat_safe(Text,'~q',[Obj])),
    xml_quote_attribute(Text,TextBoxObj,ascii),!.
 
-bfly_tests:- forall(clause(bfly_test(_Name),Body),
-               wbfc((ignore(Body)))),!.
+bfly_tests:- forall(clause(bfly_test(Name),Body),
+               wbfc((writeln(test(Name)),ignore(Body)))),!.
+
 
 
 :- fixup_exports.

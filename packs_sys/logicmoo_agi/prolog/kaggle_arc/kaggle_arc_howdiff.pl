@@ -345,13 +345,14 @@ is_fti_step(combine_same_globalpoints).
 %combine_same_globalpoints(_VM):-!.
 combine_same_globalpoints(VM):- combine_same_globalpoints(VM.objs,set(VM.objs)).
 
-combine_same_globalpoints(IndvS,IndvSO):-   
+combine_same_globalpoints(IndvS,IndvSO):- 
   append(NoDupes,[I|Rest],IndvS),
   select(O,Rest,IndvS2),
-  same_globalpoints(I,O),
+  same_globalpoints(I,O),!,
   %merge_2objs(VM,I,O,[],IO),
   must_det_ll(indv_props(I,Props)),
-  must_det_ll(override_object(Props,O,IO)),
+  my_partition(props_not_for_merge,Props,_Exclude,Include),
+  must_det_ll(override_object([iz(merged(cgp))|Include],O,IO)),
   must_det_ll(combine_same_globalpoints([IO|IndvS2],NoMoreDupes)),
   must_det_ll(append(NoDupes,NoMoreDupes,IndvSO)),!.
 combine_same_globalpoints(IndvSO,IndvSO).

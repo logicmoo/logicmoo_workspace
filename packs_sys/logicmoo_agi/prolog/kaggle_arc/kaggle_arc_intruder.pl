@@ -79,8 +79,8 @@ get_prop_of(_NeuralVM,In,Prop,Val):- root_key(Prop,RHT),ht_get(RHT,In,Val).
 root_key(Key,RHT):- current_neurons(NeuralVM),(ht_get(NeuralVM,Key,RHT)->true;(ht_new(RHT),ht_put_new(NeuralVM,Key,RHT))).
 
 
-current_neurons(NeuralVM):- nb_current(system_props,NeuralVM).
-:- ht_new(NeuralVM), nb_linkval(system_props,NeuralVM).
+current_neurons(NeuralVM):- luser_getval(system_props,NeuralVM).
+:- ht_new(NeuralVM), luser_linkval(system_props,NeuralVM).
 
 % Grid subtraction
 learn_intruders(PairName,In,Out,IH,IV,OH,OV):- %trace, 

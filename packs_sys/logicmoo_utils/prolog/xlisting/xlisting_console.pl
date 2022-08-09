@@ -240,6 +240,10 @@ Cross references predicates from the command line.
 :- use_module(library(prolog_source)).
 :- use_module(library(date)).
 :- autoload(library(listing),[portray_clause/3,listing/1]).
+:- autoload(library(http/http_open),[http_open/3]).
+:- autoload(library(http/http_parameters),[http_parameters/2]).
+:- autoload(library(http/http_stream),[is_cgi_stream/1,cgi_property/2]).
+:- autoload(library(http/http_wrapper),[http_peer/2]).
 
 %:- use_module(library(editline)).
 %:- prolog_listing:use_module(library(listing)).
@@ -1733,6 +1737,7 @@ get_print_mode(PM):- t_l:print_mode(PM),!.
 get_print_mode(html):- on_x_log_fail(this_http_current_request(_)),!.
 get_print_mode(bfly):- getenv('COLORTERM',butterfly),!.
 get_print_mode(text).
+
 
 :- use_module(library(http/http_wrapper)). % ([is_cgi_stream/1,cgi_property/2]).
 this_http_current_request(Request) :-

@@ -14,14 +14,14 @@
 set_grid_id(Grid,ID):-
   my_assertion((ground(ID),nonvar_or_ci(Grid))),
   my_assertion(\+ is_grid(ID)),
-  nb_setval(grid_name,ID),
+  luser_setval(grid_name,ID),
   ignore(( \+ into_gridnameA(Grid,ID),
   copy_term(Grid,GGrid),numbervars(GGrid,1,_),
   asserta(is_grid_id(GGrid,ID)))).
 
 :- dynamic(is_grid_id/2).
 
-%grid_to_id(Grid,Name):- is_grid_id(Grid,Name)*->true; (plain_var(Name)->(nb_current(grid_name,Name),Name\=[],grid_to_id(Grid,Name))).
+%grid_to_id(Grid,Name):- is_grid_id(Grid,Name)*->true; (plain_var(Name)->(luser_getval(grid_name,Name),Name\=[],grid_to_id(Grid,Name))).
 
 
 
@@ -64,7 +64,7 @@ print_list_of(P1,N,O):-
  (N\=[] -> pt(N); true),
   maybe_cache_glyphs(O),
   %save_grouped(print_list_of(N),O),
-   maplist(P1,O),!.
+  g_out( maplist(P1,O)),!.
 
 
 maybe_cache_glyphs(O):- ignore((is_group(O),maplist(o2g,O,_))).
@@ -115,41 +115,63 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 object_glyph_color(Obj,FC):- once(colors(Obj,[cc(FC0,_)|_]);FC0=fg),
   (FC0==black_n -> FC= wbg ; FC = FC0).
 
+object_s_glyph(Obj,SGlyph):- 
+  object_glyph(Obj,Glyph), 
+  colors(Obj,Colors),
+  maplist(arg(1),Colors,NColors),
+  object_glyph_color(Obj,FC),
+  wots(SGlyph,
+   (
+     (( \+ (member(E,NColors),E==FC))->color_print(FC,Glyph);true),
+     maplist(print_ncolors(Glyph),NColors))).
+
+
+prefered(repaired).
+prefered(full_grid).
+prefered(invisible).
+prefered(neededChanged).
+prefered(changed).
 prefered(nsew).
 prefered(colormass).
 prefered(alone_dots).
-prefered_header(birth(Caps),Caps):-prefered(Caps).
-prefered_header(iz(Caps),Caps):-prefered(Caps).
+prefered_header(cc(Caps,_),Caps):- freeze(Caps,wbg == Caps).
+prefered_header(cc(Caps,_),Caps):- freeze(Caps,black == Caps).
+prefered_header(o(Caps,_,_),Caps):- freeze(Caps,i_bg_shapes == Caps).
+prefered_header(o(Caps,sf(_),0),Caps):- freeze(Caps,atom(Caps)).
+prefered_header(o(Caps,lf(_),0),Caps):- freeze(Caps,atom(Caps)).
+prefered_header(birth(Caps),PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
+%prefered_header(iz(Caps),PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
+prefered_header(Caps,PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
 prefered_header(birth(Caps),Caps).
 prefered_header(iz(Caps),Caps).
-
+% I didn't really have the programming chops to take his program and give it human level reasoning until about 5 years ago
 debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A).
 debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
- must_det_ll((
-  ignore((o2g(Obj,GGG), nonvar(GGG),nb_setval(GGG,Obj), nop( my_asserta_if_new(g2o(GGG,Obj))))),
+ maplist(must_det_ll,[
+  ignore((o2g(Obj,GGG), nonvar(GGG),luser_setval(GGG,Obj), nop( my_asserta_if_new(g2o(GGG,Obj))))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
-  object_glyph_color(Obj,FC),
+  
   sort_obj_props(A,AS0),
  % will_show_grid(Obj,TF),
   TF = false,
   o_i_d(Obj,_,MyID),
-  append(AS0,[nth(MyID)],AS),
+  o2ansi(MyID,MissGlyph),
+  object_s_glyph(Obj,SGlyph),
+  append(AS0,[nth(MyID),miss(MissGlyph)],AS),  
   remove_too_verbose(MyID,AS,TV0), include(not_too_verbose,TV0,TV),
 
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
-  sort(AS,ASA),reverse(ASA,ASAR),once((prefered_header(P,Caps),member(P,ASAR))),
+  sort(AS,ASA),reverse(ASA,ASAR),
+  once((prefered_header(P,Caps),member(P,ASAR),atom(Caps))),
   toPropercase(Caps,PC),
-  %i_glyph(Id,Sym), wqnl([writef("%% %Nr%w \t",[PC]), color_print(FC,Sym) | AAAA ]),!. 
-  object_glyph(Obj,Glyph), 
   sort_obj_props(TV,TVS),
 
   ignore((TF==true,dash_chars)),
-  ignore((is_colorish(FC) -> wqnl([format("% ~w:\t",[PC]), color_print(FC,Glyph) | TVS ]);
-                             wqnl([format("% ~w:\t",[PC]), color_print(Glyph) | TVS ]))),
+  ignore(( g_out(style('font-size','75%'),wqnl([format("% ~w:\t\t~w\t",[PC,SGlyph]) | TVS ])))),
   ignore(( TF==true, mass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, mass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pt(A),
-  ignore(( TF==true,dash_chars)))),!.
+  ignore(( TF==true,dash_chars))]),!.
 
 not_too_verbose(X):- X\==(''), X\==s('').
 
@@ -204,7 +226,7 @@ remove_too_verbose(MyID,List,ListO):- is_list(List),!,maplist(remove_too_verbose
 %remove_too_verbose(MyID,line(HV),S):- sformat(S,'~w-Line',[HV]).
 %remove_too_verbose(MyID,square,S):- sformat(S,'square',[]).
 % @TODO UNCOMMENT THIS remove_too_verbose(MyID,background,S):- sformat(S,'bckgrnd',[]).
-remove_too_verbose(MyID,iz(H),S):- !, remove_too_verbose(MyID,H,HH),sformat(S,'~q',[(HH)]).
+remove_too_verbose(MyID,iz(H),HH):- remove_too_verbose(MyID,H,HH),!.
 
 remove_too_verbose(_MyID,o_i_d(_ * _ * X,Y),NTH):- NTH=..[X,Y].
 remove_too_verbose(_MyID,o_i_d(_ * _+_ * X,Y),NTH):- NTH=..[X,Y].
@@ -231,6 +253,7 @@ remove_too_verbose(_MyID,H,H).
 
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
 too_verbose(globalpoints).
+too_verbose(monochrome).
 too_verbose(shape).
 too_verbose(localpoints).
 too_verbose(grid).
@@ -249,7 +272,7 @@ debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,
 
   wots(S,
     (dash_chars(Pad1,' '),write(Id=Glyph),
-     print_grid(OH,OV,OH,OV,EH,EV,EH,EV,Obj))),
+     print_grid(OH,OV,EH,EV,Obj))),
 
   nop(wots(S,
     (dash_chars(Pad1,' '),write(Id=Glyph),
