@@ -131,10 +131,11 @@ individuation_macros(subshape_main, [
 % never add done to macros
 individuation_macros(subshape_both(CM), [
   % glean_grid_patterns,
-   shape_lib(hammer), % is a sanity test/hack
+   %shape_lib(hammer), % is a sanity test/hack
    CM, hv_line(h), dg_line(d), dg_line(u), hv_line(v), 
    diamonds,
-   nsew, colormass, 
+   nsew, 
+   colormass, 
    %show_neighbor_map,
    %indiv_grid_pings,
    %+recalc_sizes,
@@ -214,7 +215,7 @@ individuation_macros(do_ending, [
   find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
   find_contained, % mark any "completely contained points"
   combine_same_globalpoints, % make sure any objects are perfectly the same part of the image are combined 
-  label_sizes,
+  %label_sizes,
   %combine_objects,
   end_of_macro]).
 
@@ -234,6 +235,8 @@ individuation_macros(complete, ListO):-   %reset_points, %inside_objs(force_by_c
   append(ListM,[gather_cached],ListO).
 %use_individuator(Some):- individuator(Some,_).
 
+  
+individuator(i_hammer,[shape_lib(hammer),do_ending]).
 individuator(i_columns,[when(get(h)=<10,columns),do_ending]).
 individuator(i_rows,[when(get(v)=<10,rows),do_ending]).
 individuator(i_bg_shapes,[bg_shapes(nsew),bg_shapes(alone_dots)]).
@@ -241,13 +244,14 @@ individuator(i_by_color,[force_by_color,by_color(1,black), by_color(1,lack), by_
   /*by_color(1,bg), by_color(1,fg),*/ do_ending]).
 %individuator(i_fgbg,[by_color(1,bg), by_color(1,fg),do_ending]).
 %individuator(i_diamonds,[subshape_both(diamonds), alone_dots, maybe_lo_dots, do_ending]).
-individuator(i_colormass,[subshape_both(colormass), alone_dots, maybe_lo_dots, do_ending]).
-individuator(i_nsew,[subshape_both(nsew), alone_dots, maybe_lo_dots, do_ending]).
-%individuator(i_rectangles,[subshape_both(rectangles), alone_dots, maybe_lo_dots, do_ending]).
+individuator(i_colormass,[subshape_both(colormass), maybe_lo_dots, do_ending]).
+individuator(i_nsew,[subshape_both(nsew), maybe_lo_dots, do_ending]).
+individuator(i_common,[subshape_both(shape_lib(common)), maybe_lo_dots, do_ending]).
 %individuator(i_shapelib,[subshape_both(shape_lib(pairs)), alone_dots, maybe_lo_dots, do_ending]).
 individuator(i_repair_mirrors,[fourway]).
 individuator(i_repair_repeats,[maybe_repair_in_vm(repair_repeats)]).
 individuator(i_as_is,[shape_lib(as_is)]).
+%individuator(i_common,[shape_lib(as_is)]).
 individuator(i_maybe_glypic,[maybe_glyphic,whole]).
   %   when(len(objs)>=70,keep_points(whole)),
   %TODO when(len(objs)<70,when(len(points)<50,glyphic)),
@@ -299,7 +303,7 @@ individuation_macros(standard, [
     subshape_main, % macro for sharing code with "subshape_in_object"
     connects(jumps(X),jumps(X)), % connected jumps    
     % merge_shapes(Z,Z), % merge objects of identical types (horizontal lines become solid squares)   
-    do_ending,    
+    %do_ending,    
     end_of_macro]):- the_big_three_oh(ThreeO).
 
 individuation_macros(defaults, [ complete ]).

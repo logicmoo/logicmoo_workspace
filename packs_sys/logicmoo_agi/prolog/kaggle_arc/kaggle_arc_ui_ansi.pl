@@ -199,7 +199,7 @@ pt(P):- \+ \+ (( pt_guess_pretty(P,GP),ptw(GP))).
 %ptw(P):- quietlyd(print_tree_nl(P)),!.
 ptw(G):- is_map(G), !, write_map(G,'ptw').
 ptw(S):- term_is_ansi(S), !, write_keeping_ansi(S).
-ptw(P):- write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)]),!.
+ptw(P):- notrace(write_term(P,[blobs(portray),quoted(true),quote_non_ascii(false), portray_goal(print_ansi_tree),portray(true)])),!.
 
 pt_guess_pretty(P,O):- copy_term(P,O,_),
   ignore((sub_term(Body,O), compound(Body), Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),
