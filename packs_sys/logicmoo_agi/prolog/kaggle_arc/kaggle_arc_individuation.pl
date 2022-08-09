@@ -43,10 +43,11 @@ igo(ROptions,Grid):-
   individuate(ROptions,GridIn,IndvS),
   %maplist(add_shape_lib(as_is),IndvS),
   dash_chars,
-  print_grid(IndvS),
   format("~N~n% ?- ~q.~n~n",[igo(ROptions,ID)]),
+  print_grid(IndvS),
   length(IndvS,LenS),
  % largest_first(IndvS,IndvSS),
+  dash_chars(15),!,
   print_list_of(debug_as_grid,igo=LenS,IndvS),  
   dash_chars.
 ig(ROptions,Grid):-
@@ -60,8 +61,8 @@ ig(ROptions,Grid):-
   individuate(ROptions,GridIn,IndvS),
   %maplist(add_shape_lib(as_is),IndvS),
   dash_chars,
-  print_grid(IndvS),
   format("~N~n% ?- ~q.~n~n",[ig(ROptions,ID)]),
+  print_grid(IndvS),
   length(IndvS,LenS),
   largest_first(IndvS,IndvSS),
   print_list_of(individuate=LenS,IndvSS),  

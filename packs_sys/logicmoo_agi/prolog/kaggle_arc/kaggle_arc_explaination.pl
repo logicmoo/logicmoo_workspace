@@ -79,9 +79,12 @@ print_info(A):- pt(A).
 
 debug_as_grid(Grid):-
   v_hv(Grid,H,V),
-  fif((H\==1;V\==1), print_grid(H,V,"debug_as_grid",Grid)),
+  loc(Grid,OH,OV),
   fif(is_object(Grid),(format('~N~n'),debug_indiv(Grid))),
-  dash_chars(15),!.
+  fif((H\==1;V\==1),
+    (wots(S,print_grid(H,V,debug_as_grid(loc(OH,OV),size(H,V)),Grid)),
+     HH is (OH - 1) * 2, print_w_pad(HH,S))),
+  format('~N'),dash_chars(15),!.
 
 :- discontiguous debug_indiv/1. 
 
