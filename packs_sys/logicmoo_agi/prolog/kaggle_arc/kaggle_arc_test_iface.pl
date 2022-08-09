@@ -132,12 +132,14 @@ do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. ')
 do_menu_key('?'):- !, menu_options('i').
 do_menu_key('P'):- !, switch_grid_mode,print_test.
 do_menu_key('I'):- !, cls,!,ndividuator1.
+do_menu_key('o'):- !, cls,!,ndividuatorO.
+do_menu_key('O'):- !, cls,!,ndividuatorO1.
 do_menu_key('G'):- !, cls,!,detect_supergrid1.
 do_menu_key(-1):- !, assert(wants_exit_menu).
 do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
 do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
-  dmsg(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->true;(fail,trace,dumpST,rrtrace(Goal))))),!,
+  dmsg(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->true;(fail,trace,arcST,rrtrace(Goal))))),!,
    read_pending_codes(user_input,_Ignored,[]),!.
 
 do_menu_key(Key):- atom_length(Key,Len),Len>2,current_predicate(Key/0),!,my_submenu_call(Key).
@@ -190,6 +192,8 @@ rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
 
 ndividuator1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids1(TestID,G,ig([complete],G)).
 ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,ig([complete],G)).
+ndividuatorO1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids1(TestID,G,igo([complete],G)).
+ndividuatorO:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,igo([complete],G)).
 test_grids(TestID,G):- ignore(get_current_test(TestID)), kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
 with_test_grids1(TestID,G,P):- ignore(luser_getval(example,ExampleNum)),

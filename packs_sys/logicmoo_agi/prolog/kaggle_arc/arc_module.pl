@@ -15,9 +15,9 @@ do_forgotten_exports:-
    wdmsg(do_forgotten_exports(M)), 
    do_forgotten_exports(M).
 
-:- use_module(library(pfc_lib)).
+%:- use_module(library(pfc_lib)).
 
-:- baseKB:ensure_loaded(kaggle_arc).
+:- system:ensure_loaded(kaggle_arc).
 %:- muarc:ensure_loaded(kaggle_arc).
 
 :- do_forgotten_exports.

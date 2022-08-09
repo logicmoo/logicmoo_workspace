@@ -45,7 +45,7 @@ member_or_it(G,G).
 
 
 show_workflow(InO,_,InO):-pass_thru_workflow(InO),!. 
-show_workflow(In,String,Out):- nonvar(Out),!,dumpST,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
+show_workflow(In,String,Out):- nonvar(Out),!,arcST,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
 show_workflow(InO,String,InO):- string(String),!, 
  ignore((InO\==[], nl, writeln(String), forall(member_or_it(G,InO),ignore(print_grid(_,_,String,G))))).
 show_workflow(InO,[],InO):-!.
@@ -84,7 +84,7 @@ test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 call_expanded(VM,G):-  exp_call(VM,G,GG),G\=@=GG,!,call_expanded(VM,GG).
-call_expanded(_VM,G):- catch(call(G),E,(dumpST,pt(E),rrtrace(G))).
+call_expanded(_VM,G):- catch(call(G),E,(arcST,pt(E),rrtrace(G))).
 
 quinish(Var):- var(Var),!.
 quinish(Var):- is_grid(Var),!.
@@ -258,7 +258,7 @@ sync_colors(Orig,Colors):- colors(Orig,Colors).
 uncast_grid_to_object(Orig,Grid,NewObj):- 
  must_det_ll((
   localpoints(Grid,LocalPoints),
-  (( LocalPoints==[]) -> (dumpST,writeq(LocalPoints),trace ); true),
+  (( LocalPoints==[]) -> (arcST,writeq(LocalPoints),trace ); true),
   rebuild_from_localpoints(Orig,LocalPoints,NewObj))).
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
@@ -331,7 +331,7 @@ uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
 known_gridoid(ID,G):- is_object(ID),!,G=ID.
 known_gridoid(ID,G):- known_grid(ID,G),!.
 known_gridoid(ID,G):- known_object(ID,G),!.
-%known_gridoid(ID,G):- plain_var(ID),!,dumpST,throw(var_named_test(ID,G)).
+%known_gridoid(ID,G):- plain_var(ID),!,arcST,throw(var_named_test(ID,G)).
 
 known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
@@ -415,6 +415,7 @@ known_obj0(G,O):- is_group(G),into_group(G,OL),OL=[_],must([O|_]=OL).
 into_group(GI,G):- into_group(GI,G, _ ).
 
 into_group(P,G,(=)):- is_group(P),!,G=P.
+into_group(P,G,(group_to_and_from_vm(VM))):- is_vm(P),G=VM.objs,!.
 into_group(G,G,(=)) :- G==[],!.
 into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
  get_current_test(TestID),why_grouped(TestID,G, _Why).
@@ -422,7 +423,7 @@ into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G, into_obj):- is_object(P),!,G=[P].
 into_group(P,G, lambda_rev(why_grouped)):- known_gridoid(P,M),!,into_group(M,G).
-into_group(P,G, _):- dumpST,throw(into_group(P,G)).
+into_group(P,G, _):- arcST,throw(into_group(P,G)).
 /*
 into_group(P,G):- is_object(P),points_to_grid(P,M),!,into_group(M,G).
 %into_group(G,G):- is_grid(G),!.
@@ -469,7 +470,7 @@ prim_ops([
   rotate_grid(nsew)]).
 
 
-throw_missed(G):-  Info = missed(G),wdmsg(Info),break, dumpST,throw_missed_pt2(G,Info).
+throw_missed(G):-  Info = missed(G),wdmsg(Info),break, arcST,throw_missed_pt2(G,Info).
 throw_missed_pt2(_,Info):- tracing,!,throw(Info).
 throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rrtrace(G),throw(Info).
 

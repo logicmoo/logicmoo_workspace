@@ -43,7 +43,8 @@ assert_id_grid_cells2(ID,SH,SV,Grid):-
 
 
 get_color_at(H,V,Grid,C):-
-  nth1(V,Grid,Row),nth1(H,Row,C).
+  ((nth1(V,Grid,Row),nth1(H,Row,C))*->true;C=_).
+
 get_color_at_point(Grid,Point,C):-
   hv_point(H,V,Point),
   nth1(V,Grid,Row),nth1(H,Row,C).
@@ -190,7 +191,7 @@ hv_c_value(O,_Color,_H,_V):-  var(O),!,fail.
 hv_c_value([],_Color,_H,_V):-  !,fail.
 hv_c_value(O,GN,H,V):- is_map(O),O.objs\==[],!,hv_cg_value(O.objs,GN,H,V).
 hv_c_value(O,GN,H,V):- is_map(O),!,hv_c_value(O.grid,GN,H,V).
-hv_c_value(ID,C,H,V):- (var(H);var(V)),!,dumpST,trace, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
+hv_c_value(ID,C,H,V):- (var(H);var(V)),!,arcST,trace, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
 hv_c_value(O,Color,H,V):- is_object(O),!,globalpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
 hv_c_value(O,Color,H,V):- maplist(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).

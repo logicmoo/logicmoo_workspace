@@ -438,7 +438,7 @@ changed_by(v_hv,copy).
 
 needs_indivs(I,_):- is_object(I),!,fail.
 %needs_indivs(I,O):- is_grid(I),_unshared_indivs(I,O),!.
-needs_indivs(I,O):- is_gridoid(I), \+ is_group(I), dumpST, trace, compute_unshared_indivs(I,O),!.
+needs_indivs(I,O):- is_gridoid(I), \+ is_group(I), arcST, trace, compute_unshared_indivs(I,O),!.
 
 %diff_terms(IPs,OPs,Difs2):- diff_terms(IPs,OPs,Difs2).
 diff_numbers(I,O,0):- I =:= O,!.

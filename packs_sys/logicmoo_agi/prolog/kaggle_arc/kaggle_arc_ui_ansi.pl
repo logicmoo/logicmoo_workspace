@@ -580,7 +580,7 @@ print_grid0(H,V,Grid):- \+ callable(Grid),!,write('not grid: '),
 print_grid0(H,V,SIndvOut):- compound(SIndvOut),SIndvOut=(G-GP), \+ is_nc_point(GP),!, 
   with_glyph_index(G,with_color_index(GP,print_grid0(H,V,G))),!.
 print_grid0(H,V,Grid):- is_points_list(Grid), points_to_grid(H,V,Grid,PGrid),!,print_grid0(H,V,PGrid).
-print_grid0(H,V,G):- is_empty_grid(G), %trace, dumpST,
+print_grid0(H,V,G):- is_empty_grid(G), %trace, arcST,
  wdmsg(is_empty_grid(H,V)),!,
  make_grid(H,V,Empty),
  print_grid0(H,V,Empty),!. 
@@ -598,8 +598,8 @@ print_grid0(SH,SV,EH,EV,Grid):-
   \+ \+ print_grid1(SH,SV,EH,EV,Grid),!,format('~N').
 
 
-print_grid1(SH,SV,EH,EV,Grid):- is_object(Grid),!,
-  globalpoints(Grid,Points),print_grid1(SH,SV,EH,EV,Points).
+print_grid1(SH,SV,EH,EV,Grid):- is_object(Grid),
+  object_grid(Grid,Points),!,print_grid1(SH,SV,EH,EV,Points).
 
 print_grid1(SH,SV,EH,EV,Grid):-
  nl_if_not_side_by_side,
@@ -611,9 +611,21 @@ print_grid1(SH,SV,EH,EV,Grid):-
 
 nl_if_not_side_by_side:- ignore((current_output(Out),stream_property(Out,alias(user_output)), format('~N'))).
 
+subst_color_vars(Grid,Grid):- ground(Grid),!.
+subst_color_vars(Grid,GridI):- map_pred(subst_cv,Grid,GridI),!.
+subst_color_vars(Grid,Grid).
+
+subst_cv(C,_):- \+ var(C),!,fail.
+subst_cv(C,C):- plain_var(C),C=wbg,!.
+subst_cv(C,wbg):- is_bg_color(C),!.
+subst_cv(C,O):- attvar(C),get_attr(C,ci,fg(O)),nonvar(O),!.
+subst_cv(C,C):- attvar(C),cant_be_color(C,_E),!.
+subst_cv(_,fg).
+
 
 print_grid_pad(O1,SH,SV,EH,EV,Grid):-
-  wots(S,print_grid2(SH,SV,EH,EV,Grid)),
+  subst_color_vars(Grid,GridI),
+  wots(S,print_grid2(SH,SV,EH,EV,GridI)),
   print_w_pad(O1,S),!.
 
 print_grid2(SH,SV,EH,EV,GridI):- arc_webui,!, print_grid_html(SH,SV,EH,EV,GridI),nl.
@@ -752,10 +764,10 @@ arc_acolor(fg(C),fg(Color)):- !, arc_acolor(C,Color).
 arc_acolor(bg(C),bg(Color)):- !, arc_acolor(C,Color).
 arc_acolor(hfg(C),hfg(Color)):- !, arc_acolor(C,Color).
 arc_acolor(hbg(C),hbg(Color)):- !, arc_acolor(C,Color).
-arc_acolor(C,fg(Color)):- atom_concat('#',_,C),!,Color=C.
+arc_acolor(C,fg(Color)):- atom(C),atom_concat('#',_,C),!,Color=C.
 arc_acolor(C,fg(Color)):- integer(C),block_colors(L),length(L,UpTo),between(0,UpTo,C),nth0(C,L,Color),!.
 arc_acolor(L,LL):- is_list(L),!,maplist(arc_acolor,L,LL).
-arc_acolor(C,Color):- color_int(C,I)->C\==I,!,arc_acolor(I,Color).
+arc_acolor(C,Color):- nonvar(C), color_int(C,I)->C\==I,!,arc_acolor(I,Color).
 arc_acolor(_,[bold,underline]).
 
 ansi_color_bg(C,bg(C1)):- arc_acolor(C,C2),C2=fg(C1),nonvar(C1),!.
@@ -818,10 +830,17 @@ color_print(C-_,W):- is_color(C),!, color_print(C,W).
 color_print(C,W):- arc_acolor(C,Color),on_bg(ansi_format_arc(Color,'~w',[W])),!.
 color_print(C,W):- C==0,!,ansi_format_arc([fg('#444444')],'~w',[W]),!.
 
-color_name(C,W):- var(C),!,W=C.
-color_name(C-_,W):-!,color_name(C,W).
-color_name(C,W):- atom(C),!,W=C.
-color_name(C,W):- integer(C),named_colors(L),nth0(C,L,W),!.
+color_name(C,W):- plain_var(C),!,W=C.
+color_name(C,W):- color_name0(C,W),!.
+color_name(C-_,W):- color_name0(C,W),!.
+color_name(_-C,W):- !,color_name(C,W),!.
+
+color_name0(C,W):- atom(C),atom_length(C,L),L>1,!,W=C.
+color_name0(C,W):- integer(C),C>=0,named_colors(L),nth0(C,L,W),!.
+color_name0(C,W):- attvar(C),get_attr(C,ci,fg(O)),!,(var(O)->W=fg;color_name(O,W)).
+color_name0(C,W):- attvar(C),get_attr(C,ci,bg),!,W = bg.
+color_name0(C,W):- is_color(C),!,W=C.
+
 
 color_int(C,C):- var(C),!.
 color_int(C-_,W):-!,color_int(C,W).
@@ -912,8 +931,8 @@ print_g1(C):- C == black,!, write_nbsp.
 print_g1(C-CC):- C == black,CC == black,!,write_nbsp,!.
 print_g1(N):- is_grid(N),color_print_ele(magenta,'G'),!.
 print_g1(C):- is_bg_color(C),get_bgc(BG),\+ attvar(C),!,color_print_ele(bg(BG),' '),!.
-print_g1(N-C):- plain_var(N),is_color(C),!,print_g1(C).
-print_g1(C-N):- plain_var(N),is_color(C),!,print_g1(C).
+print_g1(N-C):- plain_var(N),print_g1(C).
+print_g1(C-N):- plain_var(N),print_g1(C).
 print_g1(N-C):- integer(N),is_color(C),!,e_int2glyph(N,G),color_print_ele(C,G).
 print_g1(C-N):- integer(N),is_color(C),!,e_int2glyph(N,G),color_print_ele(C,G).
 print_g1(C):- compound_var(C,N),nobject_glyph(N,G),underline_print(print_g1(G-G)),!.
@@ -941,6 +960,7 @@ into_color_glyph_ez(CTerm,Color,Code):-
 
 %into_color_glyph(H,V,CTerm,Color,Code):- fail, get_grid_num_xyc(H,V,SColor,SNth),into_color_glyph(SColor+SNth+CTerm,Color,Code),nonvar_or_ci(Code).
 
+into_color_glyph(C,wbg,VAR):- plain_var(C),var_dot(VAR),!.
 into_color_glyph(N,C,DOT):- is_bg_color(N),get_bgc(C),bg_dot(DOT).
 into_color_glyph(N,C,DOT):- is_spec_fg_color(N,C),fg_dot(DOT).
 into_color_glyph(N,C,DOT):- is_fg_color(N),N=C,fg_dot(DOT).
@@ -951,9 +971,8 @@ into_color_glyph(N,C,Code):- compound(N),N=(G-C),is_color(C),Code=G.
 into_color_glyph(CTerm,Color,Code):- compound(CTerm),into_color_glyph_ez(CTerm,Color,Code),nonvar_or_ci(Code),!.
 into_color_glyph(N,C,Glyph):- var(N),C=N,sformat(chars(Codes),'~p',[N]),last(Codes,Glyph),!.
 into_color_glyph(bg,Black,BGD):- get_bgc(Black), bg_dot(BGD),!.
-into_color_glyph(C,C,VAR):- plain_var(C),var_dot(VAR),!.
 into_color_glyph(0,Black,BGD):- !, into_color_glyph(bg,Black,BGD).
-into_color_glyph(C,C,FGD):- fg_dot(FGD),!.
+into_color_glyph(_,fg,FGD):- fg_dot(FGD),!.
 
 
 i_glyph(N,Glyph):- bg_sym(BG), BG==N, !, bg_dot(Code), name(Glyph,[Code]).

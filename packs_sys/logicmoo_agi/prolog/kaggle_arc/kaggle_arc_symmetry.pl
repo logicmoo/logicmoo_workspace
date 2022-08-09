@@ -855,7 +855,7 @@ my_partition(P1,[H|L],[H|I],E):- \+ \+ call(P1,H),!,
   my_partition(P1,L,I,E).
 my_partition(P1,[H|L],I,[H|E]):- 
    my_partition(P1,L,I,E),!.
-my_partition(P1,H,I,HE):- dumpST,break,
+my_partition(P1,H,I,HE):- arcST,break,
   my_partition(P1,[H],I,HE).
 
 consensus22(Steps,ColorAdvice,L,C):- 
@@ -884,7 +884,7 @@ consensus2(Steps,Vars,[C|BG],Blk,Color,Other,C).
 :- style_check(+singleton).
 
 print_grid_i(O):- print_grid(O),!.
-print_grid_i(O):- dumpST,trace,print_grid(O),!.
+print_grid_i(O):- arcST,trace,print_grid(O),!.
 
 maybe_repair_image(VM,Ordered,Objects,CorrectObjects,KeepNewState,RepairedResult):- 
   maplist(object_grid,Objects,AllGrids),

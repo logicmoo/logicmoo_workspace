@@ -78,11 +78,10 @@ print_info(A):- pt(A).
 
 
 debug_as_grid(Grid):-
-  grid_size(Grid,H,V),
-  dash_chars(H),
-  wqnl(debug_indiv_grid(H,V)),
-  print_grid(Grid),
-  dash_chars(H),!.
+  v_hv(Grid,H,V),
+  fif((H\==1;V\==1), print_grid(H,V,"debug_as_grid",Grid)),
+  fif(is_object(Grid),(format('~N~n'),debug_indiv(Grid))),
+  dash_chars(15),!.
 
 :- discontiguous debug_indiv/1. 
 

@@ -15,6 +15,7 @@
 ig:- fav_i(X),ig(X),!. ig(GridIn):- i2(complete,GridIn).
 iq:- fav_i(X),ig(X). iq(GridIn):- iq(complete,GridIn).
 iL:- fav_i(X),iL(X). iL(GridIn):- i2([shape_lib(as_is),complete],GridIn).
+igo:- fav_i(X),igo(X). igo(GridIn):- igo(complete,GridIn).
 
 :- discontiguous is_fti_step/1.
 :- discontiguous is_fti_stepr/1.
@@ -31,7 +32,24 @@ i2(ROptions,GridSpec):- clsmake,
   into_grids(GridSpec,GridIn),
   once((into_grid(GridIn,Grid),ig(ROptions,Grid))).
 
-ig(ROptions,Grid):- 
+igo(ROptions,Grid):-
+  %fail,
+  into_grid(Grid, GridIn), 
+  dash_chars,
+  print_grid(GridIn), 
+  %indiv_grid_pings(GridIn),
+  grid_to_id(GridIn,ID),
+  set_current_test(ID),
+  individuate(ROptions,GridIn,IndvS),
+  %maplist(add_shape_lib(as_is),IndvS),
+  dash_chars,
+  print_grid(IndvS),
+  format("~N~n% ?- ~q.~n~n",[igo(ROptions,ID)]),
+  length(IndvS,LenS),
+ % largest_first(IndvS,IndvSS),
+  print_list_of(debug_as_grid,igo=LenS,IndvS),  
+  dash_chars.
+ig(ROptions,Grid):-
   %fail,
   into_grid(Grid, GridIn), 
   dash_chars,
@@ -161,6 +179,14 @@ individuation_macros(jumps,
     jumps(jumps(hv_line(h))) % joined jumps
     ]).  
 
+individuation_macros(common_shape_lib, [                     
+                     shape_lib(loose,squares)
+                     %shape_lib(removed),
+                     %shape_lib(in), 
+                      %shape_lib(out), % random objects learned from other passes
+                      %shape_lib(pair) % random objects learned from this pass
+]).
+
 individuation_macros(std_shape_lib_lean, [                     
                      shape_lib(removed),
                      shape_lib(in), 
@@ -169,7 +195,7 @@ individuation_macros(std_shape_lib_lean, [
 ]).
 individuation_macros(std_shape_lib, [
     shape_lib(out), 
-    %shape_lib(as_is),
+    shape_lib(as_is),
     shape_lib(noise), % data found we needed to delay analysis on
     shape_lib(intruder), % anything that stood out in the past 
    %shape_lib(added), 
@@ -177,7 +203,7 @@ individuation_macros(std_shape_lib, [
     shape_lib(out), % random objects learned from other passes
     shape_lib(pair), % random objects learned from this pass
     shape_lib(hammer), % cheater objects for hammer sanity test/hack
-    %shape_lib(l_shape), % random objects shown by douglas to look for
+    shape_lib(l_shape), % random objects shown by douglas to look for
     shape_lib(human)]). % random objects shown by humans to look for
 
 
@@ -236,7 +262,7 @@ individuation_macros(complete, ListO):-   %reset_points, %inside_objs(force_by_c
 %use_individuator(Some):- individuator(Some,_).
 
   
-individuator(i_hammer,[shape_lib(hammer),do_ending]).
+%individuator(i_hammer,[shape_lib(hammer),do_ending]).
 individuator(i_columns,[when(get(h)=<10,columns),do_ending]).
 individuator(i_rows,[when(get(v)=<10,rows),do_ending]).
 individuator(i_bg_shapes,[bg_shapes(nsew),bg_shapes(alone_dots)]).
@@ -246,12 +272,11 @@ individuator(i_by_color,[force_by_color,by_color(1,black), by_color(1,lack), by_
 %individuator(i_diamonds,[subshape_both(diamonds), alone_dots, maybe_lo_dots, do_ending]).
 individuator(i_colormass,[subshape_both(colormass), maybe_lo_dots, do_ending]).
 individuator(i_nsew,[subshape_both(nsew), maybe_lo_dots, do_ending]).
-individuator(i_common,[subshape_both(shape_lib(common)), maybe_lo_dots, do_ending]).
+individuator(i_common,[subshape_both(common_shape_lib),do_ending]).
 %individuator(i_shapelib,[subshape_both(shape_lib(pairs)), alone_dots, maybe_lo_dots, do_ending]).
 individuator(i_repair_mirrors,[fourway]).
 individuator(i_repair_repeats,[maybe_repair_in_vm(repair_repeats)]).
 individuator(i_as_is,[shape_lib(as_is)]).
-%individuator(i_common,[shape_lib(as_is)]).
 individuator(i_maybe_glypic,[maybe_glyphic,whole]).
   %   when(len(objs)>=70,keep_points(whole)),
   %TODO when(len(objs)<70,when(len(points)<50,glyphic)),
@@ -927,7 +952,7 @@ is_fti_step(save_as_objects).
 save_as_objects(Name,VM):-
   %Objs = VM.objs,!,
  maplist(must_det_ll,[
-  call_with_depth_limit(individuate1(_,Name,VM.grid_o,IndvS0),10_000,R),
+  call_with_depth_limit(individuate1(_,Name,VM.grid_o,IndvS0),5_000,R),
   % NewObjs = VM.objs,!,
   %intersection(Objs,NewObjs,_Same,_Removed,IndvS0),
   fif(number(R),
@@ -1271,45 +1296,63 @@ one_fti(VM,by_color(Min,C)):-
    raddObjects(VM,ColorObj)))).
 
 
-one_fti(VM,shape_lib(Hammer)):- !,
-  nop((shape_lib_expanded(Hammer,Reserved),try_shapelib(VM,Hammer,Reserved))).
+one_fti(VM,shape_lib(LibName)):- !,
+  one_fti(VM,shape_lib(regular,LibName)).
+one_fti(VM,shape_lib(Method,LibName)):- !,
+  locally(b_setval(find_rule,Method),
+    ((shape_lib_expanded(LibName,Reserved),
+      try_shapelib(VM,Method,LibName,Reserved)))).
 
-try_shapelib(VM,Hammer,Reserved):-   
+try_shapelib(VM,Method,LibName,Reserved):-   
   length(Reserved,RL),
-  ignore((RL>30,pt(shape_lib_expanded(Hammer)=RL))),
-  smallest_first(Reserved,ReservedSL),
+  ignore((RL>30,pt(shape_lib_direct(LibName)=RL))),
+  %smallest_first
+  %largest_first(Reserved,ReservedSL),
   %debug_indiv(Reserved),
-  use_shapelib(VM,Hammer,ReservedSL),
+  use_shapelib(VM,Method,LibName,Reserved),
   %intersection(SofarOut,Sofar,_Intersected,Found,_LeftOverB), as_debug(8,print_grid(H,V,'shape_lib'+VM.id,Found)),
   !.
 
-use_shapelib(VM,Name,[Obj|RestReserved]):-     
-   %ignore((length(RestReserved,RL),1 is RL mod 7, pt(searchLib(Name)=RL))),
+use_shapelib(_VM,_Method,_Hammer,[]):-!.
+use_shapelib(VM,Method,LibName,[Shape|ReservedSL]):- !,
+  (try_shape(VM,Method,LibName,Shape)-> use_shapelib(VM,Method,LibName,[Shape|ReservedSL]) ; use_shapelib(VM,Method,LibName,ReservedSL)).
+
+try_shape(VM,Method,LibName,Shape):-     
+   %ignore((length(RestReserved,RL),1 is RL mod 7, pt(searchLib(LibName)=RL))),
    % Points\==[],
-  \+ color(Obj,black),
-   object_grid(Obj,OGrid),
-   Grid = VM.grid,
-   find_ogs(OH,OV,OGrid,Grid),
-   %must_det_ll
-   ((
-   localpoints(Obj,OPoints),
+   %\+ color(Shape,black),
+   object_grid(Shape,OGrid),
+   v_hv(Shape,SH,SV),
+   Grid = VM.grid, % GH = VM.h, GV = VM.v,
+   v_hv(Grid,GH,GV),!,
+   GH>=SH, GV>=SV,   
+   dmsg((GH>=SH, GV>=SV)),   
+   find_ogs_c(Method,OH,OV,OGrid,Grid),
+   print_side_by_side(Grid,OGrid),
+   show_match(OH,OV,OGrid,Grid),
+  must_det_ll(
+  (localpoints_include_bg(Shape,OPoints),
    offset_points(OH,OV,OPoints,ObjPoints),
    Points = VM.points,
    intersection(ObjPoints,Points,Intersected,NeedAsWell,RestOfPoints),
-   set(VM.points) = RestOfPoints,
    Sofar = VM.objs,
-   do_leftover(Sofar,NeedAsWell,Intersected,Use,Sofar2),
+   do_leftover(Sofar,NeedAsWell,Intersected,Use,Sofar2),   
    my_append(Intersected,Use,All),
    list_to_set(All,AllS), AllS \== [],
-   make_indiv_object(VM,[iz(copy(Name))],AllS,Indiv0), 
-   o_i_d(Obj,_,Iv), 
-   override_object(o_i_d(VM.id,Iv),Indiv0,Indiv), 
+   set(VM.points) = RestOfPoints,
+   set(VM.objs)= Sofar2,
+   points_to_grid(RestOfPoints,GH,GV,NewGrid),
+   set(VM.grid) = NewGrid,
+   indv_props(Shape,ShapeProps), 
+   my_partition(props_not_for_merge,ShapeProps,_Exclude,Include),
+   make_indiv_object(VM,[shape_lib(LibName)|Include],AllS,Indiv), 
+   %o_i_d(Shape,_,Iv), 
+   %override_object(o_i_d(VM.id,Iv),Indiv0,Indiv), 
    %make_indiv_object(VM,Use,Indiv),
    nop(points_to_grid(RestOfPoints,set(VM.grid))),
-   set(VM.objs)= Sofar2,
+   
    %print_grid(Indiv),
    raddObjects(VM,Indiv),
-   use_shapelib(VM,Name,[Obj|RestReserved]),
    nop(debug_indiv(Indiv)))).
 /*  
 use_shapelib(VM,Name,[Obj|Reserved]):-

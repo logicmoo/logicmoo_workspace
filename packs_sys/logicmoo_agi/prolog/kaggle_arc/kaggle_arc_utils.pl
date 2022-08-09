@@ -12,15 +12,27 @@
 my_len(X,Y):- var(X),!,length(X,Y).
 my_len(X,Y):- is_list(X),!,length(X,Y).
 my_len(X,Y):- functor([_|_],F,A),functor(X,F,A),!,length(X,Y).
-my_len(X,Y):- dumpST,!,break.
+my_len(X,Y):- arcST,!,break.
 */
-
+arcST:- nop(dumpST).
 
 nb_subst(Obj,New,Old):-
   get_setarg_p1(nb_setarg,Found,Obj,P1),Found=@=Old,!,
   call(P1,New),!,nb_subst(Obj,New,Old).
 nb_subst(_Obj,_New,_Old).
 
+:- thread_local(in_memo_cached/5).
+arc_memoized(G):-
+  copy_term(G,C,GT),
+  (Key = (C+GT)),
+  (in_memo_cached(Key,C,track,started,Info)->throw(already_memoizing(in_memo_cached(Key,C,track,started,Info))) ; true),
+  numbervars(Key,0,_,[singletons(true)]),!,
+  setup_call_cleanup((asserta(in_memo_cached(Key,C,track,started,_),Started)),
+  catch(
+  (in_memo_cached(Key,C,GT,Found,AttGoals)*->(G=Found,maplist(call,AttGoals))
+    ; ((call(G),copy_term(G,CG,GG)) *->asserta(in_memo_cached(Key,C,GT,CG,GG))
+                  ;assert(in_memo_cached(Key,C,GT,failed,_)))),
+  E, (retractall(in_memo_cached(Key,C,GT,_,_)),throw(E))),erase(Started)).
 
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
@@ -171,11 +183,11 @@ subst0011(X, Y, Term, NewTerm ) :-
 plain_var(V):- var(V), \+ get_attr(V,ci,_).
 
 my_assertion(G):- call(G),!.
-my_assertion(G):- dumpST,!,trace,wdmsg(my_assertion(G)),break,!.
+my_assertion(G):- arcST,!,trace,wdmsg(my_assertion(G)),break,!.
 must_be_free(AllNew):- plain_var(AllNew),!.
-must_be_free(AllNew):- dumpST,wdmsg(must_be_free(AllNew)),break,fail.
+must_be_free(AllNew):- arcST,wdmsg(must_be_free(AllNew)),break,fail.
 must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.
-must_be_nonvar(AllNew):- dumpST,wdmsg(must_be_nonvar(AllNew)),break,fail.
+must_be_nonvar(AllNew):- arcST,wdmsg(must_be_nonvar(AllNew)),break,fail.
 
 intersection([],LeftOverB,[],[],LeftOverB):-!.
 intersection(LeftOverA,[],[],LeftOverA,[]):-!.

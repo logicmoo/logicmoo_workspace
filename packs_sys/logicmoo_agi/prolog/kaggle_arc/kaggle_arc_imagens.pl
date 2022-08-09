@@ -8,11 +8,13 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
-:- discontiguous in_shape_lib/2.
 :- discontiguous make_shape/2.
-:- dynamic in_shape_lib/2.
 :- dynamic make_shape/2.
 :- discontiguous decl_sf/1.
+
+:- discontiguous in_shape_lib/2.
+:- multifile in_shape_lib/2.
+:- dynamic in_shape_lib/2.
 
 
 do_gp([],Pixels,Pixels):- !.
@@ -132,33 +134,54 @@ the_hammer(Color,ColorComplex):-
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
 
-the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,_H,_V,Points,_Complex), 
-  get_vm(VM),
-  make_indiv_object(VM,[iz(hammer)],Points,LibObj).
+the_hammer(blue, LibObj):- hammer2(Text), text_to_grid(Text,_H,_V,Grid,_Complex), 
+   into_lib_object([blue,hammer],Grid,LibObj).
 
 
-shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,mapgroup(shape_info_props,Shapes,ShapeProps).
+shape_info_props(Shapes,ShapeProps):- is_list(Shapes),!,maplist(shape_info_props,Shapes,ShapeProps).
+shape_info_props(P,P):- compound(P),!.
 shape_info_props(Shape,iz(Shape)).
 
-l_shape(LibObj):- 
+into_color_grid(Grid,ColorGrid):-
+  into_grid(Grid,Grid0),
+  mapgrid(for_color_grid,Grid0,ColorGrid).
+
+for_color_grid(Var,Var):- is_color(Var),!.
+for_color_grid(Var,Var):- plain_var(Var),!.
+for_color_grid(Var,Var):- color_name(Var),!.
+
+l_shape(LibObj):-    
   in_grid_shape_lib(Shapes0,Grid,GrowthChart),
-  once(must_det_ll((
   %grid_size(Grid,H,V),
   enum_scale(Scale),
-  flatten([Shapes0],Shapes),
-  shape_info_props(Shapes,ShapeProps),
   %flatten([Shapes,H,V,Scale],AList),!,
   %atomic_list_concat(AList,'_',ID),
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
-  globalpoints(ScaledGrid,Points)))),
-  get_vm(VM),
-  catch(make_indiv_object(VM,[iz(l_shape)|ShapeProps],Points,LibObj),_,
-    (dumpST,trace,make_indiv_object(VM,[iz(l_shape)|ShapeProps],Points,LibObj))).
+  into_lib_object([iz(l_shape),Shapes0],ScaledGrid,LibObj).
+
+into_lib_object(Shapes0,Grid0,LibObj):-
+  flatten([Shapes0],Shapes),
+  shape_info_props(Shapes,ShapeProps),
+  into_lib_object1(ShapeProps,Grid0,LibObj).
+
+into_lib_object1(ShapeProps,Grid0,LibObj):-  
+  into_color_grid(Grid0,ScaledGrid),!,
+  arc_memoized(into_lib_object2(ShapeProps,ScaledGrid,LibObj)).
+
+into_lib_object2(ShapeProps,ScaledGrid,LibObj):-
+  once(must_det_ll((
+  grid_size(ScaledGrid,H,V),
+  %flatten([Shapes,H,V,Scale],AList),!,
+  %atomic_list_concat(AList,'_',ID),
+  globalpoints_maybe_bg(ScaledGrid,SPoints)))),
+  G = make_indiv_object_no_vm(into_lib_object2,H,V,[iz(into_lib_object),grid(ScaledGrid),v_hv(H,V)|ShapeProps],SPoints,LibObj),
+  catch(G,E,(arcST,wdsg(E=G),trace,G)).
 
 % todo temp
 sortshapes(List,Set):- my_list_to_set_cmp(List, using_compare(shape_key), Set).
 % sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
 %sortshapes(List,ListS):- sort(List,ListS),!.
+
 
 my_list_to_set(List, Set):- my_list_to_set(List, (=) ,Set).
 my_list_to_set_variant(List, Set):- my_list_to_set(List, (=@=) ,Set).
@@ -310,6 +333,10 @@ solid_square(C,HW,Grid):-
   restructure(FillRows,Grid).
 
 decl_sf(hollow_square(fg_color,bg_color,size)).
+
+
+any_fg_or_bc_color(X):- attach_fg_ci(X,6);get_bgc(X).
+any_fg_color(X):- attach_fg_ci(X,6).
 
 hollow_square(C,HW,D):- get_bgc(BG),!,hollow_square(C,BG,HW,D).
 hollow_square(C,BG,HW,D):-
@@ -490,6 +517,11 @@ in_shape_lib(All,GRot):- All==all,!,in_shape_lib(_,GRot).
 in_shape_lib(decolorize(S),Gallery):- nonvar(S),!, in_shape_lib(S,GalleryC),decolorize(GalleryC,Gallery).
 in_shape_lib(all_rots(S),Gallery):-  nonvar(S),!, in_shape_lib(S,GalleryC),all_rotations(GalleryC,Gallery).
 in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
+
+in_shape_lib(squares,LibObj):- between(2,30,WH),HW is 32-WH, any_fg_color(C),solid_square(C,HW,Grid),into_lib_object([solid,square,shape_lib(common)],Grid,LibObj).
+in_shape_lib(squares,LibObj):- between(2,30,WH),HW is 32-WH, any_fg_color(C),hollow_square(C,HW,Grid),into_lib_object([hollow,outline(1),square,shape_lib(common)],Grid,LibObj).
+in_shape_lib(n_shape,LibObj):- n_shape(LibObj).
+
 in_shape_lib(hammer,Name):- the_hammer1(Name).
 in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
 

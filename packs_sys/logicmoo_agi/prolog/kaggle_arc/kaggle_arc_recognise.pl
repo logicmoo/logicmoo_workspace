@@ -10,8 +10,14 @@
 
 :- discontiguous h666/2. 
 :- discontiguous f666/2. 
+:- discontiguous n_grid/2.
+:- discontiguous in_shape_lib/2.
+:- multifile in_shape_lib/2.
+:- dynamic in_shape_lib/2.
 
 test_ogs:- clsmake, mmake, time(forall(test_ogs(_,_,_),true)).
+test_ogs_l:- clsmake, mmake, locally(b_setval(find_rule,loose),time(forall(test_ogs(_,_,_),true))).
+test_ogs_s:- clsmake, mmake, locally(b_setval(find_rule,strict),time(forall(test_ogs(_,_,_),true))).
 
 :- add_history1(test_ogs).
 :- add_history1(test_ogs0).
@@ -206,10 +212,13 @@ print_sgrid(F):- ((\+ \+ ((constrain_grid(s,_Trig,F,_FG),print_grid(F),nl)))),!.
 %constrain_type(Var,Cond):- frozen(Var,Goals),sub_term(E,Goals),E=@=Cond,!. % wdmsg(skipping(Cond)),trace.
 constrain_type(Var,Cond):- freeze(Var,Cond).
 
-find_ogs(_,_,_FG,SG):- SG==[],!,fail.
-find_ogs(H,V,FG,SG):- 
+find_ogs(H,V,FG,SG):- luser_getval(find_rule,Rul),find_ogs_c(Rul,H,V,FG,SG).
+
+find_ogs_c(_,_,_,_FG,SG):- SG==[],!,fail.
+find_ogs_c(Rul,H,V,FG,SG):- 
   %constrain_grid(f,CheckType,FG,_XFG2),
-  once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
+  locally(nb_setval(find_rule,Rul),
+    once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG)))),
   ogs_1(H,V,XFG,XSG),CheckType=black.
 /*
 
@@ -269,7 +278,7 @@ ogs_pt2(H,[Row|FindRows],[S|Search]):-
   ogs_pt2(H,FindRows,Search),!.
 
 
-grid_detect_bg(Grid1,Background):- 
+grid_detect_bg(Grid1,[bg|Background]):- 
   term_singletons(Grid1,Background).
 
 grid_label_bg(CT,GridIn,GridO):- CT=f,!,
@@ -294,7 +303,7 @@ to_grid_bg(_CT,_,BG):- get_bgc(BG),!.
 to_grid_bg(_CT,_,BG):- bg_sym(BG),!.
 to_grid_bg(_CT,_,_).
 
-grid_detect_fg(GridIn,Foreground1):- 
+grid_detect_fg_vars(GridIn,Foreground1):- 
   grid_detect_bg(GridIn,Background),!,
   term_variables(GridIn,Foreground),!,
   include(not_in(Background),Foreground,Foreground1).
@@ -302,7 +311,7 @@ grid_detect_fg(GridIn,Foreground1):-
 
 grid_label_fg(CT,GridIn):- 
   my_assertion(is_grid(GridIn)),
-  grid_detect_fg(GridIn,Foreground1),
+  grid_detect_fg_vars(GridIn,Foreground1),
   grid_label_fg(CT,GridIn,Foreground1),!.
 
 grid_label_fg(_CT,_,[]):-!.
@@ -367,6 +376,7 @@ fpad_grid(_CT,P1,Grid,Grid2):-
 
 maybe_into_grid(I,O):- \+ is_grid(I), into_grid(I,O), I \=@=O,!.
 
+
 %constrain_grid_f(Grid2,GridO):- Grid2=GridO.
 %constrain_grid_f(Grid2,Trig,GridO):- constrain_grid(f,Trig,Grid2,GridO),!.
 %constrain_grid_s(Grid2,Trig,GridO):- constrain_grid(s,Trig,Grid2,GridO),!.
@@ -428,7 +438,7 @@ constrain_grid_now(CT,Trig,GridIn, GridO):-
   constrain_grid_now(CT,Trig,GridIn,H,V,H,V,GridO),!.
 
 maybe_constrain_fg(_Trig,GridIn):- 
-  grid_detect_fg(GridIn,FGUnits),
+  grid_detect_fg_vars(GridIn,FGUnits),
   ignore((FGUnits\==[],
           set_fg_vars(FGUnits))),!.
 
@@ -481,11 +491,11 @@ constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- fail, is_spec_fg_c
   (C1O==C1I -> true ; C1O=C1I).
 
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_fg_color(C1I,_),!, 
-  ((C1O==C1I,false) -> true ; must_det_ll((constrain_type(Trig,C1I=C1O), attach_ci(C1O,C1I)))), 
+  ((C1O==C1I,false) -> true ; must_det_ll((constrain_type(Trig,C1I=C1O), attach_fg_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
 
 % BG Find On Canvas
-constrain_ele(f,GH,GV,_Trig,_GridIn,_H,_V,C1I,_C1O,_GridO):- 
+constrain_ele(f,GH,GV,_Trig,_GridIn,H,V,C1I,_C1O,_GridO):- 
    H\==1, V\==1, V\==GV, H\==GH,
    is_bg_color(C1I),!.
    
@@ -498,8 +508,8 @@ same_colors(_Trig,C1I,C1O):- nonvar(C1O),!,C1I=C1O.
 same_colors(Trig,C1I,C1O):- constrain_type(C1O,same_colors(Trig,C1I,C1O)).
 %same_colors(C1I,C1O):- is_spec_fg_color(C1O,_),!,C1I=C1O.
 
-attach_ci(CO,_C):- nonvar_or_ci(CO),!.
-attach_ci(CO,C) :- put_attr(CO,ci,fg(C)).
+attach_fg_ci(CO,_C):- nonvar_or_ci(CO),!.
+attach_fg_ci(CO,C) :- put_attr(CO,ci,fg(C)).
 
 
 
@@ -530,7 +540,17 @@ ci:attr_unify_hook(_,Value):- is_colorish(Value),!.
 mfreeze(Trig,_CDE):- nonvar(Trig),!.
 mfreeze(Trig,CDE):- constrain_type(Trig,CDE).
 
+constrain_dir_ele(_CT,_Trig,_,_GridIn,_H,_V,_C1I,_C1O,_GridO):- luser_getval(find_rule,loose),!.
 constrain_dir_ele(_CT,_Trig,[],_GridIn,_H,_V,_C1I,_C1O,_GridO).
+constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):- luser_getval(find_rule,strict),!,
+  muarc_mod(M),
+  ignore((
+  M:is_adjacent_hv(H,V,Dir,H2,V2),
+  get_color_at(H2,V2,GridIn,C2I),
+  get_color_at(H2,V2,GridO,C2O),
+     \+ is_spec_fg_color(C2I,_),
+     dif(C2O,C1O))),!,
+  constrain_dir_ele(CT, Trig,SEW,GridIn,H,V,C1I,C1O,GridO).
 constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
   muarc_mod(M),
   ignore((
@@ -757,12 +777,22 @@ h666(colors,
  [1,2,3,4,5,1,7,8,9],
  [1,2,3,4,5,2,7,8,9]]).
 
-f666(_,
+n_shape(LibObj):- 
+  n_grid(Shapes0,Grid),
+  into_lib_object(Shapes0,Grid,LibObj).
+
+
+n_grid(plus_3x3,
 [[_,1,_],
  [1,1,1],
  [_,1,_]]).
 
-f666(_,
+n_grid(plus_3x3_colorless,
+[[_,X,_],
+ [X,X,X],
+ [_,X,_]]):- any_fg_color(X).
+
+n_grid(plus_5x5,
 [[_,_,1,_,_],
  [_,_,1,_,_],
  [1,1,1,1,1],
@@ -778,39 +808,40 @@ f666(_,
  [_,_,1,_,_]]).
 
 
-f666(_,
+n_grid(plus_5x5_colorless,
 [[_,_,X,_,_],
  [_,_,X,_,_],
  [X,X,X,X,X],
  [_,_,X,_,_],
- [_,_,X,_,_]]).
+ [_,_,X,_,_]]):- any_fg_color(X).
 
 
 f666(_Ncolors,
-[[5,_,7],
+[[5,X,7],
  [5,1,7],
- [5,1,7]]).
+ [5,1,7]]):- any_fg_color(X).
 
-f666(T,
+
+n_grid(vbar_6_colorless,
 [[X],
  [X],
  [X],
  [X],
  [X],
- [X]]):- T =  _.
+ [X]]):- any_fg_color(X).
 
 f666(T,
 [[X,_],
  [X,_],
  [X,_],
  [X,X],
- [X,_]]):- T =  _.
+ [X,_]]):- any_fg_color(X), T = _.
 
 f666(T,
 [[X,_],
  [X,X],
  [X,_],
- [X,_]]):- T =  _.
+ [X,_]]):- any_fg_color(X), T = _.
 
 
 
@@ -836,24 +867,24 @@ h666(1,
  [1,2,1,4,5,1,7,8,9],
  [1,1,3,4,5,1,7,8,9]]).
 
-
-f666(1,
-[[1,1,1],
- [1,_,1],
- [1,1,1]]).
+f666(1,S):- n_grid(_,S).
 
 f666(1,
 [[1,1,1],
  [1,3,1],
  [1,1,1]]).
 
+n_grid(hollow_3x3,
+[[1,1,1],
+ [1,_,1],
+ [1,1,1]]).
 
-f666(1,
+n_grid(solid_3x3,
 [[1,1,1],
  [1,1,1],
  [1,1,1]]).
 
-h666(1,
+n_grid(solid_5x5,
 [[1,1,1,1,1],
  [1,1,1,1,1],
  [1,1,1,1,1],
