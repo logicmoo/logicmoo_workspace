@@ -528,13 +528,8 @@ count_c_neighbors(C,H,V,Dirs,GridIn):-
      get_color_at(H2,V2,GridIn,C1O),
        C1O=@=C), 
     Dirs).
-  
-ci:attr_unify_hook(free(_),_Value):- !.
-ci:attr_unify_hook(fg(_),Value):- !, is_colorish(Value),!, \+ is_bg_color(Value).
-ci:attr_unify_hook(bg,Value):- !, is_colorish(Value).
-ci:attr_unify_hook(_,Value):- is_colorish(Value),!.
 
-  
+
 %constrain_dir_ele(CT,Trig,[_|SEW],GridIn,H,V,GridO):- constrain_dir_ele(CT,Trig,SEW,GridIn,H,V,GridO).
 
 mfreeze(Trig,_CDE):- nonvar(Trig),!.

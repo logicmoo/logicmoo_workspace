@@ -435,13 +435,13 @@ indv_u_props(I,[v_hv(H,V),cmass(C),loc(X,Y),localpoints(Ps),rotation(Rot)]):-
 %indv_u_props(I,[shape(Ps),center(X,Y),pen(Pen),v_hv(H,V),rotation(Rot)]):- center(I,X,Y),shape(I,Ps),pen(I,Pen),v_hv(I,H,V),rotation(I,Rot),!.
 
 :- dynamic(is_iv_for/2).
-iv_for(L,Iv):- copy_term(L,CT),numbervars(CT,0,_,[attvar(bind)]),term_hash(CT,Fv), Iv is (Fv rem 800) + 1, 
-  (\+ is_iv_for(Iv,_) -> assert(is_iv_for(Iv,L)) ; true).
+iv_for(L,Iv):- copy_term(L,CT,_),numbervars(CT,0,_,[attvar(bind),singletons(true)]),term_hash(CT,Fv),
+ number(Fv), Iv is (Fv rem 800) + 1, (\+ is_iv_for(Iv,_) -> assert(is_iv_for(Iv,L)) ; true).
 
 o_i_d(I,_ID,Fv):- is_grid(I),!, flag(indiv,Fv,Fv+1).
 o_i_d(I,ID,Iv):- indv_props(I,L),member(o_i_d(ID,Iv),L),!.
 o_i_d(I,_,Iv):- indv_u_props(I,L),iv_for(L,Iv),!.
-o_i_d(I,ID,Fv):- into_obj(I,O),!,o_i_d(O,ID,Fv).
+%o_i_d(I,ID,Fv):- into_obj(I,O),!,o_i_d(O,ID,Fv).
 o_i_d(I,ID,Iv):- trace_or_throw(missing(o_i_d(I,ID,Iv))).
 %o_i_d(_,ID,_Iv):- luser_getval(test_pairname,ID).
 
@@ -1154,8 +1154,8 @@ guess_shape_poly(I,0,N,H,V,Colors,Points,square):- N>1,H==V,!.
 guess_shape_poly(I,0,N,H,V,Colors,Points,solid):- N > 1.
 %guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,polygon):- O\==0,once(H>1;V>1).
 
-guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2, 
-  (flipSym(SN,GridIn)*->R=symmetry(SN);R=symmetry(none)).
+guess_shape(GH,GV,GridIn,LocalGrid,I,_,N,H,V,Colors,Points,R):- N>=2,  
+  (flipSym_checks(SN,GridIn)*->R=symmetry(SN);R=symmetry(none)).
 
 %guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,solidity(A)):- solidity(Points,A).
 %guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,Solid):- (is_jagged(Points)->Solid=jagged(true);Solid=jagged(false)).
@@ -1173,7 +1173,12 @@ guess_shape(GH,GV,GridIn,LocalGrid,I,O,N,H,V,Colors,Points,fp(NPoints)):- fail,
   localpoints(SSP,NPoints),!.
   %clumped(ON,COO),!,maplist(arg(1),COO,PAT).
   %points_to_grid(H,V,FGridO,RGridO).
-   
+
+flipSym_checks(Rot90,GridIn):-
+  copy_term(GridIn,G,_),!,
+  flipSym(Rot90,G).
+
+
 :- meta_predicate(flipSym(-,+)).
 flipSym( full,GridIn):- flipSym(rot90,GridIn), flipSym(sym_hv,GridIn),!.
 flipSym(sym_hv,GridIn):- flipSym(flipH,GridIn),flipSym(flipV,GridIn),!.

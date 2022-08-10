@@ -174,7 +174,8 @@ is_spec_fg_color(C0,C):- \+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
 is_spec_color(C0,C):- (is_spec_fg_color(C0,C);is_spec_bg_color(C0,C)),!.
 
 is_color(C):- attvar(C),!,get_attr(C,ci,_).
-is_color(C):- atom(C),color_int(C,N),integer(N).
+is_color(C):- is_real_color(C).
+is_real_color(C):- atom(C),color_int(C,N),integer(N).
 
 %is_colorish(C):- attvar(C),!,get_attr(C,ci,_).
 is_colorish(C):- is_color(C),!.

@@ -254,12 +254,20 @@ prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(
 %v(f9d67f8b)
 :- export(load_last_test_name/0).
 system:load_last_test_name:- 
-  notrace((exists_file(current_test),setup_call_cleanup(open(current_test,read,O),ignore((read_term(O,TestID,[]),luser_setval(test_name,TestID))),close(O)))),!.
+  arc_settings_filename(Filename),
+  notrace((exists_file(Filename),setup_call_cleanup(open(Filename,read,O),ignore((read_term(O,TestID,[]),luser_setval(test_name,TestID))),close(O)))),!.
 system:load_last_test_name:- set_current_test(v(fe9372f3)).
 
 system:save_last_test_name:- notrace(catch(save_last_test_name_now,_,true)),!.
-system:save_last_test_name_now:- 
-  ignore(notrace((luser_getval(test_name,TestID), tell(current_test),format('~n~q.~n',[TestID]),told))).
+system:save_last_test_name_now:- arc_settings_filename(Filename),
+  ignore(notrace((luser_getval(test_name,TestID), tell(Filename),format('~n~q.~n',[TestID]),told))).
+
+arc_settings_filename(Filename):- arc_settings_filename1(File), 
+  (exists_file(File) -> (Filename=File) ; absolute_file_name(File,Filename,[access(append),file_errors(fail),expand(true)])).
+arc_settings_filename1('current_test').
+arc_settings_filename1('~/.arc_current_test').
+arc_settings_filename1('/tmp/.arc_current_test').
+
 
 set_current_test(Name):-  
   ignore((fix_test_name(Name,TestID,_),is_valid_testname(TestID),really_set_current_test(TestID))).
@@ -269,7 +277,8 @@ really_set_current_test(TestID):-
   (luser_getval(last_test_name,WasTestID);WasTestID=[]),
   (WasTestID==TestID-> true ; new_current_test_info).
 
-some_current_example_num(TrnN):- luser_getval(example,TrnN),!.
+some_current_example_num(TrnN):- nb_current(example,TrnN),TrnN\==[],!.
+some_current_example_num(TrnN):- luser_getval(example,TrnN),TrnN\==[],!.
 some_current_example_num(trn+1).
 
 next_pair:- 
@@ -278,7 +287,7 @@ next_pair:-
   N2 is N+1,
   trn_tst(Trn,Tst),
   (kaggle_arc(TestID,Trn+N2,_,_)-> ExampleNum=Trn+N2 ; ExampleNum=Tst+0),
-  luser_setval(example,ExampleNum),
+  nb_setval(example,ExampleNum),
   print_single_test(TestID*ExampleNum),!.
 
 prev_pair:- 
@@ -287,7 +296,7 @@ prev_pair:-
   N2 is N-1,
   trn_tst(Trn,Tst),
   (kaggle_arc(TestID,Trn+N2,_,_)-> ExampleNum=Trn+N2 ; ExampleNum=Tst+0),
-  luser_setval(example,ExampleNum),
+  nb_setval(example,ExampleNum),
   print_single_test(TestID*ExampleNum),!.
 
 

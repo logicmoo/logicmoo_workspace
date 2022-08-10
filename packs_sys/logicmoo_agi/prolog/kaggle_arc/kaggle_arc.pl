@@ -17,6 +17,9 @@
 :- dynamic(fav/2).
 :- export(fav/2).
 
+:- multifile(user:portray/1).
+:- dynamic(user:portray/1).
+:- discontiguous(user:portray/1).
 
 :- dynamic(kaggle_arc/4).
 :- discontiguous(kaggle_arc/4).
@@ -93,12 +96,12 @@ quietlyd(G):- quietly(G),!.
 %  :- noguitracer.
   :- set_prolog_flag(toplevel_print_anon,false).
   :- set_prolog_flag(toplevel_print_factorized,true).
-    :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
-    :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
-    :- set_prolog_flag(print_write_options, [quoted(true), portray(true), max_depth(10), attributes(dots)]).
+    :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(5), attributes(dots)]).
+    :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(5), attributes(dots)]).
+    :- set_prolog_flag(print_write_options, [quoted(true), portray(true), max_depth(5), attributes(dots)]).
 
 :- set_prolog_flag(verbose_load,true).  
-:- set_prolog_flag(verbose_autoload,true).
+%:- set_prolog_flag(verbose_autoload,true).
 :- set_prolog_flag(debug_on_error,true).
 :- set_prolog_flag(report_error,true).
 :- set_prolog_flag(debugger_show_context,true).
@@ -199,6 +202,7 @@ get_setarg_p1(P3,E,Cmpd,SA):-  compound(Cmpd), get_setarg_p2(P3,E,Cmpd,SA).
 get_setarg_p2(P3,E,Cmpd,SA):- arg(N1,Cmpd,E), SA=call(P3,N1,Cmpd).
 get_setarg_p2(P3,E,Cmpd,SA):- arg(_,Cmpd,Arg),get_setarg_p1(P3,E,Arg,SA).
 
+term_expansion_setter(I,O):- compound(I), expand_must_det(I,O).
 
 term_expansion_setter((Head:-Body),Out):- 
    get_setarg_p1(setarg,I,Head,P1), is_setter_syntax(I,Obj,Member,Var,How),
@@ -229,8 +233,20 @@ is_setter_syntax(hset(How,ObjMember),Obj,Member,_Var,How):- obj_member_syntax(Ob
 
 obj_member_syntax(ObjMember,Obj,Member):-compound(ObjMember), ObjMember =.. ['.',Obj,Member],!.
 
+expand_must_det(I,_):- \+ compound(I),!,fail.
+expand_must_det(must_det_ll(GoalL),GoalLO):- !, expand_must_det1(GoalL,GoalLO).
+expand_must_det(maplist(P1,GoalL),GoalLO):- P1 ==must_det_ll,!,
+  expand_must_det1(GoalL,GoalLO).
+
+expand_must_det1(Nil,true):- Nil==[],!.
+expand_must_det1(Var,Var):- \+ compound(Var),!.
+expand_must_det1((A,B),(AA,BB)):- !, expand_must_det1(A,AA), expand_must_det1(B,BB).
+expand_must_det1([A|B],(AA,BB)):- !, expand_must_det1(A,AA), expand_must_det1(B,BB).
+expand_must_det1(must_det_ll(AB), AABB):-!, expand_must_det1(AB,AABB).
+expand_must_det1( A,must_det_ll(AA)):- expand_goal(A,AA).
 
 goal_expansion_getter(Goal,O):- \+ compound(Goal), !,O = Goal.
+goal_expansion_getter(I,O):- expand_must_det(I,O).
 goal_expansion_getter(Goal,get_kov(Func,Self,Value)):-
   compound_name_arguments(Goal,'.', [Self, Func, Value]),!.
 goal_expansion_getter(Goal,Out):- 
@@ -248,11 +264,12 @@ goal_expansion_setter(set_omember(A,B,C,D),set_omember(A,B,C,D)):-!.
 goal_expansion_setter(set_omember(A,B,C),set_omember(b,A,B,C)):-!.
 goal_expansion_setter(Goal,get_kov(Func,Self,Value)):- compound(Goal), Goal =.. ['.', Self, Func, Value],!.
 
+goal_expansion_setter(I,O):- expand_must_det(I,O).
+
 goal_expansion_setter(Goal,Out):- 
    predicate_property(Goal,meta_predicate(_)),!,fail,
    arg(N1,Goal,P), goal_expansion_setter(P,MOut),
    setarg(N1,Goal,MOut), !, expand_goal(Goal, Out).
-
 
 goal_expansion_setter(Goal,Out):-
    arg(N1,Goal,P),  is_setter_syntax(P,Obj,Member,Var,How),
@@ -362,14 +379,16 @@ arc_user(ID):- thread_self(ID).
 
 :- dynamic(arc_user_prop/3).
 
+luser_setval(N,V):- nb_setval(N,V),!.
 luser_setval(N,V):- arc_user(ID),luser_setval(ID,N,V),!.
 luser_setval(ID,N,V):- nb_setval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
 luser_linkval(N,V):- arc_user(ID),luser_linkval(ID,N,V),!.
 luser_linkval(ID,N,V):- nb_linkval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
+luser_getval(N,V):- nb_current(N,V),!.
 luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
-luser_getval(ID,N,V):- thread_self(ID),!,nb_current(N,V).
+%luser_getval(ID,N,V):- thread_self(ID),nb_current(N,V),!.
 %luser_getval(ID,N,V):- !, ((arc_user_prop(ID,N,V);nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 luser_getval(ID,N,V):- !,
  (nb_current(N,V)*->true;
@@ -876,7 +895,6 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 %:- muarc_mod(M), M:show_tests.
 :- load_last_test_name.
 
-%user:portray(Grid):- quietly(arc_portray(Grid)),!.
 %:- muarc_mod(M), M:listing((addOptions)/2).
 %:- xlisting((.)/3).
 %:- xlisting(user:'.'(_, _, _)).
@@ -891,4 +909,5 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 %:- set_prolog_flag(arc_term_expansion, false).
 
 %:- fixup_module_exports_now.  
-  
+%user:portray(Grid):- current_predicate(is_group/1), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
+

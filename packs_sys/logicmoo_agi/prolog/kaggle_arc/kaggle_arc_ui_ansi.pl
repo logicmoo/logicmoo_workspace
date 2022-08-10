@@ -23,16 +23,25 @@ tersify(I,O):- tracing,!,I=O.
 %tersify(I,O):- term_variables(I,Vs), \+ ( member(V,Vs), attvar(V)),!,I=O.
 tersify(I,O):- quietly((tersify2(I,M),tersify3(M,O))).
 
+%srw_arc(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
+%srw_arc(I,O):- compound(I),!, wots(O,(write(ptt(I)))).
 /*
+srw_arc(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
+*/
+srw_arc(I,O):- is_map(I),!, O='..vvmm..'.
+srw_arc(I,O):- is_grid(I),!, O='..grid..'.
+%srw_arc(gridFn(_),gridFn):-!.
+%srw_arc(I,O):- is_points_list(I), length(I,N),N>10,!,O='..points..'(N),!.
+%srw_arc(I,O):- is_list(I), length(I,N),N>10,!,O='..points..'(N),!.
+srw_arc(I,O):- tersify(I,O),I\==O,!.
+
 :- multifile(dumpst_hook:simple_rewrite/2).
 :- dynamic(dumpst_hook:simple_rewrite/2).
-%dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, wots(O,(write('"'),print_grid(I),write('"'))).
-dumpst_hook:simple_rewrite(I,O):- is_grid(I),!, O='..grid..'.
-dumpst_hook:simple_rewrite(I,O):- is_map(I),!, O='..vvmm..'.
-%dumpst_hook:simple_rewrite(I,O):- is_object(I), tersify(I,O),!.
-dumpst_hook:simple_rewrite(I,O):- is_points_list(I), length(I,N),N>10,!,O='..points..'(N),!.
-*/
-portray_terse:- fail,!.
+
+%dumpst_hook:simple_rewrite(I,O):- compound(I), srw_arc(I,O), I\=@=O.
+
+
+portray_terse:- true,!.
 
 :- discontiguous arc_portray/2. 
 
@@ -108,8 +117,8 @@ arc_portray_pair_optional(Ps,K,Val,TF):-
 
 
 % arc_portray(G):- \+ \+ catch((wots(S,( tracing->arc_portray(G,true);arc_portray(G,false))),write(S),ttyflush),_,fail).
-
-arc_portray(G):- is_print_collapsed,!, locally(luser_setval(arc_portray,t),arc_portray(G)).
+arc_portray(G):- is_vm(G), !, write('..VM..').
+arc_portray(G):- is_print_collapsed,!, locally(nb_setval(arc_portray,t),arc_portray(G)).
 arc_portray(G):- compound(G), \+ \+ catch(((tracing->arc_portray(G,true);arc_portray(G,false)),ttyflush),E,(format(user_error,"~N~q~n",[E]),fail)).
 
   
@@ -209,9 +218,17 @@ pt_guess_pretty(P,O):- copy_term(P,O,_),
 :- dynamic(pretty_clauses:pp_hook/3).
 :- multifile(pretty_clauses:pp_hook/3).
 :- module_transparent(pretty_clauses:pp_hook/3).
+pretty_clauses:pp_hook(_,Tab,S):- is_vm(S),!,prefix_spaces(Tab),!,write('..VM..').
 pretty_clauses:pp_hook(_,Tab,S):- term_is_ansi(S), !,prefix_spaces(Tab), write_keeping_ansi(S).
-pretty_clauses:pp_hook(_,_,G):- fail, is_grid(G), 
- \+ (sub_term(E,G),compound(E),E='$VAR'(_)), 
+pretty_clauses:pp_hook(_,_  ,G):- current_predicate(is_group/1),pp_hook_g(G).
+
+pp_hook_g(G):-  is_grid(G),ptt(G), !.
+pp_hook_g(G):-  is_object(G),pt(G), !.
+pp_hook_g(G):-  is_group(G),ptt(G), !.
+%pp_hook_g(G):- compound(G),ptt(G),!.
+%pp_hook_g(G):- ptt(G),!.
+pp_hook_g(G):-  is_grid(G), 
+% \+ (sub_term(E,G),compound(E),E='$VAR'(_)), 
   catch((wots(S,print_grid(G)),strip_vspace(S,SS),ptc(orange,(format('"~w"',[SS])))),_,fail).
 
 strip_vspace(S,Stripped):- string_concat(' ',SS,S),!,strip_vspace(SS,Stripped).
@@ -666,6 +683,7 @@ ansi_format_real(Ansi,Format,Args):- \+ arc_webui,!,ansi_format(Ansi,Format,Args
 ansi_format_real(Ansi,Format,Args):- sformat(S,Format,Args),!,color_print_webui(Ansi,S).
 
 color_print_webui(_,G):- G==' ',!,write_nbsp.
+color_print_webui(C,G):- mv_peek_color(C,W),color_print_webui(W,G).
 color_print_webui(C,G):- is_bg_sym_or_var(C),!,color_print_webui(wbg,G).
 color_print_webui([],G):- !, write(G).
 color_print_webui([C|CC],G):- !,wots(S,color_print_webui(C,G)),color_print_webui(CC,S).
@@ -756,6 +774,7 @@ silver('#9a9a9a').
 unnegate_color(C,Neg):- number(C),C<0,C is -Neg,!.
 unnegate_color(CI,C):- compound(CI),CI= '-'(C),!.
 arc_acolor(C,Color):- unnegate_color(C,Neg),arc_acolor(Neg,Color).
+arc_acolor(C,Color):- mv_peek_color(C,W),arc_acolor(W,Color).
 arc_acolor(C,Color):- attvar(C),get_attr(C,ci,fg(N)),arc_acolor(N,Color),!.
 arc_acolor(C,fg(Color)):- attvar(C),cant_be_color(C,E),!,arc_acolor(-E,Color).
 arc_acolor(C,fg(Color)):- attvar(C),get_attr(C,ci,bg),get_bgc(BG),!,arc_acolor(BG,Color),!.
@@ -802,7 +821,7 @@ is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
 :- export(color_print/2).
 :- system:import(color_print/2).
 
-
+color_print(C,W):- mv_peek_color(C,V),!,color_print(V,W).
 color_print(C,W):- '$current_typein_module'(M), muarc_mod(MM), MM\==M, !,'$set_typein_module'(MM), module(MM),color_print(C,W).
 %color_print(C,W):- C == black,!, color_print(white,W).
 color_print(C,W):- compound(W),compound_name_arity(W,call,_),!,(wots(S1,call(call,W))->color_print(C,S1);color_print(C,failed(W))).
@@ -837,10 +856,13 @@ color_name(_-C,W):- !,color_name(C,W),!.
 
 color_name0(C,W):- atom(C),atom_length(C,L),L>1,!,W=C.
 color_name0(C,W):- integer(C),C>=0,named_colors(L),nth0(C,L,W),!.
+color_name0(C,W):- mv_peek_color(C,V),color_name0(V,W).
 color_name0(C,W):- attvar(C),get_attr(C,ci,fg(O)),!,(var(O)->W=fg;color_name(O,W)).
 color_name0(C,W):- attvar(C),get_attr(C,ci,bg),!,W = bg.
 color_name0(C,W):- is_color(C),!,W=C.
 
+mv_peek_color(C,V):- mv_peek1(C,V),is_color(C,V),V\==C.
+mv_peek1(C,W):- multivar:is_mv(C),multivar:mv_peek_value1(C,W),!.
 
 color_int(C,C):- var(C),!.
 color_int(C-_,W):-!,color_int(C,W).
@@ -926,6 +948,7 @@ mregression_test:- print_grid([[_17910,_17922-green,_17934-green,_17946-green,_1
 %print_g1(C):- compound_var(C,N),underline_print(print_g1(N)),!.
 
 
+print_g1(C):- mv_peek_color(C,V),!,print_g1(V).
 print_g1(C):- plain_var(C), write_nbsp,!, nop(( nobject_glyph(C,G),underline_print(print_g1(G-G)))),!.
 print_g1(C):- C == black,!, write_nbsp.
 print_g1(C-CC):- C == black,CC == black,!,write_nbsp,!.
