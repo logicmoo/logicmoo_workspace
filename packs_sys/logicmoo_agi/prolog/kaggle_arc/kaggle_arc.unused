@@ -1047,6 +1047,43 @@ show_indivs(IH,IV,OH,OV,Pred,When,PairName,In,Out,SF):-
   pt(yellow,sol=ShortInfo), !.
   */
 	
+% =====================================================================
+is_fti_step(bg_shapes).
+% =====================================================================
+bg_shapes(Shape,VM):-
+ must_det_ll((
+  OldPoints = VM.points,
+  OldGrid = VM.grid,  
+  get_bgc(Wbg),  
+  subst001(OldGrid,black,Wbg,MidGrid),
+  as_bgoid(_,Wbg,MidGrid,NewGrid),
+  globalpoints_include_bg(NewGrid,NewPoints),
+  set(VM.points)=NewPoints,
+  set(VM.grid)=NewGrid,
+  %print_side_by_side(OldGrid,NewGrid),
+  print_side_by_side(OldPoints,NewPoints),
+  %print_attvars(np=NewPoints), print_attvars(ng=NewGrid),
+  run_fti(VM,Shape),
+  wdmsg(bg_shapes=Shape),
+  set(VM.points)=OldPoints,
+  set(VM.grid)=OldGrid)),
+  !.
+
+as_bgoid(Fg,Wbg,Gridoid,BGoid):- into_monochrome(bg_shaped,Gridoid,BGoid).
+
+
+consider_bg(Wbg,V,WbgO):- consider_bg1(Wbg,V,WbgM),!,WbgM==Wbg,copy_term( Wbg,WbgO).
+consider_bg1(Wbg,V,Wbg):- plain_var(V),!,Wbg=V.
+consider_bg1(Wbg,V,Wbg):- V == wbg.
+consider_bg1(Wbg,V,Wbg):- V == Wbg.
+consider_bg1(Wbg,V,Wbg):- is_colorish(V), (is_bg_color(V); \+ is_fg_color(V)),!.
+
+consider_fg(Wfg,V,WfgO):- consider_fg1(Wfg,V,WfgM),!,WfgM==Wfg,copy_term( Wfg,WfgO).
+consider_fg1(Wfg,V,Wfg):- plain_var(V),!,Wfg=V.
+consider_fg1(Wfg,V,Wfg):- V == wfg.
+consider_fg1(Wfg,V,Wfg):- V == Wfg.
+consider_fg1(Wfg,V,Wfg):- is_colorish(V), (is_fg_color(V); \+ is_bg_color(V)),!.
+
 /*
   
   nop((reuse_indivs(SharedIn,SharedOut,BetterA,BetterB),
@@ -1335,4 +1372,94 @@ individuals_list(_VM,GH,GV,Sofar,ID,Options,_Reserved,Points,_Grid,IndvListOut,[
 
 individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P):-!,
   throw(fail(individuals_list(VM,GH,GV,Sofar,ID,Options,Reserved,P,Grid,Sofar,P))),!.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+list_to_row_mem(ID,N,List, row_mem(ID,N,A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32)):-
+  append(List,_,[A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32]).
+
+:- dynamic(row_mem_access/35).
+
+row_mem_access([],ID,N, B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B13, B14, B15, 
+  B16, B17, B18, B19, B20, B21, B22, B23, B24, B25, B26, B27, B28, B29, B30, B31, B32):-!,
+  row_mem(ID,N, B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B13, B14, B15, B16, B17, B18, B19, B20, B21, B22, B23, B24, B25, B26, B27, B28, B29, B30, B31, B32).
+ 
+row_mem_access([post_xform(More,P2)],ID,N, B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B13, B14, B15, 
+ B16, B17, B18, B19, B20, B21, B22, B23, B24, B25, B26, B27, B28, B29, B30, B31, B32):-!,
+ row_mem_access(More,ID,N,A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32),
+  xform(P2,A01,B01), xform(P2,A02,B02), xform(P2,A03,B03), xform(P2,A04,B04), xform(P2,A05,B05), xform(P2,A06,B06), 
+  xform(P2,A07,B07), xform(P2,A08,B08), xform(P2,A09,B09), xform(P2,A10,B10), xform(P2,A11,B11), xform(P2,A12,B12), 
+  xform(P2,A13,B13), xform(P2,A14,B14), xform(P2,A15,B15), xform(P2,A16,B16), xform(P2,A17,B17), xform(P2,A18,B18), 
+  xform(P2,A19,B19), xform(P2,A20,B20), xform(P2,A21,B21), xform(P2,A22,B22), xform(P2,A23,B23), xform(P2,A24,B24), 
+  xform(P2,A25,B25), xform(P2,A26,B26), xform(P2,A27,B27), xform(P2,A28,B28), xform(P2,A29,B29), xform(P2,A30,B30),
+  xform(P2,A31,B31), xform(P2,A32,B32).
+
+row_mem_access([xform(P2)|More],ID,N, A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, 
+ A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32):- !,
+ xform(P2,A01,B01), xform(P2,A02,B02), xform(P2,A03,B03), xform(P2,A04,B04), xform(P2,A05,B05), xform(P2,A06,B06), 
+ xform(P2,A07,B07), xform(P2,A08,B08), xform(P2,A09,B09), xform(P2,A10,B10), xform(P2,A11,B11), xform(P2,A12,B12), 
+ xform(P2,A13,B13), xform(P2,A14,B14), xform(P2,A15,B15), xform(P2,A16,B16), xform(P2,A17,B17), xform(P2,A18,B18), 
+ xform(P2,A19,B19), xform(P2,A20,B20), xform(P2,A21,B21), xform(P2,A22,B22), xform(P2,A23,B23), xform(P2,A24,B24), 
+ xform(P2,A25,B25), xform(P2,A26,B26), xform(P2,A27,B27), xform(P2,A28,B28), xform(P2,A29,B29), xform(P2,A30,B30),
+ xform(P2,A31,B31), xform(P2,A32,B32),
+ row_mem_access(More,ID,N,B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B13, B14, B15, B16, B17, B18, B19, B20, B21, B22, B23, B24, B25, B26, B27, B28, B29, B30, B31, B32).
+
+row_mem_access([rev|More],ID,N,A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15, 
+   A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30, A31, A32):-!,
+   row_mem_access(More,ID,N,A32, A31, A30, A29, A28, A27, A26, A25, A24, A23, A22, A21, A20, A19, A18, A17, A16, A15, A14, A13, A12, A11, A10, A09, A08, A07, A06, A05, A04, A03, A02, A01).  
+
+store_rowmems:- 
+  length(S1,32),length(S2,32),length(MissingH,32),% length(BLANK,32),
+  RMA = row_mem_access,
+  forall(between(0,31,I),
+ ((length(Left,I),length(Gather,I),
+   H is I + 1,
+   H = W,
+   length(USE,W),
+   append(Left,S1,All),   
+   append(S2,_,All),
+   append(USE,_,All),
+
+   append(Gather,[C|Right],S2),
+   append(Gather,[_|Right],MissingH),
+  AS1=..[row_mem,ID,V|S1],
+  AS2=..[row_mem,ID2,V|S2],
+  CH=..[row_mem,ID,V|S2],
+  BLANKH=..[row_mem,ID,V|MissingH],
+  %ASBLANK=..[row_mem,ID,V|BLANK],
+
+  SL2=..[RMA,[shift_l(I)|More],ID,V|S2],
+  SA1=..[RMA,More,ID,V|S1],
+  assert_if_new((SL2 :- SA1)),
+  SR1=..[RMA,[shift_r(I)|More],ID,V|S1],
+  SA2=..[RMA,More,ID,V|S2],
+  assert_if_new((SR1 :- SA2)),
+
+  assert_if_new((row_mem_len_list(ID,V,W,USE) :- AS1)),  
+  assert_if_new((row_mem_shift_match(I,ID,V,ID2):- AS1,AS2)),
+  assert_if_new((row_mem_dig(ID,V,W,AS1):- AS1)),
+  assert_if_new((row_mem_nth(ID,H,V,C):- AS1)),
+  assert_if_new((row_mem_set_nth(ID,H,V,C):- ignore(retract(BLANKH)),pfc_assert(CH))),
+  assert_if_new((row_mem_offset(AS1,AS2))),
+  true))).
+:- store_rowmems.
+
+xform(P2,X,Y):- call(P2,X,Y).
+
+row_mem_get_list(ID,N,USE) :- is_grid_size(ID,H,_),row_mem_len_list(ID,N,H,USE).
 

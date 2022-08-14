@@ -823,7 +823,7 @@ ensure_unshared_indivs(In,Unshared):-
 ensure_unshared_indivs(GN,Grid,Unshared):-
    is_unshared_saved(GN,Unshared)-> true;
    individuate(complete,Grid,Unshared),
-   assert(is_unshared_saved(GN,Unshared)).
+   pfc_assert(is_unshared_saved(GN,Unshared)).
 
 ensure_shared_indivs(In,SharedIndvs):-
    get_grid_and_name(In,Grid,GN),
@@ -833,7 +833,7 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
    grid_shared_with(GN,With),into_grid(With,OtherGrid),
    ensure_unshared_indivs(With,OtherGrid,Unshared),
    individuate(Unshared,Grid,SharedIndvs),
-   assert(is_shared_saved(GN,SharedIndvs)).
+   pfc_assert(is_shared_saved(GN,SharedIndvs)).
 
 
 /*

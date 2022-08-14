@@ -50,6 +50,7 @@ menu_cmd1(r,'i','             Re-enter(i)nteractve mode.',(interactive_test_menu
 
 menu_cmd9(_,'m','recomple this progra(m),',(make,menu)).
 menu_cmd9(_,'c','(c)lear the scrollback buffer,',(cls)).
+menu_cmd9(_,'C','(C)all DSL,',(call_dsl)).
 menu_cmd9(_,'Q','(Q)uit Menu,',true).
 menu_cmd9(_,'X','e(X)it to shell,',halt(4)). 
 menu_cmd9(_,'B','or (B)reak to interpreter.',(break)).
@@ -70,8 +71,11 @@ show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E
   % ignore((read_line_to_string(user_input,Sel),atom_number(Sel,Num))),
   
 my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
-my_submenu_call(E):- catch(ignore(locally(set_prolog_flag(gc,false),E)),_,true).
-   
+
+my_submenu_call(E):- current_predicate(_,E), \+ is_list(E),!,
+  catch(ignore(locally(set_prolog_flag(gc,false),E)),E,wdmsg(E)).
+my_submenu_call(E):- get_vm(VM),!, run_dsl(VM,E,VM.grid,Out),
+  set(VM.grid) = Out.
 
 read_menu_chars(_Start,_SelMax,Out):- pengine_self(_Id),!,read(Out).
 read_menu_chars(Start,SelMax,Out):-
@@ -128,22 +132,33 @@ interact:- list_of_tests(L), length(L,SelMax),!,
    once((do_menu_key(Key))), 
    retract(wants_exit_menu),!.
 
-do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), assert(wants_exit_menu).
+do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), pfc_assert(wants_exit_menu).
 do_menu_key('?'):- !, menu_options('i').
 do_menu_key('P'):- !, switch_grid_mode,print_test.
 do_menu_key('I'):- !, cls,!,ndividuator1.
 do_menu_key('o'):- !, cls,!,ndividuatorO.
 do_menu_key('O'):- !, cls,!,ndividuatorO1.
 do_menu_key('G'):- !, cls,!,detect_supergrid1.
-do_menu_key(-1):- !, assert(wants_exit_menu).
+do_menu_key(-1):- !, pfc_assert(wants_exit_menu).
 do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
 do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
   dmsg(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->true;(fail,trace,arcST,rrtrace(Goal))))),!,
    read_pending_codes(user_input,_Ignored,[]),!.
 
-do_menu_key(Key):- atom_length(Key,Len),Len>2,current_predicate(Key/0),!,my_submenu_call(Key).
+do_menu_key(Key):- maybe_call_code(Key),!.
 do_menu_key(Key):- atom_codes(Key,Codes), format("~N % Menu: didn't understand: '~w' ~q ~n",[Key,Codes]),once(mmake).
+
+maybe_call_code(Key):- atom_length(Key,Len),Len>2,
+ catch(atom_to_term(Key,Term,Vs),_,fail),!,
+ locally(nb_setval('$variable_names',Vs),
+   locally(nb_setval('$term',Term),
+     locally(nb_setval('$user_term',Term), 
+       my_submenu_call(Term)))).
+
+call_dsl:- repeat, write("\nYour DSL Goal: "), read_line_to_string(user_input,Sel),ignore(do_menu_key(Sel)),!.
+
+
 
 % nth that starts counting at three
 nth10(X,Y,Z):- var(X),!,nth0(N,Y,Z), X is N + 10 .
@@ -584,7 +599,7 @@ pair_dictation(TestID,ExampleNum,In,Out,DictOut):- cached_dictation(pair_dictati
 pair_dictation(TestID,ExampleNum,In,Out,DictOut):-
   do_pair_dication(In,Out,Vs),!,
   vars_to_dictation(Vs,_{},DictOut),
-  assert(cached_dictation(pair_dictation(TestID,ExampleNum,In,Out),DictOut)).
+  pfc_assert(cached_dictation(pair_dictation(TestID,ExampleNum,In,Out),DictOut)).
 /*
 The IEEE floating-point standard, supported by almost all modern floating-point units, specifies that every floating 
  point arithmetic operation, including division by zero, has a well-defined result. 
@@ -689,12 +704,12 @@ one_obj(I,I):- is_group(I),!.
 one_obj(I,I).
 
 is_fti_step(uncolorize).
-uncolorize(VM):- put_attr(FG,ci,fg(_)),
+uncolorize(VM):- decl_many_fg_colors(FG),
   set_all_fg_colors(FG,VM.grid,UCGRID),
   set_vm_grid(VM,UCGRID),
   set_all_fg_colors(FG,VM.objs,UCOBJS),
   set(VM.objs)=UCOBJS.
-uncolorize(I,O):- set_all_fg_colors(fg,I,O).
+uncolorize(I,O):- decl_many_fg_colors(FG),set_all_fg_colors(FG,I,O).
 %resize_grid(_H,_V,List,_,List):- is_list(List).
 %resize_grid(H,V,Color,_,NewGrid):- make_grid(H,V,Grid),replace_grid_point(1,1,Color,_,Grid,NewGrid),nop(set_bgc(Color)).
 
@@ -723,8 +738,8 @@ is_eval(P1,Prev,P1A):- nop(is_eval(P1,Prev,P1A)),fail.
 db_u(P1L,P1,P2L,P2,In,Out):- is_eval(P1,Prev,P1A),!,db_u([Prev|P1L],P1A,P2L,P2,In,Out).
 db_u(P1L,P1,P2L,P2,In,Out):- is_eval(P2,Prev,P2A),!,db_u(P1L,P1,[Prev|P2L],P2A,In,Out).
 
-%db(P1,P2,In,In):- t_or_t(freeze_for([P2],assert(is_db(TF,P2))),is_db(TF,P2)).
-%db(P2,P1,In,In):- nonvar(Color), db_value(P1,In,TF),!,t_or_t(freeze_for([Color],assert(is_db(TF,Color))),is_db(TF,Color)).
+%db(P1,P2,In,In):- t_or_t(freeze_for([P2],pfc_assert(is_db(TF,P2))),is_db(TF,P2)).
+%db(P2,P1,In,In):- nonvar(Color), db_value(P1,In,TF),!,t_or_t(freeze_for([Color],pfc_assert(is_db(TF,Color))),is_db(TF,Color)).
 db(P1,P2,In,Out):- db_u([],P1,[],P2,In,Out).
 db(X,Y,I,I):- pt(db(X,Y)),pt(I).
 
@@ -743,9 +758,16 @@ kaggle_arc(v(Name), TypeI, In, Out):-
 
 fix_test_name(V,VV,_):- var(V),!,VV=V.
 fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=E.
-fix_test_name(Tried*Example+Num*_,Fixed,Example+Num):- !, fix_id(Tried,Fixed).
-fix_test_name(Tried*Example+Num,  Fixed,Example+Num):- !, fix_id(Tried,Fixed).
+fix_test_name(ID,Fixed,Example+Num):- test_id_num_io(ID,Tried,Example,Num,_), !, fix_id(Tried,Fixed).
 fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
+
+test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*Example+Num*IO,fix_id(TstName,Name),!.
+test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*(Example+Num)*IO,fix_id(TstName,Name),!.
+test_id_num_io(ID,Name,Example,Num,_IO):- ID = TstName*Example+Num,fix_id(TstName,Name),!.
+test_id_num_io(ID,Name,Example,Num,_IO):- ID = TstName*(Example+Num),fix_id(TstName,Name),!.
+
+
+
 
 fix_id(Tried,   Tried):- var(Tried),!.
 fix_id(X,_):- is_cpoint(X),!,fail.

@@ -19,15 +19,15 @@ test_ogs:- clsmake, mmake, time(forall(test_ogs(_,_,_),true)).
 test_ogs_l:- clsmake, mmake, locally(b_setval(find_rule,loose),time(forall(test_ogs(_,_,_),true))).
 test_ogs_s:- clsmake, mmake, locally(b_setval(find_rule,strict),time(forall(test_ogs(_,_,_),true))).
 
-:- add_history1(test_ogs).
-:- add_history1(test_ogs0).
+:- arc_history1(test_ogs).
+:- arc_history1(test_ogs0).
 
 test_ogs0:- clsmake, time(forall(test_ogs0(_,_,_),true)).
 test_ogs1:- clsmake, time(forall(test_ogs1(_,_,_),true)).
 test_ogs2:- clsmake, time(forall(test_ogs2(_,_,_),true)).
 
-:- add_history1(test_ogs_m).
-:- add_history1(test_ogs_m0).
+:- arc_history1(test_ogs_m).
+:- arc_history1(test_ogs_m0).
 
 test_ogs_m:- clsmake, time(forall(test_ogs(_,_,true),true)).
 test_ogs_m0:- clsmake, time(forall(test_ogs0(_,_,true),true)).
@@ -46,7 +46,7 @@ got_result(SG,FG,Match):-
   ignore((perfect_result(CSG,CFG,WMatch), 
     ((Match\==WMatch) -> (pt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); pt(green,same)))),
   retractall(tr:existing_result(CSG,CFG,_)),
-  assert(tr:existing_result(CSG,CFG,Match)),!.
+  pfc_assert(tr:existing_result(CSG,CFG,Match)),!.
   
 was_result(SG,FG,WMatch):-  
   copy_term(FG,CFG),copy_term(SG,CSG),
@@ -118,7 +118,7 @@ test_ogs0(H,V,Match):-
 
 
 test_ogs(H,V,Match):- 
-  Run = once(( print_side_by_side(FG,XSG),extra_info(FG),extra_info(XSG),nop(ptt(tf=T)))),
+  Run = once(( print_side_by_side(FG,XSG),print_attvars(FG),print_attvars(XSG),nop(ptt(tf=T)))),
   wqln("searching..."),
     ff666(_,FG),
     ss666(T,SG),
@@ -191,16 +191,11 @@ show_m_pair(_TF,S,H,V,F,G):-
   offset_grid(H2,V2,F,OF),
   constrain_grid(f,_TrigF,OF,FF),!, 
   print_grid("find",FF),
-  extra_info(FF),
+  print_attvars(FF),
   dash_chars(60,' '),ignore(call(S)),nl,
   constrain_grid(s,_TrigG,G,CG),!,
   print_grid("find on",CG)]),!,
-  extra_info(CG).
-
-extra_info(FF):-
-  copy_term(FF,FA,GF),  
-  numbervars(FA+GF,0,_,[attvar(bind),singletons(true)]),
-  sort(GF,GS),nl,nl,writeq(FA),nl,nl,writeq(GS),nl,nl,!.
+  print_attvars(CG).
 
 
 print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid(f,_Trig,F,_FG),print_grid(GH,GV,F),nl)))),!.
@@ -281,21 +276,25 @@ ogs_pt2(H,[Row|FindRows],[S|Search]):-
 grid_detect_bg(Grid1,[bg|Background]):- 
   term_singletons(Grid1,Background).
 
+  
 grid_label_bg(CT,GridIn,GridO):- CT=f,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
-  get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
+  get_bg_label(BGL),
+  get_bgc(BG),subst001(Grid1,BG,BGL,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- CT=s,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
-  get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
+  get_bg_label(BGL),
+  get_bgc(BG),subst001(Grid1,BG,BGL,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- 
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
-  get_bgc(BG),subst001(Grid1,BG,bg,GridO),!.
+  get_bg_label(BGL),
+  get_bgc(BG),subst001(Grid1,BG,BGL,GridO),!.
 grid_label_bg(_,GridO,GridO):-!.
 
 to_grid_bg(_CT,_,E):- cant_be_color(E),!.
@@ -364,7 +363,9 @@ offset_v_grid_row(GW,V2,FF,[Row|OF]):- V1 is V2-1,
 %pad_with_contraints_3(GridO,TODO):-
 %  v_hv(GridO,HH,VV),
 %  pad_with_contraints_3(GridO,HH,VV,TODO),!.
-fpad_grid(CT,Before,After):-  fpad_grid(CT,=(bg),Before,After).
+fpad_grid(CT,Before,After):-  
+  get_bg_label(BGL),
+  fpad_grid(CT,=(BGL),Before,After).
 fpad_grid(CT,P1,O,GridO):- is_object(O),!,object_grid(O,GridIn),!,fpad_grid(CT,P1,GridIn,GridO).
 fpad_grid(_CT,P1,Grid,Grid2):-
   v_hv(Grid,H,_), H2 is H +2,
@@ -426,7 +427,7 @@ release_bg0(CT,Trig,GridIn,GridO):- is_list(GridIn), !, maplist(release_bg0(CT,T
 release_bg0(_CT,_Trig,GridIn,GridIn):- attvar(GridIn),!.
 release_bg0(_CT,_Trig,GridIn,GridIn):- plain_var(GridIn),!.
 %release_bg0(CT,Trig,GridIn-P,GridO-P):- !, release_bg0(CT,Trig,GridIn,GridO).
-release_bg0(_CT,_Trig,BG,C):- is_bg_color(BG),!,put_attr(C,ci,bg).
+release_bg0(_CT,_Trig,BG,C):- is_bg_color(BG),!,decl_bg_color(C).
 release_bg0(_CT,_Trig,C1I,C):- is_spec_fg_color(C1I,C),!.
 release_bg0(_CT,_Trig,C,C).
 
@@ -441,22 +442,6 @@ maybe_constrain_fg(_Trig,GridIn):-
   grid_detect_fg_vars(GridIn,FGUnits),
   ignore((FGUnits\==[],
           set_fg_vars(FGUnits))),!.
-
-
-set_fg_vars(Vars):-
-  copy_term(Vars,CVars), numbervars(CVars,1,_,[attvar(skip),functor_name('fg')]), 
-  maplist(set_as_fg,Vars,CVars),!.
-
-set_as_fg(V,fg(N)):- atomic(N), put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),luser_linkval(Lookup,V).
-set_as_fg(V,Sym):- put_attr(V,ci,Sym).
-
-is_fg_color_if_nonvar(Trig,V):- plain_var(V),Trig==run,!,fail,constrain_type(V,is_fg_color_if_nonvar(Trig,V)).
-is_fg_color_if_nonvar(Trig,V):- nop(wqnl(is_fg_color_if_nonvar(Trig,V))),fail.
-is_fg_color_if_nonvar(_Trig,C):- is_fg_color(C),!.
-is_bg(C):- is_bg_color(C).
-is_bgc(C):- is_bg_color(C).
-
-is_bgp(Cell):- only_color_data(Cell,C), is_bg_color(C).
 
 constrain_grid_now(_CT,_Trig,_GridIn,_Hi,0,_GH,_GV,_GridO):-!.
 constrain_grid_now(CT,Trig,GridIn,Hi,Vi,GH,GV,GridO):-
@@ -503,13 +488,8 @@ constrain_ele(f,GH,GV,_Trig,_GridIn,H,V,C1I,_C1O,_GridO):-
   % UNKNOWN
 constrain_ele(_CT,_GH,_GV,_Trig,_GridIn,_H,_V,_C1I,_C1O,_GridO).
 
-same_colors(_Trig,C1I,_C1O):- \+ is_spec_fg_color(C1I,_),!.
-same_colors(_Trig,C1I,C1O):- nonvar(C1O),!,C1I=C1O.
-same_colors(Trig,C1I,C1O):- constrain_type(C1O,same_colors(Trig,C1I,C1O)).
 %same_colors(C1I,C1O):- is_spec_fg_color(C1O,_),!,C1I=C1O.
 
-attach_fg_ci(CO,_C):- nonvar_or_ci(CO),!.
-attach_fg_ci(CO,C) :- put_attr(CO,ci,fg(C)).
 
 
 
@@ -785,7 +765,7 @@ n_grid(plus_3x3,
 n_grid(plus_3x3_colorless,
 [[_,X,_],
  [X,X,X],
- [_,X,_]]):- any_fg_color(X).
+ [_,X,_]]):- decl_one_fg_color(X).
 
 n_grid(plus_5x5,
 [[_,_,1,_,_],
@@ -808,13 +788,13 @@ n_grid(plus_5x5_colorless,
  [_,_,X,_,_],
  [X,X,X,X,X],
  [_,_,X,_,_],
- [_,_,X,_,_]]):- any_fg_color(X).
+ [_,_,X,_,_]]):- decl_one_fg_color(X).
 
 
 f666(_Ncolors,
 [[5,X,7],
  [5,1,7],
- [5,1,7]]):- any_fg_color(X).
+ [5,1,7]]):- decl_one_fg_color(X).
 
 
 n_grid(vbar_6_colorless,
@@ -823,20 +803,20 @@ n_grid(vbar_6_colorless,
  [X],
  [X],
  [X],
- [X]]):- any_fg_color(X).
+ [X]]):- decl_one_fg_color(X).
 
 f666(T,
 [[X,_],
  [X,_],
  [X,_],
  [X,X],
- [X,_]]):- any_fg_color(X), T = _.
+ [X,_]]):- decl_one_fg_color(X), T = _.
 
 f666(T,
 [[X,_],
  [X,X],
  [X,_],
- [X,_]]):- any_fg_color(X), T = _.
+ [X,_]]):- decl_one_fg_color(X), T = _.
 
 
 
@@ -901,7 +881,7 @@ h666(1,
  [2,2,2,2,2]]).
 
 f666(1,[[1]]).
-f666(1,[[FG]]):- put_attr(FG,ci,fg(_)).
+f666(1,[[FG]]):- decl_one_fg_color(FG).
 f666(1,[[3]]).
 
 %f666(1,[[1]]).

@@ -8,6 +8,228 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+
+relax_color_arg(black,bg):-!.
+relax_color_arg(E,fg):- is_color(E),!.
+
+to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,GO))),!. % ,ignore([[BG|_]|_]=GO).
+
+
+has_color(C,Cell):- only_color_data(Cell,CD), cmatch(C,CD).
+
+cmatch(C,CD):- C==CD,!.
+cmatch(fg,CD):- is_fg_color(CD),!.
+cmatch(bg,CD):- is_bg_color(CD),!.
+cmatch(wbg,CD):- is_bg_color(CD),!.
+
+free_bg(BGC,S,FB):- is_list(S),!,mapgrid(free_bg(BGC),S,FB).
+free_bg(_,S,FB):- plain_var(S),!,FB=S.
+free_bg(_BGC,BG,X):- BG==bg, put_attr(X,ci,free(bg)),!.
+free_bg(BGC,Black,X):- contains_var(BGC,Black),!, put_attr(X,ci,free(BGC)).
+free_bg(_,X,X).
+
+unfree_bg(BGC,S,FB):- is_list(S),!,mapgrid(unfree_bg(BGC),S,FB).
+unfree_bg(_,S,BGW):- var(S),!,((get_attr(S,ci,free(BGW)))->true;S=BGW).
+unfree_bg(BGC,A-B,AABB):- unfree_bg(BGC,A,B,AABB),!.
+unfree_bg(_,X,X).
+
+unfree_bg(_,S,T,FB):- plain_var(S),plain_var(T),!,FB=T.
+unfree_bg(BGC,A,B,AA-BB):- unfree_bg(BGC,A,AA),unfree_bg(BGC,B,BB).
+
+get_bg_label(wbg).
+get_fg_label(fg).
+bg_sym('bg').
+fg_sym('fg').
+
+
+dif_color(C,CD):- C==CD,!,fail.
+dif_color(C,CD):- C==bgw,!,CD\==bgw.
+dif_color(C,CD):- C==bg,!,CD\==bg.
+dif_color(_,_).
+
+% =============================
+% Color types
+% =============================
+is_fg_color(C):- is_bg_color(C),!,fail.
+is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
+is_fg_color(C):- is_color(C),!.
+%is_fg_color(C):- C == fg.
+
+%is_bg_color(BG):- plain_var(BG),!,fail.
+is_bg_color(BG):- var(BG),!,get_attr(BG,ci,bg(_)),!.
+is_bg_color(C):- bg_sym(BG),C==BG,!.
+is_bg_color(C):- get_bgc(BG),C==BG,!.
+
+is_black_or_bg(BG):- is_black(BG)-> true; is_bg_color(BG).
+%is_black_or_bg(0).
+is_black(C):- C==black.
+get_black(black).
+%get_black(0).
+
+:- use_module(library(logicmoo/util_bb_frame)).
+set_fg_vars(Vars):-
+  all_different_bindings(Vars),
+  maplist(decl_many_fg_colors,Vars).
+
+is_fg_color_if_nonvar(Trig,V):- plain_var(V),Trig==run,!,fail,constrain_type(V,is_fg_color_if_nonvar(Trig,V)).
+is_fg_color_if_nonvar(Trig,V):- nop(wqnl(is_fg_color_if_nonvar(Trig,V))),fail.
+is_fg_color_if_nonvar(_Trig,C):- is_fg_color(C),!.
+is_bg(C):- is_bg_color(C).
+is_bgc(C):- is_bg_color(C).
+
+is_bgp(Cell):- only_color_data(Cell,C), is_bg_color(C).
+
+is_bg_sym_or_var(C):- attvar(C),get_attr(C,ci,fg(_)),!,fail.
+is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
+
+mv_peek_color(C,V):- mv_peek1(C,V),V\==C,is_color(C).
+mv_peek1(C,W):- multivar:is_mv(C),multivar:mv_peek_value1(C,W),!.
+
+mv_ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)), (nonvar(N) -> arc_acolor(N,Color);arc_acolor(fg,Color)),!.
+mv_ansi_color(C,fg(Color)):- attvar(C),get_attr(C,ci,bg(_)),get_bgc(BG),!,arc_acolor(BG,Color),!.
+mv_ansi_color(C,Color):- attvar(C),mv_peek_color(C,N), (nonvar(N) -> arc_acolor(N,Color);(N\==C,arc_acolor(fg,Color))),!.
+
+same_colors(_Trig,C1I,_C1O):- \+ is_spec_fg_color(C1I,_),!.
+same_colors(_Trig,C1I,C1O):- nonvar(C1O),!,C1I=C1O.
+same_colors(Trig,C1I,C1O):- constrain_type(C1O,same_colors(Trig,C1I,C1O)).
+
+%set_as_fg(V,fg(N)):- atomic(N), put_attr(V,ci,fg(N)),!,atom_concat(fg,N,Lookup),luser_linkval(Lookup,V).
+%set_as_fg(V,Sym):- put_attr(V,ci,Sym).
+attach_fg_ci(CO,_C):- nonvar(CO),!.
+attach_fg_ci(CO,C) :- decl_many_fg_colors(CO),C=CO.
+
+is_spec_bg_color(C,CO):- is_bg_color(C),!,is_spec_color(C,CO).
+is_spec_fg_color(C,CO):- is_fg_color(C),!,is_spec_color(C,CO).
+
+%is_spec_color(C,CO):- attvar(C),!,get_attr(C,ci,fg(_)), CO=C.
+
+
+mv_color_name(C,W):- attvar(C),into_color_name_always(C,V),C\==V,color_name(V,W).
+
+into_color_name_always(Grid,Grid):- ground(Grid),!.
+into_color_name_always(Grid,GridI):- is_grid(Grid), !, mapgrid(into_color_name_always,Grid,GridI),!.
+into_color_name_always(Grid,GridI):- compound(Grid), !, map_pred(into_color_name_always,Grid,GridI),!.
+into_color_name_always(V,C):- is_real_color(V),!,C=V.
+into_color_name_always(V,C):- is_fg_color(V),!,(mv_peek_color(V,C)->true;C=fg).
+into_color_name_always(V,C):- is_bg_color(V),!,(mv_peek_color(V,C)->true;C=wbg).
+into_color_name_always(V,V):- plain_var(V),!.
+into_color_name_always(Grid,Grid).
+%into_color_name_always(C,C):- attvar(C),cant_be_color(C,_E),!.
+%into_color_name_always(_,fg).
+
+is_spec_color(V,C):- into_color_name_always(V,C),!,atom(C),!,C\==fg,C\==wbg,C\==bg.
+
+is_color(CO):- attvar(CO),!,get_attr(CO,ci,_).
+is_color(CO):- is_real_color(CO).
+is_real_color(CO):- atom(CO),color_int(CO,N),integer(N).
+
+decl_one_fg_color(Color):- put_attr(Color,ci,fg(Color)).
+decl_many_fg_colors(X):- put_attr(X,ci,fg(X)),multivar:multivar(X).
+decl_bg_color(X):- put_attr(X,ci,bg(X)),multivar:multivar(X).
+decl_fill_color(X):-  put_attr(X,ci,hollow(X)),
+    freeze(X,(mv_peek1(X,V)->(var(V)->true;is_color(V));true)),multivar:multivar(X).
+
+decl_not_color(NC,GC):- is_bg_color(NC),!,decl_many_fg_colors(GC).
+decl_not_color(NC,GC):- decl_fill_color(GC),!,dif(GC,NC).
+
+decl_one_color(CEdge):-  var(CEdge)->put_attr(CEdge,ci,hollow(CEdge));true.
+
+%cauh(Atts,Value):- attvar(Value), !, arg(1,Atts,Self),  get_attrs(Self,SAttrs), get_attrs(Value,VAttrs).
+
+cauh(_,free(_),_Val):- !.
+cauh(_,bg(_),Val):- is_fg_color(Val),!, fail.
+cauh(Self,bg(_),Val):- Val ==bg,!, nop((get_bgc(Black), Self = Black)).
+cauh(_,fg(_),Val):- is_bg_color(Val),!, fail.
+cauh(_,fg(_),Val):- Val ==fg,!.
+cauh(Self,_,Val):- cant_be_color(Self,CBC), is_spec_color(Val,C), C == CBC, !, fail.
+cauh(_Self,Atts,Val):- var(Val), !, (get_attr(Val,ci,_Other) -> true ; put_attr(Val,ci,Atts)).
+cauh(_Self,_Atts,Val):- \+ is_color(Val),!, fail.
+cauh(_,_,_).
+
+ci:attr_unify_hook(Atts,Val):- (arg(1,Atts,Self)-> cauh(Self,Atts,Val) ; true).
+
+
+%is_colorish(C):- attvar(C),!,get_attr(C,ci,_).
+is_colorish(C):- is_color(C),!.
+is_colorish(C):- cant_be_color(C,_),!.
+is_colorish(C):- get_bgc(BG),BG==C,!.
+is_colorish(C):- bg_sym(BG),BG==C,!.
+is_colorish(C):- fg_sym(FG),FG==C,!.
+%is_colorish(C):- compound_var(C,_),!.
+%is_colorish(C):- compound(C),!,arg(1,C,A),nonvar(A),is_colorish(A).
+
+is_grid_color(C):- plain_var(C),!,fail.
+% makes grid colors an integer.. 
+%is_grid_color(C):- !,integer(C).
+% we are using atoms currently
+is_grid_color(C-_):- !, is_color(C).
+is_grid_color(C):- is_color(C).
+
+is_color_dat(C):- atomic(C),color_code(C,W),!,C==W.
+
+
+:- export(set_bgc/1).
+:- nb_delete(grid_bgc).
+set_bgc(C):- atom(C),color_code(C,N),C\==N,!,set_bgc(N).
+set_bgc(C):- plain_var(C),nb_delete(grid_bgc).
+set_bgc(C):- luser_setval(grid_bgc,C),!.
+get_bgco(X):- luser_getval(grid_bgc,X),X\==[],is_color_dat(X),!.
+:- set_bgc(black).
+
+get_bgc(X):- get_bgco(X),!.
+get_bgc(X):- get_black(X).
+
+
+is_color_no_bgc(X):- \+ is_bg_color(X), is_color(X).
+
+is_bg_or_var(_,X):- free_cell(X),!.
+is_bg_or_var(BG,X):- X==BG.
+
+free_cell(Var):- plain_var(Var),!.
+free_cell(C):- get_bgco(X),C==X.
+
+non_free_fg(C):- \+ free_cell(C), \+ is_bg_color(C).
+
+/*
+?- decl_many_fg_colors(X), X = red, X = blue.
+
+?- decl_bg_color(X), X = black, X = bg.
+
+?- decl_fill_color(X), X = red, X = blue.
+
+decl_many_fg_colors(X), X = red, dif(X,red).
+xvarx(X),
+put_attr(X,ci,fg(X)),
+mv_set_values(X,[red]),
+dif(X,red).
+
+138 ?- decl_many_fg_colors(X), X = red, dif(X,red), X=red.
+false.
+
+?- decl_many_fg_colors(X), X = red, dif(X,red), X=blue, X = red.
+true.
+
+ decl_many_fg_colors(X), X = red, dif(X,red), X=blue,  dif(X,red), X = red.
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 filter_indivs(In,Filter,Out):- include(matches_filter(Filter),In,Out).
 
 matches_filter(not(A),OBJ):- !, \+ matches_filter(A,OBJ).
@@ -43,10 +265,10 @@ subtypes(C,C).
 subtypes(C,S):- subClassOf(S,C).
 
 
+%allow_dir_list(squire,[s,e,w]).
 
-allow_dir_list(nsew,[n,s,e,w]). 
+allow_dir_list(nsew,[n,s,e,w]). %s,e,n,w 
 %allow_dir_list(rectangles,[s,e]). 
-
 allow_dir_list(colormass,[n,s,e,w,nw,ne,se,sw]). 
 allow_dir_list(diamonds,[nw,sw,se,ne]).
 allow_dir_list(colormass,[n,s,e,w,nw,sw,se,ne]).
@@ -121,26 +343,6 @@ subClassOf([monochrome,contiguous,hv_line(h)],h_symmetric).
 
 meets_indiv_criteria(_,_).
 
-% =============================
-% Color types
-% =============================
-is_fg_color(C):- is_bg_color(C),!,fail.
-is_fg_color(C):- attvar(C),!,get_attr(C,ci,fg(_)).
-is_fg_color(C):- is_color(C),!.
-%is_fg_color(C):- C == fg.
-
-%is_bg_color(BG):- plain_var(BG),!,fail.
-is_bg_color(BG):- var(BG),!,get_attr(BG,ci,bg),!.
-is_bg_color(C):- bg_sym(BG),C==BG,!.
-is_bg_color(C):- get_bgc(BG),C==BG,!.
-
-is_black_or_bg(BG):- is_black(BG)-> true; is_bg_color(BG).
-%is_black_or_bg(0).
-is_black(C):- C==black.
-get_black(black).
-%get_black(0).
-
-
 data_type(O,T):- nonvar(T),data_type(O,C),T=@=C,!.
 data_type(O,plain_var):- plain_var(O),!.
 data_type([],length(_)=0):-!.
@@ -165,35 +367,6 @@ data_type(Out,size(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
 data_type(Out,length(DT)=H):- is_list(Out),!,length(Out,H), last(Out,Last),data_type(Last,DT).
 data_type(Out,F/A):- compound_name_arity(Out,F,A),!.
 
-
-is_spec_bg_color(C,C):- is_bg_color(C).
-
-is_spec_fg_color(C0,C):- attvar(C0),!,get_attr(C0,ci,fg(_)), C=C0.
-is_spec_fg_color(C0,C):- \+ is_bg_color(C0), is_fg_color(C0),!,C=C0.
-
-is_spec_color(C0,C):- (is_spec_fg_color(C0,C);is_spec_bg_color(C0,C)),!.
-
-is_color(C):- attvar(C),!,get_attr(C,ci,_).
-is_color(C):- is_real_color(C).
-is_real_color(C):- atom(C),color_int(C,N),integer(N).
-
-%is_colorish(C):- attvar(C),!,get_attr(C,ci,_).
-is_colorish(C):- is_color(C),!.
-is_colorish(C):- cant_be_color(C,_),!.
-is_colorish(C):- get_bgc(BG),BG==C,!.
-is_colorish(C):- bg_sym(BG),BG==C,!.
-is_colorish(C):- fg_sym(FG),FG==C,!.
-is_colorish(C):- compound_var(C,_),!.
-%is_colorish(C):- compound(C),!,arg(1,C,A),nonvar(A),is_colorish(A).
-
-is_grid_color(C):- plain_var(C),!,fail.
-% makes grid colors an integer.. 
-%is_grid_color(C):- !,integer(C).
-% we are using atoms currently
-is_grid_color(C-_):- !, is_color(C).
-is_grid_color(C):- is_color(C).
-
-is_color_dat(C):- atomic(C),color_code(C,W),!,C==W.
 
 is_point(P):- var(P),!,fail.
 is_point(P):- is_nc_point(P),!.
@@ -282,36 +455,12 @@ is_grid_group([G|V]):- is_grid(G),is_list(V),maplist(is_grid,V),!.
 is_object_or_grid(Grid):- is_list(Grid),!,is_grid(Grid).
 is_object_or_grid(Obj):- is_object(Obj).
 
+is_pointy(O):- is_object_or_grid(O);is_group(O);is_points_list(O).
 
 is_point_obj(O,Color,Point):- nonvar_or_ci(O),O= Color-Point,!.
 is_point_obj(O,Color,Point):- is_object(O),v_hv(O,H,V), !, hv(H,V)==hv(1,1),
   globalpoints(O,[Color-Point]),!.
 
-
-
-
-:- export(set_bgc/1).
-:- nb_delete(grid_bgc).
-set_bgc(C):- atom(C),color_code(C,N),C\==N,!,set_bgc(N).
-set_bgc(C):- plain_var(C),nb_delete(grid_bgc).
-set_bgc(C):- luser_setval(grid_bgc,C),!.
-get_bgco(X):- luser_getval(grid_bgc,X),X\==[],is_color_dat(X),!.
-:- set_bgc(black).
-
-get_bgc(X):- get_bgco(X),!.
-get_bgc(X):- get_black(X).
-
-
-is_color_no_bgc(X):- \+ is_bg_color(X), is_color(X).
-
-is_bg_or_var(_,X):- free_cell(X),!.
-is_bg_or_var(BG,X):- X==BG.
-
-
-free_cell(Var):- plain_var(Var),!.
-free_cell(C):- get_bgco(X),C==X.
-
-non_free_fg(C):- \+ free_cell(C), \+ is_bg_color(C).
 
 %free_cell(0).
 %free_cell(8).

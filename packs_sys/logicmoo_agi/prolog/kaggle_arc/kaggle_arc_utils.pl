@@ -22,6 +22,7 @@ nb_subst(Obj,New,Old):-
 nb_subst(_Obj,_New,_Old).
 
 :- thread_local(in_memo_cached/5).
+%arc_memoized(G):- !, call(G).
 arc_memoized(G):-
   copy_term(G,C,GT),
   (Key = (C+GT)),
@@ -31,7 +32,7 @@ arc_memoized(G):-
   catch(
   (in_memo_cached(Key,C,GT,Found,AttGoals)*->(G=Found,maplist(call,AttGoals))
     ; ((call(G),copy_term(G,CG,GG)) *->asserta(in_memo_cached(Key,C,GT,CG,GG))
-                  ;assert(in_memo_cached(Key,C,GT,failed,_)))),
+                  ;pfc_assert(in_memo_cached(Key,C,GT,failed,_)))),
   E, (retractall(in_memo_cached(Key,C,GT,_,_)),throw(E))),erase(Started)).
 
 set_nth1(1,[_|Row],E,[E|Row]):-!.
@@ -179,8 +180,13 @@ subst0011(X, Y, Term, NewTerm ) :-
         compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 
+print_attvars(FF):-
+  copy_term(FF,FA,GF),  
+  numbervars(FA+GF,0,_,[attvar(bind),singletons(true)]),
+  sort(GF,GS),write(' '),print(FA),format('~N\t'),print(attvars=GS),nl,nl,!.
+
 :- export(plain_var/1).
-plain_var(V):- var(V), \+ get_attr(V,ci,_).
+plain_var(V):- notrace((var(V), \+ attvar(V), \+ get_attr(V,ci,_))).
 
 my_assertion(G):- call(G),!.
 my_assertion(G):- arcST,!,trace,wdmsg(my_assertion(G)),break,!.

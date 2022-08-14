@@ -78,8 +78,22 @@ Thread.
 % :-must((asserta((user:term_expansion(A,B):-cyc_to_clif_notify(A,B),!),CLREF),asserta(at_eof_action(erase(CLREF))))).
 
 :- set_module(class(library)).
+
 :- multifile '$exported_op'/3. 
+:- dynamic '$exported_op'/3. 
 :- discontiguous '$exported_op'/3. 
+'$exported_op'(_,_,_):- fail.
+
+:- multifile '$pldoc'/4. 
+:- dynamic '$pldoc'/4. 
+:- discontiguous '$pldoc'/4. 
+'$pldoc'(_,_,_):- fail.
+
+:- multifile '$autoload'/3. 
+:- discontiguous '$autoload'/3.
+:- dynamic '$autoload'/3.
+'$autoload'(_,_,_):- fail.
+
 :- system:reexport(library(debug),[debug/3]).
 :- system:reexport(library(debuggery/bugger)).
 %:- system:reexport(library(must_sanity)).

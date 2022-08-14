@@ -41,11 +41,11 @@ select_group0(TestID,Group,How):-
   How = [How1,How2]))  *-> true ; why_grouped(TestID,How,Group).
 select_group0(TestID,Group,obj_cache):- findall(O,obj_cache(TestID,O,_),GroupJ),sort(GroupJ,Group).
 
-:- add_history(test_what_unique).
+:- arc_history(test_what_unique).
 test_what_unique:- get_current_test(TestID), what_unique(TestID,n=0,n>10).
 
 
-:- add_history((get_current_test(TestID),what_unique(TestID,n=0,n>10))).
+:- arc_history((get_current_test(TestID),what_unique(TestID,n=0,n>10))).
 get_new_uniq_dict(Dict):- 
     ArgDict = _{sharedWith:_SharedWith,object:_Obj,trait:_Trait,groupSizeMask:_GroupSizeMask,
   actualGroupSize:_ActualGroupSize,countMask:_CountMask,
@@ -114,7 +114,7 @@ maplist_e(P2,A,B):- is_list(A),!,mapgroup(P2,A,B).
 maplist_e(P2,A,B):- call(P2,A,B).
 
 :- style_check(-singleton).
-%:- add_history(what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
+%:- arc_history(what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
 :- style_check(+singleton).
 
 

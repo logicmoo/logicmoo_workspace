@@ -24,14 +24,17 @@
    print_tree_with_final/2,
    is_webui/0,
    print_tree_with_final/3]).
+
 :- multifile '$exported_op'/3. 
-:- multifile '$autoload'/3. 
 :- dynamic '$exported_op'/3. 
-:- dynamic '$autoload'/3.
 :- discontiguous '$exported_op'/3. 
-:- discontiguous '$autoload'/3.
 '$exported_op'(_,_,_):- fail.
+
+:- multifile '$autoload'/3. 
+:- discontiguous '$autoload'/3.
+:- dynamic '$autoload'/3.
 '$autoload'(_,_,_):- fail.
+
 :- system:use_module(library(debuggery/bugger)).
 %:- system:reexport(library(must_sanity)).
 :- include(portray_vars).

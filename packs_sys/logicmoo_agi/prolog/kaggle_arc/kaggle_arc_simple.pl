@@ -66,6 +66,5 @@ grid_object(Grid,mass(N),object(Points,Color)):-
   ColorHV4 = Color-HV4,
   findall(HV4,(member(ColorHV4,Rest),is_adjacent_point(HV1,_,HV5),is_adjacent_point(HV5,_,HV4)),AdjRest).
 
-%:- ensure_loaded('kaggle_arc_fwd.pfc').
 :- fixup_exports.
 

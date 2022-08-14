@@ -86,7 +86,7 @@ any_xform(Rot90,Any,NewAny):-
 
 
 :- dynamic(xform_cache/5).
-
+:- retractall(xform_cache(_,_,_,_,_)).
 xform_cache(rot45,5,5,[ [ A, B, C, D, E],
         [ F, G, H, I, J],
         [ K, L, M, N, O],
@@ -123,13 +123,27 @@ rot270( Grid,NewAnyWUpdate):- any_xform(grid_rot270,Grid,NewAnyWUpdate).
 flipH( Grid,NewAnyWUpdate):- any_xform(grid_flipH,Grid,NewAnyWUpdate).
 flipV( Grid,NewAnyWUpdate):- any_xform(grid_flipV,Grid,NewAnyWUpdate).
 flipHV( Grid,NewAnyWUpdate):- any_xform(grid_flipHV,Grid,NewAnyWUpdate).
+flipD( Grid,NewAnyWUpdate):- any_xform(grid_flipD,Grid,NewAnyWUpdate).
+flipDV( Grid,NewAnyWUpdate):- any_xform(grid_flipDV,Grid,NewAnyWUpdate).
+flipDH( Grid,NewAnyWUpdate):- any_xform(grid_flipDH,Grid,NewAnyWUpdate).
+flipDHV( Grid,NewAnyWUpdate):- any_xform(grid_flipDHV,Grid,NewAnyWUpdate).
 
-grid_rot90(Grid,NewAnyWUpdate):-  grid_flipHV(Grid,GridM),grid_rot270(GridM,NewAnyWUpdate). 
-grid_rot180(Grid,FlipHV):- grid_flipHV(Grid,FlipHV).
+grid_rot90(Grid,NewAnyWUpdate):-  rot270(GridM,NewAnyWUpdate),flipHV(Grid,GridM).
+grid_rot180(Grid,Rot180):- rot90(Grid,Rot90),rot90(Rot90,Rot180).
 grid_rot270(Grid,NewAnyWUpdate):- get_colums(Grid,NewAnyWUpdate),!.
 grid_flipH(Grid,FlipH):- mapgroup(reverse,Grid,FlipH).
 grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
-grid_flipHV(Grid,FlipHV):-grid_flipH(Grid,FlipH),grid_flipV(FlipH,FlipHV),!.
+grid_flipHV(Grid,FlipHV):-flipH(Grid,FlipH),flipV(FlipH,FlipHV),!.
+grid_flipDV(Grid,FlipHV):-flipD(Grid,FlipH),flipV(FlipH,FlipHV),!.
+grid_flipDH(Grid,FlipHV):-flipD(Grid,FlipH),flipH(FlipH,FlipHV),!.
+grid_flipDHV(Grid,FlipHV):-flipD(Grid,FlipH),flipHV(FlipH,FlipHV),!.
+
+grid_flipD(I,O):- grid_size(I,H,V),make_grid(V,H,O),
+  forall(between(1,H,X),
+    forall(between(1,V,Y),
+      (get_color_at(X,Y,I,C),
+       nb_set_local_point(Y,X,C,O)))).
+
 
 unrotate(rot90,rot270):-!.
 unrotate(rot270,rot90):-!.
@@ -373,7 +387,7 @@ find_engulfs_objects(Obj,[Touched|ScanNext],[link(insideOf,Iv)|Engulfed]):-
  once(contained_object(Obj,Touched)),!,
  /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
-find_engulfs_objects(Obj,_,[]):- has_prop(mass(M),Obj),M<5,!.
+find_engulfs_objects(Obj,_,[]):- mass(Obj,Mass),Mass<5,!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(contains,Iv)|Engulfed]):-    
  once(contained_object(Touched,Obj)),!,
  /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),

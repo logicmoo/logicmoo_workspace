@@ -8,7 +8,7 @@
 % Revised At:   $Date: 2002/07/11 21:57:28 $
 % ===================================================================
 % ===================================================================
-:- module(logicmoo_util_bb_frame, []).
+:- module(logicmoo_util_bb_frame, [all_different_bindings/1]).
 
 :- use_module(pretty_clauses).
 

@@ -36,6 +36,8 @@
 
 :- multifile(goal_expansion/4).
 
+arc_history(_).
+arc_history1(_).
 % :- dynamic(grid_hint_pred/1). :- discontiguous(grid_hint_pred/1). :- multifile(grid_hint_pred/1).
 
 
@@ -83,12 +85,29 @@ quietlyd(G):- quietly(G),!.
 
 :- strip_module(_,M,_),abolish(system:muarc_mod/1),asserta(system:muarc_mod(M)).
 
+
+'$exported_op'(_,_,_):- fail.
+:- multifile '$exported_op'/3. 
+:- dynamic '$exported_op'/3. 
+%:- discontiguous '$exported_op'/3. 
+
+'$pldoc'(_,_,_,_):- fail.
+:- multifile '$pldoc'/4. 
+:- dynamic '$pldoc'/4. 
+%:- discontiguous '$pldoc'/4. 
+
+'$autoload'(_,_,_):- fail.
+:- multifile '$autoload'/3. 
+%:- discontiguous '$autoload'/3.
+:- dynamic '$autoload'/3.
+
+
 % COMMAND LINE ARC
 :- if(\+ current_module(logicmoo_arc)).
   :- set_prolog_flag(access_level,system).
-  %:- dynamic(prolog:'$exported_op'/3).
-  %:- assert((system:'$exported_op'(_,_,_):- fail)).
-  %:- multifile('$exported_op'/3).
+
+
+
   :- SL  is 2_147_483_648*8*4, set_prolog_flag(stack_limit, SL ).
   :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
   :- unsetenv('DISPLAY').
@@ -96,19 +115,19 @@ quietlyd(G):- quietly(G),!.
 %  :- noguitracer.
   :- set_prolog_flag(toplevel_print_anon,false).
   :- set_prolog_flag(toplevel_print_factorized,true).
+
     :- set_prolog_flag(answer_write_options, [quoted(true), portray(true), max_depth(5), attributes(dots)]).
     :- set_prolog_flag(debugger_write_options, [quoted(true), portray(true), max_depth(5), attributes(dots)]).
-    :- set_prolog_flag(print_write_options, [quoted(true), portray(true), max_depth(5), attributes(dots)]).
+    :- set_prolog_flag(print_write_options, [quoted(true), portray(true), max_depth(50), attributes(dots)]).
 
-:- set_prolog_flag(verbose_load,true).  
-%:- set_prolog_flag(verbose_autoload,true).
 :- set_prolog_flag(debug_on_error,true).
 :- set_prolog_flag(report_error,true).
+:- set_prolog_flag(on_error,status).
 :- set_prolog_flag(debugger_show_context,true).
+
 :- set_prolog_flag(last_call_optimisation,false).
 %:- set_prolog_flag(trace_gc,false).
 :- set_prolog_flag(write_attributes,dots).
-:- set_prolog_flag(on_error,status).
 :- set_prolog_flag(backtrace_depth,1000).
 :- noguitracer.
 
@@ -125,6 +144,9 @@ clsmake:- update_changed_files,!.
     :- dynamic(muarc:ns4query/1).
   :- endif.
 :- endif.
+
+%:- set_prolog_flag(verbose_load,true).  
+%:- set_prolog_flag(verbose_autoload,true).
 
 :- use_module(library(quasi_quotations)).
 :- use_module(library(hashtable)).
@@ -146,8 +168,12 @@ clsmake:- update_changed_files,!.
 :- use_module(library(dictoo_lib)).
 %:- use_module(library(pfc_lib)).
 
+:- include(kaggle_arc_pfc).
+
 %:- listing((.)/3).
 %:- autoload_all.
+:- set_prolog_flag(verbose_load,false).  
+:- set_prolog_flag(verbose_autoload,false).
 
 
 % we alias these so we can catch out of control list growth
@@ -167,6 +193,7 @@ must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(must_det_ll,List)
 must_det_ll(X):- tracing,!,must_not_error(X).
 must_det_ll((X,Y,Z)):- !, (must_det_ll(X),must_det_ll(Y),must_det_ll(Z)).
 must_det_ll((X,Y)):- !, (must_det_ll(X)->must_det_ll(Y)).
+must_det_ll(fif(X,Y)):- !, fif(must_not_error(X),must_det_ll(Y)).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
@@ -386,12 +413,11 @@ luser_setval(ID,N,V):- nb_setval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(
 luser_linkval(N,V):- arc_user(ID),luser_linkval(ID,N,V),!.
 luser_linkval(ID,N,V):- nb_linkval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
-luser_getval(N,V):- nb_current(N,V),!.
 luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
 %luser_getval(ID,N,V):- thread_self(ID),nb_current(N,V),!.
 %luser_getval(ID,N,V):- !, ((arc_user_prop(ID,N,V);nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 luser_getval(ID,N,V):- !,
- (nb_current(N,V)*->true;
+ (nb_current(N,Val)*->Val=V;
   (arc_user_prop(ID,N,V)*->true;arc_user_prop(global,N,V))).
 /*
 luser_getval(ID,N,V):- 
@@ -399,19 +425,22 @@ luser_getval(ID,N,V):-
   (nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 */
 
-%c:- forall(clause(fav(A,B),true),add_history1((fav(A,B)))).
-:- add_history1(fav2).
-:- add_history1(arc2).
-:- add_history1(arc).
-:- add_history1(arc1).
-:- add_history1(fav).
-:- add_history1(fav1).
-:- add_history1(fav3).
+%c:- forall(clause(fav(A,B),true),arc_history1((fav(A,B)))).
+:- arc_history1(fav2).
+:- arc_history1(arc2).
+:- arc_history1(arc).
+:- arc_history1(arc1).
+:- arc_history1(fav).
+:- arc_history1(fav1).
+:- arc_history1(fav3).
 
 :- multifile(mregression_test/0).
 :- dynamic(mregression_test/0).
 
 :- set_prolog_flag(arc_term_expansion, true).
+
+%:- set_prolog_flag(verbose_load,true).  
+%:- set_prolog_flag(verbose_autoload,true).
 
 %:- learn_shapes.
 :- ensure_loaded(kaggle_arc_utils).
@@ -438,7 +467,8 @@ luser_getval(ID,N,V):-
 :- ensure_loaded(kaggle_arc_ui_html).
 :- ensure_loaded(kaggle_arc_test_easy).
 :- ensure_loaded(kaggle_arc_test_old).
-
+:- set_prolog_flag(verbose_load,false).
+:- set_prolog_flag(verbose_autoload,false).
 
 
 %:- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
@@ -878,7 +908,7 @@ reuse_a_b(A,B,AA):-
     (pt(same_object(GlyphA,GlyphB,How))))).
 
 test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_det_ll(Body)).
-:- add_history1(test_regressions).
+:- arc_history1(test_regressions).
 
 :- dynamic(muarc_2_mods/2).
 :- strip_module(_,M,_), prolog_load_context(module,MM), retractall(muarc_2_mods(_,_)), asserta(muarc_2_mods(M,MM)).
@@ -889,8 +919,8 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 %:- initialization(demo,restore_state).
 %:- initialization(demo,main).
 %:- initialization(demo,after_load).
+:- muarc_mod(M), arc_history1((module(M))).
 :- add_history1((cls,make,demo)).
-:- muarc_mod(M), add_history1((module(M))).
 
 %:- muarc_mod(M), M:show_tests.
 :- load_last_test_name.
@@ -900,12 +930,14 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 %:- xlisting(user:'.'(_, _, _)).
 
 :- if(prolog_load_context(reload,false)).
-:- fixup_module_exports_into_from(system,baseKB).
+:- fixup_module_exports_into(baseKB).
+:- fixup_module_exports_into(system).
 %:- fixup_module_exports_into_from(system,muarc).
 :- endif.
 
 :- ensure_loaded(kaggle_arc_simple).
 
+:- ensure_loaded('kaggle_arc_fwd.pfc').
 %:- set_prolog_flag(arc_term_expansion, false).
 
 %:- fixup_module_exports_now.  

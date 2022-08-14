@@ -293,6 +293,7 @@ cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Gr
 % TODO Comment out next line to prefer the line after
 cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
 cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
+cast_to_grid(TestID*(Tst+N)*IO,Grid,(=)):- !, kaggle_arc_io(TestID,(Tst+N),IO,Grid).
 cast_to_grid(Naming,Grid, Closure ):- 
   ((known_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;
    (fail,recast_to_grid0(Naming,Grid, Closure))).
@@ -329,22 +330,23 @@ monogrid(X,Y):- object_grid(X,M),into_monochrome(M,Y).
 uncast(_Obj,Closure,In,Out):- call(Closure,In,Out).
 %known_gridoid(ID,G):- plain_var(ID),!,(known_grid(ID,G);known_object(ID,G)).
 known_gridoid(ID,G):- is_object(ID),!,G=ID.
-known_gridoid(ID,G):- known_grid(ID,G),!.
 known_gridoid(ID,G):- known_object(ID,G),!.
+known_gridoid(ID,G):- known_grid(ID,G).
 %known_gridoid(ID,G):- plain_var(ID),!,arcST,throw(var_named_test(ID,G)).
 
 known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
 
-test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*Example+Num*IO,fix_id(TstName,Name),!.
+
 known_grid0(ID,G):- is_grid(ID),!,G=ID.
 known_grid0(ID,_):- is_object(ID),!,fail.
 known_grid0(_,ID):- is_object(ID),!,fail.
-known_grid0(ID,G):- test_id_num_io(ID,TestID,Example,Num,IO),!,ExampleNum=Example+Num,!,(kaggle_arc_io(TestID,ExampleNum,IO,G),deterministic(YN),true),(YN==true-> ! ; true).
+known_grid0(ID,G):- test_id_num_io(ID,TestID,Example,Num,IO),ExampleNum=Example+Num,!,(kaggle_arc_io(TestID,ExampleNum,IO,G),deterministic(YN),true),(YN==true-> ! ; true).
 known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- is_grid_id(G,ID).
 known_grid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
-known_grid0(ID,G):- compound(ID),ID=(_*_),!,fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_grid0(ID,G):- compound(ID),ID=(_*(Example+Num)*IO),!,fix_test_name(ID,Name,Example+Num),!,(kaggle_arc_io(Name,Example+Num,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
+known_grid0(ID,G):- compound(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_grid0(Term,G).
@@ -354,8 +356,6 @@ known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),
 
 addProgramStep(_VM,Step):-
   pt(addProgramStep(vm,Step)).
-
-to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,GO))),!. % ,ignore([[BG|_]|_]=GO).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 
@@ -371,7 +371,12 @@ makeup_gridname(GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridNa
 
 incomplete(X,X).
 
-into_obj(G,O):- no_repeats(O,known_obj0(G,O)).
+into_obj(G,O):- is_object(G),!,G=O.
+into_obj(G,O):- is_grid(G),!,individuate(whole,G,Objs),last(Objs,O),!.
+into_obj(G,O):- no_repeats(O,known_obj0(G,O))*->true; (into_grid(G,GG),!,into_obj(GG,O)),!.
+
+  %set(VM.points)=[],!.
+
 
 o2g(Obj,Glyph):-  g2o(Glyph,Obj),!.
 o2g(Obj,NewGlyph):- o_i_d(Obj,ID,Old), int2glyph(Old,Glyph), 

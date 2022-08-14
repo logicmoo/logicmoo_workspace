@@ -222,9 +222,15 @@
           ]).
 %:- endif.
 :- multifile '$exported_op'/3. 
+:- dynamic '$exported_op'/3. 
+:- discontiguous '$exported_op'/3. 
+'$exported_op'(_,_,_):- fail.
+
 :- multifile '$autoload'/3. 
-:- discontiguous '$exported_op'/3.
 :- discontiguous '$autoload'/3.
+:- dynamic '$autoload'/3.
+'$autoload'(_,_,_):- fail.
+
 %:- system:reexport(library(must_sanity)).
 :- system:reexport(library(logicmoo/redo_locally)).
 :- system:reexport(library(debuggery/bugger)).

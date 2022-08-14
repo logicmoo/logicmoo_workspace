@@ -34,7 +34,7 @@ This module manages logicmoo startup (adding history and tests, etc).
 
 
 %:- expects_dialect(swi).
-:- discontiguous logicmoo_startup:'$exported_op'/3. 
+:- discontiguous '$exported_op'/3. 
 :- autoload(library(lists),[member/2,append/3]).
 :- autoload(library(debug),[debug/3]).
 

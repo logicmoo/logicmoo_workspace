@@ -872,7 +872,10 @@ source_ctx(B:L):- must((current_source_file(F:L),file_base_name(F,B))).
 %
 current_source_location(F,L):- notrace((clause(current_source_location0(F,L),Body),notrace(catch(Body,_,fail)))),!.
 
-current_source_location0(F,L):- current_why_data(Data),sub_term(Sub,Data),compound(Sub),Sub=mfl4(_,_,F,L),!.
+sub_why(Sub,Sub).
+sub_why(Sub,Why):- compound(Why),Why=(A,B),(sub_why(Sub,A);sub_why(Sub,B)).
+
+current_source_location0(F,L):- current_why_data(Data),sub_why(Sub,Data), \+ is_list(Data), compound(Sub),Sub=mfl4(_,_,F,L),!.
 current_source_location0(F,why):- t_l:current_why_source(F).
 current_source_location0(F,L):- source_location(F,L),!.
 current_source_location0(F,L):- prolog_load_context(stream,S),line_or_char_count(S,L),stream_property(S,file_name(F)),!.
@@ -966,6 +969,7 @@ source_module(M):- \+ prolog_load_context(file,_),!, '$current_typein_module'(M)
 source_module(M):- nonvar(M),!,source_module(M0),!,(M0=M).
 source_module(M):- '$current_source_module'(M),!.
 source_module(M):- '$set_source_module'(M,M),!.
+source_module(M):- strip_module(_,M,_).
 source_module(M):- loading_module(M),!.
 
 :- thread_local(t_l:last_source_file/1).

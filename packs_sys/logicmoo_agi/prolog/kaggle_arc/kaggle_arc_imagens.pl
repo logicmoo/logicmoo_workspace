@@ -33,9 +33,6 @@ do_gp('\\',H,V,P,G,G2):- do_gp('|',H,V,P,G,G1),do_gp('/',H,V,P,G1,G2).
 do_gp('-',H,_V,_P,G,G2):- get_colum(H,G,Col),insert_col(H,Col,G,G2).
 do_gp(_,_,_,_,G,G).
 
-bg_sym('bg').
-fg_sym('fg').
-
 l_shape([circle,hv_symmetric],"
  o=o $
 o...o$
@@ -149,9 +146,9 @@ into_color_grid(Grid,ColorGrid):-
   mapgrid(for_color_grid,Grid0,ColorGrid).
 
 for_color_grid(Var,Var):- is_color(Var),!.
-for_color_grid(Var,Var):- number(var),color_name(Var),!.
+for_color_grid(Var,Color):- number(Var),color_name(Var,Color),!.
 for_color_grid(Var,Var):- plain_var(Var),!.
-for_color_grid(C,D):- extract_color_data(C,D).
+for_color_grid(C,D):- only_color_data(C,D).
 
 
 l_shape(LibObj):-    
@@ -163,7 +160,7 @@ l_shape(LibObj):-
   scale_grid(Scale,GrowthChart,Grid,ScaledGrid),
   into_lib_object([iz(l_shape),Shapes0],ScaledGrid,LibObj).
 
-into_lib_object(Shapes0,Grid0,LibObj):-
+into_lib_object(Shapes0,Grid0,LibObj):- fail,
   flatten([Shapes0],Shapes),
   shape_info_props(Shapes,ShapeProps),
   into_lib_object1(ShapeProps,Grid0,LibObj).
@@ -177,9 +174,11 @@ into_lib_object2(ShapeProps,ScaledGrid,LibObj):-
   grid_size(ScaledGrid,H,V),
   %flatten([Shapes,H,V,Scale],AList),!,
   %atomic_list_concat(AList,'_',ID),
+  %grid_colors(ScaledGrid,CGPoints),
+  %print_attvars(grid_colors(ScaledGrid,SPoints)),
   globalpoints_maybe_bg(ScaledGrid,SPoints)))),
   G = make_indiv_object_no_vm(into_lib_object2,H,V,[iz(into_lib_object),grid(ScaledGrid),v_hv(H,V)|ShapeProps],SPoints,LibObj),
-  catch(G,E,(arcST,wdsg(E=G),trace,G)).
+  catch(G,E,(arcST,wdmsg(E=G),trace,G)).
 
 % todo temp
 sortshapes(List,Set):- my_list_to_set_cmp(List, using_compare(shape_key), Set).
@@ -229,8 +228,8 @@ into_monochrome(Color,Mono):- into_monochrome(fg,black,Color,Mono).
 into_monochrome(FG,BG,Color,Mono):- into_monochrome(from_monochrome4(FG,BG),Color,Mono).
 
 
-from_monochrome4(_FG,_BG,Color,Mono):- is_bg_color(Color), decl_bg_colors(Mono),!.
-from_monochrome4(_FG,_BG,Color,Mono):- is_fg_color(Color), decl_fg_colors(Mono),!.
+from_monochrome4(_FG,_BG,Color,Mono):- is_bg_color(Color), decl_bg_color(Mono),!,cv(Mono,Color).
+from_monochrome4(_FG,_BG,Color,Mono):- is_fg_color(Color), decl_many_fg_colors(Mono),!,cv(Mono,Color).
 from_monochrome4(_FG,BG,Color,Mono):- is_bg_color(Color), apply_recolor(BG,Color,Mono),!.
 from_monochrome4(FG,_BG,Color,Mono):- is_fg_color(Color), apply_recolor(FG,Color,Mono),!.
 
@@ -238,10 +237,8 @@ apply_recolor(Izer,Color,Mono):-
   (is_color(Izer)->copy_term(Izer,Mono);( \+ missing_arity(Izer,2) -> call(Izer,Color,Mono); ( \+ missing_arity(Izer,1) -> call(Izer,Mono)))).
 
 into_monochrome(MonoP2,Color,Mono):- is_color(Color),call(MonoP2,Color,Mono),!.
-into_monochrome(_MonoP2,Color,Mono):- is_bg_color(Color), decl_bg_colors(Mono),!.
-into_monochrome(_MonoP2,Color,Mono):- is_fg_color(Color), decl_fg_colors(Mono),!.
-into_monochrome(_MonoP2,Color,Mono):- is_fg_color(Color), put_attr(Mono,ci,fg(_)),!.
-into_monochrome(_MonoP2,Color,Mono):- is_bg_color(Color), put_attr(Mono,ci,bg),!.
+into_monochrome(_MonoP2,Color,Mono):- is_bg_color(Color), decl_bg_color(Mono),!, cv(Mono,Color).
+into_monochrome(_MonoP2,Color,Mono):- is_fg_color(Color), decl_many_fg_colors(Mono),!, cv(Mono,Color).
 into_monochrome(_MonoP2,Color,Mono):- \+ compound(Color), Mono=Color.
 into_monochrome(MonoP2,Color,Mono):- is_group(Color),!,mapgroup(into_monochrome(MonoP2),Color,Mono).
 into_monochrome(MonoP2,Color,Mono):- is_grid(Color),!,mapgrid(cell_into_monochrome(MonoP2),Color,Mono).
@@ -265,7 +262,7 @@ grid_into_monochrome(FGC,BGC,Color,Mono):- is_list(Color) -> maplist(grid_into_m
 
 
 grid_into_fg_bg_pred(FGP1,BGP1,Color,Mono):- is_list(Color) -> maplist(grid_into_fg_bg_pred(FGP1,BGP1),Color,Mono) ;
-                              (call(FGP1,Color) -> put_attr(Mono,ci,fg(_)) ; (call(BGP1,Color) -> put_attr(Mono,ci,bg) ; Mono = Color)).
+                              (call(FGP1,Color) -> decl_many_fg_colors(Mono) ; (call(BGP1,Color) -> decl_bg_color(Mono) ; Mono = Color)).
 */
 
 % =====================================================================
@@ -276,16 +273,14 @@ decolorize(VM):- Grid = VM.grid,
   set(VM.grid) = NewGrid,
   print_side_by_side(silver,Grid,into,_,NewGrid,decolorize),
   nl,
-  maplist(writeq_nl,NewGrid),
+  maplist(print_attvars,NewGrid),
   nl.
 
 decolorize(Color,Mono):- is_grid(Color),!,mapgrid(decolorize_cell,Color,Mono).
 decolorize(Color,Mono):- is_group(Color),!,mapgroup(decolorize,Color,Mono).
 decolorize(Color,Mono):- is_list(Color),!,maplist(decolorize,Color,Mono).
-decolorize(Color,Mono):- is_bg_color(Color), decl_bg_colors(Mono),!.
-decolorize(Color,Mono):- is_fg_color(Color), decl_fg_colors(Mono),!.
-decolorize(Color,Mono):- is_fg_color(Color), put_attr(Mono,ci,fg(_)),!.
-decolorize(Color,Mono):- is_bg_color(Color), put_attr(Mono,ci,bg),!.
+decolorize(Color,Mono):- is_bg_color(Color), decl_bg_color(Mono),!, cv(Mono,Color).
+decolorize(Color,Mono):- is_fg_color(Color), decl_many_fg_colors(Mono),!, cv(Mono,Color).
 decolorize(Color,Mono):- \+ compound(Color), Mono=Color.
 decolorize(Color,Mono):- compound(Color), !, compound_name_arguments(Color,F,IA), maplist(decolorize,IA,OA), compound_name_arguments(Mono,F,OA).
 decolorize(I,I).
@@ -376,65 +371,75 @@ box_grid(C,Grid,GridO):-
   my_append([TB|FillRows],[TB],D),
   restructure(D,GridO),!.
 
-decl_fg_colors(X):- put_attr(X,ci,fg(X)),multivar:multivar(X).
-decl_bg_colors(X):- put_attr(X,ci,bg),multivar:multivar(X).
-hollow_color(X):-  put_attr(X,ci,hollow(X)),
-    freeze(X,(mv_peek1(X,V)->(var(V)->true;is_color(V));true)),multivar:multivar(X).
-
-color_attr_unify_hook(hollow(X),Value):- cant_be_color(X,E), Value \= E.
-color_attr_unify_hook(fg(X),Value):- cant_be_color(X,E), Value == E, !, fail.
-color_attr_unify_hook(free(_),_Value):- !.
-color_attr_unify_hook(fg(V),Value):- is_colorish(Value),!, \+ is_bg_color(Value), 
-  fif((is_color(V),is_color(Value)), nonvar(V)-> ignore(V=Value); true),
-  fif(var(Value),put_attr(Value,ci,fg(V))).
-color_attr_unify_hook(bg,Value):- is_colorish(Value),!, \+ is_fg_color(Value).
-color_attr_unify_hook(_,Value):- \+ is_colorish(Value),!,fail.
-color_attr_unify_hook(_,_).
-
-ci:attr_unify_hook(Var,Val):- color_attr_unify_hook(Var,Val).
-
-/*
-?- decl_fg_colors(X), X = red, X = blue.
-
-?- decl_bg_colors(X), X = black, X = bg.
-
-?- hollow_color(X), X = red, X = blue.
-
-decl_fg_colors(X), X = red, dif(X,red).
-xvarx(X),
-put_attr(X,ci,fg(X)),
-mv_set_values(X,[red]),
-dif(X,red).
-
-138 ?- decl_fg_colors(X), X = red, dif(X,red), X=red.
-false.
-
-?- decl_fg_colors(X), X = red, dif(X,red), X=blue, X = red.
-true.
-
- decl_fg_colors(X), X = red, dif(X,red), X=blue,  dif(X,red), X = red.
-
-*/
 
 hollow_rect:- 
   forall((notrace,
-    X=1, Y=1,
-    hollow_rect(blue,red,X,Y,Grid),
+    X=10, Y=10,
+    hollow_rect(blue,X,Y,Grid),
     get_color_at(1,1,Grid,Edge),
     get_color_at(2,2,Grid,Fill),
-    print_grid(X,Y,hollow_rect(Edge,Fill),Grid)   ),true).
-hollow_rect(CEdgeV,CInV,H,V,Grid):-  
-  hollow_color(CIn),CIn=CInV,
-  decl_fg_colors(CEdge),CEdge=CEdgeV,
-  likely_fgc(CEdge), %likely_fgc(CIn), 
-  (nop(var(H))-> thirty_down_2(H) ; true),
-  (nop(var(V))-> thirty_down_2(V) ; true),
+    print_grid(X,Y,hollow_rect(Edge,Fill,X,Y,Grid),Grid)   ),true).
+
+in_shape_lib(rect_squares,LibObj):- rect_squares(Props,Grid), 
+   into_lib_object([shape_lib(rect_squares)|Props],Grid,LibObj).
+
+
+rect_squares([iz(solid_rect(CEdgeV,H,V)),solid,rectangle],Grid):- 
+  thirty_down_2(H),thirty_down_2(V),solid_rect(CEdgeV,H,V,Grid).
+rect_squares([iz(hollow_rect(CEdgeV,H,V)),rectangle,outline(1),hollow],Grid):- 
+  thirty_down_2(H),thirty_down_2(V),hollow_rect(CEdgeV,H,V,Grid).
+
+
+
+dupe_row(E,D):- duplicate_term(E,D),E=D.
+
+solid_rect(CEdge,H,V,Grid):-
+  (plain_var(CEdge)->decl_one_color(CEdge);is_color(CEdge)),!,
+  ((var(H))-> thirty_down_2(H) ; true),
+  ((var(V))-> thirty_down_2(V) ; true),
+  length(Row,H),maplist(=(CEdge),Row),
+  length(Grid,V),maplist(dupe_row(Row),Grid).
+
+solid_rect(CEdge,H,V,Grid):- var(CEdge),!,
+  ((var(H))-> thirty_down_2(H) ; true),
+  ((var(V))-> thirty_down_2(V) ; true),
+  decl_one_color(CEdge), 
+  length(Row,H),maplist(copy_term(CEdge),Row),
+  length(Grid,V),maplist(copy_term(Row),Grid).
+
+solid_rect(CEdge,H,V,Grid):-
+  ((var(H))-> thirty_down_2(H) ; true),
+  ((var(V))-> thirty_down_2(V) ; true),
+  (H2 is H - 2, H2 >= 0, make_row_n_times(H2,V,CEdge,CEdge,CEdge,Grid)).
+
+solid_rect(CEdge,CIn,H,V,Grid):-
+  CEdge==CIn->solid_rect(CEdge,H,V,Grid);
+ (decl_one_color(CEdge), decl_many_fg_colors(CIn),
+  ((var(H))-> thirty_down_2(H) ; true),
+  ((var(V))-> thirty_down_2(V) ; true),
    H2 is H - 2, V2 is V - 2,
+   H2>0,V2>0,
+  make_row_n_times(H2,V2,CIn,CEdge,CEdge,Middle),
+  make_list(CEdge,H,Top), make_list(CEdge,H,Bottom),
+  append([Top|Middle],[Bottom],Grid)).
+
+
+hollow_rect(CEdge,H,V,Grid):-
+  hollow_rect(CEdge,_,H,V,Grid).
+
+hollow_rect(CEdge,CIn,H,V,Grid):-
+  (plain_var(CEdge)->put_attr(X,ci,hollow(X));true),
+   %dif(CIn,CEdge),
+  
+  ((var(H))-> thirty_down_2(H) ; true),
+  ((var(V))-> thirty_down_2(V) ; true),
+   H2 is H - 2, V2 is V - 2,
+   H2>0,V2>0,
   make_row_n_times(H2,V2,CIn,CEdge,CEdge,Middle),
   make_list(CEdge,H,Top), make_list(CEdge,H,Bottom),
   append([Top|Middle],[Bottom],Grid).
 
-make_row(C,L,H,R,Row):- make_list(C,H,Mid),append([L|Mid],[R],Row).
+make_row(C,L,H,R,Row):- length(Mid,H),maplist(copy_term(C),Mid),append([L|Mid],[R],Row).
 
 make_row_n_times(H,1,C,L,R,[Row]):-!,make_row(C,L,H,R,Row).
 make_row_n_times(_,0,_,_,_,[]):-!.
@@ -466,8 +471,7 @@ solid_square(C,HW,Grid):-
 decl_sf(hollow_square(fg_color,bg_color,size)).
 
 
-decl_fg_or_bc_color(X):- attach_fg_ci(X,6);get_bgc(X).
-decl_fg_color(X):- attach_fg_ci(X,6).
+
 
 hollow_square(C,HW,D):- get_bgc(BG),!,hollow_square(C,BG,HW,D).
 hollow_square(C,BG,HW,D):-
@@ -653,8 +657,8 @@ in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
 thirty_down_2(HW):- between(2,30,WH),HW is 32-WH.
 thirty_down_1(HW):- between(2,30,WH),HW is 32-WH.
 
-in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_fg_color(C),solid_square(C,HW,Grid),into_lib_object([solid,square,shape_lib(common)],Grid,LibObj).
-in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_fg_color(C),hollow_square(C,HW,Grid),into_lib_object([hollow,outline(1),square,shape_lib(common)],Grid,LibObj).
+in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_one_fg_color(C),solid_square(C,HW,Grid),into_lib_object([solid,square,shape_lib(common)],Grid,LibObj).
+in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_one_fg_color(C),hollow_square(C,HW,Grid),into_lib_object([hollow,outline(1),square,shape_lib(common)],Grid,LibObj).
 in_shape_lib(n_shape,LibObj):- n_shape(LibObj).
 
 in_shape_lib(hammer,Name):- the_hammer1(Name).
@@ -663,17 +667,17 @@ in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
 all_rots(X,Y):- all_rotations(X,Y).
 
 in_grid_shape_lib([Shape,hollow],Grid,GrowthChart):- 
-  hollow_color(BG),
+  decl_fill_color(BG),
   learned_color_inner_shape(Shape,Color,BG,Grid,GrowthChart),
-  decl_fg_color(Color).
+  decl_one_fg_color(Color).
 in_grid_shape_lib([Shape,filled],Grid,GrowthChart):- 
    learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart),
-  put_attr(Color,ci,fg(1)), 
-  put_attr(Fill,ci,fg(2)), 
+  decl_one_fg_color(Color),
+  decl_fill_color(Fill),
   dif(Color,Fill).
 in_grid_shape_lib([Shape,solid],Grid,GrowthChart):- 
    learned_color_inner_shape(Shape,Color,Fill,Grid,GrowthChart),
-  put_attr(Color,ci,fg(1)), 
+  decl_one_fg_color(Color),
   Fill = Color.
 
 :- fixup_exports.

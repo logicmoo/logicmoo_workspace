@@ -44,11 +44,12 @@ no_black(BF,BF).
 
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors0(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
-pixel_colors0(GH,CC):- is_grid(GH),!,flatten(GH,CC).
-pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors,GH,PG),my_append(PG,CC).
-pixel_colors0(C,[Color]):- color_name(C,Color),!.
-pixel_colors0(GH,CC):- globalpoints(GH,GP),!,pixel_colors(GP,CC).
+pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors0,GH,PG),my_append(PG,CC).
+pixel_colors0(Cell,[C]):- is_point(Cell),!,only_color_data_or(fg,Cell,C).
+pixel_colors0(GH,CC):- localpoints_include_bg(GH,GP),!,maplist(only_color_data_or(fg),GP,CC).
 %pixel_colors0(options(_),[]):-!.
+
+only_color_data_or(Alt,Cell,Color):- only_color_data(Cell,Color)->true;Color=Alt.
 
 %sub_term(G,GH), is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
@@ -214,7 +215,8 @@ pred_global_cpoints(Pred7,Color,Point,Grid,Grid):-  nop(wdmsg(warn(skip(pred_glo
 
 
 add_global_points(Obj,Grid,GridO):-
- add_global_points(fg,Obj,Grid,GridO).
+ get_fg_label(FGL),
+ add_global_points(FGL,Obj,Grid,GridO).
 
 add_global_points(_Color,[],Grid,Grid):- !.
 add_global_points(Color,Obj,Grid,GridO):- is_grid(Obj),!, localpoints_include_bg(Obj,Points),add_global_cpoints(Color,Points,Grid,GridO).
@@ -226,7 +228,7 @@ add_global_points(Color,Point,Grid,GridO):- add_global_cpoints(Color,Point,Grid,
 
 add_global_cpoints(_Color,[],Grid,Grid):- !.
 add_global_cpoints(Color,[H|T],Grid,GridO):- !, add_global_cpoints(Color,H,Grid,GridM),add_global_cpoints(Color,T,GridM,GridO).
-add_global_cpoints(FG,Point,Grid,GridO):- FG == fg, point_to_hvc(Point, H,V,C), !, replace_global_hvc_point(H,V,C,_,Grid,GridO).
+add_global_cpoints(FG,Point,Grid,GridO):- get_fg_label(FGL), FG == FGL, point_to_hvc(Point, H,V,C), !, replace_global_hvc_point(H,V,C,_,Grid,GridO).
 add_global_cpoints(Color,Point,Grid,GridO):- point_to_hvc(Point, H,V,_),   replace_global_hvc_point(H,V,Color,_,Grid,GridO).
 %add_global_cpoints(Color,Po int,Grid,GridO):- set_local _points(,Point,Grid,GridO).
 add_global_cpoints(Color,Point,Grid,Grid):-  nop(wdmsg(warn(skip(add_global_points(Color,Point))))).

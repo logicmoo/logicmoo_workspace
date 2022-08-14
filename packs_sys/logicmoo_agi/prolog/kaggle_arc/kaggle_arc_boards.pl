@@ -49,7 +49,7 @@ color_subst(_OSC,_ISC,[]):-!.
 detect_supergrid(TestID,ExampleNum,In,Out):- 
   detect_supergrid(TestID,ExampleNum,In,Out,TT),  
   guess_board(TT),
-  print(TT),
+  %print(TT),
   grid_hint_swap(i-o,In,Out),
   dash_chars,
   dash_chars,!.
@@ -59,8 +59,8 @@ guess_board(TT):- arc_setval(TT,guess_board,t).
 detect_supergrid(TestID,ExampleNum,In0,Out0,TT):-
   % grid_size(In0,IH,IV), 
   grid_size(Out0,OH,OV), % max_min(OV,IV,V,_),max_min(OH,IH,H,_),
-  subst(In0,black,wbg,In),
-  subst(Out0,black,wbg,OOut),
+  into_bicolor(In0,In),
+  into_bicolor(Out0,OOut),
   pair_dictation(TestID,ExampleNum,In0,Out0,T),
    T.in = In0, T.out = Out0,
   ((OV==1,OH==1) -> (O2I=[]) ;
@@ -154,10 +154,9 @@ relax_hint(cg(W,G),cg(W,GG)):- !, relax_hint(G,GG).
 relax_hint(G,GG):- duplicate_term(G,GG),arg(N,G,E),relax_arg(E,EE),nb_setarg(N,GG,EE).
 %relax_hint(G,GG):- functor(G,F,A),functor(GG,F,A).
 
-relax_arg(E,_):- var(E),!,fail.
+relax_arg(E,C):- is_color(E),!,relax_color_arg(E,C).
+%relax_arg(E,_):- var(E),!,fail.
 relax_arg(E,E):- var(E) -> !; true.
-relax_arg(black,bg):-!.
-relax_arg(E,fg):- is_color(E),!.
 relax_arg(E,len(L)):- is_list(E),length(E,L).
 relax_arg(_,_).
 
@@ -219,7 +218,7 @@ list_common_props(TestID):-
     retractall(arc_test_property(TestID,common(F),_)),
     (( findall(Data,arc_test_property(TestID,grid_fhint(F),Data-_),Commons),
       once((min_unifier(Commons,Common),nonvar(Common))))),
-      assert(arc_test_property(TestID,common(F),Common))),FComs),
+      pfc_assert(arc_test_property(TestID,common(F),Common))),FComs),
   sort(FComs,SComs),
   color_print(magenta,call((format('~N % ~w: ~@.~n',[list_common_props,ptv(SComs)])))).
 
@@ -232,8 +231,8 @@ min_unifier3(A,List,A):- maplist('=@='(A),List),!.
 min_unifier3(A,[B|List],O):- min_unifier(A,B,C), min_unifier3(C,List,O).
 
 min_unifier(A,B,C):- A=@=B,!,C=A.
-min_unifier(_,B,B):- var(B),!.
-min_unifier(A,_,A):- var(A),!.
+min_unifier(_,B,B):- plain_var(B),!.
+min_unifier(A,_,A):- plain_var(A),!.
 min_unifier(A,B,[E1|C]):- is_list(A),is_list(B),select(E1,A,AA),select(E2,B,BB), \+ is_color(E1), \+ is_color(E2), E1=@=E2,!,min_unifier(AA,BB,C).
 min_unifier([_|A],[_|B],[_|C]):- !,min_unifier(A,B,C).
 min_unifier([_],[_|B],[_|B]):-!.
@@ -272,7 +271,7 @@ grid_hint_io(_MC,_-o,In,Out,(=@=)):- In=@=Out.
 
 %grid_hint_iso(_MC,IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
 grid_hint_iso(c(_BGC),_-o,_In,Out,_IH,_IV,OH,OV,has_x_columns(Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_x_columns(Out,Y,Color,_)),Y>1.
-grid_hint_iso(c(_BGC),_-o,_In,Out,_IH,_IV,OH,OV,has_y_columns(Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_y_columns(Out,Y,Color,_)),Y>1.
+grid_hint_iso(c(_BGC),_-o,_In,Out,_IH,_IV,OH,OV,has_y_rows(Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(1.2,has_y_rows(Out,Y,Color,_)),Y>1.
 
 
 %grid_hint_iso(_,IO,_In,_Out,IH,IV,  OH,OV,comp(IO,size_r(H,V))):- comp_o(IO), V is rationalize(IV/OV), H is rationalize(IH/OH).
@@ -313,8 +312,9 @@ rinfo(obj(List0),RInfo):-
   Obj = obj(List0),
   localpoints_include_bg(Obj,LocalPoints),
   %loc(Obj,X,Y),
-  points_to_grid(LocalPoints,Grid),mapgrid(sometimes_assume(=,bg),Grid),
-  select(shape(Shape),List,Rest2),mapgrid(sometimes_assume(=,bg),Shape),
+  get_bg_label(BGL),
+  points_to_grid(LocalPoints,Grid),mapgrid(sometimes_assume(=,BGL),Grid),
+  select(shape(Shape),List,Rest2),mapgrid(sometimes_assume(=,BGL),Shape),
   Rest3 = Rest2,
   o_i_d(Obj,_,MyID),
   must_det_ll((remove_too_verbose(MyID,Rest3,TV00))),flatten([TV00],TV0),
@@ -352,7 +352,7 @@ has_xy_columns(In,Color,X,Y,BorderNumsX,BorderNumsY):-
   grid_area(In,HV), HV > 24,
   %grid_size(In,GH,GV), 
   has_x_columns(In,X,Color,BorderNumsX),
-  has_y_columns(In,Y,Color,BorderNumsY),
+  has_y_rows(In,Y,Color,BorderNumsY),
   once(X>1 ; Y>1),!.
 
 has_xy_chunks(In,Color,Chunks):-
@@ -383,14 +383,14 @@ gather_chunks(Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):-
   gather_chunks(Color,In,Chunks,Xi,Yi,GX,GY,BorderNumsX,BorderNumsY).
 
 
-has_x_columns(In,X,Color,BorderNums):- rot90(In,In90), !, has_y_columns(In90,X,Color,BorderNums).
+has_x_columns(In,X,Color,BorderNums):- rot90(In,In90), !, has_y_rows(In90,X,Color,BorderNums).
 
-has_y_columns(In,Y,Color,BorderNums):- var(Color), unique_colors(In,Colors),reverse(Colors,ColorsR),!,
+has_y_rows(In,Y,Color,BorderNums):- plain_var(Color), unique_colors(In,Colors),reverse(Colors,ColorsR),!,
   member(Color,ColorsR),is_color(Color), 
-  has_y_columns(In,Y,Color,BorderNums).
-has_y_columns(In,_Y,Color,_):- (append(_,[RowBefore,RowNext|_],In), entire_row(Color,RowBefore), entire_row(Color,RowNext)),!,fail.
+  has_y_rows(In,Y,Color,BorderNums).
+has_y_rows(In,_Y,Color,_):- (append(_,[RowBefore,RowNext|_],In), entire_row(Color,RowBefore), entire_row(Color,RowNext)),!,fail.
 
-has_y_columns(In,Y,Color,BorderNums):- 
+has_y_rows(In,Y,Color,BorderNums):- 
   has_y_columns1(In,Y,Color,BorderNums),
   is_color(Color),
   (\+ illegal_column_data1(In,Color,BorderNums)).

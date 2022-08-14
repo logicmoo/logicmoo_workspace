@@ -76,13 +76,13 @@ print_info(A):- is_group(A),maybe_cache_glyphs(A),debug_indiv(A).
 print_info([]):-!.
 print_info(A):- pt(A).
 
-
-debug_as_grid(Grid):-
+debug_as_grid(Grid):- debug_as_grid('',Grid).
+debug_as_grid(Why,Grid):-
   v_hv(Grid,H,V),
   loc(Grid,OH,OV),
   fif(is_object(Grid),(format('~N~n'),debug_indiv(Grid))),
   fif((H\==1;V\==1),
-    (wots(S,print_grid(H,V,debug_as_grid(loc(OH,OV),size(H,V)),Grid)),
+    (wots(S,print_grid(H,V,debug_as_grid(Why,loc(OH,OV),size(H,V)),Grid)),
      HH is (OH - 1) * 2, print_w_pad(HH,S))),
   format('~N'),dash_chars(15),!.
 
@@ -90,9 +90,9 @@ debug_as_grid(Grid):-
 
 debug_indiv(_):- is_print_collapsed,!.
 debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
-debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(Grid).
-debug_indiv(Grid):- maplist(is_cpoint,Grid),!,debug_as_grid(Grid).
-debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(Grid).
+debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(is_grid,Grid).
+debug_indiv(Grid):- maplist(is_cpoint,Grid),!,debug_as_grid(is_cpoint,Grid).
+debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(is_point,Grid).
 
 
 
@@ -136,14 +136,16 @@ prefered(changed).
 prefered(nsew).
 prefered(colormass).
 prefered(alone_dots).
+prefered(hv_line(_)).
+prefered(dg_line(_)).
 prefered_header(cc(Caps,_),Caps):- freeze(Caps,wbg == Caps).
 prefered_header(cc(Caps,_),Caps):- freeze(Caps,black == Caps).
 prefered_header(o(Caps,_,_),Caps):- freeze(Caps,i_bg_shapes == Caps).
 prefered_header(o(Caps,sf(_),0),Caps):- freeze(Caps,atom(Caps)).
 prefered_header(o(Caps,lf(_),0),Caps):- freeze(Caps,atom(Caps)).
-prefered_header(birth(Caps),PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
+prefered_header(birth(Caps),PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
 %prefered_header(iz(Caps),PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
-prefered_header(Caps,PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
+prefered_header(Caps,PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
 prefered_header(birth(Caps),Caps).
 prefered_header(iz(Caps),Caps).
 % I didn't really have the programming chops to take his program and give it human level reasoning until about 5 years ago
@@ -157,14 +159,14 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
  % will_show_grid(Obj,TF),
   TF = false,
   o_i_d(Obj,_,MyID),
-  o2ansi(MyID,MissGlyph),
+  %o2ansi(MyID,MissGlyph),
   object_s_glyph(Obj,SGlyph),
-  append(AS0,[nth(MyID),miss(MissGlyph)],AS),  
+  append(AS0,[nth(MyID)],AS),  
   remove_too_verbose(MyID,AS,TV0), include(not_too_verbose,TV0,TV),
 
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
   sort(AS,ASA),reverse(ASA,ASAR),
-  once((prefered_header(P,Caps),member(P,ASAR),atom(Caps))),
+  once((prefered_header(P,Caps),member(P,ASAR),ground(Caps))),
   toPropercase(Caps,PC),
   sort_obj_props(TV,TVS),
 
@@ -262,6 +264,12 @@ too_verbose(grid).
 %too_verbose(link).
 too_verbose(grid_size).
 too_verbose(rotated_grid).
+too_verbose(wide).
+too_verbose(tall).
+too_verbose(col).
+too_verbose(row).
+too_verbose(xc).
+too_verbose(yc).
 
 debug_indiv(_,_,X,_):- too_verbose(X),!.
 debug_indiv(Obj,_,F,[A]):- maplist(is_cpoint,A),!,

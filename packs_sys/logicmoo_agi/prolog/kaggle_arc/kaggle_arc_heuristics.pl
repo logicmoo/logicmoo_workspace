@@ -98,6 +98,11 @@ not_very_different_t(difference(0)). not_very_different_t(ratio(1)). not_very_di
 proportional_types(list,A,B,D):- !, proportional_lists(A,B,D).
 proportional_types(_How,A,B,D):- proportional(A,B,D).
 
+maybe_label_colors(G,L):- is_grid(G),!,mapgrid(color_name,G,L),!,G\==L.
+
+proportional(G1,G2,Out):- maybe_label_colors(G1,L1),!, proportional(L1,G2,Out).
+proportional(G1,G2,Out):- maybe_label_colors(G2,L2),!, proportional(G1,L2,Out).
+
 proportional(Obj1,Obj2,Out):- 
   decl_pt(prop_h,P1P2), P1P2=..[P2,P1|Lst],
   once((once((on_x_log_and_fail(call(P1,Obj1)),on_x_log_and_fail(call(P1,Obj2)))),
@@ -139,7 +144,7 @@ proportional_lists(IColor,OColor,OUT):-
 :- decl_pt(prop_h,center_term(is_object,loc)).
 :- decl_pt(prop_h,loc_term(is_object,loc)).
 
-:- decl_pt(prop_h,has_y_columns(is_grid,colcount,color,list(rownums))).
+:- decl_pt(prop_h,has_y_rows(is_grid,colcount,color,list(rownums))).
 :- decl_pt(prop_h,has_x_columns(is_grid,rowcount,color,list(colnums))).
 
 
