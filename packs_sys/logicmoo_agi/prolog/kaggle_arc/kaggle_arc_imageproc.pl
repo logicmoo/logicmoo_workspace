@@ -305,7 +305,7 @@ remove_color0(Color,G,NewGrid):-
    remove_color0(Color,MidGrid,NewGrid).
 remove_color0(Color,Grid,NewGrid):-
    get_bgc(Cell), subst_color(Color,Cell,Grid,NewGrid),
-   set_vm(grid,NewGrid).
+   nop(set_vm(grid,NewGrid)).
 
 
 blank_color(Color1,Grid,NewGrid):- get_bgc(Cell), subst_color(Color1,Cell,Grid,NewGrid).
@@ -465,6 +465,9 @@ grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 %grid_size([G|G],H,V):- is_list(G),is_list(G), grid_size_nd([G|G],H,V),!.
 %grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
 grid_size(_,30,30).
+
+:- system:import(grid_size/3).
+:- ansi_term:import(grid_size/3).
 
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
 calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,

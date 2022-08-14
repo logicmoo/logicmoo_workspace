@@ -57,6 +57,8 @@ arc_portray(G, TF):- TF \== true, catch(arc_portray_nt(G, TF),_,fail),!.
 %arc_portray(G, _TF):- writeq(G),!.
 
 % Portray In Debugger
+
+arc_portray_nt(G,false):- is_grid(G), print_grid(G),!.
 arc_portray_nt(G,false):- is_object(G),!,object_grid(G,OG), 
   neighbor_map(OG,NG), 
   print_grid(object_grid,NG),nl,

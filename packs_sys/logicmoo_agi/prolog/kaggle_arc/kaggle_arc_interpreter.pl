@@ -289,6 +289,7 @@ cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_gr
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), object_grid(Grp,Grid),!.
 cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj=@=Var, !,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
+cast_to_grid(OID, Grid, (=) ):- atom(OID),oid_to_grid(OID,Grid),!.
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
 % TODO Comment out next line to prefer the line after
 cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
@@ -339,6 +340,7 @@ known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; 
 
 
 known_grid0(ID,G):- is_grid(ID),!,G=ID.
+known_grid0(OID, Grid):- atom(OID),oid_to_grid(OID,Grid),!.
 known_grid0(ID,_):- is_object(ID),!,fail.
 known_grid0(_,ID):- is_object(ID),!,fail.
 known_grid0(ID,G):- test_id_num_io(ID,TestID,Example,Num,IO),ExampleNum=Example+Num,!,(kaggle_arc_io(TestID,ExampleNum,IO,G),deterministic(YN),true),(YN==true-> ! ; true).

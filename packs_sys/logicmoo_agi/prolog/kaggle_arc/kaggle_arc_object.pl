@@ -126,8 +126,10 @@ ensure_indiv_object(VM,IPoints,Obj):-
 make_point_object(VM,Overrides,C-Point,Obj):- 
   must_det_ll(make_indiv_object(VM,Overrides,[C-Point],Obj)).
 
+globalpoints_maybe_bg(ScaledGrid,GPoints):- is_points_list(ScaledGrid),!,ScaledGrid=GPoints.
 globalpoints_maybe_bg(ScaledGrid,Points):- once(globalpoints(ScaledGrid,Points)),Points\==[],!.
 globalpoints_maybe_bg(ScaledGrid,GPoints):- globalpoints_include_bg(ScaledGrid,GPoints),!.
+globalpoints_include_bg(ScaledGrid,GPoints):- is_points_list(ScaledGrid),!,ScaledGrid=GPoints.
 globalpoints_include_bg(ScaledGrid,GPoints):- loc(ScaledGrid,OH,OV),
   localpoints_include_bg(ScaledGrid,Points),!,offset_points(OH,OV,Points,GPoints).
 
@@ -1232,12 +1234,31 @@ flipSym_checks(Rot90,GridIn):-
   flipSym(Rot90,G).
 
 
+
+symmetric_types(Grid,QQ):- findall(Q,(r_p(Q),flipSym_checks(Q,Grid)),QQ).
+
 :- meta_predicate(flipSym(-,+)).
-flipSym( full,GridIn):- flipSym(rot90,GridIn), flipSym(sym_hv,GridIn),!.
-flipSym(sym_hv,GridIn):- flipSym(flipH,GridIn),flipSym(flipV,GridIn),!.
-flipSym(Rot90,GridIn):- (var(Rot90)->r_p(Rot90);true),call(Rot90,GridIn,LocalGridM),!,GridIn=@=LocalGridM.
-r_p(flipDHV). r_p(flipDH). r_p(flipDV). r_p(flipD). 
-r_p(rot90). r_p(flipH). r_p(flipV). r_p(rot180). r_p(rot270).
+flipSym( full,Grid):- flipSym(rot90,Grid), flipSym(sym_hv,Grid).
+flipSym(sym_hv,Grid):- flipSym(flipH,Grid),flipSym(flipV,Grid).
+flipSym(Rot90,Grid):- var(Rot90),!,r_p(Rot90),flipSym(Rot90,Grid).
+flipSym(Rot90,Grid):- transform_list(Rot90,Grid,LocalGridM),Grid=@=LocalGridM.
+
+transform_list(Rot90,GridIn,GridOut):- var(Rot90),!,r_p2(Rot90),transform_list(Rot90,GridIn,GridOut).
+transform_list(and(A,B),GridIn,GridOut):- !, transform_list(A,GridIn,GridM), transform_list(B,GridM,GridOut).
+transform_list([A],GridIn,GridOut):- !, transform_list(A,GridIn,GridOut).
+transform_list([A|B],GridIn,GridOut):- !, transform_list(A,GridIn,GridM), transform_list(B,GridM,GridOut).
+transform_list(Call,GridIn,GridOut):- call(Call,GridIn,GridOut).
+
+r_p(P):- r_p2(P).
+%r_p(P):- r_p1(P).
+%r_p(and(trim_to_rect,P)):- r_p1(P).
+%r_p(and(into_bicolor,P)):- r_p2(P).
+
+%r_p1(and(into_monochrome,P)):- r_p2(P).
+
+r_p2(flipDHV). r_p2(flipDH). r_p2(flipDV). r_p2(flipD). 
+r_p2(rot90). r_p2(flipH). r_p2(flipV). r_p2(rot180). r_p2(rot270).
+
 
 :- dynamic(individuated_cache/3).
 :- retractall(individuated_cache(_,_,_)).
