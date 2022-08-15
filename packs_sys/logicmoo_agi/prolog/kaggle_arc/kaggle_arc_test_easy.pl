@@ -123,7 +123,7 @@ fav(t(ff28f65a),[-shape_match,-rotation_match,-mask_match,-color_match,tt,traini
 fav(t('1b60fb0c'),[
  %indiv([i_repair_mirrors]),
  %human([new_things_are_a_color,fix_image]),
- human(
+ skip_human(
    in_out(In,Out),
    subtractGrid(Out,In,Alien),
    rot_by_90([Alien,A,B,C]),

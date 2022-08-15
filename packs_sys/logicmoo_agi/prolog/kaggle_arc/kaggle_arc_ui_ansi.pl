@@ -479,7 +479,7 @@ uses_space(C):- code_type(C,print).
 into_ss_string(C, ss(1,["var_into_ss_string"])):- var(C),!.
 into_ss_string(C,_):- plain_var(C),!,throw(var_into_ss_string(C)).
 %into_ss_string(A-B,ss(LenAB,ABL)):- into_ss_string(A,ss(LenA,LA)), into_ss_string(B,ss(LenB,LB)), append(LA,LB,ABL), max_min(LenA,LenB,LenAB,_).
-into_ss_string(print_grid(G),SS):- into_ss_string(print_grid_ss(_,_,G),SS).
+into_ss_string(print_grid(G),SS):- into_ss_string(print_grid_ss(G),SS).
 into_ss_string(print_grid(X,Y,G),SS):- into_ss_string(print_grid_ss(X,Y,G),SS).
 into_ss_string(print_grid0(G),SS):- wots(S,print_grid_ss(G)),!,into_ss_string(S,SS).
 into_ss_string(print_grid0(X,Y,G),SS):- wots(S,print_grid_ss(X,Y,G)),!,into_ss_string(S,SS).
@@ -650,7 +650,7 @@ print_grid_pad(O1,SH,SV,EH,EV,Grid):-
 
 print_grid2(SH,SV,EH,EV,GridI):- arc_webui,!, print_grid_html(SH,SV,EH,EV,GridI),nl.
 print_grid2(SH,SV,EH,EV,GridI):- print_grid_ansi(SH,SV,EH,EV,GridI).
-print_grid_ss(H,V,G):- print_grid0(H,V,G).
+print_grid_ss(H,V,G):- must_det_ll(print_grid0(H,V,G)).
 
 w_out(S):- toplevel_pp(bfly),!,correct_nbsp(S,SO),our_pengine_output(SO),!.
 w_out(S):- is_webui,!,correct_nbsp(S,SO),our_pengine_output(SO),!.

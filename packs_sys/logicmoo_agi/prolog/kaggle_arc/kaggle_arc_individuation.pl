@@ -268,7 +268,7 @@ sub_individuation_macro(S,Some):-
 individuation_macros(complete, ListO):- test_config(indiv(ListO))-> true;
 %individuation_macros(complete, ListO):-  \+ test_config(indiv(_)),!, %reset_points, %inside_objs(force_by_color,subshape_both), %TODO %
   findall(save_as_objects(From),individuator(From,_),ListM),
-  append(ListM,[gather_cached],ListO).
+  append(ListM,[/*gather_cached*/],ListO).
 %use_individuator(Some):- individuator(Some,_).
 
   
@@ -292,7 +292,7 @@ individuator(i_repair_mirrors,[repair_in_vm(find_symmetry_code)]).
 % % %%  
 %individuator(i_repair_mirrors,[fourway]).
 % % %%    individuator(i_as_is,[shape_lib(as_is)]).
-% % %%    individuator(i_maybe_glypic,[maybe_glyphic,whole]).
+individuator(i_maybe_glypic,[maybe_glyphic,whole]).
 % % %%    individuator(i_bg_shapes,[bg_shapes(subshape_both(h,nsew))]).
 % % %%    individuator(i_fg_shapes,[fg_shapes([subshape_both(h,colormass)])]).
 % % %%    individuator(i_common,[common_shape_lib,do_ending]).
@@ -1093,7 +1093,7 @@ is_fti_step(gather_cached).
 % =====================================================================
 gather_cached(VM):-
  nop((
-  findall(IndvS,individuated_cache(_ROptions,VM.grid_o,IndvS),IndvSL),
+  findall(IndvS,individuated_cache(_ROptions,VM.gid,IndvS),IndvSL),
   append(IndvSL,IndvSS),
   addObjectOverlap(VM,IndvSS))).
    
@@ -1220,7 +1220,8 @@ find_mergeable(VM,Found,[_|ScanPoints],Engulfed):-
 %one_fti_step(Name)
 
 % tiny grid becomes a series of points
-one_fti(VM,maybe_glyphic):-
+is_fti_step(maybe_glyphic).
+maybe_glyphic(VM):-
   Points = VM.points,
   fif(is_glyphic(Points,VM.h,VM.v),
   (one_fti(VM,glyphic), 
@@ -1326,7 +1327,8 @@ rects_of(_Obj,[]).
 
 mass_gt(N,Obj):- mass(Obj,Mass),Mass>N.
 
-one_fti(VM,glyphic):- 
+
+one_fti(VM,glyphic):-
   localpoints_include_bg(VM.grid_o,Points),
   maplist(make_point_object(VM,[birth(glyphic),iz(shaped)]),Points,IndvList),
   raddObjects(VM,IndvList),
@@ -1386,9 +1388,9 @@ one_fti(VM,by_color(Min,C)):-
    raddObjects(VM,ColorObj)))).
 
 
-one_fti(VM,shape_lib(LibName)):- !,
+one_fti(VM,shape_lib(LibName)):-
   one_fti(VM,shape_lib(regular,LibName)).
-one_fti(VM,shape_lib(Method,LibName)):- !,
+one_fti(VM,shape_lib(Method,LibName)):-
   locally(b_setval(find_rule,Method),
     ((shape_lib_expanded(LibName,Reserved),
       try_shapelib(VM,Method,LibName,Reserved)))).

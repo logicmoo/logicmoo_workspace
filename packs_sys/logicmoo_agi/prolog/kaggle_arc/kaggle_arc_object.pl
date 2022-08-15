@@ -236,7 +236,7 @@ make_indiv_object_s(_ID,GH,GV,Overrides,Points,ObjO):-
     [iz(row(LoV)),iz(col(LoH)),iz(tall(Height)),iz(wide(Width))],
     [%o_i_d(ID,Iv),
      % globalpoints(Points),
-     %grid_size(GH,GV)
+     %agrid_size(GH,GV)
     ]],Ps),  
   with_objprops(override,Overrides,Ps,OUT1),
   sort_obj_props(OUT1,OUT),!,as_obj(OUT,Obj),verify_object(Obj),!,
@@ -404,7 +404,7 @@ with_objprops(override,-E,List,NewList):-
     my_append(Left,[R|Right],List), E =@= R,
     my_append(Left,Right,NewList),!.
 
-with_objprops(override,E,List,NewList):- \+ aggregates(E), functor(E,F,A),functor(R,F,A),
+with_objprops(override,E,List,NewList):- \+ aggregates(E), my_assertion(compound(E)), functor(E,F,A),functor(R,F,A),
     my_append(Left,[R|Right],List), % E \=@= R,
     my_append(Left,[E|Right],NewList),!.
 
