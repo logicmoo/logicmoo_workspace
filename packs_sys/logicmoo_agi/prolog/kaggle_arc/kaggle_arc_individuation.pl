@@ -105,6 +105,7 @@ maybe_multivar(_).
 the_big_three_oh(300).
 
 
+
 individuation_macros(out, complete).
 individuation_macros(in, complete).
 
@@ -268,9 +269,6 @@ individuation_macros(complete, ListO):- test_config(indiv(ListO))-> true;
 %individuation_macros(complete, ListO):-  \+ test_config(indiv(_)),!, %reset_points, %inside_objs(force_by_color,subshape_both), %TODO %
   findall(save_as_objects(From),individuator(From,_),ListM),
   append(ListM,[gather_cached],ListO).
-
-
-
 %use_individuator(Some):- individuator(Some,_).
 
   
@@ -517,6 +515,7 @@ individuate([ROption],GridIn,IndvS):- !, individuate1(_,ROption,GridIn,IndvS).
 individuate(ROptions,GridIn,IndvS):- individuation_macros(ROptions,R), atom(R),R\==ROptions,!,individuate1(_,R,GridIn,IndvS).
 %individuate(complete,GridIn,List):- !,  findall(IndvS,(individuator(Some),individuate1(Some,GridIn,IndvS)),List),
 individuate(ROptions,GridIn,IndvS):- individuate1(_,ROptions,GridIn,IndvS).
+
 
 individuate1(_, ROptions,VM,LF):- is_map(VM),!, individuate1(VM, ROptions,VM.grid_o,LF).
 individuate1(_,ROptions,GridIn,IndvS):- get_individuated_cache(ROptions,GridIn,IndvS),!.
@@ -815,10 +814,9 @@ fti(VM,[macrof(AddTodo)|set(VM.program_i)]):-
 fti(VM,[macro(AddTodo)|TODO]):-
   listify(AddTodo,TodoL),
   my_append([progress|TodoL],TODO,set(VM.program_i)).
-
+  
 fti(VM,_):- exceeded_objs_max_len(VM),!,set(VM.program_i)= [do_ending],!,length(VM.objs,Count),set(VM.objs_max_len) is Count+3.
 fti(VM,[Step|Program]):- functor(Step,F,_), ping_indiv_grid(F), \+ warn_missing_arity(Step,1), set(VM.program_i) = Program, !, my_submenu_call(call(Step, VM.grid)).
-
 fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_step(F), \+ warn_missing_arity(Step,1), set(VM.program_i) = Program, !, my_submenu_call(call(Step,VM)).
 fti(VM,[Step|Program]):- functor(Step,F,_), is_fti_stepr(F), \+ warn_missing_arity(Step,1), set(VM.program_i) = Program, Step=..[F|ARGS], !, my_submenu_call(apply(F,[VM|ARGS])).
 fti(VM,[Step|Program]):- set(VM.program_i) = Program, one_fti_step(Step), !, my_submenu_call(one_fti(VM,Step)),!.
@@ -1008,6 +1006,7 @@ after_subtract(Shape,VM):-
   set(VM.points)=OldPoints,
   set(VM.grid)=OldGrid)),
   !.
+
 
 % =====================================================================
 is_fti_step(save_as_objects).
