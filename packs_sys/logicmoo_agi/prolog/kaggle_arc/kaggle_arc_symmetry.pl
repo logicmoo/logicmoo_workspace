@@ -138,8 +138,15 @@ repair_symmetry(TestID):-
 repair_symmetry0:- 
  forall(
   %is_symgrid(TestID), 
+  arc_test_name(TestID),
+  repair_symmetry(TestID)).
+
+repair_symmetry0:- 
+ forall(
+  %is_symgrid(TestID), 
   is_monotrim_test(TestID),
   repair_symmetry(TestID)).
+
 
 repair_symmetry0(Grid,ID,Orig,Out):- 
   (test_symmetry_code(Grid,GridS,RepairedResult,Code)
@@ -618,7 +625,7 @@ mix_cell(_,_,_,_).
 
 repair_repeats(VM,Grid,RepairedResult,Code):-
   colors(Grid,[cc(HC,Count)|_]),!,
-  repair_repeats0(VM,Grid,RepairedResult,Code),
+  repair_repeats0(VM,Grid,RepairedResult,Code), Grid\=@=RepairedResult,
   nop((colors(RepairedResult,ListCounts),
   (member(cc(HC,NewCount),ListCounts)-> NewCount =< Count ; true))).
 
@@ -653,7 +660,9 @@ quality_of_change(Grid,RepairedResult,Quality):-
 
 try_remove_color_fill_in_blanks(Grid,RepairedResult,[remove_color_fill_in_blanks(Black)]):- 
   guess_unbind_color(Black,Grid,RepairedResult), cmass(RepairedResult,Mass), Mass>0,
-  once((rot_orig(RepairedResult,Orig),fill_in_blanks(Orig,900,RepairedResult),mass_ok(Grid,RepairedResult))).
+  once((rot_orig(RepairedResult,Orig),fill_in_blanks(Orig,900,RepairedResult),
+  %(ground(Grid)->ground(RepairedResult);\+ground(RepairedResult)),
+  mass_ok(Grid,RepairedResult))).
 
 rot_orig(RepairedResult,Orig):- same(RepairedResult,Orig).
 rot_orig(RepairedResult,Orig):- flipD(RepairedResult,Orig).
@@ -669,6 +678,15 @@ fill_in_blanks(Orig,Limit,RepairedResult):- Limit>800, Orig \=@= RepairedResult,
   Orig = RepairedResult,!,
   Limit2 is Limit-1,!,
   fill_in_blanks1(Orig,Limit2,RepairedResult).
+
+fill_in_blanks(Orig,Limit,RepairedResult):-  Limit>870, G=RepairedResult,
+  arg(_,v([],[_],[_,_],[_,_,_]),L),arg(_,v([],[_],[_,_],[_,_,_]),R),append([L,GG,R],G),
+  G\==GG,
+  flipV(GG,FGG),
+  GG\=@=FGG,
+  GG=FGG,!,
+  fill_in_blanks(Orig,Limit,RepairedResult).
+
 fill_in_blanks(Orig,Limit,RepairedResult):-  Limit>850,
   length(Repair,2),
   append([_,Repair,Right],RepairedResult), \+ (ground(Repair)), \+ maplist(plain_var,Repair),
@@ -680,6 +698,7 @@ fill_in_blanks(Orig,Limit,RepairedResult):-  Limit>850,
   only_for_debug((nl,writeq(Repairing-->Repair),nl,nl)),
   Limit2 is Limit-1,!,
   fill_in_blanks(Orig,Limit2,RepairedResult).
+
 
 fill_in_blanks(Orig,Limit,RepairedResult):- Limit>0,
   Limit2 is Limit-1,

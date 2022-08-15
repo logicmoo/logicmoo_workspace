@@ -549,7 +549,11 @@ set_vm(VM):- luser_linkval('$grid_vm',VM).
 get_vm(VM):- luser_getval('$grid_vm',VM),!.
 get_vm(VM):- ndividuator,!,luser_getval('$grid_vm',VM),!.
 
-set_vm(Prop,Value):- get_vm(VM),
+set_vm(Prop,Value):- ignore(luser_getval('$grid_vm',VM)),
+ luser_set_vm(VM,Prop,Value).
+
+luser_set_vm(VM,Prop,Value):- var(VM), !, print_grid(luser_set_vm(Prop),Value).
+luser_set_vm(VM,Prop,Value):-
  (get_kov1(Prop,VM,_) -> gset(VM.Prop) = Value ; 
   (get_kov1(props,VM,Hashmap) -> 
     (var(Hashmap)->(list_to_rbtree([Prop-Value],Hashmap),gset(VM.props)=Hashmap); must_not_error( gset(Hashmap.Prop)=Value));

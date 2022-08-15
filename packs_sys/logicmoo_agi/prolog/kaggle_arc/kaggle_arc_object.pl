@@ -1249,7 +1249,16 @@ transform_list([A],GridIn,GridOut):- !, transform_list(A,GridIn,GridOut).
 transform_list([A|B],GridIn,GridOut):- !, transform_list(A,GridIn,GridM), transform_list(B,GridM,GridOut).
 transform_list(Call,GridIn,GridOut):- call(Call,GridIn,GridOut).
 
+trim_topside_v(G,GG):- arg(_,v([],[_],[_,_]),L),arg(_,v([],[_],[_,_]),R),append([L,GG,R],G),flipSym_checks(flipV,GG),!.
+trim_topside_v(G,G).
+
+trim_outside(G,GGG):- transform_list([trim_topside_v,rot90,trim_topside_v,rot270],G,GG).
+
+maybe_trim_outside(G,GG):- trim_outside(G,GG),!,G\=@=GG.
+
 r_p(P):- r_p2(P).
+r_p(and(maybe_trim_outside,P)):- r_p2(P).
+
 %r_p(P):- r_p1(P).
 %r_p(and(trim_to_rect,P)):- r_p1(P).
 %r_p(and(into_bicolor,P)):- r_p2(P).
