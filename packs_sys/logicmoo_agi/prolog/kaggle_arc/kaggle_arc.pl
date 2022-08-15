@@ -933,17 +933,18 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 %:- xlisting((.)/3).
 %:- xlisting(user:'.'(_, _, _)).
 
-:- if(prolog_load_context(reload,false)).
-:- fixup_module_exports_into(baseKB).
-:- fixup_module_exports_into(system).
-%:- fixup_module_exports_into_from(system,muarc).
-:- endif.
-
 :- ensure_loaded(kaggle_arc_simple).
 
 :- ensure_loaded('kaggle_arc_fwd.pfc').
 %:- set_prolog_flag(arc_term_expansion, false).
 
+%:- if(prolog_load_context(reload,false)).
+:- fixup_module_exports_into(baseKB).
+:- fixup_module_exports_into(system).
+%:- fixup_module_exports_into_from(system,muarc).
+%:- endif.
+
 %:- fixup_module_exports_now.  
-%user:portray(Grid):- current_predicate(is_group/1), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
+user:portray(Grid):- current_predicate(is_group/1), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
+
 

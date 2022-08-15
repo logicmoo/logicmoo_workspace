@@ -363,13 +363,29 @@ kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=i
 
 into_gridnameA(G,TstName):- known_grid(TstName,G).
 
+
+%grid_to_id(Grid,Name):- is_grid_id(Grid,Name)*->true; (plain_var(Name)->(luser_getval(grid_name,Name),Name\=[],grid_to_id(Grid,Name))).
+:- dynamic(is_grid_id/2).
+set_grid_id(Grid,ID):-
+  my_assertion((ground(ID),nonvar_or_ci(Grid))),
+  my_assertion(\+ is_grid(ID)),
+  luser_setval(grid_name,ID),
+  ignore(( \+ into_gridnameA(Grid,ID),
+  copy_term(Grid,GGrid),numbervars(GGrid,1,_),
+  asserta(is_grid_id(GGrid,ID)))).
+
+
 grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
-%grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
+grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
+grid_to_id(obj(_),_):- !,fail.
 grid_to_id(Grid,ID):- known_grid0(ID,GVar),Grid=@=GVar,!.
 grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_,[attvar(bind)]),!,grid_to_id(GGrid,ID).
-grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(ID), set_grid_id(Grid,ID),!.
+grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(Grid,ID), set_grid_id(Grid,ID),!.
 
-makeup_gridname(GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridName = ID*('ExampleNum'+F)*io.
+grid_to_oid(Grid,OID):- is_grid_id(Grid,OID),atom(OID),!.
+grid_to_oid(Grid,OID):- grid_to_id(Grid,ID),!,id_to_oid(ID,OID).
+
+makeup_gridname(_Grid,GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridName = ID*('ExampleNum'+F)*io.
 
 incomplete(X,X).
 

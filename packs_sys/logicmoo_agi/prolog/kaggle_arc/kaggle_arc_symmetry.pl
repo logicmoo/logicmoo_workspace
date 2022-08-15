@@ -102,14 +102,11 @@ is_trim_symmetricD(Grid):- trim_to_rect(Grid,Rect),!,is_grid_symmetricD(Rect).
 is_mono_symmetric(Grid):- into_bicolor(Grid,Mono),!,is_grid_symmetric(Mono).
 is_mono_symmetricD(Grid):- into_bicolor(Grid,Mono),!,is_grid_symmetricD(Mono).
 
-is_grid_symmetric(Grid):- flipSym_checks(flipHV,Grid),!.
+is_grid_symmetric(Grid):- flipSym_checks(rot180,Grid),!.
 is_grid_symmetric(Grid):- flipSym_checks(rot90,Grid),!.
 
 is_grid_symmetricD(Grid):- is_grid_symmetric(Grid),!.
 is_grid_symmetricD(Grid):- flipSym_checks(flipD,Grid),(flipSym_checks(flipDH,Grid);flipSym_checks(flipDV,Grid);flipSym_checks(flipDHV,Grid)),!.
-
-
-
 
 
 repair_symmetry(Grid):- is_grid(Grid),!,
@@ -146,6 +143,7 @@ repair_symmetry0:-
   %is_symgrid(TestID), 
   is_monotrim_test(TestID),
   repair_symmetry(TestID)).
+
 
 
 repair_symmetry0(Grid,ID,Orig,Out):- 
@@ -282,13 +280,13 @@ quaderants_and_center_rays(Grid9x9,QuadsO,CenterO,RaysO):-
   [[ Q2, _CN,   Q1],
    [_CW, _CC,  _CE],
    [ Q3, _CS,   Q4]] = Grid9x9,
-   flipH(Q1,Q1R), flipV(Q3,Q3R), flipHV(Q4,Q4R),
+   flipH(Q1,Q1R), flipV(Q3,Q3R), rot180(Q4,Q4R),
    gensym('CRef_',CRef),
    CommonQ = [iz(quadrant),iz(pattern(CRef))],
    Quads = [obj([grid(Q2),rot(same),loc(CRef,-1,-1)|CommonQ]),
              obj([grid(Q1R),rot(flipH),loc(CRef,1,-1)|CommonQ]),
              obj([grid(Q3R),rot(flipV),loc(CRef,-1,1)|CommonQ]),
-             obj([grid(Q4R),rot(flipHV),loc(CRef,1,1)|CommonQ])],
+             obj([grid(Q4R),rot(rot180),loc(CRef,1,1)|CommonQ])],
    get_center_rays(CRef,Grid9x9,Center,Rays),
    maplist(filter_empty_grids,[Quads,Center,Rays],[QuadsO,CenterO,RaysO]).
 
@@ -400,7 +398,7 @@ pad_right(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (rot270(Grid,GridM), pad_top(N
 pad_top(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (grid_size(Grid,H,_V),make_grid(H,N,Top),append(Top,Grid,GridO))).
 pad_bottem(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (grid_size(Grid,H,_V),make_grid(H,N,Bot),append(Grid,Bot,GridO))).
 
-clip_rot_patterns(flipV,flipHV,flipH,same,kaleidoscope_four).
+clip_rot_patterns(flipV,rot180,flipH,same,kaleidoscope_four).
 clip_rot_patterns(same,same,same,same,four_the_same).
 clip_rot_patterns(flipH,flipH,same,same,four_way_h_flip).
 
@@ -519,7 +517,7 @@ is_fti_step(repair_in_vm).
 repair_in_vm(P4,VM):-
  ignore((
   maybe_set_vm(VM),
-  VM.h >= 10, VM.v >= 10,
+  VM.h >= 7, VM.v >= 7,
   VM.can_repair == true,
   Grid=VM.grid,
   localpoints_include_bg(VM.grid_o,OriginalPoints),
@@ -739,10 +737,10 @@ fourway(VM):-
   repair_in_vm(repair_fourway,VM),!.
 
 repair_fourway(VM,Grid,RepairedResult,Steps):- fail,  
-  maybe_set_vm(VM), unique_colors(Grid,Colors),
-  member(Color,Colors),
-  unbind_color(Color,Grid,UGrid),
-  repair_2x2([],Steps,UGrid,RepairedResult).
+  maybe_set_vm(VM), 
+  %unique_colors(Grid,Colors), member(Color,Colors),
+  %unbind_color(Color,Grid,UGrid),
+  repair_2x2([],Steps,Grid,RepairedResult).
 
 repair_fourway(VM,Grid,RepairedResult,Steps):- 
   maybe_set_vm(VM),
@@ -1550,7 +1548,7 @@ find_and_use_pattern_gen(G,Grid9x9):-
    SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4)); 
    (writeln(did_NOT_find_pattern_gen),nop(mirror_xy(_CXL,_CYL,_CX,_CY,SXQ2,SYQ2,EXQ2,EYQ2,
    SXCC,SYCC,EXCC,EYCC,SXQ4,SYQ4,EXQ4,EYQ4,G)),fail)),
-  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYQ2,EXQ2,EYQ2,G,flipHV,Q2),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYQ2,EXQ2,EYQ2,G,rot180,Q2),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,same,Q4),
@@ -1633,6 +1631,7 @@ get_fill_points2(Grid,FillPoints):-
 
 %:- set_prolog_flag(occurs_check,error).
 
+  
 get_fill_points(In,UNFP,GridO):-
  %grid_size(Grid,H,V),
  subst001(In,black,wbg,Grid),
@@ -2018,7 +2017,7 @@ dir_num(_,_,_,0).
 idealistic_symmetric_xy_3x3(
 [[Q2,         CN,        flipH(Q2)],
  [CW,        _CC,        flipH(CW)],
- [flipV(Q2),  flipV(CN), flipHV(Q2)]]).
+ [flipV(Q2),  flipV(CN), rot180(Q2)]]).
 
 
 test_symmetry_code(Grid,[],RepairedResult,Code):- 

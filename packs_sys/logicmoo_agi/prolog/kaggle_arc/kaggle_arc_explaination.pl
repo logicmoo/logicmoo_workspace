@@ -9,20 +9,6 @@
 :- endif.
 
 
-:- dynamic(is_grid_id/2).
-
-set_grid_id(Grid,ID):-
-  my_assertion((ground(ID),nonvar_or_ci(Grid))),
-  my_assertion(\+ is_grid(ID)),
-  luser_setval(grid_name,ID),
-  ignore(( \+ into_gridnameA(Grid,ID),
-  copy_term(Grid,GGrid),numbervars(GGrid,1,_),
-  asserta(is_grid_id(GGrid,ID)))).
-
-:- dynamic(is_grid_id/2).
-
-%grid_to_id(Grid,Name):- is_grid_id(Grid,Name)*->true; (plain_var(Name)->(luser_getval(grid_name,Name),Name\=[],grid_to_id(Grid,Name))).
-
 
 
 into_pipe(Grid,Grid):- !. % into_group

@@ -34,7 +34,8 @@ fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+colo
 %fav(t('ff805c23'),[human(repair_in_vm(repair_repeats(blue)),get(changed),trim_to_rect)]).
 fav(t('ff805c23'),[human(repair_in_vm(repair_fourway),get(changed),trim_to_rect)]).
 fav(t('ff805c23'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
-fav(t('3631a71a'),[human(repair_in_vm(repair_fourway),get(repaired))]).
+%fav(t('3631a71a'),[indiv(i_repair_mirrors)]).
+%fav(t('3631a71a'),[human(repair_in_vm(repair_fourway),get(repaired))]).
 fav(t('3631a71a'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
 fav(t('29ec7d0e'),[human(repair_in_vm(repair_repeats(black)),get(repaired))]).
 fav(t('29ec7d0e'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_repetition,pattern_expansion,image_filling,detect_grid,'(4, 1)']).
@@ -648,7 +649,7 @@ fav(t(a68b268e),[out_grid(4,4),-shape_match,-rotation_match,-mask_match,-color_m
 fav(t(d23f8c26),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,image_expansion,crop,'(3, 1)']).
 fav(v(f4081712),[-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(5, 1) ']).
 fav(t('31aa019c'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,remove_noise,find_the_intruder,contouring,'(3, 1)']).
-fav(t('9ecd008a'),[indiv(i_repair_mirrors),human([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect]),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_rotation,pattern_reflection,pattern_expansion,image_filling,crop,'(3, 1)']).
+fav(t('9ecd008a'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_rotation,pattern_reflection,pattern_expansion,image_filling,crop,'(3, 1)']).
 fav(v('67b4a34d'),[out_grid(4,4),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
 fav(v(f5aa3634),[out_grid(4,3),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
 fav(v('9a4bb226'),[-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
@@ -958,11 +959,10 @@ fav(t('5117e062'),[human([find_two_color_indivs,selected_indiv,trim_to_rect,main
 fav(t('44d8ac46'),[human([find_individuals([hollow,boxes,inside([rectangle])],I),indiv_fill_color(I,red)])]).
 fav(t('447fd412'),[human([find_two_color_indivs,find_lesser_block,select_scaled_versions,builds,create_greater_blocks])]).
 fav(t('3c9b0459'),[human([rot180])]).
-fav(t('3631a71a'),[indiv(i_repair_mirrors)]).
 
 %fav(t('d511f180'),[human([compute_max_color(C1),compute_next_color(C2),swap_colors(C2,C1)])]).
 
-fav(t('9ecd008a'),[indiv(i_repair_mirrors),
+fav(t('9ecd008a'),[%indiv(i_repair_mirrors),
     human([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).
 
 

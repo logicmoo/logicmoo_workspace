@@ -49,17 +49,16 @@ arc_portray(Map,TF):- get_map_pairs(Map,Type,Pairs),!, arc_portray_pairs(Type,TF
 
 arc_portray_t(G, _):- is_map(G), !, write_map(G,'arc_portray_t').
 arc_portray_t(G, _):- is_grid(G),  !, data_type(G,W),writeq(grid(W)).
-arc_portray_t(G, _):- is_grid(G),  !, write('..grid..').
 
 arc_portray(G, _):- is_map(G),  !, write_map(G,'arc_portray').
-arc_portray(G, TF):- portray_terse, arc_portray_t(G, TF),!.
-arc_portray(G, TF):- TF \== true, catch(arc_portray_nt(G, TF),_,fail),!.
+arc_portray(G, TF):- TF == true, portray_terse, arc_portray_t(G, TF),!.
+arc_portray(G, TF):- catch(arc_portray_nt(G, TF),_,fail),!.
 %arc_portray(G, _TF):- writeq(G),!.
 
 % Portray In Debugger
 
 arc_portray_nt(G,false):- is_grid(G), print_grid(G),!.
-arc_portray_nt(G,false):- is_object(G),!,object_grid(G,OG), 
+arc_portray_nt(G,_False):- is_object(G),!,object_grid(G,OG), 
   neighbor_map(OG,NG), 
   print_grid(object_grid,NG),nl,
   underline_print(debug_indiv(G)),ptt(G).

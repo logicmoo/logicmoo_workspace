@@ -475,7 +475,7 @@ non_h_rot(rot270).
 
 enum_rotation(same).
 enum_rotation(rot90).
-enum_rotation(rot180). % = flipHV
+enum_rotation(rot180). % = rot180
 enum_rotation(rot270).
 
 non_h_ori(same).
@@ -493,7 +493,7 @@ non_v_ori(rot270).
 
 enum_orientation(same).
 enum_orientation(flipV).
-enum_orientation(rot180). % = flipHV
+enum_orientation(rot180). % = rot180
 enum_orientation(rot90).
 enum_orientation(rot270).
 enum_orientation(flipH).

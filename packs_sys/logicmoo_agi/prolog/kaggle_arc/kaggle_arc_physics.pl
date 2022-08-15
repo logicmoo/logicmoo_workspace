@@ -122,21 +122,19 @@ rot180( Grid,NewAnyWUpdate):- any_xform(grid_rot180,Grid,NewAnyWUpdate).
 rot270( Grid,NewAnyWUpdate):- any_xform(grid_rot270,Grid,NewAnyWUpdate).
 flipH( Grid,NewAnyWUpdate):- any_xform(grid_flipH,Grid,NewAnyWUpdate).
 flipV( Grid,NewAnyWUpdate):- any_xform(grid_flipV,Grid,NewAnyWUpdate).
-flipHV( Grid,NewAnyWUpdate):- any_xform(grid_flipHV,Grid,NewAnyWUpdate).
 flipD( Grid,NewAnyWUpdate):- any_xform(grid_flipD,Grid,NewAnyWUpdate).
 flipDV( Grid,NewAnyWUpdate):- any_xform(grid_flipDV,Grid,NewAnyWUpdate).
 flipDH( Grid,NewAnyWUpdate):- any_xform(grid_flipDH,Grid,NewAnyWUpdate).
 flipDHV( Grid,NewAnyWUpdate):- any_xform(grid_flipDHV,Grid,NewAnyWUpdate).
 
-grid_rot90(Grid,NewAnyWUpdate):-  rot270(GridM,NewAnyWUpdate),flipHV(Grid,GridM).
-grid_rot180(Grid,Rot180):- rot90(Grid,Rot90),rot90(Rot90,Rot180).
+grid_rot90(Grid,NewAnyWUpdate):-  rot270(GridM,NewAnyWUpdate),rot180(Grid,GridM).
+grid_rot180(Grid,Rot180):- flipV(Grid,Rot90),flipH(Rot90,Rot180).
 grid_rot270(Grid,NewAnyWUpdate):- get_colums(Grid,NewAnyWUpdate),!.
 grid_flipH(Grid,FlipH):- mapgroup(reverse,Grid,FlipH).
 grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
-grid_flipHV(Grid,FlipHV):-flipH(Grid,FlipH),flipV(FlipH,FlipHV),!.
 grid_flipDV(Grid,FlipHV):-flipD(Grid,FlipH),flipV(FlipH,FlipHV),!.
 grid_flipDH(Grid,FlipHV):-flipD(Grid,FlipH),flipH(FlipH,FlipHV),!.
-grid_flipDHV(Grid,FlipHV):-flipD(Grid,FlipH),flipHV(FlipH,FlipHV),!.
+grid_flipDHV(Grid,FlipHV):-flipD(Grid,FlipH),rot180(FlipH,FlipHV),!.
 
 grid_flipD(I,O):- grid_size(I,H,V),make_grid(V,H,O),
   forall(between(1,H,X),
