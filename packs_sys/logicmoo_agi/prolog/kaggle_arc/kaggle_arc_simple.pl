@@ -8,6 +8,13 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+grid_obj(Grid,Why,Objs):-
+  (var(Grid)->arc_grid(Grid);true),
+  ROptions = complete,
+  individuate(ROptions,Grid,_IndvS),  
+  why_grouped(Why,GS),
+  member(Objs,GS).
+
 
 :- export(grid_part/2).
 grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(luser_getval(example,ExampleNum)),!,

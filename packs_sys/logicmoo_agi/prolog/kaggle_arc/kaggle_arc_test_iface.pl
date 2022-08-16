@@ -408,7 +408,9 @@ in_out_name(tst+NN,SI,SO):- N is NN+1, format(atom(SI),'EVALUATION TEST #~w',[N]
 in_out_name(X,'Input'(X),'Output'(X)).
 
 
-arc_test_name(TestID):- kaggle_arc(TestID,trn+0,_,_).
+all_arc_test_name(TestID):- kaggle_arc(TestID,trn+0,_,_).
+
+arc_test_name(TestID):- get_current_test(WasTestID), (TestID=WasTestID;(get_current_suite_testnames(List),member(TestID,List),WasTestID\== TestID, set_current_test(TestID))).
 
 some_task_info(TestID,III):- more_task_info(TestID,III).
 some_task_info(X,[keypad]):- key_pad_tests(X). 
@@ -416,7 +418,7 @@ some_task_info(TestID,III):- fav(TestID,III).
 
 %:- dynamic(task_info_cache/2).
 %:- retractall(task_info_cache/2).
-task_info(TestID,InfoS):- var(TestID),!,arc_test_name(TestID),task_info(TestID,InfoS).
+task_info(TestID,InfoS):- var(TestID),!,all_arc_test_name(TestID),task_info(TestID,InfoS).
 %task_info(TestID,InfoS):- \+ \+ task_info_cache(TestID,_),!,task_info_cache(TestID,InfoS).
 task_info(TestID,InfoS):- nonvar(TestID),once(fix_test_name(TestID,FTestID,_)),TestID\=@=FTestID,!,task_info(FTestID,InfoS).
 task_info(TestID,InfoS):- 
@@ -448,8 +450,8 @@ test_names_by_fav_rev(Name):- test_names_ord_favs(AllS),reverse(AllS,AllR),membe
 test_names_ord_favs(FavListS):- ord_favs(FavListS),!.
 test_names_ord_favs(FavListS):- pt(recreating(test_names_ord_favs)), findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),  asserta(ord_favs(FavListS)).
 
-alphabetical_v(Set):- findall(v(Name),arc_test_name(v(Name)),List),sort(List,Set).
-alphabetical_t(Set):- findall(t(Name),arc_test_name(t(Name)),List),sort(List,Set).
+alphabetical_v(Set):- findall(v(Name),all_arc_test_name(v(Name)),List),sort(List,Set).
+alphabetical_t(Set):- findall(t(Name),all_arc_test_name(t(Name)),List),sort(List,Set).
 
 
 human_t(T):- human_t_set(Set),member(T,Set).
@@ -471,7 +473,7 @@ sol_t_set(NamesByHardUR):- % Name=t(_),
 hard_t(T):- hard_t_set(Set),member(T,Set).
 
 hard_t_set(NamesByHardUR):- Name=t(_),
-  findall(Name,arc_test_name(Name),List),sort(List,Sorted),
+  findall(Name,all_arc_test_name(Name),List),sort(List,Sorted),
   findall(Hard-Name,(member(Name,Sorted),hardness_of_name(Name,Hard)),All),
   keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,
   reverse(NamesByHardU,NamesByHardUR).
@@ -492,7 +494,7 @@ write_ansi_file(F):- call(F,Set),
 
 :- dynamic(ord_hard/1).
 test_names_ord_hard(NamesByHard):- ord_hard(NamesByHard),!.
-test_names_ord_hard(NamesByHard):- pt(recreating(test_names_ord_hard)),findall(Hard-Name,(arc_test_name(Name),hardness_of_name(Name,Hard)),All),
+test_names_ord_hard(NamesByHard):- pt(recreating(test_names_ord_hard)),findall(Hard-Name,(all_arc_test_name(Name),hardness_of_name(Name,Hard)),All),
   keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,
   list_to_set(NamesByHardU,NamesByHard), 
   asserta(ord_hard(NamesByHard)).
@@ -761,6 +763,12 @@ fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=E.
 fix_test_name(ID,Fixed,Example+Num):- test_id_num_io(ID,Tried,Example,Num,_), !, fix_id(Tried,Fixed).
 fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
 
+test_id_num_io(ID,_Name,_Example,_Num,_IO):- var(ID),!, fail.
+test_id_num_io(ID,Name,Example,Num,IO):- atom(ID),catch(atom_to_term(ID,Term,_),_,fail), Term\==ID, !,test_id_num_io(ID,Name,Example,Num,IO).
+test_id_num_io(ID,Name,Example,Num,IO):- atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], !,test_id_num_io(ID,Name,Example,Num,IO).
+test_id_num_io(ID,Name,_Example,_Num,_IO):- atom(ID),fix_id(ID,   Name),!.
+test_id_num_io([Name,Example,ANum,IO|_],Name,Example,Num,IO):-atom_number(ANum,Num),!.
+test_id_num_io(ID,ID,Example,Num,IO):- kaggle_arc_io(ID,Example+Num,IO,_).
 test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*Example+Num*IO,fix_id(TstName,Name),!.
 test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*(Example+Num)*IO,fix_id(TstName,Name),!.
 test_id_num_io(ID,Name,Example,Num,_IO):- ID = TstName*Example+Num,fix_id(TstName,Name),!.

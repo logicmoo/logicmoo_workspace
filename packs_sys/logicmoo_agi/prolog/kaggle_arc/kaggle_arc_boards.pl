@@ -120,9 +120,9 @@ show_found2(HO,VO,H,V,Info,F):-
   constrain_grid(f,_TrigF,OF,FF),!,
   print_grid(H,V,Info,FF),!.
 
-test_grid_hint:- clsmake, forall(arc_test_name(TestID),test_grid_hint(TestID)).
+test_grid_hint:- clsmake, forall(all_arc_test_name(TestID),test_grid_hint(TestID)).
 
-save_grid_hints:-  forall(arc_test_name(TestID),test_grid_hint(TestID)),
+save_grid_hints:-  forall(all_arc_test_name(TestID),test_grid_hint(TestID)),
   listing(arc_test_property/3).
 
 %test_grid_hint:- get_current_test(TestID),test_grid_hint(TestID).

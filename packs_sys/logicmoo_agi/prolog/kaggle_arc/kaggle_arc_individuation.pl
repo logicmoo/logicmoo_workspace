@@ -419,7 +419,7 @@ inside_objs(From,Next,VM):-
     points_to_grid(H,V,Points,Grid),
     gensym('ID_',ID2),
     print_grid(Next,Grid),
-    preserve_vm(VM,individuate7(_,ID2,VM.gid,Next,Grid,WasInside)),
+    preserve_vm(VM,individuate7(_,ID2,Next,Grid,WasInside)),
     raddObjects(VM,WasInside))),!.
 
 
@@ -543,25 +543,29 @@ individuate(ROptions,GridIn,IndvS):- individuation_macros(ROptions,R), atom(R),R
 individuate(ROptions,GridIn,IndvS):- individuate1(_,ROptions,GridIn,IndvS).
 
 
-individuate1(_, ROptions,VM,LF):- is_map(VM),!, individuate2(VM, VM.gid, ROptions, VM.grid, LF).
+individuate1(_, ROptions,VM,LF):- is_map(VM),!, individuate1(VM, ROptions, VM.grid, LF).
 individuate1(VM,ROptions,GridIn,IndvS):- \+ is_grid(GridIn), into_grid(GridIn,Grid),!,individuate1(VM,ROptions,Grid,IndvS).
-individuate1(VM,ROptions,Grid,IndvS):- must_det_ll((grid_to_oid(Grid,OID),individuate2(VM,OID,ROptions,Grid,IndvS))).
-
-individuate2(_,OID,ROptions,_GridIn,IndvS):-
+individuate1(_,ROptions,GridIn,IndvS):-
+  grid_to_oid(GridIn,OID),
   get_individuated_cache(ROptions,OID,IndvS),!.
-individuate2(VM,OID,ROptions,GridIn,IndvS):- 
-  do_individuate(VM,OID,ROptions,GridIn,IndvS),!,
-
+individuate1(VM,ROptions,GridIn,IndvS):- 
+  do_individuate(VM,ROptions,GridIn,IndvS),!,
+  H = individuate(VM.gid,ROptions),
+  save_grouped(H,IndvS),
+  OID = VM.gid,
   ignore((ground(GridIn),retractall(individuated_cache(ROptions,OID,_)), 
    asserta(individuated_cache(ROptions,OID,IndvS)))),!.
 
 
-do_individuate(VM, OID, ROptions, GridIn,LF):-
+do_individuate(VM, ROptions, GridIn,LF):-
    %fix_indivs_options(ROptionsL,ROptions),
    must_be_free(LF), into_points_grid(GridIn,_Points,Grid),
    grid_to_id(Grid,ID), my_assertion(\+ is_grid(ID)),
-   individuate7(VM,ID,OID,ROptions,Grid,LF),!,
-   maplist(assert_object(OID),LF).
+   individuate7(VM,ID,ROptions,Grid,LF),!,
+   id_to_oid(ID,OID),   
+   once((delistify_single_element(ROptions,NamedOpts),
+       save_grouped(individuate(OID,NamedOpts),LF))),!,
+   maplist(assert_object(ID),LF).
   %smallest_first(IndvS,SF),
   %largest_first(SF,LF),
   %gset(VM.objs) = LF,
@@ -571,9 +575,8 @@ do_individuate(VM, OID, ROptions, GridIn,LF):-
 % tiny grid becomes a series of points
 %individuate(GH,GV,ID,ROptions,_Grid,Points,IndvS):- \+ is_list(ROptions), is_glyphic(Points,GH,GV), individuate_glyphic(GH,GV,ID,Points,IndvS),!.
 %individuate(GH,GV,ID,whole,_Grid,Points,IndvS):-  individuate_whole(GH,GV,ID,Points,IndvS),!.
-individuate7(VM,ID,OID,ROptions,GridIn,IndvS):-
+individuate7(VM,ID,ROptions,GridIn,IndvS):-
       (var(VM) -> into_fti(ID,ROptions,GridIn,VM) ; true),
-      VM.gid = OID,
       %VM.points = Points,
       %individuation_reserved_options(ROptions,Reserved,NewOptions),
       %trace,
@@ -587,8 +590,6 @@ individuate7(VM,ID,OID,ROptions,GridIn,IndvS):-
       %combine_objects(IndvS1,IndvS2),
       combine_same_globalpoints(IndvS1,IndvS),
       %list_to_set(IndvS1,IndvS),
-      once((delistify_single_element(ROptions,NamedOpts),
-       save_grouped(individuate(ID,NamedOpts),IndvS))),!,
       nop(print_info(IndvS)).  
 
 into_points_grid(GridIn,Points,Grid):-
@@ -985,7 +986,7 @@ bg_shapes(Shape,VM):-
   mapgrid(bg_shaped,VM.grid,NewGrid),
   atomic_list_concat([VM.gid,'_bg_shaped'],OID),
   asserta(is_grid_id(NewGrid,OID)),
-  individuate2(_,OID,Shape,NewGrid,FoundObjs),
+  individuate1(_AltVM,Shape,NewGrid,FoundObjs),
   set_vm(VM),
   mapgroup(recolor_object(VM.grid_o),FoundObjs,ReColored),
   %map_pred(bg_shaped,FoundObjs,ReColored),
@@ -1008,7 +1009,7 @@ fg_shapes(Shape,VM):-
   mapgrid(fg_shaped,VM.grid,NewGrid),
   atomic_list_concat([VM.gid,'_fg_shaped'],OID),
   asserta(is_grid_id(NewGrid,OID)),
-  individuate2(_,OID,Shape,NewGrid,FoundObjs),
+  individuate1(_,Shape,NewGrid,FoundObjs),
   set_vm(VM),
   mapgroup(recolor_object(VM.grid_o),FoundObjs,ReColored),
   remCPoints(VM,ReColored),
@@ -1370,7 +1371,7 @@ colormass_subshapes(_VM,[]):-!.
 colormass_subshapes(VM,VMObjs):- % fail,
   select(Obj,VMObjs,Next),
   object_grid(Obj,Grid),
-  individuate7(_,VM.id,VM.gid,[subshape_in_object],Grid,WasInside),
+  individuate7(_,VM.id,[subshape_in_object],Grid,WasInside),
   ignore((WasInside =[_,_|_], % two or more
         print_grid("colormass_subshapes",WasInside),
         raddObjects(VM,WasInside))),

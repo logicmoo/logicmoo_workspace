@@ -15,7 +15,7 @@
 save_grouped(H,G):-
   sort(G,GS),
   get_current_test(TestID),
-  nop(my_asserta_if_new(why_grouped(TestID,H,GS))),
+  my_asserta_if_new(why_grouped(TestID,H,GS)),
   (mapgroup(register_obj,GS)).
 
 

@@ -410,8 +410,10 @@ o2c(Obj,Glyph):- color(Obj,Glyph),!.
 o2ansi(I,S):- integer(I),int2glyph(I,G),!,o2ansi(G,S). 
 o2ansi(G,S):- atom(G),!,g2o(G,O),o2ansi(O,S),!.
 o2ansi(Obj,S):- o2g(Obj,G),colors(Obj,Colors),maplist(arg(1),Colors,NColors),
-  wots(S,maplist(print_ncolors(G),NColors)).
+  wots(S,maplist(user:print_ncolors(G),NColors)).
 print_ncolors(G,C):- sformat(F,'~q',[G]),color_print(C,F).
+
+:- system:import(print_ncolors/2).
 
 :- dynamic(g2o/2).
 

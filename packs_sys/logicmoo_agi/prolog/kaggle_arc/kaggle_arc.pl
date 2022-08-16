@@ -525,7 +525,9 @@ arc1(G,TName):-
 
 cls1:- nop(catch(cls,_,true)).
 
-arc_grid(Grid):- test_names_by_fav(TestID),kaggle_arc_io(TestID,_ExampleNum,_,Grid).
+arc_grid(Grid):- 
+  arc_test_name(TestID),
+  kaggle_arc_io(TestID,_ExampleNum,_,Grid).
 
 list_to_rbtree_safe(I,O):- must_be_free(O), list_to_rbtree(I,M),!,M=O.
 :- dynamic(is_buggy_pair/2).
@@ -549,6 +551,8 @@ get_training(Prop,Value):- get_training(Training), get_kov(Prop,Training,Value).
 set_vm(VM):- luser_linkval('$grid_vm',VM).
 get_vm(VM):- luser_getval('$grid_vm',VM),!.
 get_vm(VM):- ndividuator,!,luser_getval('$grid_vm',VM),!.
+
+ping_get_vm(VM):- luser_getval('$grid_vm',VM),!.
 
 set_vm(Prop,Value):- ignore(luser_getval('$grid_vm',VM)),
  luser_set_vm(VM,Prop,Value).

@@ -111,7 +111,7 @@ object_s_glyph(Obj,SGlyph):-
   wots(SGlyph,
    (
      (( \+ (member(E,NColors),E==FC))->color_print(FC,Glyph);true),
-     maplist(print_ncolors(Glyph),NColors))).
+     user:maplist(print_ncolors(Glyph),NColors))).
 
 
 prefered(repaired).
