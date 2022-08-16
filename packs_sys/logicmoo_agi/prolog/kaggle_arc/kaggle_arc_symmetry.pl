@@ -12,6 +12,9 @@
 :- discontiguous(glean_patterns_hook/3).
 :- discontiguous(gph/5).
 
+kaggle_arc_io_trn(TestID,Example+Num,IO,Grid):- 
+  arg(_,v(trn,tst),Example),
+  kaggle_arc_io(TestID,Example+Num,IO,Grid).
 
 is_monotrim_test(TestID):- findall(TestID,(is_symgrid(TestID); is_monotrim_test0(TestID)),L),list_to_set(L,S),member(TestID,S).
 
@@ -24,13 +27,14 @@ is_monotrim_test0(TestID):-
   once((is_monotrim_symmetricD(Out);is_monotrim_symmetricD(In))))).
 
 is_symgrid(TestID):-!,
-      clause(is_symgrid(T),true),     
+      clause(is_symgrid(T),Body),Body\=(_,_),call(Body),     
       once((fix_test_name(T,TestID,_),
-      must(kaggle_arc_io(TestID,_,in,G)),
+      must(kaggle_arc_io_trn(TestID,_,in,G)),
       nonvar_or_ci(G))).
 %is_symgrid(t('3631a71a')*_*out).
-%is_symgrid(t(c444b776)*_*out).
 
+is_symgrid(t('29ec7d0e')).
+is_symgrid(t('1b60fb0c')).
 is_symgrid(v(f9d67f8b)).
 is_symgrid(t('73251a56')).
 is_symgrid(t('8eb1be9a')).
@@ -48,12 +52,11 @@ is_symgrid(t(a740d043)).
 is_symgrid(t(ff805c23)).
 is_symgrid(t(eb281b96)).
 is_symgrid(t('007bbfb7')).
+is_symgrid(t(c444b776)*_*out).
 
-is_symgrid(t('29ec7d0e')).
-is_symgrid(t('1b60fb0c')).
 is_symgrid(t('3631a71a')*_*in).
 is_symgrid(t('83302e8f')*_*in).
-%is_symgrid(v('8a371977')). % Weird
+is_symgrid(v('8a371977')). % Weird
 is_symgrid('6f8cd79b').
 is_symgrid('695367ec').
 is_symgrid('7447852a').
@@ -69,6 +72,8 @@ is_symgrid(t(b8825c91)).
 is_symgrid(t(e40b9e2f)). 
 is_symgrid(t('47c1f68c')).
 is_symgrid(t('9d9215db')).
+%is_symgrid(X):- is_need(X).
+%is_symgrid(X):- is_hard(X).
 
 
 %is_symgrid(N):- arc_grid(N).
@@ -123,17 +128,21 @@ is_grid_symmetricD(Grid):- is_grid_symmetric(Grid),!.
 is_grid_symmetricD(Grid):- flipSym_checks(flipD,Grid),(flipSym_checks(flipDH,Grid);flipSym_checks(flipDV,Grid);flipSym_checks(flipDHV,Grid)),!.
 
 vm_for_grid(Grid,VM):- vm_for_grid(Grid,_,_,VM).
-vm_for_grid(Grid,ID,Out,VM):-
-  ping_get_vm(VM), VM.grid == Grid,!,
+vm_for_grid(Grid,ID,Out,VM):- fail,
+  peek_vm(grid,VMGrid), VMGrid == Grid,!,
   Out = VM.grid_out, ID = VM.id.
-vm_for_grid(Grid,ID,Out,VM):-
+vm_for_grid(Grid,IDO,Out,VM):-
   grid_to_id(Grid,ID),
   into_fti(ID,in_out,Grid,VM),
   set(VM.grid)=Grid,
   ignore((
     test_id_num_io(ID,TestID,Example,Num,IO),
     set_current_test(TestID),    
-    ignore((IO==in,kaggle_arc_io(TestID,Example+Num,out,Out),nop(Example\==tst),set(VM.grid_out)=Out)))).
+
+    ignore((IO==in,kaggle_arc_io_trn(TestID,Example+Num,out,Out),
+            set(VM.id) = (TestID*(Example+Num)*IO),
+       nop(Example\==tst),set(VM.grid_out)=Out)))),
+  IDO = VM.id .
 
 
 test_repair_symmetry:- clsmake, forall(repair_symmetry0,true).
@@ -147,8 +156,8 @@ repair_symmetry0:-
 repair_symmetry(TestID):- \+ is_grid(TestID), 
  fix_id(TestID,TTestID), TTestID \== TestID, repair_symmetry(TestID).
 repair_symmetry(TestID):- \+ is_grid(TestID),
- must_det_ll(( \+ \+ kaggle_arc_io(TestID,_,_,_),
- forall(kaggle_arc_io(TestID,_,in,Grid), 
+ must_det_ll(( \+ \+ kaggle_arc_io_trn(TestID,_,_,_),
+ forall(kaggle_arc_io_trn(TestID,_,in,Grid), 
    (set_current_test(TestID),repair_symmetry(Grid))))).
 
 repair_symmetry(Grid):- is_grid(Grid),!,
@@ -156,48 +165,61 @@ repair_symmetry(Grid):- is_grid(Grid),!,
   into_fti(ID,in_out,Grid,VM),
   set_vm(VM),
   set(VM.grid)=Grid,    
-  ignore((
-    test_id_num_io(ID,TestID,Example,Num,IO),
-    set_current_test(TestID),
-    fif(IO==in,ignore(kaggle_arc_io(TestID,Example+Num,out,Out))),
-    fif(Example\==tst,set(VM.grid_out)=Out),
-    %\+ is_monotrim_symmetric(Grid), is_monotrim_symmetric(Out),
-    duplicate_term(Grid,Orig),
-    format('~N'), dash_chars,
-    wdmsg(begin_test(ID)),
-    print_side_by_side(Grid,Out),
-    wdmsg(begun_test(ID)),
-    %\+ is_hard(TestID),
-    % \+ is_need(TestID),  
-    fif(is_need(TestID),wdmsg(is_need(TestID))),
-    fif(is_hard(TestID),wdmsg(is_hard(TestID))))),
-    ignore(time(repair_symmetry0(Grid,ID,Orig,Out))),!,
-    set(VM.grid_out)=_.
+%%  ignore(( test_id_num_io(ID,TestID,_,_,_))),
+  kaggle_arc_io_trn(TestID,Example+Num,IO,Grid),
+  set_current_test(TestID),
+  fif(IO==in,kaggle_arc_io_trn(TestID,Example+Num,out,Out)),
+  (Example==tst->set(VM.grid_out)=_;set(VM.grid_out)=Out),
+  %\+ is_monotrim_symmetric(Grid), is_monotrim_symmetric(Out),
+  format('~N'), dash_chars,
+  wdmsg(begin_test(ID)),
+  print_side_by_side(Grid,Out),
+  %\+ is_hard(TestID), \+ is_need(TestID),    
+  fif(is_need(TestID),wdmsg(is_need(TestID))),
+  fif(is_hard(TestID),wdmsg(is_hard(TestID))),!,
+  ignore(time(repair_symmetry_code(Grid,_,_))),
+  set(VM.grid_out)=_.
 
-
-
-repair_symmetry0(Grid,ID,Orig,Out):- 
+repair_symmetry_code(Grid,RepairedResult,Code):- 
+  must_det_ll((
+  duplicate_term(Grid,Orig),
+  %vm_for_grid(Grid,IDO,Out,_VM),
+  ignore((kaggle_arc_io_trn(TestID,ExampleNum,in,Grid),
+          kaggle_arc_io_trn(TestID,ExampleNum,out,Out))),
+  ID = TestID*ExampleNum*in,
+  wdmsg(begun_repair_symmetry(ID)))),!,
   (test_symmetry_code(Grid,GridS,RepairedResult,Code)
      *-> 
       (fif(GridS\==[],print_grid(test_RepairedResult,GridS)),
        fif(Orig\==Grid,print_side_by_side(green,Orig,orig(ID),_,Grid,altered(ID))),
        print_side_by_side(green,Orig,gridIn(ID),_,RepairedResult,repairedResult(ID)),
        maplist(print_info,GridS),
+       Errors = _,
        fif(is_grid(Out),
-        (count_changes(Out,test_RepairedResult,0,Errors),
+        (count_changes(Out,RepairedResult,0,Errors),
          fif(Errors\==0,
            ((mapgrid(changed_grid,Out,RepairedResult,Problem)-> true ; Problem = RepairedResult),
-            print_side_by_side(yellow,Problem,unexpected_repairedResult(ID),_,Out,expected(ID)),
-           arcdbg_info(yellow,mismatched(symmetry_code(ID,Code))))))),
-       arcdbg_info(green,success(symmetry_code(ID,Code))))
+            print_side_by_side(yellow,Problem,unexpected_repairedResult(ID,Errors),_,Out,expected(ID)),
+           arcdbg_info(yellow,mismatched(symmetry_code(ID,Code))))),
+         fif(Errors==0,
+         (arcdbg_info(green,success(symmetry_code(ID,Code))),
+          reinforce_best_values(ID,Code))))),
+       fif(var(Errors),  arcdbg_info(blue,unable_to_verify(symmetry_code(ID,Code)))))
    ;
    ((var(Out)->Out=[[_]];true),
      print_side_by_side(red,Orig,gridIn(ID),_,Out,out(ID)),
      arcdbg_info(red,none_found(symmetry_code(ID))),!,fail)).
    
 changed_grid(In,Out,_):- In=@=Out,!.
-changed_grid(In,Out,In):- var(Out).
-changed_grid(_,Out,Out).
+changed_grid(Out,In,Vis):- (var(Out);Out==black),!,make_visible(In,Vis).
+changed_grid(In,Out,Vis):- (var(Out);Out==black),!,make_visible(In,Vis).
+changed_grid(In,_,Vis):- make_visible(In,Vis).
+
+
+make_visible(In,Vis):- is_real_color(In),In\==black,!,Vis=In.
+make_visible(In,Vis):- is_bg_color(In),!,Vis='.'-'#801110'.
+make_visible(In,Vis):- is_fg_color(In),!,Vis='x'-'#F0fff0'.
+make_visible(_In,'?'-'#1077f1').
 
 crop(X,Y,G,GO):- make_grid(X,Y,GO),maplist_until(aligned_rows_u,G,GO).
 
@@ -491,7 +513,8 @@ sometimes_assume(P2,X,Y):- ignore(call(P2,X,Y)).
 sometimes_assume(P1,X):- ignore(call(P1,X)).
 
 count_changes(G,R,S,S):- G=@=R,!.
-count_changes(G,R,S,E):- (\+ is_list(G);\+ is_list(R)),!,plus(S,1,E).
+count_changes(G,R,S,E):- (\+ is_list(G), \+ is_list(R)),!,plus(S,1,E).
+count_changes(G,R,S,E):- (\+ is_list(G) ; \+ is_list(R)),!,plus(S,10_000,E).
 count_changes([G|Grid],[R|RepairedResult],S,E):-
   count_changes(G,R,S,Changes),
   count_changes(Grid,RepairedResult,Changes,E),!.
@@ -582,15 +605,22 @@ repair_in_vm(P4,VM):-
 column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row). 
 column_or_row(Grid,Color):- rot90(Grid,Grid0),!,member(Row,Grid0), maplist(==(Color),Row). 
 
-guess_to_unbind(Grid,Color):- guess_to_unbind1(Grid,Color), (Color\==black -> \+ column_or_row(Grid,Color) ; true).
+guess_to_unbind(Grid,Color):- guess_to_unbind1(Grid,Color), 
+  (Color\==black -> ( \+ column_or_row(Grid,Color),if_target(Out, \+ contains_color(Color,Out))) ; true).
+  
 %guess_to_unbind1(_Grid,Color):- Color = brown.
-guess_to_unbind1(Grid,Color):- colors_count_black_first(Grid,Colors),!,member(cc(Color,N),Colors),N>0.
+guess_to_unbind1(Grid,Color):- colors_count_black_first(Grid,Colors),Colors\==[], !,member(cc(Color,N),Colors),N>0.
 guess_to_unbind1(_Grid,Color):- Color = black.
 guess_to_unbind1(_Grid,Color):- Color = blue.
 guess_to_unbind1(Grid,Color):- !, fail, select(Row1,Grid,Rows),member(Row2,Rows),
   append(_,[C1,C2],Row1),C1==C2,
   append(_,[C3,C4],Row2),C3==C4,
   C1=C4,C1\==black,Color=C1.
+
+if_target(Out,Goal):- (peek_target(Out)->call(Goal);true).
+peek_target(Out):- peek_vm(grid_out,Out),is_grid(Out).
+peek_target(Grid,Out):- peek_target(Out)->true;Grid=Out.
+contains_color(Color,Out):- unique_colors(Out,Colors),member(Color,Colors).
 
 guess_unbind_color(UnbindColor,Grid,RepairedResult):- 
    guess_to_unbind(Grid,UnbindColor), 
@@ -617,7 +647,6 @@ blur_some(B,Mix,I,O):- (var(B)->blur_turn(B);true),(once(call(B,I,M)),I\=@=M), m
 blur_turn(rot90). blur_turn(rot270). 
 blur_turn(flipV). blur_turn(flipH). blur_turn(rot180). 
 blur_turn(flipDHV). blur_turn(flipD). blur_turn(flipDV). blur_turn(flipDH).
-
 blur_mix(fg). blur_mix(bg). blur_mix(not_color(black)). 
 
 cv(FG,OC):- once(FG==fg;OC==fg;FG==bg;OC==bg),!.
@@ -625,8 +654,8 @@ cv(FG,OC):- FG=OC,!.
 cv(_,_).
 
 mix_cellr(Mix,I,M,O):- mix_cell(Mix,M,I,O).
+mix_cellr(blanks,OC,FG,New):- !, (var(OC)->New=FG;New=OC).
 mix_cell(Mix,I,M,O):- var(Mix),!,blur_mix(Mix),mix_cell(Mix,I,M,O).
-
 
 mix_cell(fg,OC,FG,FG):- OC==FG,!.
 mix_cell(fg,OC,FG,FG):- is_fg_color(FG),(is_real_color(FG); \+ is_fg_color(OC)),!,cv(FG,OC).
@@ -654,32 +683,37 @@ mix_cell(not_color(NC),BC,GC,GC):- BC==NC,!.
 mix_cell(not_color(NC),GC,BC,GC):- BC==NC,!.
 mix_cell(not_color(_),GC,_,GC).
 
-mix_cell(blanks,OC,FG,New):- !, (var(OC)->New=FG;New=OC).
 
 mix_cell(P,I,M,O):- \+ missing_arity(P,3),call(P,I,M,O),!.
 mix_cell(P,I,M,O):- \+ missing_arity(P,2),call(P,I,M),!,O=M.
 mix_cell(_,_,_,_).
 
 
-
-mprint_grid(wqs([Quality,Did])-RepairedResult):-
-  print_grid(wqs([Quality,Did]),RepairedResult).
-
 saliency_quality_of_change(Grid,RepairedResult,Quality):-  
-  grid_size(Grid,H,V),Area is H * V,
+  grid_size(Grid,H,V),OArea is H * V,
+  grid_size(RepairedResult,RH,RV),RArea is RH * RV,
+
   count_changes(Grid,RepairedResult,0,Changes),
-  cmass(Grid,OMass),!,
+  cmass(Grid,OMass),!,  
   cmass(RepairedResult,RMass),
-  left_over_blanks(RepairedResult,Blanks),
+  nop(RArea == RMass -> OMass==OArea ; true),
+  count_variables(RepairedResult,Blanks),
   NegBlanks is -Blanks,
   symmetric_types(RepairedResult,QQ),length(QQ,N),
-  Change is -rationalize(Changes/Area),
+  NegChange is -rationalize(Changes/OArea),
   DMass is rationalize(RMass/OMass),
-  Quality = N+NegBlanks+Change+DMass+QQ.
+  Quality = N+NegBlanks+NegChange+DMass+QQ.
 
-left_over_blanks(RepairedResult,Blanks):- append(RepairedResult,Flat),include(var,Flat,Vars),length(Vars,Blanks).
+count_variables(RepairedResult,Blanks):- append(RepairedResult,Flat),include(plain_var,Flat,Vars),length(Vars,Blanks).
 
+:- thread_local(remember_learning/3).
 learn_best_values(VarsIn,VarsOut,Goal):- assert(remember_learning(VarsIn,VarsOut,Goal),Cl), undo(erase(Cl)), call(Goal).
+reinforce_best_values(ID,Code):- 
+  get_current_test(TestID),
+  Data = remember_learning(_VarsIn,_VarsOut,_Goal),
+  forall(Data,assert_test_property(TestID,reinforce_best_values,Data)),
+  forall(Data,assert_test_property(TestID,code,Code)),
+  wdmsg(reinforce_best_values(ID,Code)).
 
 test_symmetry_code(Grid,[],RepairedResult,Code):- 
   repair_repeats(_VM,Grid,RepairedResult,Code).
@@ -690,14 +724,11 @@ test_symmetry_code(Grid,Grids,RepairedResult,Code):-
 repair_symmetry(G,GR):-
  find_and_use_pattern_gen(G,GR),!.
  
-test_repair_symmetry:- clsmake, repair_symmetry0.
-:- arc_history(test_repair_symmetry).
 repair_repeats(VM,Grid,RepairedResult,Code):-
   colors(Grid,[cc(HC,Count)|_]),!,
   repair_repeats0(VM,Grid,RepairedResult,Code), Grid\=@=RepairedResult,
   nop((colors(RepairedResult,ListCounts),
   (member(cc(HC,NewCount),ListCounts)-> NewCount =< Count ; true))).
-
 
 repair_repeats0(_VM,Grid,RepairedResult,Did):-
   maybe_try_something(Grid,RepairedResult,Did).
@@ -707,89 +738,152 @@ repair_repeats0(_VM,Grid,RepairedResult,[blur_least(_,fg)]):-
   blur_least(_,fg,Grid,RepairedResult),
   nop(is_trim_symmetricD(RepairedResult)).
 
-maybe_try_something(Grid,RepairedResult,Did):-
-  AnswerFormat = print_grid(wqs([Quality,Did]),RepairedResult),
+
+maybe_try_something(Grid,RepairedResultO,Did):- maybe_try_something0(Grid,RepairedResultO,Did).
+
+maybe_try_something0(Grid,RepairedResult,Did):-  maybe_try_something1(Grid,RepairedResult,Did), ground(RepairedResult),!.
+maybe_try_something0(Grid,RepairedResultO,Did):- 
+  maybe_try_something1(Grid,RepairedResult,Did1),
+  maybe_try_something_more(Grid,RepairedResult,Did1,RepairedResultO,Did), ground(RepairedResult),!.
+maybe_try_something0(Grid,RepairedResult,Did):-  maybe_try_something1(Grid,RepairedResult,Did).
+
+maybe_try_something_more(_Grid,RepairedResult,Did,RepairedResult,Did):- ground(RepairedResult),!.
+maybe_try_something_more(Grid,RepairedResult,Did1,RepairedResultO,[Did1, blur_least(BL,blanks)]):-  fail,
+  best_of(Grid,Did1,blur_least(BL,blanks),RepairedResult,RepairedResultO).
+maybe_try_something_more(Grid,RepairedResult,Did1,RepairedResultO,[Did1, now_fill_in_blanks(P2)]):-  
+  best_of(Grid,Did1,now_fill_in_blanks(P2),RepairedResult,RepairedResultO).
+
+
+maybe_try_something1(Grid,RepairedResult,Did):-
+  peek_target(Grid,Out), 
+    best_of(Out,[],try_something(Did),Grid,RepairedResult).
+
+mprint_grid(wqs(P),RepairedResult):-!, print_grid((P),RepairedResult),!.
+mprint_grid((P),RepairedResult):-!, print_grid((P),RepairedResult),!.
+mprint_grid(O):- print_grid(O),!.
+mprint_grid(O):- arcST,trace,print_grid(O),!.
+
+
+best_of(Grid,Info,P2Did,In,RepairedResult):-
+  AnswerFormat = mprint_grid(wqs([Quality,Info,P2Did]),RepairedResult),
   findall(AnswerFormat, 
-    (try_remove_color_fill_in_blanks(Grid,RepairedResult,Did),
-     saliency_quality_of_change(Grid,RepairedResult,Quality)), Trials),
+    (call(P2Did,In,RepairedResult), 
+      saliency_quality_of_change(Grid,RepairedResult,Quality)), Trials),
   sort(Trials,STrials),
-  maplist(call,STrials),
+  format('~N'),dash_chars,
+  nop(maplist(call,STrials)),
   last(STrials,AnswerFormat).
 
+try_something(Did,Grid,RepairedResult):- 
+  try_remove_color_fill_in_blanks(Grid,RepairedResult,Did).
 
-try_remove_color_fill_in_blanks(Grid,RepairedResult,[remove_color_fill_in_blanks(Black)]):- 
-  learn_best_values(Grid,Black,guess_unbind_color(Black,Grid,RepairedResult)), cmass(RepairedResult,Mass), Mass>0,
-  ((findall(Orig,(rot_orig(RepairedResult,Orig),\+ RepairedResult\=Orig),List),List\==[])-> true;
-    (findall(Orig,(rot_orig(RepairedResult,Orig)),List))),
-  list_to_set(List,Set),member(Orig,Set),
-  %print_grid('xform',Orig),
-  once(fill_in_blanks(Orig,900,RepairedResult)),
+try_something(blur_least(B,Mix),Grid,RepairedResult):-
+  \+ is_trim_symmetric(Grid),
+  blur_least(B,Mix,Grid,RepairedResult),
+  is_trim_symmetric(RepairedResult).
+
+try_remove_color_fill_in_blanks(Grid,RepairedResultO,[Info,CodeNext]):- 
+  Info = guess_unbind_color(Black),
+  learn_best_values(Grid,Black,guess_unbind_color(Black,Grid,RepairedResult)), 
+  CodeNext = now_fill_in_blanks(_),
+  peek_target(Grid,Out),
+  best_of(Out,Info,CodeNext,RepairedResult,RepairedResultO),
+  cmass(RepairedResultO,Mass), Mass>0.
+
+  
+now_fill_in_blanks(_,RepairedResult,RepairedResultO):- ground(RepairedResult),!,RepairedResultO=RepairedResult.
+now_fill_in_blanks(P2,RepairedResult,RepairedResultO):-   
+  copy_term(RepairedResult,UnRepairedResult),
+  select_p2_rot(P2,RepairedResult,Orig),
+  once(fill_in_blanks(P2,Orig,900,RepairedResult)),
+  RepairedResult \== UnRepairedResult,
+  RepairedResultO = RepairedResult.
+
+select_p2_rot(P2,RepairedResult,Orig):- rot_orig(P2,RepairedResult,Orig).
+select_p2_rot(P2,RepairedResult,Orig):- fail,
+  ((findall(P2-Orig,(rot_orig(P2,RepairedResult,Orig),\+ RepairedResult\=Orig),List),List\==[])-> true;
+    (findall(P2-Orig,(rot_orig(P2,RepairedResult,Orig)),List))),
+  maplist(arg(2),List,Origs),list_to_set(Origs,Set),maplist(copy_term,Set,SetC),
+  member(Orig,SetC),
+  copy_term(Orig,OrigC),
+  once(member(P2-OrigC,List)).
+
+
+/*
+
+  ignore((\+ ground(RepairedResult),rotP2(P2),P2\==P,call(P2,RepairedResult,Orig2), 
+     fill_in_blanks(P2,Orig2,900,RepairedResult))),
+  %ground(RepairedResult),
   %(ground(Grid)->ground(RepairedResult);\+ground(RepairedResult)),
   mass_ok(Grid,RepairedResult).
+*/
 
-rot_orig(RepairedResult,Orig):- same(RepairedResult,Orig).
-rot_orig(RepairedResult,Orig):- flipD(RepairedResult,Orig).
-rot_orig(RepairedResult,Orig):- blur_least(_,fg,RepairedResult,Orig).
-rot_orig(RepairedResult,Orig):- flipV(RepairedResult,Orig).
-rot_orig(RepairedResult,Orig):- flipH(RepairedResult,Orig).
-rot_orig(RepairedResult,Orig):- rot90(RepairedResult,Orig).
-rot_orig(RepairedResult,Orig):- rot180(RepairedResult,Orig).
-rot_orig(RepairedResult,Orig):- rot270(RepairedResult,Orig).
+rot_orig(RepairedResult,Orig):- rot_orig(_P,RepairedResult,Orig).
+rot_orig(P2,RepairedResult,Orig):- (var(P2)->rotP(P2);true),call(P2,RepairedResult,Orig).
+rotP_L(P_L):- findall(P2,rotP(P2),P_L).
+rotP(same).
+rotP(flipD).
+rotP(blur_least(_,fg)).
+rotP(flipV).
+rotP(flipH).
+rotP(P2):- rotP2(P2). %,P2\==rot90.
+rotP2(rot90).
+rotP2(rot180).
+rotP2(rot270).
 
-fill_in_blanks(_Orig,_Limit,RepairedResult):- ground(RepairedResult),!.
-fill_in_blanks(Orig,Limit,RepairedResult):- Limit>800, Orig \=@= RepairedResult, 
+fill_in_blanks(_P2,_Orig,_Limit,RepairedResult):- ground(RepairedResult),!.
+fill_in_blanks(_P2,Orig,Limit,RepairedResult):- Limit>800, Orig \=@= RepairedResult, 
   Orig = RepairedResult,!,
   Limit2 is Limit-1,!,
   fill_in_blanks1(Orig,Limit2,RepairedResult).
 
-fill_in_blanks(Orig,Limit,RepairedResult):-  Limit>870, G=RepairedResult,
+fill_in_blanks(P2,Orig,Limit,RepairedResult):-  Limit>870, G=RepairedResult,
   arg(_,v([],[_],[_,_],[_,_,_]),L),arg(_,v([],[_],[_,_],[_,_,_]),R),append([L,GG,R],G),
   G\==GG,
   flipV(GG,FGG),
   GG\=@=FGG,
-  GG=FGG,!,
-  fill_in_blanks(Orig,Limit,RepairedResult).
+  GG=FGG,!, \+ maplist(single_color,GG),
+  fill_in_blanks(P2,Orig,Limit,RepairedResult).
 
-fill_in_blanks(Orig,Limit,RepairedResult):-  Limit>850,
+fill_in_blanks(P2,Orig,Limit,RepairedResult):-  Limit>850,
   length(Repair,2),
   append([_,Repair,Right],RepairedResult), \+ (ground(Repair)), \+ maplist(plain_var,Repair),
   append([_,From,FRight],Orig), \+ maplist(plain_var,Orig),
   From\=@=Repair,
   only_for_debug(copy_term(Repair,Repairing)),
-  From=Repair,
+  From=Repair, \+ maplist(single_color,From),
   maplist_until1(=,FRight,Right),
   only_for_debug((nl,writeq(Repairing-->Repair),nl,nl)),
   Limit2 is Limit-1,!,
-  fill_in_blanks(Orig,Limit2,RepairedResult).
+  fill_in_blanks(P2,Orig,Limit2,RepairedResult).
 
-
-fill_in_blanks(Orig,Limit,RepairedResult):- Limit>0,
+fill_in_blanks(P2,Orig,Limit,RepairedResult):- Limit>0,
   Limit2 is Limit-1,
   fill_in_blanks1(Orig,Limit2,RepairedResult),
-  rot270(RepairedResult,RepairedResult2),
-  rot270(Orig,Orig2),
-  fill_in_blanks(Orig2,Limit2,RepairedResult2).
-fill_in_blanks(_Orig,_Limit,_).
+  rotP_L(P2_List),next_in_list(P2,P2_List,NextP2), 
+  call(NextP2,RepairedResult,RepairedResult2),
+  call(NextP2,Orig,Orig2), \+ maplist(single_color,Orig2),
+  fill_in_blanks(NextP2,Orig2,Limit2,RepairedResult2).
+fill_in_blanks(_P2,_Orig,_Limit,_).
 
-
-select_some(Orig,RepairedResult,From,Repair):- fail,
-  append(_,[Row1a,Row1b|_],RepairedResult), Repair=[Row1a,Row1b], \+ (ground(Repair)),
-  append(_,[Row2a,Row2b|_],Orig), From=[Row2a,Row2b].
-
-select_some(Orig,RepairedResult,From,Repair):- 
-  member(Repair,RepairedResult), \+ (ground(Repair)),
-  member(From,Orig).
-  
+single_color(List):- is_list(List), \+ \+ (member(C,List), \+ is_list(C)), !,maplist(=(C),List),!.
+single_color(List):- is_list(List), \+ \+ (member(C,List), is_list(C)), !,maplist(single_color,C),!.
+single_color(Repair):- single_color(_,Repair).
+single_color(C,List):- is_list(List),!,maplist(single_color(C),List).
+single_color(C,V):- plain_var(V),!,C=V.
+single_color(C,V):- attvar(V), !, \+ V \=  C.
+single_color(C,C). 
 
 fill_in_blanks1(_Orig,_Limit,RepairedResult):- ground(RepairedResult),!.
 fill_in_blanks1(Orig,Limit,RepairedResult):-  Limit>0,
-  select_some(Orig,RepairedResult,From,Repair),
-  From\=@=Repair,
+  select(Repair,Orig,RestOrig),
+  From\=@=Repair, 
+  member(From,RepairedResult),
   copy_term(Repair,Repairing),
-  From=Repair,
+  From=Repair, \+ single_color(From),
   only_for_debug((nl,writeq(Repairing-->Repair),nl,nl)),
   Limit2 is Limit-1,!,
-  fill_in_blanks1(Orig,Limit2,RepairedResult).
+  fill_in_blanks1(RestOrig,Limit2,RepairedResult).
 fill_in_blanks1(_Orig,_Limit,_RepairedResult).
 
 only_for_debug(_).
@@ -1199,9 +1293,6 @@ consensus2(Steps,Vars,BG,[C|Blk],Color,Other,C).
 consensus2(Steps,Vars,[C|BG],Blk,Color,Other,C).
 :- style_check(+singleton).
 
-print_grid_i(O):- print_grid(O),!.
-print_grid_i(O):- arcST,trace,print_grid(O),!.
-
 maybe_repair_image(VM,Ordered,Objects,CorrectObjects,KeepNewState,RepairedResult):- 
   maplist(object_grid,Objects,AllGrids),
   AllGrids=Grids , %once(predsort(sort_on(colored_pixel_count),AllGrids,Grids);sort(AllGrids,Grids)),
@@ -1303,7 +1394,7 @@ replace_diffs(LPoints,Obj,NewObj):-
    % pt(LPOnly), pt(LPointOnly),
   rebuild_from_localpoints(Obj,Points,NewObjM))))),
   override_object(repaired(pattern),NewObjM,NewObj),
-    %print_grid_i(NewObj),
+    %mprint_grid(NewObj),
   nop(show_shape(NewObj)),!.
 
 point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),

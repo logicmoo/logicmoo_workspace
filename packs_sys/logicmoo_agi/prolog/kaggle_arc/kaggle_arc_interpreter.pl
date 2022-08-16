@@ -359,7 +359,9 @@ known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),
 addProgramStep(_VM,Step):-
   pt(addProgramStep(vm,Step)).
 
-kaggle_arc_io(Name,ExampleNum,IO,G):- kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
+kaggle_arc_io(Name,ExampleNum,IO,G):- 
+  arg(_,v(trn+_,tst+_),ExampleNum),
+  kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 
 into_gridnameA(G,TstName):- known_grid(TstName,G).
 

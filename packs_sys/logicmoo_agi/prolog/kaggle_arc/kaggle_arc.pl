@@ -552,7 +552,8 @@ set_vm(VM):- luser_linkval('$grid_vm',VM).
 get_vm(VM):- luser_getval('$grid_vm',VM),!.
 get_vm(VM):- ndividuator,!,luser_getval('$grid_vm',VM),!.
 
-ping_get_vm(VM):- luser_getval('$grid_vm',VM),!.
+peek_vm(VM):- luser_getval('$grid_vm',VM),!.
+peek_vm(Key,Value):- luser_getval('$grid_vm',VM)->get_kov(Key,VM,Value);luser_getval(Key,Value).
 
 set_vm(Prop,Value):- ignore(luser_getval('$grid_vm',VM)),
  luser_set_vm(VM,Prop,Value).
