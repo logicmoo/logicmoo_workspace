@@ -4,10 +4,13 @@
 % Douglas Miles
 
 */
+:- set_prolog_flag(pfc_shared_module,user).
+%:- set_prolog_flag(pfc_shared_module,baseKB).
+
 control_arg_types(A,B):- control_arg_types1([],A,B),A\==B,!.
 
 control_arg_types1(_,A,B):- \+ compound(A),!,A=B.
-control_arg_types1(_,A,B):- check_args(A,B),A\==B,!.
+control_arg_types1(_,A,B):- current_predicate(check_args/2), check_args(A,B),A\==B,!.
 control_arg_types1(Pre,A,B):- 
  compound_name_arguments(A,F,AA),
  length(AA,N),
@@ -45,8 +48,6 @@ pfcStateTerm(F/A):-
 control_arg_type(F/_,N,_Pre,A,B):- arg_n_isa(F,N,ISA),into_type(ISA,A,B),!.
 control_arg_type(FofN,_,Pre,A,B):- control_arg_types1([FofN|Pre],A,B).
 
-:- set_prolog_flag(pfc_shared_module,user).
-%:- set_prolog_flag(pfc_shared_module,baseKB).
 
 :- if(( current_prolog_flag(xref,true) ;
    ('$current_source_module'(SM),'context_module'(M),'$current_typein_module'(CM),
@@ -248,9 +249,13 @@ pfc_term_expansion((==>P),(:- pfcAdd(P))).
 pfc_term_expansion(I,I):- I == end_of_file,!.
 pfc_term_expansion( P ,(:- pfcAdd(P))):- if_pfc_indicated.
 
+use_pfc_term_expansion:- current_prolog_flag(pfc_term_expansion,false),!,fail.
+% maybe switch to prolog_load_context(file,...)?
+use_pfc_term_expansion:- source_location(File,_), atom_concat(_,'.pfc.pl',File).
+
 %:- multifile('term_expansion'/2).
-system:term_expansion(I,S0,O,S1):- current_prolog_flag(pfc_term_expansion,true), % trace,
- prolog_load_context('term',T)->T==I->pfc_term_expansion(I,O)->I\=@=O->S0=S1, wdmsg(I-->O).
+system:term_expansion(I,S0,O,S1):- use_pfc_term_expansion, % trace,
+ prolog_load_context('term',T)->(T==I->pfc_term_expansion(I,O)->I\=@=O->S0=S1, wdmsg(I-->O)).
 
 
 term_subst(P,O):- term_subst(clause,P,O),!.
