@@ -15,7 +15,7 @@
 % Douglas Miles
 %  cls ; kill -9 %1 ; fg ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
 
-into_baseKB_righto:-  
+def_pfc_operators:-  
  locally(set_prolog_flag(access_level,system),
  ((op(200,fy,'-'),op(300,fx,'-'),
  op(1190,xfx,('::::')),
@@ -32,7 +32,7 @@ into_baseKB_righto:-
  op(300,fx,'-'),
  op(1199,fx,('==>'))))).
 
-:- into_baseKB_righto.
+:- def_pfc_operators.
 %:- module(system).
 
 %:- expects_dialect(pfc).
@@ -54,8 +54,6 @@ startAll==>((kaggle_arc_io(TestID,ExampleNum,IO,G)/(ID=TestID*ExampleNum*IO,term
   ==>(tid_to_gids(ID,GID),oid_to_grid(GID,G),process_oid(GID))).
 
 %tid_to_gids(T,A) :- zwc,!, term_to_oid(T,A).
-
-startAll ==> zwc, bwc, cwc, awc, fwc.
 
 ==> startAll.
 

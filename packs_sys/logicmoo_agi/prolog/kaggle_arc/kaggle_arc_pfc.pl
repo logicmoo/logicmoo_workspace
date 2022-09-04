@@ -3197,6 +3197,8 @@ is_pfc_chained(fwc).
 is_pfc_chained(bwc).
 is_pfc_chained(wac).
 
+:- forall(is_pfc_chained(Op),assert_if_new(Op)).
+
 reserved_body(B):-var(B),!,fail.
 reserved_body(attr_bind(_)).
 reserved_body(attr_bind(_,_)).
