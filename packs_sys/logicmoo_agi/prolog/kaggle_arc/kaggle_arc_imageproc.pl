@@ -44,9 +44,11 @@ no_black(BF,BF).
 
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors0(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
+pixel_colors0(GH,CC):- is_grid(GH),!,append(GH,CC).
 pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors0,GH,PG),my_append(PG,CC).
+pixel_colors0(GH,CC):- is_colorish(GH),!,CC=GH.
 pixel_colors0(Cell,[C]):- is_point(Cell),!,only_color_data_or(fg,Cell,C).
-pixel_colors0(GH,CC):- localpoints_include_bg(GH,GP),!,maplist(only_color_data_or(fg),GP,CC).
+pixel_colors0(GH,CC):- globalpoints_include_bg(GH,GP),!,maplist(only_color_data_or(fg),GP,CC).
 %pixel_colors0(options(_),[]):-!.
 
 only_color_data_or(Alt,Cell,Color):- only_color_data(Cell,Color)->true;Color=Alt.
@@ -54,7 +56,7 @@ only_color_data_or(Alt,Cell,Color):- only_color_data(Cell,Color)->true;Color=Alt
 %sub_term(G,GH), is_grid(G),!,flatten(G,GF),include(is_grid_color,GF,GL),maplist(color_name,GL,CC).
 %pixel_colors(G,GL):- findall(Name,(sub_term(CP,G),compound(CP),CP=(C-_),color_name(C,Name)),GL).
 
-unique_colors(G,UC):- colors(G,GF),quietly(maplist(arg(1),GF,UC)).
+unique_colors(G,SUC):- colors(G,GF),quietly(maplist(arg(1),GF,UC)),sort(UC,SUC).
 unique_color_count(G,Len):- unique_colors(G,UC),length(UC,Len).
 colors_count_size(G,UC):- colors(G,GS),length(GS,UC).
 
@@ -63,6 +65,28 @@ into_cc1(N-C,cc(Nm,CN)):- CN is N,!,color_name(C,Nm).
 
 colors_count_black_first(G,BF):- colors(G,SK),black_first(SK,BF).
 colors_count_no_black(G,BF):- colors(G,SK),no_black(SK,BF).
+
+:- decl_pt(prop_h,all_colors_count(is_object_or_grid, list)).
+all_colors_count(G,CC):- 
+  pixel_colors(G,All), 
+  findall(Nm-C,(enum_colors_test(C),occurs:count((sub_term(Sub, All), \+ \+ cmatch(C,Sub)), Nm)),BF),
+  into_cc(BF,CC),!.
+
+:- decl_pt(prop_h,some_colors_count(is_object_or_grid, list)).
+some_colors_count(G,CC):- 
+  pixel_colors(G,All), 
+  findall(Nm-C,(enum_colors_test(C),occurs:count((sub_term(Sub, All), \+ \+ cmatch(C,Sub)), Nm),Nm\==0),BF),
+  into_cc(BF,CC),!.
+
+enum_colors_test(C):- no_repeats(C,enum_colors_test0(C)).
+enum_colors_test0(C):- get_bgc(C).
+enum_colors_test0(C):- C=black, \+ enum_fg_colors(C).
+enum_colors_test0(C):- enum_fg_colors(C), C \== wbg, C\== '#444455'.
+enum_colors_test0(fg).
+enum_colors_test0(bg).
+enum_colors_test0(is_colorish).
+enum_colors_test0(var).
+
 
 num_objects(G,NO):- compute_shared_indivs(G,GS),length(GS,NO).
 

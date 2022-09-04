@@ -18,9 +18,9 @@ recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
    nop((set(VM.program_i) = [After,recalc_sizes|TODO])).
 /*
-   Ë mass(3) cc(blue,3.0) v_hv(1,3) loc(2,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(2,2) layer(in) nth(21)
-%mass(3) cc(cyan,3.0) v_hv(1,3) loc(1,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(1,2) layer(in) nth(22)
-%  Iz(Non Diag):         Ê mass(3) cc(green,3.0) v_hv(1,3) loc(3,1) pen([]) birth(ifti3(nsew)) iz(nsew) iz(rectangulator) iz(symmetry(sym_hv)) center(3,2) layer(in) nth(20)
+   Ë amass(3) cc(blue,3.0) v_hv(1,3) loc(2,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(2,2) layer(in) nth(21)
+%amass(3) cc(cyan,3.0) v_hv(1,3) loc(1,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(1,2) layer(in) nth(22)
+%  Iz(Non Diag):         Ê amass(3) cc(green,3.0) v_hv(1,3) loc(3,1) pen([]) birth(ifti3(nsew)) iz(nsew) iz(rectangulator) iz(symmetry(sym_hv)) center(3,2) layer(in) nth(20)
 
 */
 
@@ -49,10 +49,10 @@ cullObjectsOutsideOf(VM,Min,Max):-
      my_partition(within_mass(1,1),Cull,_Ones,NonOnes),
      remObjects(VM,NonOnes))).
 
-within_mass(Min,Max,Obj):- mass(Obj,Mass),between(Min,Max,Mass).
+within_mass(Min,Max,Obj):- amass(Obj,Mass),between(Min,Max,Mass).
 
 size_to_keys(N,N-N).
-computeMassIndex(VM,Sizes):-  maplist(mass,VM.objs,UKeySizes), maplist(size_to_keys,UKeySizes,KSizes),keysort(KSizes,SKSizes),
+computeMassIndex(VM,Sizes):-  maplist(amass,VM.objs,UKeySizes), maplist(size_to_keys,UKeySizes,KSizes),keysort(KSizes,SKSizes),
   maplist(arg(2),SKSizes,SKSizesR),reverse(SKSizesR,Sizes).
 
 computeMinMass(VM,Min):- computeMassIndex(VM,List),length(List,Count),computeMinMass(VM,List,Count,Min).
@@ -71,88 +71,12 @@ computeMaxMass(VM,List,_Count,Max):- append(_,[A,B|_],List),A>B,max_min(VM.objs_
 computeMaxMass(VM,_List,_Count,Max):- max_min(VM.objs_max_mass,700,_,Max).
 
 
-proportional_how(AG,BG,Set):- into_list(AG,AGL),into_list(BG,BGL), proportional_how_l(AGL,BGL,Set). %findall(DD,proportionate(AGL,BGL,DD),List),list_to_set(List,Set).
-
-proportional_how_l(AG,BG,Set):-  my_permutation(AG,AGL), my_permutation(BG,BGL), proportionate(not_very_simular,AGL,BGL,Set).
-
-my_permutation(BG,BG):-!.
-my_permutation(BG,BGL):- permutation(BG,BGL).
-%proportionate(List1,List2):- proportionate(List1,List2,_),!.
-proportionate(_Nvm,[],[],_).
-proportionate(NVM,[HV1|List1],[HV2|List2],N):-
-   proportional(HV1,HV2,N),
-   nop(call(NVM, N)),
-   proportionate(NVM,List1,List2,N).
-
-not_very_simular(X):- \+ not_very_different(X).
-
-not_very_different(vis_hv_term(size(A,B))):- !, not_very_different_t(A),not_very_different_t(B).
-not_very_different(vis_hv_term(area(A))):-   !, not_very_different_t(A).
-not_very_different(loc_term(loc(A,B))):-  !, not_very_different_t(A),not_very_different_t(B).
-not_very_different(center_term(loc(A,B))):-  !, not_very_different_t(A),not_very_different_t(B).
-
-not_very_different(mass(A)):- !, not_very_different_t(A).
-not_very_different_t(difference(0)). not_very_different_t(ratio(1)). not_very_different_t(moved(0)).
-
-
-proportional_types(list,A,B,D):- !, proportional_lists(A,B,D).
-proportional_types(_How,A,B,D):- proportional(A,B,D).
-
-maybe_label_colors(G,L):- is_grid(G),!,mapgrid(color_name,G,L),!,G\==L.
-
-proportional(G1,G2,Out):- maybe_label_colors(G1,L1),!, proportional(L1,G2,Out).
-proportional(G1,G2,Out):- maybe_label_colors(G2,L2),!, proportional(G1,L2,Out).
-
-proportional(Obj1,Obj2,Out):- 
-  decl_pt(prop_h,P1P2), P1P2=..[P2,P1|Lst],
-  once((once((on_x_log_and_fail(call(P1,Obj1)),on_x_log_and_fail(call(P1,Obj2)))),
-  length(Lst,Len), length(NewLst1,Len),length(NewLst2,Len),
-  once((on_x_log_and_fail(apply(P2,[Obj1|NewLst1])),on_x_log_and_fail(apply(P2,[Obj2|NewLst2])))))),
-  maplist(proportional_types,Lst,NewLst1,NewLst1,OutL), Out =.. [P2|OutL].
-
-proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
-proportional(size(V1,H1),size(H2,V2),size_inv(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
-proportional(size(H1,V1),size(H2,V2),area(HV)):- !, HV1 is H1*V1, HV2 is H2*V2, proportional_size(HV1,HV2,HV).
-proportional(loc(H1,V1),loc(H2,V2),loc(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
-proportional(colors(H1),colors(H2),color_changes(H)):- !, proportional_lists(H1,H2,H).
-proportional(N1,N2,N):- number(N1),number(N2),!,proportional_size(N1,N2,N).
-proportional(L1,L2,N):- is_list(L1),is_list(L2),length(L1,N1),length(L2,N2),!,proportional_lists(N1,N2,N).
-
-on_x_log_and_fail(G):- catch(G,E,(wdmsg(red((E -> G))),trace,G,fail)).
-
-%proportional(N1,N2,N):- is_object(N1),is_object(N2),!,proportional_objs(N1,N2,N).
-%proportional(N1,N2,N):- is_grid(N1),is_grid(N2),!,proportional_grids(N1,N2,N).
-
-proportional_loc(N1,N2,moved(N1,N,N2)):- N is N1-N2.
-proportional_size(N1,N2,n(N1,N2,d(N),a(NA),r(R))):- N is N1-N2,NA is abs(N1-N2), catch(R is rationalize(N1/N2),_,true).
-proportional_lists(IColor,OColor,OUT):- 
-  intersection(IColor,OColor,Shared,IOnlyC,OOnlyC),
-  sort(Shared,SharedS),
-  maplist(length,[IColor,OColor,IOnlyC,Shared,OOnlyC],Lens),
-  OUT=..[lst,l(IOnlyC),s(SharedS),r(OOnlyC)|Lens].
-
-
-%proportional_grids(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
-%proportional_grids(Obj1,Obj2,loc_term(N)):- once((loc_term(Obj1,N1),loc_term(Obj2,N2))),proportional(N1,N2,N).
-%proportional_grids(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
-%proportional_grids(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
-
-
-:- decl_pt(prop_h,unique_colors(is_object_or_grid, list)).
-:- decl_pt(prop_h,mass(is_object_or_grid,number)).
-
-:- decl_pt(prop_h,center_term(is_object,loc)).
-:- decl_pt(prop_h,loc_term(is_object,loc)).
-
-:- decl_pt(prop_h,has_y_rows(is_grid,colcount,color,list(rownums))).
-:- decl_pt(prop_h,has_x_columns(is_grid,rowcount,color,list(colnums))).
-
-
-/*proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
+/*
+proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,loc_term(N)):- once((loc_term(Obj1,N1),loc_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,color_diff(N)):- colors(Obj1,N1),colors(Obj2,N2),proportional(N1,N2,N).
-proportional_objs(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
+proportional_objs(Obj1,Obj2,amass(N)):- once((amass(Obj1,N1),amass(Obj2,N2))),proportional_size(N1,N2,N).
 */
 
 
@@ -200,7 +124,7 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
     % input has its own noise
     CommonCsL>0,IPCsL>0,OPCsL==0,  
     %ignore((
-    mass(ImO,IMass),mass(OmI,OMass),IMass>0, OMass==0,
+    amass(ImO,IMass),amass(OmI,OMass),IMass>0, OMass==0,
     % individu ate([],[options([full])],ImO,NoiseObject), 
     grid_to_individual(ImO,NoiseObject),!,
     add_shape_lib(noise,NoiseObject),
@@ -226,8 +150,8 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
   add_cond(hasPrivateColor(in,IPCs)),
   do_action(remove_colors(OPCs,Out,OmI)),
   remove_colors(IPCs,In,ImO),
-  % mass(In,InMass),mass(Out,OutMass),
-  mass(ImO,IMass),mass(OmI,OMass),
+  % amass(In,InMass),amass(Out,OutMass),
+  amass(ImO,IMass),amass(OmI,OMass),
   IMass>0, OMass>0, OPCsL == 0,
   individu ate([],options([solid(rectangle),defaults]),ImO,NewImO), 
   add_shape_lib(pair,NewImO),
@@ -279,7 +203,7 @@ learn_color_individuals_lib_one_way(PairName,In,Out,IH,IV,OH,OV,
   do_action(remove_colors(CommonCs,Out,OmI)),
   do_action(remove_colors(CommonCs,In,ImO)),
   show_pair_no_i(IH,IV,OH,OV,learn_color_individuals_lib_one_way,PairName,ImO,OmI),
-  mass(ImO,IMass),mass(OmI,OMass),
+  amass(ImO,IMass),amass(OmI,OMass),
   %one_is_zero(IMass,OMass),
   ((
   ignore((IMass>0, OMass==0, 

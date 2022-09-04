@@ -79,10 +79,12 @@ Thread.
 
 :- set_module(class(library)).
 
+/*
 :- multifile '$exported_op'/3. 
 :- dynamic '$exported_op'/3. 
 :- discontiguous '$exported_op'/3. 
 '$exported_op'(_,_,_):- fail.
+*/
 
 :- multifile '$pldoc'/4. 
 :- dynamic '$pldoc'/4. 
@@ -94,8 +96,9 @@ Thread.
 :- dynamic '$autoload'/3.
 '$autoload'(_,_,_):- fail.
 
-:- system:reexport(library(debug),[debug/3]).
-:- system:reexport(library(debuggery/bugger)).
+%:- system:reexport(library(debug),[debug/3]).
+%:- system:reexport(library(debuggery/bugger)).
+
 %:- system:reexport(library(must_sanity)).
 :- if( \+ current_predicate(nop/1)).
 system:nop(_).

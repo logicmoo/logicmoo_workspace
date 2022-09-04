@@ -32,7 +32,7 @@ arc_memoized(G):-
   catch(
   (in_memo_cached(Key,C,GT,Found,AttGoals)*->(G=Found,maplist(call,AttGoals))
     ; ((call(G),copy_term(G,CG,GG)) *->asserta(in_memo_cached(Key,C,GT,CG,GG))
-                  ;pfc_assert(in_memo_cached(Key,C,GT,failed,_)))),
+                  ;asserta(in_memo_cached(Key,C,GT,failed,_)))),
   E, (retractall(in_memo_cached(Key,C,GT,_,_)),throw(E))),erase(Started)).
 
 set_nth1(1,[_|Row],E,[E|Row]):-!.
@@ -189,7 +189,7 @@ print_attvars(FF):-
 plain_var(V):- notrace((var(V), \+ attvar(V), \+ get_attr(V,ci,_))).
 
 my_assertion(G):- call(G),!.
-my_assertion(G):- arcST,!,trace,wdmsg(my_assertion(G)),break,!.
+my_assertion(G):- wdmsg(my_assertion(G)),writeq(goal(G)),nl,!,break.
 must_be_free(AllNew):- plain_var(AllNew),!.
 must_be_free(AllNew):- arcST,wdmsg(must_be_free(AllNew)),break,fail.
 must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.
@@ -258,9 +258,12 @@ vars_to_dictation([],T,T).
 
 tio_tersify(Value,ValueT):- is_grid(Value),!,ValueT=_.
 tio_tersify(Value,Value).
-:- export(copy_qq/3).
+:- export(copy_qq_//1).
+
 copy_qq_([]) --> [].
 copy_qq_([C|Cs]) --> [C], copy_qq_(Cs).
+
+:- export(copy_qq//1).
 copy_qq(A) --> copy_qq_(Cs), {atom_codes(A, Cs)}.
 
 to_prop_name(Name=_,UName):- nonvar(Name),!,to_prop_name(Name,UName).

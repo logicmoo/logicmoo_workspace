@@ -46,7 +46,7 @@ got_result(SG,FG,Match):-
   ignore((perfect_result(CSG,CFG,WMatch), 
     ((Match\==WMatch) -> (pt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); pt(green,same)))),
   retractall(tr:existing_result(CSG,CFG,_)),
-  pfc_assert(tr:existing_result(CSG,CFG,Match)),!.
+  arc_assert(tr:existing_result(CSG,CFG,Match)),!.
   
 was_result(SG,FG,WMatch):-  
   copy_term(FG,CFG),copy_term(SG,CSG),
@@ -658,7 +658,7 @@ fp666(T,Y):- ff666(T,X), fpad_grid(f,X,Y).
 text_to_grid(Text,GO):- text_to_grid(Text,_HH,_VV,_ObjPoints,GO).
 text_to_grid(Text,HH,VV,ObjPoints,GO):-
   ascii_to_grid(Text,G),
-  % grid_to_id(G,ID),
+  % grid_to_tid(G,ID),
   %print_grid(G),
   globalpoints(G,GPs),!,
   %print_grid(GPs),

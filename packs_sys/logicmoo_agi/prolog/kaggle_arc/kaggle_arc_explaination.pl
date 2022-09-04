@@ -37,7 +37,7 @@ debug_indiv:- test_config(nodebug_indiv),!,fail.
 debug_indiv:- test_config(debug_indiv),!.
 debug_indiv:- test_config(indiv(_)),!.
 
-will_show_grid(Obj,true):- mass(Obj,Mass)-> (Mass>4, v_hv(Obj,H,V) -> (H>1,V>1)),!.
+will_show_grid(Obj,true):- amass(Obj,Mass)-> (Mass>4, v_hv(Obj,H,V) -> (H>1,V>1)),!.
 will_show_grid(_,false).
 
 
@@ -53,35 +53,44 @@ print_list_of(P1,N,O):-
   g_out( maplist(P1,O)),!.
 
 
-maybe_cache_glyphs(O):- ignore((is_group(O),maplist(o2g,O,_))).
+maybe_cache_glyphs(O):- ignore((is_group(O),mapgroup(o2g,O,_))).
 
-print_info(A):- is_grid(A),print_grid(A).
-print_info(A):- is_object(A), ignore(debug_indiv(A)).
-print_info(A):- is_group(A),maybe_cache_glyphs(A),debug_indiv(A).
+print_info(A):- is_grid(A),print_grid(A),!.
+print_info(A):- is_object(A), ignore(debug_indiv(A)),!.
+print_info(A):- is_group(A),maybe_cache_glyphs(A),debug_indiv(A),!.
 %print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
-print_info(A):- pt(A).
+print_info(A):- pt(A),!.
 
 debug_as_grid(Grid):- debug_as_grid('',Grid).
 debug_as_grid(Why,Grid):-
   v_hv(Grid,H,V),
-  loc(Grid,OH,OV),
-  fif(is_object(Grid),(format('~N~n'),debug_indiv(Grid))),
+  Title = debug_as_grid(Why,loc(OH,OV),size(H,V)),
   fif((H\==1;V\==1),
-    (wots(S,print_grid(H,V,debug_as_grid(Why,loc(OH,OV),size(H,V)),Grid)),
+    (loc(Grid,OH,OV),
+     localpoints_include_bg(Grid,GridO),
+     ((IH=H,IV=V)), % (IH = 30,IV=30), 
+     subst(GridO,black,wbg,GridOO),
+     into_ngrid(GridOO,IH,IV,NGrid),
+     wots(S,print_side_by_side(print_grid(IH,IV,Title,GridOO),print_grid(IH,IV,ngrid,NGrid))),
      HH is (OH - 1) * 2, print_w_pad(HH,S))),
+  fif(is_object(Grid),(format('~N~n'),
+  locally(nb_setval(debug_as_grid,nil),underline_print(debug_indiv(Grid))))),
   format('~N'),dash_chars(15),!.
+
+into_ngrid(Points,H,V,NGrid):- 
+  neighbor_map(H,V,Points,Points,CountedPoints),!,
+  points_to_grid(H,V,CountedPoints,NGrid).
+
+  
 
 :- discontiguous debug_indiv/1. 
 
 debug_indiv(_):- is_print_collapsed,!.
 debug_indiv(Var):- plain_var(Var),pt(debug_indiv(Var)),!.
-debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(is_grid,Grid).
+debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(is_grid,Grid),!.
 debug_indiv(Grid):- maplist(is_cpoint,Grid),!,debug_as_grid(is_cpoint,Grid).
 debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(is_point,Grid).
-
-
-
 
 
 debug_indiv(List):- is_list(List),length(List,Len),!,
@@ -96,7 +105,7 @@ debug_indiv(obj(A)):- \+ is_list(A),!, pt(debug_indiv(obj(A))).
 
 /*
 debug_indiv(A):- is_point_obj(A,Color,Point),
-  o_i_d(A,Tst,Id), i_glyph(Id,Sym),
+  obj_to_oid(A,Tst,Id), i_glyph(Id,Sym),
   hv_point(H,V,Point), i_glyph(Id,Sym),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc(H,V)]),!. 
 */
@@ -135,20 +144,23 @@ prefered_header(Caps,PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PC
 prefered_header(birth(Caps),Caps).
 prefered_header(iz(Caps),Caps).
 % I didn't really have the programming chops to take his program and give it human level reasoning until about 5 years ago
-debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A).
+debug_indiv(obj(A)):- \+ \+ debug_indiv_obj(A),!.
+
+
+debug_indiv_obj(A):- nb_current(debug_as_grid,t),debug_as_grid(A),!.
 debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
  maplist(must_det_ll,[
-  ignore((o2g(Obj,GGG), nonvar(GGG),luser_setval(GGG,Obj), nop( my_asserta_if_new(g2o(GGG,Obj))))),
+  %ignore((o2g(Obj,GGG), nonvar(GGG),set_glyph_to_object(GGG,Obj))),
 %debug_indiv(Obj):- Obj = obj(A), is_list(A),  
   
   sort_obj_props(A,AS0),
  % will_show_grid(Obj,TF),
   TF = false,
-  o_i_d(Obj,_,MyID),
-  %o2ansi(MyID,MissGlyph),
+  obj_to_oid(Obj,MyOID),
+  %o2ansi(MyOID,MissGlyph),
   object_s_glyph(Obj,SGlyph),
-  append(AS0,[nth(MyID)],AS),  
-  remove_too_verbose(MyID,AS,TV0), include(not_too_verbose,TV0,TV),
+  append(AS0,[nth(MyOID)],AS),  
+  remove_too_verbose(MyOID,AS,TV0), include(not_too_verbose,TV0,TV),
 
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
   sort(AS,ASA),reverse(ASA,ASAR),
@@ -158,8 +170,8 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
 
   ignore((TF==true,dash_chars)),
   ignore(( g_out(style('font-size','75%'),wqnl([format("% ~w:\t\t~w\t",[PC,SGlyph]) | TVS ])))),
-  ignore(( TF==true, mass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
-  ignore(( fail, mass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
+  ignore(( TF==true, amass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
+  ignore(( fail, amass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pt(A),
   ignore(( TF==true,dash_chars))]),!.
 
@@ -168,7 +180,7 @@ not_too_verbose(X):- X\==(''), X\==s('').
 show_st_map(Obj):-
   ignore(( 
   localpoints(Obj,Points),
-%  mass(Obj,Mass),!,Mass>4,
+%  amass(Obj,Mass),!,Mass>4,
 %  v_hv(Obj,H,V),!,H>1,V>1,
   format('~N'),
   solidness(Points,0,inf,Res),
@@ -176,7 +188,7 @@ show_st_map(Obj):-
   solidness_is_diag(Points,0,inf,ResD),
   print_side_by_side(print_side_by_side(ResND,ResD),Res))).
 
-debug_indiv(obj(A)):- \+is_list(A),!, append(A,[],A),debug_indiv(obj(A)).
+debug_indiv(obj(A)):- \+is_list(A),!, append(A,[],A),debug_indiv(obj(A)),!.
 debug_indiv(obj(A)):- is_list(A),!, 
   dash_chars,  
   maplist(debug_indiv(obj(A)),A),
@@ -184,8 +196,8 @@ debug_indiv(obj(A)):- is_list(A),!,
 
 debug_indiv([]):- !.
 
-debug_indiv(diff(_)).
-debug_indiv([Other]):-!,debug_indiv(Other).
+debug_indiv(diff(_)):-!.
+debug_indiv([Other]):-debug_indiv(Other),!.
 debug_indiv(P):- is_rule(P,Q),
   dash_chars,
   pt(Q),
@@ -203,41 +215,41 @@ debug_indiv(Other):-
   pt(Other),
   dash_chars,!.
 
-debug_indiv(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A).
+debug_indiv(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A),!.
 
 
 %alt_id(_MyID,ID,Alt):- int2glyph(ID,Alt).
-alt_id(MyID,ID,Alt):- Alt is abs(MyID-ID).
+alt_id(MyOID,ID,Alt):- Alt is abs(MyOID-ID).
 remove_too_verbose(_MyID,Var,plain_var(Var)):- plain_var(Var),!.
 remove_too_verbose(_MyID,H,''):- too_verbose(H),!.
-remove_too_verbose(MyID,List,ListO):- is_list(List),!,maplist(remove_too_verbose(MyID),List,ListO),!.
+remove_too_verbose(MyOID,List,ListO):- is_list(List),!,maplist(remove_too_verbose(MyOID),List,ListO),!.
 
-% @TODO UNCOMMENT THIS remove_too_verbose(MyID,dot,"point"):- !.
-%remove_too_verbose(MyID,line(HV),S):- sformat(S,'~w-Line',[HV]).
-%remove_too_verbose(MyID,square,S):- sformat(S,'square',[]).
-% @TODO UNCOMMENT THIS remove_too_verbose(MyID,background,S):- sformat(S,'bckgrnd',[]).
-remove_too_verbose(MyID,iz(H),HH):- remove_too_verbose(MyID,H,HH),!.
+% @TODO UNCOMMENT THIS remove_too_verbose(MyOID,dot,"point"):- !.
+%remove_too_verbose(MyOID,line(HV),S):- sformat(S,'~w-Line',[HV]).
+%remove_too_verbose(MyOID,square,S):- sformat(S,'square',[]).
+% @TODO UNCOMMENT THIS remove_too_verbose(MyOID,background,S):- sformat(S,'bckgrnd',[]).
+remove_too_verbose(MyOID,iz(H),HH):- remove_too_verbose(MyOID,H,HH),!.
 
-remove_too_verbose(_MyID,o_i_d(_ * _ * X,Y),NTH):- NTH=..[X,Y].
-remove_too_verbose(_MyID,o_i_d(_ * _+_ * X,Y),NTH):- NTH=..[X,Y].
-remove_too_verbose(_MyID,o_i_d(_ * X,Y),NTH):- NTH=..[X,Y].
+%remove_too_verbose(_MyID,obj_to _oid(_ * _ * X,Y),NTH):- NTH=..[X,Y].
+%remove_too_verbose(_MyID,obj_to_oid(_ * _+_ * X,Y),NTH):- NTH=..[X,Y].
+%remove_too_verbose(_MyID,obj_to _oid(_ * X,Y),NTH):- NTH=..[X,Y].
 
-remove_too_verbose(MyID,link(Touched,ID,Dir),HH):- %number(MyID),
-  MyID\==0,integer(ID),alt_id(MyID,ID,Alt),o2ansi(ID,Glyph),
+remove_too_verbose(MyOID,link(Touched,ID,Dir),HH):- %number(MyOID),
+  MyOID\==0,integer(ID),alt_id(MyOID,ID,Alt),o2ansi(ID,Glyph),
   remove_too_verbose(0,link(Touched,Alt,Dir,Glyph),HH).
-remove_too_verbose(MyID,link(Touched,ID),HH):- % number(MyID),
-  MyID\==0, integer(ID),alt_id(MyID,ID,Alt),o2ansi(ID,Glyph),
+remove_too_verbose(MyOID,link(Touched,ID),HH):- % number(MyOID),
+  MyOID\==0, integer(ID),alt_id(MyOID,ID,Alt),o2ansi(ID,Glyph),
   remove_too_verbose(0,link(Touched,Alt,Glyph),HH).
 
-remove_too_verbose(MyID,TP,HH):- compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),
-   compound_name_arguments(TPP,F,A),!,remove_too_verbose(MyID,TPP,HH).
+remove_too_verbose(MyOID,TP,HH):- compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),
+   compound_name_arguments(TPP,F,A),!,remove_too_verbose(MyOID,TPP,HH).
 
-remove_too_verbose(MyID,colors(H),HH):- !, remove_too_verbose(MyID,H,HH).
-%remove_too_verbose(MyID,loc(X,Y),loc(X,Y)).
-%remove_too_verbose(MyID,v_hv(X,Y),size(X,Y)).
+remove_too_verbose(MyOID,colors(H),HH):- !, remove_too_verbose(MyOID,H,HH).
+%remove_too_verbose(MyOID,loc(X,Y),loc(X,Y)).
+%remove_too_verbose(MyOID,v_hv(X,Y),size(X,Y)).
 remove_too_verbose(_MyID,changes([]),'').
 remove_too_verbose(_MyID,rotation(same),'').
-remove_too_verbose(MyID,L,LL):- is_list(L),!, maplist(remove_too_verbose(MyID),L,LL).
+remove_too_verbose(MyOID,L,LL):- is_list(L),!, maplist(remove_too_verbose(MyOID),L,LL).
 remove_too_verbose(_MyID,H,HH):- compound(H),arg(1,H,L), is_list(L), maybe_four_terse(L,T),H=..[F,L|Args],HH=..[F,T|Args].
 remove_too_verbose(_MyID,H,H).
 

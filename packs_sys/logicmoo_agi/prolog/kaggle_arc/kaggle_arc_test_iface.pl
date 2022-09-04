@@ -28,9 +28,9 @@ print_menu_cmd9(_Key,Info,_Goal):- format(' ~w',[Info]).
 :- multifile(menu_cmd9/4).
 menu_cmd1(_,'t','       You may fully (t)rain from examples considering all the test pairs (this is the default)',(cls,!,print_test,train_test)).
 menu_cmd1(_,'T','                  or (T)rain from only understanding single pairs (not considering the test as a whole)',(cls,train_only_from_pairs)).
-menu_cmd1(i,'i','             See the (i)ndividuation of the input/outputs',(cls,!,ndividuator)).
+menu_cmd1(i,'i','             See the (i)ndividuation of the input/outputs',(cls,!,ndividuator1)).
 menu_cmd1(_,'u','                  or (u)niqueness between objects in the input/outputs',(cls,!,what_unique)).
-menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls,!,detect_supergrid)).
+menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls,!,compile_and_save_test)).
 menu_cmd1(_,'p','                  or (p)rint the test (textured grid)',(print_test)).
 menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls,print_test,!,solve_test)).
 menu_cmd1(_,'L','                  or (L)earned program',(learned_test)).
@@ -59,7 +59,7 @@ menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd1(Mode,Key,Mesg,Goal).
 menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd9(Mode,Key,Mesg,Goal).
 
 find_tests(F):-
-   current_predicate(N),N=F/0, atom_concat(test_,_,F),\+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit)).
+   current_predicate(N),N=F/0, atom_concat(test_,_,F), \+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit) ).
 find_tests(F):- ping_indiv_grid(F).
 find_tests(F):- is_fti_stepr(F).
 find_tests(F):- is_fti_step(F).
@@ -73,8 +73,8 @@ show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E
 my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
 
 my_submenu_call(E):- current_predicate(_,E), \+ is_list(E),!,
-  catch(ignore(locally(set_prolog_flag(gc,false),E)),E,wdmsg(E)).
-my_submenu_call(E):- get_vm(VM),!, run_dsl(VM,E,VM.grid,Out),
+  catch(ignore(locally(set_prolog_flag(gc,true),E)),E,wdmsg(E)).
+my_submenu_call(E):- peek_vm(VM),!, run_dsl(VM,E,VM.grid,Out),
   set(VM.grid) = Out.
 
 read_menu_chars(_Start,_SelMax,Out):- pengine_self(_Id),!,read(Out).
@@ -109,8 +109,9 @@ clsR:- !. % once(cls).
 
 
 enter_test:- repeat, write("\nYour favorite: "), read_line_to_string(user_input,Sel),enter_test(Sel),!.
+
 enter_test(""):- wqnl("resuming menu"), menu,!.
-enter_test(Sel):- atom_string(Name,Sel), fix_test_name(Name,TestID,_),switch_test(TestID).
+enter_test(Sel):- atom_string(Name,Sel), fix_test_name(Name,TestID,_),switch_test(TestID),!.
 enter_test(Sel):- 
    catch(read_term_from_atom(Sel,Name,[module(user),double_quotes(string),variable_names(Vs),singletons(Singles)]),_,
         (wqnl(['failed to read: ',Sel]),fail)),
@@ -132,14 +133,14 @@ interact:- list_of_tests(L), length(L,SelMax),!,
    once((do_menu_key(Key))), 
    retract(wants_exit_menu),!.
 
-do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), pfc_assert(wants_exit_menu).
+do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), arc_assert(wants_exit_menu).
 do_menu_key('?'):- !, menu_options('i').
 do_menu_key('P'):- !, switch_grid_mode,print_test.
-do_menu_key('I'):- !, cls,!,ndividuator1.
-do_menu_key('o'):- !, cls,!,ndividuatorO.
-do_menu_key('O'):- !, cls,!,ndividuatorO1.
-do_menu_key('G'):- !, cls,!,detect_supergrid1.
-do_menu_key(-1):- !, pfc_assert(wants_exit_menu).
+do_menu_key('I'):- !, cls,!,ndividuator.
+do_menu_key('o'):- !, cls,!,ndividuatorO1.
+do_menu_key('O'):- !, cls,!,ndividuatorO.
+do_menu_key('G'):- !, cls,!,detect_test_hints1.
+do_menu_key(-1):- !, arc_assert(wants_exit_menu).
 do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
 do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
 do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format('~N~n'),
@@ -147,10 +148,11 @@ do_menu_key(Key):- print_menu_cmd(Key),menu_cmds(_Mode,Key,_Info,Goal),!, format
    read_pending_codes(user_input,_Ignored,[]),!.
 
 do_menu_key(Key):- maybe_call_code(Key),!.
-do_menu_key(Key):- atom_codes(Key,Codes), format("~N % Menu: didn't understand: '~w' ~q ~n",[Key,Codes]),once(mmake).
+do_menu_key(Key):- atom(Key),atom_length(Key,1),atom_codes(Key,Codes), format("~N % Menu: didn't understand: '~w' ~q ~n",[Key,Codes]),once(mmake).
+do_menu_key(_).
 
 maybe_call_code(Key):- atom_length(Key,Len),Len>2,
- catch(atom_to_term(Key,Term,Vs),_,fail),!,
+ catch(atom_to_term(Key,Term,Vs),_,fail),!, 
  locally(nb_setval('$variable_names',Vs),
    locally(nb_setval('$term',Term),
      locally(nb_setval('$user_term',Term), 
@@ -205,15 +207,23 @@ rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
 
 
 
-ndividuator1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids1(TestID,G,ig([complete],G)).
-ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,ig([complete],G)).
-ndividuatorO1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids1(TestID,G,igo([complete],G)).
-ndividuatorO:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,G,igo([complete],G)).
+ndividuator1:- get_current_test(TestID),set_flag(indiv,0),with_test_pairs1(TestID,In,Out,ip(In,Out)).
+ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_pairs(TestID,In,Out,ip(In,Out)).
+ndividuatorO1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,In,igo(In)).
+ndividuatorO:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,In,igo(In)).
+
 test_grids(TestID,G):- ignore(get_current_test(TestID)), kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
 with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call(P)).
 with_test_grids1(TestID,G,P):- ignore(luser_getval(example,ExampleNum)),
   forall((kaggle_arc_io(TestID,ExampleNum,IO,G),((ExampleNum*IO) \= ((tst+_)*out))),
   my_menu_call(P)).
+
+test_pairs(TestID,In,Out):- ignore(get_current_test(TestID)), kaggle_arc(TestID,_,In,Out).
+
+with_test_pairs(TestID,In,Out,P):- forall(test_pairs(TestID,In,Out),my_menu_call(P)).
+with_test_pairs1(TestID,In,Out,P):- 
+  ignore(luser_getval(example,ExampleNum)),
+  forall(kaggle_arc(TestID,ExampleNum,In,Out), my_menu_call(P)).
 
 bad:- ig([complete],v(aa4ec2a5)*(trn+0)*in).
 
@@ -290,7 +300,7 @@ set_current_test(Name):-
 really_set_current_test(TestID):-
    luser_setval(test_name,TestID),
   (luser_getval(last_test_name,WasTestID);WasTestID=[]),
-  (WasTestID==TestID-> true ; new_current_test_info).
+  (WasTestID==TestID-> true ; new_current_test_info(WasTestID,TestID)).
 
 some_current_example_num(TrnN):- nb_current(example,TrnN),TrnN\==[],!.
 some_current_example_num(TrnN):- luser_getval(example,TrnN),TrnN\==[],!.
@@ -318,15 +328,38 @@ prev_pair:-
 trn_tst(trn,tst).
 trn_tst(tst,trn).
 
-new_current_test_info:- 
+clear_test(TestID):- is_list(TestID),!,maplist(clear_test,TestID).
+clear_test(TestID):- clear_training(TestID),
+ saveable_test_info(TestID,Info),
+ maplist(erase,Info).
+
+new_current_test_info(WasTestID,TestID):- 
+  clear_test(WasTestID),
   ignore((
   %luser_getval(test_name,TestID),
   get_current_test(TestID),
   dmsg(fav(TestID,[])),
-  luser_setval(example,tst+0),
+  %luser_setval(example,tst+0),
   luser_setval(last_test_name,TestID))),
   save_last_test_name,
-  clear_training(TestID).
+  test_name_output_file(TestID,File),
+  load_file_dyn(File).
+  %clear_training(TestID).
+
+unload_file_dyn(File):- \+ exists_file(File), !.
+unload_file_dyn(File):- unload_file(File),!.
+unload_file_dyn_pfc(File):- 
+ open(File,read,I),
+ repeat,read_term(I,Term,[]),
+ (Term = end_of_file -> true ; pfcRemove(Term),fail).
+
+load_file_dyn(File):- \+ exists_file(File), !.
+load_file_dyn(File):- consult(File),!.
+load_file_dyn(File):- load_file_dyn_pfc(File).
+load_file_dyn_pfc(File):- 
+ open(File,read,I),
+ repeat,read_term(I,Term,[]),
+ (Term = end_of_file -> true ; pfcAdd(Term),fail).
 
 new_test_pair(PairName):-
   %nb_delete(grid_bgc),
@@ -337,8 +370,8 @@ new_test_pair(PairName):-
   retractall(is_shared_saved(PairName,_)),
   retractall(is_unshared_saved(PairName*_,_)),
   retractall(is_unshared_saved(PairName,_)),
-  retractall(is_grid_id(PairName*_,_)),
-  retractall(is_grid_id(PairName,_)),!.
+  retractall(is_grid_tid(PairName*_,_)),
+  retractall(is_grid_tid(PairName,_)),!.
 
 human_test:- solve_test_trial(human).
 fully_test:- print_test, !, train_test, !, solve_test, !.
@@ -410,23 +443,39 @@ in_out_name(X,'Input'(X),'Output'(X)).
 
 all_arc_test_name(TestID):- kaggle_arc(TestID,trn+0,_,_).
 
-arc_test_name(TestID):- get_current_test(WasTestID), (TestID=WasTestID;(get_current_suite_testnames(List),member(TestID,List),WasTestID\== TestID, set_current_test(TestID))).
+arc_pair_id(TestID,ExampleNum):- 
+  arc_test_name(TestID),
+  ignore((luser_getval(example,Example+NumE), Example\==tst , ExampleNum=Example+NumE)),
+  kaggle_arc_io(TestID,ExampleNum,in,_).
 
-some_task_info(TestID,III):- more_task_info(TestID,III).
-some_task_info(X,[keypad]):- key_pad_tests(X). 
-some_task_info(TestID,III):- fav(TestID,III).
+arc_grid_pair(In,Out):- 
+ ((var(In),var(Out))-> arc_pair_id(TestID,ExampleNum); true),
+  kaggle_arc(TestID,ExampleNum,In,Out).
 
-%:- dynamic(task_info_cache/2).
-%:- retractall(task_info_cache/2).
-task_info(TestID,InfoS):- var(TestID),!,all_arc_test_name(TestID),task_info(TestID,InfoS).
-%task_info(TestID,InfoS):- \+ \+ task_info_cache(TestID,_),!,task_info_cache(TestID,InfoS).
-task_info(TestID,InfoS):- nonvar(TestID),once(fix_test_name(TestID,FTestID,_)),TestID\=@=FTestID,!,task_info(FTestID,InfoS).
-task_info(TestID,InfoS):- 
+arc_grid(Grid):- arc_grid(in,Grid).
+arc_grid(IO,Grid):-
+  arc_pair_id(TestID,ExampleNum),
+  kaggle_arc_io(TestID,ExampleNum,IO,Grid).
+
+arc_test_name(TestID):- get_current_test(TestID).
+%arc_test_name(TestID):- get_current_test(WasTestID), (TestID=WasTestID;(get_current_suite_testnames(List),member(TestID,List),WasTestID\== TestID, set_current_test(TestID))).
+
+some_test_info(TestID,III):- more_test_info(TestID,III).
+some_test_info(X,[keypad]):- key_pad_tests(X). 
+some_test_info(TestID,III):- fav(TestID,III).
+
+:- dynamic(test_info_cache/2).
+:- retractall(test_info_cache(_,_)).
+test_info(TestID,InfoS):- var(TestID),!,all_arc_test_name(TestID),test_info(TestID,InfoS).
+%test_info(TestID,InfoS):- \+ \+ test_info_cache(TestID,_),!,test_info_cache(TestID,InfoS).
+test_info(TestID,InfoS):- nonvar(TestID),once(fix_test_name(TestID,FTestID,_)),TestID\=@=FTestID,!,test_info(FTestID,InfoS).
+test_info(TestID,InfoS):- test_info_cache(TestID,InfoS),!.
+test_info(TestID,InfoS):- 
  findall(Inf,
-  (some_task_info(CTestID,Inf0),once((fix_test_name(CTestID,CFTestID,_),CFTestID=TestID)),
+  (some_test_info(CTestID,Inf0),once((fix_test_name(CTestID,CFTestID,_),CFTestID=TestID)),
    repair_info(Inf0,Inf)),Info),
   flatten([Info],InfoFF),repair_info(InfoFF,InfoF),list_to_set(InfoF,InfoS),!,
-  asserta(task_info_cache(TestID,InfoS)),!.
+  asserta(test_info_cache(TestID,InfoS)),!.
 
 repair_info(Inf,InfO):- listify(Inf,Inf1),maplist(repair_info0,Inf1,InfO).
 repair_info0(Inf0,Inf):- is_list(Inf0),!,maplist(repair_info0,Inf0,Inf).
@@ -458,14 +507,14 @@ human_t(T):- human_t_set(Set),member(T,Set).
 
 %human_t_set(NamesByHardUR):- cached_tests(human_t_set,NamesByHardUR),!.
 human_t_set(NamesByHardUR):- % Name=t(_),
-  findall(Name,(task_info(Name,Sol),member(human(_),Sol)),All),
+  findall(Name,(test_info(Name,Sol),member(human(_),Sol)),All),
   list_to_set(All,NamesByHardUR).
 
 sol_t(T):- sol_t_set(Set),member(T,Set).
 sol_t(T):- human_t_set(Set),member(T,Set).
 sol_t_set(NamesByHardUR):- % Name=t(_),
   findall(Name,
-   (task_info(Name,Sol),member(C,Sol),compound(C),functor(C,F,1),atom_contains(F,sol)),All),
+   (test_info(Name,Sol),member(C,Sol),compound(C),functor(C,F,1),atom_contains(F,sol)),All),
   list_to_set(All,NamesByHardUR).
 
 
@@ -601,24 +650,9 @@ pair_dictation(TestID,ExampleNum,In,Out,DictOut):- cached_dictation(pair_dictati
 pair_dictation(TestID,ExampleNum,In,Out,DictOut):-
   do_pair_dication(In,Out,Vs),!,
   vars_to_dictation(Vs,_{},DictOut),
-  pfc_assert(cached_dictation(pair_dictation(TestID,ExampleNum,In,Out),DictOut)).
-/*
-The IEEE floating-point standard, supported by almost all modern floating-point units, specifies that every floating 
- point arithmetic operation, including division by zero, has a well-defined result. 
-  The standard supports signed zero, as well as infinity and NaN (not a number). 
-   There are two zeroes: +0 (positive zero) and -0 (negative zero) and this removes any ambiguity when dividing. 
-   In IEEE 754 arithmetic, a ÷ +0 is positive infinity when a is positive, negative infinity when a is negative, 
-   and NaN when a = ±0. The infinity signs change when dividing by -0 instead.
-*/
-ratio_for(Ratio,_/_=Out,In):- nonvar(Out), !, ratio_for(Ratio,Out,In).
-ratio_for(Ratio,Out,_/_=In):- nonvar(In), !, ratio_for(Ratio,Out,In).
-ratio_for(Out/In=Ratio,Out,In):- ratio_for0(Ratio,Out,In).
-ratio_for0(1.0,Out,In):- 0 is In, 0 is Out,!.
-ratio_for0(Ratio,Out,In):- 0 is In, !, Ratio is -0.0.
-ratio_for0(1,Out,In):- Out =:= In.
-ratio_for0(Ratio,Out,In):- 0 is Out, !, Ratio is +0.0.
-ratio_for0(Ratio,Out,In):- catch(Ratio is rationalize(Out/In),error(evaluation_error(_zero_divisor),_),fail),!.
-ratio_for0(Ratio,Out,In):- catch(NRatio is rationalize(In/Out),error(evaluation_error(_zero_divisor),_),fail),!, Ratio is -NRatio.
+  retractall(cached_dictation(pair_dictation(TestID,ExampleNum,_,_),_)),
+  arc_assert(cached_dictation(pair_dictation(TestID,ExampleNum,In,Out),DictOut)).
+
 
 :- quasi_quotation_syntax(dictate_sourcecode).
 :- export(dictate_sourcecode/4).
@@ -647,8 +681,8 @@ do_pair_dication(In,Out,_Vs):-
   ratio_for(RatioArea,OutArea,InArea),
   max_min(OutArea,InArea,BothMaxArea,BothMinArea),
 
-  mass(In,InMass),
-  mass(Out,OutMass),
+  amass(In,InMass),
+  amass(Out,OutMass),
   ratio_for(DeltaMass,OutMass,InMass),
 
   unique_color_count(In,InColorLen),
@@ -740,8 +774,8 @@ is_eval(P1,Prev,P1A):- nop(is_eval(P1,Prev,P1A)),fail.
 db_u(P1L,P1,P2L,P2,In,Out):- is_eval(P1,Prev,P1A),!,db_u([Prev|P1L],P1A,P2L,P2,In,Out).
 db_u(P1L,P1,P2L,P2,In,Out):- is_eval(P2,Prev,P2A),!,db_u(P1L,P1,[Prev|P2L],P2A,In,Out).
 
-%db(P1,P2,In,In):- t_or_t(freeze_for([P2],pfc_assert(is_db(TF,P2))),is_db(TF,P2)).
-%db(P2,P1,In,In):- nonvar(Color), db_value(P1,In,TF),!,t_or_t(freeze_for([Color],pfc_assert(is_db(TF,Color))),is_db(TF,Color)).
+%db(P1,P2,In,In):- t_or_t(freeze_for([P2],arc_assert(is_db(TF,P2))),is_db(TF,P2)).
+%db(P2,P1,In,In):- nonvar(Color), db_value(P1,In,TF),!,t_or_t(freeze_for([Color],arc_assert(is_db(TF,Color))),is_db(TF,Color)).
 db(P1,P2,In,Out):- db_u([],P1,[],P2,In,Out).
 db(X,Y,I,I):- pt(db(X,Y)),pt(I).
 
@@ -759,20 +793,29 @@ kaggle_arc(v(Name), TypeI, In, Out):-
 */
 
 fix_test_name(V,VV,_):- var(V),!,VV=V.
-fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=E.
-fix_test_name(ID,Fixed,Example+Num):- test_id_num_io(ID,Tried,Example,Num,_), !, fix_id(Tried,Fixed).
-fix_test_name(Tried           ,  Fixed,         _):-    fix_id(Tried,Fixed).
+fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=@=G.
+fix_test_name(ID,Fixed,Example+Num):- testid_name_num_io(ID,Tried,Example,Num,_), fix_id(Tried,Fixed).
 
-test_id_num_io(ID,_Name,_Example,_Num,_IO):- var(ID),!, fail.
-test_id_num_io(ID,Name,Example,Num,IO):- atom(ID),catch(atom_to_term(ID,Term,_),_,fail), Term\==ID, !,test_id_num_io(ID,Name,Example,Num,IO).
-test_id_num_io(ID,Name,Example,Num,IO):- atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], !,test_id_num_io(ID,Name,Example,Num,IO).
-test_id_num_io(ID,Name,_Example,_Num,_IO):- atom(ID),fix_id(ID,   Name),!.
-test_id_num_io([Name,Example,ANum,IO|_],Name,Example,Num,IO):-atom_number(ANum,Num),!.
-test_id_num_io(ID,ID,Example,Num,IO):- kaggle_arc_io(ID,Example+Num,IO,_).
-test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*Example+Num*IO,fix_id(TstName,Name),!.
-test_id_num_io(ID,Name,Example,Num,IO):- ID = TstName*(Example+Num)*IO,fix_id(TstName,Name),!.
-test_id_num_io(ID,Name,Example,Num,_IO):- ID = TstName*Example+Num,fix_id(TstName,Name),!.
-test_id_num_io(ID,Name,Example,Num,_IO):- ID = TstName*(Example+Num),fix_id(TstName,Name),!.
+
+testid_name_num_io(ID,_Name,_Example,_Num,_IO):- var(ID),!, fail.
+testid_name_num_io(ID,_Name,_Example,_Num,_IO):- is_grid(ID),!, fail.
+testid_name_num_io(ID,_Name,_Example,_Num,_IO):- is_list(ID), \+ maplist(nonvar,ID),!,fail.
+
+testid_name_num_io([V,Name,Example,ANum,IO|_],TstName,Example,Num,IO):- !, atom(V),VName=..[V,Name],atom_number(ANum,Num),!,fix_id(VName,TstName).
+testid_name_num_io(TstName*Example+Num*IO,Name,Example,Num,IO):- !,fix_id(TstName,Name).
+testid_name_num_io(TstName*(Example+Num)*IO,Name,Example,Num,IO):- !,fix_id(TstName,Name).
+testid_name_num_io(TstName*Example+Num,Name,Example,Num,_IO):- !,fix_id(TstName,Name).
+testid_name_num_io(TstName*(Example+Num),Name,Example,Num,_IO):- !,fix_id(TstName,Name).
+testid_name_num_io(ID,Name,Example,Num,IO):- ID = TstName*(Example+Num)*IO,!,fix_id(TstName,Name),!.
+testid_name_num_io(ID,Name,Example,Num,_IO):- ID = TstName*Example+Num,!,fix_id(TstName,Name),!.
+testid_name_num_io(ID,Name,Example,Num,_IO):- ID = TstName*(Example+Num),!,fix_id(TstName,Name),!.
+testid_name_num_io(ID,Name,Example,Num,IO):- atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], 
+  testid_name_num_io(Term,Name,Example,Num,IO),!.
+testid_name_num_io(ID,Name,Example,Num,IO):- atom(ID),catch(atom_to_term(ID,Term,_),_,fail), Term\==ID, nonvar(Term), 
+  testid_name_num_io(Term,Name,Example,Num,IO),!.
+%testid_name_num_io(ID,Name,_Example,_Num,_IO):- atom(ID),!,fix_id(ID,   Name),!.
+testid_name_num_io(ID,Name,_Example,_Num,_IO):- fix_id(ID,   Name),!. %, kaggle_arc_io(Name,Example+Num,IO,_).
+
 
 
 
@@ -780,12 +823,17 @@ test_id_num_io(ID,Name,Example,Num,_IO):- ID = TstName*(Example+Num),fix_id(TstN
 fix_id(Tried,   Tried):- var(Tried),!.
 fix_id(X,_):- is_cpoint(X),!,fail.
 fix_id(X,_):- is_list(X),maplist(is_cpoint,X),!,fail.
-fix_id(o_i_d(X,_),Fixed):-  !, fix_id(X,Fixed).
+fix_id(obj_to_oid(_,X),Fixed):-  !, fix_id(X,Fixed).
 fix_id(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
-fix_id(Tried,t(Tried)):- atom(Tried), kaggle_arc(t(Tried),_,_,_),!.
-fix_id(Tried,v(Tried)):- atom(Tried), kaggle_arc(v(Tried),_,_,_),!.
-fix_id(t(Tried),v(Tried)):- atom(Tried), kaggle_arc(v(Tried),_,_,_),!.
-fix_id(v(Tried),t(Tried)):-atom(Tried), kaggle_arc(t(Tried),_,_,_),!.
+fix_id(v(Tried),   TriedV):- !, atom_id(Tried,TriedV),!.
+fix_id(t(Tried),   TriedV):- !, atom_id(Tried,TriedV),!.
+fix_id(Tried,   TriedV):- atom_id(Tried,TriedV),!.
+
+%DD2401ED
+atom_id(NonAtom,TriedV):- \+ atom(NonAtom),!,string(NonAtom),atom_string(Tried,NonAtom),atom_id(Tried,TriedV).
+atom_id(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
+atom_id(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
+atom_id(Atom,TriedV):- downcase_atom(Atom,Tried),Atom\==Tried,atom_id(Tried,TriedV).
 %fix_id(Tried,Fixed):- !, fail,compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_id(E,Fixed),!.
 
 
@@ -814,7 +862,7 @@ parcCmt1(TName):-
   IHV = IH*IV, OHV = OH*OV,
   BGColor = '$VAR'('Color'),
   (IHV\==OHV -> CG = resize_grid(OH,OV,BGColor); CG = copy_grid(in)),
-  findall(III,task_info(TestID,III),InfoUF),
+  findall(III,test_info(TestID,III),InfoUF),
   flatten(InfoUF,InfoF),
   DSL = no_sol(i(complete),CG,incomplete),
   predsort(sort_univ,[DSL|InfoF],InfoFS), %44f52bb0

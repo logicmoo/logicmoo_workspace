@@ -17,10 +17,14 @@ to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,G
 
 has_color(C,Cell):- only_color_data(Cell,CD), cmatch(C,CD).
 
-cmatch(C,CD):- C==CD,!.
+cmatch(C,CD):- plain_var(C),!,C=CD,!.
+cmatch(C,CD):- var(C),!,C=CD,!.
 cmatch(fg,CD):- is_fg_color(CD),!.
 cmatch(bg,CD):- is_bg_color(CD),!.
-cmatch(wbg,CD):- is_bg_color(CD),!.
+cmatch(wbg,CD):- (CD==wbc;is_bg_color(CD)),!.
+%cmatch(P,CD):- is_real_color(P),!, \+ P\==CD.
+cmatch(P,CD):- is_colorish(P),!, \+ P\=CD.
+cmatch(P,CD):- call(P,CD),!.
 
 free_bg(BGC,S,FB):- is_list(S),!,mapgrid(free_bg(BGC),S,FB).
 free_bg(_,S,FB):- plain_var(S),!,FB=S.
@@ -78,6 +82,7 @@ is_bg(C):- is_bg_color(C).
 is_bgc(C):- is_bg_color(C).
 
 is_bgp(Cell):- only_color_data(Cell,C), is_bg_color(C).
+is_fgp(Cell):- only_color_data(Cell,C), is_fg_color(C).
 
 is_bg_sym_or_var(C):- attvar(C),get_attr(C,ci,fg(_)),!,fail.
 is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
@@ -350,7 +355,7 @@ data_type(O,int):- integer(O),!.
 data_type(O,float):- float(O),!.
 data_type(O,rational):- rational(O),!.
 data_type(O,string):- string(O),!.
-data_type(_=O,ratio):- (rational(O);number(O)),!.
+data_type(_=O,=(N)):- nonvar(O),!,data_type(O,N).
 data_type(O,object):- is_object(O),!.
 data_type(O,dict(L)):- is_map(O),get_kov(objs,O,Value),!,data_type(Value,L).
 data_type(O,group(N)):- is_group(O),into_list(O,L),!,length(L,N).
@@ -362,10 +367,10 @@ data_type(O,unknown_bg_color):- is_bg_color(O),!.
 data_type(O,unknown_fg_color):- is_fg_color(O),!.
 data_type(O,unknown_color):- is_colorish(O),!.
 data_type(Out,S):- \+ compound(Out),!,Out = S.
-data_type(Out,S):- compound_name_arity(Out,print_grid,A),arg(A,Out,P),data_type(P,S),!.
-data_type(Out,size(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
+data_type(Out,grid(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
 data_type(Out,length(DT)=H):- is_list(Out),!,length(Out,H), last(Out,Last),data_type(Last,DT).
-data_type(Out,F/A):- compound_name_arity(Out,F,A),!.
+data_type(Out,S):- compound_name_arity(Out,print_grid,A),arg(A,Out,P),data_type(P,S),!.
+data_type(Out,FS):- compound_name_arity(Out,F,A),arg(A,Out,P),data_type(P,S),!,FS=..[F,S].
 
 
 is_point(P):- var(P),!,fail.
@@ -373,10 +378,15 @@ is_point(P):- is_nc_point(P),!.
 is_point(P):- is_cpoint(P).
 
 is_points_list(P):- var(P),!,fail.
-is_points_list([G|L]):- is_point(G),!,maplist(is_point,L).
+is_points_list([G|L]):- is_point(G),!,(L==[];is_points_list(L)),!.
+
+is_cpoints_list(P):- var(P),!,fail.
+%is_cpoints_list(P):- P==[],!.
+is_cpoints_list([G|L]):- is_cpoint(G),!,(L==[];is_cpoints_list(L)),!.
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
-enum_fg_colors(Color):- enum_colors(Color),is_color_no_bgc(Color).
+enum_fg_colors(FG):- enum_colors(FG), is_fg_color(FG), \+ is_bg_color(FG), FG\==fg.
+%enum_fg_colors(Color):- enum_colors(Color),is_color_no_bgc(Color).
 fill_color(Color,OtherColor):- enum_colors(OtherColor),Color\==OtherColor,is_color_no_bgc(OtherColor).
 
 is_bg_indiv(O):- colors(O,[cc(C,CC)]),CC>0,is_bg_color(C).

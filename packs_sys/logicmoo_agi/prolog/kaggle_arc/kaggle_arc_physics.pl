@@ -11,12 +11,12 @@
 
 area(Obj,Area):- v_hv(Obj,H,V), Area is H * V.
 
-density(Obj,Density):- area(Obj,Area),mass(Obj,Mass), Density is Mass/Area.
+density(Obj,Density):- area(Obj,Area),amass(Obj,Mass), Density is Mass/Area.
 
 
 into_gridoid0(obj(N),O):- enum_object(O),o2g(O,G),sformat(N," ~w ",[G]).
 into_gridoid0(shape_lib(N:Lib),O):- shape_lib_expanded(Lib,Grids),nth1(N,Grids,O).
-into_gridoid0(N,G):- get_current_test(TestID),why_grouped(TestID,N,UG), UG\==[],UG\=[_],smallest_first(UG,G).
+into_gridoid0(N,G):- get_current_test(TestID),is_why_grouped(TestID,_,N,UG), UG\==[],UG\=[_],smallest_first(UG,G).
 into_gridoid0(N,G):- into_grids(N,G).
 
 into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort(P,S))).
@@ -43,11 +43,17 @@ tips_to_rot(Grid,H,V,[rot90|RotOut],Final):- is_top_heavy(Grid), !, rot270(Grid,
 %tips_to_rot(Grid,H,V,[rot180|RotOut]):- is_top_heavy(Grid), !, rot180(Grid,Grid90), !, tips_to_rot(Grid90,H,V,RotOut).
 tips_to_rot(Grid,_H,_V,RotOut,Final):- is_left_heavy(Grid)-> (RotOut=[rot180],rot180(Grid,Final)); (RotOut=[same],Final=Grid).
 
-is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,color_mass(Top,TopM),color_mass(Bottem,BottemM),!,BottemM>TopM.
+is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,color_w_mass(Top,TopM),color_w_mass(Bottem,BottemM),!,BottemM>TopM.
 is_left_heavy(Grid0):- rot90(Grid0,Grid),is_top_heavy(Grid).
 split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
     my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
 
+color_w_mass(Color,Int):- var(Color),!,Int=13.
+color_w_mass(Points,Count):- is_list(Points),!,maplist(color_w_mass,Points,MPoints),!,sum_list(MPoints,Count).
+color_w_mass(Color,Int):- ground(Color),color_int(Color,Int),!.
+color_w_mass(Color,Int):- number(Color),Color=Int,!.
+color_w_mass(Obj,Count):- nonvar(Obj),localpoints(Obj,Points),!,color_w_mass(Points,Count),!.
+color_w_mass(_,0).
 /*
   bottem_heavy(Grid90,RotG,Grid180).
 grav_mass(Grid,_H,_V,RotG,Grid90):- is_h_symmetric(Grid),!,bottem_heavy(Grid,RotG,Grid90).
@@ -307,7 +313,7 @@ mention_touches(Obj,[link(Dir,Touched)|More],NewFObjO):- !,
   mention_touches(Obj,Dir-Touched,MidObj),
   mention_touches(MidObj,More,NewFObjO).
 mention_touches(Obj,Dir-Touched,NewObj):-
-  /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
+  /*must_det_ll*/(obj_to_oid(Touched,Iv)),
   /*must_det_ll*/(override_object(link(touches,Dir,Iv),Obj,NewObj)),!.
 */
 
@@ -317,7 +323,7 @@ find_touches_objects(Obj,_,[]):- has_prop(link(touched,_,_),Obj),!.
 find_touches_objects(Obj,[Touched|ScanNext],[BetterTouch|Engulfed]):-    
  once(touching_object(Dirs,Obj,Touched)),Dirs\==[],!,
  better_touched(Iv,Dirs,BetterTouch),
- /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
+ /*must_det_ll*/(obj_to_oid(Touched,Iv)),
  /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
 find_touches_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
 
@@ -383,12 +389,12 @@ find_engulfs_objects(Obj,_,[]):- has_prop(link(insideOf,_),Obj),!.
 find_engulfs_objects(Obj,_,[]):- has_prop(link(contains,_),Obj),!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(insideOf,Iv)|Engulfed]):-    
  once(contained_object(Obj,Touched)),!,
- /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
+ /*must_det_ll*/(obj_to_oid(Touched,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
-find_engulfs_objects(Obj,_,[]):- mass(Obj,Mass),Mass<5,!.
+find_engulfs_objects(Obj,_,[]):- amass(Obj,Mass),Mass<5,!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(contains,Iv)|Engulfed]):-    
  once(contained_object(Touched,Obj)),!,
- /*must_det_ll*/(o_i_d(Touched,_Where,Iv)),
+ /*must_det_ll*/(obj_to_oid(Touched,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 find_engulfs_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 
@@ -428,7 +434,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   %grid_size(Found,H,V),
   /*must_det_ll*/((
   % points_to_grid(H,V,ContainedPoints,Grid),
-  %once(o_i_d(Found,ID,_);grid_to_id(Grid,ID)),
+  %once(obj_to_oid(Found,ID,_);grid_to_tid(Grid,ID)),
   individuate(subshape_in_object,ContainedPoints,NewInside),
   mapgroup(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained",[Found|NewInsideM])))),
@@ -439,7 +445,7 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScan
 
 
 mention_inside(Found,NewInside,NewInsideO):-
-  o_i_d(Found,_Where,Iv),
+  obj_to_oid(Found,Iv),
   add_shape_info(link(insideOf,Iv),NewInside,NewInsideO).
 
 find_contained_points(_,[],[],[]).

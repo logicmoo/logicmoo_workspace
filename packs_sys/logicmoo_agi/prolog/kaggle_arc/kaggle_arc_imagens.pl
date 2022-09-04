@@ -127,10 +127,10 @@ the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
 the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
 the_hammer(Color,ColorComplex):- 
-  ColorComplex = obj([mass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+  ColorComplex = obj([amass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), v_hv(3, 3), rotation(same), loc(2, 5), 
-  changes([]), iz(rectangle), iz(hammer), o_i_d(t('1b60fb0c')*(trn+666)*out, 666), 
+  changes([]), iz(rectangle), iz(hammer), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
 
@@ -324,7 +324,7 @@ add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, mapgroup(add_shape_
 
 add_shape_lib(Type,Obj):- add_shape_lib0(Type,Obj).
 
-add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
+add_shape_lib0(Type,Obj):- amass(Obj,Mass),!,
   %dash_chars, print_grid(Obj),
   ( Mass<3 
    -> nop(pt(too_small_for_shapelib(Type,Mass))) ; (nop(pt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
@@ -332,7 +332,7 @@ add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   !.
 
 
-%assert_shape_lib(_,Obj):-  mass(Obj,Mass), Mass<4,!.
+%assert_shape_lib(_,Obj):-  amass(Obj,Mass), Mass<4,!.
 assert_shape_lib(Type,Obj):- is_list(Type),!,mapgroup(lambda_rev(assert_shape_lib3(Type,Obj)),Type).
 assert_shape_lib(Type,Obj):- assert_shape_lib3(Type,[Type],Obj).
 assert_shape_lib3(Type,InfoIn,Obj):- 
@@ -527,7 +527,7 @@ print_shape_0(Shape):-
   %numbervars(Shape,0,_,[attvar(bind)]),
   %grid_numbervars(FG,Grid),
   pt(Grid), 
-  %o_i_d(Shape,_Glyph,Iv),
+  %obj_ to_oid(Shape,_Glyph,Iv),
   print_grid(H,V,Grid),!.
   %locally(luser_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
 
@@ -662,7 +662,7 @@ in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_one_fg_color(C),hollow_sq
 in_shape_lib(n_shape,LibObj):- n_shape(LibObj).
 
 in_shape_lib(hammer,Name):- the_hammer1(Name).
-in_shape_lib(seen,O):- g2o(_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
+in_shape_lib(seen,O):- get_current_test(TestID),g_2_o(TestID,_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
 
 all_rots(X,Y):- all_rotations(X,Y).
 

@@ -477,21 +477,21 @@ simplify_goal_printed(term_position(_,_,_,_,_),'$..term_position/4..$').
 %simplify_goal_printed(catchv(G,_,_),GS):-!,simplify_goal_printed(G,GS).
 %simplify_goal_printed(catch(G,_,_),GS):-!,simplify_goal_printed(G,GS).
 %simplify_goal_printed(skolem(V,N,_F),GS):-!,simplify_goal_printed(skeq(V,N,'..'),GS).
+simplify_goal_printed(I,O):- once(dumpst_hook:simple_rewrite(I,O)), I \== O,!.
 
 simplify_goal_printed(List,O):- current_prolog_flag(dmsg_len,Three),
   is_list(List),length(List,L),L>Three,
    append([A,B,C],[F|_],List),F \='...'(_), !, 
-  simplify_goal_printed([A,B,C,'...'(_)],O).
+  simplify_goal_printed([A,B,C,'....'(L>Three)],O).
 
 
-simplify_goal_printed([E|OList],O):- \+ is_list(OList), 
+simplify_goal_printed([E|OList],O):- fail,  \+ is_list(OList), 
    append(List,Open,OList),var(Open),!,
     current_prolog_flag(dmsg_len,Three),
    is_list(List),length(List,L),L>Three,
     append([A,B,C],[F|_],[E|List]),F \='...'(_), !, 
    simplify_goal_printed([A,B,C,'...'(_)],O).
 
-simplify_goal_printed(I,O):- once(dumpst_hook:simple_rewrite(I,O)), I \== O.
 
 simplify_goal_printed([F|A],[FS|AS]):- !,simplify_goal_printed(F,FS),simplify_goal_printed(A,AS).
 simplify_goal_printed(G,GS):- univ_safe_2(G,[F|A]),maplist(simplify_goal_printed,A,AA),univ_safe_2(GS,[F|AA]).

@@ -411,8 +411,10 @@ guess_pretty1(O):- mortvar(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pre
 
 make_pretty(I,O):- pretty_numbervars(I,O),!.
 make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
-make_pretty(I,O):- dumplicate_term(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
+make_pretty(I,O):- plvn(Vs),duplicate_term(I+Vs,O+Vs), pretty1(O),pretty_three(O),pretty_final(O),!.
 
+plvn(Vs):- nb_current('$variable_names',Vs),!.
+plvn(Vs):- prolog_load_context(variable_names,Vs).
 %:- export(guess_varnames/1).
 
 guess_varnames(I):- guess_pretty1(I).

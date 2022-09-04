@@ -25,10 +25,12 @@
    is_webui/0,
    print_tree_with_final/3]).
 
+/*
 :- multifile '$exported_op'/3. 
 :- dynamic '$exported_op'/3. 
 :- discontiguous '$exported_op'/3. 
 '$exported_op'(_,_,_):- fail.
+*/
 
 :- multifile '$autoload'/3. 
 :- discontiguous '$autoload'/3.
@@ -645,8 +647,8 @@ write_q(X):- in_pp(bfly),!,print_html_term(X).
 write_q(S):- current_output_line_position(Pos), pretty_clauses:pp_hook(write_q, Pos, S),!.
 write_q(X):- writeq(X).
 
-ec_portray(_,X):- as_is_cmpd(X),!,write_q(X).
-ec_portray(_,X):- atom(X),ansi_ansi,!,write_q(X).
+ec_portray(_,X):- as_is_cmpd(X),!,without_ec_portray_hook(write_q(X)).
+ec_portray(_,X):- atom(X),ansi_ansi,!,without_ec_portray_hook(write_q(X)).
 ec_portray(N,_):- N > 3,!,fail.
 ec_portray(_,Term):- (\+ compound(Term);Term='$VAR'(_)),!, ec_portray_now(Term).
 ec_portray(N,List):- N<2, is_list(List),!,print_tree00(List).

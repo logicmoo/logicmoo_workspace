@@ -44,8 +44,8 @@ rtrace_on_error(Goal):- catch(quietly(Goal),E,(notrace,dmsg(E=Goal),break,1==1,r
 % Grid subtraction
 individuals_from_pair(PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):- 
   add_note("trying grid minus grid"),
-  grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
-  grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
+  grid_minus_grid(In,Out,ImO),amass(ImO,IMass),
+  grid_minus_grid(Out,In,OmI),amass(OmI,OMass),
    show_pair_no_i(H,V,H,V,grid_subtraction,PairName,ImO,OmI),
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),

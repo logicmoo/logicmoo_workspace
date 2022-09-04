@@ -21,7 +21,7 @@ last_indiv(I,R):- into_group(I,M),I\=@=M,!,predsort(sort_on(loc_term),M,O),rever
 
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
-%fav(t(d631b094),human(globalpoints,grid_out=[get(points)],maplist(arg(1)))).
+%fav(t(d631b094),human(globalpoints,grid_target=[get(points)],maplist(arg(1)))).
 fav(t('d631b094'),[human(i(lo_dots),get(objs),learn_rule)]).
 fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,summarize,dominant_color,count_tiles,'(4, 1)']).
 
@@ -39,7 +39,8 @@ fav(t('ff805c23'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,trai
 fav(t('3631a71a'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
 fav(t('29ec7d0e'),[human(repair_in_vm(repair_repeats(black)),get(repaired))]).
 fav(t('29ec7d0e'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_repetition,pattern_expansion,image_filling,detect_grid,'(4, 1)']).
-fav(t('47c1f68c'),[hedra,human(compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1),blur(flipH),blur(flipV))]).
+fav(t('47c1f68c'),[hedra,
+   human(compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1),blur(flipH),blur(flipV))]).
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,recolor,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
 fav(v('cad67732'),[human(i(whole),first_object_term(rotated),learn_rule),-shape_match,-rotation_match,-mask_match,+color_match,evaluation,'(3, 1) ']).
 fav(t('27a28665'),[human(i(whole),learn_rule)]).
@@ -52,7 +53,7 @@ fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
 /*
   Grid = [[1,1,1,1]]
   The Drawer does 
-  Draw Grid = loc(1,1),line_hv(h), pen(1), mass(4)
+  Draw Grid = loc(1,1),line_hv(h), pen(1), amass(4)
   
   % Grid<->Drawer   Drawer<->Grid
   
@@ -62,7 +63,7 @@ fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
   
   Slover = [- pen(1), + pen(2)]
   
-  DrawGrid = loc(1,1),line_hv(h), pen(2), mass(5)
+  DrawGrid = loc(1,1),line_hv(h), pen(2), amass(5)
   Grid = [[2,2,2,2,2]]
 */
 /*
@@ -93,7 +94,7 @@ fav(v('73ccf9c2'),[human(colormass,most_unique(symmetry),get(solution),trim_to_r
 
 fav(v('a8610ef7'),[grid_size_same,find_symmetry,-rotation_match,-color_match,+shape_match,+mask_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',evaluation,'(4, 1)']).
 
-fav(v('6ea4a07e'),[clue(mass(in)+mass(out)=:=9),human(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
+fav(v('6ea4a07e'),[clue(amass(in)+amass(out)=:=9),human(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
 
 fav(t('23b5c85d'),[human([smallest_indiv,trim_to_rect])]).
 fav(t('1cf80156'),[human([trim_to_rect])]).
@@ -102,8 +103,8 @@ fav(v('94133066'),[human([largest_indiv,trim_to_rect,rot90,flipV]),-shape_match,
 fav(t('23b5c85d'),[human([smallest_indiv,trim_to_rect]),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,take_minimum,measure_area,crop,'(5, 1)']).
 fav(t('8d5021e8'),[human([grow([[rot180, flipV],[flipH, same],[rot180, flipV]])])]).
 
-fav(t('6150a2bd'),[clue(mass(in)=:=mass(out)),human(rot180),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(2, 1)']).
-fav(t('ed36ccf7'),[clue(mass(in)=:=mass(out)),human(rot270),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(4, 1)']).
+fav(t('6150a2bd'),[clue(amass(in)=:=amass(out)),human(rot180),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(2, 1)']).
+fav(t('ed36ccf7'),[clue(amass(in)=:=amass(out)),human(rot270),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(4, 1)']).
 fav(t(b230c067),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,find_the_intruder,associate_colors_to_bools,'(2, 1)']).
 fav(t(d2abd087),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
 fav(v('0a2355a6'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(4, 1) ']).
@@ -116,10 +117,10 @@ fav(t('08ed6ac7'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mas
 fav(v('626c0bcc'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(3, 1) ']).
 fav(v('639f5a19'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(2, 1) ']).
 
-fav(v('6ea4a07e'),[clue(mass(in)+mass(out)=9),human(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
+fav(v('6ea4a07e'),[clue(amass(in)+amass(out)=9),human(use_clues),clue(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
 
 :- style_check(-singleton).
-fav(t(ff28f65a),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,count_shapes,associate_images_to_numbers,'(8, 3)']).
+fav(t(ff28f65a),[human(count_shapes,associate_images_to_numbers),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,count_shapes,associate_images_to_numbers,'(8, 3)']).
 fav(t('1b60fb0c'),[
  %indiv([i_repair_mirrors]),
  %human([new_things_are_a_color,fix_image]),
@@ -608,7 +609,8 @@ fav(v('7c9b52a0'),[out_grid(4,4),-shape_match,-rotation_match,-mask_match,-color
 fav(t(b190f7f5),[out_grid(9,9),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,separate_images,replace_pattern,image_resizing,image_expasion,color_palette,'(3, 1)']).
 fav(v('19bb5feb'),[out_grid(2,2),-shape_match,-rotation_match,-mask_match,-color_match,test,evaluation,'(3, 1) ']).
 fav(v('20818e16'),[out_grid(8,6)]).
-fav(t(e6721834),[out_grid(17,15),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_moving,pattern_juxtaposition,crop,'(3, 1)']).
+fav(t(e6721834),[out_grid(17,15),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,
+  pattern_moving,pattern_juxtaposition,crop,'(3, 1)']).
 fav(t(f8ff0b80),[out_grid(1,3),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,summarize,separate_shapes,order_numbers,count_tiles,'(3, 1)']).
 fav(v('50aad11f'),[out_grid(4,8),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
 fav(v(b7cb93ac),[out_grid(4,3),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
@@ -1024,138 +1026,153 @@ if like in the game of TTT you can win, but not diagonlly.. place the color on t
 
 */
 
- task_tag(adapt_image_to_grid).
- task_tag(algebra).
- task_tag(associate_color_to_bools).
- task_tag(associate_colors_to_bools).
- task_tag(associate_colors_to_colors).
- task_tag(associate_colors_to_images).
- task_tag(associate_colors_to_numbers).
- task_tag(associate_colors_to_patterns).
- task_tag(associate_colors_to_ranks).
- task_tag(associate_colors_to_shapes).
- task_tag(associate_images_to_bools).
- task_tag(associate_images_to_colors).
- task_tag(associate_images_to_images).
- task_tag(associate_images_to_numbers).
- task_tag(associate_images_to_patterns).
+test_tag_info(X):- 
+ (var(X)->test_tag(X);true),
+ findall(TestID,(test_info(TestID,Info),sub_var(X,Info)),Tests),
+  list_to_set(Tests,Set),
+  length(Set,LS),
+  dash_chars,
+  wdmsg(?- test_tag_info(X)=LS),
+  maplist(test_tag_info(X),Set),
+  wdmsg(test_tag_info(X)=LS),
+  dash_chars.
 
- task_tag(associate_patterns_to_colors).
- task_tag(associate_patterns_to_patterns).
+test_tag_info(_X,TestID):- print_qtest(TestID),!.
 
- task_tag(background_filling).
- task_tag(bounce).
- task_tag(bouncing).
- task_tag(bridges).
- task_tag(bring_patterns_close).
- task_tag(color_guessing).
- task_tag(color_matching).
- task_tag(color_palette).
- task_tag(color_permutation).
- task_tag(compare_image).
- task_tag(concentric).
- task_tag(connect_the_dots).
- task_tag(contouring).
- task_tag(count_different_colors).
- task_tag(count_hor_lines).
- task_tag(count_patterns).
- task_tag(count_shapes).
- task_tag(count_tiles).
- task_tag(count_ver_lines).
- task_tag(create_grid).
- task_tag(create_image_from_info).
- task_tag(crop).
- task_tag(cylindrical).
- task_tag(detect_background_color).
- task_tag(detect_closed_curves).
- task_tag(detect_connectedness).
- task_tag(detect_enclosure).
- task_tag(detect_grid).
- task_tag(detect_hor_lines).
- task_tag(detect_repetition).
- task_tag(detect_symmetry).
- task_tag(detect_wall).
- task_tag(diagonal_symmetry).
- task_tag(diagonals).
- task_tag(direction_guesing).
- task_tag(direction_guessing).
- task_tag(divide_by_n).
- task_tag(dominant_color).
- task_tag(draw_line_from_border).
- task_tag(draw_line_from_point).
- task_tag(draw_parallel_line).
- task_tag(draw_pattern_from_point).
- task_tag(draw_rectangle).
- task_tag(enlarge_image).
- task_tag(even_or_odd).
- task_tag(ex_nihilo).
- task_tag(extrapolate_image_from_grid).
- task_tag(find_the_intruder).
- task_tag(fractal_repetition).
- task_tag(gravity).
- task_tag(grid_coloring).
- task_tag(holes).
- task_tag(homeomorphism).
- task_tag(image_expansion).
- task_tag(image_expasion).
- task_tag(image_filling).
- task_tag(image_juxtaposition).
- task_tag(image_reflection).
- task_tag(image_repetition).
- task_tag(image_resizing).
- task_tag(image_rotation).
- task_tag(image_within_image).
- task_tag(inside_out).
- task_tag(jigsaw).
- task_tag(loop_filling).
- task_tag(maze).
- task_tag(measure_area).
- task_tag(measure_distance_from_side).
- task_tag(measure_length).
- task_tag(mimic_pattern).
- task_tag(obstacles).
- task_tag(one_yes_one_no).
- task_tag(only_one).
- task_tag(order_numbers).
- task_tag(out_of_boundary).
- task_tag(pairwise_analogy).
- task_tag(pattern_alignment).
- task_tag(pattern_coloring).
- task_tag(pattern_completion).
- task_tag(pattern_deconstruction).
- task_tag(pattern_differences).
- task_tag(pattern_expansion).
- task_tag(pattern_intersection).
- task_tag(pattern_juxtaposition).
- task_tag(pattern_modification).
- task_tag(pattern_moving).
- task_tag(pattern_reflection).
- task_tag(pattern_repetition).
- task_tag(pattern_resizing).
- task_tag(pattern_rotation).
- task_tag(portals).
- task_tag(projection_unto_rectangle).
- task_tag(proximity_guessing).
- task_tag(recolor).
- task_tag(recoloring).
- task_tag(rectangle_guessing).
- task_tag(remove_intruder).
- task_tag(remove_intruders).
- task_tag(remove_noise).
- task_tag(replace_pattern).
- task_tag(rettangle_guessing).
- task_tag(separate_image).
- task_tag(separate_images).
- task_tag(separate_shapes).
- task_tag(shape_guessing).
- task_tag(size_guessing).
- task_tag(spacing).
- task_tag(summarize).
- task_tag(take_complement).
- task_tag(take_half).
- task_tag(take_intersection).
- task_tag(take_maximum).
- task_tag(take_minimum).
- task_tag(take_negative).
- task_tag(x_marks_the_spot).
+test_tag:- forall(test_tag(X),test_tag_info(X)).
+
+ test_tag(adapt_image_to_grid).
+ test_tag(algebra).
+ test_tag(associate_color_to_bools).
+ test_tag(associate_colors_to_bools).
+ test_tag(associate_colors_to_colors).
+ test_tag(associate_colors_to_images).
+ test_tag(associate_colors_to_numbers).
+ test_tag(associate_colors_to_patterns).
+ test_tag(associate_colors_to_ranks).
+ test_tag(associate_colors_to_shapes).
+ test_tag(associate_images_to_bools).
+ test_tag(associate_images_to_colors).
+ test_tag(associate_images_to_images).
+ test_tag(associate_images_to_numbers).
+ test_tag(associate_images_to_patterns).
+
+ test_tag(associate_patterns_to_colors).
+ test_tag(associate_patterns_to_patterns).
+
+ test_tag(background_filling).
+ test_tag(bounce).
+ test_tag(bouncing).
+ test_tag(bridges).
+ test_tag(bring_patterns_close).
+ test_tag(color_guessing).
+ test_tag(color_matching).
+ test_tag(color_palette).
+ test_tag(color_permutation).
+ test_tag(compare_image).
+ test_tag(concentric).
+ test_tag(connect_the_dots).
+ test_tag(contouring).
+ test_tag(count_different_colors).
+ test_tag(count_hor_lines).
+ test_tag(count_patterns).
+ test_tag(count_shapes).
+ test_tag(count_tiles).
+ test_tag(count_ver_lines).
+ test_tag(create_grid).
+ test_tag(create_image_from_info).
+ test_tag(crop).
+ test_tag(cylindrical).
+ test_tag(detect_background_color).
+ test_tag(detect_closed_curves).
+ test_tag(detect_connectedness).
+ test_tag(detect_enclosure).
+ test_tag(detect_grid).
+ test_tag(detect_hor_lines).
+ test_tag(detect_repetition).
+ test_tag(detect_symmetry).
+ test_tag(detect_wall).
+ test_tag(diagonal_symmetry).
+ test_tag(diagonals).
+ test_tag(direction_guesing).
+ test_tag(direction_guessing).
+ test_tag(divide_by_n).
+ test_tag(dominant_color).
+ test_tag(draw_line_from_border).
+ test_tag(draw_line_from_point).
+ test_tag(draw_parallel_line).
+ test_tag(draw_pattern_from_point).
+ test_tag(draw_rectangle).
+ test_tag(enlarge_image).
+ test_tag(even_or_odd).
+ test_tag(ex_nihilo).
+ test_tag(extrapolate_image_from_grid).
+ test_tag(find_the_intruder).
+ test_tag(fractal_repetition).
+ test_tag(gravity).
+ test_tag(grid_coloring).
+ test_tag(holes).
+ test_tag(homeomorphism).
+ test_tag(image_expansion).
+ test_tag(image_expasion).
+ test_tag(image_filling).
+ test_tag(image_juxtaposition).
+ test_tag(image_reflection).
+ test_tag(image_repetition).
+ test_tag(image_resizing).
+ test_tag(image_rotation).
+ test_tag(image_within_image).
+ test_tag(inside_out).
+ test_tag(jigsaw).
+ test_tag(loop_filling).
+ test_tag(maze).
+ test_tag(measure_area).
+ test_tag(measure_distance_from_side).
+ test_tag(measure_length).
+ test_tag(mimic_pattern).
+ test_tag(obstacles).
+ test_tag(one_yes_one_no).
+ test_tag(only_one).
+ test_tag(order_numbers).
+ test_tag(out_of_boundary).
+ test_tag(pairwise_analogy).
+ test_tag(pattern_alignment).
+ test_tag(pattern_coloring).
+ test_tag(pattern_completion).
+ test_tag(pattern_deconstruction).
+ test_tag(pattern_differences).
+ test_tag(pattern_expansion).
+ test_tag(pattern_intersection).
+ test_tag(pattern_juxtaposition).
+ test_tag(pattern_modification).
+ test_tag(pattern_moving).
+ test_tag(pattern_reflection).
+ test_tag(pattern_repetition).
+ test_tag(pattern_resizing).
+ test_tag(pattern_rotation).
+ test_tag(portals).
+ test_tag(projection_unto_rectangle).
+ test_tag(proximity_guessing).
+ test_tag(recolor).
+ test_tag(recoloring).
+ test_tag(rectangle_guessing).
+ test_tag(remove_intruder).
+ test_tag(remove_intruders).
+ test_tag(remove_noise).
+ test_tag(replace_pattern).
+ test_tag(rettangle_guessing).
+ test_tag(separate_image).
+ test_tag(separate_images).
+ test_tag(separate_shapes).
+ test_tag(shape_guessing).
+ test_tag(size_guessing).
+ test_tag(spacing).
+ test_tag(summarize).
+ test_tag(take_complement).
+ test_tag(take_half).
+ test_tag(take_intersection).
+ test_tag(take_maximum).
+ test_tag(take_minimum).
+ test_tag(take_negative).
+ test_tag(x_marks_the_spot).
 

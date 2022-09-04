@@ -27,7 +27,7 @@ This module allows easier loading of common logicmoo utility predicates.
 
 
 :- op(700,xfx,prolog:('univ_safe')).
-:- discontiguous '$exported_op'/3.
+%:- discontiguous '$exported_op'/3.
 
 
 :- system:use_module((logicmoo_startup)).

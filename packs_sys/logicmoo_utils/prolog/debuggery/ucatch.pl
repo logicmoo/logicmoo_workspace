@@ -949,9 +949,14 @@ with_only_current_why(Why,Prolog):-
 %
 with_current_why(S,Call):-
   current_why(UU),
-  (S=@=UU -> Call;
-  (((UU=(U,_),S=@=U) -> Call; 
-  with_only_current_why((S,UU),Call)))).
+  (s_in_why(S,UU) -> Call;  with_only_current_why((S,UU),Call)).
+
+s_in_why(S,UU):- S=@=UU,!.
+s_in_why(_,UU):- \+ compound(UU),!,fail.
+s_in_why(S,(U1,U2)):- !, (s_in_why(S,U1);s_in_why(S,U2)).
+s_in_why(S,[U1|U2]):- !, (s_in_why(S,U1);s_in_why(S,U2)).
+s_in_why(S,UU):- sub_goal(U,UU),S=@=U,!.
+sub_goal(U,UU):- sub_term(U,UU),nonvar(U), U\==UU.
 
 :- thread_initialization(nb_setval('$current_why',[])).
 

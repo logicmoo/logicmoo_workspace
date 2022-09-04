@@ -11,25 +11,30 @@
 
 decl_pt(_):- fail.
 
-check_args(P,MC):- functor(P,F,A),functor(T,F,A),functor(C,F,A),decl_pt(T),check_args(P,1,A,A,T,C,MC).
+check_args(P,MC):- functor(P,F,A),functor(T,F,A),functor(C,F,A),decl_pt(_,T),check_args(P,1,A,A,T,C,MC),!.
 check_args(P,P):- !. 
 
-check_args(P,Arity,Arity,1,T,C,MC):- !,
- call(C),arg(An,T,ArgType),arg(An,C,Result),
+check_args(P,Arity,Arity,1,T,C,MC):- fail,
+ call(C), arg(An,T,ArgType),arg(An,C,Result),
  MC = t,
  arg(An,P,Return),into_type(ArgType,Result,Return).
-check_args(P,Arity,An,2,T,C,MC):-
+
+check_args(P,Arity,An,2,T,C,MC):- fail,
  arg(An,P,ArgIn),arg(An,T,ArgType),arg(An,C,CallArg),
  is_group(ArgIn), ArgType = object,!,
  arg(Arity,P,Result),arg(Arity,C,Return),
  findall(Return,(member(CallArg,ArgIn),check_args(P,Arity,Arity,1,T,C,MC)),Result).
+
 check_args(P,Arity,An,Left,T,C,MC):-  
  arg(An,P,ArgIn),arg(An,T,ArgType),arg(An,C,CallArg),into_type(ArgType,ArgIn,CallArg),
- AnM1 is An+1,LeftP1 is Left-1, check_args(P,Arity,AnM1,LeftP1,T,C,MC).
+ AnM1 is An+1,LeftP1 is Left-1, check_args(P,Arity,AnM1,LeftP1,T,C,MC),!.
+check_args(_P,_Arity,_An,_Left,_T,C,C).
 
 into_type(Type,G,O):- nonvar_or_ci(O),!,into_type(Type,G,M),!,M=O.
+into_type(_Type,G,O):- plain_var(G),O=G,!.
 into_type(Type,G,O):- plain_var(G),throw(var_into_type(Type,G)),O=fake(Type,G).
 into_type(+,X,X).
+into_type(oid,X,ID):- into_oid(X,ID).
 into_type(num,X,X):- assertion(number(X)).
 into_type(dir,X,X):- assertion(nav(X,_,_)).
 into_type(grid,X,O):- into_grid(X,O).
@@ -78,7 +83,7 @@ vert_pos(Class,Y):- into_singles(Class,Obj),loc(Obj,_X,Y).
 horiz_pos(Class,X):- into_singles(Class,Obj),loc(Obj,X,_Y).
 
 when_config(This,Goal):-test_config(This)-> call(Goal) ; true.
-test_config(This):- get_current_test(Name),task_info(Name,InfoL),!,contains_nonvar(This,InfoL).
+test_config(This):- get_current_test(Name),test_info(Name,InfoL),!,contains_nonvar(This,InfoL).
 
 test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
@@ -208,8 +213,8 @@ run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val
 run_dsl(VM,_Mode,vm_set(Name,Val),In,Out):- !, vm_grid(VM,set_vm(Name,Val),In, Out).
 run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,In,Objs),set_vm_grid(VM,Objs)),In,Out).
 
-run_dsl(VM,_Mode,o(_Indiv),In,In):- var(VM.grid_out),!.
-run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.grid_out,Objs),set_vm_grid(VM,Objs)),In,Out).
+run_dsl(VM,_Mode,o(_Indiv),In,In):- var(VM.grid_target),!.
+run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.grid_target,Objs),set_vm_grid(VM,Objs)),In,Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
@@ -269,11 +274,13 @@ back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
   gset(Dict.Was) = NewPrev ,
   Ret = Dict.
 
+:- include(kaggle_arc_pfc).
+
 :- decl_pt(into_grid(+(any),-mv(grid))).
 into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(any),-grid)).
-into_grid(P,G):- var(P),!,ignore(get_current_test(TestID)),test_grids(TestID,G),grid_to_id(G,P).
+into_grid(P,G):- var(P),!,ignore(get_current_test(TestID)),test_grids(TestID,G),grid_to_tid(G,P).
 into_grid(P,G):- cast_to_grid(P,G, _).
 
 map_to_grid(objs,Dict,Obj,Grid,Closure):- get_kov(objs,Dict,Obj), Obj\=[], cast_to_grid(Obj,Grid,Closure),!.
@@ -289,7 +296,7 @@ cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_gr
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), object_grid(Grp,Grid),!.
 cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj=@=Var, !,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
-cast_to_grid(OID, Grid, (=) ):- atom(OID),oid_to_grid(OID,Grid),!.
+cast_to_grid(OID, Grid, (=) ):- atom(OID),oid_to_gridoid(OID,Grid),!.
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
 % TODO Comment out next line to prefer the line after
 cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
@@ -338,14 +345,24 @@ known_gridoid(ID,G):- known_grid(ID,G).
 known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
 
+oid_to_gridoid(GID,G):- current_predicate(oid_to_grid/2), oid_to_grid(GID,G).
+oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], !,append(GOID,[OID],Term),
+  testid_name_num_io(GOID,_Name,_Example,_Num,_IO),
+  ((atom(OID),atom_number(OID,ONum))->int2glyph(ONum,GL);GL=OID),
+  get_current_test(TestID),
+  g_2_o(TestID,GL,G).
 
+
+known_grid0(ID,_):- var(ID),!,fail.
 known_grid0(ID,G):- is_grid(ID),!,G=ID.
-known_grid0(OID, Grid):- atom(OID),oid_to_grid(OID,Grid),!.
+known_grid0(ID,_):- is_list(ID),!,fail.
+known_grid0(OID, Grid):- atom(OID),oid_to_gridoid(OID,Grid),!.
 known_grid0(ID,_):- is_object(ID),!,fail.
 known_grid0(_,ID):- is_object(ID),!,fail.
-known_grid0(ID,G):- test_id_num_io(ID,TestID,Example,Num,IO),ExampleNum=Example+Num,!,(kaggle_arc_io(TestID,ExampleNum,IO,G),deterministic(YN),true),(YN==true-> ! ; true).
-known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_grid0(ID,G):- is_grid_id(G,ID).
+known_grid0(ID,G):-  testid_name_num_io(ID,TestID,Example,Num,IO),ExampleNum=Example+Num,!,(kaggle_arc_io(TestID,ExampleNum,IO,G),deterministic(YN),true),(YN==true-> ! ; true).
+known_grid0(ID,G):- is_grid_tid(G,ID),!.
+known_grid0(ID,G):- fix_test_name(ID,Name,ExampleNum),!,
+  (kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- learned_color_inner_shape(ID,magenta,BG,G,_),get_bgc(BG).
 known_grid0(ID,G):- compound(ID),ID=(_*(Example+Num)*IO),!,fix_test_name(ID,Name,Example+Num),!,(kaggle_arc_io(Name,Example+Num,IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 known_grid0(ID,G):- compound(ID),ID=(_*_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
@@ -366,26 +383,44 @@ kaggle_arc_io(Name,ExampleNum,IO,G):-
 into_gridnameA(G,TstName):- known_grid(TstName,G).
 
 
-%grid_to_id(Grid,Name):- is_grid_id(Grid,Name)*->true; (plain_var(Name)->(luser_getval(grid_name,Name),Name\=[],grid_to_id(Grid,Name))).
-:- dynamic(is_grid_id/2).
-set_grid_id(Grid,ID):-
+%grid_to_tid(Grid,Name):- is_grid_tid(Grid,Name)*->true; (plain_var(Name)->(luser_getval(grid_name,Name),Name\=[],grid_to_tid(Grid,Name))).
+:- dynamic(is_grid_tid/2).
+set_grid_tid(Grid,ID):-
   my_assertion((ground(ID),nonvar_or_ci(Grid))),
   my_assertion(\+ is_grid(ID)),
   luser_setval(grid_name,ID),
   ignore(( \+ into_gridnameA(Grid,ID),
   copy_term(Grid,GGrid),numbervars(GGrid,1,_),
-  asserta(is_grid_id(GGrid,ID)))).
+  asserta(is_grid_tid(GGrid,ID)))).
 
+to_assertable_grid(A,A):- ground(A),!.
+%to_assertable_grid(A,C):- copy_term(A,B),numbervars(B,0,_,[attvar(skip),singletons(true)]),B\==A,to_assertable_grid(B,C).
+to_assertable_grid(A,B):- 
+  term_attvars(A,V),maplist(get_attrs,V,ATTS),term_attvars(A+ATTS,V2),maplist(get_attrs,V2,ATTS2),
+  copy_term(A+V2+ATTS2,B+VV2+VATTS2,_),
+  maplist(save_atts,VATTS2,VV2),numbervars(B+VV2+VATTS2,0,_,[attvar(skip),singletons(true)]).
 
-grid_to_id(Grid,ID):- atom(Grid),!,ID=Grid.
-grid_to_id(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
-grid_to_id(obj(_),_):- !,fail.
-grid_to_id(Grid,ID):- known_grid0(ID,GVar),Grid=@=GVar,!.
-grid_to_id(Grid,ID):- \+ ground(Grid), copy_term(Grid,GGrid),numbervars(GGrid,1,_,[attvar(bind)]),!,grid_to_id(GGrid,ID).
-grid_to_id(Grid,ID):- must_be_free(ID),makeup_gridname(Grid,ID), set_grid_id(Grid,ID),!.
+save_atts(A,'$attrs'(Attrs)):- attvar(A),!,get_attrs(A,Attrs).
+save_atts(A,'$attrs'(A)). 
 
-grid_to_oid(Grid,OID):- is_grid_id(Grid,OID),atom(OID),!.
-grid_to_oid(Grid,OID):- grid_to_id(Grid,ID),!,id_to_oid(ID,OID).
+to_assertable(A,A):- ground(A),!.
+to_assertable(A,'$VAR'(N)):- plain_var(A),!,format(atom(N),'~q',[A]).
+
+grid_to_tid(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
+grid_to_tid(obj(_),_):- !,fail.
+%grid_to_tid(Grid,ID):- atom(Grid),!,ID=Grid.
+grid_to_tid(Grid,ID):- \+ ground(Grid), to_assertable_grid(Grid,GGrid),!,grid_to_tid(GGrid,ID).
+grid_to_tid(Grid,ID):- kaggle_arc_io(TestID,Example+Num,IO,Grid),!,ID = TestID*(Example+Num)*IO.
+grid_to_tid(Grid,ID):- known_grid0(ID,GVar),Grid=@=GVar,!.
+grid_to_tid(Grid,ID):- must_be_free(ID),makeup_gridname(Grid,ID), set_grid_tid(Grid,ID),!.
+
+into_oid(X,ID):- atom(X),!,X=ID.
+into_oid(X,ID):- is_grid(X),grid_to_gid(X,ID),!.
+into_oid(X,ID):- is_object(X),obj_to_oid(X,ID),!.
+into_oid(X,ID):- tid_to_gids(X,ID),!.
+
+grid_to_gid(Grid,OID):- is_grid_tid(Grid,OID),atom(OID),!.
+grid_to_gid(Grid,OID):- grid_to_tid(Grid,ID),!,(clause(tid_to_gids(ID,OID),true)*-> true ; term_to_oid(ID,OID)).
 
 makeup_gridname(_Grid,GridName):- get_current_test(ID),flag(made_up_grid,F,F+1),GridName = ID*('ExampleNum'+F)*io.
 
@@ -398,14 +433,35 @@ into_obj(G,O):- no_repeats(O,known_obj0(G,O))*->true; (into_grid(G,GG),!,into_ob
   %set(VM.points)=[],!.
 
 
-o2g(Obj,Glyph):-  g2o(Glyph,Obj),!.
-o2g(Obj,NewGlyph):- o_i_d(Obj,ID,Old), int2glyph(Old,Glyph), 
- (luser_getval(Glyph,O2) ->
-(O2=@=Obj->NewGlyph=Glyph; 
- ( flag(indiv,Iv,Iv+1),int2glyph(Iv,NewGlyph),
-  subst001(Obj,o_i_d(ID,Old),o_i_d(ID,Iv),NewObj),
-  luser_linkval(NewGlyph,NewObj),nop(asserta(g2o(NewGlyph,NewObj))))) ; (NewGlyph=Glyph,luser_linkval(NewGlyph,Obj))),
- my_asserta_if_new(g2o(NewGlyph,Obj)).
+:- module_transparent register_obj/1.
+%register_obj(O):- quietly((wots(S,weto(arcST)), asserta(obj_cache(TestID,O,S)))),!.
+register_obj(O):-  must_det_ll(o2g(O,_)),!.
+/*register_obj(L):- asserta(obj_cache(TestID,L,'')),
+  ignore(( false, O=obj(L),amass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
+*/
+:- dynamic(obj_cache/3).
+:- module_transparent obj_cache/2.
+
+:- dynamic(oid_glyph_object/3).
+
+o2g(Obj,Glyph):- var(Obj),!,gid_glyph_oid(_,Glyph,OID),oid_glyph_object(OID,Glyph,Obj).
+%o2g(Obj,Glyph):-  g2o(Glyph,Obj),!.
+o2g(Obj,NewGlyph):- var(NewGlyph),must_det_ll((o2g_f(Obj,NewGlyph))),!. 
+o2g(Obj,NewGlyph):- trace,o2g_f(Obj,NewGlyph).
+
+/*
+ obj_to _oid(Obj,Old), int2glyph(Old,Glyph), 
+ (g2o(Glyph,O2) ->
+       (O2=@=Obj->NewGlyph=Glyph; 
+         must_det_ll(( 
+           flag(indiv,Iv,Iv+1),
+           int2glyph(Iv,NewGlyph),!,           
+           subst001(Obj,obj_to_oid(ID,Old),obj_to_oid(ID,Iv),NewObj),
+           (number(NewGlyph)->trace;true),
+           set_glyph_to_object(NewGlyph,NewObj))))
+  ; ((number(NewGlyph)->trace;true),NewGlyph=Glyph,(number(NewGlyph)->trace;true),set_glyph_to_object(NewGlyph,Obj))),
+ set_glyph_to_object(NewGlyph,Obj).
+*/
 
 o2c(Obj,Glyph):- color(Obj,Glyph),!.
 
@@ -417,19 +473,28 @@ print_ncolors(G,C):- sformat(F,'~q',[G]),color_print(C,F).
 
 :- system:import(print_ncolors/2).
 
-:- dynamic(g2o/2).
+:- dynamic(g_2_o/3).
+g_2_o(_,_,_):- fail.
 
-g2o(G,O):- var(G),!,luser_getval(G,O),is_object(O).
-g2o(G,O):- atom(G),luser_getval(G,O),is_object(O),!.
+%set_glyph_to_object(G,O):- ignore(luser_linkval(G,O)),(get_current_test(TestID),my_asserta_if_new(g_2_o(TestID,G,O))).
+
+g2o(G,O):- var(G), !, oid_glyph_object(_,G,O).
 g2o(G,O):- integer(G),int2glyph(G,C),!,g2o(C,O),!.
 g2o(C,O):- compound(C), !, C= objFn(G,_), !, g2o(G,O).
-g2o(G,O):- atom(G),!,Chars=[_,_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
-g2o(G,O):- string(G),Chars=[_|_],atom_chars(G,Chars),!,member(C,Chars),g2o(C,O),!.
+g2o(G,O):- \+ atom(G), !, string(G),Chars=[_|_],atom_chars(G,Chars),!,chars2o(Chars,O).
+g2o(G,O):- oid_to_object(G,O)-> true;(oid_glyph_object(_,G,O)*->true;(Chars=[_,_|_],atom_chars(G,Chars),chars2o(Chars,O))).
+
+
+
+%get_glyph_to_object(G,O):- ((luser_getval(G,O),is_object(O))*->true;(get_current_test(TestID),g_2_o(TestID,G,O))).
+
+chars2o(['o',C,'_'|_],O):- !, g2o(C,O).
+chars2o(Chars,O):- \+ member('_',Chars), member(C,Chars),g2o(C,O),!.
 
 
 known_object(G,O):- known_obj0(G,O).
 
-known_obj0(G,_):- G==[],!.
+known_obj0(G,_):- G==[],!,fail.
 known_obj0(G,E):- plain_var(G),!,enum_object(E),G=E.
 known_obj0(G,O):- is_object(G),!,G=O.
 known_obj0(obj(O),obj(O)):- !, is_list(O),!.
@@ -437,18 +502,19 @@ known_obj0(G,O):- g2o(G,O),!.
 known_obj0(G,O):- is_grid(G),!,grid_to_individual(G,O).
 known_obj0(G,O):- is_group(G),into_group(G,OL),OL=[_],must([O|_]=OL).
 
-% this is bad  ?- into_grid('E',ID),grid_to_id(G,ID).  ?- into_grid('Z',ID),grid_to_id(G,ID).
+% this is bad  ?- into_grid('E',ID),grid_to_tid(G,ID).  ?- into_grid('Z',ID),grid_to_tid(G,ID).
 
 into_group(GI,G):- into_group(GI,G, _ ).
 
 into_group(P,G,(=)):- is_group(P),!,G=P.
+into_group(G, G, _):- plain_var(G),!, throw(var_into_group(G)),
+   (why_grouped(_Why, G)*->true; 
+     ((arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs)),
+      (why_grouped(_Why, G)*->true; G=Objs))).
 into_group(P,G,(group_to_and_from_vm(VM))):- is_vm(P),G=VM.objs,!.
-into_group(G,G,(=)) :- G==[],!.
-into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
- get_current_test(TestID),why_grouped(TestID,G, _Why).
-
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G, into_obj):- is_object(P),!,G=[P].
+into_group(G,G,(=)) :- G==[],!.
 into_group(P,G, lambda_rev(why_grouped)):- known_gridoid(P,M),!,into_group(M,G).
 into_group(P,G, _):- arcST,throw(into_group(P,G)).
 /*
@@ -568,6 +634,7 @@ goal_expansion(Goal,I,Out,O):-  var(I), \+ source_location(_,_),luser_getval('$g
 :- luser_linkval('$goal_expanded', []).
 expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
     % Have vars to expand and varnames are empty
+    luser_getval('$goal', WGoal), WGoal\=@=Goal, % this prevents the loop
     luser_linkval('$goal', Goal),
     quietly((Bindings\==[],prolog_load_context(variable_names,Vs), Vs ==[])), % this prevents the loop
     luser_linkval('$variable_names', Bindings),

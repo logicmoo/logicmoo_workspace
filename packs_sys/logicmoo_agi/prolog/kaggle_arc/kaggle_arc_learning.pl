@@ -23,15 +23,15 @@ learned_test(TName):-
     maplist(print_rule(TestID),Info),
     length(Info,Len),
     ptc(orange,format('~N~n% Rules Learned: ~w~n~n',[Len])),!.
- 
 
 
-print_rule(M,ref(Ref)):- nonvar(Ref), !,
-  clause(H,B,Ref), 
-  print_rule(M,(H:-B)).
+is_clause_ref(Ref):-  atomic(Ref), blob(Ref,_), \+ atom(Ref), clause_name(Ref,_),!.
+
+print_rule(M,Ref):-is_clause_ref(Ref),!,
+  clause(H,B,Ref), print_rule(M,(H:-B)).
 
 print_rule(M,(X:-True)):- True == true,!, print_rule(M,X).
-print_rule(M,(learnt_rule(TestID,A,B,C,D):-Body)):- !,
+print_rule(M,(learnt_rule(TestID,A,B,C,D):-Body)):- fail, !,
    \+ \+ (( ignore((Body=was_once(InSet,InVars),maplist(upcase_atom_var,InSet,InVars))),   
     orpt(M=[C=[TestID,in=(A),label=(B),out=(D)]]))).
 print_rule(M,(X:-Body)):- !,
@@ -43,7 +43,7 @@ print_rule(M,(X:-Body)):- !,
     orpt(M=[X]))).
 print_rule(M,O):- \+ \+ (( orpt(M=[O]))).
 
-orpt(G):- \+ \+ ((numbervars(G,0,_,[attvar(bind),singletons(true)]), pt(orange,(call(print(G)))))).
+orpt(G):- \+ \+ ((numbervars(G,0,_,[attvar(bind),singletons(true)]), format('~N'), pt(orange,(call(print(G)))))).
 
 save_learnt_rule(TestID,In,InKey,RuleDir,Out):-
   nop_now(save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out))).
@@ -79,7 +79,7 @@ not_for_matching(_Why,_,iz(_)):- !, fail.
 %not_for_matching(_Why,localpoints(_)).
 not_for_matching(_Why,_,link(_,_,_)).
 not_for_matching(_Why,_,birth(_)).
-not_for_matching(_Why,_,o_i_d(_,_)).
+not_for_matching(_Why,_,obj_to_oid(_,_)).
 %not_for_matching(_Why,L,shape(_)):- !, member(localpoints(_),L).
 not_for_matching(_Why,L,localpoints(XX)):- !, started_is_list(XX), member(shape(_),L).
 not_for_matching(_Why,L,globalpoints(XX)):- !, started_is_list(XX), (member(shape(_),L);member(localpoints(_),L)).
@@ -118,7 +118,7 @@ group_group(What,[Obj|In],[G1|Groups]):- indv_props(Obj,Props), member_skip_open
 group_group(_,_,[]).
 
 group_keys(iz).
-group_keys(mass).
+group_keys(amass).
 group_keys(birth).
 group_keys(color).
 %group_keys(shape).
@@ -143,7 +143,7 @@ train_io_from_hint(TestID,ExampleNum,InVM):-
     kaggle_arc_io(TestID,ExampleNum,in,InGrid),
    (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
     gset(InVM.grid) = InGrid,
-    gset(InVM.grid_out) = ExpectedOut,
+    gset(InVM.grid_target) = ExpectedOut,
     do_sols_for(_All,"Do Training",InVM,TestID,ExampleNum))),
   confirm_train_io_from_hint(TestID,ExampleNum).
 
@@ -154,7 +154,7 @@ confirm_train_io_from_hint(TestID,ExampleNum):-
     kaggle_arc_io(TestID,ExampleNum,in,InGrid),
    (var(InVM) -> into_fti(TestID*ExampleNum*in,in_out,InGrid,InVM) ; true),
     gset(InVM.grid) = InGrid,
-   % gset(InVM.grid_out) = ExpectedOut,
+   % gset(InVM.grid_target) = ExpectedOut,
     do_sols_for(_All,"Confirm Trained",InVM,TestID,ExampleNum))).
 
 
@@ -166,7 +166,7 @@ learn_rule_o(Mode,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
  maplist(must_det_ll,[
   InGrid = InVM.grid, InObjs0 = InVM.objs,  
   OutGrid = OutVM.grid, OutObjs0 = OutVM.objs,
-  ignore(InVM.grid_out = OutGrid),
+  ignore(InVM.grid_target = OutGrid),
   maplist(simplify_for_matching(lhs),InObjs0,InObjs),
   %maplist(simplify_for_matching,OutObjs0,OutObjs),
   OutObjs0=OutObjs,
@@ -210,8 +210,8 @@ confirm_reproduction(Objs0,DebugObjs0,ExpectedOut):-
 debug_reproduction(H,V,Obj,DObj):- 
   globalpoints(Obj,Points),
   print_grid(H,V,Obj,Points),
-  o_i_d(Obj,_,ID1),
-  o_i_d(DObj,_,ID2),
+  obj_to_oid(Obj,ID1),
+  obj_to_oid(DObj,ID2),
   pt(dobj(ID1,ID2)=DObj),!.
 
 show_result(What,Solution,ExpectedOut,Errors):-
@@ -221,7 +221,7 @@ show_result(What,Solution,ExpectedOut,Errors):-
       (Errors==0 -> 
            arcdbg_info(green,pass(What,TestID))
          ; arcdbg_info(red,fail(What,Errors,TestID))))),
- task_info(TestID,InfoF),wqnl(fav(TestID,InfoF)),!.
+ test_info(TestID,InfoF),wqnl(fav(TestID,InfoF)),!.
 
 
 arcdbg_info(Color, Info):- banner_lines(Color), arcdbg(Info), banner_lines(Color).
@@ -262,7 +262,7 @@ compare_objs_how([same]).
 compare_objs_how(_).
 
 /*
-v_hv(5,5), mass(25),
+v_hv(5,5), amass(25),
 center(9,14),loc(7,12),
 colors([cc(PURPLE,21),cc(BLACK,4)]),
 localpoints
@@ -275,7 +275,7 @@ diff_2props(I,O):- comparable_2props(I,O), I \=@= O.
 
 
 % shape, 
-% v_hv, cmass
+% v_hv, mass
 % center
 
 :- discontiguous(learn_rule_in_out/4).
@@ -284,9 +284,9 @@ learn_rule_in_out(_,in_out,In,Out):- is_list(In),is_list(Out),
 
 learn_rule_in_out_sames(In,Out):- fail,
   is_list(In),is_list(Out),
-  average_or_mid(cmass,Out,MinMass),
+  average_or_mid(mass,Out,MinMass),
   member(I,In),member(O,Out),
-  cmass(O,Mass), Mass>MinMass, cmass(I,Mass),
+  mass(O,Mass), Mass>MinMass, mass(I,Mass),
   once((compare_objs_how(How), nonvar(How), compare_objs1(How,I,O))),
   pt(How),
   simplify_for_matching(lhs,I,II),
@@ -308,12 +308,12 @@ learn_rule_in_out(_,in_out,In,Out):- is_list(In),is_list(Out),
   (learn_rule_in_out_level1(In,Out), deterministic(TF), true), (TF==true -> !; true).
 
 learn_rule_in_out_level1(In,Out):- fail,
-  is_list(Out), average_or_mid(cmass,Out,MinMass),
-  member(O,Out), cmass(O,Mass), Mass>MinMass,
+  is_list(Out), average_or_mid(mass,Out,MinMass),
+  member(O,Out), mass(O,Mass), Mass>MinMass,
   indv_props(O,OL),
   once(learn_rule_iin_oout(1,In,O,OL)).
 
-learn_rule_iin_oout(_,In,O,OL):- cmass(O,Mass),
+learn_rule_iin_oout(_,In,O,OL):- mass(O,Mass),
   findall(SL-SAME-I-DL,
    (member(I,In),indv_props(I,IL),
     pred_intersection(same_2props,IL,OL,SAME,_,_IF,_OF),
@@ -326,7 +326,7 @@ learn_rule_iin_oout(_,In,O,OL):- cmass(O,Mass),
   compare_objs1(How,I,O),
   %shape(I,Shape),shape(O,Shape),
   %pen(I,Pen),pen(O,Pen),
-  cmass(I,Mass),
+  mass(I,Mass),
   simplify_for_matching(lhs,I,II),
   simplify_for_matching(rhs,O,OO),
   save_learnt_rule(test_solved(unk(How),II,OO),I,O),!.
@@ -380,14 +380,43 @@ learn_rule_ee(Mode,P,Others):- forall(member(O,Others),learn_grid_local(Mode,P,O
 learn_grid_local(Mode,P,O):- P @< O, !, learn_grid_local(Mode,O,P).
 learn_grid_local(_Mode,P,O):- ignore((\+ is_grid(P),is_grid(O),assert_visually(grid_associatable(P,O)))).
 
+test_local_dyn(F,A):- setof(F/A,(test_local_dyn(F),current_predicate(F/A)),L),member(F/A,L),A\==0.
 :- dynamic(test_local_dyn/1).
 test_local_dyn(learnt_rule).
 test_local_dyn(grid_associatable).
 test_local_dyn(test_associatable).
 test_local_dyn(test_solved).
-test_local_dyn(why_grouped).
+%test_local_dyn(why_grouped).
 test_local_dyn(cached_dictation).
 test_local_dyn(oout_associatable).
+
+test_local_save(F,A):- setof(F/A,(test_local_save(F),current_predicate(F/A),A\==0),L),member(F/A,L).
+test_local_save(note).
+test_local_save(individuated_cache).
+test_local_save(g_2_o).
+test_local_save(cmem).
+test_local_save(cindv).
+test_local_save(is_why_grouped_g).
+test_local_save(arc_test_property).
+test_local_save(gid_glyph_oid).
+test_local_save(oid_glyph_object).
+test_local_save(P):- test_local_dyn(P).
+
+training_info(TestID,InfoSet):-
+ sub_atom_value(TestID,TestIDA),
+  findall(Ref,
+  (test_local_dyn(F,A), functor(X,F,A),
+      clause(X,_,Ref),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),
+  list_to_set(Info,InfoSet).
+
+saveable_test_info(TestID,InfoSet):-
+ sub_atom_value(TestID,TestIDA),
+ findall(Ref,
+  (test_local_save(F,A), functor(X,F,A),
+      clause(X,_,Ref),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),
+ list_to_set(Info,InfoSet).
+
+
 
 assert_visually(H:-B):- !,unnumbervars((H:-B),(HH:-BB)), assert_visually1(HH,BB).
 assert_visually( H  ):- unnumbervars(H,HH),assert_visually1(HH,true).
@@ -401,20 +430,12 @@ assert_visually2(H,B):- functor(H,F,_), my_asserta_if_new(test_local_dyn(F)), pr
 
 nop_now(_).
 
-training_info(TestID,Info):-
- findall((X:-Y),
-  (test_local_dyn(F),
-   (current_predicate(F/A),
-    ((functor(X,F,A),
-      ((clause(X,Y,Ref),arg(1,X,E),E==TestID),
-       nop(erase(Ref))))))),Info).
-
-clear_training(TestID):-
+clear_training(TestID):-  
   %retractall(individuated_cache(_,_,_)),
   set_bgc(_),
   set_flag(indiv,0),
   forall(test_local_dyn(F),
-   forall(current_predicate(F/A),
+   forall((current_predicate(F/A),A\==0),
     ((functor(X,F,A),
       forall((clause(X,_,Ref),arg(1,X,E),E==TestID),
        erase(Ref)))))),
@@ -422,7 +443,7 @@ clear_training(TestID):-
   luser_linkval(test_rules, [rules]),
   wno((clear_shape_lib(test), clear_shape_lib(noise), 
    retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
-  nop(retractall(g2o(_,_))),!.
+  nop(retractall(g_2_o(_,_))),!.
  
 
 learn_rule(In,Out):-
@@ -434,7 +455,7 @@ learn_rule(In,Out):-
 
 learn_rule(In,RuleDir,Out):- 
  get_vm(VM), 
- Target=VM.grid_out, 
+ Target=VM.grid_target, 
  is_grid(Target),!,
  Out = Target,
  get_current_test(TestID), 
@@ -450,7 +471,7 @@ have their own starting points that are gleaned by looking at what DSL would gen
 DSL would generate all the inputs) the thing that is learned by training is how the edits are supposed to happen in each
  of the generative DSLs (edited)
 the progression of inputs teaches the system abotu what the input's generative DSL is used for inputs (edited)
-though the progression of outputs give more information about the total task (but still give the hints about the the output's generative DSL) 
+though the progression of outputs give more information about the total test (but still give the hints about the the output's generative DSL) 
 round tripping between a grid and the generative DSL seems important.   Has anyone started a Grid-> "generative DSL" convertor ?
 oh yes even the operations such editing/transformation of the generative DSL is in the domain of yet another DSL that specifies those operations.. and in my code i even have a 3rd DSL that is specific to transformations that both the two previous DSLs are indexed against.. in order to make the things fast i assume that the three forms each transition between will be part of the final index built during training (edited)
 s the training pairs are fed in it eliminates the candidate associations
@@ -470,6 +491,8 @@ has_learnt_rule(TestID,In,Key,RuleDir,Out):- clause(learnt_rule(TestID,In,Key,Ru
   maplist(ignore_equal,InSet,InVars).
 ignore_equal(X,Y):- ignore(X=Y).  
 
+rev_key0(C-P,P-C).
+
 ppt(O):- format('~N'),print(O),nl.
 use_test_associatable(In,Solution):- 
   simplify_for_matching(lhs,In,IIn),
@@ -478,7 +501,7 @@ use_test_associatable(In,Solution):-
   keysort(OutL,OutLS),
   maplist(arg(2),OutLS,OutLS2),
   clumped(OutLS2,OutLS3),
-  maplist(rev_key,OutLS3,OutLS4),
+  maplist(rev_key0,OutLS3,OutLS4),
   sort(OutLS4,OutLS2SS),
   reverse(OutLS2SS,OutLS2SSR),
   maybe_four_terse(OutLS2SSR,OutLS2SSRT),
@@ -526,14 +549,14 @@ same_props(I,Pre):- select(E2,Pre,PrePre),select(E2,I,II),!,same_props(II,PrePre
 
 use_learnt_rule(In,_RuleDir,Out):- use_test_associatable(In,Out).
 
-use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_out, 
+use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_target, 
  get_current_test(TestID),
   ignore(get_vm(last_key,Key)),
   ((has_learnt_rule(TestID,In,Key,RuleDir,Out);has_learnt_rule(TestID,_,Key,RuleDir,Out);has_learnt_rule(TestID,In,_,RuleDir,Out))),
   pt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
   ignore(Out = ROut).
 
-use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_out, 
+use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_target, 
  get_current_test(TestID),
   ignore(get_vm(last_key,Key)), 
    In = VM.grid_o,
@@ -603,8 +626,8 @@ sub_label(X, Term, OutGoal) :-
 
 never_labels_in(iz(_)).
 never_labels_in(shape(_)).
+never_labels_in(amass(1)).
 never_labels_in(mass(1)).
-never_labels_in(cmass(1)).
 never_labels_in(loc(_,_)).
 
 
@@ -790,9 +813,9 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
         nl,wqnl(arc1(TestID)),nl,nl,dash_chars(60,"A"),nl)),   
   GridNameIn= PairName*in,
   GridNameOut= PairName*out,
-  set_grid_id(In,GridNameIn),
-  set_grid_id(Out,GridNameOut),  
-  task_info(TestID,Info), pt(fav(TestID,Info)),nl)).
+  set_grid_tid(In,GridNameIn),
+  set_grid_tid(Out,GridNameOut),  
+  test_info(TestID,Info), pt(fav(TestID,Info)),nl)).
   
 
 
@@ -814,8 +837,8 @@ compute_shared_indivs(GN,Grid,SharedIndvs):-
 grid_shared_with(TestName*ExampleNum*in,TestName*ExampleNum*out):-!.
 grid_shared_with(TestName*ExampleNum*out,TestName*ExampleNum*in):-!.
 
-get_grid_and_name(In,Grid,GN):- is_grid(In),!,grid_to_id(Grid,GN).
-get_grid_and_name(In,Grid,GN):- into_grid(In,Grid),!,grid_to_id(Grid,GN).
+get_grid_and_name(In,Grid,GN):- is_grid(In),!,grid_to_tid(Grid,GN).
+get_grid_and_name(In,Grid,GN):- into_grid(In,Grid),!,grid_to_tid(Grid,GN).
 
 ensure_unshared_indivs(In,Unshared):-
    get_grid_and_name(In,Grid,GN),
@@ -823,7 +846,7 @@ ensure_unshared_indivs(In,Unshared):-
 ensure_unshared_indivs(GN,Grid,Unshared):-
    is_unshared_saved(GN,Unshared)-> true;
    individuate(complete,Grid,Unshared),
-   pfc_assert(is_unshared_saved(GN,Unshared)).
+   arc_assert(is_unshared_saved(GN,Unshared)).
 
 ensure_shared_indivs(In,SharedIndvs):-
    get_grid_and_name(In,Grid,GN),
@@ -833,7 +856,7 @@ ensure_shared_indivs(GN,Grid,SharedIndvs):-
    grid_shared_with(GN,With),into_grid(With,OtherGrid),
    ensure_unshared_indivs(With,OtherGrid,Unshared),
    individuate(Unshared,Grid,SharedIndvs),
-   pfc_assert(is_shared_saved(GN,SharedIndvs)).
+   arc_assert(is_shared_saved(GN,SharedIndvs)).
 
 
 /*

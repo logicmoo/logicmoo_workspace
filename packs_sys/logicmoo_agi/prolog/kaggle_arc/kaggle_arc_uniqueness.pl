@@ -10,35 +10,51 @@
 
 
 
+saved_group(Why,IndvS):-
+  is_why_grouped(_TestID,_Count,Why,IndvS).
+
+is_why_grouped(TestID,Count,Why,IndvS):-
+  is_why_grouped_g(TestID,Count,Why,IndvSG),
+  maplist(oid_to_object,IndvSG,IndvS).
 
 
-save_grouped(H,G):-
-  sort(G,GS),
+save_grouped(Why,G):-
+  into_group(G,GS),
   get_current_test(TestID),
-  my_asserta_if_new(why_grouped(TestID,H,GS)),
-  (mapgroup(register_obj,GS)).
+  length(GS,Len),
+  mapgroup(register_obj,GS),
+  maplist(obj_to_oid,GS,GGG),
+  %maplist(obj_to_oid,GS,OIDs),
+  my_asserta_if_new(is_why_grouped_g(TestID,Len,Why,GGG)).
 
 
 normal_group_form(Group,Group):-!.
 
-:- dynamic(why_grouped/3).
+:- dynamic(is_why_grouped_g/4).
+why_grouped(Why,Group):-
+  arc_test_name(TestID),
+  why_grouped(TestID,Why,Group).
 
-why_grouped(Group,Why):-
-  get_current_test(TestID),
-  (why_grouped(TestID,Group,Why)*->true; why_grouped(_,Group,Why)).
+why_grouped(TestID,Why,Group):- 
+  (is_why_grouped(TestID,_,Why,Group)*->true; 
+     ((is_list(Group)->length(Group,Len);true),is_why_grouped(TestID,Len,Why,Grp),same_members(=@=,Group,Grp))).
+
+same_members(P2,G1,G2):- 
+  select(E1,G1,GG1),select(E2,G2,GG2),
+  call(P2,E1,E2), same_members(P2,GG1,GG2).
 
 %select_group(TestID,Group,How):- no_repeats(Group,select_group0(TestID,Group,How)).
 select_group(TestID,Group,How):- select_group0(TestID,Group,How).
 select_group0(TestID,Group,How):-
-  ((why_grouped(TestID,How1,Group1), % dif(Group1,Group2), 
-    why_grouped(TestID,How2,Group2),
+  ((is_why_grouped(TestID,_,How1,Group1), % dif(Group1,Group2), 
+    is_why_grouped(TestID,_,How2,Group2),
     Group1\==Group2,
     once((sub_term(E,How1),sub_var(E,How2))),
     %length(Group1,G1), length(Group2,G2), G1>G2,
   once((sub_term(E,How1),sub_var(E,How2))),
   %member(M1,Group1),member(M2,Group2),M1=M2,
   my_append(Group1,Group2,GroupJ), sort(GroupJ,Group),
-  How = [How1,How2]))  *-> true ; why_grouped(TestID,How,Group).
+  How = [How1,How2]))  *-> true ; is_why_grouped(TestID,_,How,Group).
 select_group0(TestID,Group,obj_cache):- findall(O,obj_cache(TestID,O,_),GroupJ),sort(GroupJ,Group).
 
 :- arc_history(test_what_unique).
@@ -219,7 +235,6 @@ never_noteable(colors).
 never_noteable(globalpoints).
 never_noteable(P):- compound(P),functor(P,F,_),never_noteable(F).
 
-
 is_prop_for_noteablity(P):- compound(P),functor(P,F,_),is_prop_for_noteablity(F),!.
 is_prop_for_noteablity(X):- \+ never_noteable(X),!.
 
@@ -254,8 +269,12 @@ each_trait(Obj,Obj-S):- findall(T,each_1trait(Obj,T),L),list_to_set(L,S).
 
 
 too_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_unique(F).
-%too_unique(o_i_d).
+%too_unique(obj_to_oid).
 too_unique(globalpoints).
+too_unique(o).
+too_unique(link).
+too_unique(obj_to_oid).
+too_unique(birth).
 %good_overlap(shape).
 
 good_overlap(P):- compound(P),!,compound_name_arity(P,F,_),!,good_overlap(F).
@@ -268,7 +287,7 @@ too_non_unique(birth).
 too_non_unique(grid).
 too_non_unique(changes).
 
-%too_non_unique(mass).
+%too_non_unique(amass).
 
 length_criteria(List,P):- compound(P), P=..[F,n,L],C=..[F,I,L],length(List,I),!,call(C).
 length_criteria(List,P):- compound(P), P=..[F,L], C=..[F,I,L],length(List,I),!,call(C).
@@ -276,13 +295,14 @@ length_criteria(List,P):- compound(P), length(List,I), !, call(call,P,I).
 length_criteria(List,N):- length(List,N).
 
 tesT_compare_objects:- compare_objects([
-    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),
-      v_hv(1,1),rotation(same),loc(4,9),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,9),o_i_d(t(af902bf9)*(tst+0)*in,37),globalpoints([yellow-point_04_09]),grid_size(10,10),iz(important)]),
-    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(4,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,6),o_i_d(t(af902bf9)*(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
-    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(1,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(1,6),o_i_d(t(af902bf9)*(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
-    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(10,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,5),o_i_d(t(af902bf9)*(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
-    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(6,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,5),o_i_d(t(af902bf9)*(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
-    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(10,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,1),o_i_d(t(af902bf9)*(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
-    obj([mass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(6,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,1),o_i_d(t(af902bf9)*(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),
+      v_hv(1,1),rotation(same),loc(4,9),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,9),% obj_to_oid(t(af902bf9)*(tst+0)*in,37),globalpoints([yellow-point_04_09]),
+      grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(4,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,6),obj_to_oid(t(af902bf9)*(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(1,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(1,6),obj_to_oid(t(af902bf9)*(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(10,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,5),obj_to_oid(t(af902bf9)*(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(6,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,5),obj_to_oid(t(af902bf9)*(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(10,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,1),obj_to_oid(t(af902bf9)*(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(6,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,1),obj_to_oid(t(af902bf9)*(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
     OUTPUT),
   print(OUTPUT).

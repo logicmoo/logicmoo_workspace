@@ -1,0 +1,496 @@
+/*
+  this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
+
+  This work may not be copied and used by anyone other than the author Douglas Miles
+  unless permission or license is granted (contact at business@logicmoo.org)
+*/
+:- if(current_module(trill)).
+:- set_prolog_flag_until_eof(trill_term_expansion,false).
+:- endif.
+
+
+/*  
+
+%fav(v('20818e16'),[guess_bg,indiv(min(2))]).
+
+%(fav(_,P)/(flatten([P],Flat),member(E,Flat))) ==> fav_trait(E).
+
+*/
+:- dynamic(kaggle_arc_json/4).
+
+:- export(load_json_files/2).
+load_json_files(F,Mask):- 
+  arc_sub_path('.',ARC_DIR),
+  absolute_file_name(Mask,AbsMask,[relative_to(ARC_DIR)]),
+  expand_file_name(AbsMask,FullNames),
+  wdmsg(load_json_files(AbsMask,FullNames)),
+  maplist(file_base_name,FullNames,BaseNames),
+  maplist(file_name_extension,Names,_,BaseNames),
+  maplist(load_json_file(F),Names,FullNames),!.
+
+no_uscore(UBaseName,BaseName):- 
+  atomic_list_concat(List,'_',UBaseName),
+  atomic_list_concat(List,'-',BaseName).
+
+load_json_file(F, UBaseName, FullName):- no_uscore(UBaseName,BaseName), Testname=..[F,BaseName], 
+  % dmsg(load_json_file=FullName),
+  setup_call_cleanup(open(FullName,read,In),
+   json:json_read(In,Term,[]),
+   close(In)),
+  load_json_of_file(Testname,file,Term),!.
+
+  load_json_of_file(Name,Type,json(Term)):-! , load_json_of_file(Name,Type,Term).
+  load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
+  load_json_of_file(Name,train,T):-!,load_json_of_file(Name,trn,T).
+  load_json_of_file(Name,test,T):-!,load_json_of_file(Name,tst,T).
+    load_json_of_file(Testname,ExampleNum,[input=In,output=Out]):-
+       json_to_colors(In,InColor),
+       json_to_colors(Out,OutColor),
+       assert_if_new(kaggle_arc_json(Testname,ExampleNum,InColor,OutColor)),!.
+  load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(kaggle_arc_json(Name,Type,In,Out)),!.
+  load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
+  load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
+
+
+%ma:attr_unify_hook(
+
+%cell(color,type,objects,
+
+% json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.
+:- export(json_to_colors/2).
+json_to_colors(Out,Color):- is_list(Out),!,maplist(json_to_colors,Out,Color).
+json_to_colors(Out,Color):- grid_color_code(Out,Color).
+
+
+:- dynamic(muarc_tmp:arc_directory/1).
+muarc_tmp:arc_directory(ARC_DIR):- getenv('ARC_DIR',ARC_DIR), exists_directory(ARC_DIR),!.
+
+:- multifile (user:file_search_path/2).
+user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
+
+:- prolog_load_context(directory,ARC_DIR), asserta(muarc_tmp:arc_directory(ARC_DIR)).
+
+absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
+  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
+absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
+  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(regular),solutions(first),file_errors(error),access(read)]).
+
+arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath),!.
+
+:- export(arc_sub_path/2).
+
+:- load_json_files(t,'./data/training/*.json').
+:- load_json_files(v,'./data/evaluation/*.json').
+:- load_json_files(t,'./data/1D_testset/*.json').
+%:- load_json_files(v,'./data/test/*.json').
+:- export(kaggle_arc/4).
+kaggle_arc(TName,ExampleNum,In,Out):- kaggle_arc_json(TName,ExampleNum,In,O), disallow_test_out(ExampleNum,O,Out).
+
+disallow_test_out(trn+_,OO,OO):-!.
+%disallow_test_out(tst+_, O,OO):- grid_size(O,H,V),make_grid(H,V,OO).
+disallow_test_out(_,OO,OO).
+
+
+icu('007bbfb7', x + 3 ).
+icu('00d62c1b', x + 3 ).
+icu('017c7c7b', x + 33 ).
+icu('025d127b', x + 3 ).
+icu('045e512c', -1 ).
+icu('0520fde7', 3 ).
+icu('05269061', x + 3 ).
+icu('05f2a901', x + -1 ).
+icu('06df4c85', 3 ).
+icu('08ed6ac7', -1 ).
+icu('09629e4f', 3 ).
+icu('0962bcdd', 3 ).
+icu('0a938d79', -1 ).
+icu('0b148d64', 3 ).
+icu('0ca9ddb6', -1 ).
+icu('0d3d703e', -1 ).
+icu('0dfd9992', 3 ).
+icu('0e206a2e', -1 ).
+icu('10fcaaa3', -1 ).
+icu('11852cab', -1 ).
+icu('1190e5a7', 3 ).
+icu('137eaa0f', -1 ).
+icu('150deff5', -1 ).
+icu('178fcbfb', 3 ).
+icu('1a07d186', -1 ).
+icu('1b2d62fb', 3 ).
+icu('1b60fb0c', -1 ).
+icu('1bfc4729', 3 ).
+icu('1c786137', 3 ).
+icu('1caeab9d', -1 ).
+icu('1cf80156', 3 ).
+icu('1e0a9b12', 3 ).
+icu('1e32b0e9', 3 ).
+icu('1f0c79e5', 3 ).
+icu('1f642eb9', -1 ).
+icu('1f85a75f', 3 ).
+icu('1f876c06', 3 ).
+icu('1fad071e', 3 ).
+icu('2013d3e2', 3 ).
+icu('2204b7a8', 3 ).
+icu('22168020', 3 ).
+icu('22233c11', -1 ).
+icu('2281f1f4', 3 ).
+icu('228f6490', 3 ).
+icu('22eb0ac0', 3 ).
+icu('234bbc79', -1 ).
+icu('23581191', 23 ).
+icu('239be575', 3 ).
+icu('23b5c85d', 3 ).
+icu('253bf280', 3 ).
+icu('25d487eb', 3 ).
+icu('25d8a9c8', -1 ).
+icu('25ff71a9', 3 ).
+icu('264363fd', -1 ).
+icu('272f95fa', 3 ).
+icu('27a28665', -1 ).
+icu('28bf18c6', 3 ).
+icu('28e73c20', -1 ).
+icu('29623171', 3 ).
+icu('29c11459', -1 ).
+icu('29ec7d0e', 3 ).
+icu('2bcee788', 4 ).
+icu('2bee17df', 3 ).
+icu('2c608aff', -1 ).
+icu('2dc579da', 3 ).
+icu('2dd70a9a', -1 ).
+icu('2dee498d', 3 ).
+icu('31aa019c', 3 ).
+icu('321b1fc6', -1 ).
+icu('32597951', 3 ).
+icu('3345333e', -1 ).
+icu('3428a4f5', 3 ).
+icu('3618c87e', 3 ).
+icu('3631a71a', -1 ).
+icu('363442ee', -1 ).
+icu('36d67576', -1 ).
+icu('36fdfd69', -1 ).
+icu('3906de3d', 3 ).
+icu('39a8645d', -1 ).
+icu('39e1d7f9', -1 ).
+icu('3aa6fb7a', 3 ).
+icu('3ac3eb23', -1 ).
+icu('3af2c5a8', 3 ).
+icu('3bd67248', 3 ).
+icu('3bdb4ada', -1 ).
+icu('3befdf3e', -1 ).
+icu('3c9b0459', 3 ).
+icu('3de23699', -1 ).
+icu('3e980e27', -1 ).
+icu('3eda0437', -1 ).
+icu('3f7978a0', -1 ).
+icu('40853293', 3 ).
+icu('4093f84a', -1 ).
+icu('41e4d17e', -1 ).
+icu('4258a5f9', 3 ).
+icu('4290ef0e', -1 ).
+icu('42a50994', 3 ).
+icu('4347f46a', 3 ).
+icu('444801d8', 3 ).
+icu('445eab21', 3 ).
+icu('447fd412', -1 ).
+icu('44d8ac46', -1 ).
+icu('44f52bb0', 3 ).
+icu('4522001f', -1 ).
+icu('4612dd53', 23 ).
+icu('46442a0e', -1 ).
+icu('469497ad', -1 ).
+icu('46f33fce', -1 ).
+icu('47c1f68c', 3 ).
+icu('484b58aa', -1 ).
+icu('48d8fb45', 3 ).
+icu('4938f0c2', -1 ).
+icu('496994bd', 3 ).
+icu('49d1d64f', 3 ).
+icu('4be741c5', 3 ).
+icu('4c4377d9', 3 ).
+icu('4c5c2cf0', -1 ).
+icu('50846271', -1 ).
+icu('508bd3b6', -1 ).
+icu('50cb2852', 3 ).
+icu('5117e062', 3 ).
+icu('5168d44c', -1 ).
+icu('539a4f51', -1 ).
+icu('53b68214', 3 ).
+icu('543a7ed5', 3 ).
+icu('54d82841', 3 ).
+icu('54d9e175', -1 ).
+icu('5521c0d9', 4 ).
+icu('5582e5ca', 3 ).
+icu('5614dbcf', 3 ).
+icu('56dc2b01', 33 ).
+icu('56ff96f3', 3 ).
+icu('57aa92db', -1 ).
+icu('5ad4f10b', 3 ).
+icu('5bd6f4ac', 3 ).
+icu('5c0a986e', -1 ).
+icu('5c2c9af4', -1 ).
+icu('5daaa586', -1 ).
+icu('60b61512', -1 ).
+icu('6150a2bd', 3 ).
+icu('623ea044', 3 ).
+icu('62c24649', 3 ).
+icu('63613498', 3 ).
+icu('6430c8c4', 3 ).
+icu('6455b5f5', 3 ).
+icu('662c240a', 3 ).
+icu('67385a82', 3 ).
+icu('673ef223', -1 ).
+icu('6773b310', 4 ).
+icu('67a3c6ac', 3 ).
+icu('67a423a3', 23 ).
+icu('67e8384a', 3 ).
+icu('681b3aeb', 3 ).
+icu('6855a6e4', 23 ).
+icu('68b16354', 3 ).
+icu('694f12f3', 23 ).
+icu('6a1e5592', -1 ).
+icu('6aa20dc0', -1 ).
+icu('6b9890af', 3 ).
+icu('6c434453', 3 ).
+icu('6cdd2623', 3 ).
+icu('6cf79266', -1 ).
+icu('6d0160f0', -1 ).
+icu('6d0aefbc', 3 ).
+icu('6d58a25d', 3 ).
+icu('6d75e8bb', 3 ).
+icu('6e02f1e3', -1 ).
+icu('6e19193c', -1 ).
+icu('6e82a1ae', 33 ).
+icu('6ecd11f4', -1 ).
+icu('6f8cd79b', 3 ).
+icu('6fa7a44f', 3 ).
+icu('72322fa7', -1 ).
+icu('72ca375d', -1 ).
+icu('73251a56', 3 ).
+icu('7447852a', -1 ).
+icu('7468f01a', 3 ).
+icu('746b3537', 3 ).
+icu('74dd1130', 3 ).
+icu('75b8110e', 3 ).
+icu('760b3cac', 23 ).
+icu('776ffc46', -1 ).
+icu('77fdfe62', 4 ).
+icu('780d0b14', -1 ).
+icu('7837ac64', -1 ).
+icu('794b24be', -1 ).
+icu('7b6016b9', 3 ).
+icu('7b7f7511', -1 ).
+icu('7c008303', -1 ).
+icu('7ddcd7ec', 23 ).
+icu('7df24a62', -1 ).
+icu('7e0986d6', -1 ).
+icu('7f4411dc', -1 ).
+icu('7fe24cdd', -1 ).
+icu('80af3007', 3 ).
+icu('810b9b61', 3 ).
+icu('82819916', -1 ).
+icu('83302e8f', 3 ).
+icu('834ec97d', 4 ).
+icu('8403a5d5', -1 ).
+icu('846bdb03', -1 ).
+icu('855e0971', 4 ).
+icu('85c4e7cd', -1 ).
+icu('868de0fa', -1 ).
+icu('8731374e', -1 ).
+icu('88a10436', -1 ).
+icu('88a62173', 3 ).
+icu('890034e9', -1 ).
+icu('8a004b2b', -1 ).
+icu('8be77c9e', 3 ).
+icu('8d5021e8', 3 ).
+icu('8d510a79', 3 ).
+icu('8e1813be', 3 ).
+icu('8e5a5113', 3 ).
+icu('8eb1be9a', 3 ).
+icu('8efcae92', 3 ).
+icu('8f2ea7aa', 3 ).
+icu('90c28cc7', 3 ).
+icu('90f3ed37', -1 ).
+icu('913fb3ed', -1 ).
+icu('91413438', -1 ).
+icu('91714a58', -1 ).
+icu('9172f3a0', 3 ).
+icu('928ad970', 3 ).
+icu('93b581b8', -1 ).
+icu('941d9a10', -1 ).
+icu('94f9d214', 3 ).
+icu('952a094c', 3 ).
+icu('9565186b', 3 ).
+icu('95990924', -1 ).
+icu('963e52fc', 3 ).
+icu('97999447', -1 ).
+icu('97a05b5b', -1 ).
+icu('98cf29f8', 23 ).
+icu('995c5fa3', -1 ).
+icu('99b1bc43', 3 ).
+icu('99fa7670', 3 ).
+icu('9aec4887', -1 ).
+icu('9af7a82c', 4 ).
+icu('9d9215db', -1 ).
+icu('9dfd6313', 3 ).
+icu('9ecd008a', -1 ).
+icu('9edfc990', -1 ).
+icu('9f236235', 3 ).
+icu('a1570a43', 4 ).
+icu('a2fd1cf0', 3 ).
+icu('a3325580', -1 ).
+icu('a3df8b1e', -1 ).
+icu('a416b8f3', 3 ).
+icu('a48eeaf7', -1 ).
+icu('a5313dff', 3 ).
+icu('a5f85a15', -1 ).
+icu('a61ba2ce', -1 ).
+icu('a61f2674', -1 ).
+icu('a64e4611', -1 ).
+icu('a65b410d', 3 ).
+icu('a68b268e', 3 ).
+icu('a699fb00', 3 ).
+icu('a740d043', 3 ).
+icu('a78176bb', 23 ).
+icu('a79310a0', 4 ).
+icu('a85d4709', -1 ).
+icu('a87f7484', 3 ).
+icu('a8c38be5', -1 ).
+icu('a8d7556c', -1 ).
+icu('a9f96cdd', -1 ).
+icu('aabf363d', 3 ).
+icu('aba27056', -1 ).
+icu('ac0a08a4', 3 ).
+icu('ae3edfdc', 23 ).
+icu('ae4f1146', 3 ).
+icu('aedd82e4', -1 ).
+icu('af902bf9', 3 ).
+icu('b0c4d837', 23 ).
+icu('b190f7f5', 23 ).
+icu('b1948b0a', 3 ).
+icu('b230c067', -1 ).
+icu('b27ca6d3', -1 ).
+icu('b2862040', 3 ).
+icu('b527c5c6', -1 ).
+icu('b548a754', 3 ).
+icu('b60334d2', -1 ).
+icu('b6afb2da', 3 ).
+icu('b7249182', -1 ).
+icu('b775ac94', -1 ).
+icu('b782dc8a', 3 ).
+icu('b8825c91', 3 ).
+icu('b8cdaf2b', 4 ).
+icu('b91ae062', 3 ).
+icu('b94a9452', 3 ).
+icu('b9b7f026', -1 ).
+icu('ba26e723', 3 ).
+icu('ba97ae07', 3 ).
+icu('bb43febb', 3 ).
+icu('bbc9ae5d', 3 ).
+icu('bc1d5164', 3 ).
+icu('bd4472b8', -1 ).
+icu('bda2d7a6', -1 ).
+icu('bdad9b1f', -1 ).
+icu('be94b721', 3 ).
+icu('beb8660c', 4 ).
+icu('c0f76784', -1 ).
+icu('c1d99e64', 3 ).
+icu('c3e719e8', 3 ).
+icu('c3f564a4', 3 ).
+icu('c444b776', -1 ).
+icu('c59eb873', 3 ).
+icu('c8cbb738', -1 ).
+icu('c8f0f002', 3 ).
+icu('c909285e', x + -1 ).
+icu('c9e6f938', 3 ).
+icu('c9f8e694', 3 ).
+icu('caa06a1f', -1 ).
+icu('cbded52d', -1 ).
+icu('cce03e0d', 3 ).
+icu('cdecee7f', -1 ).
+icu('ce22a75a', 3 ).
+icu('ce4f8723', x + 3 ).
+icu('ce602527', 23 ).
+icu('ce9e57f2', 3 ).
+icu('cf98881b', 3 ).
+icu('d037b0a7', 3 ).
+icu('d06dbe63', -1 ).
+icu('d07ae81c', -1 ).
+icu('d0f5fe59', x + -1 ).
+icu('d10ecb37', 3 ).
+icu('d13f3404', 3 ).
+icu('d22278a0', -1 ).
+icu('d23f8c26', 3 ).
+icu('d2abd087', -1 ).
+icu('d364b489', -1 ).
+icu('d406998b', 23 ).
+icu('d43fd935', -1 ).
+icu('d4469b4b', 3 ).
+icu('d4a91cb9', 4 ).
+icu('d4f3cd78', -1 ).
+icu('d511f180', 3 ).
+icu('d5d6de2d', 3 ).
+icu('d631b094', 3 ).
+icu('d687bc17', 3 ).
+icu('d6ad076f', 3 ).
+icu('d89b689b', 3 ).
+icu('d8c310e9', -1 ).
+icu('d90796e8', -1 ).
+icu('d9f24cd1', -1 ).
+icu('d9fac9be', 3 ).
+icu('dae9d2b5', 3 ).
+icu('db3e9e38', 3 ).
+icu('db93a21d', -1 ).
+icu('dbc1a6ce', 3 ).
+icu('dc0a314f', -1 ).
+icu('dc1df850', 3 ).
+icu('dc433765', 3 ).
+icu('ddf7fa4f', 33 ).
+icu('de1cd16c', 3 ).
+icu('ded97339', 3 ).
+icu('e179c5f4', -1 ).
+icu('e21d9049', 3 ).
+icu('e26a3af2', -1 ).
+icu('e3497940', 3 ).
+icu('e40b9e2f', -1 ).
+icu('e48d4e1a', -1 ).
+icu('e5062a87', -1 ).
+icu('e509e548', -1 ).
+icu('e50d258f', -1 ).
+icu('e6721834', -1 ).
+icu('e73095fd', -1 ).
+icu('e76a88a6', -1 ).
+icu('e8593010', 3 ).
+icu('e8dc4411', -1 ).
+icu('e9614598', -1 ).
+icu('e98196ab', 3 ).
+icu('e9afcf9a', 3 ).
+icu('ea32f347', -1 ).
+icu('ea786f4a', 3 ).
+icu('eb281b96', 3 ).
+icu('eb5a1d5d', 3 ).
+icu('ec883f72', -1 ).
+icu('ecdecbb3', -1 ).
+icu('ed36ccf7', 3 ).
+icu('ef135b50', 3 ).
+icu('f15e1fac', -1 ).
+icu('f1cefba8', -1 ).
+icu('f25fbde4', 3 ).
+icu('f25ffba3', 3 ).
+icu('f2829549', 3 ).
+icu('f35d900a', 4 ).
+icu('f5b8619d', 3 ).
+icu('f76d97a5', 3 ).
+icu('f8a8fe49', 3 ).
+icu('f8b3ba0a', 3 ).
+icu('f8c80d96', 3 ).
+icu('f8ff0b80', -1 ).
+icu('f9012d9b', -1 ).
+icu('fafffa47', 3 ).
+icu('fcb5c309', 3 ).
+icu('fcc82909', -1 ).
+icu('feca6190', 3 ).
+icu('ff28f65a', -1 ).
+icu('ff805c23', -1 ).
+

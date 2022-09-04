@@ -160,7 +160,7 @@ inf(1e10).
 
 system:term_expansion((:- aleph), []) :-
   prolog_load_context(module, M),
-  pfc_assert(aleph_input_mod(M)),!,
+  arc_assert(aleph_input_mod(M)),!,
   initialize(M).
 
 aleph_module(M):-aleph_input_mod(M),!.
@@ -206,24 +206,24 @@ initialize(M):-
   M:dynamic((prune/1,cost/3,example/3,aleph_portray/1)),
   style_check(-discontiguous),
   aleph:init(swi,M),
-  pfc_assert(M:(reduce:-reduce(_))),
-  pfc_assert(M:(induce_constraints:-induce_constraints(_))),
-  pfc_assert(M:(induce_modes:-induce_modes(_))),
-  pfc_assert(M:(induce_incremental:-induce_incremental(_))),
-  pfc_assert(M:(induce_clauses:-induce_clauses(_))),
-  pfc_assert(M:(induce:-induce(_))),
-  pfc_assert(M:(induce_tree:-induce_tree(_))),
-  pfc_assert(M:(induce_max:-induce_max(_))),
-  pfc_assert(M:(induce_cover:-induce_cover(_))),
-  pfc_assert(M:(induce_theory:-induce_theory(_))),
-  pfc_assert(M:(induce_features:-induce_features(_))),
-  pfc_assert(M:(rdhyp:-rdhyp(_))),
-  pfc_assert(M:(sphyp:-sphyp_i(_))),
-  pfc_assert(M:(addgcws:-addgcws_i(_))),
-  pfc_assert(M:(rmhyp:-rmhyp_i(_))),
-  pfc_assert(M:(addhyp:-addhyp_i(_))),
-  pfc_assert(M:(covers:-covers(_))),
-  pfc_assert(M:(coversn:-coversn(_))),
+  arc_assert(M:(reduce:-reduce(_))),
+  arc_assert(M:(induce_constraints:-induce_constraints(_))),
+  arc_assert(M:(induce_modes:-induce_modes(_))),
+  arc_assert(M:(induce_incremental:-induce_incremental(_))),
+  arc_assert(M:(induce_clauses:-induce_clauses(_))),
+  arc_assert(M:(induce:-induce(_))),
+  arc_assert(M:(induce_tree:-induce_tree(_))),
+  arc_assert(M:(induce_max:-induce_max(_))),
+  arc_assert(M:(induce_cover:-induce_cover(_))),
+  arc_assert(M:(induce_theory:-induce_theory(_))),
+  arc_assert(M:(induce_features:-induce_features(_))),
+  arc_assert(M:(rdhyp:-rdhyp(_))),
+  arc_assert(M:(sphyp:-sphyp_i(_))),
+  arc_assert(M:(addgcws:-addgcws_i(_))),
+  arc_assert(M:(rmhyp:-rmhyp_i(_))),
+  arc_assert(M:(addhyp:-addhyp_i(_))),
+  arc_assert(M:(covers:-covers(_))),
+  arc_assert(M:(coversn:-coversn(_))),
 
   aleph:clean_up(M),
   retractall(M:example(_,_,_)),
@@ -233,7 +233,7 @@ initialize(M):-
 system:term_expansion((:- begin_bg), []) :-
   prolog_load_context(module, M),
   aleph_input_mod(M),!,
-  pfc_assert(M:bg_on).
+  arc_assert(M:bg_on).
 
 system:term_expansion(C, C) :-
   C\= (:- end_bg),
@@ -250,14 +250,14 @@ system:term_expansion((:- end_bg), []) :-
  % (M:bg(BG0)->
  %   retract(M:bg(BG0)),
  %   my_append(BG0,L,BG),
- %   pfc_assert(M:bg(BG))
+ %   arc_assert(M:bg(BG))
  % ;
  %   assert_all(L,M,_)
  % ).
 system:term_expansion((:- begin_in_pos), []) :-
   prolog_load_context(module, M),
   aleph_input_mod(M),!,
-  pfc_assert(M:pos_on),
+  arc_assert(M:pos_on),
   clean_up_examples(pos,M),
 	asserta(M:'$aleph_global'(size,size(pos,0))).
 	
@@ -278,9 +278,9 @@ system:term_expansion((:- end_in_pos), []) :-
 %    retract(M:in(IN0)),%
 %	
 %    my_append(IN0,L,IN),
-%    pfc_assert(M:in(IN))
+%    arc_assert(M:in(IN))
 %  ;
-%    pfc_assert(M:in(L))
+%    arc_assert(M:in(L))
 %  ).
 
 %%%%%%
@@ -288,7 +288,7 @@ system:term_expansion((:- end_in_pos), []) :-
 system:term_expansion((:- begin_in_neg), []) :-
   prolog_load_context(module, M),
   aleph_input_mod(M),!,
-  pfc_assert(M:neg_on),
+  arc_assert(M:neg_on),
 	aleph:clean_up_examples(neg,M),
 	asserta(M:'$aleph_global'(size,size(neg,0))).
 
@@ -334,9 +334,9 @@ system:term_expansion((:- end_in_neg), []) :-
 %    retract(M:in(IN0)),
 	
 %    my_append(IN0,L,IN),
-%    pfc_assert(M:in(IN))
+%    arc_assert(M:in(IN))
 %  ;
-%    pfc_assert(M:in(L))
+%    arc_assert(M:in(L))
 %  ).
  system:term_expansion((:- aleph_read_all), []) :-
         prolog_load_context(module, M),
@@ -434,20 +434,20 @@ init(swi,M):-
 	style_check(-discontiguous),
 	M:dynamic(aleph_false/0),
 	M:dynamic(example/3),
-	pfc_assert((depth_bound_call(G,L,M):-
+	arc_assert((depth_bound_call(G,L,M):-
 			call_with_depth_limit(M:G,L,R),
 			R \= depth_limit_exceeded)),
 	(predicate_property(numbervars(_,_,_),built_in) -> true;
-		pfc_assert((numbervars(A,B,C):- numbervars(A,'$VAR',B,C)))),
-	pfc_assert((system(X):- shell(X))),
-	pfc_assert((exists(X):- exists_file(X))), 
-	pfc_assert((aleph_reconsult(F):- consult(F))),
-	%pfc_assert((aleph_random(X):- I = 1000000, X is float(random(I-1))/float(I))),
+		arc_assert((numbervars(A,B,C):- numbervars(A,'$VAR',B,C)))),
+	arc_assert((system(X):- shell(X))),
+	arc_assert((exists(X):- exists_file(X))), 
+	arc_assert((aleph_reconsult(F):- consult(F))),
+	%arc_assert((aleph_random(X):- I = 1000000, X is float(random(I-1))/float(I))),
         (predicate_property(thread_local(_),built_in) -> true;
-		pfc_assert(thread_local(_))),
+		arc_assert(thread_local(_))),
 	
 	(predicate_property(delete_file(_),built_in) -> true;
-		pfc_assert(delete_file(_))).
+		arc_assert(delete_file(_))).
 
 aleph_background_predicate(Lit,M):-
 				predicate_property(M:Lit,P),
@@ -5378,7 +5378,7 @@ get_besthyp(AbduceFlag,M):-
 		abgen(Atom,AbGen,M),
 		once(retract(M:'$aleph_global'(hypothesis,
 				hypothesis(Label,_,PCover,NCover)))),
-		pfc_assert(M:'$aleph_global'(hypothesis,
+		arc_assert(M:'$aleph_global'(hypothesis,
 				hypothesis(Label,AbGen,PCover,NCover))),
 		update_besthyp(Num,M);
 		true),
@@ -5724,7 +5724,7 @@ write_entry(W,V):-
 % One complication with abductive learning is this: for a given
 % positive example to be provable, we require all the ground atoms
 % in its abductive explanation to be true. Correctly therefore,
-% we would need to pfc_assert the abductive explanation before
+% we would need to assert the abductive explanation before
 % checking the utility of any hypothesis. To avoid unnecessary
 % asserts and retracts, the "pclause" trick is used here (see
 % record_testclause/0).
@@ -6219,9 +6219,9 @@ update_gsample(_,N,M):-
         retract(M:'$aleph_global'(atoms,atoms(rand,_))),
         retract(M:'$aleph_global'(atoms_left,atoms_left(rand,_))),
         retract(M:'$aleph_global'(last_example,last_example(rand,_))),
-        pfc_assert(M:'$aleph_global'(atoms,atoms(rand,[1-N]))),
-        pfc_assert(M:'$aleph_global'(atoms_left,atoms_left(rand,[1-N]))),
-        pfc_assert(M:'$aleph_global'(last_example,last_example(rand,N))).
+        arc_assert(M:'$aleph_global'(atoms,atoms(rand,[1-N]))),
+        arc_assert(M:'$aleph_global'(atoms_left,atoms_left(rand,[1-N]))),
+        arc_assert(M:'$aleph_global'(last_example,last_example(rand,N))).
 update_gsample(_,_,_M).
 
 	
@@ -6517,7 +6517,7 @@ process_determs(M):-
 	find_mode(modeb,Name1/Arity1,Mode,M),
 	copy_modeterms(Mode,Pred,Arity1),
 	Determ = M:'$aleph_determination'(Name/Arity,Pred),
-	(Determ -> true; pfc_assert(Determ)),
+	(Determ -> true; arc_assert(Determ)),
 	fail.
 process_determs(_M).
 
@@ -6537,13 +6537,13 @@ add_ioc_links(Lit,I,O,C,M):-
 	get_o_links(O,Lit,VT,true,OGoals,M),
 	get_i_links(I,Lit,VT,OGoals,IOGoals),
 	get_c_links(C,Lit,IOGoals,Body),
-	pfc_assert(M:Clause).
+	arc_assert(M:Clause).
 
 add_ovars(Lit,O,M):-
 	aleph_member(Pos/Type,O),
 	tparg(Pos,Lit,V),
 	(M:'$aleph_has_ovar'(Lit,V,Type,Pos)->true;
-		pfc_assert(M:'$aleph_has_ovar'(Lit,V,Type,Pos))),
+		arc_assert(M:'$aleph_has_ovar'(Lit,V,Type,Pos))),
 	fail.
 add_ovars(_,_,_M).
 
@@ -6551,7 +6551,7 @@ add_ivars(Lit,I,M):-
 	aleph_member(Pos/Type,I),
 	tparg(Pos,Lit,V),
 	(M:'$aleph_has_ivar'(Lit,V,Type,Pos)->true;
-		pfc_assert(M:'$aleph_has_ivar'(Lit,V,Type,Pos))),
+		arc_assert(M:'$aleph_has_ivar'(Lit,V,Type,Pos))),
 	fail.
 add_ivars(_,_,_M).
 
@@ -6559,7 +6559,7 @@ add_vars(Lit,I,O,M):-
         get_var_types(I,Lit,IVarTypes),
         get_var_types(O,Lit,OVarTypes),
         (M:'$aleph_has_vars'(Lit,IVarTypes,OVarTypes) -> true;
-        	pfc_assert(M:'$aleph_has_vars'(Lit,IVarTypes,OVarTypes))).
+        	arc_assert(M:'$aleph_has_vars'(Lit,IVarTypes,OVarTypes))).
 
 get_var_types([],_,[]).
 get_var_types([Pos/Type|PlaceTypes],Lit,[Var/Type|Rest]):-
@@ -10548,7 +10548,7 @@ reset(M):-
 	clear_cache(M),
 	aleph_abolish('$aleph_global'/2,M),
 	aleph_abolish(example/3,M),
-	pfc_assert(M:example(0,uspec,aleph_false)),
+	arc_assert(M:example(0,uspec,aleph_false)),
 	set_default(_,M),
 	!.
 

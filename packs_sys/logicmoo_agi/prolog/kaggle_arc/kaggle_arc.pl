@@ -9,6 +9,7 @@
 :- set_prolog_flag(arc_term_expansion, false).
 :- dynamic((ap/1,apv/2)).
 :- dynamic(cmem/3).
+:- dynamic(cmemo/3).
 :- dynamic(grid_nums/1).
 :- dynamic(grid_nums/2).
 
@@ -41,8 +42,8 @@ arc_history1(_).
 % :- dynamic(grid_hint_pred/1). :- discontiguous(grid_hint_pred/1). :- multifile(grid_hint_pred/1).
 
 
-my_is_clause(H,B):- clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB.
-my_asserta_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; asserta(H:-B)).
+my_is_clause(H,B):- clause(H,B,Ref),clause(HH,BB,Ref), H+B=@=HH+BB,!.
+my_asserta_if_new((H:-B)):- !, (my_is_clause(H,B) -> nop(wdmsg(my_is_clause(H,B))) ; arc_assert(H:-B)).
 my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
 
 my_assertz_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; assertz(H:-B)).
@@ -69,13 +70,14 @@ decl_pt(How,G):- nonvar(How),ground(G), !, my_assertz_if_new(decl_pt(How,G)).
 :- multifile is_fti_stepr/1.
 :- discontiguous is_fti_step/1.
 :- discontiguous is_fti_stepr/1.
-:- discontiguous ping_indiv_grid/1.
-:- multifile ping_indiv_grid/1.
+
 
 :- discontiguous is_changeable_param/1.
 :- multifile is_changeable_param/1.
 :- dynamic is_changeable_param/1.
 
+:- discontiguous ping_indiv_grid/1.
+:- multifile ping_indiv_grid/1.
 
 :- meta_predicate(fif(0,0)).
 fif(IF, THEN) :- (   call(IF) ->  call(THEN) ;   true ).
@@ -85,11 +87,12 @@ quietlyd(G):- quietly(G),!.
 
 :- strip_module(_,M,_),abolish(system:muarc_mod/1),asserta(system:muarc_mod(M)).
 
-
-'$exported_op'(_,_,_):- fail.
+/*
+:- discontiguous '$exported_op'/3. 
+*/
 :- multifile '$exported_op'/3. 
 :- dynamic '$exported_op'/3. 
-%:- discontiguous '$exported_op'/3. 
+:- assert(system:('$exported_op'(_,_,_):- fail)).
 
 '$pldoc'(_,_,_,_):- fail.
 :- multifile '$pldoc'/4. 
@@ -163,12 +166,16 @@ clsmake:- update_changed_files,!.
 :- use_module(library(pairs)).
 :- use_module(library(logicmoo_common)).
 :- use_module(library(prolog_trace)).
+:- use_module(library(prolog_clause)).
+:- use_module(library(prolog_source)).
+ %library(trace/clause) 
 %:- autoload_all.
 :- use_module(library(gvar_globals_api)).
 :- use_module(library(dictoo_lib)).
 %:- use_module(library(pfc_lib)).
 
-:- include(kaggle_arc_pfc).
+:- autoload_all.
+
 
 %:- listing((.)/3).
 %:- autoload_all.
@@ -210,6 +217,7 @@ must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/writeq(E=X),p
 must_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,rrtrace(X),!.
 % must_det_ll(X):- must_det_ll(X),!.
 
+rrtrace(X):- !, rtrace(X).
 rrtrace(X):- notrace,nortrace, arcST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> rtrace(X); (trace,call(X))).
 
 remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
@@ -407,7 +415,7 @@ arc_user(ID):- thread_self(ID).
 
 :- dynamic(arc_user_prop/3).
 
-luser_setval(N,V):- nb_setval(N,V),!.
+%luser_setval(N,V):- nb_setval(N,V),!.
 luser_setval(N,V):- arc_user(ID),luser_setval(ID,N,V),!.
 luser_setval(ID,N,V):- nb_setval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
@@ -425,6 +433,7 @@ luser_getval(ID,N,V):-
  (arc_user_prop(ID,N,V)*->true;
   (nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 */
+:- luser_setval(global,example,trn+0).
 
 %c:- forall(clause(fav(A,B),true),arc_history1((fav(A,B)))).
 :- arc_history1(fav2).
@@ -446,6 +455,7 @@ luser_getval(ID,N,V):-
 %:- learn_shapes.
 :- ensure_loaded(kaggle_arc_utils).
 :- ensure_loaded(kaggle_arc_ui_ansi).
+:- ensure_loaded(kaggle_arc_interpreter).
 :- ensure_loaded(kaggle_arc_test_loader).
 :- ensure_loaded(kaggle_arc_domaintypes).
 :- ensure_loaded(kaggle_arc_test_iface).
@@ -458,7 +468,7 @@ luser_getval(ID,N,V):-
 :- ensure_loaded(kaggle_arc_intruder).
 :- ensure_loaded(kaggle_arc_test_cache).
 :- ensure_loaded(kaggle_arc_individuation).
-:- ensure_loaded(kaggle_arc_interpreter).
+
 :- ensure_loaded(kaggle_arc_object).
 :- ensure_loaded(kaggle_arc_boards).
 :- ensure_loaded(kaggle_arc_learning).
@@ -524,10 +534,6 @@ arc1(G,TName):-
 
 
 cls1:- nop(catch(cls,_,true)).
-
-arc_grid(Grid):- 
-  arc_test_name(TestID),
-  kaggle_arc_io(TestID,_ExampleNum,_,Grid).
 
 list_to_rbtree_safe(I,O):- must_be_free(O), list_to_rbtree(I,M),!,M=O.
 :- dynamic(is_buggy_pair/2).
@@ -622,7 +628,7 @@ make_training(TestID,VMO):-
      pre_in:_, pre_out:_,
      inC:_InC,outC:_OutC,
      removed:_,added:_, kept:_,   
-     grid_in:_,grid_out:_,
+     grid_in:_,grid_target:_,
    set(VM.mappings) =[map])), !. % pt(VM),nl.
   */
 
@@ -673,7 +679,7 @@ train_only_from_pairs(TestID):- clear_training(TestID), train_test(TestID,train_
 train_using_io(TestID,DictIn,DictOut):- train_using_io(TestID,trn,0,DictIn,DictOut).
 train_using_io(TestID,Trn,N1,DictIn,DictOut):- 
   kaggle_arc(TestID,(Trn+N1),In,Out),!,
-  detect_supergrid(TestID,(Trn+N1),In,Out),
+  detect_pair_hints(TestID,(Trn+N1),In,Out),
   train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictMid),
   N2 is N1 + 1,
   train_using_io(TestID,Trn,N2,DictMid,DictOut).
@@ -696,7 +702,7 @@ train_for_objects_from_pair_with_mono(Dict0,TestID,Desc,In,Out,Dict9):-
    ignore(Dict1=Dict9))),!.
 
 train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
-  locally(set_prolog_flag(gc,false),train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1)).
+  locally(set_prolog_flag(gc,true),train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1)).
 
 train_for_objects_from_1pair1(Dict0,_TestID,Desc,_InA,_OutA,Dict0):- Desc = [_Trn,'o',_N1,'o',_N2], !.
 
@@ -726,9 +732,9 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM)]),!,
 
    %InVM.compare=OutVM, 
-   set(InVM.grid_out)=Out,
+   set(InVM.grid_target)=Out,
    %OutVM.compare=InVM, 
-   set(OutVM.grid_out)=In,
+   set(OutVM.grid_target)=In,
   maplist(must_det_ll,[
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
   individuate_c(InVM),!,
@@ -781,14 +787,14 @@ show_pair_code(In,Out):-
   dash_chars,dash_chars.
 
 print_testinfo(TestID):-
-  ignore(((task_info(TestID,F),forall(member(I,F),pt(task_info=I))))).
+  ignore(((test_info(TestID,F),forall(member(I,F),pt(test_info=I))))).
 
 % trials(learn). trials(clue).   
 trials(human). trials(sol).
 trials(dsl). trials(runDSL).
 trial_non_human(sol).
 
-sols_for(TaskID,Trial,TrialSol):- trials(Trial),once((Entry=..[Trial,Sol], task_info(TaskID,Sols),member(Entry,Sols))),
+sols_for(TestID,Trial,TrialSol):- trials(Trial),once((Entry=..[Trial,Sol], test_info(TestID,Sols),member(Entry,Sols))),
   append_trial(Trial,Sol,TrialSol).
 
 append_trial(Trial,Sol,TrialSol):- listify(Sol,SolL),
@@ -843,7 +849,7 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     %set(InVM.training) = Training,
     set_training(Training),
     maybe_set_vm(InVM),    
-    gset(InVM.grid_out) = _,
+    gset(InVM.grid_target) = _,
     must_det_ll((
     %print(training(Training)),nl,
     %ptt(InVM),
@@ -873,7 +879,7 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
            (Errors==0 -> 
               (banner_lines(green),arcdbg(pass(Why,TestID,ExampleNum,SolutionProgram)),banner_lines(green))
               ; (banner_lines(red), arcdbg(fail(Why,Errors,TestID,ExampleNum,SolutionProgram)),
-               task_info(TestID,InfoF),wqnl(fav(TestID*ExampleNum,InfoF)),
+               test_info(TestID,InfoF),wqnl(fav(TestID*ExampleNum,InfoF)),
                banner_lines(red)))))
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))))),
     print_grid("our grid", InVM.grid),!,
@@ -910,8 +916,9 @@ reuse_indivs_cleanup(A,B,C,A,B,C).
 %same_object(D)
 reuse_a_b(A,B,AA):-
   findall(H,compare_objs1(H,A,B),How),
-  o_i_d(B,ID,Iv),
-  setq(A,o_i_d(ID,Iv),AA),
+  obj_to_oid(B,BOID),
+  obj_to_oid(A,_AOID),
+  setq(A,oid(BOID),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
   ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
