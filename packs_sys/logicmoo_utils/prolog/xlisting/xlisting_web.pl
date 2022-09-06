@@ -864,16 +864,17 @@ handler_logicmoo_cyclone_call(Request):-
   make_here,
   handler_logicmoo_cyclone(Request).
 
-on_xf_ignore_flush(G):- flush_output_safe,on_xf_ignore(G),flush_output_safe.
+on_xf_ignore_flush(G):- flush_output_safe,on_xf_ignore(must_det_ll(G)),flush_output_safe.
 
 handler_logicmoo_cyclone(Request):- 
   html_write:html_current_option(content_type(D)),format('Content-type: ~w~n~n', [D]),
   %format('<!DOCTYPE html>',[]),flush_output_safe,
-  must_run_html(handler_logicmoo_cyclone000(Request)),!.
+  (must_run_html(handler_logicmoo_cyclone000(Request))-> true ; handler_logicmoo_cyclone000(Request)).
 
 
 handler_logicmoo_cyclone000(Request):-
   maplist(on_xf_ignore_flush,[
+  must_det_ll((
   ignore(get_http_session(_)), 
   set_prolog_flag(retry_undefined, none),
   current_input(In),current_output(Out),
@@ -882,6 +883,7 @@ handler_logicmoo_cyclone000(Request):-
   asserta(lmcache:current_ioet(In,Out,Err,ID)),
   save_request_in_session(Request),
   get_webproc(WebProc),
+
   write_begin_html(WebProc),
   ((ignore( \+ ((  
     get_param_req(cmd,Call),
@@ -902,7 +904,7 @@ handler_logicmoo_cyclone000(Request):-
 
   ensure_colapsable_script,
   write_end_html,
-  flush_output_safe]),
+  flush_output_safe))]),
   !.
 
 
@@ -968,8 +970,10 @@ test_rok(W) :-
       x_forwarded_server('127.0.1.1'), connection('Keep-Alive')]),!.
 
 add_context_menu:-!.
+
 :- include(xlisting_web_cm).
 
+:- listing(ensure_colapsable_script/0).
 
 % logicmoo_html_needs_debug.
 
@@ -2724,7 +2728,9 @@ must_run0(Goal):- flush_output_safe,
     wdmsg(nop(assertion_failed(fail, Goal)))),
   flush_output_safe.
 
-no_undefined_preds(G):- locally(set_prolog_flag(unknown,fail),G).
+no_undefined_preds(G):- locally(set_prolog_flag(unknown,fail),G),!.
+no_undefined_preds(G):- call(G).
+
 
 :- multifile(prolog_debug:assertion/1).
 :- abolish(prolog_debug:assertion/1).
@@ -2794,6 +2800,7 @@ try_or_rtrace(G):- tracing,!,dmsg(try(G)),call(G).
 try_or_rtrace(G):- fast_and_mean, !, with_no_xdbg(G).
 try_or_rtrace(G):- catch(G,E,(E==time_limit_exceeded->throw(time_limit_exceeded);(ignore((dmsg(G=E),www_dumpST,dmsg(G=E),thread_self(main),rtrace(G),www_dumpST,dmsg(G=E),break))))).
 
+www_dumpST:- with_output_to(user_error,dumpST),!.
 www_dumpST:- write_expandable(false,(write('<pre>'),dumpST,write('</pre>'))).
 % :- prolog_xref:assert_default_options(register_called(all)).
 

@@ -8,6 +8,8 @@
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
 
+%%:- module(user).
+
 %
 %  PFC is a language extension for prolog.. there is so much that can be done in this language extension to Prolog
 %
@@ -15,10 +17,10 @@
 % Douglas Miles
 %  cls ; kill -9 %1 ; fg ; swipl -g "ensure_loaded(pack(logicmoo_base/t/examples/base/'sanity_abc.pfc'))."
 
-def_pfc_operators:-  
+:-  
  locally(set_prolog_flag(access_level,system),
- ((op(200,fy,'-'),op(300,fx,'-'),
- op(1190,xfx,('::::')),
+((op(200,fy,'-'),op(300,fx,'-'),
+  op(1190,xfx,('::::')),
  op(1180,xfx,('==>')),
  op(1170,xfx,'<==>'),
  op(1160,xfx,('<-')),
@@ -32,7 +34,7 @@ def_pfc_operators:-
  op(300,fx,'-'),
  op(1199,fx,('==>'))))).
 
-:- def_pfc_operators.
+%:- def_pfc_operators.
 %:- module(system).
 
 %:- expects_dialect(pfc).
@@ -42,11 +44,14 @@ forall_assert(G,P):- forall(G,assert_if_new(P)).
 
 meta_argtypes(process_test_grid(oid)).
 
-meta_argtypes(P) ==> {decl_pt(P)}.
+==>(meta_argtypes(P) , {decl_pt(P)}).
 
 never_all_free==>cmem(_,_,_).
 never_all_free==>gid_glyph_oid(_,_,_).
 never_all_free==>cindv(_,_,_).
+%never_all_free==>tid_to_gids(_,_).
+%never_all_free==>kaggle_arc_io(_,_,_,_).
+==>awc.
 
 tid_to_gids(T,A) :- awc,!, (clause(tid_to_gids(T,A),true)*-> true ; term_to_oid(T,A)).
 
@@ -69,9 +74,6 @@ startAll2==>(process_oid(GID)/( \+ cmem(GID,_,_))==>{assert_id_grid_cells(GID)})
 ((individuate_test_grids(TestID),tid_to_gids(TestID*trn*in,GID))==> process_test_grid(GID)).
 process_test_grid(GID)==>{assert_id_grid_cells(GID),individuate(complete,GID,_)}.
 
-:- dynamic(saved_training/1).
-saved_training(TestID):- ~saved_training(TestID), !, fail. % explictly always assume unsaved?
-saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
 
 (process_test(TestID) / (\+ saved_training(TestID))) ==> {compile_and_save_test(TestID)}.
 
@@ -79,9 +81,9 @@ assert_obj_global_points==>
   ((cindv( Obj, localpoints, _)/(obj_to_oid(Obj,GID),globalpoints(Obj,GPS)))==> {assert_id_cells(GID,GPS)}).
 
 
-arc_test_property(T, common(comp(o-o, area)), area(n(1, 1, d(0), a(0), r(1))))==> note(T,"output always size 1").
-arc_test_property(T, common(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/var(X)==> note(T,"output size always same as input").
-%arc_test_property(T, common(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> note(T,"output size always same as input").
+arc_test_property(T, common(comp(o-o, area)), area(n(1, 1, d(0), a(0), r(1))))==> arc_note(T,"output always size 1").
+arc_test_property(T, common(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/var(X)==> arc_note(T,"output size always same as input").
+%arc_test_property(T, common(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> arc_note(T,"output size always same as input").
 
 %:- forall_assert(kaggle_arc_io(TestID,ExampleNum,IO,_),some_grid_tid(TestID*ExampleNum*IO)).
 :- set_prolog_flag(pfc_term_expansion,false).
@@ -89,4 +91,6 @@ arc_test_property(T, common(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/v
 
 :- fixup_exports.
 
-:- add_history(pfcAddF(startAll4)).
+:- add_history((make,pfcAddF(startAll4))).
+
+:- module(system).

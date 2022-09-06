@@ -4100,6 +4100,7 @@ mpred_compile_rhs_term_consquent(MZ,WS,rhs(Test),rhs(TestO)) :- !,mpred_compile_
 mpred_compile_rhs_term_consquent(MZ,WS,Test,TestO):- is_list(Test),must_maplist(mpred_compile_rhs_term_consquent(MZ,WS),Test,TestO).
 
 mpred_compile_rhs_term_consquent(_MZ,_WS,(H:-B),(H:-B)):-!.
+mpred_compile_rhs_term_consquent(_MZ,_WS,(B==>H),(B==>H)):-!.
 
 mpred_compile_rhs_term_consquent(MZ,WS,Test,TestO):-
    code_sentence_op(Test),Test univ_safe [F|TestL],

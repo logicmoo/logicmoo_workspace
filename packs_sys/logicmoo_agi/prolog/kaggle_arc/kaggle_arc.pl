@@ -6,6 +6,12 @@
 */
 
 :- encoding(iso_latin_1).
+
+% :- pack_install(logicmoo_utils).
+% :- pack_install(dictoo).
+% :- pack_upgrade(logicmoo_utils).
+% :- pack_upgrade(dictoo).
+
 :- set_prolog_flag(arc_term_expansion, false).
 :- dynamic((ap/1,apv/2)).
 :- dynamic(cmem/3).
@@ -90,9 +96,9 @@ quietlyd(G):- quietly(G),!.
 /*
 :- discontiguous '$exported_op'/3. 
 */
-:- multifile '$exported_op'/3. 
-:- dynamic '$exported_op'/3. 
-:- assert(system:('$exported_op'(_,_,_):- fail)).
+:- multifile system:'$exported_op'/3. 
+:- dynamic system:'$exported_op'/3. 
+:- catch((assert(system:('$exported_op'(_,_,_):- fail))),_,true).
 
 '$pldoc'(_,_,_,_):- fail.
 :- multifile '$pldoc'/4. 
@@ -172,7 +178,6 @@ clsmake:- update_changed_files,!.
 %:- autoload_all.
 :- use_module(library(gvar_globals_api)).
 :- use_module(library(dictoo_lib)).
-%:- use_module(library(pfc_lib)).
 
 :- autoload_all.
 
@@ -948,12 +953,17 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 
 :- ensure_loaded(kaggle_arc_simple).
 
-:- ensure_loaded('kaggle_arc_fwd.pfc').
+:- fixup_module_exports_into(baseKB).
+:- fixup_module_exports_into(system).
+
+:- dynamic(saved_training/1).
+saved_training(TestID):- call_u('~'(saved_training(TestID))), !, fail. % explictly always assume unsaved?
+saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
+
+:- baseKB:ensure_loaded('kaggle_arc_fwd.pfc').
 %:- set_prolog_flag(arc_term_expansion, false).
 
 %:- if(prolog_load_context(reload,false)).
-:- fixup_module_exports_into(baseKB).
-:- fixup_module_exports_into(system).
 %:- fixup_module_exports_into_from(system,muarc).
 %:- endif.
 

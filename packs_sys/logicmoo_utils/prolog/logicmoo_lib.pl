@@ -22,7 +22,7 @@
 
 :- use_module(library(logicmoo_utils)).
 
-
+app_argv_local(X):- current_predicate(app_argv/2),app_argv(X).
 
 % :- multifile prolog:message//1, prolog:message_hook/3.
 % prolog:message(ignored_weak_import(Into, From:PI))--> { nonvar(Into),Into \== system,dtrace(dmsg(ignored_weak_import(Into, From:PI))),fail}.
@@ -30,8 +30,8 @@
 % prolog:message_hook(T,error,Warn):- dtrace(wdmsg(nessage_hook(T,warning,Warn))),fail.
 % prolog:message_hook(T,warning,Warn):- dtrace(wdmsg(nessage_hook(T,warning,Warn))),fail.
 
-:- if(app_argv('--pdt')).
-:- if(\+ app_argv('-nopce')).
+:- if(app_argv_local('--pdt')).
+:- if(\+ app_argv_local('-nopce')).
 :- if(\+ (getenv('DISPLAY',X) -> \+ atom_string(X,""))).
 %:- guitracer.
 :- else.
@@ -40,15 +40,15 @@
 :- endif.
 :- endif.
 
-:- if(app_argv('--wamcl');app_argv('--lispsock')).
+:- if(app_argv_local('--wamcl');app_argv_local('--lispsock')).
 :- user:use_module(library(wamclrt)).
 :- endif.
 
-%:- if(app_argv('--lispsock 3301')).
+%:- if(app_argv_local('--lispsock 3301')).
 %:- start_lspsrv(repl,3301,"Lisp Repl").
 %:- endif.
 
-:- if(app_argv('--pdt')).
+:- if(app_argv_local('--pdt')).
 :- user:use_module(library(logicmoo_pdt)).
 :- endif.
 
@@ -269,7 +269,7 @@ load_library_system(library(logicmoo_webbot))).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- user:use_module(library(logicmoo_common)).
 
-:- if(\+ app_argv('--nonet')).
+:- if(\+ app_argv_local('--nonet')).
 :- logicmoo_webbot.
 :- endif.
 */
@@ -282,7 +282,7 @@ load_library_system(library(logicmoo_webbot))).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- dmsg("[Mostly Required] Load the Logicmoo Plan Generator System").
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-:- if(app_argv('--planner')).
+:- if(app_argv_local('--planner')).
 :- if(exists_source(library(logicmoo_planner))).
 :- load_library_system(library(logicmoo_planner)).
 :- endif.

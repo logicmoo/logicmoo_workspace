@@ -163,8 +163,10 @@ test_print_tree(N):- integer(N), nth_clause(test_print_tree1(_),N,Ref),clause(_,
 :- meta_predicate(on_xf_ignore(0)).
 %on_xf_ignore(G):- \+ thread_self(main), !, notrace(ignore(on_x_fail(catch(G,E,wdmsg(G->E))))),!.
 %on_xf_ignore(G):- on_x_fail(G),!. 
-on_xf_ignore(G):- call(G),!.
-on_xf_ignore(G):- dmsg(failed(G)),!.
+%on_xf_ignore(G):- call(G),!.
+%on_xf_ignore(G):- dmsg(failed(G)),!.
+on_xf_ignore(G):- notrace(ignore(catch(G,_,fail))).
+:- export(on_xf_ignore/1).
 
 test_pp(PP,Goal):- 
   write('%====================================================\n'),
@@ -1268,12 +1270,15 @@ pformat_html(Fmt):- atomic(Fmt),!,bfly_html_goal(pformat_write(Fmt)).
 pformat_html(Fmt):- phrase(pretty_clauses:html(Fmt), Tokens), print_html(Tokens).
 
 
+:- export(pformat_string/2).
 pformat_string(Fmt,S):- \+ compound(Fmt),!,any_to_string(Fmt,S).
 pformat_string(Fmt,S):- wots(S,pformat(Fmt)).
 
+:- export(pformat_write/1).
 pformat_write(Codes):- catch(text_to_string(Codes,Str),_,fail),!,write(Str).
-\(Str):- write(Str).
+pformat_write(Str):- write(Str).
 
+:- export(pformat_std/2).
 pformat_std(_,List):- is_codelist(List),string_codes(Str,List),!,pformat_write(Str).
 pformat_std(P,List):- is_list(List),!,maplist(P,List).
 pformat_std(_,Fmt):- (Fmt=='';Fmt==[]),!.

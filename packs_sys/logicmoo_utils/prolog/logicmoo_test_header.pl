@@ -39,10 +39,10 @@
 
 % Load PFC
 :- if(set_prolog_flag(pfc_version,v(2,0,0))). :- endif.
-:- if(ensure_loaded(library(pfc_lib))). :-endif.
+:- if(ignore((exists_source(library(pfc_lib)),ensure_loaded(library(pfc_lib))))). :-endif.
 
 % Load CLIF
-:- if((use_module(library(logicmoo_clif)))). :-endif.
+:- if(ignore((exists_source(library(logicmoo_clif)),ensure_loaded(library(logicmoo_clif))))). :-endif.
 
 :- endif. % \+ current_module(logicmoo_clif)
 

@@ -206,6 +206,7 @@ rtty:- with_tty_raw(rtty1).
 rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
 
 
+ip(I,O):- ip(complete,I,O).
 
 ndividuator1:- get_current_test(TestID),set_flag(indiv,0),with_test_pairs1(TestID,In,Out,ip(In,Out)).
 ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_pairs(TestID,In,Out,ip(In,Out)).

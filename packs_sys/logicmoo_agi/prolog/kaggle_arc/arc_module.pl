@@ -18,7 +18,7 @@ do_forgotten_exports:-
 %:- use_module(library(pfc_lib)).
 
 :- system:ensure_loaded(kaggle_arc).
-%:- muarc:ensure_loaded(kaggle_arc).
+:- muarc:ensure_loaded(kaggle_arc).
 
 :- do_forgotten_exports.
 

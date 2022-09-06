@@ -160,18 +160,29 @@ diff_groups0(A3,B3,DD):- diff_groups1(A3,B3,DD).
 diff_groups(A0,B0,DD):- 
   maplist(obj_grp_comparable,A0,A2),
   maplist(obj_grp_comparable,B0,B2),
-  pt(diff_groups1(A2,B2)),
   diff_groups1(A2,B2,DD).
 
 
-select_obj_pair(AAR,BBR,PA,PB):- 
+select_obj_pair(AAR,BBR,PA,PB):-
+  select_obj_pair1(AAR,BBR,PA,PB),
+  select_obj_pair2(AAR,BBR,PA2,PB2),
+  ignore((fail, ([PA,PB] == [PA2,PB2]) , wdmsg([a,PA,b,PB]))),!.
+select_obj_pair(AAR,BBR,PA,PB):-
+  select_obj_pair1(AAR,BBR,PA,PB).
+select_obj_pair(AAR,BBR,PA2,PB2):-
+  select_obj_pair2(AAR,BBR,PA2,PB2).
+
+
+select_obj_pair1(AAR,BBR,PA,PB):- 
  findall(pair(L,PA,PB),
   (member(PA,AAR), obj_atoms(PA,PAP), 
    member(PB,BBR), obj_atoms(PB,PBP),
      intersection(PAP,PBP,Shared,_,_),length(Shared,L)),
    Pairs),sort(Pairs,SPairs),last(SPairs,pair(L,PA,PB)),
- wdmsg(pair(L,PA,PB)).
-select_obj_pair(AAR,BBR,PA,PB):- member(PA,AAR), get_selector(PA,PB), member(PB,BBR),wdmsg(selector_pair(PA,PB)).
+ nop(wdmsg(pair(L,PA,PB))).
+
+select_obj_pair2(AAR,BBR,PA,PB):- member(PA,AAR), get_selector(PA,PB), member(PB,BBR).
+
 
 obj_atoms(PA,PAP):-nonvar(PA),obj_atoms1(PA,M),findall(E,(member(SE,M),sub_obj_atom(E,SE)),PAP),!.
 
@@ -187,6 +198,12 @@ obj_atoms1(obj(PA),PAP):- is_list(PA),!,PAP=PA.
 
 never_pair(PA,PB):- nop(never_pair(PA,PB)),!,fail.
 
+reorder_group_objs(AAR,BBR,[PA|G1],[PB|G2]):-
+   select_obj_pair(AAR,BBR,PA,PB),
+  \+ never_pair(PA,PB),
+  select(PA,AAR,AA), select(PB,BBR,BB),!,
+  reorder_group_objs(AA,BB,G1,G2).
+reorder_group_objs(AA,BB,AA,BB).
 
 diff_groups1([],[],[]):-!.
 diff_groups1([],B,left_extra(BO)):- maplist(object_dglyph,B,BO).
@@ -255,15 +272,17 @@ uncomparable2(group,link).
 uncomparable2(object,iz).
 uncomparable2(shape,localpoints).
 
-never_diff(V):- var(V),!,fail.
-never_diff(_):- nb_current(diff_porportional,t),!,fail.
-never_diff(iz).
-never_diff(obj_to_oid).
-never_diff(o).
-never_diff(link).
-never_diff(change).
-never_diff(birth).
-never_diff(V):- compound(V),functor(V,F,_),!,never_diff(F).
+never_show_diff(V):- var(V),!,fail.
+never_show_diff(_):- nb_current(diff_porportional,t),!,fail.
+never_show_diff(o).
+never_show_diff(link).
+never_show_diff(iz(A)):- atomic(A).
+never_show_diff(obj_to_oid).
+never_show_diff(change).
+never_show_diff(birth).
+never_show_diff(V):- compound(V),functor(V,F,_),!,never_show_diff(F).
+
+never_do_diff(V):- never_show_diff(V).
 
 make_comparable(I,I):- plain_var(I).
 make_comparable(I,I):- \+ compound(I),!.
@@ -471,7 +490,7 @@ needs_indivs(I,O):- is_gridoid(I), \+ is_group(I), arcST, trace, compute_unshare
 diff_terms(I,O,D):- nonvar_or_ci(D),!,diff_terms(I,O,DD),!,D==DD.
 diff_terms(I,O,D):- maybe_number(I,N1),maybe_number(O,N2),!,proportional_size(N1,N2,D).
 diff_terms(I,O,[]):- O==I,!.
-diff_terms(I,O, [] ):- (never_diff(I);never_diff(O)),!.
+diff_terms(I,O, [] ):- (never_do_diff(I);never_do_diff(O)),!.
 diff_terms(I,O,[]):- plain_var(I),plain_var(O),!.
 diff_terms(I,O,O):- plain_var(I),!.
 diff_terms(O,I,O):- plain_var(I),!.
@@ -494,7 +513,7 @@ diff_terms(IF=IA,O,IF=D):- find_kv(O,IF,OA),!,diff_terms(IA,OA,D).
 diff_terms(I,O,D):- compound(I),compound(O),!,diff_compounds(I,O,D).
 diff_terms(I,O,diff(I->O)).
 
-diff_compounds(I,O, [] ):- (never_diff(I);never_diff(O)),!.
+diff_compounds(I,O, [] ):- (never_show_diff(I);never_show_diff(O)),!.
 diff_compounds(I,O,D):- compound_name_arguments(I,IF,IA),compound_name_arguments(O,OF,OA),
   maplist(compute_diff_or_same,IA,OA,DA),
   diff_compounds(I,IF,O,OF,DA,D).
@@ -589,14 +608,18 @@ maybe_label_colors(G,L):- is_grid(G),!,mapgrid(color_name,G,L),!,G\==L.
 
 non_grid_list(X):- is_list(X), \+ is_grid(X).
 
-dead_proportion(_,_,_):- \+ nb_current(allow_dead_proportion,t),!,fail.
-dead_proportion(Obj1,Obj2,Obj3):- dead_proportion1(Obj1,Obj2,Obj3),!.
+unused_proportion(_,_,_):- \+ nb_current(allow_unused_proportion,t),!,fail.
+unused_proportion(Obj1,Obj2,Obj3):- unused_proportion1(Obj1,Obj2,Obj3),!.
 
-dead_proportion1( Obj1,Obj2,Obj1):- Obj1=@=Obj2.
-dead_proportion1(Obj1,_Obj2,Obj1):- var(Obj1),!.
-dead_proportion1(_Obj1,Obj2,Obj2):- var(Obj2),!.
+unused_proportion1( Obj1,Obj2,Obj1):- Obj1=@=Obj2.
+unused_proportion1(Obj1,_Obj2,Obj1):- var(Obj1),!.
+unused_proportion1(_Obj1,Obj2,Obj2):- var(Obj2),!.
 
-proportional(Obj1,Obj2,Obj3):- dead_proportion1(Obj1,Obj2,Obj3),!.
+maybe_reorder_pair(A2,B2,A3,B3):- is_group(A2),is_group(B2),
+  once(reorder_group_objs(A2,B2,A3,B3)),(A2\==A3;B2\==B3),!.
+
+proportional(Obj1,Obj2,Obj3):- unused_proportion1(Obj1,Obj2,Obj3),!.
+proportional(A2,B2,List):- maybe_reorder_pair(A2,B2,A3,B3), !, proportional(A3,B3,List).
 proportional(L1,L2,List):- non_grid_list(L1),non_grid_list(L2),!,must_det_ll(proportional_lists(L1,L2,List)).
 proportional(size(H1,V1),size(H2,V2),size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
 proportional(size(V1,H1),size(H2,V2),size_inv(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
@@ -612,7 +635,7 @@ proportional(G1,G2,Out):- maybe_label_colors(G2,L2),!, proportional(G1,L2,Out).
 proportional(A,B,C):- maybe_extract_values(B,BB), compound(A), \+ maybe_extract_values(A,_), proportional(A,BB,AABB),proportional(AABB,B,C),!.
 proportional(B,A,C):- maybe_extract_values(B,BB), compound(A), \+ maybe_extract_values(A,_), proportional(A,BB,AABB),proportional(AABB,B,C),!.
 
-proportional(G1,G2,Out):- dead_proportion(G1,G2,Out),!.
+proportional(G1,G2,Out):- unused_proportion(G1,G2,Out),!.
 %proportional(E1,E2,E1):- E1=@=E2,!.
 proportional(Obj1,Obj2,Out):- 
   decl_pt(prop_h,P1P2), P1P2=..[P2,P1|Lst],
@@ -628,7 +651,7 @@ proportional(N1,N2,N):- compound(N1),compound_name_arguments(N1,F,A1),compound_n
   maplist(proportional_or_same,A1,A2,AR),compound_name_arguments(N,F,AR).
 proportional(L1,L2,Diff):- locally(nb_setval(diff_porportional,t),diff_terms(L1,L2,Diff)),!.
 
-proportional_or_same(G1,G2,Out):- dead_proportion(G1,G2,Out),!.
+proportional_or_same(G1,G2,Out):- unused_proportion(G1,G2,Out),!.
 proportional_or_same(A1,A2,A1):- A1==A2,!.
 proportional_or_same(L1,L2,LR):- proportional(L1,L2,LR).
 
@@ -651,7 +674,7 @@ extract_vals(V2,[V2]).
 maybe_extract_values(Color,Values):- compound(Color), Color=..[DF,vals(Values)|_],!,diff_f(DF),is_list(Values),!.
 maybe_extract_value(Color,Value):- maybe_extract_values(Color,Values),!,member(Value,Values).
 
-proportional_size(N1,N2,P):- dead_proportion(N1,N2,P),!.
+proportional_size(N1,N2,P):- unused_proportion(N1,N2,P),!.
 proportional_size(M1,M2, num(vals([M1,M2]),+N,r(R))):- maybe_number(M1,N1),maybe_number(M2,N2), N is N2-N1, catch(R is rationalize(N1/N2),_,true).
 
 
@@ -659,7 +682,7 @@ diff_f(lst).
 diff_f(num).
 
 
-proportional_loc(G1,G2,Out):- dead_proportion(G1,G2,Out),!.
+proportional_loc(G1,G2,Out):- unused_proportion(G1,G2,Out),!.
 proportional_loc(N1,N2,moved(N1,N,N2)):- diff_numbers(N1,N2,N).
 diff_numbers(I,O,0):- I =:= O,!.
 diff_numbers(I,O,diff(-(D))):- I<O,!, D is O -I.
@@ -669,7 +692,7 @@ is_vset(Colors):- sort(Colors,ColorsS),!,Colors=ColorsS.
 is_lset(Colors):- list_to_set(Colors,ColorsS),!,Colors=ColorsS.
 
 
-proportional_lists(L1,L2,L1):- dead_proportion(L1,L2,_Out).
+proportional_lists(L1,L2,L1):- unused_proportion(L1,L2,_Out).
 %proportional_lists(L1,L2,OUT):- is_vset(L1),is_vset(L2),!,proportional_sets(L1,L2,OUT).
 proportional_lists(L1,L2,Out):- maybe_extract_value(L1,V),V\==L2,!,proportional_lists(V,L2,Out).
 proportional_lists(L1,L2,Out):- maybe_extract_value(L2,V),V\==L1,!,proportional_lists(L1,V,Out).
