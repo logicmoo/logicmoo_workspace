@@ -9,8 +9,10 @@
 
 % :- pack_install(logicmoo_utils).
 % :- pack_install(dictoo).
-% :- pack_upgrade(logicmoo_utils).
+:- pack_upgrade('https://github.com/logicmoo/logicmoo_utils.git').
 % :- pack_upgrade(dictoo).
+
+%:- module(system).
 
 :- set_prolog_flag(arc_term_expansion, false).
 :- dynamic((ap/1,apv/2)).
@@ -138,13 +140,13 @@ quietlyd(G):- quietly(G),!.
 %:- set_prolog_flag(trace_gc,false).
 :- set_prolog_flag(write_attributes,dots).
 :- set_prolog_flag(backtrace_depth,1000).
-:- noguitracer.
+:- catch(noguitracer,_,true).
 
 
 clsmake:- notrace((cls,!,update_changed_files,make)),!.
 
 :- else.  % SWISH ARC
-:- noguitracer.
+:- catch(noguitracer,_,true).
 
 clsmake:- update_changed_files,!.
 
@@ -152,34 +154,40 @@ clsmake:- update_changed_files,!.
     :- set_prolog_flag_until_eof(trill_term_expansion,false).
     :- dynamic(muarc:ns4query/1).
   :- endif.
+
+pfcUnique(_,P):- mpred_unique_u(P).
+pfcAdd(P):- mpred_ain(P).
+pfcFwd(P):- mpred_fwc(P).
+arc_assert(P):- pfcAdd(P).
+
 :- endif.
 
 %:- set_prolog_flag(verbose_load,true).  
 %:- set_prolog_flag(verbose_autoload,true).
 
-:- use_module(library(quasi_quotations)).
-:- use_module(library(hashtable)).
-:- use_module(library(gensym)).
-:- use_module(library(sort)).
-:- use_module(library(writef)).
-:- use_module(library(rbtrees)).
-:- use_module(library(dicts)).
-:- use_module(library(edinburgh)).
-:- use_module(library(lists)).
-:- use_module(library(statistics)).
-:- use_module(library(nb_set)).
-:- use_module(library(assoc)).
-:- use_module(library(pairs)).
-:- use_module(library(logicmoo_common)).
-:- use_module(library(prolog_trace)).
-:- use_module(library(prolog_clause)).
-:- use_module(library(prolog_source)).
+:- system:use_module(library(quasi_quotations)).
+:- system:use_module(library(hashtable)).
+:- system:use_module(library(gensym)).
+:- system:use_module(library(sort)).
+:- system:use_module(library(writef)).
+:- system:use_module(library(rbtrees)).
+:- system:use_module(library(dicts)).
+:- system:use_module(library(edinburgh)).
+%:- system:use_module(library(lists)).
+:- system:use_module(library(statistics)).
+:- system:use_module(library(nb_set)).
+:- system:use_module(library(assoc)).
+:- system:use_module(library(pairs)).
+:- system:use_module(library(logicmoo_common)).
+:- system:use_module(library(prolog_trace)).
+:- system:use_module(library(prolog_clause)).
+:- system:use_module(library(prolog_source)).
  %library(trace/clause) 
 %:- autoload_all.
-:- use_module(library(gvar_globals_api)).
-:- use_module(library(dictoo_lib)).
+:- system:use_module(library(gvar_globals_api)).
+:- system:use_module(library(dictoo_lib)).
 
-:- autoload_all.
+%:- autoload_all.
 
 
 %:- listing((.)/3).
@@ -272,7 +280,7 @@ is_setter_syntax(set(ObjMember),Obj,Member,_Var,b):- obj_member_syntax(ObjMember
 is_setter_syntax(gset(ObjMember),Obj,Member,_Var,nb):- obj_member_syntax(ObjMember,Obj,Member).
 is_setter_syntax(hset(How,ObjMember),Obj,Member,_Var,How):- obj_member_syntax(ObjMember,Obj,Member).
 
-obj_member_syntax(ObjMember,Obj,Member):-compound(ObjMember), ObjMember =.. ['.',Obj,Member],!.
+obj_member_syntax(ObjMember,Obj,Member):-compound(ObjMember), compound_name_arguments(ObjMember,'.',[Obj,Member]),!.
 
 expand_must_det(I,_):- \+ compound(I),!,fail.
 expand_must_det(must_det_ll(GoalL),GoalLO):- !, expand_must_det1(GoalL,GoalLO).
@@ -303,7 +311,7 @@ goal_expansion_setter(Goal,_):- \+ compound(Goal), !, fail.
 %goal_expansion_setter((G1,G2),(O1,O2)):- !, expand_goal(G1,O1), expand_goal(G2,O2),!.
 goal_expansion_setter(set_omember(A,B,C,D),set_omember(A,B,C,D)):-!.
 goal_expansion_setter(set_omember(A,B,C),set_omember(b,A,B,C)):-!.
-goal_expansion_setter(Goal,get_kov(Func,Self,Value)):- compound(Goal), Goal =.. ['.', Self, Func, Value],!.
+goal_expansion_setter(Goal,get_kov(Func,Self,Value)):- compound(Goal), compound_name_arguments(Goal,'.',[ Self, Func, Value]).
 
 goal_expansion_setter(I,O):- expand_must_det(I,O).
 
@@ -317,7 +325,7 @@ goal_expansion_setter(Goal,Out):-
    setarg(N1,Goal,Var), !, expand_goal((Goal,set_omember(How,Member,Obj,Var)), Out).
 
 goal_expansion_setter(Goal,Out):-
-   get_setarg_p1(setarg,I,Goal,P1), compound(I), I=.. ['.', Self, Func, Value],
+   get_setarg_p1(setarg,I,Goal,P1), compound(I), compound_name_arguments(I,'.',[ Self, Func, Value]),
    call(P1,get_kov(Func,Self,Value)),!,
    expand_goal(Goal,Out).
 
@@ -401,7 +409,6 @@ disable_arc_expansion:-
  forall(arc_term_expansions(Rule),forall(retract(Rule),true)).
 
 
-:- enable_arc_expansion.
 /*
  tests for term expander
 
@@ -415,8 +422,16 @@ doit(set(E.v)):- that.
 :- style_check(+singleton).
 */
 
-arc_user(ID):- catch((pengine:pengine_user(ID)),_,fail),!.
-arc_user(ID):- thread_self(ID).
+arc_user(ID):- thread_self(TID),arc_user(TID, ID).
+
+suggest_arc_user(ID):- catch((xlisting_web:find_http_session(ID)),_,fail),!.
+suggest_arc_user(ID):- catch((pengine:pengine_user(ID)),_,fail),!.
+suggest_arc_user(ID):- catch((http_session:session_data(_,username(ID))),_,fail),!.
+
+arc_user(TID, ID):- catch((http_session:session_data(TID,username(ID))),_,fail),!.
+arc_user(TID, ID):- suggest_arc_user(ID), TID\=ID,!.
+arc_user(TID, ID):- TID=ID,!.
+
 
 :- dynamic(arc_user_prop/3).
 
@@ -452,6 +467,7 @@ luser_getval(ID,N,V):-
 :- multifile(mregression_test/0).
 :- dynamic(mregression_test/0).
 
+:- enable_arc_expansion.
 :- set_prolog_flag(arc_term_expansion, true).
 
 %:- set_prolog_flag(verbose_load,true).  
@@ -799,7 +815,7 @@ trials(human). trials(sol).
 trials(dsl). trials(runDSL).
 trial_non_human(sol).
 
-sols_for(TestID,Trial,TrialSol):- trials(Trial),once((Entry=..[Trial,Sol], test_info(TestID,Sols),member(Entry,Sols))),
+sols_for(TestID,Trial,TrialSol):- trials(Trial),once((compound_name_arguments(Entry,Trial,[Sol]), test_info(TestID,Sols),member(Entry,Sols))),
   append_trial(Trial,Sol,TrialSol).
 
 append_trial(Trial,Sol,TrialSol):- listify(Sol,SolL),
@@ -953,12 +969,15 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 
 :- ensure_loaded(kaggle_arc_simple).
 
-:- fixup_module_exports_into(baseKB).
-:- fixup_module_exports_into(system).
-
 :- dynamic(saved_training/1).
 saved_training(TestID):- call_u('~'(saved_training(TestID))), !, fail. % explictly always assume unsaved?
 saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
+
+pfcAddF(P):-
+  ignore(mpred_test_why(P)),
+  forall(retract(P),true),
+  pfcUnique(post, P)-> pfcAdd(P) ; pfcFwd(P).
+
 
 :- baseKB:ensure_loaded('kaggle_arc_fwd.pfc').
 %:- set_prolog_flag(arc_term_expansion, false).
@@ -970,4 +989,7 @@ saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
 %:- fixup_module_exports_now.  
 user:portray(Grid):- current_predicate(is_group/1), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
 
+:- fixup_module_exports_into(baseKB).
+:- fixup_module_exports_into(system).
 
+:- forall(find_tests(F),xlisting_web:offer_testcase(F)).

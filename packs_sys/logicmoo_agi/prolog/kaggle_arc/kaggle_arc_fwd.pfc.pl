@@ -53,16 +53,14 @@ never_all_free==>cindv(_,_,_).
 %never_all_free==>kaggle_arc_io(_,_,_,_).
 ==>awc.
 
-tid_to_gids(T,A) :- awc,!, (clause(tid_to_gids(T,A),true)*-> true ; term_to_oid(T,A)).
-
-startAll==>((kaggle_arc_io(TestID,ExampleNum,IO,G)/(ID=TestID*ExampleNum*IO,term_to_oid(ID,GID)))
+startAll1==>((kaggle_arc_io(TestID,ExampleNum,IO,G)/(ID=TestID*ExampleNum*IO,term_to_oid(ID,GID)))
   ==>(tid_to_gids(ID,GID),oid_to_grid(GID,G),process_oid(GID))).
 
 %tid_to_gids(T,A) :- zwc,!, term_to_oid(T,A).
 
 ==> startAll.
 
-:- include('kaggle_arc_fwd_sanity.pfc.pl').
+%:- include('kaggle_arc_fwd_sanity.pfc.pl').
 
 
 startAll2==>(process_oid(GID)/( \+ cmem(GID,_,_))==>{assert_id_grid_cells(GID)}).
@@ -71,7 +69,7 @@ startAll2==>(process_oid(GID)/( \+ cmem(GID,_,_))==>{assert_id_grid_cells(GID)})
 (startAll3 ==>process_test(t('27a28665'))).
 ((startAll4,all_arc_test_name(ID)) ==>process_test(ID)).
 
-((individuate_test_grids(TestID),tid_to_gids(TestID*trn*in,GID))==> process_test_grid(GID)).
+((individuate_test_grids(TestID)/tid_to_gids(TestID*trn*in,GID))==> process_test_grid(GID)).
 process_test_grid(GID)==>{assert_id_grid_cells(GID),individuate(complete,GID,_)}.
 
 

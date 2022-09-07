@@ -32,7 +32,7 @@
 :- system:use_module(library(must_trace)).
 :- use_module(library(prolog_stack)).
 :- use_module(library(listing)).
-:- use_module(library(lists)).
+%:- use_module(library(lists)).
 :- use_module(library(must_trace)).
 :- reexport(library(statistics), [profile/1]).
 

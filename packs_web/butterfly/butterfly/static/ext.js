@@ -1,6 +1,9 @@
+
 (function() {
-  var Popup, Selection, _set_theme_href, _theme, alt, cancel, clean_ansi, copy, ctrl, escape, histSize, linkify, maybePack, nextLeaf, packSize, popup, previousLeaf, selection, setAlarm, tags, tid, walk,
+  var Popup, Terminal, Selection, _set_theme_href, _theme, alt, cancel, clean_ansi, copy, ctrl, escape, histSize, linkify, maybePack, nextLeaf, packSize, popup, previousLeaf, selection, setAlarm, tags, tid, walk,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  Terminal = window.Terminal;
 
   clean_ansi = function(data) {
     var c, i, out, state;
@@ -211,11 +214,33 @@
     '>': '&gt;'
   };
 
+  escape_n = function(s) {
+	i = 0;
+	ss = '';
+	len = s.length;
+	while (i < len) {
+	   code = s.charCodeAt(i);
+       if (code > 160) {
+		   ss += "&#"+code+";"
+		   console.log("ESC="+code);
+	   } else if (code == 32) {
+          ss += "&nbsp;"
+	   } else {
+		  ss += s.charAt(i);
+	   }
+	   i++;
+	}
+    return ss.replace(/[&<>]/g, function(tag) {
+      return tags[tag] || tag;
+    });
+  };  
+
   escape = function(s) {
     return s.replace(/[&<>]/g, function(tag) {
       return tags[tag] || tag;
     });
   };
+
 
   Terminal.on('change', function(line) {
     return walk(line, function() {
@@ -233,6 +258,7 @@
     });
   });
 
+ 
   ctrl = false;
 
   alt = false;
@@ -321,6 +347,7 @@
     hist = document.getElementById('packed');
     return butterfly.body.replaceChild(newHist, hist);
   });
+
 
   Popup = (function() {
     function Popup() {

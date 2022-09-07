@@ -1,3 +1,4 @@
+:- encoding(octet).
 /*
   this is part of (H)MUARC  https://logicmoo.org/xwiki/bin/view/Main/ARC/
 
@@ -304,32 +305,35 @@ write_nbsp:- write(' ').
 
 is_breaker(P):- compound(P),functor(P,_,A), A>=3.
 need_nl(_,_):- arc_webui,!.
-need_nl(H,[P|_]):- \+ is_breaker(H),is_breaker(P),line_position(user_output,L1),L1>80,nl,write('\t\t').
-need_nl(_,_):- line_position(user_output,L1),L1>160,nl,write('\t\t').
+need_nl(H,[P|_]):- \+ is_breaker(H),is_breaker(P),line_position(user_output,L1),L1>80,nl,bformatc('\t\t').
+need_nl(_,_):- line_position(user_output,L1),L1>160,nl,bformatc('\t\t').
 need_nl(_,_).
 wqln(X):- wqnl(X).
 wqnl(X):- is_list(X),!,g_out(wqs(X)).
 wqnl(X):- format('~N~q~N',[X]).
+
 dash_chars:- dash_chars(40),!.
 dash_chars(H):- integer(H), dash_border(H).
 dash_chars(S):- format('~N'),dash_chars(60,S),format('~N').
 dash_chars(H,_):- H < 1,!.
-dash_chars(H,C):-forall(between(0,H,_),write(C)).
+dash_chars(H,C):-forall(between(0,H,_),bformatc(C)).
 
-dash_uborder_no_nl(1):-  line_position(current_output,0),!, write('¯¯¯ ').
-dash_uborder_no_nl(1):-  line_position(current_output,W),write(W),!, write('¯¯¯ ').
-dash_uborder_no_nl(1):- write('¯¯¯ ').
-dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' ¯'),dash_chars(WidthM1,'¯¯'),!.
+dash_uborder_no_nl_1:-  line_position(current_output,0),!, bformatc('¯¯¯ ').
+dash_uborder_no_nl_1:-  line_position(current_output,W),bformatc(W),!, bformatc('¯¯¯ ').
+dash_uborder_no_nl_1:- bformatc('¯¯¯ ').
+dash_uborder_no_nl(1):- !, dash_uborder_no_nl_1.
+dash_uborder_no_nl(Width):- WidthM1 is Width-1, bformatc(' ¯'),dash_chars(WidthM1,'¯¯'),!.
 %dash_uborder_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__').
 
 
-dash_border_no_nl(1):-  line_position(current_output,0),!, write(' ___ ').
-dash_border_no_nl(1):-  line_position(current_output,W),write(W),!, write('___ ').
-dash_border_no_nl(1):- write(' ___ ').
-dash_border_no_nl(Width):- WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__').
+dash_border_no_nl_1:-  line_position(current_output,0),!, bformatc(' ___ ').
+dash_border_no_nl_1:-  line_position(current_output,W),bformatc(W),!, bformatc('___ ').
+dash_border_no_nl_1:- bformatc(' ___ ').
+dash_border_no_nl(1):- !,dash_border_no_nl_1.
+dash_border_no_nl(Width):- WidthM1 is Width-1, bformatc(' _'),dash_chars(WidthM1,'__').
 
 dash_border(Width):- !, dash_border_no_nl(Width),nl,!.
-dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' ¯'),dash_chars(WidthM1,'¯¯'),nl.
+dash_uborder(Width):- format('~N'), WidthM1 is Width-1, bformatc(' ¯'),dash_chars(WidthM1,'¯¯'),nl.
 %dash_uborder(Width):- format('~N'), WidthM1 is Width-1, write(' _'),dash_chars(WidthM1,'__'),nl.
 
 functor_test_color(pass,green).
@@ -682,13 +686,17 @@ w_out(S):- is_webui,!,correct_nbsp(S,SO),our_pengine_output(SO),!.
 w_out(S):- format('~N'),write(S).
 %w_out(SO):- pengines:pengine_output('</pre>'),pengines:pengine_output(SO),pengines:pengine_output('<pre class="console">'),!.
 
+arc_webui:- in_pp(http),!.
 arc_webui:- toplevel_pp(swish),!.
-%arc_webui:- toplevel_pp(bfly),!.
+arc_webui:- toplevel_pp(bfly),!.
 arc_webui:- is_webui,!.
 
 g_out(G):- is_side(_),!,call(G).
+g_out(G):- in_pp(http),!,color_print_webui(teal,call(G)).
 g_out(G):- \+ arc_webui,!,format('~N'),call(G),format('~N').
 g_out(G):- nb_current(in_g_out,t),!,format('~N'),call(G),format('~N').
+g_out(G):- in_pp(bfly),!,bfly_html_goal(G).
+g_out(G):- in_pp(http),!,call(G).
 g_out(G):- locally(nb_setval(in_g_out,t), gg_out(G)).
 
 gg_out(G):- \+ toplevel_pp(bfly),!,gg_out2(G).
@@ -702,36 +710,55 @@ gg_out2(G):-
 g_out(C,G):- wots(S0,g_out(G)),correct_nbsp(S0,S),
  mbfy(color_print_webui(C,S)).
 
-mbfy(G):- \+ in_pp(bfly),!,call(G).
-mbfy(G):- bfly_html_goal(G).
+mbfy(G):- in_pp(bfly),!,bfly_html_goal(G).
+mbfy(G):- in_pp(http),!,call(G).
+mbfy(G):- !,call(G).
 
 correct_nbsp(S0,S):- replace_in_string([" &nbsp;"="&nbsp;","&nbsp; "="&nbsp;"],S0,S).
 
 ansi_format_real(Ansi,Format,Args):- \+ arc_webui,!,ansi_format(Ansi,Format,Args).
 ansi_format_real(Ansi,Format,Args):- sformat(S,Format,Args),!,color_print_webui(Ansi,S).
 
-color_print_webui(_,G):- G==' ',!,write_nbsp.
-color_print_webui(C,G):- mv_peek_color(C,W),color_print_webui(W,G).
-color_print_webui(C,G):- is_bg_sym_or_var(C),!,color_print_webui(wbg,G).
-color_print_webui([],G):- !, write(G).
-color_print_webui([C|CC],G):- !,wots(S,color_print_webui(C,G)),color_print_webui(CC,S).
-color_print_webui(_C,G):- \+ arc_webui,!,write(G).
+color_print_webui(C,G):- mbfy(cpwui(C,G)).
+  
+cpwui(_,G):- G==' ',!,write_nbsp.
+cpwui(C,G):- mv_peek_color(C,W),cpwui(W,G).
+cpwui(C,G):- is_bg_sym_or_var(C),!,cpwui(wbg,G).
 
-color_print_webui(underline,G):- !, color_print_webui(style('text-decoration','underline'),G).
-color_print_webui(bold,G):- !, color_print_webui(style('font-weight','bold'),G).
-color_print_webui(italic,G):- !, color_print_webui(style('font-style','italic'),G).
+cpwui([],G):- !, bformatc(G).
+cpwui([C|CC],G):- !,wots(S,cpwui(C,G)),cpwui(CC,S).
+%cpwui(_C,G):- \+ arc_webui,!,bformatc(G).
 
-%color_print_webui(C,G):- \+ arc_webui,!,color_print(C,G).
-color_print_webui(bg(C),G):- !, color_print_webui(style('background-color',C),G).
-color_print_webui(hbg(C),G):- !, color_print_webui([bg(C),style('filter','brightness(150%)')],G).
-color_print_webui(hfg(C),G):- !, color_print_webui([C,style('brightness','200%')],G).
-color_print_webui(fg(C),G):- !, color_print_webui(C,G).
-color_print_webui(style(C),G):- !, format('<font style="~w">~w</font>',[C,G]).
-color_print_webui(style(N,V),G):- !, format('<font style="~w: ~w;">~w</font>',[N,V,G]).
-color_print_webui(color(C),G):- !, format('<font color="~w">~w</font>',[C,G]).
-color_print_webui(black,G):- color_print_webui(style('opacity: 0.5;'),G).
-color_print_webui(C,G):- C==wbg,!,color_print_webui([black,black],G).
-color_print_webui(C,G):- format('<font color="~w" style="font-weight: bold;">~w</font>',[C,G]),!.
+cpwui(underline,G):- !, cpwui(style('text-decoration','underline'),G).
+cpwui(bold,G):- !, cpwui(style('font-weight','bold'),G).
+cpwui(italic,G):- !, cpwui(style('font-style','italic'),G).
+
+%cpwui(C,G):- \+ arc_webui,!,color_print(C,G).
+cpwui(bg(C),G):- !, cpwui(style('background-color',C),G).
+cpwui(hbg(C),G):- !, cpwui([bg(C),style('filter','brightness(150%)')],G).
+cpwui(hfg(C),G):- !, cpwui([C,style('brightness','200%')],G).
+cpwui(fg(C),G):- !, cpwui(C,G).
+cpwui(style(C),G):- !, format('<font style="~w">~@</font>',[C,bformatc(G)]).
+cpwui(style(N,V),G):- !, format('<font style="~w: ~w;">~@</font>',[N,V,bformatc(G)]).
+cpwui(color(C),G):- !, format('<font color="~w">~@</font>',[C,bformatc(G)]).
+cpwui(black,G):- cpwui(style('opacity: 0.5;'),G).
+cpwui(C,G):- C==wbg,!,cpwui([black,black],G).
+cpwui(C,G):- format('<font color="~w" style="font-weight: bold;">~@</font>',[C,bformatc(G)]),!.
+
+bformatc(call(G)):- !, wots(S,call(G)), bformats(S).
+bformatc(G):- string(G),!,bformats(G).
+bformatc(G):- atom(G),!,bformats(G).
+bformatc(G):- wots(S,write(G)), bformats(S).
+bformats(S):- \+ in_pp(bfly),!,write(S).
+bformats(S):- atom_codes(S,Cs), maplist(map_html_entities,Cs,CsO),atomic_list_concat(CsO,W),!,bformatw(W).
+
+map_html_entities(Code,S):- Code == 124,!,sformat(S, '&#~w;',[Code]).
+map_html_entities(Code,S):- Code>255, !, sformat(S, '&#~w;',[Code]).
+map_html_entities(Code,S):- Code>127, !, sformat(S, '&#~w;',[Code]).
+map_html_entities(62,'&gt;'). map_html_entities(60,'&lt;'). map_html_entities(38,'&amp;'). map_html_entities(32,'&nbsp;').
+map_html_entities(Code,S):- Code>32, name(S,[Code]),!.
+
+bformatw(G):- g_out(bformat(G)).
 
 print_grid_html(SH,SV,EH,EV,Grid):-
  g_out(must_det_ll((
@@ -742,10 +769,10 @@ print_grid_html(SH,SV,EH,EV,Grid):-
   once((dash_border_no_nl(DBW))),
   bg_sym(BGC),
   forall(between(SV,EV,V),
-   ((format('~N|<font style="background-color: reset; line-height: .5; font-stretch: ultra-extended;">'),
+   ((format('~N['),nop(format('<font style="background-color: reset; line-height: .5; font-stretch: ultra-extended;">')),
      forall(between(SH,EH,H),
      ignore((((hv_cg_value(Grid,CG,H,V);/*grid_cpoint(Grid,CG-_,H,V);*/CG=BGC)->
-        (once(print_gw1(CG))))))),write('&nbsp|</font>')))),
+        (once(print_gw1(CG))))))),write('&nbsp;]'),nop(write('</font>'))))),
   %print_g(H,V,C,LoH,LoV,HiH,HiV)
   format('~N'),!,
   once((dash_uborder_no_nl(DBW)))))).
@@ -864,11 +891,11 @@ compound_var(C,N):- \+ plain_var(C), \+ attvar(C), is_ftVar(C),arg(1,C,N).
 :- export(color_print/2).
 :- system:import(color_print/2).
 
+%color_print(C,W):- '$current_typein_module'(M), muarc_mod(MM), MM\==M, !,'$set_typein_module'(MM), module(MM),color_print(C,W).
+color_print(C,W):- arc_webui,!,color_print_webui(C,W).
 color_print(C,W):- mv_peek_color(C,V),!,color_print(V,W).
-color_print(C,W):- '$current_typein_module'(M), muarc_mod(MM), MM\==M, !,'$set_typein_module'(MM), module(MM),color_print(C,W).
 %color_print(C,W):- C == black,!, color_print(white,W).
 color_print(C,W):- compound(W),compound_name_arity(W,call,_),!,(wots(S1,call(call,W))->color_print(C,S1);color_print(C,failed(W))).
-color_print(C,W):- arc_webui,!,color_print_webui(C,W).
 
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,on_bg(write_nbsp),!.
 color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').
@@ -922,14 +949,17 @@ color_code(C,W):- color_name(C,W).
 
 %print_g(H,V,_,LH,LV,HH,HV):- (H<LH;H>HH;V<LV;V>HV),!, write('  ').
 
-resrv_dot(Code):-  code_type(Code,white);code_type(Code,punct);code_type(Code,quote);var_dot(Code);bg_dot(Code);fg_dot(Code);
- member(Code,`?.¨«¬­°```).
+special_dot(Code):- var_dot(Code);bg_dot(Code);fg_dot(Code);grid_dot(Code);cant_be_dot(Code).
+
+resrv_dot(Code):-  code_type(Code,white);code_type(Code,punct);code_type(Code,quote); 
+ member(Code,`?.¨«¬­°```);special_dot(Code).
+
 
 
 var_dot(63).
-/* code=63 ?  code=183 · code=176 ° code=186 º 170 ª */
+/* code=63 ?  code=183 · code=176 ° code=186 º 170 ª   */
 bg_dot(32).
-/* 169	© 248	ø 216	Ø  215 ×  174	® */
+/* 169	© 248	ø 216	Ø  215 ×  174	®   */
 %fg_dot(C):- luser_getval(fg_dot,C),integer(C),!.
 %fg_dot(_):- luser_getval(no_rdot,true),luser_setval(no_rdot,false)-> break , fail.
 fg_dot(C):- luser_getval(alt_grid_dot,C),C\==[],!.
@@ -1053,7 +1083,7 @@ i_glyph0(N,Glyph):- atom(N),atom_length(N,1),Glyph=N.
 i_glyph0(N,Glyph):- N>10, integer(N),N3 is N div 3, i_glyph0(N3,Glyph).
 %i_glyph(N,Glyph):- atom(N),atom_chars(N,Chars),last(Chars,LGlyph),upcase_atom(LGlyph,Glyph).
                                                                             
-i_sym(N2,Code):- integer(N2),!, N is N2, change_code(N,NN), i_syms(Codes),nth0(NN,Codes,Code),!.
+i_sym(N2,Code):- integer(N2),!, N is N2, change_code(N,NN), iss:i_syms(Codes),nth0(NN,Codes,Code),!.
 i_sym(N2,Code):- atom(N2),name(N2,[C|_]),!,i_sym(C,Code).
 i_sym(N,Code):- plain_var(N), Code = 63.
 %change_code(N,M):- M is N * 100,!.
@@ -1064,6 +1094,7 @@ change_code(N,N). % M is N+212.
 print_g1(_,_, E):- print_g1(E),!. 
 %print_g1(_,_,C):- trace, write(C).
 
+code_not_bfly(Code):- between(170,inf,Code).
 
 save_codes(Max):- 
  %stream_property(File,file_no(1)),
@@ -1075,17 +1106,21 @@ save_codes(Max):-
   \+ between(1350,4600,Code),
   \+ between(4650,5000,Code),
   \+ between(5850,11500,Code),
+  \+ between(42560,42600,Code),
   %(42600 > Code),
   
   \+ resrv_dot(Code)
    % ignore((0 is Code mod 50, format(File,'\n\n~d:',[Code]), put_code(File,Code))),
-  ),put_code(Code))))),
-  % format('~N~s~N',[CCC]),
-  assertz(i_syms(CCC)).
+  ),put_code(Code))))),  
+  assertz(iss:i_syms(CCC)).
 
 save_codes:- save_codes(42600).
 
+check_dot_spacing(CCC):- color_print(red, call(format('~n~w = |~s|',[CCC,[CCC,32,CCC,32,CCC,32,CCC,32,CCC,32]]))).
+check_dot_spacing:- iss:i_syms(CCC),maplist(check_dot_spacing,CCC),!.
+
 :- ignore(save_codes).
+%:- ignore(check_dot_spacing).
 
 /*
 get_glyph(Point,Glyph):-  

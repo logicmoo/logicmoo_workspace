@@ -137,6 +137,8 @@ if [ -f "/.dockerenv" ]; then
 adduser --disabled-password --gecos "" --no-create-home $LOGICMOO_USER --home $LOGICMOO_GAMES
 #chown -R $LOGICMOO_USER $LOGICMOO_GAMES
 
+mv /usr/local/lib/python3.10/dist-packages/butterfly /usr/local/lib/python3.10/dist-packages/butterfly.DEAD
+ln -s /opt/logicmoo_workspace/packs_web/butterfly/butterfly/ /usr/local/lib/python3.10/dist-packages/butterfly
 
 # apache config
 #cp -a -n -v $LOGICMOO_WS/packs_web/logicmoo_webui/etc/* /etc \

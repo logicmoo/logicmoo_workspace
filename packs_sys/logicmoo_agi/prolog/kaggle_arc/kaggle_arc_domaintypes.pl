@@ -90,6 +90,8 @@ is_bg_sym_or_var(C):- (attvar(C); bg_sym(C); C==' '; C==''; C=='bg'; C == 0),!.
 mv_peek_color(C,V):- mv_peek1(C,V),V\==C,is_color(C).
 mv_peek1(C,W):- multivar:is_mv(C),multivar:mv_peek_value1(C,W),!.
 
+%:- system:import(mv_peek_color/2).
+
 mv_ansi_color(C,Color):- attvar(C),get_attr(C,ci,fg(N)), (nonvar(N) -> arc_acolor(N,Color);arc_acolor(fg,Color)),!.
 mv_ansi_color(C,fg(Color)):- attvar(C),get_attr(C,ci,bg(_)),get_bgc(BG),!,arc_acolor(BG,Color),!.
 mv_ansi_color(C,Color):- attvar(C),mv_peek_color(C,N), (nonvar(N) -> arc_acolor(N,Color);(N\==C,arc_acolor(fg,Color))),!.

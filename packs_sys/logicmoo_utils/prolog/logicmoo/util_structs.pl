@@ -150,7 +150,7 @@ This module allows use of C++ like structures in prolog.
 
 /*
 default_point/1,
-is_point/1,
+is _point/1,
 make_point/2,
 make_point/3,
 nb_set_x_of_point/2,

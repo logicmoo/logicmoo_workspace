@@ -21,8 +21,13 @@ menu_options(Mode):-
   forall(menu_cmd9(Mode,Key,Info,Goal),print_menu_cmd9(Key,Info,Goal)),
   !.
 print_menu_cmd(Key):- ignore((menu_cmd1(_,Key,Info,Goal),print_menu_cmd(Key,Info,Goal))).
-print_menu_cmd(_Key,Info,_Goal):- format('~N ~w ',[Info]).
-print_menu_cmd9(_Key,Info,_Goal):- format(' ~w',[Info]).
+print_menu_cmd(_Key,Info,Goal):- format('~N '),print_menu_cmd1(Info,Goal).
+print_menu_cmd9(_Key,Info,Goal):- format(' '),print_menu_cmd1(Info,Goal).
+
+print_menu_cmd1(Info,Goal):- if_arc_webui(write_cmd_link(Info,Goal)),!.
+print_menu_cmd1(Info,_Goal):- format('~w',[Info]).
+
+if_arc_webui(Goal):- arc_webui,!,g_out(call(Goal)).
 
 :- multifile(menu_cmd1/4).
 :- multifile(menu_cmd9/4).
@@ -59,22 +64,27 @@ menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd1(Mode,Key,Mesg,Goal).
 menu_cmds(Mode,Key,Mesg,Goal):-menu_cmd9(Mode,Key,Mesg,Goal).
 
 find_tests(F):-
-   current_predicate(N),N=F/0, atom_concat(test_,_,F), \+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit) ).
-find_tests(F):- ping_indiv_grid(F).
-find_tests(F):- is_fti_stepr(F).
-find_tests(F):- is_fti_step(F).
+   current_predicate(N),N=F/0, (atom_concat(test_,_,F); atom_concat(_,'_test',F)),
+    \+ ( atom_codes(F,Codes),member(C,Codes),char_type(C,digit) ).
 
-list_of_tests(S):- findall(F,find_tests(F),L),sort(L,S).
+find_g_tests(F):- ping_indiv_grid(F).
+find_g_tests(F):- is_fti_stepr(F).
+find_g_tests(F):- is_fti_step(F).
+find_g_tests(F):- find_tests(F).
 
-show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~w  ',[N,E])),nl.
+list_of_tests(S):- findall(F,find_g_tests(F),L),sort(L,S).
+
+show_tests:- make, list_of_tests(L),forall(nth10(N,L,E),format('~N~w: ~@  ',[N,print_menu_cmd1(E,E)])),nl.
 
   % ignore((read_line_to_string(user_input,Sel),atom_number(Sel,Num))),
-  
-my_menu_call(E):- locally(set_prolog_flag(gc,true),E).
 
-my_submenu_call(E):- current_predicate(_,E), \+ is_list(E),!,
-  catch(ignore(locally(set_prolog_flag(gc,true),E)),E,wdmsg(E)).
-my_submenu_call(E):- peek_vm(VM),!, run_dsl(VM,E,VM.grid,Out),
+ui_menu_call(G):- if_arc_webui(catch(ignore(G),E,wdmsg(E)))->true;catch(ignore(G),E,wdmsg(E)).
+  
+my_menu_call(E):- locally(set_prolog_flag(gc,true),ui_menu_call(E)).
+
+my_submenu_call(G):- current_predicate(_,G), \+ is_list(G),!,
+  locally(set_prolog_flag(gc,true),ui_menu_call(G)).
+my_submenu_call0(E):- peek_vm(VM),!, ui_menu_call(run_dsl(VM,E,VM.grid,Out)),
   set(VM.grid) = Out.
 
 read_menu_chars(_Start,_SelMax,Out):- pengine_self(_Id),!,read(Out).
@@ -269,9 +279,11 @@ current_suite_testnames(X,Set):- findall(ID,call(X,ID),List), my_list_to_set_var
 previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID).
 next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
 is_valid_testname(TestID):- kaggle_arc(TestID,_,_,_).
+
 get_current_test(TestID):- luser_getval(test_name,TestID),is_valid_testname(TestID),!.
 get_current_test(TestID):- get_next_test(TestID,_),!.
 get_current_test(v(fe9372f3)).
+
 get_next_test(TestID,NextID):- get_current_suite_testnames(List), next_in_list(TestID,List,NextID).
 get_previous_test(TestID,PrevID):-  get_current_suite_testnames(List), prev_in_list(TestID,List,PrevID).
 next_in_list(TestID,List,Next):- append(_,[TestID,Next|_],List)-> true; List=[Next|_].
@@ -280,19 +292,19 @@ prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(
 %v(f9d67f8b)
 :- export(load_last_test_name/0).
 system:load_last_test_name:- 
-  arc_settings_filename(Filename),
+  muarc:arc_settings_filename(Filename),
   notrace((exists_file(Filename),setup_call_cleanup(open(Filename,read,O),ignore((read_term(O,TestID,[]),luser_setval(test_name,TestID))),close(O)))),!.
 system:load_last_test_name:- set_current_test(v(fe9372f3)).
 
 system:save_last_test_name:- notrace(catch(save_last_test_name_now,_,true)),!.
-system:save_last_test_name_now:- arc_settings_filename(Filename),
+system:save_last_test_name_now:- muarc:arc_settings_filename(Filename),
   ignore(notrace((luser_getval(test_name,TestID), tell(Filename),format('~n~q.~n',[TestID]),told))).
 
-arc_settings_filename(Filename):- arc_settings_filename1(File), 
+muarc:arc_settings_filename(Filename):- muarc:arc_settings_filename1(File), 
   (exists_file(File) -> (Filename=File) ; absolute_file_name(File,Filename,[access(append),file_errors(fail),expand(true)])).
-arc_settings_filename1('current_test').
-arc_settings_filename1('~/.arc_current_test').
-arc_settings_filename1('/tmp/.arc_current_test').
+muarc:arc_settings_filename1('current_test').
+muarc:arc_settings_filename1('~/.arc_current_test').
+muarc:arc_settings_filename1('/tmp/.arc_current_test').
 
 
 set_current_test(Name):-  
@@ -394,8 +406,9 @@ test_id_border(TestID):-
 
 print_test:- notrace((get_current_test(TestID),print_test(TestID))).
 print_test(TName):- 
+  arc_user(USER),
   fix_test_name(TName,TestID,ExampleNum1),
-   cmt_border,format('% ?- ~q. ~n',[print_test(TName)]),cmt_border,
+   cmt_border,format('%~w % ?- ~q. ~n',[USER,print_test(TName)]),cmt_border,
    ignore(print_test_hints(TestID)),
    format('~N% '),dash_chars,
     forall(arg(_,v((trn+_),(tst+_)),ExampleNum1),
@@ -658,12 +671,12 @@ pair_dictation(TestID,ExampleNum,In,Out,DictOut):-
 :- quasi_quotation_syntax(dictate_sourcecode).
 :- export(dictate_sourcecode/4).
 dictate_sourcecode(Content, _Vars, OutterVars, TP):-     
-    phrase_from_quasi_quotation(copy_qq(Chars), Content),    
+    phrase_from_quasi_quotation(muarc:copy_qq(Chars), Content),    
     atom_to_term(Chars,Sourcecode0,Vs0),
     parse_expansions([],Vs0, Vs, Sourcecode0, Sourcecode),!,
     maplist(share_vars(Vs),OutterVars),
     \+ \+ ((  maplist(ignore_numvars,Vs),
-              numbervars(TP,0,_),
+              numbervars(TP,0,_,[attvar(bind),singletons(true)]),
               print(program=Sourcecode),nl,
               maplist(print_prop_val,Vs))),
     !, TP = source_buffer(Sourcecode, Vs).

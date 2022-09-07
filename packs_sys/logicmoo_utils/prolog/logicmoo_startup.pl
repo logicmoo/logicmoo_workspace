@@ -35,7 +35,7 @@ This module manages logicmoo startup (adding history and tests, etc).
 
 %:- expects_dialect(swi).
 %:- discontiguous '$exported_op'/3. 
-:- autoload(library(lists),[member/2,append/3]).
+%:- autoload(library(lists),[member/2,append/3]).
 :- autoload(library(debug),[debug/3]).
 
 :- module_transparent(now_and_later/1).
@@ -465,7 +465,7 @@ setup_hist0:-  '$toplevel':setup_history.
 :- user:use_module(library(latex2html/latex2html)).
 :- system:use_module(library(lazy_lists)).
 :- system:use_module(library(listing)).
-:- system:use_module(library(lists)).
+%:- system:use_module(library(lists)).
 :- system:use_module(library(lynx/format)).
 :- system:use_module(library(lynx/html_style)).
 :- system:use_module(library(lynx/html_text)).
@@ -1880,8 +1880,7 @@ qsave_bin_now(Clif):-
 :- user:use_module(library(http/json)).
 :- user:use_module(library(http/json_convert)).
 :- system:use_module(library(listing)).
-:- system:use_module(library(lists)).
-:- system:use_module(library(lists)).
+%:- system:use_module(library(lists)).
 :- system:use_module(library(occurs)).
 :- system:use_module(library(option)).
 :- system:use_module(library(pairs)).

@@ -27,7 +27,7 @@ arc_memoized(G):-
   copy_term(G,C,GT),
   (Key = (C+GT)),
   (in_memo_cached(Key,C,track,started,Info)->throw(already_memoizing(in_memo_cached(Key,C,track,started,Info))) ; true),
-  numbervars(Key,0,_,[singletons(true)]),!,
+  numbervars(Key,0,_,[attvar(bind),singletons(true)]),!,
   setup_call_cleanup((asserta(in_memo_cached(Key,C,track,started,_),Started)),
   catch(
   (in_memo_cached(Key,C,GT,Found,AttGoals)*->(G=Found,maplist(call,AttGoals))
@@ -264,7 +264,7 @@ copy_qq_([]) --> [].
 copy_qq_([C|Cs]) --> [C], copy_qq_(Cs).
 
 :- export(copy_qq//1).
-copy_qq(A) --> copy_qq_(Cs), {atom_codes(A, Cs)}.
+muarc:copy_qq(A) --> copy_qq_(Cs), {atom_codes(A, Cs)}.
 
 to_prop_name(Name=_,UName):- nonvar(Name),!,to_prop_name(Name,UName).
 to_prop_name(Name,UName):- compound(Name),compound_name_arity(Name,F,_),!,to_prop_name(F,UName).

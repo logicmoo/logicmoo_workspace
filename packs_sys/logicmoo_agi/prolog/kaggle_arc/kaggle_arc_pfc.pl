@@ -121,10 +121,6 @@ quietly_ex(X):-call(X).
 
 add(X):- pfcAdd(X).
 
-pfcAddF(P):-
-  ignore(mpred_test_why(P)),
-  forall(retract(P),true),
-  pfcUnique(post, P)-> pfcAdd(P) ; pfcFwd(P).
 
 mpred_test(call_u(X)):- nonvar(X),!,pfcCallSystem(X),pfcWhy(X).
 mpred_test(\+ call_u(X)):- nonvar(X),!, (call_u(X)-> (dmsg(warn(failed(mpred_test(\+ call_u(X))))),mpred_test_why(X)); mpred_test_why(~(X))).
@@ -160,7 +156,7 @@ await_ain_pool:- is_ain_pool_empty->true;(repeat, sleep(0.005), is_ain_pool_empt
 
 ain_in_thread(MAIN):- strip_module(MAIN,M,AIN), call_in_thread(M:pfcAdd(AIN)).
 
-call_in_thread(MG):- strip_module(MG,M,G), notrace((copy_term(M:G,GG,_),numbervars(GG,0,_),term_to_atom(GG,TN))), 
+call_in_thread(MG):- strip_module(MG,M,G), notrace((copy_term(M:G,GG,_),numbervars(GG,0,_,[attvar(skip),singletons(true)]),term_to_atom(GG,TN))), 
  call_in_thread(TN,M,G),
   dmsg_pretty(call_in_thread(TN,M,G)).
 

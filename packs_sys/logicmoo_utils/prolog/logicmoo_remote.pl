@@ -27,7 +27,7 @@
 
 % the regular things we need for testing.
 :- use_module(library(plunit)).
-:- use_module(library(lists)).
+%:- use_module(library(lists)).
 :- use_module(library(debug)).
 :- use_module(library(pengines)).
 :- use_module(library(pengines_sandbox)).

@@ -151,11 +151,14 @@ else
  chmod o+rw $SSH_TTY
 fi
 
+mkdir -p ~/.local/share/swi-prolog
+mkdir -p /root/.local/share/swi-prolog
+
 if [[ -d ~/.local/share/swi-prolog/pack/ ]]; then
    $ECHO "#* Found ~/.local/share/swi-prolog/pack"
 else 
    echo "#* Attempting: ln -s $LOGICMOO_WS/prologmud_server/ ~/.local/share/swi-prolog/pack"
-   mkdir -p ~/.local/share/swi-prolog
+   mkdir -p $LOGICMOO_WS/prologmud_server/.local/share/swi-prolog/
    ln -s $LOGICMOO_WS/prologmud_server/.local/share/swi-prolog/pack/ ~/.local/share/swi-prolog/pack
    ls ~/.local/share/swi-prolog/pack/
 fi

@@ -274,8 +274,10 @@ back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
   gset(Dict.Was) = NewPrev ,
   Ret = Dict.
 
-%:- include(kaggle_arc_pfc).
-:- use_module(library(pfc_lib)).
+:- if( \+ current_module(pfc_lib)).
+:- include(kaggle_arc_pfc).
+%:- use_module(library(pfc_lib)).
+:- endif.
 
 :- decl_pt(into_grid(+(any),-mv(grid))).
 into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).

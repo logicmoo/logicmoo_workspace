@@ -1,3 +1,4 @@
+
 (function() {
   var $, State, Terminal, cancel, cols, isMobile, openTs, quit, rows, s, ws,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
@@ -285,10 +286,15 @@
     };
 
     Terminal.prototype.putChar = function(c, placeholder) {
-      var newChar;
+      var newChar, chint;
       if (placeholder == null) {
         placeholder = false;
       }
+	  chint = c.charCodeAt();
+	  if(chint > 160) {
+		//  c = "&#"+chint+";"
+    	  console.log("chint="+c);
+	  }
       newChar = this.cloneAttr(this.curAttr, c);	  
       newChar.placeholder = placeholder;
       if (this.insertMode) {
@@ -430,19 +436,25 @@
             if (ch === 255) {
               return data.push(0);
             }
-            if (ch > 127) {
-              ch = 127;
-            }
+			if (ch > 127) {
+			  console.log("PUSHUTF = &#"+ch+";");
+			   return data.push("&#"+ch+";");
+			}
             return data.push(ch);
           } else {
             if (ch === 2047) {
               return data.push(0);
             }
+			if (ch > 160) {				
+			   console.log("PUSH = &#"+ch+";");
+			   return data.push("&#"+ch+";");
+			}
             if (ch < 127) {
               return data.push(ch);
             } else {
               if (ch > 2047) {
-                ch = 2047;
+				  debugger;
+               // ch = 2047;
               }
               data.push(0xC0 | (ch >> 6));
               return data.push(0x80 | (ch & 0x3F));
@@ -649,16 +661,29 @@
     };
 
     Terminal.prototype.charToDom = function(data, attr, cursor) {
-      var ch, char, classes, ref, styles;
+      var ch, char, code, classes, ref, styles;
+	  attr = attr || this.cloneAttr(this.defAttr);
+      ch = data.ch;
+	  char = '';
+
       if (data.placeholder) {
         return;
       }
       if (data.html) {
         return data.html;
       }
-      attr = attr || this.cloneAttr(this.defAttr);
-      ch = data.ch;
-      char = '';
+
+	  code = ch.charCodeAt();
+	  if (code >= 160) {
+		char = "<pre>&#"+code+";</pre>";
+		console.log("CH0 = "+char);
+		char = "<pre>"+ch+"</pre>";
+		console.log("CH1 = "+char);
+		data.html = char;
+		return data.html;
+	  }
+
+
       if (!this.equalAttr(data, attr)) {
         if (!this.equalAttr(attr, this.defAttr)) {
           char += "</span>";	   
@@ -687,14 +712,20 @@
           char += "&lt;";
           break;
         case ">":
-          char += "&gt;";
-          break;
+			char += "&gt;";
+			break;
         case " ":
           char += '<span class="nbsp">\u2007</span>';
           break;
-        default:
-          if (ch <= " ") {
-            char += "&nbsp;";
+	  default:
+		  code = ch.charCodeAt();
+		  if (code >= 160) {
+			  char = "<pre>&#"+code+";</pre>";
+			console.log("CH2 = "+char+";");
+		  } else if (ch == " ") {
+			char += "&nbsp;";
+		  } else if (ch <= " ") {
+			char += "&nbsp;"+code;
           } else if (!(this.forceWidth || this.isCJK(ch))) {
               		  if ((""+ch)==("undefined")) {
 						 return char; 
@@ -957,11 +988,13 @@
     };
 
     Terminal.prototype.write2 = function(data) { //HTML
-      var attr, b64, c, ch, content, cs, i, k, l, len, line, m, mime, num, pt, ref, ref1, ref2, ref3, safe, type, valid, x, y;
+      var chint, attr, b64, c, ch, content, cs, i, k, l, len, line, m, mime, num, pt, ref, ref1, ref2, ref3, safe, type, valid, x, y;
       i = 0;
       l = data.length;
+
       while (i < l) {
         ch = data.charAt(i);
+
         switch (this.state) {
           case State.normal:
             switch (ch) {
@@ -1453,7 +1486,8 @@
 					  */
 					  var wasValidHTML = isValidHTML(safe);
 					  if (wasValidHTML != true) {
-						  console.log("!wasValidHTML=" + safe);						  
+						  console.log("!wasValidHTML=" + safe);	  
+						  wasValidHTML = true;
 					  }
 					  if (wasValidHTML != true || safe.charAt(safe.length-1) != ">") {
 						  // safe = "<pre class=\"inline-html\">" + safe + "</pre>";
@@ -1571,6 +1605,7 @@
 	Terminal.prototype.write = function(data) {
 		lastWasHTML = false;
 		var l = data.length;
+        
 		if (l < 3 && buffer.length==0) {
 			this.write2(data);
 		} else {

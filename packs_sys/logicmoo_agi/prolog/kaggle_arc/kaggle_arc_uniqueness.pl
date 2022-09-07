@@ -69,8 +69,8 @@ get_new_uniq_dict(Dict):-
   setL:_SetL,others:_TraitCountSets,how:_How,group:_Group},
   (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict).
 
-is_fti_stepr(most_unique).
-most_unique(VM,symmetry):-
+is_fti_step(most_unique).
+most_unique(symmetry,VM):-
   List = VM.objs,
   last(List,Obj),
   set(VM.solution)= Obj.

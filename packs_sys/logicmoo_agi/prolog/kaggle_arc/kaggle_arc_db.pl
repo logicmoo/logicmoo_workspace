@@ -62,6 +62,9 @@ get_color_at(H,V,Grid,C):-
 
 get_color_at_point(Grid,Point,C):- hv_point(H,V,Point), get_color_at(H,V,Grid,C).
   
+:- dynamic(tid_to_gids/2).
+tid_to_gids(T,A) :- awc,!, (clause(tid_to_gids(T,A),true)*-> true ; term_to_oid(T,A)).
+
 term_to_oid(v(A)*(B+C)*D,Atom):- maplist(atomic,[A,B,C,D]),atomic_list_concat([v,A,B,C,D],'_',Atom),!.
 term_to_oid(t(A)*(B+C)*D,Atom):- maplist(atomic,[A,B,C,D]),atomic_list_concat([t,A,B,C,D],'_',Atom),!.
 term_to_oid(T,A):- (compound(T)->term_to_atom(T,A);(atom(T)->T=A;term_to_atom(T,A))).

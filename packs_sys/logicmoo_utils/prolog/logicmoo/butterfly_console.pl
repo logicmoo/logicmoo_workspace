@@ -356,7 +356,6 @@ bflyw:-!.
 ccls:- cls,bfly_write(ansi,escape_from_screen([call(cls)])).
 
 
-
 bfly_in:- inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X+1).
 bfly_in:- \+ in_pp(bfly),!.
 bfly_in:- bflyw,set_bfly_style('html_esc',t),!,bfly_write(_,escape_from_screen([esc(80),';HTML|'])).

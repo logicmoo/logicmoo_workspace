@@ -18,6 +18,10 @@
 */
 :- dynamic(kaggle_arc_json/4).
 
+%:- system:reconsult(library(lists)).
+%:- listing(lists:'$seek_list'/4).
+%:- break.
+
 :- export(load_json_files/2).
 load_json_files(F,Mask):- 
   arc_sub_path('.',ARC_DIR),
@@ -48,9 +52,18 @@ load_json_file(F, UBaseName, FullName):- no_uscore(UBaseName,BaseName), Testname
        json_to_colors(Out,OutColor),
        assert_if_new(kaggle_arc_json(Testname,ExampleNum,InColor,OutColor)),!.
   load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(kaggle_arc_json(Name,Type,In,Out)),!.
-  load_json_of_file(Name,Type,[H|T]):- !, forall(nth0(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
+  load_json_of_file(Name,Type,[H|T]):- !, forall(nth00(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
   load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
 
+nth00(N,HT,E):- integer(N),!,length(Left,N),append(Left,[E|_Right],HT).
+nth00(N,HT,E):- append(Left,[E|_Right],HT), length(Left,N).
+nth11(N,HT,E):- integer(N),!, N2 is N-1, nth00(N2,HT,E).
+nth11(N,HT,E):- nth00(N2,HT,E),N2 is N+1.
+
+nth00(N,HT,E,Rest):- integer(N),!,length(Left,N),append(Left,[E|Right],HT),append(Left,Right,Rest).
+nth00(N,HT,E,Rest):- append(Left,[E|Right],HT), length(Left,N),append(Left,Right,Rest).
+nth11(N,HT,E,Rest):- integer(N),!, N2 is N-1, nth00(N2,HT,E,Rest).
+nth11(N,HT,E,Rest):- nth00(N2,HT,E,Rest),N2 is N+1.
 
 %ma:attr_unify_hook(
 

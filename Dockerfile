@@ -56,17 +56,18 @@ RUN git clone https://github.com/jerry40/guile-simple-zmq.git && \
     autoreconf --verbose --install --force && \
     ./configure --prefix=/usr && make && make install
 #
-RUN mkdir /usr/local/share/jupyter/kernels/guile
+RUN mkdir -p /usr/local/share/jupyter/kernels/guile
 WORKDIR /usr/local/share/jupyter/kernels/guile
 RUN git clone https://github.com/jerry40/guile-kernel.git
 RUN cp ./guile-kernel/src/kernel.json .
 #EXPOSE 8888
-RUN groupadd -r jupyter_users && useradd --no-log-init -m -r -g jupyter_users opencog
-USER opencog
+RUN groupadd -r jupyter_users ; /bin/true
+RUN useradd --no-log-init -m -r -g jupyter_users opencog ; /bin/true
 WORKDIR /home/opencog
-
+#USER root
 RUN /in_container_build.sh
 #CMD $LOGICMOO_WS/StartLogicmoo.sh
+#USER opencog
 ENTRYPOINT ["/startup_logicmoo.sh"]
 #ENTRYPOINT ["/startup.sh"]
 RUN sleep 1000000

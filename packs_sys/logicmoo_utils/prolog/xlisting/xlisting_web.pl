@@ -309,7 +309,7 @@ suppliment_cp_menu:-
 :- (multifile http:location/3, http_dispatch:handler/4, http_log:log_stream/2, http_session:session_data/2, http_session:urandom_handle/1, baseKB:shared_hide_data/1, system:'$init_goal'/3, user:file_search_path/2).
 :- (module_transparent edit1term/1, must_run/1, if_html/2, return_to_pos/1, show_edit_term/2, with_search_filters/1).
 :- (volatile http_log:log_stream/2, http_session:session_data/2, http_session:urandom_handle/1).
-:- export((current_form_var0/1, get_http_session0/1,  is_context0/1, escape_quoting/2, pp_i2tml_0/1, pp_i2tml_1/1, show_edit_term/2, show_select1/2, show_select2/3)).
+:- export((current_form_var0/1, find_http_session/1,  is_context0/1, escape_quoting/2, pp_i2tml_0/1, pp_i2tml_1/1, show_edit_term/2, show_select1/2, show_select2/3)).
 :- multifile((lmcache:last_item_offered/1, http:location/3, http_dispatch:handler/4, http_session:session_data/2, http_session:urandom_handle/1,
    foobar/1, lmcache:last_http_request/1, lmcache:last_item_offered/1, system:'$init_goal'/3, user:file_search_path/2)).
 
@@ -650,25 +650,27 @@ make_session(S):- catch((is_cgi_stream->http_session:http_open_session(S,[renew(
 
 
 :- export(get_http_session/1).
+:- system:import(get_http_session/1).
 %% get_http_session( ?ARG1) is det.
 %
 % Get Http Session.
 %
-get_http_session(S):- catch(get_http_session0(S),_,fail),nonvar(S),!, make_session(S).
-get_http_session(main).
+get_http_session(S):- catch(find_http_session(S),_,fail),nonvar(S),!, make_session(S).
+get_http_session(S):- catch((pengine:pengine_user(S)),_,fail),!.
+get_http_session(ID):- thread_self(ID).
 
-% on_x_log_fail(G):- catch(G,E,(dmsg(E:G),fail)).
+on_xx_log_fail(G):- catch(G,E,(nop(dmsg(E:G)),fail)).
 
-
-:- export(get_http_session0/1).
-%% get_http_session0( ?ARG1) is det.
+:- export(find_http_session/1).
+:- system:import(find_http_session/1).
+%% find_http_session( ?ARG1) is det.
 %
 % Get Http Session Primary Helper.
 %
-get_http_session0(S):- on_x_log_fail((get_http_current_request(R),member(session(S),R))),!.
-get_http_session0(S):- on_x_log_fail((http_session:http_in_session(S))),!.
-get_http_session0(S):- on_x_log_fail((get_http_current_request(R),member(cookie([swipl_session=S]),R))),!.
-get_http_session0(S):- is_cgi_stream,catch(((http_session:http_open_session(S,[renew(false)]))),_,true),!.
+find_http_session(S):- on_xx_log_fail((get_http_current_request(R),member(session(S),R))),nonvar(S),!.
+find_http_session(S):- on_xx_log_fail((http_session:http_in_session(S))),nonvar(S),!.
+find_http_session(S):- on_xx_log_fail((get_http_current_request(R),member(cookie(Cookies),R),member(swipl_session=S,Cookies))),nonvar(S),!.
+find_http_session(S):- on_xx_log_fail((http_session:http_open_session(S,[renew(false)]))),nonvar(S),!.
 
 
 
@@ -794,7 +796,8 @@ nop_format(G):- nop(format(G)).
 write_expandable(Showing,Goal):- %ensure_colapable_styles,
  (Showing -> PX='128'; PX='0'),
  (Showing -> Exp=''; Exp='colapsed'),
- inline_html_format([
+ 
+  inline_html_format([
    '<pre><button type="button" class="collapsible">',writeq(Goal),' (click to un/expand)</button>',
    '<div class="',write(Exp),'" style="max-height: ',PX,'px">',
     weto(ignore(Goal)),
@@ -818,22 +821,22 @@ write_begin_html(Title):-
       <script type=\"text/javascript\">window.name="lm_xref"; </script>
      <script data-main="/swish/js/swish" src="/node_modules/requirejs/require.js"></script>,
      </head><body id="body" class="yui-skin-sam cliopatria">',call(ensure_swish_app_html),'<div style="display: none;">',  
-  (get_param_req(lean,'1') -> write("</div>") ;
-   (write("</div>"),
-    output_html(div([id('cp-menu'), class(menu)], \ cp_menu)),
-   format('<br/>'),
-   write_expandable(false,(offer_testcases,show_http_session)))),  
+  (get_param_req(lean,'1') -> write("</div>") ; (write("</div>"), do_cp_menu, format('<br/>'))),  
   % ensure_colapsable_script,
-   call(ensure_colapsable_styles),
-  '']).
+   call(ensure_colapsable_styles), '']).
 
+do_cp_menu:-
+  nop(output_html(div([id('cp-menu'), class(menu)],  \ cp_menu))).
 
 offer_testcases :- forall(offer_testcase(X),write_cmd_link(X)).
 
-write_cmd_link(X):- nonvar(X),with_output_to(string(S),writeq(X)),
-  www_form_encode(S,A), format('<a href="?cmd=~w">?- ~q. </a>\n',[A,X]).
+write_cmd_link(Goal):- write_cmd_link(Goal,Goal).
+
+write_cmd_link(Info,Goal):- nonvar(Goal),with_output_to(string(S),writeq(Goal)),
+  www_form_encode(S,A), format('<a href="?cmd=~w">?- ~q. </a>\n',[A,Info]).
 
 :- dynamic(offer_testcase/1).
+offer_testcase(G):- nonvar(G), asserta_new(offer_testcase(G)),!.
 offer_testcase(run_pipeline('Every man likes at least 3 things.')).
 offer_testcase(ls).
 offer_testcase(xlisting_html(ls)).
@@ -844,7 +847,7 @@ offer_testcase(test_rok).
 offer_testcase(test_pp).
 offer_testcase(X):- var(X), % source_file(xlisting_web:show_menu_types,F),!,
   source_file(xlisting_web:X,_F),ground(X).
-
+:- export(offer_testcase/1).
 
 
 %% handler_logicmoo_cyclone_call( +Request) is det.
@@ -869,13 +872,12 @@ on_xf_ignore_flush(G):- flush_output_safe,on_xf_ignore(must_det_ll(G)),flush_out
 handler_logicmoo_cyclone(Request):- 
   html_write:html_current_option(content_type(D)),format('Content-type: ~w~n~n', [D]),
   %format('<!DOCTYPE html>',[]),flush_output_safe,
-  (must_run_html(handler_logicmoo_cyclone000(Request))-> true ; handler_logicmoo_cyclone000(Request)).
+  with_http(must_run_html(handler_logicmoo_cyclone000(Request))-> true ; handler_logicmoo_cyclone000(Request)).
 
 
 handler_logicmoo_cyclone000(Request):-
   maplist(on_xf_ignore_flush,[
-  must_det_ll((
-  ignore(get_http_session(_)), 
+  ignore(find_http_session(_)), 
   set_prolog_flag(retry_undefined, none),
   current_input(In),current_output(Out),
   (stream_property(Err,file_no(2));current_error_stream(Err)),
@@ -883,8 +885,13 @@ handler_logicmoo_cyclone000(Request):-
   asserta(lmcache:current_ioet(In,Out,Err,ID)),
   save_request_in_session(Request),
   get_webproc(WebProc),
+  with_http(handler_logicmoo_cyclone000(Request,WebProc))]).
 
+
+handler_logicmoo_cyclone000(_Request,WebProc):-
+ maplist(on_xf_ignore_flush,[
   write_begin_html(WebProc),
+
   ((ignore( \+ ((  
     get_param_req(cmd,Call),
     url_decode_term(Call,Prolog),
@@ -892,20 +899,15 @@ handler_logicmoo_cyclone000(Request):-
     dmsg(cmd=Prolog),
     ignore((nonvar(Prolog),asserta_new(offer_testcase(Prolog)))), 
      weto(write_expandable(true,Prolog))))))),
+  %write_expandable(true,(menu)),
+  write_expandable(false,(offer_testcases,show_http_session)),
 
-  ((ignore(  \+ (( callable(WebProc), must_run_html(WebProc)))))),
+ ((ignore(  \+ (( callable(WebProc), must_run_html(WebProc)))))),
  (get_param_req(lean,'1') -> true ;
   ((
-  ((ignore( \+ (( WebProc\== edit1term,
-    edit1term))))),
-
-  ((ignore( \+ (( WebProc\== search4term,
-    search4term)))))))),
-
-  ensure_colapsable_script,
-  write_end_html,
-  flush_output_safe))]),
-  !.
+  ((ignore( \+ (( WebProc\== edit1term, edit1term))))),
+  ((ignore( \+ (( WebProc\== search4term, search4term)))))))),
+    ensure_colapsable_script, write_end_html, flush_output_safe]), !.
 
 
 get_param_req_or_session(N,V):- get_param_req(N,M),!,url_decode_term(M,V).
@@ -2800,8 +2802,7 @@ try_or_rtrace(G):- tracing,!,dmsg(try(G)),call(G).
 try_or_rtrace(G):- fast_and_mean, !, with_no_xdbg(G).
 try_or_rtrace(G):- catch(G,E,(E==time_limit_exceeded->throw(time_limit_exceeded);(ignore((dmsg(G=E),www_dumpST,dmsg(G=E),thread_self(main),rtrace(G),www_dumpST,dmsg(G=E),break))))).
 
-www_dumpST:- with_output_to(user_error,dumpST),!.
-www_dumpST:- write_expandable(false,(write('<pre>'),dumpST,write('</pre>'))).
+www_dumpST:- with_output_to(user_error,dumpST),write_expandable(false,(write('<pre>'),dumpST,write('</pre>'))).
 % :- prolog_xref:assert_default_options(register_called(all)).
 
 %i2tml_hbr_trace(H,B,R):- rtrace(i2tml_hbr(H,B,R)).
@@ -3149,9 +3150,11 @@ term_to_pretty_string(H,Vs,HS):- with_output_to(string(HS),print_pretty_string(H
 print_pretty_string(H,_):- \+ compound(H),!,write(H).
 print_pretty_string(H,Vs):- into_textarea(print_tree(H,[variable_names(Vs),right_margin(40)])).
 
+:- meta_predicate(into_textarea(0)).
 into_textarea(G):- with_pp(plain,G).
 
-
+:- meta_predicate(with_http(0)).
+with_http(Goal):- with_pp(http,Goal).
 
 %% fmtimg( ?ARG1, ?ARG2) is det.
 %

@@ -1157,9 +1157,11 @@ should_print_mode_html(_).
 %with_pp(swish,Goal):- toplevel_pp(swish),!,with_pp(bfly,Goal).
 %with_pp(http,Goal):- toplevel_pp(swish),!,with_pp(bfly,Goal).
 
+:- meta_predicate(with_pp(+,0)).
 with_pp(plain,Goal):- !, with_pp(ansi,locally_tl(print_mode(plain),Goal)).
 with_pp(Mode,Goal):- quietly(with_pp0(Mode,Goal)).
 
+:- meta_predicate(with_pp0(+,0)).
 with_pp0(bfly,Goal):- in_pp(swish),!,with_pp0(swish,Goal).
 with_pp0(ansi,Goal):- \+ t_l:print_mode(plain), !, locally_tl(print_mode(plain),with_pp0(ansi,Goal)).
 with_pp0(Mode,Goal):- \+ t_l:print_mode(html), should_print_mode_html(Mode),!, locally_tl(print_mode(html),with_pp0(Mode,Goal)).
@@ -1328,6 +1330,10 @@ prefix_spaces0(Now,Tab):- Need is Tab - Now,!, print_spaces(Need).
 prefix_spaces1(Tab):- \+ integer(Tab), recalc_tab(Tab,   NewTab),!, prefix_spaces1(NewTab).
 prefix_spaces1(Tab):- Floor is floor(Tab/2)+1, prefix_spaces0(Floor).
 
+:- export(ansi/0).
+:- system:import(ansi/0).
+:- export(bfly/0).
+:- system:import(bfly/0).
 ansi:- bfly_set(butterfly,f).
 bfly:- bfly_set(butterfly,t),bflyw.
 

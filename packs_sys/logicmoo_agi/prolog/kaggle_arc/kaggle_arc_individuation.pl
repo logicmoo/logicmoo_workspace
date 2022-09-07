@@ -1809,7 +1809,7 @@ addGPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 
 %in_set(Set,I):- member(E,Set), E=@=I,!.
 
-is_fti_stepr(remove_from_image).
+is_fti_stepr(remove_from_image(_Data)).
 remove_from_image(VM,Data):-    
     must_det_ll((remove_global_points(Data,VM.points,Points),
     pt(Points),
