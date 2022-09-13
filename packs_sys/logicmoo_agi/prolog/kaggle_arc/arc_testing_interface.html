@@ -266,9 +266,9 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     }
 
     fillJqGridWithData(jqInputGrid, inputGrid);
-    fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 200, 200);
+    fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 150, 150);
     fillJqGridWithData(jqOutputGrid, outputGrid);
-    fitCellsToContainer(jqOutputGrid, outputGrid.height, outputGrid.width, 200, 200);
+    fitCellsToContainer(jqOutputGrid, outputGrid.height, outputGrid.width, 150, 150);
 }
 
 function loadJSONTask(train, test) {
@@ -300,6 +300,7 @@ function loadJSONTask(train, test) {
 function display_task_name(task_name, task_index, number_of_tasks) {
     big_space = '&nbsp;'.repeat(4); 
 	// alert(''+task_name);
+	setTaskID(task_name);
     document.getElementById('task_name').innerHTML = (
         'Task name:' + big_space + task_name + big_space + (
             task_index===null ? '' :
@@ -345,6 +346,14 @@ var setTask;
 var setTaskIndex;
 var setTaskName;
 var task_url;
+
+function setTaskID(ID) {
+    ID = ID.split('.')[0]
+	var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?task='+ID;
+	window.history.pushState({path:newurl},'',newurl);
+}
+
+
 function urlTask(tasks) { 
   if(urlParams.has("task")) {
 	var taskname = urlParams.get('task')
@@ -435,7 +444,7 @@ function submitSolution() {
 function fillTestInput(inputGrid) {
     jqInputGrid = $('#evaluation_input');
     fillJqGridWithData(jqInputGrid, inputGrid);
-    fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 400, 400);
+    fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 300, 300);
 }
 
 function copyToOutput() {
@@ -773,7 +782,7 @@ body {
 
 #evaluation-input-view {
     float: left;
-    width: 400px;
+    width: 300px;
     margin: 10px;
 }
 
@@ -862,18 +871,18 @@ input, button {
 /*Task demonstration*/
 
 .pair_preview {
-    height: 200px;
+    height: 150px;
     padding: 5px;
     border-bottom: solid 1px #a1a1a1;
 }
 .input_preview {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     float: left;
 }
 .output_preview {
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     float: left;
     margin-left: 35px;
 }
@@ -925,7 +934,7 @@ input, button {
 
             <div id="demonstration_examples_view">
                 <div class="text" id="task_demo_header">Task demonstration</div>
-                <div id="task_preview"></div>
+                <div id="task_preview" style="height:50%;"></div>
             </div>
 
             <div id="evaluation_view">
