@@ -1733,11 +1733,34 @@ ansicall_2(Out,CtrlIn,Goal):- notrace((ansi_control_conv(CtrlIn,Ctrl);CtrlIn=Ctr
 %ansicall_2(Out,Ctrl,Goal):- bfly_html_goal(ansicall_3(Out,Ctrl,Goal)).
 
 ansicall_3(Out,Ctrl,Goal):-
-   (notrace((retractall(tlbugger:last_used_color(_)),asserta(tlbugger:last_used_color(Ctrl)),!,ansicall_4(Out,Ctrl,Goal)))).
+   (quietly((retractall(tlbugger:last_used_color(_)),asserta(tlbugger:last_used_color(Ctrl)),!,ansicall_4(Out,Ctrl,Goal)))).
 
 %maybe_bfly_in_out(G):- on_x_fail(bfly_html_goal(G)),!.
 %maybe_bfly_in_out(G):- call(G).
 
+mUST_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(mUST_det_ll,List).
+mUST_det_ll(mUST_det_ll(X)):- !, mUST_det_ll(X).
+mUST_det_ll(X):- tracing,!,mUST_not_error(X).
+mUST_det_ll((X,Y,Z)):- !, (mUST_det_ll(X),mUST_det_ll(Y),mUST_det_ll(Z)).
+mUST_det_ll((X,Y)):- !, (mUST_det_ll(X)->mUST_det_ll(Y)).
+mUST_det_ll(fif(X,Y)):- !, fif(mUST_not_error(X),mUST_det_ll(Y)).
+mUST_det_ll((A->X;Y)):- !,(mUST_not_error(A)->mUST_det_ll(X);mUST_det_ll(Y)).
+mUST_det_ll((A*->X;Y)):- !,(mUST_not_error(A)*->mUST_det_ll(X);mUST_det_ll(Y)).
+mUST_det_ll((X;Y)):- !, ((mUST_not_error(X);mUST_not_error(Y))->true;mUST_det_ll_failed(X;Y)).
+mUST_det_ll(\+ (X)):- !, (\+ mUST_not_error(X) -> true ; mUST_det_ll_failed(\+ X)).
+%mUST_det_ll((M:Y)):- nonvar(M), !, M:mUST_det_ll(Y).
+mUST_det_ll(once(A)):- !, once(mUST_det_ll(A)).
+mUST_det_ll(X):- 
+  strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(mUST_not_error(X)*->true;mUST_det_ll_failed(X)),
+    nop(trace(M:F/A,-fail))).
+
+mUST_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/wdmsg(E=X),wdmsg(rRTrace(E)=X),rRTrace(X)))).
+
+mUST_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,noRTrace,trace,rRTrace(X),!.
+% mUST_det_ll(X):- mUST_det_ll(X),!.
+
+rRTrace(X):- !, rtrace(X).
+rRTrace(X):- notrace,noRTrace, arcST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> rtrace(X); (trace,call(X))).
 
 %= 	 	 
 
@@ -1746,8 +1769,8 @@ ansicall_3(Out,Ctrl,Goal):-
 % Ansicall Primary Helper.
 %
 ansicall_4(_,[],Goal):-!,call(Goal).
-ansicall_4(Out,[Ctrl|Set],Goal):-!, ansicall_4(Out,Ctrl,ansicall_4(Out,Set,Goal)).
-ansicall_4(Out,Ctrl,Goal):- keep_line_pos_w_w(Out, ansicall_5(Out,Ctrl,Goal)).
+ansicall_4(Out,[Ctrl|Set],Goal):-!, ansicall_4(Out,Ctrl,ansicall_4(Out,Set,mUST_det_ll(Goal))).
+ansicall_4(Out,Ctrl,Goal):- keep_line_pos_w_w(Out, ansicall_5(Out,Ctrl,mUST_det_ll(Goal))).
 
 ansicall_5(Out,Ctrl,Goal):- maybe_bfly_html(ansicall_6(Out,Ctrl,Goal)).
 

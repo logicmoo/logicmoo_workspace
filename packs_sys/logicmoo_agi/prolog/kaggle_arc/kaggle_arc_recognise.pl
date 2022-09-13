@@ -35,7 +35,7 @@ test_ogs_m0:- clsmake, time(forall(test_ogs0(_,_,true),true)).
 
 :- dynamic(tr:existing_result/3).
 
-save_tr:- cls, 
+save_tr:- cls_z, 
  forall(tr:existing_result(X,Y,Z),
   format('~N~@.',[write_term(perfect_result(X,Y,Z),
     [quoted(true),quote_non_ascii(true),numbervars(false)])])).
@@ -44,7 +44,7 @@ got_result(SG,FG,Match):-
   copy_term(FG,CFG),copy_term(SG,CSG),
   numbervars(CSG+CFG,999,_,[attvar(bind)]),
   ignore((perfect_result(CSG,CFG,WMatch), 
-    ((Match\==WMatch) -> (pt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); pt(green,same)))),
+    ((Match\==WMatch) -> (ppt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); ppt(green,sameR)))),
   retractall(tr:existing_result(CSG,CFG,_)),
   arc_assert(tr:existing_result(CSG,CFG,Match)),!.
   
@@ -71,7 +71,7 @@ test_ogs2(H,V,Match):-
   got_result(CSG,CFG,Match),
   Match==true.
 
-% should still be the same
+% should still be the sameR
 test_ogs1(H,V,Match):-
   Run = once(( print_side_by_side(FG,SG),nop(ptt(tf=T)))),
   wqln("searching..."),
@@ -93,7 +93,7 @@ never_fg(Trig,Var):- freeze(Trig, \+ is_fg_color(Var)).
 never_fg(Var):- freeze(Var, \+ is_fg_color(Var)).
 
 
-% should still be the same
+% should still be the sameR
 test_ogs0(H,V,Match):-
   Run = once(( print_side_by_side(FG,SG),print(test_ogs0(H,V,TMatch)),nop(ptt(tf=T)))),
   wqln("searching..."),
@@ -336,10 +336,6 @@ grid_numbervars(GridIn,GridO):-
  must_det_ll((grid_label_bg(p,GridIn,GridO),grid_label_fg(p,GridO))).
 
 
-cant_be_color(Y):- get_attr(Y,dif,_),!.
-cant_be_color(Y):- get_attr(Y,cc,_),!.
-cant_be_color(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E).
-
 
 
 
@@ -382,7 +378,7 @@ maybe_into_grid(I,O):- \+ is_grid(I), into_grid(I,O), I \=@=O,!.
 %constrain_grid_f(Grid2,Trig,GridO):- constrain_grid(f,Trig,Grid2,GridO),!.
 %constrain_grid_s(Grid2,Trig,GridO):- constrain_grid(s,Trig,Grid2,GridO),!.
 constrain_grid(CT,Trig,Obj,GridO):- maybe_into_grid(Obj,Grid),!,constrain_grid(CT,Trig,Grid,GridO),!.
-constrain_grid(CT,_Trig,Grid,GridO):- CT==same,!,Grid=GridO.
+constrain_grid(CT,_Trig,Grid,GridO):- CT==sameR,!,Grid=GridO.
 constrain_grid(CT,_Trig,Grid,GridO):- CT==copy,!,copy_term(Grid,GridO).
 
 
@@ -567,7 +563,7 @@ h666(_Ham,
           B                       R       B      
         B B                             B B      
         B B B                           B B B     
-__________________________________________________").
+__________________________________________________"):- fail.
 
 
 f666(_Ham,G):-
@@ -605,7 +601,7 @@ h666(_Ham,
              B     B B       R R     B     B B
          B B B B B               B B B B B
          B B B B B               B B B B B
- _________________________________________________").
+ _________________________________________________"):- fail.
 
 trans_to_color('R','red').
 trans_to_color('B','blue').
@@ -619,39 +615,44 @@ f666(_Color,
  [4,5,1],
  [4,5,1]]).
 
-
-
-
-ascii_to_grid(Text,G):- atom_contains(Text,'____'),!,
-  atom_chars(Text,C),
-  make_grid(30,30,G0),
-  parse_text_to_grid(0,0,C,G0,G).
-
-ascii_to_grid(Text,G):- 
-   ascii_to_growthchart(Text,GrowthChart),
-   growthchart_to_grid(GrowthChart,6,5,G).
-
-ascii_to_growthchart(Text,GrowthChart):- 
- replace_in_string([ 
-   '\r'='\n','\n\n'='\n','$ '='$','$\n'='\n','$'=''],Text,Ascii0),
-   atomics_to_string(Rows1,'\n',Ascii0),Rows1=[_|Rows],mapgroup(atom_chars,Rows,GrowthChart),!.
-
-
 into_grid_color(L,O):- is_list(L),!,mapgroup(into_grid_color,L,O).
 into_grid_color(L,O):- plain_var(L),!,L=O.
 into_grid_color(L,O):- color_code(L,O),!.
 into_grid_color(O,O).
 
-into_g666(Grid,G):- is_grid(Grid),!,maplist(into_grid_color,Grid,G),!.
+into_g666(Text,G):- atomic(Text),maybe_fix_ascii(Text,Ascii0),!,into_g666(Ascii0,G).
+into_g666(Text,G):- atomic(Text),must_det_ll(text_to_grid(Text,TG)),!,into_g666(TG,G),!.
+into_g666(Grid,G):- is_grid_of(integer,Grid),!,mapgrid(into_grid_color,Grid,G),!.
+into_g666(Grid,G):- is_grid(Grid),!,mapgrid(into_grid_color,Grid,G),!.
 into_g666(Obj,G):- is_object(Obj),!,must_det_ll(object_grid(Obj,OG)),!,into_g666(OG,G).
-into_g666(Text,G):- atomic(Text),text_to_grid(Text,TG),!,into_g666(TG,G),!.
-into_g666(Other,G):- wdmsg(failed(into_g666(Other,G))),fail.
+into_g666(Other,G):- wdmsg(failed(into_g666(Other,G))),!,fail.
 
 ss666(T,G):- h666(T,S),must_det_ll(into_g666(S,G)).
 sp666(T,Y):- ss666(T,X), fpad_grid(s,X,Y).
 
 ff666(T,G0):- no_repeats(G0,((f666(T,F),into_g666(F,G),all_rotations(G,G0)))).
 fp666(T,Y):- ff666(T,X), fpad_grid(f,X,Y).
+
+
+maybe_fix_ascii(Text,Ascii0):-
+ replace_in_string([ 
+   '\r'='\n','\n\n'='\n','$ '='$','$\n'='\n','$'='','\n '='\n','_\n'='_',' _'='_'],Text,Ascii0),!,
+ Text\==Ascii0,!.
+
+
+ascii_to_growthchart(Text,G):- maybe_fix_ascii(Text,Ascii0), !, ascii_to_growthchart(Ascii0,G).
+ascii_to_growthchart(Text,GrowthChart):-  
+  atomics_to_string(Rows1,'\n',Text),Rows1=[_|Rows],mapgroup(atom_chars,Rows,GrowthChart),!.
+
+
+ascii_to_grid(Text,G):- maybe_fix_ascii(Text,Ascii0), !, ascii_to_grid(Ascii0,G).
+ascii_to_grid(Text,G):- atom_contains(Text,'____'),!,
+  atom_chars(Text,C),
+  make_grid(30,30,G0),
+  parse_text_to_grid(0,0,C,G0,G).
+ascii_to_grid(Text,G):- 
+ ascii_to_growthchart(Text,GrowthChart),
+ growthchart_to_grid(GrowthChart,6,5,G).
 
 :- luser_setval(global,find_rule,regular).
 % ?- h666(X),text_to_grid(X,G).

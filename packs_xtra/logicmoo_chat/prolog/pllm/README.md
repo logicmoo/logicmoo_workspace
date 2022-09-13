@@ -19,14 +19,17 @@ true.
 % 138,245,537 inferences, 18.918 CPU in 18.921 seconds (100% CPU, 7307492 Lips)
 %~ /opt/logicmoo_workspace/packs_xtra/logicmoo_chat/self_dialogue_corpus/train_from.txt:396886
 %~ Trained on 372720 lines
-%~ Overlap 803179
-%~ Nodes 2841658
+%~ Overlap 803,179
+%~ Nodes 2,841,658
 %~ compute corpus stats...
 % 45,649,005 inferences, 6.838 CPU in 6.839 seconds (100% CPU, 6675596 Lips)
 true.
 
 3 ?- autoc([len(55)]).
-[other_conversant(0),have,you,seen,thor,?,i,cant,help,but,feel,more,of,an,attachment,to,the,first,one,left,off,other_conversant(102),youre,correct,but,i,cant,help,but,feel,more,of,an,attachment,to,the,orginial,,,so,the,story,line,pretty,much,picked,up,where,the,first,one,left,off,.,i,do]
+[other_conversant(0),have,you,seen,thor,?,i,cant,help,but,feel,more,of,an,attachment,
+  to,the,first,one,left,off,
+  other_conversant(102),youre,correct,but,i,cant,help,but,feel,more,of,an,attachment,to,the,orginial,,
+  ,so,the,story,line,pretty,much,picked,up,where,the,first,one,left,off,.,i,do]
 true .
 
 4 ?- autoc([len(23),love,len(23)]).

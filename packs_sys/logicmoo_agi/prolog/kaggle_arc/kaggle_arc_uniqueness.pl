@@ -271,7 +271,7 @@ each_trait(Obj,Obj-S):- findall(T,each_1trait(Obj,T),L),list_to_set(L,S).
 too_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_unique(F).
 %too_unique(obj_to_oid).
 too_unique(globalpoints).
-too_unique(o).
+%too_unique(o).
 too_unique(link).
 too_unique(obj_to_oid).
 too_unique(birth).
@@ -283,7 +283,7 @@ good_overlap(rotation).
 
 too_non_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_non_unique(F).
 too_non_unique(grid_size).
-too_non_unique(birth).
+%too_non_unique(birth).
 too_non_unique(grid).
 too_non_unique(changes).
 
@@ -296,13 +296,13 @@ length_criteria(List,N):- length(List,N).
 
 tesT_compare_objects:- compare_objects([
     obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),
-      v_hv(1,1),rotation(same),loc(4,9),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,9),% obj_to_oid(t(af902bf9)*(tst+0)*in,37),globalpoints([yellow-point_04_09]),
+      v_hv(1,1),rotation(sameR),loc(4,9),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,9),% obj_to_oid(t(af902bf9)*(tst+0)*in,37),globalpoints([yellow-point_04_09]),
       grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(4,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,6),obj_to_oid(t(af902bf9)*(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(1,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(1,6),obj_to_oid(t(af902bf9)*(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(10,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,5),obj_to_oid(t(af902bf9)*(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(6,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,5),obj_to_oid(t(af902bf9)*(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(10,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,1),obj_to_oid(t(af902bf9)*(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(same),loc(6,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,1),obj_to_oid(t(af902bf9)*(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(4,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,6),obj_to_oid(t(af902bf9)*(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(1,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(1,6),obj_to_oid(t(af902bf9)*(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(10,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,5),obj_to_oid(t(af902bf9)*(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(6,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,5),obj_to_oid(t(af902bf9)*(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(10,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,1),obj_to_oid(t(af902bf9)*(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(6,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,1),obj_to_oid(t(af902bf9)*(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
     OUTPUT),
   print(OUTPUT).

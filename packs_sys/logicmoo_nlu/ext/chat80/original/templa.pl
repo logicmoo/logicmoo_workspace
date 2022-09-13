@@ -384,9 +384,9 @@ qualifiedBy_LF0(Var,_FType, X,_,np_head(Var,det(a),[],Table),ti(Table,X)).
 qualifiedBy_LF0(Var,_FType,X,_Type,pronoun(Var,_,1+sg),isa(X,vTheVarFn("I"))).
 qualifiedBy_LF0(Var,_FType,X,_Type,pronoun(Var,_,1+pl),isa(X,vTheVarFn("US"))).
 qualifiedBy_LF0(Var,_FType,X,Type,np_head(Var,generic,Adjs,Table),Pred):-
-  must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
+  must80(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
 qualifiedBy_LF0(Var,_FType,X,Type,np_head(Var,det(a),Adjs,Table),Pred):- 
-  must(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
+  must80(i_adjs(Adjs,Type-X,Type-X,_,Head,Head,Pred,ti(Table,X))).
 qualifiedBy_LF0(Var,_FType,Name,Type,Else,P):- P = qualifiedBy(Var,Name,Type,Else),!.
 qualifiedBy_LF0(Var,FType,Name,Type,Else,P):- wdmsg(missed(qualifiedBy_LF(Var,FType,Name,Type,Else,P))),fail.
 

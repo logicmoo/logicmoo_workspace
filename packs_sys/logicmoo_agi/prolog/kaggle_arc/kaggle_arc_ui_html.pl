@@ -53,6 +53,7 @@ user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
 :- http_handler('/swish/arc/', swish_arc, [prefix]).
 :- http_handler('/swish/muarc/arcproc_right', arcproc_right, [prefix]).
 :- http_handler('/swish/muarc/arcproc_left', arcproc_left, [prefix]).
+:- http_handler('/swish/muarc/swish_config.json', swish_reply_config_root,[priority(200)]).
 
 
 % http_handler docs: http://www.swi-prolog.org/pldoc/man?predicate=http_handler/3
@@ -133,32 +134,132 @@ arc_http_server:- http_server(http_dispatch, [port(1777)]),
 
 %http:location(images,	root(images), []).
 
+no_web_dbg:-
+  unsetenv('DISPLAY'),
+  no_xdbg_flags,
+  no_x_flags,
+  set_prolog_flag(xpce,true).
 
-swish_arc(Request):- 
+%:- no_web_dbg.
+
+begin_arc_html(Request):- notrace(with_http(begin_arc_html0(Request))).
+begin_arc_html0(Request):-
+  ignore((current_output(Out),
+  set_stream(Out,buffer(false)))),
+  /* set_stream(Out,close_on_exec(false)),
+  set_stream(Out,close_on_abort(true)),
+  set_stream(Out,encoding(octet)),
+  set_stream(Out,write_errors(ignore)))),*/
+  format('Content-type: text/html~n~n',[]),
+  format('<!DOCTYPE html>',[]),
+  %ignore(set_test_param),
+  ignore((member(search(List),Request),member(task=Task,List),  
+  atom_id(Task,ID), dmsg(Task->ID), set_current_test(ID))),
+  ignore(intern_request_data(Request)),
+  ignore(write_begin_html('ARC Solver')),
+  nop(ensure_readable_html).
+
+set_test_param:- 
+  ignore((get_param_sess(task,Task), Task\=='',  Task\=="",
+  atom_id(Task,ID), dmsg(Task->ID), set_current_test(ID))),!.
+
+
+swish_arc(Request):-   
   muarc_tmp:arc_directory(ARC_DIR),
   http_reply_from_files(ARC_DIR, [], Request).
 
-arcproc_right(_Request):- 
-  ((format('Content-type: text/html~n~n',[]),
-  format('<!DOCTYPE html><html><head></head><body><pre>~@</pre></body></html>~n~n',[(listing(arcproc_right/1),nop(www_dumpST))]),
-  flush_output_safe)),!.
-arcproc_right(Request):- swish_arc(Request),!.
+%arcproc_left(Request):- xlisting_web:handler_logicmoo_cyclone(Request),!.
+arcproc_left(Request):-  
+  %no_web_dbg,
+  notrace((begin_arc_html(Request),
+  flush_output,
+  with_http((inline_html_format([
+    ignore(handler_logicmoo_left),
+    ignore(ensure_colapsable_script),
+    ignore(write_end_html)]))))),!.
 
-arcproc_left(_Request):- 
-  ((format('Content-type: text/html~n~n',[]),
-  format('<!DOCTYPE html><html><head></head><body><pre>~@</pre></body></html>~n~n',[listing(arcproc_left/1)]),
-  flush_output_safe)),!.
+%arcproc_left(Request):- swish_arc(Request),!.
+arcproc_left(Request):- 
+  notrace((begin_arc_html(Request),
+  with_http((inline_html_format([
+    handler_logicmoo_right,
+    ensure_colapsable_script,
+    write_end_html]))))).
 
-:- if(current_module(logicmoo_arc)).
-arcproc_left(Request):- xlisting_web:handler_logicmoo_cyclone(Request),!.
-:- else.
+
+
 :- initialization arc_http_server.
+
+
+
+
+% arc_find_tests(menu):- ignore(menu).
+arc_find_tests(F):- find_tests(F).
+
+:- dynamic(xlisting_whook:offer_testcase/1).
+:- multifile(xlisting_whook:offer_testcase/1).
+xlisting_whook:offer_testcase(F):- arc_find_tests(F).
+
+handler_logicmoo_right:-   
+ inline_html_format([
+   ignore((get_http_current_request(Request))),write('<pre>'),
+   print_tree(Request),offer_testcases,show_http_session,
+   write('</pre>')]).
+
+handler_logicmoo_arc:- inline_html_format([call(handler_logicmoo_left)]).
+handler_logicmoo_left:- 
+   inline_html_format( 
+   [ `<pre>`,
+   ignore(arc_nav_menu),
+   flush_output,
+   ignore(show_console_info),
+   flush_output,
+   ignore(call_current_arc_cmd),
+   flush_output,
+   invoke_arc_cmd(menu),
+   flush_output,
+   invoke_arc_cmd(edit1term),
+   show_http_session,
+    `</pre>`]), 
+  !.
+
+arc_nav_menu:- 
+  current_arc_cmd(tcmd,Prolog),
+  write_cmd_link((prev_test,Prolog)),
+  write_cmd_link((next_test,Prolog)),
+  write_cmd_link((Prolog)),!.
+show_console_info:-
+  in_pp(PP),ppt(in_pp(PP)),!.
+
+call_current_arc_cmd:- 
+  call_current_arc_cmd(cmd),
+  call_current_arc_cmd(fcmd).
+
+call_current_arc_cmd(Var):-
+   current_arc_cmd(Var,Prolog),        
+   dmsg(Var=Prolog),invoke_arc_cmd(Prolog).
+
+
+invoke_arc_cmd(Prolog):-
+   nonvar(Prolog),
+   asserta_new(xlisting_whook:offer_testcase(Prolog)), !,
+   catch(weto(Prolog),E,wdmsg(E)),!.
+
+get_uvalue(N,V,Default):- ((get_param_req_or_session(N,V), V\=='',V\=="")->true;V=Default).
+
+current_arc_cmd(Prolog):- current_arc_cmd(cmd,Prolog).
+
+current_arc_cmd(cmd,Prolog):- get_uvalue(cmd,Prolog,print_test).
+current_arc_cmd(tcmd,Prolog):- get_uvalue(tcmd,Prolog,ndividuatorO1).
+current_arc_cmd(fcmd,Prolog):- get_uvalue(fcmd,Prolog,statistics).
+%current_arc_cmd(fcmd,Prolog):- (\+ current_arc_cmd(cmd,menu) -> get_uvalue(fcmd,Prolog,menu) ; get_uvalue(fcmd,Prolog,edit1term)).
+
+:- if(exists_source(library(logicmoo_webui))).
+:- set_prolog_flag(no_sandbox,true).
+:- use_module(library(logicmoo_webui)).
+:- webui_start_swish_and_clio.
 :- endif.
 
-arc_html(`
-
-
-
-`).
-
 :- fixup_exports.
+
+

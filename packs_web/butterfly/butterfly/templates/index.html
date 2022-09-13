@@ -37,7 +37,7 @@
 <link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/popupmenu/styles/Popup-plugin.css">
 <link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/popupmenu/styles/Example.css">
 <!--Use either font-awesome icons or Google icons with these links. Other icons could also be used if preferred-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.4.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 <script data-main="/swish/js/swish" src="/node_modules/requirejs/require.js"></script>  
@@ -76,7 +76,7 @@
     </div>
     <div id="popup" class="hidden">
     </div>
-    <!--script src="{{ static_url('html-sanitizer.js') }}"></script-->
+    <script src="{{ static_url('html-sanitizer.js') }}"></script>
     <script src="{{ static_url('main.%sjs' % (
                  '' if options.unminified else 'min.')) }}"></script>
     <script src="{{ static_url('ext.%sjs' % (

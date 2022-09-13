@@ -89,7 +89,7 @@ test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 call_expanded(VM,G):-  exp_call(VM,G,GG),G\=@=GG,!,call_expanded(VM,GG).
-call_expanded(_VM,G):- catch(call(G),E,(arcST,pt(E),rrtrace(G))).
+call_expanded(_VM,G):- catch(call(G),E,(arcST,ppt(E),rrtrace(G))).
 
 quinish(Var):- var(Var),!.
 quinish(Var):- is_grid(Var),!.
@@ -140,7 +140,7 @@ set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
 set_vm_grid_now(VM,Grp):- 
   data_type(Grp,Type),
   gset(VM.type) = data_type(Type),
-  pt(yellow,set_vm_grid_now),pt(cyan,Type),fail.
+  ppt(yellow,set_vm_grid_now),ppt(cyan,Type),fail.
 set_vm_grid_now(VM,In):- VM==In,!.
 set_vm_grid_now(VM,In):- is_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
 set_vm_grid_now(VM,Grp):- is_group(Grp), !,
@@ -222,7 +222,7 @@ run_dsl(_VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(
 
 run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((luser_getval(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),luser_linkval(dsl_pipe,PipeOut).
-run_dsl(_VM,_Mode,same,In,Out):-!, duplicate_term(In,Out).
+run_dsl(_VM,_Mode,sameR,In,Out):-!, duplicate_term(In,Out).
 
 % prevents unneeded updates such as color/position settings
 run_dsl(VM,_Mode,Prog,In,Out):- \+ missing_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
@@ -274,7 +274,7 @@ back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
   gset(Dict.Was) = NewPrev ,
   Ret = Dict.
 
-:- if( \+ current_module(pfc_lib)).
+:- if( \+ current_predicate(any_to_ace_str/2)).
 :- include(kaggle_arc_pfc).
 %:- use_module(library(pfc_lib)).
 :- endif.
@@ -348,7 +348,7 @@ known_gridoid(ID,G):- known_grid(ID,G).
 known_grid(ID,GO):- (known_grid0(ID,G),deterministic(YN),true), (YN==true-> ! ; true), to_real_grid(G,GO).
 
 
-oid_to_gridoid(GID,G):- current_predicate(oid_to_grid/2), oid_to_grid(GID,G).
+oid_to_gridoid(GID,G):- current_predicate(gid_to_grid/2), call(call,gid_to_grid,GID,G).
 oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], !,append(GOID,[OID],Term),
   testid_name_num_io(GOID,_Name,_Example,_Num,_IO),
   ((atom(OID),atom_number(OID,ONum))->int2glyph(ONum,GL);GL=OID),
@@ -377,7 +377,7 @@ known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),
 
 
 addProgramStep(_VM,Step):-
-  pt(addProgramStep(vm,Step)).
+  ppt(addProgramStep(vm,Step)).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- 
   arg(_,v(trn+_,tst+_),ExampleNum),
@@ -514,7 +514,7 @@ into_group(G, G, _):- plain_var(G),!, throw(var_into_group(G)),
    (why_grouped(_Why, G)*->true; 
      ((arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs)),
       (why_grouped(_Why, G)*->true; G=Objs))).
-into_group(P,G,(group_to_and_from_vm(VM))):- is_vm(P),G=VM.objs,!.
+into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),G=VM.objs,is_group(G),!.
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
 into_group(P,G, into_obj):- is_object(P),!,G=[P].
 into_group(G,G,(=)) :- G==[],!.
@@ -579,7 +579,7 @@ do_change(Change,Grid1,Grid2):- do_change_nd(Change,Grid1,Grid2).
 do_change_nd([],Grid1,Grid1).
 do_change_nd([H|T],Grid1,Grid2):- one_change(H,Grid1,GridM),do_change_nd(T,GridM,Grid2).
 
-one_change(same,Grid1,Grid2):- is_grid(Grid2),Grid1=Grid2,!.
+one_change(sameR,Grid1,Grid2):- is_grid(Grid2),Grid1=Grid2,!.
 one_change(colorChange(C1,C2),Grid1,Grid2):- 
   first_color(Grid1,C1),ignore((is_grid(Grid2),first_color(Grid2,C2))),
   subst001(Grid1,C1,C2,Grid2).
@@ -599,7 +599,7 @@ do_change(Change, Grid1, Grid2):- do_change_nd(Change, Grid1, Grid2).
 do_change_nd([], Grid1, Grid1).
 do_change_nd([H|T], Grid1, Grid2):- one_change(H, Grid1, GridM), do_change_nd(T, GridM, Grid2).
 
-one_change(same, Grid1, Grid2):- is_grid(Grid2), Grid1=Grid2, !.
+one_change(sameR, Grid1, Grid2):- is_grid(Grid2), Grid1=Grid2, !.
 one_change(colorChange(C1, C2), Grid1, Grid2):- 
  first_color(Grid1, C1), ignore((is_grid(Grid2), first_color(Grid2, C2))), subst001(Grid1, C1, C2, Grid2).
 one_change(blank1Color(C1), Grid1, Grid2):- 
@@ -623,11 +623,18 @@ goal_expansion_query(Goal,Out):- compound(Goal),
    call(P1,Var),expand_goal((Exp,Goal),Out).
 
 
-:- fixup_exports.
-
-goal_expansion(Goal,I,Out,O):-  var(I), \+ source_location(_,_),luser_getval('$goal', Term),% writeq(Term=@=Goal),nl,
+goal_expansion_q(Goal,I,Out,O):-  var(I), \+ source_location(_,_),luser_getval('$goal', Term),% writeq(Term=@=Goal),nl,
   Goal=@=Term,
   (goal_expansion_query(Goal,Out)-> Goal\=@=Out),I=O.
+
+:- export(thread_httpd:http_process/4).
+:- system:import(thread_httpd:http_process/4).
+
+:- fixup_exports.
+
+:- multifile(goal_expansion/4).
+:- dynamic(goal_expansion/4).
+%goal_expansion(Goal,I,Out,O):- goal_expansion_q(Goal,I,Out,O).
 
 % ?- print_grid(gridFn(X)).
 %:- export(is_toplevel_query/2).
@@ -635,7 +642,7 @@ goal_expansion(Goal,I,Out,O):-  var(I), \+ source_location(_,_),luser_getval('$g
 :- luser_linkval('$goal', []).
 %:- b_setval('$goal_expanded', []).
 :- luser_linkval('$goal_expanded', []).
-expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
+expand_query(Goal, Expanded, Bindings, ExpandedBindings):- current_predicate(luser_linkval/2),
     % Have vars to expand and varnames are empty
     luser_getval('$goal', WGoal), WGoal\=@=Goal, % this prevents the loop
     luser_linkval('$goal', Goal),

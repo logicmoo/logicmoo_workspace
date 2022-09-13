@@ -23,10 +23,35 @@ into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort
 %into_gridoid(N,G):- into_gridoid0(N,G).    
    
 
-test_grav_rot:- test_p2(grav_rot).
-grav_rot(Group,List):- override_group(grav_rot(Group,List)),!.
-grav_rot(Shape,Final):- into_grid(Shape,Grid),grav_mass(Grid,RotG),!,call_rot(RotG,Shape,Final).
-grav_rot(Shape,RotG,Final):- into_grid(Shape,Grid),grav_mass(Grid,RotG),!,call_rot(RotG,Shape,Final).
+%grav_rot(Group,List):- override_group(grav_rot(Group,List)),!.
+%grav_rot(Shape,Final):- into_grid(Shape,Grid),grav_mass(Grid,RotG),!,call_rot(RotG,Shape,Final).
+
+
+test_grav_rot:- test_p2(test_grav_rot(_)).
+test_grav_rot(RotG,Shape,Rotated):- grav_rot(Shape,RotG,Rotated). %,unrotate(RotG,Rotated,Back),assertion(Shape==Back).
+
+grav_rot(Grid,RotG,Rotated):- must_be_free(Rotated), is_grid(Grid),!,
+    w(W,RotG,Rotated)=Template,
+    findall(Template,(flipSome1(RotG,Grid,Rotated),rot_mass(Rotated,W)),Pos),
+    sort(Pos,LPos),last(LPos,Template).
+grav_rot(Shape,RotG,Rotated):-    
+    must_det_ll((
+    cast_to_grid(Shape,Grid,Uncast),
+    test_grav_rot(RotG,Grid,Final),
+    uncast(Shape,Uncast,Final,Rotated))),!.
+
+rot_mass(LP,Mass):- mapgrid(color_mass_int,LP,CN),
+ append(CN,AC),!,total_n(1,AC,Mass).
+
+color_mass_int(Cell,-2):- plain_var(Cell),!.
+color_mass_int(Cell,0):- is_bg_color(Cell),!.
+color_mass_int(Cell,-20):- var(Cell),is_fg_color(Cell),!.
+color_mass_int(Cell,-10):- var(Cell),is_bg_color(Cell),!.
+color_mass_int(Cell,N):- color_int(Cell,N),!.
+color_mass_int(_,0).
+
+total_n(_,[],0):-!.
+total_n(S,[A|AA],Mass):- (var(A)-> LM is 0 ; LM is S * A),!,S2 is S+1, total_n(S2,AA,N),Mass is LM+N,!.
 
 call_rot([],I,I):- !.
 call_rot([H|T],I,O):- !,
@@ -34,14 +59,14 @@ call_rot([H|T],I,O):- !,
   call_rot(T,M,O).
 call_rot(T,I,O):- call(T,I,O).
 
-grav_mass(Grid,same):- iz(Grid,hv_symmetric),!.
+grav_mass(Grid,sameR):- iz(Grid,hv_symmetric),!.
 grav_mass(Grid,RotOut):- v_hv(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut,_).
 
 % make things bottem heavy
 tips_to_rot(Grid,H,V,[rot270|RotOut],Final):- H<V, !, rot90(Grid,Grid90),!,trace,tips_to_rot(Grid90,V,H,RotOut,Final).
 tips_to_rot(Grid,H,V,[rot90|RotOut],Final):- is_top_heavy(Grid), !, rot270(Grid,Grid90), !, tips_to_rot(Grid90,V,H,RotOut,Final).
 %tips_to_rot(Grid,H,V,[rot180|RotOut]):- is_top_heavy(Grid), !, rot180(Grid,Grid90), !, tips_to_rot(Grid90,H,V,RotOut).
-tips_to_rot(Grid,_H,_V,RotOut,Final):- is_left_heavy(Grid)-> (RotOut=[rot180],rot180(Grid,Final)); (RotOut=[same],Final=Grid).
+tips_to_rot(Grid,_H,_V,RotOut,Final):- is_left_heavy(Grid)-> (RotOut=[rot180],rot180(Grid,Final)); (RotOut=[sameR],Final=Grid).
 
 is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,color_w_mass(Top,TopM),color_w_mass(Bottem,BottemM),!,BottemM>TopM.
 is_left_heavy(Grid0):- rot90(Grid0,Grid),is_top_heavy(Grid).
@@ -59,7 +84,7 @@ color_w_mass(_,0).
 grav_mass(Grid,_H,_V,RotG,Grid90):- is_h_symmetric(Grid),!,bottem_heavy(Grid,RotG,Grid90).
 grav_mass(Grid,_H,_V,RotG,Grid90):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG,Grid90).
 
-bottem_heavy(Grid,Turn,Grid180):-  (is_top_heavy(Grid)->(rot180(Grid,Grid180),Turn=rot180);(Grid=Grid180;Turn=same)).*/
+bottem_heavy(Grid,Turn,Grid180):-  (is_top_heavy(Grid)->(rot180(Grid,Grid180),Turn=rot180);(Grid=Grid180;Turn=sameR)).*/
 /*
 grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
   findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
@@ -118,12 +143,12 @@ get_spatial_xformer(Name,H,V,In,Out):-
    asserta(xform_cache(Name,H,V,In,Out)),!.
 
 grid_same(X,X).
-same_grid(X1,X2):- into_grid(X1,G1),into_grid(X2,G2),same(G1,G2).
-same(X,X).
+same_grid(X1,X2):- into_grid(X1,G1),into_grid(X2,G2),sameR(G1,G2).
+sameR(X,X).
 
 test_rot:- test_p2(rot270),test_p2(rot90).
 %srot90V,flipV
-rot90( Grid,NewAnyWUpdate):- any_xform(grid_rot90,Grid,NewAnyWUpdate).
+rot90( Grid,NewAnyWUpdate):- rot180( Grid,M),rot270( M,NewAnyWUpdate).
 rot180( Grid,NewAnyWUpdate):- any_xform(grid_rot180,Grid,NewAnyWUpdate).
 rot270( Grid,NewAnyWUpdate):- any_xform(grid_rot270,Grid,NewAnyWUpdate).
 flipH( Grid,NewAnyWUpdate):- any_xform(grid_flipH,Grid,NewAnyWUpdate).
@@ -136,8 +161,9 @@ flipDHV( Grid,NewAnyWUpdate):- any_xform(grid_flipDHV,Grid,NewAnyWUpdate).
 grid_rot90(Grid,NewAnyWUpdate):-  rot270(GridM,NewAnyWUpdate),rot180(Grid,GridM).
 grid_rot180(Grid,Rot180):- flipV(Grid,Rot90),flipH(Rot90,Rot180).
 grid_rot270(Grid,NewAnyWUpdate):- get_colums(Grid,NewAnyWUpdate),!.
-grid_flipH(Grid,FlipH):- mapgroup(reverse,Grid,FlipH).
+grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
 grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
+
 grid_flipDV(Grid,FlipHV):-flipD(Grid,FlipH),flipV(FlipH,FlipHV),!.
 grid_flipDH(Grid,FlipHV):-flipD(Grid,FlipH),flipH(FlipH,FlipHV),!.
 grid_flipDHV(Grid,FlipHV):-flipD(Grid,FlipH),rot180(FlipH,FlipHV),!.
@@ -149,6 +175,7 @@ grid_flipD(I,O):- grid_size(I,H,V),make_grid(V,H,O),
        nb_set_local_point(Y,X,C,O)))).
 
 
+unrotate(UnRot,X,Y):- unrotate(UnRot,Rot),!,call_rot(Rot,X,Y).
 unrotate(rot90,rot270):-!.
 unrotate(rot270,rot90):-!.
 unrotate(X,X).

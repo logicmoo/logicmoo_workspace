@@ -296,7 +296,9 @@ i_adj(adj(Adj),TypeX-X,TypeV-V,_,
 i_adj(adj(Adj),TypeX-X,T,T,Head,Head,
  quantS(voidQ,TypeX-Y,'`'(P),'`'(Q)&Pred,[],_),Pred) :-
    lf80(TypeX,attribute_LF(Adj,TypeX,X,_,Y,P)),
-   lf80(TypeX,standard_adj_LF(Adj,TypeX,Y,Q)).
+   lf80(TypeX,l_standard_adj_LF(Adj,TypeX,Y,Q)).
+
+l_standard_adj_LF(Adj,TypeX,Y,Q):- standard_adj_LF(Adj,TypeX,Y,Q) *-> true ; Q = ajLF(Adj,TypeX,Y).
 
 /*i_s(s(Subj,Verb,VArgs,VMods),Pred,Up,Id) :-
   select(cond(_),VArgs,NewVargs), !,

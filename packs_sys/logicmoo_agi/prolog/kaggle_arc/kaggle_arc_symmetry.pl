@@ -193,7 +193,7 @@ repair_symmetry_code(Grid,RepairedResult,Code):-
       (fif(GridS\==[],print_grid(test_RepairedResult,GridS)),
        fif(Orig\==Grid,print_side_by_side(green,Orig,orig(ID),_,Grid,altered(ID))),
        print_side_by_side(green,Orig,gridIn(ID),_,RepairedResult,repairedResult(ID)),
-       maplist(print_info,GridS),
+       print_info_l(GridS),
        Errors = _,
        fif(is_grid(Out),
         (count_changes(Out,RepairedResult,0,Errors),
@@ -279,7 +279,7 @@ aligned_rows_u(_,[]):-!.
 aligned_rows_u([E|L],[E|R]):- aligned_rows_u(L,R).
 
 no_symmetry_yet(Row):- maplist(plain_var,Row),!. % no data yet
-no_symmetry_yet(Row):- maplist(=(_),Row),!. % all same element
+no_symmetry_yet(Row):- maplist(=(_),Row),!. % all sameR element
 
 sort_row_by_num_colors(G,G0):-
    maplist(row_color_changes,G,C),keysort(C,KS),reverse(KS,Now),
@@ -340,7 +340,7 @@ quaderants_and_center_rays(Grid9x9,QuadsO,CenterO,RaysO):-
    flipH(Q1,Q1R), flipV(Q3,Q3R), rot180(Q4,Q4R),
    gensym('CRef_',CRef),
    CommonQ = [iz(quadrant),iz(pattern(CRef))],
-   Quads = [obj([grid(Q2),rot(same),loc(CRef,-1,-1)|CommonQ]),
+   Quads = [obj([grid(Q2),rot(sameR),loc(CRef,-1,-1)|CommonQ]),
              obj([grid(Q1R),rot(flipH),loc(CRef,1,-1)|CommonQ]),
              obj([grid(Q3R),rot(flipV),loc(CRef,-1,1)|CommonQ]),
              obj([grid(Q4R),rot(rot180),loc(CRef,1,1)|CommonQ])],
@@ -355,11 +355,11 @@ get_center_rays(CRef,Grid9x9,Center,Rays):-
    rot180(CW,CWR), rot270(CN,CNR), rot90(CS,CSR),
    CommonR = [iz(divider(CRef)),iz(ray(CRef))],
    
-   Rays  = [obj([grid(CE),rot(same),   loc(CRef,1,0)|CommonR]),
+   Rays  = [obj([grid(CE),rot(sameR),   loc(CRef,1,0)|CommonR]),
              obj([grid(CWR),rot(rot180),loc(CRef,-1,0)|CommonR]),
              obj([grid(CSR),rot(rot90), loc(CRef,0,1)|CommonR]),
              obj([grid(CNR),rot(rot270),loc(CRef,0,-1)|CommonR])],
-   Center =  [obj([grid(CC),rot(same),loc(CRef,0,0)|iz(center(CRef))])],!.
+   Center =  [obj([grid(CC),rot(sameR),loc(CRef,0,0)|iz(center(CRef))])],!.
 
 
 filter_empty_grids(List,ListO):- include(obj_has_form,List,ListO).
@@ -455,9 +455,9 @@ pad_right(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (rot270(Grid,GridM), pad_top(N
 pad_top(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (grid_size(Grid,H,_V),make_grid(H,N,Top),append(Top,Grid,GridO))).
 pad_bottem(N,Grid,GridO):-  (N==0 -> Grid=GridO ;  (grid_size(Grid,H,_V),make_grid(H,N,Bot),append(Grid,Bot,GridO))).
 
-clip_rot_patterns(flipV,rot180,flipH,same,kaleidoscope_four).
-clip_rot_patterns(same,same,same,same,four_the_same).
-clip_rot_patterns(flipH,flipH,same,same,four_way_h_flip).
+clip_rot_patterns(flipV,rot180,flipH,sameR,kaleidoscope_four).
+clip_rot_patterns(sameR,sameR,sameR,sameR,four_the_same).
+clip_rot_patterns(flipH,flipH,sameR,sameR,four_way_h_flip).
 
 is_fti_step(glean_grid_patterns).
 
@@ -532,7 +532,7 @@ mass_ok(Grid,RepairedResult):-
   mass(Grid,OMass),!,
   mass(RepairedResult,RMass),!,  
   DMass is RMass/OMass,
-  %pt(yellow,[oMass=OMass,rMass=RMass,dMass=DMass]),!,
+  %ppt(yellow,[oMass=OMass,rMass=RMass,dMass=DMass]),!,
   ((DMass>0.5,DMass<1.6)
    -> true ; 
    (fail,DMass<1.63,print_side_by_side(red,Grid,too_much_change(gridIn,dMass=DMass),_,RepairedResult,too_much_change(repairedOut)),fail)).
@@ -630,14 +630,14 @@ guess_unbind_color(UnbindColor,Grid,RepairedResult):-
 
 blur_least(B,Mix,I,O):-
   blur_list(B,Mix,I,S),
-  S=[O-pt(blur_some(B,Mix))|_].
+  S=[O-ppt(blur_some(B,Mix))|_].
 
 /*
 ?- into_grid(t('1b60fb0c')*_*_,I),blur_list(B,Mix,I,O),maplist(print_side_by_side(I),O).
 
 */
 blur_list(B,Mix,I,S):-
-  findall(O-pt(blur_some(B,Mix)),blur_some(B,Mix,I,O),L),
+  findall(O-ppt(blur_some(B,Mix)),blur_some(B,Mix,I,O),L),
   predsort(sort_on(pointy_mass),L,S).
 
 pointy_mass(P,Mass):- is_pointy(P),!,mass(P,Mass).
@@ -822,7 +822,7 @@ select_p2_rot(P2,RepairedResult,Orig):- fail,
 rot_orig(RepairedResult,Orig):- rot_orig(_P,RepairedResult,Orig).
 rot_orig(P2,RepairedResult,Orig):- (var(P2)->rotP(P2);true),call(P2,RepairedResult,Orig).
 rotP_L(P_L):- findall(P2,rotP(P2),P_L).
-rotP(same).
+rotP(sameR).
 rotP(flipD).
 rotP(blur_least(_,fg)).
 rotP(flipV).
@@ -974,7 +974,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   maplist(append_term(remObjects),Ordered,RemoveObjs),
   append(CCs,RemoveObjs,RemovalTrials))))),!,
 
-  trial_removal([same|RemovalTrials],G3,RemovalTrialUsed,GridOS),
+  trial_removal([sameR|RemovalTrials],G3,RemovalTrialUsed,GridOS),
   %trial_removal([unbind_color(brown)],G3,RemovalTrialUsed,GridO))),
   try_whole_grid_xforms(GridOS),
   =(GridOS,GridO),
@@ -1360,8 +1360,8 @@ repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,KeepNewState,Rep
   prefect_result(VM,H,V,Ordered,Grids,RepairedResult,ColorAdvice),
   %print_grid(_,_,repairedResult,RepairedResult),
   localpoints_include_bg(RepairedResult,LPoints),
-%  pt(RepairedResult),
-  %pt(LPoints),
+%  ppt(RepairedResult),
+  %ppt(LPoints),
  %together(( localpoints_include_bg(RepairedResult,LPoints),hv_c_value(LPoints,C,1,2))),
  % together((maplist(set_local_points(LPoints),Grids,CorrectGrids),
  %           maplist(check_my_local_points(LPoints),CorrectGrids),
@@ -1392,7 +1392,7 @@ replace_diffs(LPoints,Obj,NewObj):-
   intersection(LP,Points,_Same,LPOnly,LPointOnly),
   ((LPOnly ==[], LPointOnly ==[]) -> NewObjM = Obj ;
   (
-   % pt(LPOnly), pt(LPointOnly),
+   % ppt(LPOnly), ppt(LPointOnly),
   rebuild_from_localpoints(Obj,Points,NewObjM))))),
   override_object(repaired(pattern),NewObjM,NewObj),
     %mprint_grid(NewObj),
@@ -1635,12 +1635,12 @@ glean_pattern_reps(Steps,G,NewGrid):-
   print_grid(G),
   writeln(repired_result),
   Steps = rp(patW=PatWidth,type=Type,divW=DivW,startV=StartV,patV=PatV),
-  pt(Steps),
-  %pt(Grid9x9),
+  ppt(Steps),
+  %ppt(Grid9x9),
   print_grid(Pattern),!,
   ignore(((Div\==[]),print_grid([Div]))),!,
   StartH=0,
-  (must_not_error((gen_pattern(H,V,StartH,StartV,Pattern,Div,same,NewGrid),
+  (must_not_error((gen_pattern(H,V,StartH,StartV,Pattern,Div,sameR,NewGrid),
   print_grid(NewGrid)))),  
   dash_chars)),!.
 
@@ -1708,11 +1708,11 @@ find_and_use_pattern_gen(G,Grid9x9):-
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYQ2,EXQ2,EYQ2,G,rot180,Q2),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYQ2,EXQ4,EYQ2,G,flipV,Q1),
   clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYQ4,EXQ2,EYQ4,G,flipH,Q3),
-  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,same,Q4),
+  clip_quadrant(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,sameR,Q4),
   %clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXCC,SYCC,EXCC,EYCC,G,CC),    
   clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXCC,SYQ2,EXCC,EYQ2,G,rot270,CN),
   clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXCC,SYQ4,EXCC,EYQ4,G,rot90,CS),
-  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYCC,EXQ4,EYCC,G,same,CE),
+  clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ4,SYCC,EXQ4,EYCC,G,sameR,CE),
   clip_ray(CRef,EXQ2,EYQ2,SXQ4,SYQ4,VM,SXQ2,SYCC,EXQ2,EYCC,G,rot180,CW),
   nop(print_symmetry(localpoints,Q2,Q1,Q3,Q4)),!.
 
@@ -1771,7 +1771,7 @@ most_d_colors(Grid,ColorO,GridNM):-
   %trace,
   get_fill_points(Grid,Points,GridNM),
   uneib(Points,FPoints),
-  % grid_size(GridNM,H,V), pt(fillPoints(H,V) = FPoints),
+  % grid_size(GridNM,H,V), ppt(fillPoints(H,V) = FPoints),
   sort(FPoints,NPSS),
   %trace,
   % (N2-C)-P1
@@ -1909,11 +1909,16 @@ blackFree(E):- ignore(black=E).
 g_or_gc(_,G,G).
 %g_or_gc(G,_,G).
 
+flipSome1(Rot,X,Y):- flipSome(Rot,X,Y),X\=@=Y.
+flipSome1(sameR,X,X).
+
 flipSome(rot90,X,Y):- rot90(X,Y).
 flipSome(flipV,X,Y):-  flipV(X,Y).
 flipSome(rot270,X,Y):-  rot270(X,Y).
 flipSome(rot180,X,Y):- rot180(X,Y).
 flipSome(flipH,X,Y):-  flipH(X,Y).
+flipSome(flipD,X,Y):-  flipD(X,Y).
+flipSome(flipDHV,X,Y):-  flipDHV(X,Y).
 
 
 % (N2-C)-P1

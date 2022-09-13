@@ -42,7 +42,7 @@ with_no_x(G):- with_no_x_flag(X,V),current_prolog_flag(X,Was),Was\==V,!,
  call_cleanup((set_prolog_flag(X,V),with_no_x(G)),set_prolog_flag(X,Was)).
 with_no_x(G):- locally_each(tlbugger:show_must_go_on(true),call(G)).
 
-
+with_no_xdbg_flag(gui_tracer, false).
 with_no_xdbg_flag(backtrace,false).
 with_no_xdbg_flag(debug_threads,false).
 with_no_xdbg_flag(debug,false).
@@ -63,7 +63,8 @@ with_no_xdbg_flag(verbose,silent).
 no_xdbg_flags:- forall(with_no_xdbg_flag(X,V),set_prolog_flag(X,V)).
 
 with_no_xdbg(G):- tracing,!,call_cleanup((notrace,with_no_xdbg(G)),trace).
-with_no_xdbg(G):- with_no_xdbg_flag(X,V),current_prolog_flag(X,Was),Was\==V,!,call_cleanup((set_prolog_flag(X,V),with_no_xdbg(G)),set_prolog_flag(X,Was)).
+with_no_xdbg(G):- with_no_xdbg_flag(X,V),
+  current_prolog_flag(X,Was),Was\==V,!,call_cleanup((set_prolog_flag(X,V),with_no_xdbg(G)),set_prolog_flag(X,Was)).
 with_no_xdbg(G):- with_no_x(G).
 
 

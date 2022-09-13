@@ -149,30 +149,30 @@ This module allows use of C++ like structures in prolog.
 :- ensure_loaded(library(ordsets)).
 
 /*
-default_point/1,
-is _point/1,
-make_point/2,
-make_point/3,
-nb_set_x_of_point/2,
-nb_set_y_of_point/2,
-point_data/3,
-point_x/2,
-point_y/2,
-set_point_field/3,
-set_point_fields/3,
-set_point_fields/4,
-set_x_of_point/2,
-set_x_of_point/3,
-set_y_of_point/2,
-set_y_of_point/3,
+default_point2d/1,
+is _point2d/1,
+make_point2d/2,
+make_point2d/3,
+nb_set_x_of_point2d/2,
+nb_set_y_of_point2d/2,
+point2d_data/3,
+point2d_x/2,
+point2d_y/2,
+set_point2d_field/3,
+set_point2d_fields/3,
+set_point2d_fields/4,
+set_x_of_point2d/2,
+set_x_of_point2d/3,
+set_y_of_point2d/2,
+set_y_of_point2d/3,
 */
-:- record(point(x:integer=0, y:integer=0)).
+:- record(point2d(x:integer=0, y:integer=0)).
      /*
-        default_point(Point),
-        point_x(Point, X),
-        set_x_of_point(10, Point, Point1),
+        default_point2d(Point),
+        point2d_x(Point, X),
+        set_x_of_point2d(10, Point, Point1),
 
-        make_point([y(20)], YPoint),
+        make_point2d([y(20)], YPoint),
    */
 
 :- use_module(library(assoc)).

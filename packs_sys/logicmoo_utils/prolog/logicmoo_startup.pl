@@ -1220,7 +1220,7 @@ lmconfig:never_export_named(_,'>>',2).
 lmconfig:never_export_named(_,'==>',2).
 lmconfig:never_export_named(_,'=>',2).
 */
-lmconfig:never_export_named(_,Symbol,_):- upcase_atom(Symbol,UC),Symbol==UC,!.
+lmconfig:never_export_named(_,Symbol,N):- upcase_atom(Symbol,UC),Symbol==UC, N=<3,!.
 lmconfig:never_export_named(_,isa,2).
 lmconfig:never_export_named(_,F,_):- atom_concat('$',_,F) ; atom_concat('__aux',_,F).
 
@@ -1495,25 +1495,35 @@ user:expand_query(Goal, _Expanded, Bindings, _ExpandedBindings):-        fail,
 
 fixup_exports:-
    all_source_file_predicates_are_exported,
-   all_source_file_predicates_are_transparent.
+   all_source_file_predicates_are_transparent,
+   fixup_module_exports_now.
 
+:- module_transparent(fixup_exports_system/0).
 fixup_exports_system:-   (prolog_load_context(source,SF)-> reexport(SF) ; true).
 
 :- module_transparent(fixup_module_exports_now/0).
 fixup_module_exports_now:- 
-  fixup_module_exports_into(system).
+  (prolog_load_context(reloading,true)->true;fixup_module_exports_into(system)).
+
+:- module_transparent(loading_from_module/1).
+loading_from_module(From):- \+ source_location(_,_), !, '$current_typein_module'(From).
+loading_from_module(From):- source_location(Src,_),module_property(From,file(Src)),!.
+loading_from_module(From):- source_location(_,_),prolog_load_context(source,Src),module_property(From,file(Src)),!.
+loading_from_module(From):- prolog_load_context(module,From),!.
+loading_from_module(From):- '$current_source_module'(From),!.
+loading_from_module(From):- strip_module(_,From,_).
 
 :- module_transparent(fixup_module_exports_into/1).
 fixup_module_exports_into(Into):- 
-  strip_module(_,From,_),
-  fixup_module_exports_into_from(Into,From).
+  loading_from_module(From),
+  now_and_later(fixup_module_exports_into_from(Into,From)).
 
 :- module_transparent(fixup_module_exports_into_from/2).
 fixup_module_exports_into_from(_Into,From):- system == From, !.
 fixup_module_exports_into_from(Into,From):- 
   format('~N% ?- ~q. ~n',[fixup_module_exports_into_from(Into,From)]),
-  forall((predicate_property(From:P,defined), \+ predicate_property(From:P,imported_from(_))),    
-    (functor(P,F,A),From:define_into_module(From:Into,F/A))).
+  forall((predicate_property(From:P,defined), \+ predicate_property(From:P,imported_from(_)),functor(P,F,A)),    
+    From:define_into_module(From:Into,F/A)).
 
 :- meta_predicate(define_into_module(:,+)).
 define_into_module(_:From:Into,FA):- define_into_module_now_and_later(From,Into,FA).
@@ -1539,15 +1549,15 @@ define_into_module_now1(From,Into,op(P,XFY,F)):-!,notrace(catch(From:op(P,XFY,F)
 define_into_module_now1(From,Into,F//A):- number(A), !, A2 is A+2,define_into_module_now1(From,Into,F/A2).
 define_into_module_now1(_,Into,F/A):- lmconfig:never_reexport_named(Into,F,A),!.
 define_into_module_now1(_,Into,F/A):- lmconfig:never_export_named(Into,F,A),!.
+%ignore((\+ current_predicate(Into:F/A), functor(P,F,A), Into:assert(((Into:P):- P)))),
 define_into_module_now1(From,Into,F/A):-
  %From:dynamic(F/A),
- notrace(catch(From:export(From:F/A),_,true)),
- notrace(catch(From:module_transparent(From:F/A),_,true)),
- ((Into == From -> true ; notrace(catch(Into:import(From:F/A),_,true)))),
- %ignore((\+ current_predicate(Into:F/A), functor(P,F,A), Into:assert(((Into:P):- P)))),
- nop(module_transparent(Into:F/A)).
-define_into_module_now1(From,Into,FA):- format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]),
-  dumpST,format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]).
+ ignore(notrace(catch(From:export(From:F/A),_,true))),
+ ignore(notrace(catch(From:module_transparent(From:F/A),_,true))),
+ (((Into == From -> true ; ignore(notrace(catch('@'(import(From:F/A),Into),_,true)))))), 
+ !.
+define_into_module_now1(From,Into,FA):- %format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]),
+  format(user_error,'~N ~q ~n',[define_into_module_now(From,Into,FA)]).
 
 :- redefine_system_predicate(system:nop/1).
 :- abolish(system:nop/1),asserta(system:nop(_)).
@@ -1555,6 +1565,8 @@ define_into_module_now1(From,Into,FA):- format(user_error,'~N ~q ~n',[define_int
 %
 %  Comments out code without losing syntax
 %
+
+%:- fixup_module_exports_into(system).
 
 :- define_into_module(
          [maybe_notrace/1,

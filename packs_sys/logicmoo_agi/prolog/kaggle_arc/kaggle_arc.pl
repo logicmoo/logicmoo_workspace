@@ -7,9 +7,9 @@
 
 :- encoding(iso_latin_1).
 
-% :- pack_install(logicmoo_utils).
+%:- pack_install('https://github.com/logicmoo/logicmoo_utils.git').
+%:- pack_upgrade(logicmoo_utils).
 % :- pack_install(dictoo).
-:- pack_upgrade('https://github.com/logicmoo/logicmoo_utils.git').
 % :- pack_upgrade(dictoo).
 
 %:- module(system).
@@ -43,7 +43,6 @@
 :- discontiguous(individuation_macros/2).
 :- multifile(individuation_macros/2).
 
-:- multifile(goal_expansion/4).
 
 arc_history(_).
 arc_history1(_).
@@ -121,7 +120,7 @@ quietlyd(G):- quietly(G),!.
 
   :- SL  is 2_147_483_648*8*4, set_prolog_flag(stack_limit, SL ).
   :- (getenv('DISPLAY',_) -> true ; setenv('DISPLAY','10.0.0.122:0.0')).
-  :- unsetenv('DISPLAY').
+  %:- unsetenv('DISPLAY').
 %  :- (getenv('DISPLAY',_) -> guitracer ; true).
 %  :- noguitracer.
   :- set_prolog_flag(toplevel_print_anon,false).
@@ -142,8 +141,10 @@ quietlyd(G):- quietly(G),!.
 :- set_prolog_flag(backtrace_depth,1000).
 :- catch(noguitracer,_,true).
 
+clsmake:- is_detatched_thread,!.
+clsmake:- notrace((cls_z,!,update_changed_files,make)),!.
 
-clsmake:- notrace((cls,!,update_changed_files,make)),!.
+%arc_assert(P):- pfcAddF(P).
 
 :- else.  % SWISH ARC
 :- catch(noguitracer,_,true).
@@ -161,6 +162,12 @@ pfcFwd(P):- mpred_fwc(P).
 arc_assert(P):- pfcAdd(P).
 
 :- endif.
+
+pfcAddF(P):-  
+  forall(retract(P),true),
+  ignore(mpred_info(P)),
+  pfcUnique(post, P)-> pfcAdd(P) ; pfcFwd(P).
+
 
 %:- set_prolog_flag(verbose_load,true).  
 %:- set_prolog_flag(verbose_autoload,true).
@@ -206,13 +213,13 @@ check_len(_).
 :- meta_predicate(must_not_error(0)).
 %:- meta_predicate(must_det_l(0)).
 
+:- no_xdbg_flags.
 
 %must_det_ll(G):- !, call(G).
 %must_det_ll(X):- !,must_not_error(X).
 must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(must_det_ll,List).
 must_det_ll(must_det_ll(X)):- !, must_det_ll(X).
-must_det_ll(X):- tracing,!,must_not_error(X).
-must_det_ll((X,Y,Z)):- !, (must_det_ll(X),must_det_ll(Y),must_det_ll(Z)).
+must_det_ll((X,Y,Z)):- !, (must_det_ll(X)->must_det_ll(Y)->must_det_ll(Z)).
 must_det_ll((X,Y)):- !, (must_det_ll(X)->must_det_ll(Y)).
 must_det_ll(fif(X,Y)):- !, fif(must_not_error(X),must_det_ll(Y)).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
@@ -220,12 +227,13 @@ must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
 must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
 %must_det_ll((M:Y)):- nonvar(M), !, M:must_det_ll(Y).
+must_det_ll(X):- tracing,!,must_not_error(X).
 must_det_ll(once(A)):- !, once(must_det_ll(A)).
 must_det_ll(X):- 
   strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
     nop(trace(M:F/A,-fail))).
 
-must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/writeq(E=X),pt(rrtrace=X),rrtrace(X)))).
+must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/writeq(E=X),ppt(rrtrace=X),rrtrace(X)))).
 
 must_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,rrtrace(X),!.
 % must_det_ll(X):- must_det_ll(X),!.
@@ -402,11 +410,14 @@ arc_term_expansions(H:- (current_prolog_flag(arc_term_expansion, true), B)):-
 
 :- export(enable_arc_expansion/0).
 enable_arc_expansion:-
- forall(arc_term_expansions(Rule),asserta_if_new(Rule)).
+ forall(arc_term_expansions(Rule),
+   (strip_module(Rule,M,Rule0), wdmsg(asserta_if_new(Rule,M,Rule0)),asserta_if_new(Rule))),
+ set_prolog_flag(arc_term_expansion, true).
 
 :- export(disable_arc_expansion/0).
 disable_arc_expansion:-
- forall(arc_term_expansions(Rule),forall(retract(Rule),true)).
+ forall(arc_term_expansions(Rule),forall(retract(Rule),true)),
+ set_prolog_flag(arc_term_expansion, false).
 
 
 /*
@@ -468,7 +479,6 @@ luser_getval(ID,N,V):-
 :- dynamic(mregression_test/0).
 
 :- enable_arc_expansion.
-:- set_prolog_flag(arc_term_expansion, true).
 
 %:- set_prolog_flag(verbose_load,true).  
 %:- set_prolog_flag(verbose_autoload,true).
@@ -554,7 +564,12 @@ arc1(G,TName):-
     run_arc_io(TestID,ExampleNum)),'$aborted',true)))))).
 
 
-cls1:- nop(catch(cls,_,true)).
+is_detatched_thread:- arc_webui,!.
+is_detatched_thread:- \+ (thread_self(Main) -> Main == main ; main==0),!.
+
+cls_z:- is_detatched_thread,!.
+cls_z:- catch(cls,_,true).
+cls1:- nop(catch(cls_z,_,true)).
 
 list_to_rbtree_safe(I,O):- must_be_free(O), list_to_rbtree(I,M),!,M=O.
 :- dynamic(is_buggy_pair/2).
@@ -650,7 +665,7 @@ make_training(TestID,VMO):-
      inC:_InC,outC:_OutC,
      removed:_,added:_, kept:_,   
      grid_in:_,grid_target:_,
-   set(VM.mappings) =[map])), !. % pt(VM),nl.
+   set(VM.mappings) =[map])), !. % ppt(VM),nl.
   */
 
 
@@ -737,10 +752,10 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  atom_concat(IO1,N1,ION1),
  atom_concat(IO2,N2,ION2),
  atomic_list_concat([ION1,ION2],'_',ExampleNum),
- pt([train_for_objects_from_1pair1=ExampleNum,left=ION1,right=ION2]),
+ ppt([train_for_objects_from_1pair1=ExampleNum,left=ION1,right=ION2]),
  garbage_collect,
   Dict0=Dict1,
-   format('~N dict= '), pt(Dict0),
+   format('~N dict= '), ppt(Dict0),
 
    %get_map_pairs(Dict0,_Type,Pairs),
    %list_to_rbtree_safe(Pairs,InVM),
@@ -777,14 +792,14 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   show_pair_grid(cyan,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,
   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
   luser_setval(no_rdot,true),
-  ((Removed==Added, Removed==[]) -> pt(yellow,nothing_removed_added(PairName)) ;
+  ((Removed==Added, Removed==[]) -> ppt(yellow,nothing_removed_added(PairName)) ;
     show_pair_diff_code(IOH,IOV,IOH,IOV,removed(PairName),added(PairName),PairName,Removed,Added)),
-  ((RetainedIn==RetainedOut, RetainedIn==[]) -> pt(yellow,nothing_retained(PairName)) ;
+  ((RetainedIn==RetainedOut, RetainedIn==[]) -> ppt(yellow,nothing_retained(PairName)) ;
     show_pair_diff_code(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
-  ((InC==OutC, InC==[]) -> pt(yellow,nothing_individuated(PairName)) ;
+  ((InC==OutC, InC==[]) -> ppt(yellow,nothing_individuated(PairName)) ;
     show_pair_diff_code(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!, 
   luser_setval(no_rdot,false),
-   % pt(OutC=InC),
+   % ppt(OutC=InC),
 
    ignore(( learn_rule_o(ModeIn,InVM,OutVM))),
 
@@ -800,7 +815,7 @@ show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   nop(show_pair_code(In,Out)),!.
 
 show_pair_code(In,Out):- 
-  pt(purple,show_objs_as_code),
+  ppt(purple,show_objs_as_code),
   dash_chars,
   show_objs_as_code(In),
   dash_chars,
@@ -808,7 +823,7 @@ show_pair_code(In,Out):-
   dash_chars,dash_chars.
 
 print_testinfo(TestID):-
-  ignore(((test_info(TestID,F),forall(member(I,F),pt(test_info=I))))).
+  ignore(((test_info(TestID,F),forall(member(I,F),ppt(test_info=I))))).
 
 % trials(learn). trials(clue).   
 trials(human). trials(sol).
@@ -878,14 +893,14 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     %print_testinfo(TestID),
     do_sols_for(Trial,"Taking Test",InVM,TestID,ExampleNum))).
 
-    % find indiviuation one each side that creates the same number of changes
+    % find indiviuation one each side that creates the sameR number of changes
     
 do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
  must_det_ll(( ptt("BEGIN!!!"+Why+TestID*ExampleNum), 
     kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
     forall(sols_for(TestID,Trial,SolutionProgram),
      ignore(((
-      once((pt(cyan,trial=Trial),
+      once((ppt(cyan,trial=Trial),
        ptt(cyan,run_dsl(TestID*ExampleNum,Trial,SolutionProgram)),!,
        (time((
               maybe_set_vm(InVM),
@@ -942,8 +957,8 @@ reuse_a_b(A,B,AA):-
   setq(A,oid(BOID),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
-  ignore((How ==[]-> nop(pt(shared_object(GlyphB->GlyphA))); 
-    (pt(same_object(GlyphA,GlyphB,How))))).
+  ignore((How ==[]-> nop(ppt(shared_object(GlyphB->GlyphA))); 
+    (ppt(same_object(GlyphA,GlyphB,How))))).
 
 test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_det_ll(Body)).
 :- arc_history1(test_regressions).
@@ -958,7 +973,7 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 %:- initialization(demo,main).
 %:- initialization(demo,after_load).
 :- muarc_mod(M), arc_history1((module(M))).
-:- add_history1((cls,make,demo)).
+:- add_history1((cls_z,make,demo)).
 
 %:- muarc_mod(M), M:show_tests.
 :- load_last_test_name.
@@ -973,13 +988,10 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 saved_training(TestID):- call_u('~'(saved_training(TestID))), !, fail. % explictly always assume unsaved?
 saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
 
-pfcAddF(P):-
-  ignore(mpred_test_why(P)),
-  forall(retract(P),true),
-  pfcUnique(post, P)-> pfcAdd(P) ; pfcFwd(P).
 
 
-:- baseKB:ensure_loaded('kaggle_arc_fwd.pfc').
+:- set_prolog_flag(arc_term_expansion, true).
+:- ensure_loaded('kaggle_arc_fwd.pfc').
 %:- set_prolog_flag(arc_term_expansion, false).
 
 %:- if(prolog_load_context(reload,false)).
@@ -992,4 +1004,4 @@ user:portray(Grid):- current_predicate(is_group/1), \+ \+ catch(quietly(arc_port
 :- fixup_module_exports_into(baseKB).
 :- fixup_module_exports_into(system).
 
-:- forall(find_tests(F),xlisting_web:offer_testcase(F)).
+

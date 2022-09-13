@@ -71,8 +71,8 @@ with_butterfly_console(TF,Goal):- in_bfly(TF,Goal).
 %  setup_call_cleanup(asserta(lmcache:is_butterfly_thread(X,TF),Ref),Goal,erase(Ref)).
 
 is_butterfly_console:- toplevel_pp(bfly),!.
-%is_butterfly_console:- thread_self(X), lmcache:is_butterfly_thread(X,TF),!,TF==t.
-%is_butterfly_console:- getenv('COLORTERM',butterfly),!.
+is_butterfly_console:- thread_self(X), lmcache:is_butterfly_thread(X,TF),!,TF==t.
+is_butterfly_console:- getenv('COLORTERM',butterfly),!.
 %is_butterfly_console:- thread_self(X),atom(X),(atom_concat(_,'23',X);atom_concat(_,'01',X);atom_concat(_,'00',X)),!.
 
 
@@ -195,7 +195,7 @@ print_raw_html_page(S):-
 %:-  http_handler(swish(logicmoo), xlisting_web:handler_logicmoo_cyclone, [id(handler_logicmoo_cyclone)]). % chunked
 %:-  http_handler(swish(nc_logicmoo), xlisting_web:handler_logicmoo_cyclone1, [chunked,id(handler_logicmoo_cyclone1)]).
 %:- http_handler('/swish/bfly_decl_1_style',butterfly:bfly_decl_1_style,[prefix]).
-:- http_handler(root(swish/bfly_decl_style),bfly_decl_style_http,[chunked,methods([get,post,put])]).
+:- http_handler(('/swish/bfly_decl_style'),bfly_decl_style_http,[chunked,methods([get,post,put])]).
 
 
 :- export(bfly_decl_1_style/3).
@@ -475,7 +475,7 @@ bfly_write(_Styl,X):-!, pformat(X).
 :- multifile(cp_menu:menu_item/2).
 :- dynamic(cp_menu:menu_item/2).
 :- asserta(cp_menu:menu_item('https://logicmoo.org/4123/',	'Butterfly REPL')).
-:- asserta(cp_menu:menu_item('https://logicmoo.org/swish/',	'SWISH')).
+:- asserta(cp_menu:menu_item('/swish/',	'SWISH')).
 
 :- meta_predicate(esc_screen(0)).
 esc_screen(X):- Style=current,
@@ -626,6 +626,8 @@ bfly_test(6):-  bfly_html_goal(writeln('<pre><iframe src="/swish/" name="example
 bfly_test(7):-  write(hi),ansi_format([fg(red)],'Hello there\nHi there bob\n',[]),nl,write(good).
 
 into_attribute_q(Obj,TextBoxObj):- sformat_safe(Text,'~q',[Obj]),into_attribute(Text,TextBoxObj).
+:- export(into_attribute/2).
+:- system:import(into_attribute/2).
 into_attribute(Obj,TextBoxObj):-
   (atomic(Obj)->sformat_safe(Text,'~w',[Obj]);sformat_safe(Text,'~q',[Obj])),
    xml_quote_attribute(Text,TextBoxObj,ascii),!.

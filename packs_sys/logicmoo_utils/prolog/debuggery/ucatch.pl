@@ -970,8 +970,8 @@ sub_goal(U,UU):- sub_term(U,UU),nonvar(U), U\==UU.
 %
 % Source Module.
 %
-source_module(M):- \+ prolog_load_context(file,_),!, '$current_typein_module'(M).
 source_module(M):- nonvar(M),!,source_module(M0),!,(M0=M).
+source_module(M):- \+ source_location(_,_),!, '$current_typein_module'(M).
 source_module(M):- '$current_source_module'(M),!.
 source_module(M):- '$set_source_module'(M,M),!.
 source_module(M):- strip_module(_,M,_).

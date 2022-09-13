@@ -139,7 +139,7 @@ $('body').each(function() {
     loadjsfile("/swish/js/cliopatria.js")
     loadcssfile("/swish/css/butterfly_term.css")
     loadcssfile("/swish/css/term.css")
-	loadjsfile("/ef/files/ws.mount/shrdlu/eval_socket.js")
+	// loadjsfile("/ef/files/ws.mount/shrdlu/eval_socket.js")
     console.log("loadjsfile");
     //debugger;
 

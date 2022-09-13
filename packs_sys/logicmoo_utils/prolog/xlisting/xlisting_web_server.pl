@@ -16,14 +16,33 @@
 :- set_module(class(library)).
 
 
+swish_reply_config_root(Request):-
+  (current_predicate(swish_config:swish_reply_config/1)
+   -> swish_config:swish_reply_config(Request); 
+      swish_reply_config_root).
 
-swish_reply_config_root(_Request):-
+swish_reply_config_root:-
+  current_predicate(swish_config:json_config/2),!,
   swish_config:
   (json_config(JSON, []),
 	 reply_json(JSON)).
+swish_reply_config_root:- 
+  user:file_search_path(xlisting_web,Here),
+  atom_concat(Here,'/swish_config.json',ConfigFile),
+  exists_file(ConfigFile),!,
+  format('Content-type: application/json; charset=UTF-8~n~n'),
+  read_file_to_string(ConfigFile,Config,[]),
+  write(current_output, Config).
+swish_reply_config_root:- 
+  http_json:reply_json(_{}).
+
+
+
+
 
 :- http_handler('/swish_config.json', swish_reply_config_root,[]).
 
+/*
 
 :- dynamic user:library_directory/1.
 :- multifile user:library_directory/1.
@@ -36,6 +55,7 @@ hide_xpce_library_directory:- fail,
 hide_xpce_library_directory.
 
 %:- hide_xpce_library_directory.
+*/
 :- set_prolog_flag(hide_xpce_library_directory,true).
 
 %:- ensure_loaded(library(logicmoo_swilib)).
@@ -114,18 +134,25 @@ handler_logicmoo_cyclone3a(X):- xlisting_web:handler_logicmoo_cyclone3(X).
 % File Search Path.
 %
 :- prolog_load_context(directory,Here),atom_concat(Here,'/pixmaps',NewDir),asserta_new((user:file_search_path(pixmapx,NewDir))).
+:- prolog_load_context(directory,Here),asserta_new((user:file_search_path(xlisting_web,Here))).
 %user:file_search_path(pixmapx, logicmoo('mpred_online/pixmapx')).
+
+%user:file_search_path(pixmapx,NewDir):- user:file_search_path(xlisting_web,Here), atom_concat(Here,'/pixmaps',NewDir).
 
 register_logicmoo_browser:- 
   %http_handler('/lm_xref/', handler_logicmoo_cyclone0, [prefix]), % chunked
   %http_handler('/lm_xref_nc/', handler_logicmoo_cyclone1, [prefix,chunked]),
-  http_handler(swish('lm_xref'), handler_logicmoo_cyclone2a, [prefix,priority(50)]), % chunked
-  http_handler(swish('lm_xref/swish_config.json'), swish_config:swish_reply_config,[priority(200)]),
-  http_handler(swish('lm_xref/slowcode'), handler_logicmoo_slowcode, [prefix,chunked,priority(100)]), % chunked
-  http_handler(swish(lm_xref/pixmapx), http_server_files:serve_files_in_directory(pixmapx), [prefix,priority(100)]),
-  http_handler(swish('lm_xref_nc'), handler_logicmoo_cyclone3a, [prefix,chunked]),
+  http_handler(('/swish/lm_xref'), handler_logicmoo_cyclone2a, [prefix,priority(50)]), % chunked
+  http_handler(('/swish/lm_xref/swish_config.json'), swish_reply_config_root,[priority(200)]),
+  http_handler(('/swish/lm_xref/slowcode'), handler_logicmoo_slowcode, [prefix,chunked,priority(100)]), % chunked
+  http_handler(('/swish/lm_xref/pixmapx'), http_server_files:serve_files_in_directory(pixmapx), [prefix,priority(100)]),
+  http_handler(('/swish/lm_xref_nc'), handler_logicmoo_cyclone3a, [prefix,chunked]),
 
   nop(doc_collect(true)).
+
+:- fixup_module_exports_into(baseKB).
+:- fixup_module_exports_into(system).
+
 :- register_logicmoo_browser.
 
 

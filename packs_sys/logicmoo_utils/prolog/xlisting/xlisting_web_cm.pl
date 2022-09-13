@@ -2,6 +2,27 @@
 
 once_per_request(G):- must_run_html(G),!.
 
+ensure_readable_html:-
+  once_per_request(format('~s',[`
+<style>
+body {
+  background: #000000; 
+  mix-blend-mode: difference;
+}
+
+p {
+	background: #ffffff;
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAA1BMVEVilQmZw+RvAAAAAXRSTlOF3TSvyQAAAD1JREFUeNrtwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBmnQgAAd4aVNwAAAAASUVORK5CYII=");
+	background-repeat: repeat-y;
+    background-size: 0% auto;
+	color: #ffffff;
+	padding: 5px;
+	text-align: center;
+	border: 1px solid #3E8096;
+	display: block; 
+}
+</style>`])).
+
 
 ensure_swish_app_html:-
   once_per_request(format('\n<div id="hidden_swish_app" style="display:none; visibility:hidden">
@@ -246,6 +267,7 @@ html {
 }
 </style>
 </div>
+
 '))).
 
 
@@ -315,6 +337,7 @@ write('
             </selecton-tooltip>
         </div>
     </div>
+
 
 <script type="text/javascript">
 
@@ -601,7 +624,9 @@ once_per_request(pformat_write(`<style>
   background-color: #f1f1f1;
 }
 
-</style>`)).
+</style>
+
+`)).
 
 ensure_colapsable_script:- 
 once_per_request(pformat_write('

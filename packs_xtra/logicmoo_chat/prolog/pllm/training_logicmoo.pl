@@ -546,6 +546,7 @@ use_scene_info(scene_info(_Name,_,_Chars,Vars,AllEvents)):-
 
 use_linear_events(LE):- wdmsg(LE).
 
+
 combine_whos(Who,Did,[],[Who:Did]):- !.
 combine_whos(Who,Did,[Who1:Does|Events],LinearEvents):- Who==Who1,!,
   combine_events(Did,Does,DidDoes),

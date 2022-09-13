@@ -38,6 +38,8 @@ arc_memoized(G):-
 set_nth1(1,[_|Row],E,[E|Row]):-!.
 set_nth1(N,[W|Row],E,[W|RowMod]):- Nm1 is N-1, set_nth1(Nm1,Row,E,RowMod).
 
+findall_count(T,G,N):- findall(T,G,L),list_to_set(L,S),length(S,N).
+
 make_list_inited(0,_,[]):-!.
 make_list_inited(1,E,[E]):-!.
 make_list_inited(N,E,[E|List]):- Nm1 is N -1,make_list_inited(Nm1,E,List).
@@ -52,7 +54,7 @@ add_i(Info):-
  luser_getval(pair_rules,PRules),
   nb_set_add(TRules,InfoT),
   nb_set_add(PRules,InfoT),
- nop(pt(cyan,+InfoT)))).
+ nop(ppt(cyan,+InfoT)))).
 
 add_i(F,Info):- 
  append_term(i(F),Info,FInfo),
@@ -67,8 +69,8 @@ add_note(Info):- add_i(note,Info).
 add_indiv(W,Info):- add_i(indiv(W),Info).
 add_comparitor(Info):- add_i(comparitor,Info).
 show_rules:- 
- luser_getval(pair_rules,PRules), maplist(pt(cyan),PRules),
- luser_getval(test_rules,TRules), maplist(pt(blue),TRules),
+ luser_getval(pair_rules,PRules), maplist(ppt(cyan),PRules),
+ luser_getval(test_rules,TRules), maplist(ppt(blue),TRules),
  !.
   
 

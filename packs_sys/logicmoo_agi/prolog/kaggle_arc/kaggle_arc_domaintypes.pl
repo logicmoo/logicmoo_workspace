@@ -113,6 +113,7 @@ is_spec_fg_color(C,CO):- is_fg_color(C),!,is_spec_color(C,CO).
 
 mv_color_name(C,W):- attvar(C),into_color_name_always(C,V),C\==V,color_name(V,W).
 
+into_color_name_always(Grid,Grid):- !.
 into_color_name_always(Grid,Grid):- ground(Grid),!.
 into_color_name_always(Grid,GridI):- is_grid(Grid), !, mapgrid(into_color_name_always,Grid,GridI),!.
 into_color_name_always(Grid,GridI):- compound(Grid), !, map_pred(into_color_name_always,Grid,GridI),!.
@@ -124,11 +125,11 @@ into_color_name_always(Grid,Grid).
 %into_color_name_always(C,C):- attvar(C),cant_be_color(C,_E),!.
 %into_color_name_always(_,fg).
 
-is_spec_color(V,C):- into_color_name_always(V,C),!,atom(C),!,C\==fg,C\==wbg,C\==bg.
+is_spec_color(V,C):- into_color_name_always(V,C),!,atom(C),!,C\==fg,C\==wfg,C\==wbg,C\==bg.
 
 is_color(CO):- attvar(CO),!,get_attr(CO,ci,_).
 is_color(CO):- is_real_color(CO).
-is_real_color(CO):- atom(CO),color_int(CO,N),integer(N).
+is_real_color(C):- atom(C),named_colors(L),member(C,L),!.
 
 decl_one_fg_color(Color):- put_attr(Color,ci,fg(Color)).
 decl_many_fg_colors(X):- put_attr(X,ci,fg(X)),multivar:multivar(X).
@@ -155,6 +156,9 @@ cauh(_,_,_).
 
 ci:attr_unify_hook(Atts,Val):- (arg(1,Atts,Self)-> cauh(Self,Atts,Val) ; true).
 
+cant_be_color(Y):- get_attr(Y,dif,_),!.
+cant_be_color(Y):- get_attr(Y,cc,_),!.
+cant_be_color(C,E):- attvar(C), get_attr(C,dif,XX),!, sub_term(E,XX),is_color(E).
 
 %is_colorish(C):- attvar(C),!,get_attr(C,ci,_).
 is_colorish(C):- is_color(C),!.
@@ -350,29 +354,37 @@ subClassOf([monochrome,contiguous,hv_line(h)],h_symmetric).
 
 meets_indiv_criteria(_,_).
 
-data_type(O,T):- nonvar(T),data_type(O,C),T=@=C,!.
+data_type(O,T):- nonvar(T),data_type(O,C),T=C,!.
+
+
 data_type(O,plain_var):- plain_var(O),!.
-data_type([],length(_)=0):-!.
+data_type(O,point(color)):- is_cpoint(O),!.
+data_type(O,point(no_color)):- is_nc_point(O),!.
+data_type(O,point(_)):- is_point(O),!.
+data_type(O,CT):- compound(O),!,data_typec(O,CT).
+data_type(O,lst(_)=0):- O==[],!.
 data_type(O,int):- integer(O),!.
 data_type(O,float):- float(O),!.
 data_type(O,rational):- rational(O),!.
 data_type(O,string):- string(O),!.
-data_type(_=O,=(N)):- nonvar(O),!,data_type(O,N).
-data_type(O,object):- is_object(O),!.
-data_type(O,dict(L)):- is_map(O),get_kov(objs,O,Value),!,data_type(Value,L).
-data_type(O,group(N)):- is_group(O),into_list(O,L),!,length(L,N).
-data_type(O,cpoint):- is_cpoint(O),!.
-data_type(O,nc_point):- is_nc_point(O),!.
-data_type(O,bg_color):- is_spec_bg_color(O,_),!.
-data_type(O,fg_color):- is_spec_fg_color(O,_),!.
-data_type(O,unknown_bg_color):- is_bg_color(O),!.
-data_type(O,unknown_fg_color):- is_fg_color(O),!.
-data_type(O,unknown_color):- is_colorish(O),!.
-data_type(Out,S):- \+ compound(Out),!,Out = S.
-data_type(Out,grid(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
-data_type(Out,length(DT)=H):- is_list(Out),!,length(Out,H), last(Out,Last),data_type(Last,DT).
-data_type(Out,S):- compound_name_arity(Out,print_grid,A),arg(A,Out,P),data_type(P,S),!.
-data_type(Out,FS):- compound_name_arity(Out,F,A),arg(A,Out,P),data_type(P,S),!,FS=..[F,S].
+data_type(O,color(bg,C,_)):- is_spec_bg_color(O,C),!.
+data_type(O,color(fg,C,_)):- is_spec_fg_color(O,C),!.
+data_type(O,color(bg,_,_)):- is_bg_color(O),!.
+data_type(O,color(fg,_,_)):- is_fg_color(O),!.
+data_type(O,color(_,_,_)):- is_colorish(O),!.
+data_type(O,blob(Type)):- blob(O,Type),Type\==text,!.
+data_type(O,atomic(O)):- atomic(O),!.
+data_type(O,unk(O)):-!.
+
+data_typec(O,object):- is_object(O),!.
+data_typec(O,dict(L)):- is_map(O),get_kov(objs,O,Value),!,data_type(Value,L).
+data_typec(O,group(N)):- is_group(O),into_list(O,L),!,length(L,N).
+data_typec(Out,grid(H,V)):- is_grid(Out),!,grid_size(Out,H,V).
+data_typec(Out,lst(DT)=H):- is_list(Out),!,length(Out,H), last(Out,Last),data_type(Last,DT).
+data_typec(_=O,=(N)):- nonvar(O),!,data_type(O,N).
+data_typec(Out,S):- compound_name_arity(Out,print_grid,A),arg(A,Out,P),data_type(P,S),!.
+data_typec(Out,Type):- compound_name_arguments(Out,F,Args),maplist(data_type,Args,DTs),compound_name_arguments(Type,F,DTs),!.
+data_typec(Out,FS):- compound_name_arity(Out,F,A),arg(A,Out,P),data_type(P,S),!,FS=..[F,S].
 
 
 is_point(P):- var(P),!,fail.
@@ -384,6 +396,7 @@ is_points_list([G|L]):- is_point(G),!,(L==[];is_points_list(L)),!.
 
 is_cpoints_list(P):- var(P),!,fail.
 %is_cpoints_list(P):- P==[],!.
+%is_cpoints_list(List):- is_list(List),!,is_cpoints_list(List).
 is_cpoints_list([G|L]):- is_cpoint(G),!,(L==[];is_cpoints_list(L)),!.
 
 enum_colors(OtherColor):- named_colors(Colors),!,member(OtherColor,Colors).
@@ -405,6 +418,8 @@ is_cpoint(_-P):- is_nc_point(P).
 
 %is_list_of_gt0(P1,List):- is_list(List),maplist(P1,List).
 
+:- dynamic(hv_point/3).
+
 is_nc_point(P):- nonvar(P),hv_point(_,_,P).
 
 is_gpoint(G):- plain_var(G),!,fail.
@@ -414,10 +429,13 @@ is_gpoint(G):- hv_point(H,_,G),!,nonvar_or_ci(H),my_assertion(number(H)).
 % Grid-oids
 is_list_of_gridoids([G|V]):- \+ is_grid([G|V]), is_gridoid(G), is_list(V), maplist(is_gridoid,V).
 
+is_1gridoid(G):- is_grid(G),!.
+is_1gridoid(G):- is_object(G),!.
+is_1gridoid(G):- is_points_list(G),!.
+
 is_gridoid(G):- plain_var(G),!, fail.
-is_gridoid(G):- is_grid(G),!.
-is_gridoid(G):- is_object(G),!.
-is_gridoid(G):- is_points_list(G),!.
+is_gridoid([C|_]):- is_nc_point(C),!,fail.
+is_gridoid(G):- is_1gridoid(G),!.
 is_gridoid(G):- is_list_of_gridoids(G).
 
 is_printable_gridoid(G):- plain_var(G),!, fail.
@@ -433,22 +451,26 @@ vm_grid(VM,VM.grid).
 vm_obj(VM,O):- member(O,VM.objs).
 
 :- export(is_grid/1).
-is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
+% is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
+is_grid(G):- nonvar(G), \+ \+  quietly(is_grid_of(is_grid_cell,G)).
 
 fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C), !, is_grid_cell(C).
 
-slow_is_grid([[C|H]|R]):- notrace((is_grid_cell(C),is_list(H),is_list(R),
-  length([C|H],L),
-  %maplist(is_grid_cell,H),
-  maplist(is_row_len(L),R))).
+is_grid_of(P1,[[C|H]|R]):- 
+  call(P1,C),is_list(H),is_list(R),
+  length([C|H],L),!,
+  maplist(P1,H),!,
+  maplist(is_row_len(L),R).
+is_row_len(N,L):- is_list(L),length(L,N).
 
-%is_object(H):- is_list(H),maplist(is_cpoint,H).
+%is_object(H):- is_list(H),is_cpoints_list(H).
 is_grid_cell(C):- var(C),!.
+is_grid_cell(C):- number(C),C<13.
 is_grid_cell(C):- is_colorish(C),!.
-is_grid_cell(C):- atomic(C),!.
-is_grid_cell(_-_):-!.
-is_grid_cell(att(_,_)).
-is_grid_cell(cell(_)).
+is_grid_cell(att(_,_)):-!.
+is_grid_cell(cell(_)):-!.
+%is_grid_cell(C):- atomic(C),!.
+is_grid_cell(AB):- compound(AB),!, sub_term(E,AB),(var(E);is_colorish(E)),!.
 
 h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
 h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).
@@ -462,7 +484,7 @@ is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),mapl
 
 is_functor(F,E):- compound(E),functor(E,F,_).
 is_object_group(V):- is_list(V),maplist(is_functor(obj),V),!.
-is_grid_group([G|V]):- is_grid(G),is_list(V),maplist(is_grid,V),!.
+is_grid_group([G|V]):- is_grid(G),is_list(V),maplist(call(is_grid),V),!.
 
 is_object_or_grid(Grid):- is_list(Grid),!,is_grid(Grid).
 is_object_or_grid(Obj):- is_object(Obj).
@@ -481,29 +503,29 @@ is_point_obj(O,Color,Point):- is_object(O),v_hv(O,H,V), !, hv(H,V)==hv(1,1),
 %trim_unused_vert_square(BG,GridR,GridO):- my_append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(_,G,G).*/
 
-non_h_rot(same).
+non_h_rot(sameR).
 non_h_rot(rot90).
 non_h_rot(rot270).
 
-enum_rotation(same).
+enum_rotation(sameR).
 enum_rotation(rot90).
 enum_rotation(rot180). % = rot180
 enum_rotation(rot270).
 
-non_h_ori(same).
+non_h_ori(sameR).
 non_h_ori(rot90).
 non_h_ori(flipV).
 non_h_ori(rot270).
 
-non_diag_ori(same).
+non_diag_ori(sameR).
 non_diag_ori(flipV).
 
-non_v_ori(same).
+non_v_ori(sameR).
 non_v_ori(rot90).
 non_v_ori(flipH).
 non_v_ori(rot270).
 
-enum_orientation(same).
+enum_orientation(sameR).
 enum_orientation(flipV).
 enum_orientation(rot180). % = rot180
 enum_orientation(rot90).
@@ -586,7 +608,7 @@ shape_orientations(RedHammer,Hammer):- enum_orientation(ROT), call(ROT,RedHammer
 bg_to_fresh_vars(BGrid,Grid):- map_pred(bg_to_fresh_vars_e,BGrid,Grid).
 bg_to_fresh_vars_e(X,Y):- bg_sym(BG), X==BG, Y= _.
 
-use_growth_chart(Pixels,GC,NewPixels):- globalpoints(GC,GP), do_gp(GP,Pixels,NewPixels).
+use_growth_chart(Pixels,GC,NewPixels):-  globalpoints(GC,GP), do_gp(GP,Pixels,NewPixels).
  
   
 %learned_color_inner_shape(Shape,Color,Color,P,GC),globalpoints(GC,GP),use_growth_chart(P,GC,PO).

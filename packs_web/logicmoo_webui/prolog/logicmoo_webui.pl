@@ -191,6 +191,7 @@ load_web_package_dirs0:-
 
 
 sandbox:safe_meta_predicate(system:notrace/1).
+sandbox:safe_meta_predicate(system:call/1).
 
 :- if(\+ prolog_load_context(reloading,true)).
 :- use_module(library(sandbox)).
@@ -220,6 +221,7 @@ webui_load_swish_and_clio0:-
   % trace,
   \+ \+ (absolute_file_name('../../swish/run_swish_and_clio',Run,[relative_to(Dir),file_type(prolog),file_errors(fail)]),
   user:ensure_loaded(Run)),
+  set_prolog_flag(no_sandbox,true),
   asserta((prolog_version:git_update_versions(V):- skipping(prolog_version:git_update_versions(V)),!)),
   asserta((swish_version:git_update_versions(V):- skipping(swish_version:git_update_versions(V)),!)),
   swish_app:load_config('./config-enabled-swish'),

@@ -725,7 +725,7 @@ arg_type_decl_name(EC23,3,3,time_until):- ec_timed(EC23).
 arg_type_decl_name(object,7,1,event).
 arg_type_decl_name(predicate,5,1,event).
 
-arg_type_decl_name(F,A,N,C):- notrace(on_x_fail(call_u(argIsa(F, N, C)))),A>1.
+arg_type_decl_name(F,A,N,C):- current_predicate(argIsa/3), notrace(on_x_fail(call_u(argIsa(F, N, C)))),A>1.
 
 arg_type_decl_name(at,2,2,tloc).
 arg_type_decl_name(satisfy_each1,2,1,ctx).

@@ -9,6 +9,7 @@
 :- endif.
 :- use_module(library(pengines)).
 
+test_menu :- with_http(menu).
 menu :- write_menu('i').
 write_menu(Mode):-
   get_current_test(TestID),!,
@@ -24,6 +25,8 @@ print_menu_cmd(Key):- ignore((menu_cmd1(_,Key,Info,Goal),print_menu_cmd(Key,Info
 print_menu_cmd(_Key,Info,Goal):- format('~N '),print_menu_cmd1(Info,Goal).
 print_menu_cmd9(_Key,Info,Goal):- format(' '),print_menu_cmd1(Info,Goal).
 
+:- use_module(library(xlisting/xlisting_web)).
+:- use_module(library(xlisting/xlisting_web_server)).
 print_menu_cmd1(Info,Goal):- if_arc_webui(write_cmd_link(Info,Goal)),!.
 print_menu_cmd1(Info,_Goal):- format('~w',[Info]).
 
@@ -31,19 +34,19 @@ if_arc_webui(Goal):- arc_webui,!,g_out(call(Goal)).
 
 :- multifile(menu_cmd1/4).
 :- multifile(menu_cmd9/4).
-menu_cmd1(_,'t','       You may fully (t)rain from examples considering all the test pairs (this is the default)',(cls,!,print_test,train_test)).
-menu_cmd1(_,'T','                  or (T)rain from only understanding single pairs (not considering the test as a whole)',(cls,train_only_from_pairs)).
-menu_cmd1(i,'i','             See the (i)ndividuation of the input/outputs',(cls,!,ndividuator1)).
-menu_cmd1(_,'u','                  or (u)niqueness between objects in the input/outputs',(cls,!,what_unique)).
-menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls,!,compile_and_save_test)).
+menu_cmd1(_,'t','       You may fully (t)rain from examples considering all the test pairs (this is the default)',(cls_z,!,print_test,train_test)).
+menu_cmd1(_,'T','                  or (T)rain from only understanding single pairs (not considering the test as a whole)',(cls_z,train_only_from_pairs)).
+menu_cmd1(i,'i','             See the (i)ndividuation of the input/outputs',(cls_z,!,ndividuator1)).
+menu_cmd1(_,'u','                  or (u)niqueness between objects in the input/outputs',(cls_z,!,what_unique)).
+menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls_z,!,compile_and_save_test)).
 menu_cmd1(_,'p','                  or (p)rint the test (textured grid)',(print_test)).
-menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls,print_test,!,solve_test)).
+menu_cmd1(_,'e','                  or (e)xamine the program leared by training',(cls_z,print_test,!,solve_test)).
 menu_cmd1(_,'L','                  or (L)earned program',(learned_test)).
-menu_cmd1(_,'s','              Try to (s)olve based on training',(cls,print_test,!,solve_test)).
-menu_cmd1(_,'S','                  or (S)olve confirming it works on training pairs',(cls,print_test,!,solve_test_training_too)).
+menu_cmd1(_,'s','              Try to (s)olve based on training',(cls_z,print_test,!,solve_test)).
+menu_cmd1(_,'S','                  or (S)olve confirming it works on training pairs',(cls_z,print_test,!,solve_test_training_too)).
 menu_cmd1(_,'h','                  or (h)uman proposed solution',(human_test)).
-menu_cmd1(_,'r','               Maybe (r)un some of the above: (p)rint, (t)rain, (e)xamine and (s)olve !',(cls,fully_test)).
-menu_cmd1(_,'a','                  or (a)dvance to the next test and (r)un it',(cls,!,run_next_test)).
+menu_cmd1(_,'r','               Maybe (r)un some of the above: (p)rint, (t)rain, (e)xamine and (s)olve !',(cls_z,fully_test)).
+menu_cmd1(_,'a','                  or (a)dvance to the next test and (r)un it',(cls_z,!,run_next_test)).
 menu_cmd1(_,'n','               Go to (n)ext test (skipping this one)',(next_test,print_qtest)).
 menu_cmd1(_,'N','                  or (N)ext suite',(next_suite)).
 menu_cmd1(_,'b','                  or (b)ack to previous test.',(previous_test,print_qtest)).
@@ -54,7 +57,7 @@ menu_cmd1(_,'l','                  or (l)ist special tests to run,',(show_tests)
 menu_cmd1(r,'i','             Re-enter(i)nteractve mode.',(interactive_test_menu)).
 
 menu_cmd9(_,'m','recomple this progra(m),',(make,menu)).
-menu_cmd9(_,'c','(c)lear the scrollback buffer,',(cls)).
+menu_cmd9(_,'c','(c)lear the scrollback buffer,',(cls_z)).
 menu_cmd9(_,'C','(C)all DSL,',(call_dsl)).
 menu_cmd9(_,'Q','(Q)uit Menu,',true).
 menu_cmd9(_,'X','e(X)it to shell,',halt(4)). 
@@ -115,7 +118,7 @@ append_num_code(Start,SelMax,Digit,Out):- atom_codes(Digit,[C|_]),char_type(C,di
 append_num_code(Start,_SelMax,Key,Sel):- atom_concat(Start,Key,Sel).
 
 
-clsR:- !. % once(cls).
+clsR:- !. % once(cls_z).
 
 
 enter_test:- repeat, write("\nYour favorite: "), read_line_to_string(user_input,Sel),enter_test(Sel),!.
@@ -146,10 +149,10 @@ interact:- list_of_tests(L), length(L,SelMax),!,
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), arc_assert(wants_exit_menu).
 do_menu_key('?'):- !, menu_options('i').
 do_menu_key('P'):- !, switch_grid_mode,print_test.
-do_menu_key('I'):- !, cls,!,ndividuator.
-do_menu_key('o'):- !, cls,!,ndividuatorO1.
-do_menu_key('O'):- !, cls,!,ndividuatorO.
-do_menu_key('G'):- !, cls,!,detect_test_hints1.
+do_menu_key('I'):- !, cls_z,!,ndividuator.
+do_menu_key('o'):- !, cls_z,!,ndividuatorO1.
+do_menu_key('O'):- !, cls_z,!,ndividuatorO.
+do_menu_key('G'):- !, cls_z,!,detect_test_hints1.
 do_menu_key(-1):- !, arc_assert(wants_exit_menu).
 do_menu_key(Key):- atom_codes(Key,Codes),  do_menu_codes(Codes), !.
 do_menu_key(Sel):- atom_number(Sel,Num), number(Num), do_test_number(Num),!.
@@ -176,7 +179,7 @@ call_dsl:- repeat, write("\nYour DSL Goal: "), read_line_to_string(user_input,Se
 nth10(X,Y,Z):- var(X),!,nth0(N,Y,Z), X is N + 10 .
 nth10(X,Y,Z):- N is X -10, nth0(N,Y,Z).
 
-do_test_number(Num):- list_of_tests(L), nth10(Num,L,E),!, cls, get_current_grid(G), set_flag(indiv,0), my_submenu_call(ig(E,G)),!.
+do_test_number(Num):- list_of_tests(L), nth10(Num,L,E),!, cls_z, get_current_grid(G), set_flag(indiv,0), my_submenu_call(ig(E,G)),!.
 
 get_current_grid(G):- get_current_test(T),kaggle_arc_io(T,_,_,G).
 
@@ -189,9 +192,9 @@ do_menu_codes([27,27,91,68]):- !, previous_test, print_test.
 % alt right arrow
 do_menu_codes([27,27,91,67]):- !, next_test, print_test.
 % left arrow
-do_menu_codes([27,91,68]):- !, cls, previous_test, print_test.
+do_menu_codes([27,91,68]):- !, cls_z, previous_test, print_test.
 % right arrow
-do_menu_codes([27,91,67]):- !, cls,  next_test, print_test.
+do_menu_codes([27,91,67]):- !, cls_z,  next_test, print_test.
 % page up
 do_menu_codes([27,91,53,126]):- !, prev_suite.
 % page down
@@ -220,7 +223,7 @@ ip(I,O):- ip(complete,I,O).
 
 ndividuator1:- get_current_test(TestID),set_flag(indiv,0),with_test_pairs1(TestID,In,Out,ip(In,Out)).
 ndividuator:- get_current_test(TestID),set_flag(indiv,0),with_test_pairs(TestID,In,Out,ip(In,Out)).
-ndividuatorO1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,In,igo(In)).
+ndividuatorO1:- get_current_test(TestID),set_flag(indiv,0),with_test_grids1(TestID,In,igo(In)).
 ndividuatorO:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,In,igo(In)).
 
 test_grids(TestID,G):- ignore(get_current_test(TestID)), kaggle_arc_io(TestID,ExampleNum,IO,G), ((ExampleNum*IO) \= ((tst+_)*out)).
@@ -266,21 +269,21 @@ test_suite_name(key_pad_tests). test_suite_name(alphabetical_v). test_suite_name
 test_suite_name(test_names_by_hard). 
 test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
 
-:- dynamic(cached_tests/2).
-%:- retractall(cached_tests(_,_)).
+:- dynamic(muarc_tmp:cached_tests/2).
+%:- retractall(muarc_tmp:cached_tests(_,_)).
 :- luser_setval(global,test_order,sol_t).
 get_current_suite_testnames(Set):-
   luser_getval(test_order,X),
   current_suite_testnames(X,Set).
 
-current_suite_testnames(X,Set):- cached_tests(X,Set),!.  
-current_suite_testnames(X,Set):- findall(ID,call(X,ID),List), my_list_to_set_variant(List,Set),!,asserta(cached_tests(X,Set)).
+current_suite_testnames(X,Set):- muarc_tmp:cached_tests(X,Set),!.  
+current_suite_testnames(X,Set):- findall(ID,call(X,ID),List), my_list_to_set_variant(List,Set),!,asserta(muarc_tmp:cached_tests(X,Set)).
 
 previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID).
 next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
 is_valid_testname(TestID):- kaggle_arc(TestID,_,_,_).
 
-get_current_test(TestID):- luser_getval(test_name,TestID),is_valid_testname(TestID),!.
+get_current_test(TestID):- luser_getval(task,TestID),is_valid_testname(TestID),!.
 get_current_test(TestID):- get_next_test(TestID,_),!.
 get_current_test(v(fe9372f3)).
 
@@ -293,12 +296,12 @@ prev_in_list(TestID,List,PrevID):-  once(append(_,[PrevID,TestID|_],List); last(
 :- export(load_last_test_name/0).
 system:load_last_test_name:- 
   muarc:arc_settings_filename(Filename),
-  notrace((exists_file(Filename),setup_call_cleanup(open(Filename,read,O),ignore((read_term(O,TestID,[]),luser_setval(test_name,TestID))),close(O)))),!.
+  notrace((exists_file(Filename),setup_call_cleanup(open(Filename,read,O),ignore((read_term(O,TestID,[]),luser_setval(task,TestID))),close(O)))),!.
 system:load_last_test_name:- set_current_test(v(fe9372f3)).
 
 system:save_last_test_name:- notrace(catch(save_last_test_name_now,_,true)),!.
 system:save_last_test_name_now:- muarc:arc_settings_filename(Filename),
-  ignore(notrace((luser_getval(test_name,TestID), tell(Filename),format('~n~q.~n',[TestID]),told))).
+  ignore(notrace((luser_getval(task,TestID), tell(Filename),format('~n~q.~n',[TestID]),told))).
 
 muarc:arc_settings_filename(Filename):- muarc:arc_settings_filename1(File), 
   (exists_file(File) -> (Filename=File) ; absolute_file_name(File,Filename,[access(append),file_errors(fail),expand(true)])).
@@ -308,10 +311,10 @@ muarc:arc_settings_filename1('/tmp/.arc_current_test').
 
 
 set_current_test(Name):-  
-  ignore((fix_test_name(Name,TestID,_),is_valid_testname(TestID),really_set_current_test(TestID))).
+  ignore((fix_id(Name,TestID),is_valid_testname(TestID),really_set_current_test(TestID))).
 
 really_set_current_test(TestID):-
-   luser_setval(test_name,TestID),
+   luser_setval(task,TestID),
   (luser_getval(last_test_name,WasTestID);WasTestID=[]),
   (WasTestID==TestID-> true ; new_current_test_info(WasTestID,TestID)).
 
@@ -349,15 +352,19 @@ clear_test(TestID):- clear_training(TestID),
 new_current_test_info(WasTestID,TestID):- 
   clear_test(WasTestID),
   ignore((
-  %luser_getval(test_name,TestID),
+  %luser_getval(task,TestID),
   get_current_test(TestID),
   dmsg(fav(TestID,[])),
   %luser_setval(example,tst+0),
   luser_setval(last_test_name,TestID))),
   save_last_test_name,
+  load_test_id_dyn(TestID).
+  %clear_training(TestID).
+
+load_test_id_dyn(TestID):- 
   test_name_output_file(TestID,File),
   load_file_dyn(File).
-  %clear_training(TestID).
+
 
 unload_file_dyn(File):- \+ exists_file(File), !.
 unload_file_dyn(File):- unload_file(File),!.
@@ -478,18 +485,18 @@ some_test_info(TestID,III):- more_test_info(TestID,III).
 some_test_info(X,[keypad]):- key_pad_tests(X). 
 some_test_info(TestID,III):- fav(TestID,III).
 
-:- dynamic(test_info_cache/2).
-:- retractall(test_info_cache(_,_)).
+:- dynamic(muarc_tmp:test_info_cache/2).
+:- retractall(muarc_tmp:test_info_cache(_,_)).
 test_info(TestID,InfoS):- var(TestID),!,all_arc_test_name(TestID),test_info(TestID,InfoS).
-%test_info(TestID,InfoS):- \+ \+ test_info_cache(TestID,_),!,test_info_cache(TestID,InfoS).
+%test_info(TestID,InfoS):- \+ \+ muarc_tmp:test_info_cache(TestID,_),!,muarc_tmp:test_info_cache(TestID,InfoS).
 test_info(TestID,InfoS):- nonvar(TestID),once(fix_test_name(TestID,FTestID,_)),TestID\=@=FTestID,!,test_info(FTestID,InfoS).
-test_info(TestID,InfoS):- test_info_cache(TestID,InfoS),!.
+test_info(TestID,InfoS):- muarc_tmp:test_info_cache(TestID,InfoS),!.
 test_info(TestID,InfoS):- 
  findall(Inf,
   (some_test_info(CTestID,Inf0),once((fix_test_name(CTestID,CFTestID,_),CFTestID=TestID)),
    repair_info(Inf0,Inf)),Info),
   flatten([Info],InfoFF),repair_info(InfoFF,InfoF),list_to_set(InfoF,InfoS),!,
-  asserta(test_info_cache(TestID,InfoS)),!.
+  asserta(muarc_tmp:test_info_cache(TestID,InfoS)),!.
 
 repair_info(Inf,InfO):- listify(Inf,Inf1),maplist(repair_info0,Inf1,InfO).
 repair_info0(Inf0,Inf):- is_list(Inf0),!,maplist(repair_info0,Inf0,Inf).
@@ -511,7 +518,7 @@ test_names_by_fav_rev(Name):- test_names_ord_favs(AllS),reverse(AllS,AllR),membe
 
 :- dynamic(ord_favs/1).
 test_names_ord_favs(FavListS):- ord_favs(FavListS),!.
-test_names_ord_favs(FavListS):- pt(recreating(test_names_ord_favs)), findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),  asserta(ord_favs(FavListS)).
+test_names_ord_favs(FavListS):- ppt(recreating(test_names_ord_favs)), findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),  asserta(ord_favs(FavListS)).
 
 alphabetical_v(Set):- findall(v(Name),all_arc_test_name(v(Name)),List),sort(List,Set).
 alphabetical_t(Set):- findall(t(Name),all_arc_test_name(t(Name)),List),sort(List,Set).
@@ -519,7 +526,7 @@ alphabetical_t(Set):- findall(t(Name),all_arc_test_name(t(Name)),List),sort(List
 
 human_t(T):- human_t_set(Set),member(T,Set).
 
-%human_t_set(NamesByHardUR):- cached_tests(human_t_set,NamesByHardUR),!.
+%human_t_set(NamesByHardUR):- muarc_tmp:cached_tests(human_t_set,NamesByHardUR),!.
 human_t_set(NamesByHardUR):- % Name=t(_),
   findall(Name,(test_info(Name,Sol),member(human(_),Sol)),All),
   list_to_set(All,NamesByHardUR).
@@ -541,7 +548,7 @@ hard_t_set(NamesByHardUR):- Name=t(_),
   keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,
   reverse(NamesByHardU,NamesByHardUR).
 
-hard_t:- cls, hard_t(NamesByHardUR),
+hard_t:- cls_z, hard_t(NamesByHardUR),
   forall(member(Name,NamesByHardUR),print_test(Name)).
 
 
@@ -557,7 +564,7 @@ write_ansi_file(F):- call(F,Set),
 
 :- dynamic(ord_hard/1).
 test_names_ord_hard(NamesByHard):- ord_hard(NamesByHard),!.
-test_names_ord_hard(NamesByHard):- pt(recreating(test_names_ord_hard)),findall(Hard-Name,(all_arc_test_name(Name),hardness_of_name(Name,Hard)),All),
+test_names_ord_hard(NamesByHard):- ppt(recreating(test_names_ord_hard)),findall(Hard-Name,(all_arc_test_name(Name),hardness_of_name(Name,Hard)),All),
   keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,
   list_to_set(NamesByHardU,NamesByHard), 
   asserta(ord_hard(NamesByHard)).
@@ -649,9 +656,9 @@ test_hints_5(TestID,Trn,N,DictIn,DictOut):-
 print_test_hints(TestID):- 
   hardness_of_name(TestID,Hard),!,
   write('/*'),
-  pt(hard=Hard),
+  ppt(hard=Hard),
   %make_training_hints(TestID,print_test{},DictOut),
-  %pt(all=DictOut),
+  %ppt(all=DictOut),
   writeln('*/').
 
 
@@ -680,6 +687,7 @@ dictate_sourcecode(Content, _Vars, OutterVars, TP):-
               print(program=Sourcecode),nl,
               maplist(print_prop_val,Vs))),
     !, TP = source_buffer(Sourcecode, Vs).
+
 
 do_pair_dication(In,Out,_Vs):-   
  run_source_code(['In'=In, 'Out'=Out], _Vs,
@@ -742,13 +750,16 @@ macro(one_obj, must_det_ll(len(objs)=1)).
 
 test_p2(P2):- clsmake,
   append_termlist(P2,[N1,'$VAR'('Result')],N2), 
-  time(forall(into_gridoid(N1,G1),     
+  time(forall(into_grids(N1,G1),     
      forall((set_current_test(G1),call(P2,G1,G2)),
-       once(ignore((print_side_by_side(red,G1,N1,_LW,G2,?-N2),dash_chars)))))).
+       once(ignore((grid_arg(G2,GR,Rest),print_side_by_side(red,G1,N1-Rest,_LW,GR,(?-(N2))),dash_chars)))))).
+
+grid_arg(G2,G2,[]):- is_grid(G2),!.
+grid_arg(GRest,GR,GRest):- arg(N,GRest,GR), is_grid(GR),!,setarg(N,GRest,grid),!.
 
 %:- style_check(-singleton).
 %whole(I,O):- is_group(I),length(I,1),I=O,!.
-%whole(I,O):- print_grid(I),pt(I),into_obj(I,O).
+%whole(I,O):- print_grid(I),ppt(I),into_obj(I,O).
 one_obj(I,I):- is_group(I),length(I,1),!.
 one_obj(I,I):- is_group(I),!.
 one_obj(I,I).
@@ -791,7 +802,7 @@ db_u(P1L,P1,P2L,P2,In,Out):- is_eval(P2,Prev,P2A),!,db_u(P1L,P1,[Prev|P2L],P2A,I
 %db(P1,P2,In,In):- t_or_t(freeze_for([P2],arc_assert(is_db(TF,P2))),is_db(TF,P2)).
 %db(P2,P1,In,In):- nonvar(Color), db_value(P1,In,TF),!,t_or_t(freeze_for([Color],arc_assert(is_db(TF,Color))),is_db(TF,Color)).
 db(P1,P2,In,Out):- db_u([],P1,[],P2,In,Out).
-db(X,Y,I,I):- pt(db(X,Y)),pt(I).
+db(X,Y,I,I):- ppt(db(X,Y)),ppt(I).
 
 
 
@@ -823,6 +834,8 @@ testid_name_num_io(TstName*(Example+Num),Name,Example,Num,_IO):- !,fix_id(TstNam
 testid_name_num_io(ID,Name,Example,Num,IO):- ID = TstName*(Example+Num)*IO,!,fix_id(TstName,Name),!.
 testid_name_num_io(ID,Name,Example,Num,_IO):- ID = TstName*Example+Num,!,fix_id(TstName,Name),!.
 testid_name_num_io(ID,Name,Example,Num,_IO):- ID = TstName*(Example+Num),!,fix_id(TstName,Name),!.
+
+testid_name_num_io(V,TstName,Example,Num,IO):- atom(V), atom_concat(VV,'.json',V),!,testid_name_num_io(VV,TstName,Example,Num,IO).
 testid_name_num_io(ID,Name,Example,Num,IO):- atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], 
   testid_name_num_io(Term,Name,Example,Num,IO),!.
 testid_name_num_io(ID,Name,Example,Num,IO):- atom(ID),catch(atom_to_term(ID,Term,_),_,fail), Term\==ID, nonvar(Term), 
@@ -836,7 +849,7 @@ testid_name_num_io(ID,Name,_Example,_Num,_IO):- fix_id(ID,   Name),!. %, kaggle_
 
 fix_id(Tried,   Tried):- var(Tried),!.
 fix_id(X,_):- is_cpoint(X),!,fail.
-fix_id(X,_):- is_list(X),maplist(is_cpoint,X),!,fail.
+fix_id(X,_):- is_cpoints_list(X),!,fail.
 fix_id(obj_to_oid(_,X),Fixed):-  !, fix_id(X,Fixed).
 fix_id(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
 fix_id(v(Tried),   TriedV):- !, atom_id(Tried,TriedV),!.
@@ -845,6 +858,7 @@ fix_id(Tried,   TriedV):- atom_id(Tried,TriedV),!.
 
 %DD2401ED
 atom_id(NonAtom,TriedV):- \+ atom(NonAtom),!,string(NonAtom),atom_string(Tried,NonAtom),atom_id(Tried,TriedV).
+atom_id(Tried,TriedV):- atom_concat(Atom,'.json',Tried),atom_id(Atom,TriedV),!.
 atom_id(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
 atom_id(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
 atom_id(Atom,TriedV):- downcase_atom(Atom,Tried),Atom\==Tried,atom_id(Tried,TriedV).
@@ -859,7 +873,7 @@ print_eval0:- arc(v('009d5c81')).
 
 
 parc1:- parc1(6300*3). 
-parc1(OS):- clsmake,   luser_setval(test_name,[]),
+parc1(OS):- clsmake,   luser_setval(task,[]),
    open(tt,write,O,[encoding(text)]), parc0(OS), with_output_to(O,parc0(OS)), close(O).
 parc0(OS):-
  locally(set_prolog_flag(gc,true),forall(parc11(OS,_),true)).

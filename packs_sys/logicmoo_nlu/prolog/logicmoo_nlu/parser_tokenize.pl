@@ -9,7 +9,7 @@
 % Revised At:   $Date: 2002/06/06 15:43:15 $
 % ===================================================================
 
-:- module(parser_tokenize,[into_text80/2,into_acetext/2,any_nb_to_atom/2,foc_framevar/3,foc_framevar2/2]).
+:- module(parser_tokenize,[into_text80/2,into_text80_string/2,into_acetext/2,any_nb_to_atom/2,foc_framevar/3,foc_framevar2/2]).
 
 %into_acetext(Input,AceText):- atomic(Input), !, tokenizer:tokenize(Input, Tokens), into_acetext(Tokens,AceText).
 %into_acetext(Input,AceText):- into_acetext(Input,AceText).
@@ -116,7 +116,7 @@ split_from_end(S):- split_symbol(S), S \== '#'.
 :-share_mp(into_text80/2).
 
 init_to_tokens(I,C):- is_list(I),words_of(I,II),!,into_control80(II,T),rejoin_pronouns(T,C),!.
-init_to_tokens(I,C):- any_to_string(I,S),atom_string(A,S),!,tokenizer_tokenize(A,T),words_of(T,TT),into_control80(TT,C).
+init_to_tokens(I,C):- any_to_string(I,S),atom_string(A,S),!,tokenizer_tokenize(A,T),parser_chat80:words_of(T,TT),into_control80(TT,C).
 
 tokenizer_tokenize(A,T):- tokenizer:tokenize(A,M),!, rejoin_pronouns(M,T),!.
 

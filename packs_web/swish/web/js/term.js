@@ -341,9 +341,18 @@ function() {
 
 	$(document).on('click', '.pl-functor, .pl-infix', function() {
 
+		var doNext = 1;
+		//debugger;
+		var ns = $(this).nextElementSibling;
+		//.find('span.pl-functor').click();
+
+
 		var e = $(this).next('span');
 		var p = $(e).next('span');
+        
 		if ($(e).is('.pl-args')) {
+
+
 			//debugger;
 			p = e;
 			e = $(p).before('<span class="pl-ellipsis, fold">...</span>');

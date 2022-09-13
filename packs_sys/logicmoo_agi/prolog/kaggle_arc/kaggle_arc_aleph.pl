@@ -8,7 +8,7 @@
 % will be used for model construction for examples in a leaf.
 % The user has to provide a definition for this predicate that
 % is able to: (a) construct the model; and (b) predict using
-% the model constructed. The trick used is the same as that
+% the model constructed. The trick used is the sameR as that
 % for lazy evaluation.
 
 % Learning a model tree

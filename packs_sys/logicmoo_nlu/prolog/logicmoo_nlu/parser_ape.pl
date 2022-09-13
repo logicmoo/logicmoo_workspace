@@ -102,7 +102,7 @@
 %:- reexport(ape('utils/owlswrl/get_owl_output')).
 
 
-
+:- export(any_to_ace_str/2).
 any_to_ace_str(I,S):- words_of(I,M),
   tokenizer:expand_contracted_forms(_All,M,MS),
  % ignore((M\==MS,dmsg(expand_contracted_forms(M,MS)))),

@@ -129,7 +129,7 @@ the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 the_hammer(Color,ColorComplex):- 
   ColorComplex = obj([amass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
-  Color-point_02_02, Color-point_03_02]), v_hv(3, 3), rotation(same), loc(2, 5), 
+  Color-point_02_02, Color-point_03_02]), v_hv(3, 3), rotation(sameR), loc(2, 5), 
   changes([]), iz(rectangle), iz(hammer), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
@@ -204,7 +204,7 @@ frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),sing
 
 shape_key(Shape,Key):- into_grid(Shape,Key1),frozen_key(Key1,Key).
 
-shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot(Key,KeyR).
+shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot(Key,_,KeyR).
 
 
 searchable(Group,List):- override_group(searchable(Group,List)),!.
@@ -314,8 +314,8 @@ llamma(P,A):- \+ \+ call(P,A).
 
 % \+ is_points_list(Obj),
 
-%add_shape_lib(Type,Obj):- !, nop(pt(add_shape_lib(Type,Obj))).
-add_shape_lib(Type,Obj):- \+ ground(Obj), nop(pt(add_shape_lib(Type,Obj))),fail.
+%add_shape_lib(Type,Obj):- !, nop(ppt(add_shape_lib(Type,Obj))).
+add_shape_lib(Type,Obj):- \+ ground(Obj), nop(ppt(add_shape_lib(Type,Obj))),fail.
 add_shape_lib(Type,Obj):-  is_object(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 
@@ -327,7 +327,7 @@ add_shape_lib(Type,Obj):- add_shape_lib0(Type,Obj).
 add_shape_lib0(Type,Obj):- amass(Obj,Mass),!,
   %dash_chars, print_grid(Obj),
   ( Mass<3 
-   -> nop(pt(too_small_for_shapelib(Type,Mass))) ; (nop(pt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
+   -> nop(ppt(too_small_for_shapelib(Type,Mass))) ; (nop(ppt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
   %dash_chars,
   !.
 
@@ -505,12 +505,12 @@ show_shape(Shape):- is_grid(Shape),!,
 show_shape(Shape):- ground(Shape),!,  
   ignore(print_info(Shape)),
   ignore(print_grid([Shape])),
-  ignore((\+ ground(Shape),pt(Shape))),!.
+  ignore((\+ ground(Shape),ppt(Shape))),!.
 show_shape(Shape):-
   dash_chars,
   ignore(print_info(Shape)),
   ignore((\+ \+ print_shape_0(Shape) ->true;writeln(failed_print_grid))),
-  ignore((\+ ground(Shape),pt(Shape))),!.
+  ignore((\+ ground(Shape),ppt(Shape))),!.
 
 
 print_shape_0(Shape):-
@@ -526,25 +526,25 @@ print_shape_0(Shape):-
   %object_grid(Shape,FG),
   %numbervars(Shape,0,_,[attvar(bind)]),
   %grid_numbervars(FG,Grid),
-  pt(Grid), 
+  ppt(Grid), 
   %obj_ to_oid(Shape,_Glyph,Iv),
   print_grid(H,V,Grid),!.
   %locally(luser_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
 
 show_shape_lib(Name):- make,
- pt(?- show_shape_lib(Name)),
- mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pt(shape_lib_direct(Name)=Len))),
+ ppt(?- show_shape_lib(Name)),
+ mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), ppt(shape_lib_direct(Name)=Len))),
  ignore(( Len\==0,
   mapgroup(show_shape,GalleryS),  
-  mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), underline_print(pt(shape_lib_expanded(Name)=LenOS)))),
+  mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), underline_print(ppt(shape_lib_expanded(Name)=LenOS)))),
   mapgroup(show_shape,GallerySOS),
-  %shape_lib_rules(Name,Rules),length(Rules,LenRules),pt(shape_lib_rules(LenRules)=Rules),
-  mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, pt(shapelib_opts(LenOpts)=Opts)))),!,
+  %shape_lib_rules(Name,Rules),length(Rules,LenRules),ppt(shape_lib_rules(LenRules)=Rules),
+  mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, ppt(shapelib_opts(LenOpts)=Opts)))),!,
   ignore((fail,GalleryS\==[], mapgroup(show_shape,GalleryS))))).
 
 clear_shape_lib(Name):- 
   findall(_,(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),L),
-  length(L,Len),pt(clear_shape_lib(Name)=Len),
+  length(L,Len),ppt(clear_shape_lib(Name)=Len),
   nop(show_shape_lib(Name)).
  
 shape_lib_expanded(Name,GallerySOS):- 

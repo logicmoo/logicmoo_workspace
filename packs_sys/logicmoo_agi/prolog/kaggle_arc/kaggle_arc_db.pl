@@ -63,13 +63,21 @@ get_color_at(H,V,Grid,C):-
 get_color_at_point(Grid,Point,C):- hv_point(H,V,Point), get_color_at(H,V,Grid,C).
   
 :- dynamic(tid_to_gids/2).
-tid_to_gids(T,A) :- awc,!, (clause(tid_to_gids(T,A),true)*-> true ; term_to_oid(T,A)).
+tid_to_gids(TID,GID) :- awc,!, (clause(tid_to_gids(TID,GID),true)*-> true ; term_to_oid(TID,GID)).
+
+find_test_gids(TestID,Type,GID) :- awc,!, find_test_grids(TestID,Type,Grid), grid_to_gid(Grid,GID).
+
+find_test_grids(TestID,visible,Grid):- test_grids(TestID,Grid).
+find_test_grids(TestID,train,Grid):- kaggle_arc_io(TestID,trn,_,Grid).
+find_test_grids(TestID,test_input,Grid):- kaggle_arc_io(TestID,tst,in,Grid).
+find_test_grids(TestID,train_input,Grid):- kaggle_arc_io(TestID,trn,in,Grid).
+find_test_grids(TestID,train_output,Grid):- kaggle_arc_io(TestID,trn,out,Grid).
 
 term_to_oid(v(A)*(B+C)*D,Atom):- maplist(atomic,[A,B,C,D]),atomic_list_concat([v,A,B,C,D],'_',Atom),!.
 term_to_oid(t(A)*(B+C)*D,Atom):- maplist(atomic,[A,B,C,D]),atomic_list_concat([t,A,B,C,D],'_',Atom),!.
 term_to_oid(T,A):- (compound(T)->term_to_atom(T,A);(atom(T)->T=A;term_to_atom(T,A))).
 
-point_to_hvc(Point, H,V,_):- atomic(Point),!, hv_point(H,V,Point),!.
+point_to_hvc(Point,  H,V,wfg):- atomic(Point),!, hv_point(H,V,Point),!.
 point_to_hvc(C-Point,H,V,C):- must(nonvar(Point)),must(hv_point(H,V,Point)),!.
 %point_ to_hvc(H,V,_,H,V).
 %point_ to_hvc(Inf,Inf,offset_ranges(_,_,_,_)).
@@ -137,13 +145,16 @@ from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
 %hv_c_value(O,_Color,_H,_V):- is_object(O), iz(O,combined), !, fail.
 hv_c_value(O,_Color,_H,_V):-  plain_var(O),!,fail.
 hv_c_value([],_Color,_H,_V):-  !,fail.
+hv_c_value(diff(_-> New),C,H,V):-!,hv_c_value(New,C,H,V).
+hv_c_value(diff(_),_C,_H,_V):-!, fail.
+hv_c_value(O,C,_H,_V):- is_colorish(O),!,C=O.
 hv_c_value(O,GN,H,V):- is_map(O),O.objs\==[],!,hv_c_value(O.objs,GN,H,V).
 hv_c_value(O,GN,H,V):- is_map(O),!,hv_c_value(O.grid,GN,H,V).
 
 hv_c_value(ID,C,H,V):- (var(H);var(V)),!,arcST,trace, hv_point(H,V,_),hv_c_value(ID,CC,H,V),CC=C.
 hv_c_value(O,Color,H,V):- is_object(O),!,globalpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 hv_c_value(O,Color,H,V):- is_grid(O),!,nth1(V,O,Row),nth1(H,Row,Color),!.
-hv_c_value(O,Color,H,V):- is_list(O), maplist(is_cpoint,  O),!,hv_point(H,V,Point),member(Color-Point,O).
+hv_c_value(O,Color,H,V):- is_list(O), is_cpoints_list(  O),!,hv_point(H,V,Point),member(Color-Point,O).
 hv_c_value(O,FGL   ,H,V):- is_list(O), maplist(is_nc_point,O),!,hv_point(H,V,Point),member(Point,O),get_fg_label(FGL).
 hv_c_value(O,Color,H,V):- is_cpoint(O),!,O=(Color-Point),hv_point(H,V,Point),!.
 hv_c_value(O,FGL   ,H,V):- is_nc_point(O),!,O=Point,hv_point(H,V,Point),!,get_fg_label(FGL).
@@ -189,7 +200,7 @@ pgt1(Obj):-
          shape( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
-         localpoints( [ red-point_01_01, silver-point_02_01]), v_hv(3, 1), rotation(same), loc(3, 1),
+         localpoints( [ red-point_01_01, silver-point_02_01]), v_hv(3, 1), rotation(sameR), loc(3, 1),
          changes([]), iz(combined),
          iz(rectangle), iz(multicolored),
          iz(polygon), %obj _to_oid(v('0ad4ef5')*(trn+0)*in, 21),
@@ -201,7 +212,7 @@ pgt2(Obj):- Obj =
          shape( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
-         localpoints( [ red-point_01_01, silver-point_02_01]), v_hv(3, 1), rotation(same), loc(2, 1),
+         localpoints( [ red-point_01_01, silver-point_02_01]), v_hv(3, 1), rotation(sameR), loc(2, 1),
          changes([]), iz(combined),
          iz(rectangle), iz(multicolored),
          iz(polygon), %obj _to_oid(v('a1d4ef5')*(trn+0)*in, 66),

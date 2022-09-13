@@ -557,7 +557,7 @@ define(["jquery", "form", "config", "preferences", "modal",
                   class: "sourcelist"
                 }));
               // BEGIN FILE-EXPLORER
-              var ss = $('<div><iframe id="the_iframe" src="/ef/elfinder.swish.html" width="100%" height="700px" /></div>');
+              var ss = $('<div><iframe id="the_iframe" src="http://logicmoo.org/ef/elfinder.swish.html" width="100%" height="700px" /></div>');
               $(ss).css('height', $(window).height() * 0.80);
               // $(ss).css('height', "20%");
               $(ss).css('width', "100%");
