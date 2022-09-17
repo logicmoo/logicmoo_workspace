@@ -30,28 +30,75 @@ into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort
 test_grav_rot:- test_p2(test_grav_rot(_)).
 test_grav_rot(RotG,Shape,Rotated):- grav_rot(Shape,RotG,Rotated). %,unrotate(RotG,Rotated,Back),assertion(Shape==Back).
 
-grav_rot(Grid,RotG,Rotated):- must_be_free(Rotated), is_grid(Grid),!,
-    w(W,RotG,Rotated)=Template,
-    findall(Template,(flipSome1(RotG,Grid,Rotated),rot_mass(Rotated,W)),Pos),
-    sort(Pos,LPos),last(LPos,Template).
-grav_rot(Shape,RotG,Rotated):-    
-    must_det_ll((
-    cast_to_grid(Shape,Grid,Uncast),
-    test_grav_rot(RotG,Grid,Final),
-    uncast(Shape,Uncast,Final,Rotated))),!.
+flip_Once(rot90,X,Y):- rot90(X,Y).
+flip_Once(rot180,X,Y):- rot180(X,Y).
+flip_Once(rot270,X,Y):-  rot270(X,Y).
+flip_Once(flipD,X,Y):-  flipD(X,Y).
+flip_Once(flipH,X,Y):-  flipH(X,Y).
+flip_Once(flipV,X,Y):-  flipV(X,Y).
+flip_Once(flipDHV,X,Y):- flipDHV(X,Y).
+flip_Once(flipDH,X,Y):-  flipDH(X,Y).
+flip_Once(flipDV,X,Y):-  flipDV(X,Y).
 
-rot_mass(LP,Mass):- mapgrid(color_mass_int,LP,CN),
- append(CN,AC),!,total_n(1,AC,Mass).
+flip_Many(Rot,X,Y):- flip_Once(Rot,X,Y),X\=@=Y.
+flip_Many(sameR,X,X).
 
+normal_w(_,CC,N):- plain_var(CC),N=0,!.
+normal_w(_,CC,N):- integer(CC),N=CC,!.
+normal_w(L,CC,N):- nth1(N,L,C),C==CC,!.
+normal_w(_,CC,N):- color_mass_int(CC,N).
 color_mass_int(Cell,-2):- plain_var(Cell),!.
-color_mass_int(Cell,0):- is_bg_color(Cell),!.
 color_mass_int(Cell,-20):- var(Cell),is_fg_color(Cell),!.
 color_mass_int(Cell,-10):- var(Cell),is_bg_color(Cell),!.
-color_mass_int(Cell,N):- color_int(Cell,N),!.
+color_mass_int(Cell,1):- is_fg_color(Cell),!.
+color_mass_int(Cell,0):- is_bg_color(Cell),!.
+%color_mass_int(Cell,N):- color_int(Cell,N),!.
 color_mass_int(_,0).
 
-total_n(_,[],0):-!.
-total_n(S,[A|AA],Mass):- (var(A)-> LM is 0 ; LM is S * A),!,S2 is S+1, total_n(S2,AA,N),Mass is LM+N,!.
+grid_mass_ints(Grid,GridIII):- unique_colors(Grid,CC), mapgrid(normal_w(CC),Grid,GridIII),!.
+
+grav_rot(Grid,RotG,Rotated):- 
+  must_det_ll((into_grid(Grid,GridII),
+   grid_mass_ints(GridII,GridIII),
+   best_grav_rot(GridIII,RotG,_),
+   call(RotG,GridII,Rotated))),!.
+best_grav_rot(Shape,RotG,Rotated):- must_be_free(Rotated),  
+    must_det_ll((
+    cast_to_grid(Shape,Grid,Uncast),
+    best_grav_rot_grid(Grid,RotG,Final),
+    uncast(Shape,Uncast,Final,Rotated))),!.
+best_grav_rot_grid(Grid,RotG,Rotated):- must_be_free(Rotated), 
+ must_det_ll(( is_grid(Grid), 
+    w(W,Rotated,RotG)=Template,
+    findall(Template,(flip_Many(RotG,Grid,Rotated),rot_mass(Rotated,W)),Pos),
+    sort(Pos,LPos),last(LPos,Template))).
+
+rot_mass(Grid,Mass):- 
+ into_grid(Grid,LP0), !,
+ LP = [C|_],
+ must_det_ll(( mapgrid(color_mass_int,LP0,LP),
+    length(C,Len),map_row_size(10,Len,LP,Mass))).
+
+rot_mass(Grid,OMass):- into_grid(Grid,LP0), 
+ LP = [C|_],
+ must_det_ll(( mapgrid(color_mass_int,LP0,LP),
+    length(C,Len),map_row_size(10,Len,LP,Mass),
+   (is_top_heavy(LP)->Bonus=16;Bonus=8),
+   (is_left_heavy(LP)->Bonus2=2;Bonus2=1),
+   OMass is Mass*Bonus*Bonus2)).
+
+map_row_size(_,Len,[],Len):-!.
+map_row_size(N,Len,[Row|Rest],Mass):- is_list(Row),!, 
+   length(Row,Len2), map_row_size(10,Len2,Row,RMass),   
+   N2 is N * Len,
+   map_row_size(N2,Len,Rest,RRMass),
+   Mass is RRMass+(RMass*N).
+map_row_size(N,Len,[Mult|Rest],Mass):- number(Mult),!, 
+   N2 is N * Len, map_row_size(N2,Len,Rest,RMass),
+   Mass is Mult*N + RMass.
+map_row_size(N,Len,[_|Rest],Mass):- 
+   N2 is N * Len, map_row_size(N2,Len,Rest,Mass),!.
+
 
 call_rot([],I,I):- !.
 call_rot([H|T],I,O):- !,
@@ -68,28 +115,12 @@ tips_to_rot(Grid,H,V,[rot90|RotOut],Final):- is_top_heavy(Grid), !, rot270(Grid,
 %tips_to_rot(Grid,H,V,[rot180|RotOut]):- is_top_heavy(Grid), !, rot180(Grid,Grid90), !, tips_to_rot(Grid90,H,V,RotOut).
 tips_to_rot(Grid,_H,_V,RotOut,Final):- is_left_heavy(Grid)-> (RotOut=[rot180],rot180(Grid,Final)); (RotOut=[sameR],Final=Grid).
 
-is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,color_w_mass(Top,TopM),color_w_mass(Bottem,BottemM),!,BottemM>TopM.
-is_left_heavy(Grid0):- rot90(Grid0,Grid),is_top_heavy(Grid).
+is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,rot_mass(Top,TopM),rot_mass(Bottem,BottemM),!,BottemM>TopM.
+is_left_heavy(Grid0):- rot90(Grid0,Grid),!,is_top_heavy(Grid).
 split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
     my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
 
-color_w_mass(Color,Int):- var(Color),!,Int=13.
-color_w_mass(Points,Count):- is_list(Points),!,maplist(color_w_mass,Points,MPoints),!,sum_list(MPoints,Count).
-color_w_mass(Color,Int):- ground(Color),color_int(Color,Int),!.
-color_w_mass(Color,Int):- number(Color),Color=Int,!.
-color_w_mass(Obj,Count):- nonvar(Obj),localpoints(Obj,Points),!,color_w_mass(Points,Count),!.
-color_w_mass(_,0).
-/*
-  bottem_heavy(Grid90,RotG,Grid180).
-grav_mass(Grid,_H,_V,RotG,Grid90):- is_h_symmetric(Grid),!,bottem_heavy(Grid,RotG,Grid90).
-grav_mass(Grid,_H,_V,RotG,Grid90):- bottem_heavy(Grid,A),rot90(A,B),bottem_heavy(B,RotG,Grid90).
 
-bottem_heavy(Grid,Turn,Grid180):-  (is_top_heavy(Grid)->(rot180(Grid,Grid180),Turn=rot180);(Grid=Grid180;Turn=sameR)).*/
-/*
-grav_mass(Grid,Mass):- grid_size(Grid,H,V), HV is round(H/V), Vh is floor(V/2),
-  findall(C,(between(Vh,V,Vi),between(0,H,Hi), Hi*HV > Vi, get_color_at(Hi,Vi,Grid,C),is_fg_color(C)),CList),
-  length(CList,Mass).
-*/
 
 gravity:- test_p2(gravity(4,w)).
 gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
@@ -412,7 +443,7 @@ find_engulfs([Obj|ScanNext],OtherObjects,[NewObj|ScanRest]):-
   /*must_det_ll*/(find_engulfs(ScanNext,OtherObjects,ScanRest)).
 
 find_engulfs_objects(_,[],[]).
-find_engulfs_objects(Obj,_,[]):- has_prop(link(insideOf,_),Obj),!.
+%find_engulfs_objects(Obj,_,[]):- has_prop(link(insideOf,_),Obj),!.
 find_engulfs_objects(Obj,_,[]):- has_prop(link(contains,_),Obj),!.
 find_engulfs_objects(Obj,[Touched|ScanNext],[link(insideOf,Iv)|Engulfed]):-    
  once(contained_object(Obj,Touched)),!,
@@ -426,10 +457,9 @@ find_engulfs_objects(Obj,[Touched|ScanNext],[link(contains,Iv)|Engulfed]):-
 find_engulfs_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 
 
-contained_object(O2,O1):-   
+contained_object(O2,O1):-
   O1 \== O2,
-  \+ has_prop(birth(glyphic),O2),
-  \+ has_prop(birth(glyphic),O1),
+  % \+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
   loc(O1,LowH1,LowV1),loc(O2,LowH2,LowV2), 
   LowH2 > LowH1, LowV2 > LowV1,
   v_hv(O1,H1,V1),v_hv(O2,H2,V2), 
@@ -455,7 +485,7 @@ find_contained(VM):-
 find_contained(_H,_V,_ID,Sofar,Sofar,[],[]).
 find_contained(_H,_V,_ID,[],[],NextScanPoints,NextScanPoints).
 find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextScanPointsInstead):-
-  isz(Found,outline(_)),
+ must(nop(isz(Found,outline(_)))),
   once(find_contained_points(Found,NextScanPoints,ScanPointsInstead,ContainedPoints)),
   ContainedPoints\==[],
   %grid_size(Found,H,V),

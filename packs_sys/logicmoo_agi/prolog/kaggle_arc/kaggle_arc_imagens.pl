@@ -175,7 +175,7 @@ into_lib_object2(ShapeProps,ScaledGrid,LibObj):-
   %flatten([Shapes,H,V,Scale],AList),!,
   %atomic_list_concat(AList,'_',ID),
   %grid_colors(ScaledGrid,CGPoints),
-  %print_attvars(grid_colors(ScaledGrid,SPoints)),
+  %ppa(grid_colors(ScaledGrid,SPoints)),
   globalpoints_maybe_bg(ScaledGrid,SPoints)))),
   G = make_indiv_object_no_vm(into_lib_object2,H,V,[iz(into_lib_object),grid(ScaledGrid),v_hv(H,V)|ShapeProps],SPoints,LibObj),
   catch(G,E,(arcST,wdmsg(E=G),trace,G)).
@@ -273,7 +273,7 @@ decolorize(VM):- Grid = VM.grid,
   set(VM.grid) = NewGrid,
   print_side_by_side(silver,Grid,into,_,NewGrid,decolorize),
   nl,
-  maplist(print_attvars,NewGrid),
+  maplist(ppa,NewGrid),
   nl.
 
 decolorize(Color,Mono):- is_grid(Color),!,mapgrid(decolorize_cell,Color,Mono).
@@ -314,8 +314,8 @@ llamma(P,A):- \+ \+ call(P,A).
 
 % \+ is_points_list(Obj),
 
-%add_shape_lib(Type,Obj):- !, nop(ppt(add_shape_lib(Type,Obj))).
-add_shape_lib(Type,Obj):- \+ ground(Obj), nop(ppt(add_shape_lib(Type,Obj))),fail.
+%add_shape_lib(Type,Obj):- !, nop(pp(add_shape_lib(Type,Obj))).
+add_shape_lib(Type,Obj):- \+ ground(Obj), nop(pp(add_shape_lib(Type,Obj))),fail.
 add_shape_lib(Type,Obj):-  is_object(Obj),!,add_shape_lib0(Type,Obj),!.
 add_shape_lib(Type,Obj):-  is_grid(Obj),!,add_shape_lib0(Type,Obj),!.
 
@@ -327,7 +327,7 @@ add_shape_lib(Type,Obj):- add_shape_lib0(Type,Obj).
 add_shape_lib0(Type,Obj):- amass(Obj,Mass),!,
   %dash_chars, print_grid(Obj),
   ( Mass<3 
-   -> nop(ppt(too_small_for_shapelib(Type,Mass))) ; (nop(ppt(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
+   -> nop(pp(too_small_for_shapelib(Type,Mass))) ; (nop(pp(add_shape_lib(Type))),assert_shape_lib(Type,Obj))), 
   %dash_chars,
   !.
 
@@ -505,12 +505,12 @@ show_shape(Shape):- is_grid(Shape),!,
 show_shape(Shape):- ground(Shape),!,  
   ignore(print_info(Shape)),
   ignore(print_grid([Shape])),
-  ignore((\+ ground(Shape),ppt(Shape))),!.
+  ignore((\+ ground(Shape),pp(Shape))),!.
 show_shape(Shape):-
   dash_chars,
   ignore(print_info(Shape)),
   ignore((\+ \+ print_shape_0(Shape) ->true;writeln(failed_print_grid))),
-  ignore((\+ ground(Shape),ppt(Shape))),!.
+  ignore((\+ ground(Shape),pp(Shape))),!.
 
 
 print_shape_0(Shape):-
@@ -526,25 +526,25 @@ print_shape_0(Shape):-
   %object_grid(Shape,FG),
   %numbervars(Shape,0,_,[attvar(bind)]),
   %grid_numbervars(FG,Grid),
-  ppt(Grid), 
+  pp(Grid), 
   %obj_ to_oid(Shape,_Glyph,Iv),
   print_grid(H,V,Grid),!.
   %locally(luser_setval(alt_grid_dot,Iv),print_grid(H,V,Grid)).
 
 show_shape_lib(Name):- make,
- ppt(?- show_shape_lib(Name)),
- mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), ppt(shape_lib_direct(Name)=Len))),
+ pp(?- show_shape_lib(Name)),
+ mort((shape_lib_direct(Name,GalleryS), length(GalleryS,Len), pp(shape_lib_direct(Name)=Len))),
  ignore(( Len\==0,
   mapgroup(show_shape,GalleryS),  
-  mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), underline_print(ppt(shape_lib_expanded(Name)=LenOS)))),
+  mort((shape_lib_expanded(Name,GallerySOS), length(GallerySOS,LenOS), underline_print(pp(shape_lib_expanded(Name)=LenOS)))),
   mapgroup(show_shape,GallerySOS),
-  %shape_lib_rules(Name,Rules),length(Rules,LenRules),ppt(shape_lib_rules(LenRules)=Rules),
-  mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, ppt(shapelib_opts(LenOpts)=Opts)))),!,
+  %shape_lib_rules(Name,Rules),length(Rules,LenRules),pp(shape_lib_rules(LenRules)=Rules),
+  mort(ignore((shapelib_opts(Name,Opts), length(Opts,LenOpts), LenOpts > 0, pp(shapelib_opts(LenOpts)=Opts)))),!,
   ignore((fail,GalleryS\==[], mapgroup(show_shape,GalleryS))))).
 
 clear_shape_lib(Name):- 
   findall(_,(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),L),
-  length(L,Len),ppt(clear_shape_lib(Name)=Len),
+  length(L,Len),pp(clear_shape_lib(Name)=Len),
   nop(show_shape_lib(Name)).
  
 shape_lib_expanded(Name,GallerySOS):- 

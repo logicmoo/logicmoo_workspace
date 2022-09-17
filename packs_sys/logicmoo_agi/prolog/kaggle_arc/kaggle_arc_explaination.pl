@@ -9,14 +9,14 @@
 :- endif.
 
 
-
+% make_grid(3,4)
 
 into_pipe(Grid,Grid):- !. % into_group
 into_pipe(Grid,Solution):- into_grid(Grid,Solution).
 
 describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
 describe_feature(_,call(Call)):- !, call(Call).
-describe_feature(Grid,Pred):- is_pointless(Grid), !, as_debug(9,ppt(usupported_call(Pred,Grid))).
+describe_feature(Grid,Pred):- is_pointless(Grid), !, as_debug(9,pp(usupported_call(Pred,Grid))).
 describe_feature(Grid,Pred):- call(Pred,Grid,Res)->print_equals(Grid,Pred,Res);print_equals(Pred,f),!.
 
 
@@ -44,36 +44,40 @@ will_show_grid(_,false).
 
   
 
-print_list_of(N,O):- print_list_of(print_info,N,O).
-print_list_of(_,_,[]):-!.
-print_list_of(P1,N,O):-
- (N\=[] -> ppt(N); true),
-  maybe_cache_glyphs(O),
-  %save_grouped(print_list_of(N),O),
-  g_out( maplist(P1,O)),!.
+print_list_of(Title,O):- print_list_of(print_info,Title,O).
 
+:- meta_predicate(print_list_of(1,+,+)).
+print_list_of(_,Title,[]):- pp(no_data(Title)),!.
+print_list_of(P1,Title,O):-
+ collapsible_section(info,Title,maybe,
+ (((Title\=[] -> pp(Title); true),
+  maybe_cache_glyphs(O),
+  %save_grouped(print_list_of(Title),O),
+  g_out( maplist(P1,O))))),!.
 
 maybe_cache_glyphs(O):- ignore((is_group(O),mapgroup(o2g,O,_))).
 
+print_info(R):- is_object_props(R),!,print_info(obj(R)).
 print_info(A):- is_grid(A),print_grid(A),!.
 print_info(A):- is_object(A), ignore(debug_indiv(A)),!.
 print_info(A):- is_group(A),maybe_cache_glyphs(A),debug_indiv(A),!.
 %print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
-print_info(A):- ppt(A),!.
+print_info(A):- pp(A),!.
 
 print_info_1(G):- print_info(G).
 
 print_info_l(GridS):- maplist(print_info_1,GridS).
 
 debug_as_grid(Grid):- debug_as_grid('',Grid).
-
+debug_as_grid(Why,R):- is_object_props(R),!,debug_as_grid(Why,obj(R)).
 debug_as_grid(Why,R):- atom(R), atom_contains(R,'_'), pp_parent([LF|_]), \+ (LF==lf;LF==objFn), 
   resolve_reference(R,Var), R\==Var, \+ plain_var(Var),!, 
   write(' '), writeq(R), write(' /* '), debug_as_grid(Why,Var), write(' */ ').
 %debug_as_grid(Why,R):- resolve_reference(R,Var)-> R\==Var, write(' ( '), writeq(R),write(' , '),debug_as_grid(Why,Var),write(' )'),!.
 debug_as_grid(Why,Grid):- (is_object(Grid)/*;is_grid(Grid)*/),!,
   v_hv(Grid,H,V),
+  object_glyph(Grid,Glyph),
   Title = debug_as_grid(Why,loc(OH,OV),size(H,V)),
   fif((H\==1;V\==1),
     (loc(Grid,OH,OV),
@@ -81,7 +85,9 @@ debug_as_grid(Why,Grid):- (is_object(Grid)/*;is_grid(Grid)*/),!,
      ((IH=H,IV=V)), % (IH = 30,IV=30), 
      subst(GridO,black,wbg,GridOO),
      into_ngrid(GridOO,IH,IV,NGrid),
-     wots(S,print_side_by_side(print_grid(IH,IV,Title,GridOO),print_grid(IH,IV,ngrid,NGrid))),
+
+     wots(GS,print_grid(IH,IV,Title,GridOO)),replace_in_string(['®'=Glyph],GS,GSS),
+     wots(S,print_side_by_side(GSS,print_grid(IH,IV,ngrid,NGrid))),
      HH is (OH - 1) * 2, print_w_pad(HH,S))),
   fif(is_object(Grid),(format('~N~n'),
   locally(nb_setval(debug_as_grid,nil),underline_print(debug_indiv(Grid))))),
@@ -100,8 +106,9 @@ into_ngrid(Points,H,V,NGrid):-
 :- discontiguous debug_indiv/1. 
 
 debug_indiv(_):- is_print_collapsed,!.
+debug_indiv(R):- is_object_props(R),!,debug_indiv(obj(R)).
 debug_indiv(_):- format('~N'),fail.
-debug_indiv(Var):- plain_var(Var),ppt(debug_indiv(Var)),!.
+debug_indiv(Var):- plain_var(Var),pp(debug_indiv(Var)),!.
 debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(is_grid,Grid),!.
 debug_indiv(Grid):- is_cpoints_list(Grid),!,debug_as_grid(is_cpoint,Grid).
 debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(is_point,Grid).
@@ -115,7 +122,7 @@ debug_indiv(List):- is_list(List),length(List,Len),!,
   dash_chars,!.
 
 
-debug_indiv(obj(A)):- \+ is_list(A),!, ppt(debug_indiv(obj(A))).
+debug_indiv(obj(A)):- \+ is_list(A),!, pp(debug_indiv(obj(A))).
 
 /*
 debug_indiv(A):- is_point_obj(A,Color,Point),
@@ -186,7 +193,7 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   ignore(( g_out_style(style('font-size','75%'),wqnl([format("% ~w:\t\t~w\t",[PC,SGlyph]) | TVS ])))),
   ignore(( TF==true, amass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, amass(Obj,Mass),!,Mass>4, v_hv(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
-  %ppt(A),
+  %pp(A),
   ignore(( TF==true,dash_chars))]),!.
 
 not_too_verbose(X):- X\==(''), X\==s('').
@@ -214,7 +221,7 @@ debug_indiv(diff(_)):-!.
 debug_indiv([Other]):-debug_indiv(Other),!.
 debug_indiv(P):- is_rule(P,Q),
   dash_chars,
-  ppt(Q),
+  pp(Q),
   dash_chars,!.
 
 is_rule(P,_):- \+ compound(P),!,fail.
@@ -226,7 +233,7 @@ debug_indiv(Other):-
   dash_chars,
   functor(Other,F,A),
   wqnl(other = F/A),
-  ppt(Other),
+  pp(Other),
   dash_chars,!.
 
 debug_indiv(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),debug_indiv(Obj,P,F,A),!.
@@ -305,7 +312,7 @@ debug_indiv(Obj,_,F,[A]):- is_cpoints_list(A),!,
   print_w_pad(PadH,S).
 
 
-debug_indiv(_,P,_,_):- ppt(P).
+debug_indiv(_,P,_,_):- pp(P).
 
 
 

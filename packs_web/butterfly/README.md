@@ -22,13 +22,18 @@ Butterfly is a xterm compatible terminal that runs in your browser.
 * Geolocation from browser!
 * May work on firefox too!
 
-## Try it
+## Try it (LOGICMOO Specific)
 
 ``` bash
-$ pip install butterfly
+$ pip install .
 $ pip install butterfly[themes]  # If you want to use themes
 $ pip install butterfly[systemd]  # If you want to use systemd
-$ butterfly
+$ butterfly.server.py  --port=7771 --unsecure --i-hereby-declare-i-dont-want-any-security-whatsoever --cmd="/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/Kaggle_arch.sh"
+
+# OR 
+
+$ butterfly  # This might open your browser if you are in X Windows
+
 ```
 
 A new tab should appear in your browser. Then type
@@ -93,8 +98,8 @@ Client side development use [grunt](http://gruntjs.com/) and [bower](http://bowe
 ## Credits
 
 The js part is based on [term.js](https://github.com/chjj/term.js/) which is based on [jslinux](http://bellard.org/jslinux/).
-## Author
 
+## Author
 [Florian Mounier](http://paradoxxxzero.github.io/)
 
 ## License

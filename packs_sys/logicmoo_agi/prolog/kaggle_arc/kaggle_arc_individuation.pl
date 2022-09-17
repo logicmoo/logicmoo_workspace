@@ -90,7 +90,7 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC,OutC):-
   dash_chars,
   luser_setval(no_rdot,true),
   grid_size(GridIn,IH,IV), grid_size(GridOut,OH,OV),
-  ((InC==OutC, InC==[]) -> ppt(yellow,nothing_individuated(PairName)) ;
+  ((InC==OutC, InC==[]) -> pp(yellow,nothing_individuated(PairName)) ;
     show_pair_diff_code(IH,IV,  OH, OV,individuated(ROptions,ID1),individuated(ROptions,ID2),PairName,InC,OutC)),!,
   luser_setval(no_rdot,false).
 
@@ -277,7 +277,7 @@ individuation_macros(altro, [
 individuation_macros(do_ending, [
   find_touches,    
   find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
-  find_contained, % mark any "completely contained points"
+  % find_contained, % mark any "completely contained points"
   combine_same_globalpoints, % make sure any objects are perfectly the sameR part of the image are combined 
   %label_sizes,
   %combine_objects,
@@ -294,9 +294,10 @@ sub_individuation_macro(S,Some):-
 %individuation_macros(complete, [parallel,done]).
 
 individuation_macros(complete, ListO):- test_config(indiv(ListO))-> true;
-%individuation_macros(complete, ListO):-  \+ test_config(indiv(_)),!, %reset_points, %inside_objs(force_by_color,subshape_both), %TODO %
+%individuation_macros(complete, ListO):-  \+ test_config(indiv(_)),!, %reset_points, %sub_individuate(force_by_color,subshape_both), %TODO %
   findall(save_as_objects(From),individuator(From,_),ListM),
-  append(ListM,[/*gather_cached*/],ListO).
+  append(ListM,[/*gather_cached*/
+    pointless([sub_indiv([save_as_objects(force_by_color),save_as_objects(i_colormass),save_as_objects(i_nsew)]),do_ending])],ListO).
 %use_individuator(Some):- individuator(Some,_).
 
   
@@ -309,7 +310,17 @@ individuator(i_maybe_glypic,[maybe_glyphic]). %:- \+ doing_pair.
 %individuator(i_maybe_glypic,[whole]):- doing_pair.
 individuator(i_columns,[when(get(h)=<7,columns),do_ending]). %:- \+ doing_pair.
 individuator(i_rows,[when(get(v)=<7,rows),do_ending]). %:- \+ doing_pair.
-individuator(i_mono_nsew,[bg_shapes([subshape_both(h,nsew)])]).
+
+individuator(i_mono,[save_as_objects(bg_shapes([subshape_both(h,nsew)])),
+                          save_as_objects(bg_shapes([subshape_both(v,colormass)]))]).
+/*
+individuator(i_mono_nsew,
+ [sub_individuate(
+    bg_shapes([subshape_both(h,nsew)]),
+   ([save_as_objects(force_by_color),save_as_objects(i_colormass)])),do_ending]).
+*/
+%individuator(i_subobjs,[sub_indiv([save_as_objects(force_by_color),save_as_objects(i_colormass)])]).
+
 %individuator(i_bg_nsew,[bg_shapes(subshape_both(h,nsew))]).
 %individuator(i_mono_colormass,[fg_shapes([subshape_both(v,colormass)])]).
 %individuator(i_fgbg,[by_color(1,bg), by_color(1,fg),do_ending]).
@@ -440,11 +451,11 @@ preserve_vm(VM,Goal):-
     maplist(arc_setval(VM),DPairs)),
   set_vm(VM).
 
- 
+/*
 % =====================================================================
-is_fti_step(inside_objs).
+is_fti_step(sub_individuate).
 % =====================================================================
-inside_objs(From,Next,VM):-
+sub_individuate(From,SubProgram,VM):-
   OldObjs = VM.objs,
   ignore(fti(VM,From)),
   NewObjs = VM.objs,
@@ -454,9 +465,44 @@ inside_objs(From,Next,VM):-
     H = VM.h, V = VM.v,
     points_to_grid(H,V,Points,Grid),
     gensym('ID_',ID2),
-    print_grid(Next,Grid),
-    preserve_vm(VM,individuate7(_,ID2,Next,Grid,WasInside)),
+    print_grid(SubProgram,Grid),
+    preserve_vm(VM,individuate7(_,ID2,SubProgram,Grid,WasInside)),
     raddObjects(VM,WasInside))),!.
+*/
+pointless(Res,VM):-
+  set(VM.points) = [],
+  run_fti(VM,Res).
+
+is_fti_step(sub_indiv).
+sub_indiv(SubProgram,VM):-
+  OnlyNew = VM.objs,  
+  maplist(individuate_object(VM,VM.gid,SubProgram),OnlyNew,WasInside),
+  maplist(addObjects(VM),WasInside).
+
+individuate_object(VM,GID,SubProgram,OnlyNew,WasInside):-
+ must_det_ll((
+   object_grid(OnlyNew,OGrid),
+   mapgrid(if_plain_then(black),OGrid,Grid),
+   object_glyph(OnlyNew,Glyph),
+   loc(OnlyNew,X,Y),
+   atomic_list_concat([GID,'_',Glyph,'_sub'],NewGID),
+   asserta(is_grid_tid(Grid,NewGID)),
+   set_vm(VM),!,
+   with_global_offset(X,Y,
+    individuate7(_,NewGID,SubProgram,Grid,WasInside)),!,
+   set_vm(VM))).
+
+% =====================================================================
+is_fti_step(sub_individuate).
+% =====================================================================
+sub_individuate(From,SubProgram,VM):-
+  OldObjs = VM.objs,
+  ignore(run_fti(VM,From)),
+  NewObjs = VM.objs,
+  intersection(NewObjs,OldObjs,_,OnlyNew,_),
+    preserve_vm(VM,maplist(individuate_object(VM, VM.gid,SubProgram),OnlyNew,WasInside)),
+  maplist(addObjects(VM),WasInside),
+  set_vm(VM).
 
 
 % =====================================================================
@@ -554,15 +600,19 @@ individuation_reserved_options(ROptions,Reserved,Options):-
    %subst(Options0,defaults,DefaultOptions,Options),
    %(Options0==Options -> my_append(Options,DefaultOptions,NewOptions) ; (Options=NewOptions)),!,
    ignore((ROptions \= Options,is_list(ROptions), sub_var(complete,ROptions),
-      (ppt(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options))))).
+      (pp(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options))))).
 
 
 %individuate_second_pass(Grid,IndvS):- individuate([second_pass],Grid,IndvS).
 %?- i(v(e41c6fd3)*(trn+0)*in).
 
+:- multifile(prolog:make_hook/2).
+:- dynamic(prolog:make_hook/2).
+
 :- dynamic(individuated_cache/3).
 :- retractall(individuated_cache(_,_,_)).
-:- luser_setval(global,individuated_cache,true).
+prolog:make_hook(before, Some):- Some \==[], retractall(individuated_cache(_,_,_)), fail.
+:- luser_defval(individuated_cache,true).
 
 get_individuated_cache(ROptions,OID,IndvS):- nonvar(ROptions),
   ground(OID), \+ luser_getval(individuated_cache,false), individuated_cache(OID,ROptions,IndvS),!.
@@ -624,7 +674,7 @@ individuate_two_grids(ROptions,Grid1,Grid2,IndvSI,IndvSO):-
   delistify_single_element(ROptions,NamedOpts),
   grid_to_gid(Grid1,OID1), grid_to_gid(Grid2,OID2),
   locally(nb_setval(doing_pair,t),
-    individuate_two_grids_once(two(OID1,OID2),NamedOpts,Grid1,Grid2,IndvSI,IndvSO)).
+    collapsible_section(individuate_two_grids_once(two(OID1,OID2),NamedOpts,Grid1,Grid2,IndvSI,IndvSO))).
 
 /*
 individuate_two_grids_once(OID1OID2,ROptions,Grid1,Grid2,IndvSI,IndvSO):- saved_group(individuate(OID1OID2,ROptions),IndvS),!,into_gio(IndvS,IndvSI,IndvSO),!.
@@ -642,6 +692,7 @@ individuate_two_grids_once(OID1OID2,ROptions,Grid1,Grid2,IndvSI,IndvSO):-
 
 
 :- retractall(is_why_grouped(_,_,_,_)).
+prolog:make_hook(before, Some):- Some \==[], retractall(is_why_grouped(_,_,_,_)), fail.
 
 individuate_two_grids_now(OID1OID2,ROptions,Grid1,Grid2,IndvSI,IndvSO):- 
  must_det_ll((
@@ -727,12 +778,12 @@ individuate_two_grids_now_X(OID1OID2,ROptions,Grid1,Grid2,VM1,VM2,Grid1X,Grid2X,
 
 individuate2(VM,[ROptions],OID,Grid,IndvS):- !, nonvar(ROptions), individuate2(VM,ROptions,OID,Grid,IndvS).
 individuate2(_VM,ROptions,OID,_GridIn,IndvS):- nonvar(OID), 
-  get_individuated_cache(ROptions,OID,IndvS),length(IndvS,Len),ppt(yellow,oid_cached(ROptions,OID,len(Len))),!.
+  get_individuated_cache(ROptions,OID,IndvS),length(IndvS,Len),pp(yellow,oid_cached(ROptions,OID,len(Len))),!.
 individuate2(VM,ROptions,OID,GridIn,IndvS):- 
   do_individuate(VM,ROptions,GridIn,IndvS),!,
   length(IndvS,Len),
   ignore((nonvar(OID),retractall(individuated_cache(OID,ROptions,_)), 
-          ppt(yellow,oid_created(ROptions,OID,len(Len))),
+          pp(yellow,oid_created(ROptions,OID,len(Len))),
           my_asserta_if_new(individuated_cache(OID,ROptions,IndvS)))),!.
 
 
@@ -754,7 +805,10 @@ do_individuate(VM, ROptions, GridIn,LF):- must_be_free(LF),
 % tiny grid becomes a series of points
 %individuate(GH,GV,ID,ROptions,_Grid,Points,IndvS):- \+ is_list(ROptions), is_glyphic(Points,GH,GV), individuate_glyphic(GH,GV,ID,Points,IndvS),!.
 %individuate(GH,GV,ID,whole,_Grid,Points,IndvS):-  individuate_whole(GH,GV,ID,Points,IndvS),!.
-individuate7(VM,ID,ROptions,GridIn,IndvS):-      
+
+individuate7(VM,ID,ROptions,GridIn,IndvS):-
+  individuate8(VM,ID,ROptions,GridIn,IndvS).
+individuate8(VM,ID,ROptions,GridIn,IndvS):-
  must_det_ll((
       (var(VM) -> into_fti(ID,ROptions,GridIn,VM) ; true),
       %VM.points = Points,
@@ -763,9 +817,9 @@ individuate7(VM,ID,ROptions,GridIn,IndvS):-
       %ensure_fti(GH,GV,ID,Grid,[],Reserved,NewOptions,Points,VM),   
       set_vm(VM),
       %individuals_raw(VM,GH,GV,ID,NewOptions,Reserved,Points,Grid,IndvSRaw),
-      run_fti(VM), 
+      run_fti(VM,ROptions), 
       IndvSRaw = VM.objs,
-  %as_debug(9,ptt((individuate=IndvSRaw))),
+  %as_debug(9,ppt((individuate=IndvSRaw))),
       make_indiv_object_list(VM,IndvSRaw,IndvS1),
       %combine_objects(IndvS1,IndvS2),
       combine_same_globalpoints(IndvS1,IndvS),
@@ -777,7 +831,7 @@ individuate7(VM,ID,ROptions,GridIn,IndvS):-
 into_fti(ID,ROptions,GridIn0,VM):-
   must_det_ll((
   ignore((ROptions \= Options,is_list(ROptions), sub_var(complete,ROptions),
-    (ppt(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options))))),
+    (pp(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options))))),
   statistics(cputime,X),Timeleft is X+30,
   fix_indivs_options(ROptions,Options),
   %rtrace,
@@ -790,12 +844,12 @@ into_fti(ID,ROptions,GridIn0,VM):-
  % rb_new(HM),duplicate_term(HM,Hashmap),
 
   max_min(H,V,MaxM,_),
-  max_min(25,MaxM,Max,_),
+  max_min(42,MaxM,Max,_),
   grid_to_gid(Grid,OID),
 
   listify(ROptions,OOptions),
   Area is H*V,
- % ppt(yellow,ig(ROptions,ID)=into_fti(H,V)),
+ % pp(yellow,ig(ROptions,ID)=into_fti(H,V)),
   ArgVM = vm{
    % parent VM
    %training:_,
@@ -833,7 +887,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
     true)),
    %b_set_dict(objs,VM,[]),
    %set(VM.current_i) = VM
-   ppt(yellow,ig(ROptions,ID)=(H,V)),
+   pp(yellow,ig(ROptions,ID)=(H,V)),
    !.
 
 
@@ -933,7 +987,7 @@ run_fti(VM,[F|TODO]):-
   show_vm_changes(VM,F, must_det_ll(fti(VM,[F|TODO]))),!,
   must_det_ll(get_kov(program_i,VM,Code)),!,    
   ([F|TODO]=@=Code -> 
-    (% ppt(blue,fti=[F|TODO]), ppt(blue,code=Code), 
+    (% pp(blue,fti=[F|TODO]), pp(blue,code=Code), 
      set(VM.program_i) = TODO, 
        run_fti(VM,TODO)) ; run_fti(VM)),!.
 
@@ -944,7 +998,7 @@ print_vm_debug_objs(VM):-
   length(Objs,Count),
   as_debug(8,(amass(Objs,Mass), length(VM.points,PC),
       maybe_four_terse(VM.program_i,Four),
-      ppt(t([obj/obj_mass=(Count/Mass),unprocessed_points=PC,roptions=VM.roptions,fsi=Four])))).
+      pp(t([obj/obj_mass=(Count/Mass),unprocessed_points=PC,roptions=VM.roptions,fsi=Four])))).
 
 
 maybe_four_terse(L,F=..N):- length(L,N),N>4,!,length(F,4),append(F,_,L),!.
@@ -987,7 +1041,7 @@ fti(VM,[Routine|set(VM.program_i)]):-  fail,
    length(VM.objs,Count),
    Count>Max,!,fail.
 
-fti(VM,[when(G,D)|TODO]):- ((call_expanded(VM,G),!,ppt(using_when(G,D)))->R=D;R=call(nop(ppt(skipped(G,D))))),
+fti(VM,[when(G,D)|TODO]):- ((call_expanded(VM,G),!,pp(using_when(G,D)))->R=D;R=call(nop(pp(skipped(G,D))))),
   set(VM.program_i) = [R|TODO].
 
 fti(VM,[call(G)|TODO]):-   set(VM.program_i) = TODO, !, my_submenu_call(call_expanded(VM,G)).
@@ -1042,7 +1096,7 @@ exceeded_objs_max_len(VM):-
   length(Objs,Count),
   Count > VM.objs_max_len,
   wdmsg(warn(Count > VM.objs_max_len)),
-  dumpST(2),
+  %dumpST(2),
   wdmsg(throw(exeeded_object_limit(Count > VM.objs_max_len))).
   
 
@@ -1128,7 +1182,9 @@ dir_mergeable_list(Ps1,Ps2,DirsOK,DirsNotOK):-
 mergable_dir(Ps1,Ps2,Dir):- member(C-P1,Ps1), member(C-P2,Ps2), is_adjacent_point(P1,Dir,P2),!.
 
 one_fti(VM,'rows'):-
-  maplist_n(1,row_to_indiv(VM), VM.grid_o).
+ Grid = VM.grid_o,
+ (\+ ground(Grid) -> true ;
+  maplist_n(1,row_to_indiv(VM), Grid)).
 
 row_to_indiv(VM,N,Row):-
   sameR([Row],Rot90),
@@ -1142,8 +1198,10 @@ row_to_indiv(VM,N,Row):-
   raddObjects(VM,Obj).
 
 one_fti(VM,'columns'):-
-  rot90(VM.grid_o,Grid90),
-  maplist_n(1,column_to_indiv(VM), Grid90).
+ Grid = VM.grid_o,
+ (\+ ground(Grid) -> true ;
+  rot90(Grid,Grid90),
+  maplist_n(1,column_to_indiv(VM), Grid90)).
 
 column_to_indiv(VM,N,Row):-  
   rot270([Row],Rot270),
@@ -1235,26 +1293,42 @@ is_fti_step(save_as_objects).
 % =====================================================================
 save_as_objects(Name,VM):-
   %Objs = VM.objs,!,
- Title = save_as_objects(Name),
  must_det_ll((
   Grid = VM.grid,
   %notrace(catch(call_with_depth_limit(individuate1(_,Name,VM.grid_o,IndvS0),20_000,R),E,(wdmsg(E)))),
   individuate1(_,Name,Grid,IndvS0),
-  % NewObjs = VM.objs,!,
-  %intersection(Objs,NewObjs,_Same,_Removed,IndvS0),
+  %maplist(override_object(iz(bp(Name))),IndvS0,IndvS1),
+  label_name_by_size(VM,IndvS0,Name))),!.
+
+label_name_by_size(VM,IndvS0,Name):- 
+  Title = save_as_objects(Name),
   fif((true;number(_R)),
    (length(IndvS0,Len),
     fif(Len>0,
      must_det_ll((
       override_object([o(Name,sf(Len),nil),o(Name,lf(Len),nil)],IndvS0,IndvS1),
       label_sizes(Name,IndvS1,IndvLS,IndvSL),
+      (( Name == i_nsew ) -> DebugThis = full ; luser_getval(debug,DebugThis)->true; DebugThis=true),
+      ( DebugThis\==false -> Feedback = debug_as_grid(Title) ; Feedback = print_info),
+      nop(ignore((DebugThis\==false, print_grid(VM.h,VM.v,Title,IndvSL)))),
+      nop(ignore((DebugThis==full, print_list_of(pp,Title,IndvLS)))),
       %dash_chars,
-      ( luser_getval(debug,full) -> Feedback = debug_as_grid(Title) ; Feedback = print_info),
-      grid_size(Grid,H,V),
-      print_grid(H,V,Title,IndvSL),
-      print_list_of(Feedback,Title,IndvLS),
-      dash_chars,
-      addObjectOverlap(VM,IndvSL)))))))).
+      addObjectOverlap(VM,IndvSL)))))),!.
+
+saved_named_objs(VM):-
+  Objs = VM.objs,
+  %Grid = VM.grid,
+  findall(Name,feature_props(Name,Objs),Names),
+  list_to_set(Names,Props),
+  maplist(objs_with_feat(Objs),Props,Group),
+  maplist(label_name_by_size(VM),Group,Props).
+
+feature_props(Name,Objs):-
+  sub_term(E,Objs), ground(E), E = birth(_), E = Name.
+
+
+objs_with_feat(Objs,Name,Matches):-
+  include(has_prop(Name),Objs,Matches).
 
 addObjectOverlap(VM,IndvS2):- 
    append(IndvS2,VM.objs,IndvS3),
@@ -1397,8 +1471,8 @@ colormass_merger(VM,Smaller,Bigger):-
    set(VM.objs) = [Combined|Kept])) .
 
 find_mergeable(_VM,_,[],[]).
-find_mergeable(VM,Found,[Next|ScanPoints],[Next|Engulfed]):-    
- mergable_objects(VM,Found,Next),
+find_mergeable(VM,Found,[SubProgram|ScanPoints],[SubProgram|Engulfed]):-    
+ mergable_objects(VM,Found,SubProgram),
  find_mergeable(VM,Found,ScanPoints,Engulfed),!.
 find_mergeable(VM,Found,[_|ScanPoints],Engulfed):-
  find_mergeable(VM,Found,ScanPoints,Engulfed),!.
@@ -1526,7 +1600,7 @@ one_fti(VM,glyphic):-
  must_det_ll((
   one_fti(VM,whole),
   localpoints_include_bg(VM.grid_o,Points),length(Points,LenBG),
-  (LenBG=<25->UPoints=Points;mostly_fgp(Points,UPoints)),!,
+  (LenBG=<42->UPoints=Points;mostly_fgp(Points,UPoints)),!,
   using_alone_dots(VM,(maplist(make_point_object(VM,[birth(glyphic),iz(shaped)]),UPoints,IndvList), raddObjects(VM,IndvList),
   save_grouped(individuate(VM.gid,glyphic),IndvList))))).
 
@@ -1564,13 +1638,13 @@ is_fti_step(colormass_subshapes).
 colormass_subshapes(VM):- colormass_subshapes(VM,VM.objs).
 colormass_subshapes(_VM,[]):-!.
 colormass_subshapes(VM,VMObjs):- % fail,
-  select(Obj,VMObjs,Next),
+  select(Obj,VMObjs,SubProgram),
   object_grid(Obj,Grid),
   individuate7(_,VM.id,[subshape_in_object],Grid,WasInside),
   ignore((WasInside =[_,_|_], % two or more
         print_grid("colormass_subshapes",WasInside),
         raddObjects(VM,WasInside))),
-  colormass_subshapes(VM,Next).
+  colormass_subshapes(VM,SubProgram).
 colormass_subshapes(_,_):-!.
 
 
@@ -1597,7 +1671,7 @@ one_fti(VM,shape_lib(Method,LibName)):-
 
 try_shapelib(VM,Method,LibName,Reserved):-   
   length(Reserved,RL),
-  ignore((RL>30,ppt(shape_lib_direct(LibName)=RL))),
+  ignore((RL>30,pp(shape_lib_direct(LibName)=RL))),
   %smallest_first
   %largest_first(Reserved,ReservedSL),
   %debug_indiv(Reserved),
@@ -1610,7 +1684,7 @@ use_shapelib(VM,Method,LibName,[Shape|ReservedSL]):- !,
   (try_shape(VM,Method,LibName,Shape)-> use_shapelib(VM,Method,LibName,[Shape|ReservedSL]) ; use_shapelib(VM,Method,LibName,ReservedSL)).
 
 try_shape(VM,Method,LibName,Shape):-     
-   %ignore((length(RestReserved,RL),1 is RL mod 7, ppt(searchLib(LibName)=RL))),
+   %ignore((length(RestReserved,RL),1 is RL mod 7, pp(searchLib(LibName)=RL))),
    % Points\==[],
    %\+ color(Shape,black),
    object_grid(Shape,OGrid),
@@ -1708,8 +1782,10 @@ objs_into(Opts,VM):-
 is_fti_step(leftover_as_one).
 % =====================================================================
 leftover_as_one(VM):-
-   ignore((VM.points\==[],
-   make_indiv_object(VM,[iz(combined),birth(leftover_as_one)],VM.points,LeftOverObj), verify_object(LeftOverObj),
+   Points = VM.points,
+   ignore((Points\==[],
+   wdmsg(leftover_as_one=Points),
+   make_indiv_object(VM,[iz(combined),birth(leftover_as_one)],Points,LeftOverObj), verify_object(LeftOverObj),
    raddObjects(VM,LeftOverObj))),
    VM.points=[].
 
@@ -1719,7 +1795,8 @@ is_fti_step(current_as_one).
 current_as_one(VM):-
  Points = VM.points,
    ignore((Points\==[],
-   make_indiv_object(VM,[iz(combined),birth(leftover_as_one)],Points,LeftOverObj), verify_object(LeftOverObj),
+   set_html_stream_encoding, wdmsg(current_as_one=Points),
+   make_indiv_object(VM,[iz(combined),birth(current_as_one)],Points,LeftOverObj), verify_object(LeftOverObj),
    raddObjects(VM,LeftOverObj),
    set(VM.points) = Points)).
    
@@ -1843,7 +1920,7 @@ addGPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 is_fti_stepr(remove_from_image(_Data)).
 remove_from_image(VM,Data):-    
     must_det_ll((remove_global_points(Data,VM.points,Points),
-    ppt(Points),
+    pp(Points),
     set(VM.points) = Points)),!.
    
 
@@ -2051,7 +2128,7 @@ shape_min_points(_VM,Shape,MinShapeO):-shape_min_points0(Shape,MinShapeO).
 shape_min_points0(_,[_,_|_]).
 %  shape_min_points(VM,_,_).
 
-:- luser_setval(global,color_mode,monochrome).
+:- luser_defval(color_mode,monochrome).
 
 ok_color_with(C1,C1).
 /*
@@ -2316,8 +2393,8 @@ merge_a_b(A,B,AA):-
   setq(A,oid(OID),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
-  ignore((How ==[]-> nop(ppt(shared_object(GlyphB->GlyphA))); 
-    (ppt(same_object(GlyphA,GlyphB,How))))).
+  ignore((How ==[]-> nop(pp(shared_object(GlyphB->GlyphA))); 
+    (pp(same_object(GlyphA,GlyphB,How))))).
 
 
 

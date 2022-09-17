@@ -177,7 +177,6 @@ Tests that can still be passed by memorization code (ML) and deduction code (GOF
 * Non logicmoo runs at [http://gitlab:1777/swish/arc/arc_testing_interface.html](http://gitlab:1777/swish/arc/arc_testing_interface.html)
 * 
 
-
 ---
 
 6/10/2022
@@ -275,6 +274,10 @@ for Example:
 * Rerun individuation on the individuals using only themselves
 * Rerun individuation on the individuals using individuals in their fill areas
 
+---
+9/15 
+
+* ```butterfly.server.py  --port=7771 --unsecure --i-hereby-declare-i-dont-want-any-security-whatsoever --cmd="/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/Kaggle_arch.sh"```
 
 
 ---

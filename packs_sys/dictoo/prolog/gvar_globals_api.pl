@@ -249,7 +249,6 @@ nb_att3_get_attr(atts(Name0,Value0,Atts),Name,Value):- Name==Name0 -> Value=Valu
 
 :- fixup_exports.
 
-
 :- include(gvar_fixup_exports).
 
 :- system:reexport(gvar_globals_api).

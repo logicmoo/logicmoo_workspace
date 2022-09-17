@@ -74,7 +74,7 @@ most(c(X) ==> ~b(X)) .
 a(1).
 
 
-%:- listing([a/1,b/1,c/1,(==>)/2,most/1,ppt,nt,bt]).
+%:- listing([a/1,b/1,c/1,(==>)/2,most/1,pp,nt,bt]).
 
 :- mpred_test(~b(1)).
 

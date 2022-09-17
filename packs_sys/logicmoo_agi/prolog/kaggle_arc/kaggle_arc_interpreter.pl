@@ -89,7 +89,7 @@ test_cond_or(This,_That):- test_config(This),!.
 test_cond_or(This, That):- term_variables(This,[That|_]),!.
 
 call_expanded(VM,G):-  exp_call(VM,G,GG),G\=@=GG,!,call_expanded(VM,GG).
-call_expanded(_VM,G):- catch(call(G),E,(arcST,ppt(E),rrtrace(G))).
+call_expanded(_VM,G):- catch(call(G),E,(arcST,pp(E),rrtrace(G))).
 
 quinish(Var):- var(Var),!.
 quinish(Var):- is_grid(Var),!.
@@ -134,13 +134,13 @@ set_vm_grid(VM,In):- var(In),!, In = VM.grid .
 set_vm_grid(VM,In):- is_grid(In), !, set_vm_grid_now(VM,In).
 set_vm_grid(VM,In):- into_grid(In,Grid), set_vm_grid_now(VM,Grid),!.
 set_vm_grid(VM,In):- is_map(In), map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
-set_vm_grid(VM,In):- set_vm_grid_now(VM,In).
+set_vm_grid(VM,In):- collapsible_section(debug,set_vm_grid_now(VM,In)).
 
 set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
 set_vm_grid_now(VM,Grp):- 
   data_type(Grp,Type),
   gset(VM.type) = data_type(Type),
-  ppt(yellow,set_vm_grid_now),ppt(cyan,Type),fail.
+  pp(yellow,set_vm_grid_now),pp(cyan,Type),fail.
 set_vm_grid_now(VM,In):- VM==In,!.
 set_vm_grid_now(VM,In):- is_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
 set_vm_grid_now(VM,Grp):- is_group(Grp), !,
@@ -218,7 +218,7 @@ run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.grid_tar
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
-run_dsl(_VM,Mode,Prog,In,_Out):- ptt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
+run_dsl(_VM,Mode,Prog,In,_Out):- ppt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
 
 run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((luser_getval(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),luser_linkval(dsl_pipe,PipeOut).
@@ -269,7 +269,7 @@ uncast_grid_to_object(Orig,Grid,NewObj):-
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
 back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
-  ptt(back_to_map(Was,Dict,Prev,Grid,Closure,New)),
+  ppt(back_to_map(Was,Dict,Prev,Grid,Closure,New)),
   call(Closure,New,NewPrev),
   gset(Dict.Was) = NewPrev ,
   Ret = Dict.
@@ -377,7 +377,7 @@ known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),
 
 
 addProgramStep(_VM,Step):-
-  ppt(addProgramStep(vm,Step)).
+  pp(addProgramStep(vm,Step)).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- 
   arg(_,v(trn+_,tst+_),ExampleNum),

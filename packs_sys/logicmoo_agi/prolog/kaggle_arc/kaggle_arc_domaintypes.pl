@@ -19,9 +19,9 @@ has_color(C,Cell):- only_color_data(Cell,CD), cmatch(C,CD).
 
 cmatch(C,CD):- plain_var(C),!,C=CD,!.
 cmatch(C,CD):- var(C),!,C=CD,!.
-cmatch(fg,CD):- is_fg_color(CD),!.
-cmatch(bg,CD):- is_bg_color(CD),!.
-cmatch(wbg,CD):- (CD==wbc;is_bg_color(CD)),!.
+cmatch(fg,CD):- !, is_fg_color(CD),!.
+cmatch(bg,CD):- !, is_bg_color(CD),!.
+cmatch(wbg,CD):- !, (CD==wbc;is_bg_color(CD)),!.
 %cmatch(P,CD):- is_real_color(P),!, \+ P\==CD.
 cmatch(P,CD):- is_colorish(P),!, \+ P\=CD.
 cmatch(P,CD):- call(P,CD),!.
@@ -464,13 +464,15 @@ is_grid_of(P1,[[C|H]|R]):-
 is_row_len(N,L):- is_list(L),length(L,N).
 
 %is_object(H):- is_list(H),is_cpoints_list(H).
-is_grid_cell(C):- var(C),!.
-is_grid_cell(C):- number(C),C<13.
-is_grid_cell(C):- is_colorish(C),!.
+%is_grid_cell(C):- var(C),!.
+is_grid_cell(AB):- \+ compound(AB),!.
+%is_grid_cell(C):- number(C),C<13.
+%is_grid_cell(C):- is_colorish(C),!.
 is_grid_cell(att(_,_)):-!.
 is_grid_cell(cell(_)):-!.
+
 %is_grid_cell(C):- atomic(C),!.
-is_grid_cell(AB):- compound(AB),!, sub_term(E,AB),(var(E);is_colorish(E)),!.
+is_grid_cell(AB):- compound(AB),!, \+ is_list(AB), sub_term(E,AB),(var(E);is_colorish(E)),!.
 
 h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
 h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).

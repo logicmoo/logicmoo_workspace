@@ -43,7 +43,7 @@ print_rule(M,(X:-Body)):- !,
     orpt(M=[X]))).
 print_rule(M,O):- \+ \+ (( orpt(M=[O]))).
 
-orpt(G):- \+ \+ ((numbervars(G,0,_,[attvar(bind),singletons(true)]), format('~N'), ppt(orange,(call(print(G)))))).
+orpt(G):- \+ \+ ((numbervars(G,0,_,[attvar(bind),singletons(true)]), format('~N'), pp(orange,(call(print(G)))))).
 
 save_learnt_rule(TestID,In,InKey,RuleDir,Out):-
   nop_now(save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out))).
@@ -212,7 +212,7 @@ debug_reproduction(H,V,Obj,DObj):-
   print_grid(H,V,Obj,Points),
   obj_to_oid(Obj,ID1),
   obj_to_oid(DObj,ID2),
-  ppt(dobj(ID1,ID2)=DObj),!.
+  pp(dobj(ID1,ID2)=DObj),!.
 
 show_result(What,Solution,ExpectedOut,Errors):-
  get_current_test(TestID),
@@ -288,7 +288,7 @@ learn_rule_in_out_sames(In,Out):- fail,
   member(I,In),member(O,Out),
   mass(O,Mass), Mass>MinMass, mass(I,Mass),
   once((compare_objs_how(How), nonvar(How), compare_objs1(How,I,O))),
-  ppt(How),
+  pp(How),
   simplify_for_matching(lhs,I,II),
   simplify_for_matching(rhs,O,OO),
   save_learnt_rule(test_solved(How,II,OO),I,O),!.
@@ -322,7 +322,7 @@ learn_rule_iin_oout(_,In,O,OL):- mass(O,Mass),
   sort(SLIDL,SSLIDL),
   reverse(SSLIDL,RSLIDL),
   member(SL-SAME-I-DL,RSLIDL),
-  ppt([SL+DL, sameR = SAME, in=I,out=OL]),  
+  pp([SL+DL, sameR = SAME, in=I,out=OL]),  
   compare_objs1(How,I,O),
   %shape(I,Shape),shape(O,Shape),
   %pen(I,Pen),pen(O,Pen),
@@ -424,8 +424,8 @@ assert_visually( H  ):- unnumbervars(H,HH),assert_visually1(HH,true).
 assert_visually1(H,B):- get_current_test(TestID), arg(1,H,W),W\==TestID,!, H=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
 assert_visually1(H,B):- assert_visually2(H,B).
 
-assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,nop(ppt(cyan,known_exact(H:-B))).
-assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,ppt(cyan,known(H:-B)).
+assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,nop(pp(cyan,known_exact(H:-B))).
+assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,pp(cyan,known(H:-B)).
 assert_visually2(H,B):- functor(H,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(H:-B)), my_asserta_if_new((H:-B)).
 
 nop_now(_).
@@ -493,10 +493,10 @@ ignore_equal(X,Y):- ignore(X=Y).
 
 rev_key0(C-P,P-C).
 
-%ppt(O):- format('~N'),print(O),nl.
+%pp(O):- format('~N'),print(O),nl.
 use_test_associatable(In,Solution):- 
   simplify_for_matching(lhs,In,IIn),
-  %ppt(in=IIn),  
+  %pp(in=IIn),  
   findall(Ref-OutS,use_test_associatable_io(IIn,OutS,Ref),OutL),
   keysort(OutL,OutLS),
   maplist(arg(2),OutLS,OutLS2),
@@ -517,7 +517,7 @@ use_test_associatable(In,OutR):-
    OutSet=[for_output2],     
    nb_set_add1(OutSet,OutL),
    ignore(OutR=OutSet),!,
-   ppt(outSet2=OutSet).
+   pp(outSet2=OutSet).
 
 test_associatable_proof(In,OutR):-
   findall(InS,simplify_for_matching_nondet(lhs,In,InS),InL),
@@ -538,7 +538,7 @@ use_test_associatable_io(I,O,Ref):- get_current_test(TestID), clause(test_solved
 use_test_associatable_io(I,O,Ref):- get_current_test(TestID),
   clause(test_associatable(TestID,Pre,O),_,Ref),
   \+ \+ same_props(I,Pre),
-  nop(ppt(same_props(I,Pre))).
+  nop(pp(same_props(I,Pre))).
 
 same_props(I,Pre):- (var(I);var(Pre)),!.
 same_props(I,Pre):- ([]==(I);[]==(Pre)),!.
@@ -553,7 +553,7 @@ use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_target,
  get_current_test(TestID),
   ignore(get_vm(last_key,Key)),
   ((has_learnt_rule(TestID,In,Key,RuleDir,Out);has_learnt_rule(TestID,_,Key,RuleDir,Out);has_learnt_rule(TestID,In,_,RuleDir,Out))),
-  ppt(orange,using_learnt_rule(In,Key,RuleDir,Out)),
+  pp(orange,using_learnt_rule(In,Key,RuleDir,Out)),
   ignore(Out = ROut).
 
 use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_target, 
@@ -562,7 +562,7 @@ use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_target,
    In = VM.grid_o,
    Head = learnt_rule(TestID0,In0,Key0,RuleDir0,Out0),
    Rule = rule(Len,In0,Key0,RuleDir0,TestID0,Out0,Ref),
-   ppt(searching_for=[in(In),dir(RuleDir),key(Key)]),
+   pp(searching_for=[in(In),dir(RuleDir),key(Key)]),
   findall(Rule,
    (clause(Head,_Vars,Ref),
     call(Head),
@@ -705,7 +705,7 @@ find_by_shape(Grid,Find,Founds):-
    find_ogs(H,V,F1,Grid),% trace,
 
    grid_to_points(F1,GH,GV,Points),
-   ppt(Points),
+   pp(Points),
    make_indiv_object(VM,[iz(find_by_shape),F1,loc(H,V),alt_grid_size(GH,GV)],Points,F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).
@@ -816,7 +816,7 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   GridNameOut= PairName*out,
   set_grid_tid(In,GridNameIn),
   set_grid_tid(Out,GridNameOut),  
-  test_info(TestID,Info), ppt(fav(TestID,Info)),nl)).
+  test_info(TestID,Info), pp(fav(TestID,Info)),nl)).
   
 
 

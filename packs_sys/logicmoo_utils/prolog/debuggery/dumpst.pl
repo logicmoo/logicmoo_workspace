@@ -270,7 +270,7 @@ dumpST_now(FrameInto,Opts):-
      nb_getval('$current_stack_frame_depth',N),
      nb_getval('$current_stack_frame_handle',Frame),
     ((pushFrame(N,Frame,Opts),MD>N)-> 
-     ((prolog_frame_attribute(Frame,parent,ParentFrame)->
+     ((getPFA2(Frame,parent,ParentFrame)->
        (nb_setval('$current_stack_frame_handle',ParentFrame),
        NN is N +1,nb_setval('$current_stack_frame_depth',NN),fail); !));
      (!))),

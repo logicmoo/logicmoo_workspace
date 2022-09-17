@@ -44,7 +44,7 @@ got_result(SG,FG,Match):-
   copy_term(FG,CFG),copy_term(SG,CSG),
   numbervars(CSG+CFG,999,_,[attvar(bind)]),
   ignore((perfect_result(CSG,CFG,WMatch), 
-    ((Match\==WMatch) -> (ppt(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); ppt(green,sameR)))),
+    ((Match\==WMatch) -> (pp(red,'ChAnGED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n\n\n\n\n\n\n\n'),sleep(0.1)); pp(green,sameR)))),
   retractall(tr:existing_result(CSG,CFG,_)),
   arc_assert(tr:existing_result(CSG,CFG,Match)),!.
   
@@ -73,7 +73,7 @@ test_ogs2(H,V,Match):-
 
 % should still be the sameR
 test_ogs1(H,V,Match):-
-  Run = once(( print_side_by_side(FG,SG),nop(ptt(tf=T)))),
+  Run = once(( print_side_by_side(FG,SG),nop(ppt(tf=T)))),
   wqln("searching..."),
     ff666(T,UFG),      ss666(T,USG),
   copy_term(UFG,FG), copy_term(USG,SG),
@@ -95,7 +95,7 @@ never_fg(Var):- freeze(Var, \+ is_fg_color(Var)).
 
 % should still be the sameR
 test_ogs0(H,V,Match):-
-  Run = once(( print_side_by_side(FG,SG),print(test_ogs0(H,V,TMatch)),nop(ptt(tf=T)))),
+  Run = once(( print_side_by_side(FG,SG),print(test_ogs0(H,V,TMatch)),nop(ppt(tf=T)))),
   wqln("searching..."),
     ff666(T,UFG),      ss666(T,USG),
   copy_term(UFG,FG), copy_term(USG,SG),
@@ -118,7 +118,7 @@ test_ogs0(H,V,Match):-
 
 
 test_ogs(H,V,Match):- 
-  Run = once(( print_side_by_side(FG,XSG),print_attvars(FG),print_attvars(XSG),nop(ptt(tf=T)))),
+  Run = once(( print_side_by_side(FG,XSG),ppa(FG),ppa(XSG),nop(ppt(tf=T)))),
   wqln("searching..."),
     ff666(_,FG),
     ss666(T,SG),
@@ -191,11 +191,11 @@ show_m_pair(_TF,S,H,V,F,G):-
   offset_grid(H2,V2,F,OF),
   constrain_grid(f,_TrigF,OF,FF),!, 
   print_grid("find",FF),
-  print_attvars(FF),
+  ppa(FF),
   dash_chars(60,' '),ignore(call(S)),nl,
   constrain_grid(s,_TrigG,G,CG),!,
   print_grid("find on",CG)]),!,
-  print_attvars(CG).
+  ppa(CG).
 
 
 print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid(f,_Trig,F,_FG),print_grid(GH,GV,F),nl)))),!.
@@ -654,7 +654,7 @@ ascii_to_grid(Text,G):-
  ascii_to_growthchart(Text,GrowthChart),
  growthchart_to_grid(GrowthChart,6,5,G).
 
-:- luser_setval(global,find_rule,regular).
+:- luser_defval(find_rule,regular).
 % ?- h666(X),text_to_grid(X,G).
 text_to_grid(Text,GO):- text_to_grid(Text,_HH,_VV,_ObjPoints,GO).
 text_to_grid(Text,HH,VV,ObjPoints,GO):-

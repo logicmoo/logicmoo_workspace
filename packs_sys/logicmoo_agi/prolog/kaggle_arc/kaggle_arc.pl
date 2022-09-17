@@ -7,6 +7,11 @@
 
 :- encoding(iso_latin_1).
 
+:- set_prolog_flag(encoding,iso_latin_1).
+:- set_prolog_flag(stream_type_check,false).
+
+
+
 %:- pack_install('https://github.com/logicmoo/logicmoo_utils.git').
 %:- pack_upgrade(logicmoo_utils).
 % :- pack_install(dictoo).
@@ -68,7 +73,6 @@ decl_sf(G):- ground(G), !, my_assertz_if_new(decl_sf(G)).
 :- dynamic(decl_pt/1).
 decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(plain,G)).
 decl_pt(How,G):- nonvar(How),ground(G), !, my_assertz_if_new(decl_pt(How,G)).
-:- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(color_term,true).
 :- set_stream(current_output, tty(true)).
 :- stream_property(S,file_no(2)), set_stream(S,tty(true)).
@@ -233,7 +237,7 @@ must_det_ll(X):-
   strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
     nop(trace(M:F/A,-fail))).
 
-must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/writeq(E=X),ppt(rrtrace=X),rrtrace(X)))).
+must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/writeq(E=X),pp(rrtrace=X),rrtrace(X)))).
 
 must_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,rrtrace(X),!.
 % must_det_ll(X):- must_det_ll(X),!.
@@ -243,6 +247,9 @@ rrtrace(X):- notrace,nortrace, arcST, sleep(0.5), trace, (notrace(\+ current_pro
 
 remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
 remove_must_dets(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
+
+:- current_prolog_flag(argv,C),wdmsg(current_prolog_flag(argv,C)),!.
+
 
 % goal_expansion(must_det_l(G),I,must_det_ll(G),O):- nonvar(I),source_location(_,_), nonvar(G),I=O.
 
@@ -433,15 +440,16 @@ doit(set(E.v)):- that.
 :- style_check(+singleton).
 */
 
-arc_user(ID):- thread_self(TID),arc_user(TID, ID).
+arc_user(main):-!.
+%arc_user(ID):- thread_self(TID),arc_user(TID, ID).
 
-suggest_arc_user(ID):- catch((xlisting_web:find_http_session(ID)),_,fail),!.
+suggest_arc_user(ID):- catch((if_arc_webui(xlisting_web:find_http_session(ID))),_,fail),!.
 suggest_arc_user(ID):- catch((pengine:pengine_user(ID)),_,fail),!.
 suggest_arc_user(ID):- catch((http_session:session_data(_,username(ID))),_,fail),!.
 
+arc_user(TID, ID):- \+ arc_webui,!,TID=ID,!.
 arc_user(TID, ID):- catch((http_session:session_data(TID,username(ID))),_,fail),!.
 arc_user(TID, ID):- suggest_arc_user(ID), TID\=ID,!.
-arc_user(TID, ID):- TID=ID,!.
 
 
 :- dynamic(arc_user_prop/3).
@@ -450,21 +458,29 @@ arc_user(TID, ID):- TID=ID,!.
 luser_setval(N,V):- arc_user(ID),luser_setval(ID,N,V),!.
 luser_setval(ID,N,V):- nb_setval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
+luser_defval(N,V):- luser_setval(global,N,V).
+
 luser_linkval(N,V):- arc_user(ID),luser_linkval(ID,N,V),!.
 luser_linkval(ID,N,V):- nb_linkval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
+:- meta_predicate(if_arc_webui(-)).
+if_arc_webui(_):- \+ arc_webui,!,fail.
+if_arc_webui(Goal):- arc_webui,!,g_out(call(Goal)).
+
+luser_getval(N,V):- if_arc_webui(((get_param_req_or_session(N,V), V\=='',V\==""))).
 luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
 %luser_getval(ID,N,V):- thread_self(ID),nb_current(N,V),!.
 %luser_getval(ID,N,V):- !, ((arc_user_prop(ID,N,V);nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 luser_getval(ID,N,V):- !,
  (nb_current(N,Val)*->Val=V;
   (arc_user_prop(ID,N,V)*->true;arc_user_prop(global,N,V))).
+
 /*
 luser_getval(ID,N,V):- 
  (arc_user_prop(ID,N,V)*->true;
   (nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 */
-:- luser_setval(global,example,trn+0).
+:- luser_defval(example,trn+0).
 
 %c:- forall(clause(fav(A,B),true),arc_history1((fav(A,B)))).
 :- arc_history1(fav2).
@@ -549,7 +565,6 @@ arc(TestID):- time(forall(arc1(true,TestID),true)).
 
 arc1(TName):- arc1(true,TName).
 %arc1(G,TName):- arc2(G,TName,(_+0)).
-
 
 
 arc1(G,TName):-
@@ -665,7 +680,7 @@ make_training(TestID,VMO):-
      inC:_InC,outC:_OutC,
      removed:_,added:_, kept:_,   
      grid_in:_,grid_target:_,
-   set(VM.mappings) =[map])), !. % ppt(VM),nl.
+   set(VM.mappings) =[map])), !. % pp(VM),nl.
   */
 
 
@@ -673,7 +688,9 @@ make_training(TestID,VMO):-
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
 train_test:- notrace(get_current_test(TestID)), once(train_test(TestID)).
-train_test(TestID):- clear_training(TestID),train_test(TestID,train_using_oo_ii_io).
+train_test(TestID):- clear_training(TestID),
+  compile_and_save_test(TestID),
+  train_test(TestID,train_using_oo_ii_io).
 train_test(TestID,P2):-   
   print_testinfo(TestID),
   flag(indiv,_,0),
@@ -743,7 +760,8 @@ train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
 train_for_objects_from_1pair1(Dict0,_TestID,Desc,_InA,_OutA,Dict0):- Desc = [_Trn,'o',_N1,'o',_N2], !.
 
 train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
- maplist(must_det_ll,[
+ collapsible_section(debug,train_for_objects_from_1pair1,true,
+(maplist(must_det_ll,[
  Desc = [Trn,IsIO1,N1,IsIO2,N2], 
  which_io(IsIO1,IO1),
  which_io(IsIO2,IO2),
@@ -752,10 +770,10 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  atom_concat(IO1,N1,ION1),
  atom_concat(IO2,N2,ION2),
  atomic_list_concat([ION1,ION2],'_',ExampleNum),
- ppt([train_for_objects_from_1pair1=ExampleNum,left=ION1,right=ION2]),
+ pp([train_for_objects_from_1pair1=ExampleNum,left=ION1,right=ION2]),
  garbage_collect,
   Dict0=Dict1,
-   format('~N dict= '), ppt(Dict0),
+   format('~N dict= '), pp(Dict0),
 
    %get_map_pairs(Dict0,_Type,Pairs),
    %list_to_rbtree_safe(Pairs,InVM),
@@ -792,14 +810,14 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   show_pair_grid(cyan,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,
   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
   luser_setval(no_rdot,true),
-  ((Removed==Added, Removed==[]) -> ppt(yellow,nothing_removed_added(PairName)) ;
+  ((Removed==Added, Removed==[]) -> pp(yellow,nothing_removed_added(PairName)) ;
     show_pair_diff_code(IOH,IOV,IOH,IOV,removed(PairName),added(PairName),PairName,Removed,Added)),
-  ((RetainedIn==RetainedOut, RetainedIn==[]) -> ppt(yellow,nothing_retained(PairName)) ;
+  ((RetainedIn==RetainedOut, RetainedIn==[]) -> pp(yellow,nothing_retained(PairName)) ;
     show_pair_diff_code(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
-  ((InC==OutC, InC==[]) -> ppt(yellow,nothing_individuated(PairName)) ;
-    show_pair_diff_code(IH,IV,   OH, OV,individuated(ION1),individuated(ION2),PairName,InC,OutC)),!, 
+  ((InC==OutC, InC==[]) -> pp(yellow,nothing_individuated(PairName)) ;
+    show_pair_diff_code(IH,IV,   OH, OV,individuated1(ION1),individuated1(ION2),PairName,InC,OutC)),!, 
   luser_setval(no_rdot,false),
-   % ppt(OutC=InC),
+   % pp(OutC=InC),
 
    ignore(( learn_rule_o(ModeIn,InVM,OutVM))),
 
@@ -807,7 +825,7 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
             train_io_from_hint(TestID,Trn+N1,InVM))),
 
   dash_chars,dash_chars,dash_chars,dash_chars,
-  print_testinfo(TestID)]).
+  print_testinfo(TestID)]))).
 
 show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),
@@ -815,7 +833,7 @@ show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   nop(show_pair_code(In,Out)),!.
 
 show_pair_code(In,Out):- 
-  ppt(purple,show_objs_as_code),
+  pp(purple,show_objs_as_code),
   dash_chars,
   show_objs_as_code(In),
   dash_chars,
@@ -823,7 +841,7 @@ show_pair_code(In,Out):-
   dash_chars,dash_chars.
 
 print_testinfo(TestID):-
-  ignore(((test_info(TestID,F),forall(member(I,F),ppt(test_info=I))))).
+  ignore(((test_info(TestID,F),forall(member(I,F),pp(test_info=I))))).
 
 % trials(learn). trials(clue).   
 trials(human). trials(sol).
@@ -888,7 +906,7 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     gset(InVM.grid_target) = _,
     must_det_ll((
     %print(training(Training)),nl,
-    %ptt(InVM),
+    %ppt(InVM),
     dash_chars, dash_chars,    
     %print_testinfo(TestID),
     do_sols_for(Trial,"Taking Test",InVM,TestID,ExampleNum))).
@@ -896,12 +914,12 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     % find indiviuation one each side that creates the sameR number of changes
     
 do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
- must_det_ll(( ptt("BEGIN!!!"+Why+TestID*ExampleNum), 
+ must_det_ll(( ppt("BEGIN!!!"+Why+TestID*ExampleNum), 
     kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
     forall(sols_for(TestID,Trial,SolutionProgram),
      ignore(((
-      once((ppt(cyan,trial=Trial),
-       ptt(cyan,run_dsl(TestID*ExampleNum,Trial,SolutionProgram)),!,
+      once((pp(cyan,trial=Trial),
+       ppt(cyan,run_dsl(TestID*ExampleNum,Trial,SolutionProgram)),!,
        (time((
               maybe_set_vm(InVM),
               kaggle_arc_io(TestID,ExampleNum,in,TestIn),
@@ -920,7 +938,7 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))))),
     print_grid("our grid", InVM.grid),!,
     print_list_of("our objs",InVM.objs),
-    ptt("END!!!"+Why+TestID+ExampleNum))),!.
+    ppt("END!!!"+Why+TestID+ExampleNum))),!.
    
 
 
@@ -957,10 +975,10 @@ reuse_a_b(A,B,AA):-
   setq(A,oid(BOID),AA),
   object_glyph(A,GlyphA),
   object_glyph(B,GlyphB),
-  ignore((How ==[]-> nop(ppt(shared_object(GlyphB->GlyphA))); 
-    (ppt(same_object(GlyphA,GlyphB,How))))).
+  ignore((How ==[]-> nop(pp(shared_object(GlyphB->GlyphA))); 
+    (pp(same_object(GlyphA,GlyphB,How))))).
 
-test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_det_ll(Body)).
+test_regressions:- make, forall((clause(mregression_test,Body),ppt(Body)),must_det_ll(Body)).
 :- arc_history1(test_regressions).
 
 :- dynamic(muarc_2_mods/2).
@@ -974,6 +992,7 @@ test_regressions:- make, forall((clause(mregression_test,Body),ptt(Body)),must_d
 %:- initialization(demo,after_load).
 :- muarc_mod(M), arc_history1((module(M))).
 :- add_history1((cls_z,make,demo)).
+:- add_history1((demo)).
 
 %:- muarc_mod(M), M:show_tests.
 :- load_last_test_name.
@@ -999,9 +1018,18 @@ saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
 %:- endif.
 
 %:- fixup_module_exports_now.  
-user:portray(Grid):- current_predicate(is_group/1), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
+user:portray(Grid):- 
+   \+ nb_current(arc_can_portray,nil),
+   current_predicate(bfly_startup/0), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
+
+%:- ignore(check_dot_spacing).
+bfly_startup:- 
+   start_arc_server,
+   webui_tests,
+   print_test, menu, nop((next_test,previous_test)),demo.
 
 :- fixup_module_exports_into(baseKB).
 :- fixup_module_exports_into(system).
+
 
 

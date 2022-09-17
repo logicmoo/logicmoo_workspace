@@ -43,11 +43,23 @@ no_black(BF,BF).
 
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors0(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
-pixel_colors0(GH,CC):- is_grid(GH),!,append(GH,CC).
-pixel_colors0(GH,CC):- is_list(GH),!,maplist(pixel_colors0,GH,PG),my_append(PG,CC).
-pixel_colors0(GH,CC):- is_colorish(GH),!,CC=GH.
-pixel_colors0(Cell,[C]):- is_point(Cell),!,only_color_data_or(fg,Cell,C).
-pixel_colors0(GH,CC):- globalpoints_include_bg(GH,GP),!,maplist(only_color_data_or(fg),GP,CC).
+
+if_plain_then(T,V,T):- plain_var(V). 
+if_plain_then(_,V,V).
+
+pixel_colors0(GH,CC):- 
+  term_singletons(GH,TS),
+  maplist(if_plain_then(wbg),TS,TS),
+  pixel_colors1(GH,CC).
+
+pixel_colors1(GH,CC):- is_grid(GH),!,mapgrid(only_color_data_or(wbg),GH,Cs),append(Cs,CC).
+  %include(
+  %term_singletons(Cs,Ss),include(is_colorish,Ss,CC),!.
+
+pixel_colors1(GH,CC):- is_list(GH),!,maplist(pixel_colors0,GH,PG),my_append(PG,CC).
+pixel_colors1(GH,CC):- is_colorish(GH),!,CC=GH.
+pixel_colors1(Cell,[C]):- is_point(Cell),!,only_color_data_or(fg,Cell,C).
+pixel_colors1(GH,CC):- globalpoints_include_bg(GH,GP),!,maplist(only_color_data_or(fg),GP,CC).
 %pixel_colors0(options(_),[]):-!.
 
 only_color_data_or(Alt,Cell,Color):- only_color_data(Cell,Color)->true;Color=Alt.
@@ -378,7 +390,7 @@ colors_to_vars(Vars,Grid,GridO):-  colors_to_vars(_Colors,Vars,Grid,GridO).
 colors_to_vars(Colors,Vars,Grid,GridO):- (plain_var(Colors)->unique_colors(Grid,Colors);true),!,
   length(Colors,Len),length(Vars,Len),
    subst_cvars(Colors,Vars,Grid,GridO),
-   ppt(Grid-->GridO).
+   pp(Grid-->GridO).
 
 subst_cvars([],[],A,A):-!. 
 subst_cvars([F|FF],[R|RR],S,D):- !, freeze(R,(\=(R,_-_))),subst001(S,F,R,M), subst_cvars(FF,RR,M,D).

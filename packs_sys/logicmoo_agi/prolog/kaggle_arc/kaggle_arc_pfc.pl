@@ -159,9 +159,9 @@ show_child_info(P,_):- asserta(t_l:shown_child(P)),fail.
 show_child_info(_,[]):-!.
 show_child_info(P,L):- list_to_set(L,S),
   format("~N~nChildren for ",[]),  
-  ansi_format([fg(green)],'~@',[ppt(P)]),
+  ansi_format([fg(green)],'~@',[pp(P)]),
   format(" :~n",[]),
-  forall((member(D,S), \+ t_l:shown_dep(P,D)),(asserta(t_l:shown_dep(P,D)),ansi_format([fg(yellow)],'~N ~@. ~n',[ppt(D)]))),
+  forall((member(D,S), \+ t_l:shown_dep(P,D)),(asserta(t_l:shown_dep(P,D)),ansi_format([fg(yellow)],'~N ~@. ~n',[pp(D)]))),
   maplist(show_child_info,S).
 
 mpred_why(X):- mpred_test_why(X).
@@ -2280,7 +2280,7 @@ pfcShowJustifications(P,Js) :-
   reset_shown_justs,
   %color_line(yellow,1),
   format("~N~nJustifications for ",[]),
-  ansi_format([fg(green)],'~@',[ppt(P)]),
+  ansi_format([fg(green)],'~@',[pp(P)]),
   format(" :~n",[]),
   pfcShowJustification1(Js,1),!,
   printLine.

@@ -139,8 +139,9 @@ gridoid_glyph(Points,GN,H,V):-
 %from_gridoid(Points,C,GN,H,V):- from_gridoid(Points,C,N,H,V,G), maybe_glyph(G,N,GN).
 %from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V),nonvar_or_ci(C), \+ is_bg_color(C), \+ bg_sym(C), !.
 %from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V),nonvar_or_ci(C),!.
-from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G),hv_c_value(G,C,H,V).
+from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G), \+ cant_use(G),hv_c_value(G,C,H,V).
 
+cant_use(G):- is_object(G), has_prop(G,iz(bfc(bg))),!.
 
 %hv_c_value(O,_Color,_H,_V):- is_object(O), iz(O,combined), !, fail.
 hv_c_value(O,_Color,_H,_V):-  plain_var(O),!,fail.
@@ -170,7 +171,7 @@ hv_cg_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_cg_value(ID,CC,H,V
 hv_cg_value(Grid,Color,H,V):- is_grid(Grid),!,nth1(V,Grid,Row),nth1(H,Row,Color).
 hv_cg_value(O,GN,H,V):- is_map(O),O.objs\==[],!,hv_cg_value(O.objs,GN,H,V).
 hv_cg_value(O,GN,H,V):- is_map(O),!,hv_cg_value(O.grid,GN,H,V).
-hv_cg_value(O,Color-GN,H,V):- is_object(O),hv_c_value(O,Color,H,V),obj_to_oid(O,GN),nonvar_or_ci(GN),!.
+hv_cg_value(O,Color-GN,H,V):- is_object(O), hv_c_value(O,Color,H,V),obj_to_oid(O,GN),nonvar_or_ci(GN),!.
 
 hv_cg_value([G|Points],CN,H,V):- quietly(( is_list(Points), is_object_or_grid(G))), 
    grid_color_and_glyph([G|Points],C,N,H,V),CN=(C-N),!.

@@ -282,6 +282,8 @@
     };
 
     Terminal.prototype.equalAttr = function(a, b) {
+      if(a===undefined) return false;
+      if(b===undefined) return false;
       return a.bg === b.bg && a.fg === b.fg && a.bold === b.bold && a.underline === b.underline && a.blink === b.blink && a.inverse === b.inverse && a.invisible === b.invisible && a.italic === b.italic && a.faint === b.faint && a.crossed === b.crossed;
     };
 
@@ -291,10 +293,23 @@
         placeholder = false;
       }
 	  chint = c.charCodeAt();
-	  if(chint > 160) {
-		//  c = "&#"+chint+";"
-    	  console.log("chint="+c);
+      if (c == "&") {
+        c = "&amp;";
+      } else if (c == "<") {
+        c = "&lt;";
+      } else if (c == ">") {
+        c = "&gt;";
+      } else if (c == "®") {
+        c = "@";
+      } else if (chint == 32) {
+        c = "&nbsp;"
+      } else if (chint > 160) {
+        c = "&#" + chint + ";"
+      } else {
+        c = '' + c;
 	  }
+      
+      c = '<span class="mc-10">' + c + '</span>';
       newChar = this.cloneAttr(this.curAttr, c);	  
       newChar.placeholder = placeholder;
       if (this.insertMode) {
@@ -446,8 +461,8 @@
               return data.push(0);
             }
 			if (ch > 160) {				
-			   console.log("PUSH = &#"+ch+";");
-			   return data.push("&#"+ch+";");
+              //console.log("PUSH = &#"+ch+";");
+              //return data.push("&#"+ch+";");
 			}
             if (ch < 127) {
               return data.push(ch);
@@ -672,16 +687,6 @@
       if (data.html) {
         return data.html;
       }
-
-	  code = ch.charCodeAt();
-	  if (code >= 160) {
-		char = "<pre>&#"+code+";</pre>";
-		console.log("CH0 = "+char);
-		char = "<pre>"+ch+"</pre>";
-		console.log("CH1 = "+char);
-		data.html = char;
-		return data.html;
-	  }
 
 
       if (!this.equalAttr(data, attr)) {

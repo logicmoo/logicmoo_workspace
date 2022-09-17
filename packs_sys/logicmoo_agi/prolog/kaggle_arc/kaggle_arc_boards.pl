@@ -60,16 +60,17 @@ compile_and_save_test(TestID):-
   arc_assert(saved_training(TestID)),
   arc_assert(process_test(TestID)),
   detect_all_training_hints(TestID),  
-  %individuate_pairs_from_hints(TestID),
+  individuate_pairs_from_hints(TestID),
   %train_test(TestID,train_using_io),  
   save_supertest(TestID))).
 
 individuate_pairs_from_hints(TestID):- 
   arc_assert(individuate_test_grids(TestID)),
-  forall(kaggle_arc(TestID,ExampleNum,In,Out),
-   individuate_pair_here(TestID,ExampleNum,In,Out)).
+  forall(kaggle_arc(TestID,ExampleNum,In,Out), 
+    individuate_pair_here(TestID,ExampleNum,In,Out)).
 
 individuate_pair_here(TestID,Trn+N1,In,Out):-
+  Trn == trn, % no peeking
   ip(complete,In,Out),
   nop(train_for_objects_from_1pair(_{},TestID,[Trn,'i',N1,'o',N1],In,Out,_DictMid)).
 
@@ -140,7 +141,7 @@ detect_supergrid_tt(TestID,ExampleNum,In0,Out0,TT):-
   dash_chars,
   dmsg(detect_all_training_hints(TestID,ExampleNum)),
     print_side_by_side(cyan,NI,CI,_,NO,CO),
-  ppt(O2I),
+  pp(O2I),
     print_side_by_side(cyan,In0,task_in(ExampleNum),_,Out0,task_out(ExampleNum)),
   
   %show_patterns(In),show_patterns(Out),
@@ -353,12 +354,11 @@ grid_hint_swap(IO,In,Out):-
 grid_hint_swap_io(IO,In,Out,Hint):-  grid_hint_recolor(IO,In,Out,Hint).
 grid_hint_swap_io(I-O,In,Out,rev(Hint)):- grid_hint_recolor(O-I,Out,In,Hint).
 
-grid_hint_recolor(IO,In,Out,mono(Hint)):-  
+grid_hint_recolor(IO,In,Out,mono(Hint)):-  fail,
  once((into_monogrid(In,In0),into_monogrid(Out,Out0))),
   In\==In0,Out\==Out0,
   grid_hint_io(monochrome,IO,In0,Out0,Hint), 
   \+ grid_hint_recolor1(IO,In,Out,_Hint).
-
 grid_hint_recolor(IO,In,Out,Hint):- grid_hint_recolor1(IO,In,Out,Hint).
 
 grid_hint_recolor1(IO,In,Out,Hint):-  grid_hint_io(cbg(black),IO,In,Out,Hint).
@@ -366,6 +366,59 @@ grid_hint_recolor1(IO,In,Out,Hint):-  grid_hint_io(cbg(black),IO,In,Out,Hint).
 %maybe_fail_over_time(Time,Goal):- fail_over_time(Time,Goal).
 maybe_fail_over_time(_Time,Goal):- once(Goal).
 
+/*
+reduce_op(Grid,blur(flipD),Left):- flipD(Grid,GridR), GridR==Grid,!,keep_flipD(Grid,Left).
+*/
+%reduce_op(Grid,blur(A,flipV),Left):- length(Grid,L),LS is floor(L/2),length(Left,LS),reverse(Left,Right), RS is L-LS, 
+%  (RS==LS->  (append(Left,Right,Grid),A=[]) ; (append(Left,[E|Right],Grid),A=[E])).
+reduce_op(G,M,O):- maybe_into_grid(G,GG),!,reduce_op(GG,M,O).
+reduce_op(Grid,left_right(Left),A):- length(Grid,L),LS is floor(L/2),between(1,LS,LR),LRR is LS-LR,length(Left,LRR),reverse(Left,Right), 
+   append([Left,A,Right],Grid).
+reduce_op(Grid,copy_row(N1,N2),GridR):- once((length(Grid,L),nth1(N1,Grid,A,GridR),between(N1,L,N2),N2>N1, nth1(N2,Grid,B),A=@=B)).
+
+left_right(Left,G,GOO):- reverse(Left,Right),append([Left,G,Right],GO),mapgrid(=,GO,GOO).
+copy_row(N1,N2,G,GOO):- nth1(N1,G,Row),N12 is N2-1,length(Left,N12),append(Left,Right,G),append(Left,[Row|Right],GO),mapgrid(=,GO,GOO).
+
+xform_op(Grid,rot270,GridR):- rot90(Grid,GridR).
+
+keep_flipD(I,O):- grid_size(I,H,V),make_grid(V,H,O),
+  forall(between(1,H,X),
+    forall(between(1,V,Y),
+      (X>=Y,get_color_at(X,Y,I,C),
+       nb_set_local_point(Y,X,C,O)))).
+
+
+
+:- decl_pt(reduce_grid(is_grid,loc)).
+
+unreduce_grid(G,OP,GO):- is_list(OP),!,reverse(OP,ROP),unreduce_grid0(G,ROP,GO).
+unreduce_grid(G,OP,GO):- call(OP,G,GO).
+unreduce_grid0(G,[OP|List],GO):- !, unreduce_grid(G,OP,M),unreduce_grid0(M,List,GO).
+unreduce_grid0(G,[],G):-!.
+
+reduce_grid(G,O):- maybe_into_grid(G,GG),!,reduce_grid(GG,O).
+reduce_grid(Grid,reduced(OP,GridR)):- reduce_grid(Grid,OP,GridR).
+:- decl_pt(reduce_grid(is_grid,list,grid)).
+reduce_grid(Grid,OP,GridR):- reduce_grid(Grid,[Grid],OP,GridR).
+%reduce_grid(Grid,Reduced):- append(Left,[A,B|Right],Grid), A=B,append(Left,[A|Right],GridM),reduce_grid(Grid,Reduced).
+
+reduce_grid(Grid,NBC,OP,GridR):- reduce_grid_op(Grid,NBC,OP,GridR),!.
+reduce_grid(Grid,_,[],Grid).
+
+reduce_grid_op(Grid,NBC,OP,GridR):- reduce_grid_op1(Grid,NBC,OP,GridR).
+reduce_grid_op(Grid,NBC,[OP|More],Reduced):-  xform_op(Grid,OP,GridR),Grid\==GridR, \+ (member(E,NBC), E==GridR), !, 
+    reduce_grid_op(GridR,[GridR|NBC],More,Reduced).
+
+reduce_grid_op1(Grid,NBC,[OP|More],Reduced):- reduce_op(Grid,OP,GridR),  Grid\==GridR, \+ (member(E,NBC), E==GridR),
+    reduce_grid(GridR,[GridR|NBC],More,Reduced),!.
+%reduce_grid_op(NR,_,[],NR):-!.
+
+
+test_reduce_grid:- test_p2(reduce_grid).
+
+
+
+%reduce_grid(Grid,res(Opers,Result)):- reduce_grid(Grid,Opers,res(Opers,Result)),!.
 
 c_proportional(I,O,R):- proportional(I,O,R).
 %grid_hint_io(MC,IO,In,Out,find_ogs):- maybe_fail_over_time(1.2,find_ogs(_,_,In,Out)).
@@ -374,19 +427,23 @@ grid_hint_io(MC,IO,In,Out,comp(MC,IO,Hint)):- comp_o(IO),  c_proportional(In,Out
 grid_hint_io(MC,IO,In,Out,comp(MC,IO,Hint)):- grid_size(In,IH,IV),grid_size(Out,OH,OV),grid_hint_iso(MC,IO,In,Out,IH,IV,OH,OV,Hint).
 
 grid_hint_io(MC,IO,In,Out,(=@=(MC,IO))):- In=@=Out, !.
-grid_hint_io(MC,IO,In,Out,Hint):- % \+ In=@=Out,
-  Hint = comp(MC,IO,maybe_________________________ogs(MC,R,list(Len,XY))),
-  member(R,[strict,loose]), 
-  findall(loc(X,Y),maybe_ogs(R,X,Y,In,Out),XY),XY\==[],length(XY,Len),!.
-grid_hint_io(MC,IO,Trim,Out,Hint):- % \+ In=@=Out,
-  Hint = comp(MC,IO,trim__________ogs(MC,R,list(Len,XY))),
-  trim_to_rect(Trim,In),!,Trim\=In,maybe_ogs(_,OX,OY,Trim,In),  
-  member(R,[strict,loose]), 
-  findall(loc(XX,YY),(maybe_ogs(R,X,Y,In,Out),XX is X+OX, YY is Y+OY),XY), XY\==[], length(XY,Len),!.
-%grid_hint_iso(MC,IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,_Color,OH,OV,)).
+grid_hint_io(MC,IO,In,Out,comp(MC,IO,Hint)):- grid_hint_io_ogs(In,Out,Hint).
+
+
+grid_hint_io_ogs(In,Out,mayb_ogs(R,XY)):-  all_ogs(  0,0,R,In,Out,XY).
+grid_hint_io_ogs(II,Out,trim_ogs(R,XY)):-  
+   trim_to_rect(II,In),!, II\=In, maybe_ogs(_,OX,OY,II,In),
+   all_ogs(OX,OY,R,In,Out,XY).
+
+all_ogs(OX,OY,R,In,Out,list(Len,XY)):- 
+  member(R,[strict,loose]), findall(loc(XX,YY),(maybe_ogs(R,X,Y,In,Out),XX is X+OX, YY is Y+OY),XY), XY\==[], length(XY,Len),!.
 
 maybe_ogs(R,X,Y,In,Out):- nonvar(R),!,(R==strict->find_ogs(X,Y,In,Out);ogs_11(X,Y,In,Out)).
 maybe_ogs(R,X,Y,In,Out):-  find_ogs(X,Y,In,Out)*->R=strict;(ogs_11(X,Y,In,Out),R=loose).
+
+
+  %grid_hint_iso(MC,IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,_Color,OH,OV,)).
+
 
 
 %grid_hint_iso(_MC,IO,_In,_Out,_IH,_IV,OH,OV,grid_size(IO,OH,OV)).
@@ -479,7 +536,7 @@ has_xy_columns(In,Color,X,Y,BorderNumsX,BorderNumsY):-
 has_xy_chunks(In,Color,Chunks):-
   has_xy_columns(In,Color,X,Y,BorderNumsX,BorderNumsY),
   make_grid(X,Y,Chunks),
-  %ppt(slicing(BorderNumsX,BorderNumsY,onto(X,Y))),
+  %pp(slicing(BorderNumsX,BorderNumsY,onto(X,Y))),
   gather_chunks(Color,In,Chunks,1,1,X,Y,BorderNumsX,BorderNumsY).
 
 grid_x_y_area(In,X,Y,Color,Cells):- 
@@ -497,7 +554,7 @@ gather_chunks(Color,In,Chunks,X,Y,GX,GY,BorderNumsX,BorderNumsY):-
   EX1 is EX - 1,
   EY1 is EY - 1,
   clip(SX1,SY1,EX1,EY1,In,Clip),
-  % print_grid((X,Y),Clip), ppt(clipped(SX,SY,EX,EY,into(X,Y))),
+  % print_grid((X,Y),Clip), pp(clipped(SX,SY,EX,EY,into(X,Y))),
   % once(Clip = [_,[_,Cell|_]|_];Clip = [[Cell|_]|_]),  
   once(((Clip = [_,[_,C|_]|_];Clip = [[C|_]|_];(member(CR,Clip),member(C,CR))),C\==Color,C\==black,Cell=C);Cell=Clip),
   (GX =< X -> (Yi is Y + 1, Xi is 1) ; (Xi is X+1, Yi is Y)),

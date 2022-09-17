@@ -1804,27 +1804,37 @@ first_n(N,[E|R],[E|List],Right):- NN is N-1, first_n(NN,R,List,Right).
 pt_cont_args(_Sep1, _Ab,_Sep,_Mid,_In, Nil) :- Nil==[], !.
 pt_cont_args(_Sep1, Tab,_Sep, Mid, FS, A) :- (var(A) ; A \= [_|_]), !,  pformat(Mid), print_tab_term(Tab,FS,A), !.
 pt_cont_args(Sep1, Tab,_Sep,_Mid, FS,[A|R]) :- R==[], pformat(Sep1), !, print_tab_term(Tab,FS,A), !.
-
-pt_cont_args(Sep1, Tab, Sep, Mid,FS,RL) :-  rev_append(List,Right,RL), 
-   length(List,L), L>1, maplist(not_is_list_local,List), max_output(Tab,80,List),!,
-   write_ar_simple(Sep1,Tab,Sep,List),
-   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
-
-pt_cont_args(Sep1, Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),RL,List,Right), List\= [_],!,
-  write_ar_simple(Sep1, Tab,Sep,List),
-   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
-
-pt_cont_args(Sep1, Tab, Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_],  max_output(Tab,80,List),!,
-   write_ar_simple(Sep1, Tab,Sep,List),
-   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
-
-pt_cont_args(Sep1, Tab, Sep,_Mid,_FS, List) :- % ground(List),
-   is_list(List), length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), !,
-   pformat(Sep1), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),!.
-
+pt_cont_args(Sep1, Tab,Sep, Mid, FS, RL):- 
+  wots(S,pt_cont_args_s(Sep1, Tab,Sep, Mid, FS, RL)), write(S),!.
 pt_cont_args(Sep1, Tab,Sep, Mid, FS,[A|As]) :- !,  
    pformat(Sep1), print_tab_term(Tab,[lf|FS],A),
    pt_cont_args(Sep, Tab,Sep, Mid,[lf|FS],As).
+
+
+first_right_not_short(List,[FR|_]):- last(List,Last), display_length(Last,LL),display_length(FR,RL),RL<LL, !, fail.
+first_right_not_short(_,_Right):- !.
+
+pt_cont_args_s(Sep1, Tab, Sep, Mid,FS,RL) :- 
+    rev_append(List,Right,RL), 
+   length(List,L), L>1, maplist(not_is_list_local,List), max_output(Tab,80,List), 
+   first_right_not_short(List,Right), !,
+   write_ar_simple(Sep1,Tab,Sep,List),    
+   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
+
+pt_cont_args_s(Sep1, Tab,Sep, Mid, FS, RL) :- RL=[A|_], is_arity_lt1(A), slice_eq(==(A),RL,List,Right), List\= [_],
+  first_right_not_short(List,Right), !,
+  write_ar_simple(Sep1, Tab,Sep,List),
+   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
+
+pt_cont_args_s(Sep1, Tab, Sep, Mid, FS, RL) :- first_n(6, RL, List,Right),List\= [_],  max_output(Tab,80,List),
+   first_right_not_short(List,Right), !,
+   write_ar_simple(Sep1, Tab,Sep,List),
+   ignore(( Right\==[], write(Sep), nl, prefix_spaces(Tab), pt_cont_args('', Tab,Sep, Mid, FS, Right))).
+
+pt_cont_args_s(Sep1, Tab, Sep,_Mid,_FS, List) :- % ground(List),
+   is_list(List), length(List,Len),Len>1, Len<6, maplist(is_arity_lt1,List), 
+   first_right_not_short([A],R), !,
+   pformat(Sep1), notrace(prefix_spaces(Tab)),pformat(' '), List=[A|R], write_simple(A), write_simple_each(Sep,R),!.
 
 
 :- export(print_tab_term/2).

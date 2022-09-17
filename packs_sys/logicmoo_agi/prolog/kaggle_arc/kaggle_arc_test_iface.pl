@@ -9,12 +9,17 @@
 :- endif.
 :- use_module(library(pengines)).
 
-test_menu :- with_http(menu).
+test_menu :- with_webui(menu).
 menu :- write_menu('i').
+
 write_menu(Mode):-
   get_current_test(TestID),!,
   print_single_test(TestID),!,
-  format('~N\n    With selected test: ~q ~n~n',[TestID]),
+  write_menu_opts(Mode).
+
+write_menu_opts(Mode):-
+  get_current_test(TestID),(luser_getval(example,Example);Example=_),!,
+  format('~N\n    With selected test: ~q ~q ~n~n',[TestID,example(Example)]),
   menu_options(Mode).
 
 menu_options(Mode):- 
@@ -25,12 +30,10 @@ print_menu_cmd(Key):- ignore((menu_cmd1(_,Key,Info,Goal),print_menu_cmd(Key,Info
 print_menu_cmd(_Key,Info,Goal):- format('~N '),print_menu_cmd1(Info,Goal).
 print_menu_cmd9(_Key,Info,Goal):- format(' '),print_menu_cmd1(Info,Goal).
 
-:- use_module(library(xlisting/xlisting_web)).
-:- use_module(library(xlisting/xlisting_web_server)).
+print_menu_cmd1(Goal):-  if_arc_webui(write_cmd_link(Goal)),!.
 print_menu_cmd1(Info,Goal):- if_arc_webui(write_cmd_link(Info,Goal)),!.
 print_menu_cmd1(Info,_Goal):- format('~w',[Info]).
 
-if_arc_webui(Goal):- arc_webui,!,g_out(call(Goal)).
 
 :- multifile(menu_cmd1/4).
 :- multifile(menu_cmd9/4).
@@ -147,7 +150,7 @@ interact:- list_of_tests(L), length(L,SelMax),!,
    retract(wants_exit_menu),!.
 
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), arc_assert(wants_exit_menu).
-do_menu_key('?'):- !, menu_options('i').
+do_menu_key('?'):- !, write_menu_opts('i').
 do_menu_key('P'):- !, switch_grid_mode,print_test.
 do_menu_key('I'):- !, cls_z,!,ndividuator.
 do_menu_key('o'):- !, cls_z,!,ndividuatorO1.
@@ -199,7 +202,9 @@ do_menu_codes([27,91,67]):- !, cls_z,  next_test, print_test.
 do_menu_codes([27,91,53,126]):- !, prev_suite.
 % page down
 do_menu_codes([27,91,54,126]):- !, next_suite.
+% up arrow
 do_menu_codes([27,91,65]):- !, prev_pair.
+% down arrow
 do_menu_codes([27,91,66]):- !, next_pair.
 
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
@@ -271,13 +276,14 @@ test_suite_name(test_names_by_fav_rev). test_suite_name(test_names_by_hard_rev).
 
 :- dynamic(muarc_tmp:cached_tests/2).
 %:- retractall(muarc_tmp:cached_tests(_,_)).
-:- luser_setval(global,test_order,sol_t).
+:- luser_defval(test_order,sol_t).
 get_current_suite_testnames(Set):-
   luser_getval(test_order,X),
   current_suite_testnames(X,Set).
 
 current_suite_testnames(X,Set):- muarc_tmp:cached_tests(X,Set),!.  
-current_suite_testnames(X,Set):- findall(ID,call(X,ID),List), my_list_to_set_variant(List,Set),!,asserta(muarc_tmp:cached_tests(X,Set)).
+current_suite_testnames(X,Set):-  pp(recreating(X)),
+  findall(ID,call(X,ID),List), my_list_to_set_variant(List,Set),!,asserta(muarc_tmp:cached_tests(X,Set)).
 
 previous_test:-  get_current_test(TestID), get_previous_test(TestID,NextID), set_current_test(NextID).
 next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
@@ -318,8 +324,8 @@ really_set_current_test(TestID):-
   (luser_getval(last_test_name,WasTestID);WasTestID=[]),
   (WasTestID==TestID-> true ; new_current_test_info(WasTestID,TestID)).
 
-some_current_example_num(TrnN):- nb_current(example,TrnN),TrnN\==[],!.
-some_current_example_num(TrnN):- luser_getval(example,TrnN),TrnN\==[],!.
+some_current_example_num(TrnN):- nb_current(example,TrnN),ground(TrnN),TrnN\==[],!.
+some_current_example_num(TrnN):- luser_getval(example,TrnN),ground(TrnN),TrnN\==[],!.
 some_current_example_num(trn+1).
 
 next_pair:- 
@@ -415,6 +421,7 @@ print_test:- notrace((get_current_test(TestID),print_test(TestID))).
 print_test(TName):- 
   arc_user(USER),
   fix_test_name(TName,TestID,ExampleNum1),
+  luser_setval(example,ExampleNum1),
    cmt_border,format('%~w % ?- ~q. ~n',[USER,print_test(TName)]),cmt_border,
    ignore(print_test_hints(TestID)),
    format('~N% '),dash_chars,
@@ -487,7 +494,7 @@ some_test_info(TestID,III):- fav(TestID,III).
 
 :- dynamic(muarc_tmp:test_info_cache/2).
 :- retractall(muarc_tmp:test_info_cache(_,_)).
-test_info(TestID,InfoS):- var(TestID),!,all_arc_test_name(TestID),test_info(TestID,InfoS).
+test_info(TestID,InfoS):- var(TestID),!, pp(recreating(test_info)),all_arc_test_name(TestID),test_info(TestID,InfoS).
 %test_info(TestID,InfoS):- \+ \+ muarc_tmp:test_info_cache(TestID,_),!,muarc_tmp:test_info_cache(TestID,InfoS).
 test_info(TestID,InfoS):- nonvar(TestID),once(fix_test_name(TestID,FTestID,_)),TestID\=@=FTestID,!,test_info(FTestID,InfoS).
 test_info(TestID,InfoS):- muarc_tmp:test_info_cache(TestID,InfoS),!.
@@ -518,7 +525,11 @@ test_names_by_fav_rev(Name):- test_names_ord_favs(AllS),reverse(AllS,AllR),membe
 
 :- dynamic(ord_favs/1).
 test_names_ord_favs(FavListS):- ord_favs(FavListS),!.
-test_names_ord_favs(FavListS):- ppt(recreating(test_names_ord_favs)), findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),  asserta(ord_favs(FavListS)).
+test_names_ord_favs(FavListS):- 
+  pp(recreating(test_names_ord_favs)), 
+  findall(Name,fav(Name),FavList),list_to_set(FavList,FavListS),
+  pp(done_recreating(ascending_hard)),  
+  asserta(ord_favs(FavListS)).
 
 alphabetical_v(Set):- findall(v(Name),all_arc_test_name(v(Name)),List),sort(List,Set).
 alphabetical_t(Set):- findall(t(Name),all_arc_test_name(t(Name)),List),sort(List,Set).
@@ -557,14 +568,16 @@ alphabetical_v:- clsmake, write_ansi_file(alphabetical_v).
 
 write_ansi_file(F):- call(F,Set),
   atom_concat(F,'.vt100',FN),
-  setup_call_cleanup(open(FN,write,O,[create([default]),encoding(iso_latin_1)]),
+  setup_call_cleanup(open(FN,write,O,[create([default]),encoding(utf8)]),
   forall(member(T,Set), 
     (wots(S,print_test(T)), write(O,S),write(S))),close(O)).
 
 
 :- dynamic(ord_hard/1).
 test_names_ord_hard(NamesByHard):- ord_hard(NamesByHard),!.
-test_names_ord_hard(NamesByHard):- ppt(recreating(test_names_ord_hard)),findall(Hard-Name,(all_arc_test_name(Name),hardness_of_name(Name,Hard)),All),
+test_names_ord_hard(NamesByHard):- 
+  pp(recreating(test_names_ord_hard)),
+  findall(Hard-Name,(all_arc_test_name(Name),hardness_of_name(Name,Hard)),All),
   keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,
   list_to_set(NamesByHardU,NamesByHard), 
   asserta(ord_hard(NamesByHard)).
@@ -573,6 +586,7 @@ test_names_ord_hard(NamesByHard):- ppt(recreating(test_names_ord_hard)),findall(
 :- retractall(ord_favs(_)),retractall(ord_hard(_)).
 
 ascending_hard:-
+  pp(recreating(ascending_hard)),
   tell('arc_ascending.pl'),
   forall(test_names_by_hard(TestID),
     forall(kaggle_arc(TestID,ExampleNum,In,Out),format('~q.~n',[kaggle_arc_ord(TestID,ExampleNum,In,Out)]))),
@@ -656,9 +670,9 @@ test_hints_5(TestID,Trn,N,DictIn,DictOut):-
 print_test_hints(TestID):- 
   hardness_of_name(TestID,Hard),!,
   write('/*'),
-  ppt(hard=Hard),
+  pp(hard=Hard),
   %make_training_hints(TestID,print_test{},DictOut),
-  %ppt(all=DictOut),
+  %pp(all=DictOut),
   writeln('*/').
 
 
@@ -759,7 +773,7 @@ grid_arg(GRest,GR,GRest):- arg(N,GRest,GR), is_grid(GR),!,setarg(N,GRest,grid),!
 
 %:- style_check(-singleton).
 %whole(I,O):- is_group(I),length(I,1),I=O,!.
-%whole(I,O):- print_grid(I),ppt(I),into_obj(I,O).
+%whole(I,O):- print_grid(I),pp(I),into_obj(I,O).
 one_obj(I,I):- is_group(I),length(I,1),!.
 one_obj(I,I):- is_group(I),!.
 one_obj(I,I).
@@ -802,7 +816,7 @@ db_u(P1L,P1,P2L,P2,In,Out):- is_eval(P2,Prev,P2A),!,db_u(P1L,P1,[Prev|P2L],P2A,I
 %db(P1,P2,In,In):- t_or_t(freeze_for([P2],arc_assert(is_db(TF,P2))),is_db(TF,P2)).
 %db(P2,P1,In,In):- nonvar(Color), db_value(P1,In,TF),!,t_or_t(freeze_for([Color],arc_assert(is_db(TF,Color))),is_db(TF,Color)).
 db(P1,P2,In,Out):- db_u([],P1,[],P2,In,Out).
-db(X,Y,I,I):- ppt(db(X,Y)),ppt(I).
+db(X,Y,I,I):- pp(db(X,Y)),pp(I).
 
 
 

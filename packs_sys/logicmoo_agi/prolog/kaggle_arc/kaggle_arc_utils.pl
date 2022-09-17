@@ -21,7 +21,11 @@ nb_subst(Obj,New,Old):-
   call(P1,New),!,nb_subst(Obj,New,Old).
 nb_subst(_Obj,_New,_Old).
 
+
 :- thread_local(in_memo_cached/5).
+:- multifile(prolog:make_hook/2).
+:- dynamic(prolog:make_hook/2).
+prolog:make_hook(before, Some):- Some \==[], retractall(in_memo_cached(_,_,_,_,_)), fail.
 %arc_memoized(G):- !, call(G).
 arc_memoized(G):-
   copy_term(G,C,GT),
@@ -54,7 +58,7 @@ add_i(Info):-
  luser_getval(pair_rules,PRules),
   nb_set_add(TRules,InfoT),
   nb_set_add(PRules,InfoT),
- nop(ppt(cyan,+InfoT)))).
+ nop(pp(cyan,+InfoT)))).
 
 add_i(F,Info):- 
  append_term(i(F),Info,FInfo),
@@ -69,8 +73,8 @@ add_note(Info):- add_i(note,Info).
 add_indiv(W,Info):- add_i(indiv(W),Info).
 add_comparitor(Info):- add_i(comparitor,Info).
 show_rules:- 
- luser_getval(pair_rules,PRules), maplist(ppt(cyan),PRules),
- luser_getval(test_rules,TRules), maplist(ppt(blue),TRules),
+ luser_getval(pair_rules,PRules), maplist(pp(cyan),PRules),
+ luser_getval(test_rules,TRules), maplist(pp(blue),TRules),
  !.
   
 
@@ -182,10 +186,21 @@ subst0011(X, Y, Term, NewTerm ) :-
         compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 
-print_attvars(FF):-
+ppa(FF):-
   copy_term(FF,FA,GF),  
   numbervars(FA+GF,0,_,[attvar(bind),singletons(true)]),
-  sort(GF,GS),write(' '),print(FA),format('~N\t'),print(attvars=GS),nl,nl,!.
+  sort(GF,GS),write(' '),
+  locally(b_setval(arc_can_portray,nil),
+      ppawt(FA)),format('~N'),
+  ignore((GS\==[], format('\t'),ppawt(attvars=GS),nl)),nl,!.
+
+ppawt(FA):-
+  write_term(FA,[numbervars(true), quoted(true), 
+   character_escapes(true),cycles(true),dotlists(false),no_lists(false),
+    blobs(portray),attributes(dots), 
+    portray(true), partial(false), fullstop(true),
+    %portray(false), partial(true), fullstop(true),
+   ignore_ops(false), quoted(true), quote_non_ascii(true), brace_terms(false)]).
 
 :- export(plain_var/1).
 plain_var(V):- notrace((var(V), \+ attvar(V), \+ get_attr(V,ci,_))).

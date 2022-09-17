@@ -43,14 +43,6 @@
 :- 'gvlib':export(expand_gvs_head/6).
 :- 'system':import(expand_gvs_head/6).
 
-:- 
- forall(source_file(M:H,S),
- ((source_location(S,_), prolog_load_context(module,LC),
- ignore((functor(H,F,A), \+ atom_concat('$',_,F), \+ lmconfig:never_export_named_gvar(F/_),
-  ignore(((atom(LC),atom(M), LC\==M,M:export(M:F/A),LC:multifile(M:F/A),fail,atom_concat('$',_,F),LC:import(M:F/A)))),
-  ignore(((\+ atom_concat('$',_,F),\+ atom_concat('__aux',_,F),LC:export(M:F/A), 
-  ignore(((current_predicate(system:F/A)->true; system:import(M:F/A)))))))))))).
-
 /*
  
  rtrace($varA.value()=X).
@@ -546,6 +538,21 @@ expand_functions(MBody, ExpandedBody):-
 
 :- include(gvar_fixup_exports).
 
+/*
+:- 
+ source_location(S,SL), 
+ writeq(source_location(S,SL)),
+ prolog_load_context(source,S),
+ forall(source_file(M:H,SF),
+ ((SF=S,
+ writeln(prolog_load_context(module,LC)),
+ ignore((functor(H,F,A), \+ atom_concat('$',_,F), \+ lmconfig:never_export_named_gvar(F/_),
+  ignore(((atom(LC),atom(M), LC\==M,M:export(M:F/A),LC:multifile(M:F/A),fail,atom_concat('$',_,F),LC:import(M:F/A)))),
+  ignore(((\+ atom_concat('$',_,F),\+ atom_concat('__aux',_,F),LC:export(M:F/A), 
+  ignore(((current_predicate(system:F/A)->true; system:import(M:F/A)))))))))))).
+*/
+
+:- fixup_exports.
 
 :- install_dot_intercept.
 
@@ -667,4 +674,6 @@ system:goal_expansion(Goal, P, NewGoal, PO):-
 
 %:- set_prolog_flag(toplevel_goal_expansion,true).
 %:- set_prolog_flag(scope_functions,true).
+
+
 

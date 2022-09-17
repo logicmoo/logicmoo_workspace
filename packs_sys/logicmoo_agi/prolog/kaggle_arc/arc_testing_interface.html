@@ -307,11 +307,6 @@ function display_task_name(task_name, task_index, number_of_tasks) {
             ( String(task_index) + ' out of ' + String(number_of_tasks) )
         )
     );
-	//document.getElementById('arcproc_right_frame').src="/swish/muarc/arcproc_right?task="+task_name;
-	var propose = "/swish/muarc/arcproc_left?task="+task_name;
-	if(document.getElementById('arcproc_left_frame').src !== propose) {
-		document.getElementById('arcproc_left_frame').src = propose
-	}
 }
 
 function loadTaskFromFile(e) {
@@ -344,27 +339,35 @@ var queryString = window.location.search;
 var urlParams = new URLSearchParams(queryString);
 var setTask;
 var setTaskIndex;
-var setTaskName;
+var url_taskname;
 var task_url;
 
-function setTaskID(ID) {
-    ID = ID.split('.')[0]
-	var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?task='+ID;
+function setTaskID(task_id) {
+    task_id = task_id.split('.')[0]
+	var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?task='+task_id;
 	window.history.pushState({path:newurl},'',newurl);
+    //document.getElementById('arcproc_right_frame').src="/swish/muarc/arcproc_right?task="+task_name;
+	var propose = "/swish/muarc/arcproc_left?task="+task_id;
+	if(document.getElementById('arcproc_left_frame').src !== propose) {
+		document.getElementById('arcproc_left_frame').src = propose
+	}
+
 }
 
 
 function urlTask(tasks) { 
   if(urlParams.has("task")) {
-	var taskname = urlParams.get('task')
+	var taskname = urlParams.get('task');
+	taskname = taskname.split('.')[0];
 	for (var i=0; i < tasks.length; i++) {
 		setTaskIndex = i;
 		setTask = tasks[i];
 		task_url = setTask["download_url"];
-	    setTaskName = setTask['name'];
-		if(setTaskName.indexOf(taskname)==0) {
+	    url_taskname = setTask['name'].split('.')[0]
+		if(url_taskname==taskname) {
 			urlParams = new URLSearchParams("");
 			//display_task_name(maybeTask['name'], i, tasks.length);
+			//setTaskID(url_taskname);
 			return true;
 		}
 	}
@@ -379,10 +382,6 @@ function randomTask() {
         var task = tasks[task_index];
 		if (urlTask(tasks)) {
 		   task = setTask;
-		   var propose = "/swish/muarc/arcproc_left?task="+setTaskName;
-		   if(document.getElementById('arcproc_left_frame').src !== propose) {
-			   document.getElementById('arcproc_left_frame').src = propose
-		   }
 		   task_index = setTaskIndex;
 	    }
         $.getJSON(task["download_url"], function(json) {
