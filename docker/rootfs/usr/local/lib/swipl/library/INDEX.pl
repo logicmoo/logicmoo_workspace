@@ -1127,8 +1127,6 @@ index((rew_term_expansion), 2, rewrite_term, rewrite_term).
 index((rew_goal_expansion), 2, rewrite_term, rewrite_term).
 index((rlimit), 3, clib_rlimit, rlimit).
 index((saml_authenticate), 4, saml, saml).
-index((safe_goal), 1, sandbox, sandbox).
-index((safe_call), 1, sandbox, sandbox).
 index((setting), 4, settings, settings).
 index((setting), 2, settings, settings).
 index((set_setting), 2, settings, settings).

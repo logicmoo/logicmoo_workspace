@@ -142,6 +142,7 @@ prolog_pprint_tree_term(Term):-  prolog_pprint(Term), !.
 user:test_pp:- 
   make,
   print_tree(a(a{ a:b, = : -1 })),
+  %print_tree(a(a{ a:b, = : -1 })),
   %bfly_tests,
   %retractall(bfly_tl:bfly_setting(_,_)),
   % abolish(bfly_tl:bfly_setting,2),
@@ -149,11 +150,12 @@ user:test_pp:-
   test_print_tree.
 
 test_print_tree:- 
+  
   predicate_property(test_print_tree1(_),number_of_clauses(N)),
   forall((between(1,N,X),
      nth_clause(test_print_tree1(_),N,Ref),clause(_,Body,Ref),
-      format('~N%=% ?- ~q.~n',[test_pp(Body)])),
-     test_pp(on_xf_ignore(test_print_tree(X)))).
+      format('~N%=% ?- ~q.~n',[test_pp_each(Body)])),
+     test_pp_each(on_xf_ignore(test_print_tree(X)))).
 %  forall(clause(test_print_tree1(N),_Body),call((nop(test_print_tree1(N)),call_test_print_tree(N)))).
 
 test_print_tree(N):- integer(N), nth_clause(test_print_tree1(_),N,Ref),clause(_,Body,Ref),!,
@@ -168,25 +170,27 @@ test_print_tree(N):- integer(N), nth_clause(test_print_tree1(_),N,Ref),clause(_,
 on_xf_ignore(G):- notrace(ignore(catch(G,_,fail))).
 :- export(on_xf_ignore/1).
 
-test_pp(PP,Goal):- 
+test_pp(PP,Goal):-
+  with_pp(PP,test_pp_desc(PP,Goal)).
+test_pp_desc(PP,Goal):- 
   write('%====================================================\n'),
   format('% ?- ~p. ~n',[test_pp(PP,Goal)]),
   format('% ?- ~@. ~n',[print_tree_no_nl(test_pp(PP,Goal))]),
   format('% ?- ~@. ~n',[print_tree(test_pp(PP,Goal))]),
   format('% ?- ~@ ~n', [print_tree_with_final(test_pp(PP,Goal),'.')]),
   write('%==================START====================\n==>\n'),
-  with_pp(PP,\+ \+ Goal),
+  ignore(with_pp(PP,\+ \+ Goal)),
   write('<==\n%==================END========================\n'),
    !.
 
-test_pp(G):- 
+test_pp_each(G):- 
  ttyflush,
  maplist(on_xf_ignore,
  [test_pp(ansi,G),
   ttyflush,
-  %test_pp(http,G),
+  wots(SS,test_pp(http,G)),our_pengine_output(SS),
   ttyflush,
-  test_pp(bfly,G),
+  wots(S,test_pp(bfly,G)),our_pengine_output(S),
   ttyflush,
   %test_pp(swish,G),
   ttyflush,
@@ -1073,11 +1077,26 @@ maybe_pp_hook(Why,S):-
    with_write_options(Options, pretty_clauses:pp_hook(Why, Pos, S)).
 
 
-print_tree(Term):- ansi_ansi,!,print_tree_with_final(Term,'.\n').
+%print_tree(Term):- print_html_term_tree(Term).
 print_tree(Term):- ansi_ansi,current_output_line_position(Pos),!,print_tree_with_final(Term,''), maybe_reset_spaces(Pos).
-print_tree(Term):-  print_tree_unit(Term).
+print_tree(Term):- ansi_ansi,!,print_tree_nl(Term).
+print_tree(Term):-  
+  wots(S,with_pp(http,print_tree_unit(Term))),write_html(S).
+/*
+print_html_term_tree(Term):- 
+ current_print_write_options(Options),
+ must_or_rtrace(phrase(bfly_term(Term,[right_margin(60),left_margin(0),indent(1),nl(true),full_stop(true)]),Tokens)),!,
+ must_or_rtrace(print_html_term_tree_st(Tokens)),!.
+
+print_html_term_tree_st(['<',html,'>'|Tokens]):-!,remove_if_last(Tokens,['</',html,'>'],TokensLeft),print_html_term_tree_st_1(TokensLeft).
+print_html_term_tree_st(Tokens):- print_html_term_tree_st_1(Tokens).
+print_html_term_tree_st_1([nl(1)|Tokens]):-!,remove_if_last(Tokens,[nl(1)],TokensLeft),print_html_term_tree_st(TokensLeft).
+print_html_term_tree_st_1(Tokens):- with_output_to(string(HTMLString), (write('<pre>'), html_write:print_html(Tokens),write('</pre>'))),
+  write_html(HTMLString).
+*/
 
 print_tree_unit(S):- maybe_pp_hook(print_tree_unit,S),!.
+
 print_tree_unit(Term):-
  current_output_line_position(Pos),
  ensure_pp((
@@ -1171,10 +1190,10 @@ use_new.
 ensure_pp(Goal):-  is_pp_set(Where), !, with_pp(Where,Goal).
 ensure_pp(Goal):-  toplevel_pp(Where), !, with_pp(Where,Goal).
 
-should_print_mode_html(_):- toplevel_pp(ansi),!,fail.
-should_print_mode_html(_):- current_predicate(inside_bfly_html_esc/0), inside_bfly_html_esc.
-should_print_mode_html(ansi):- !, fail.
-should_print_mode_html(_).
+should_print_mode_be_html(_):- toplevel_pp(ansi),!,fail.
+should_print_mode_be_html(_):- current_predicate(inside_bfly_html_esc/0), inside_bfly_html_esc.
+should_print_mode_be_html(ansi):- !, fail.
+should_print_mode_be_html(_).
 
 
 % with_pp(swish,Goal):- !,locally_tl(print_mode(html),with_pp(bfly,Goal)).
@@ -1189,7 +1208,10 @@ with_pp(Mode,Goal):- quietly(with_pp0(Mode,Goal)).
 :- meta_predicate(with_pp0(+,0)).
 with_pp0(bfly,Goal):- in_pp(swish),!,with_pp0(swish,Goal).
 with_pp0(ansi,Goal):- \+ t_l:print_mode(plain), !, locally_tl(print_mode(plain),with_pp0(ansi,Goal)).
-with_pp0(Mode,Goal):- \+ t_l:print_mode(html), should_print_mode_html(Mode),!, locally_tl(print_mode(html),with_pp0(Mode,Goal)).
+with_pp0(Mode,Goal):- \+ t_l:print_mode(html), 
+  should_print_mode_be_html(Mode),!, 
+  locally_tl(print_mode(html),with_pp0(Mode,Goal)).
+
 with_pp0(Where,Goal):- \+ is_pp_set(Where), !,
     setup_call_cleanup(
       asserta(bfly_tl:bfly_setting(pp_output,Where),Ref),
@@ -1200,7 +1222,7 @@ with_pp0(Where,Goal):- toplevel_pp(Real), ttyflush, with_real_pp(Real,Where,Goal
 
 write_bfly_html(S):- empty_str(S),!.
 write_bfly_html(S):- split_string(S, "", "\s\t\n",L),atomics_to_string(L,LL),LL\==S,!,write_bfly_html(LL).
-write_bfly_html(S):- split_string(S,"\n","",LS),atomics_to_string(LS,'<br/>',W),write_bfly_html_0(W).
+write_bfly_html(S):- split_string(S,"\n\r\0","",LS),atomics_to_string(LS,'\n',W),write_bfly_html_0(W).
 
 write_bfly_html_0(S):- empty_str(S),!.
 write_bfly_html_0(S):- split_string(S, "", "\s\t\n",L),atomics_to_string(L,LL),LL\==S,!,write_bfly_html_0(LL).
@@ -1241,10 +1263,32 @@ with_real_pp(swish,bfly,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 with_real_pp(swish,http,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 with_real_pp(swish,swish,Goal):-wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 
+our_pengine_output(Codes):- catch(text_to_string(Codes,Str),_,fail),Codes\==Str,!,our_pengine_output(Str).
+
+%our_pengine_output(SO):- toplevel_pp(http),!,format('<span class="swish">~w</span>',[SO]).
+%our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal((sformat(S,'<pre>~w</pre>',[SO]),print_raw_html_page(S))).
 our_pengine_output(SO):- toplevel_pp(swish),!,pengines:pengine_output(SO),!.
-our_pengine_output(SO):- toplevel_pp(http),!,format('<pre>~w</pre>',[SO]).
-our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal((sformat(S,'<pre>~w </pre>',[SO]),print_raw_html_page(S))).
-our_pengine_output(SO):- ttyflush,format('our_pengine_output\n{~w}',[SO]),nl.
+our_pengine_output(SO):- toplevel_pp(http),!,write(SO).
+our_pengine_output(SO):- bfly_write_hs(SO).
+%our_pengine_output(SO):- setup_call_cleanup((bfly_title("+HtmlMode"),write(SO),bfly_title("-HtmlMode"),flush_output),true,true),!.
+
+
+
+%write_html(HTML):- phrase(html(HTML), Tokens), html_write:print_html(Out, Tokens))).
+% output_html(html([div([id('cp-menu'), class(menu)], cp_skin: cp_logo_and_menu)]))
+output_html(Var):- var(Var),!,term_to_atom(Var,Atom),output_html(pre([Atom])).
+%output_html(html(HTML)):- !,output_html(HTML). 
+output_html(HTML):- atomic(HTML),!,write_html( \ [HTML]). 
+%output_html(HTML):- is_list(HTML),send_tokens(HTML).
+output_html(HTML):- html_write:phrase(html(HTML), Tokens,[]),!,send_tokens(Tokens).
+
+
+%  our_pengine_output('<pre>hi</pre>').
+%  our_html_output_old('<pre>hi</pre>').
+%our_pengine_output(SO):- ttyflush,format('our_pengine_output\n{~w}',[SO]),nl.
+%our_pengine_output(SO):- 
+
+%:- nb_setval(isHtmlMode,nil).
 
 
 is_webui:- notrace(once(toplevel_pp(http);toplevel_pp(swish);in_pp(http);in_pp(swish);get_print_mode(html))).
@@ -1252,7 +1296,7 @@ is_webui:- notrace(once(toplevel_pp(http);toplevel_pp(swish);in_pp(http);in_pp(s
 %in_bfly_esc:- !, current_predicate(in_bfly_style/2), in_bfly_style(style,'html_esc'), !.
 in_pp(X):- notrace(in_pp0(X)).
 
-in_pp0(X):- nonvar(X), in_pp(Y), !, X==Y.
+in_pp0(X):- nonvar(X), in_pp0(Y), !, X==Y.
 in_pp0(X):- is_pp_set(X),!.
 in_pp0(Guess):- toplevel_pp(Guess).
 
@@ -1260,10 +1304,12 @@ pp_set(X):- bfly_set(pp_output,X).
 
 is_pp_set(X):- bfly_tl:bfly_setting(pp_output,X),!.
 
+
 toplevel_pp(X):- nonvar(X), toplevel_pp(Y), !, X==Y.
 toplevel_pp(swish):- on_x_log_fail(nb_current('$pp_swish',t);pengines:pengine_self(_Self)),!.
 toplevel_pp(http):- on_x_log_fail(httpd_wrapper:http_current_request(_)),!.
-toplevel_pp(ansi):- current_predicate(bfly_get/2), bfly_get(butterfly,f),!.
+toplevel_pp(bfly):- getenv('TERM','xterm-256color'),!.
+toplevel_pp(ansi):- getenv('TERM','xterm'),!.
 toplevel_pp(bfly):- current_predicate(bfly_get/2), bfly_get(butterfly,t),!.
 toplevel_pp(ansi).
 
@@ -1330,12 +1376,14 @@ print_spaces(Need):- pformat_space,M1 is Need -1,print_spaces(M1).
 %pformat_space:- in_pp(http),!,write('&nbsp').
 pformat_space:- write(' ').
 
-pformat_newline:- !,nl.
+%pformat_newline:- !,nl.
 pformat_newline:- ansi_ansi,!,nl.
-pformat_newline:- in_pp(bfly),!,write(' <br/>'),nl.
+%pformat_newline:- in_pp(bfly),!,write(' <br/>'),nl.
+pformat_newline:- in_pp(bfly),!,nl.
 pformat_newline:- in_pp(html_pre),!,write('\n'),nl.
 pformat_newline:- in_pp(http),!,write(' <p/>\n').
 pformat_newline:- in_pp(swish),!,our_pengine_output(' <p/>\n').
+pformat_newline:-!.
 pformat_newline:- ignore((on_x_log_fail(httpd_wrapper:http_current_request(_)),nl)),nop((write(' <br/>'))).
 
 prefix_spaces_exact(Tab):- notrace(prefix_spaces0(Tab)).
@@ -1359,8 +1407,8 @@ prefix_spaces1(Tab):- Floor is floor(Tab/2)+1, prefix_spaces0(Floor).
 :- system:import(ansi/0).
 :- export(bfly/0).
 :- system:import(bfly/0).
-ansi:- bfly_set(butterfly,f).
-bfly:- bfly_set(butterfly,t),bflyw.
+ansi:- bfly_set(butterfly,f),set_pp(ansi).
+bfly:- bfly_set(butterfly,t),set_pp(bfly),bflyw.
 
 pl_span_c(Class):- pformat(html('<span class="pl-~w">',Class)).
 pl_span_e:- pformat(html('</span>')).
@@ -3096,11 +3144,11 @@ finalize_term(Term, Dict) -->
     (   { true == Dict.get(full_stop) }
     ->  space(Term, '.', Dict, Dict),
         (   { true == Dict.get(nl) }
-        ->  html(['.', br([])])
+        ->  html(['.', p([])])
         ;   html('. ')
         )
     ;   (   { true == Dict.get(nl) }
-        ->  html(br([]))
+        ->  html(p([]))
         ;   []
         )
     ).

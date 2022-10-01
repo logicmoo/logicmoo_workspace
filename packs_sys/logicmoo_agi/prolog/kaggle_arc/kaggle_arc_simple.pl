@@ -4,9 +4,41 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+
 :- if(current_module(trill)).
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
+
+
+
+
+solve_easy:- get_current_test(Name),solve_easy(Name).
+
+solve_easy(Name):- 
+  fix_test_name(Name,TestID,ExampleNum),
+  ignore(luser_getval(example,ExampleNum)),
+  forall(kaggle_arc(TestID,ExampleNum,In,Out),try_easy_io(TestID>ExampleNum,In,Out)),
+  ((ExampleNum\=tst+_)-> 
+    forall(kaggle_arc(TestID,tst+N,In,Out),try_easy_io(TestID>tst+N,In,Out))).
+
+try_something_easy(rot180).
+try_something_easy(=).
+try_something_easy(run_dsl(E)):- test_info(_,human(E)).
+
+maybe_try_something_easy(I,M,P2):-  try_something_easy(P2), call(P2,I,M).
+maybe_try_something_easy(I,M,Did):- fail_over_time(4,try_something(Did,I,M),fail),!.
+
+try_easy_io(Name,I,O):-
+ ignore((
+  Template = try_something(W,Did,I,M),
+  findall(Template,(maybe_try_something_easy(I,M,Did),count_changes(M,O,1,W),(W==1->!;true)),List),
+  sort(List,[Template|_]),
+  %ignore((call(P2,I,II),call(P2,O,OO),
+  %reduce_grid(GridIn+GridOut,IOps,II+OO),!,
+  (W==1 -> Color=green; Color = yellow),
+  must_det_ll(print_side_by_side(Color,M,easyResult(Name,Did),_,O,easyExpected(Name=W))))), !. 
+
+
 
 grid_w_obj(Grid,Why,Objs):-
   (var(Grid)->arc_grid(Grid);true),
@@ -159,11 +191,11 @@ number_obj(N,obj(List),obj([ord(N)|List])).
 
 %grid(Type,ConstructorData,[rot270]),CacheOfCalls).
 
-%is_graid(T*E*IO,T,E,IO).
-is_graid(T*E*IO,G):- kaggle_arc_io(T,E,IO,G).
+%is_graid(TestID>ExampleNum*IO,TestID,ExampleNum,IO).
+is_graid((TestID>ExampleNum*IO),G):- kaggle_arc_io(TestID,ExampleNum,IO,G).
 
 :- export(is_graid/2).
-%grid_aid(ID,T*E*IO):- is_graid(Grid,T,E,IO),format(ID,).
+%grid_aid(ID,TestID>ExampleNum*IO):- is_graid(Grid,TestID,ExampleNum,IO),format(ID,).
 
 point(Grid,Color,X,Y):- is_graid(Grid,G),nth1(Y,G,R),nth1(X,R,Color).
 

@@ -1537,6 +1537,8 @@ define(["jquery", "config", "preferences", "utils",
           try {
             eval(script)(node);
           } catch (e) {
+		    console.log("node=" + node);
+			console.log("Script=" + script);					
             alert(e);
           }
         }

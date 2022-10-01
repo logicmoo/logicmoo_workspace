@@ -23,7 +23,9 @@ p {
 }
 </style>`])).
 
-
+ensure_swish_app_html:- in_pp(http),!.
+ensure_swish_app_html:- in_pp(swish),!.
+ensure_swish_app_html:- !.
 ensure_swish_app_html:-
   once_per_request(format('\n<div id="hidden_swish_app" style="display:none; visibility:hidden">
 		<header class="navbar navbar-default">

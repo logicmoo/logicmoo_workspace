@@ -250,6 +250,16 @@ hide_xpce_library_directory.
 
 :- thread_local(t_l:print_mode/1).
 
+:- multifile((cp_menu:extra_cp_menu//0)).
+:- dynamic((cp_menu:extra_cp_menu//0)).
+:- export(cp_menu:extra_cp_menu//0).
+
+cp_menu:extra_cp_menu -->  
+   { \+ (( httpd_wrapper:http_current_request(Request),member(request_uri(URI),Request), atom_contains(URI,pldoc))) },!,
+   pldoc_search:doc_links([],[]).
+cp_menu:extra_cp_menu --> [].
+
+
 :- if(exists_source(cliopatria('applications/help/load'))).
 :- system:use_module(cliopatria('applications/help/load')).
 % Load ClioPatria itself.  Better keep this line.
@@ -259,14 +269,6 @@ cp_menu:cp_menu(X,X).
 %cp_menu:cp_menu.
 :- endif.
 
-:- multifile((extra_cp_menu/0)).
-:- dynamic((extra_cp_menu//0)).
-:- export(extra_cp_menu//0).
-
-cp_menu:extra_cp_menu -->  
-   { \+ (( httpd_wrapper:http_current_request(Request),member(request_uri(URI),Request), atom_contains(URI,pldoc))) },!,
-   pldoc_search:doc_links([],[]).
-cp_menu:extra_cp_menu --> [].
 
 
 :- multifile(cp_menu:(cp_menu/2)).
@@ -850,7 +852,8 @@ print_xlisting_head(Title):-
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<link rel="stylesheet" type="text/css" href="/swish/css/menu.css">
 	<link rel="stylesheet" type="text/css" href="/swish/css/cliopatria.css">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://unpkg.com/gojs@2.2.15/release/go.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script type="text/javascript">window.name="lm_xref"; </script>
 	<script data-main="/swish/js/swish" src="https://logicmoo.org/node_modules/requirejs/require.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -877,7 +880,7 @@ write_cmd_link(menu(Info,Goal)):- nonvar(Info),!, write_cmd_link(Info,Goal).
 write_cmd_link(Goal):- sformat(S,'~q',['?-'(Goal)]),write_cmd_link(S,Goal).
 
 write_cmd_link(Info,Goal):- nonvar(Goal),with_output_to(string(S),writeq(Goal)),
-  www_form_encode(S,A), format('<a href="?cmd=~w" target="_self">~w</a>\n',[A,Info]).
+  www_form_encode(S,A), format('<a href="/swish/lm_xref/?cmd=~w" target="_new">~w</a>\n',[A,Info]).
 
 :- dynamic(xlisting_whook:offer_testcase/1).
 :- multifile(xlisting_whook:offer_testcase/1).
@@ -918,16 +921,19 @@ system:xnotrace(G):- call(G).
 
 %handler_logicmoo_cyclone(Request):- !, arcproc_left(Request),!.
 handler_logicmoo_cyclone(Request):- 
-  no_xdbg_flags,
-  html_write:html_current_option(content_type(D)),format('Content-type: ~w~n~n', [D]),
+  (html_write:html_current_option(content_type(D))-> true ; D=  'text/html'),
+  format('Content-type: ~w~n~n', [D]),!,
   %format('<!DOCTYPE html>',[]),flush_output_safe,
-  with_http(must_run_html(handler_logicmoo_cyclone000(Request))-> true ; handler_logicmoo_cyclone000(Request)).
+  no_xdbg_flags,
+  with_http(
+    must_run_html(handler_logicmoo_cyclone000(Request))
+     -> true ; handler_logicmoo_cyclone000(Request)),!.
 
 handler_logicmoo_cyclone000(Request):-
-  intern_request_data(Request),
+  ignore(intern_request_data(Request)),
   handler_logicmoo_cyclone111.
 
-mUST_CALL(G):- call(G).
+mUST_CALL(G):- must_det_ll(G).
 %mUST_CALL(G):- mUST_det_ll(G).
 
 intern_request_data(Request):-
@@ -937,10 +943,11 @@ intern_request_data(Request):-
   current_input(In),current_output(Out),
   once(stream_property(Err,file_no(2));current_error_stream(Err)),
   thread_self(ID),!,
+  retractall(lmcache:current_ioet(_,_,_,ID)),
   asserta(lmcache:current_ioet(In,Out,Err,ID)),
   save_request_in_session(Request))),!.
 
-handler_logicmoo_cyclone111:- current_predicate(handler_logicmoo_arc/0),!,with_http(handler_logicmoo_arc).
+handler_logicmoo_cyclone111:- current_predicate(handler_logicmoo_arc/0),ignore(with_http(handler_logicmoo_arc)),!.
 handler_logicmoo_cyclone111:- 
  get_webproc(WebProc),
  ignore(WebProc=ls),
@@ -2096,15 +2103,6 @@ output_telnet_console2(Port):- HttpPort is Port +100,
 
 
 
-%write_html(HTML):- phrase(html(HTML), Tokens), html_write:print_html(Out, Tokens))).
-% output_html(html([div([id('cp-menu'), class(menu)], cp_skin: cp_logo_and_menu)]))
-output_html(Var):- var(Var),!,term_to_atom(Var,Atom),output_html(pre([Atom])).
-%output_html(html(HTML)):- !,output_html(HTML). 
-output_html(HTML):- atomic(HTML),!,write_html(HTML). 
-%output_html(HTML):- is_list(HTML),send_tokens(HTML).
-output_html(HTML):- html_write:phrase(html(HTML), Tokens,[]),!,send_tokens(Tokens).
-
-
 
 
 inline_html_format(G):- must_run_html(ilhf(G)).
@@ -2785,7 +2783,9 @@ get_request_vars(Format):- ignore(Exclude=[term,fa,session_data,webproc,user_age
 % must_run(G):- fast_and_mean, !, call(G).
 
 %must_run(Goal)
-must_run_html(Goal):- toplevel_pp(bfly)-> bfly_html_goal(must_run(Goal)); must_run(Goal).
+must_run_html(Goal):- 
+ wots(S,(toplevel_pp(bfly)-> bfly_html_goal(must_run(Goal)); must_run(Goal))),
+ our_pengine_output(S).
 
 must_run(List):- is_list(List),!,maplist(must_run0,List).
 must_run(Goal):- must_run0(Goal).
@@ -3226,6 +3226,7 @@ into_textarea(G):- with_pp(plain,G).
 
 :- export(with_http/1).
 :- meta_predicate(with_http(0)).
+with_http(Goal):- !, call(Goal).
 with_http(Goal):- with_pp(http,with_no_x_http(Goal)).
 
 %with_no_x_http(Goal):- make_sessionwith_no_xdbg(Goal),!.

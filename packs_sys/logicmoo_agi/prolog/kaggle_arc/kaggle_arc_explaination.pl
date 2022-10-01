@@ -48,9 +48,11 @@ print_list_of(Title,O):- print_list_of(print_info,Title,O).
 
 :- meta_predicate(print_list_of(1,+,+)).
 print_list_of(_,Title,[]):- pp(no_data(Title)),!.
+print_list_of(P1,Title,O):- \+ is_list(O),!,print_list_of(P1,Title,[O]).
 print_list_of(P1,Title,O):-
+ length(O,Len),
  collapsible_section(info,Title,maybe,
- (((Title\=[] -> pp(Title); true),
+ (((Title\=[] -> pp(Title=Len); pp(P1=Len)),
   maybe_cache_glyphs(O),
   %save_grouped(print_list_of(Title),O),
   g_out( maplist(P1,O))))),!.
@@ -68,6 +70,19 @@ print_info(A):- pp(A),!.
 print_info_1(G):- print_info(G).
 
 print_info_l(GridS):- maplist(print_info_1,GridS).
+
+object_grid_to_str(Grid,Str,Title):- 
+  v_hv(Grid,H,V), 
+  object_glyph(Grid,Glyph),
+  Title = object_grid(loc(OH,OV),size(H,V)),
+  loc(Grid,OH,OV),
+  localpoints_include_bg(Grid,GridO),
+  ((IH=H,IV=V)), % (IH = 30,IV=30), 
+  subst(GridO,black,wbg,GridOO),
+  wots(GS,(print_grid(IH,IV,GridOO))),
+  replace_in_string(['®'=Glyph],GS,GSS),  
+  HH is (OH - 1) * 2, wots(Str,(print_w_pad(HH,GSS))).
+
 
 debug_as_grid(Grid):- debug_as_grid('',Grid).
 debug_as_grid(Why,R):- is_object_props(R),!,debug_as_grid(Why,obj(R)).
@@ -97,7 +112,9 @@ debug_as_grid(  I,   A):- is_1gridoid(A), !, subst(A,'black','wbg',AA), print_gr
 debug_as_grid( '',Grid):- !, print_tree_no_nl(Grid).
 debug_as_grid(Why,Grid):- print_tree_no_nl(debug_as_grid(Why,Grid)).
 
-into_ngrid(Points,H,V,NGrid):- 
+into_ngrid(Points,NGrid):-  v_hv(Points,H,V),into_ngrid(Points,H,V,NGrid).
+into_ngrid(Obj,H,V,NGrid):-
+  localpoints_include_bg(Obj,Points),
   neighbor_map(H,V,Points,Points,CountedPoints),!,
   points_to_grid(H,V,CountedPoints,NGrid).
 
@@ -184,8 +201,9 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   remove_too_verbose(MyOID,AS,TV0), include(not_too_verbose,TV0,TV),
 
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
-  sort(AS,ASA),reverse(ASA,ASAR),
-  once((prefered_header(P,Caps),member(P,ASAR),ground(Caps))),
+  sort(TV,ASA),reverse(ASA,ASAR),
+  append(ASAR,AS,ASFROM),
+  once((prefered_header(P,Caps),member(P,ASFROM),ground(Caps))),
   toPropercase(Caps,PC),
   sort_obj_props(TV,TVS),
 
@@ -278,6 +296,8 @@ too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
 too_verbose(globalpoints).
 too_verbose(monochrome).
 too_verbose(shape).
+too_verbose(gid).
+too_verbose(grid_sz).
 too_verbose(localpoints).
 too_verbose(grid).
 %too_verbose(link).

@@ -3348,7 +3348,7 @@ which_missing_argnum(Q,_F,A,N):- between(A,1,N),get_assertion_head_arg(N,Q,Was),
 system:term_expansion(I,S0,O,S1):- %use_afc_term_expansion, % trace,
  ( \+ current_prolog_flag(afc_term_expansion,false),
   ( \+ \+ (source_location(File,_), atom_concat(_,'.afc.pl',File)) ; current_prolog_flag(afc_term_expansion,true))) ->
- prolog_load_context('term',T)->(T==I->afc_term_expansion(I,O)->I\=@=O->S0=S1, wdmsg(I-->O)).
+ prolog_load_context('term',T)->(T==I->afc_term_expansion(I,O)-> I\=@=O->S0=S1, wdmsg(I-->O)).
 
 
 :- endif.

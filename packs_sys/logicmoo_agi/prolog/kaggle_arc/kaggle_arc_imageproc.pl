@@ -23,7 +23,7 @@ set_on_grid(OH,OV,Grid,C-Point):- nonvar_or_ci(C),
   hv_point(H,V,Point),
   HH is H - OH + 1, 
   VV is V - OV + 1,
-  nth1(VV,Grid,Row),nb_set_nth1(HH,Row,I).
+  nb_set_grid_color(Grid,I,HH,VV).
 
 
 grid_dim(G,v_hv(H,V)):- grid_size(G,H,V).
@@ -44,12 +44,12 @@ no_black(BF,BF).
 %pixel_colors(GH,CC):- (is_group(GH);is_object(GH)),!,globalpoints(GH,GP),pixel_colors0(GP,CC).
 pixel_colors(GH,CC):- quietly(pixel_colors0(GH,CC)).
 
-if_plain_then(T,V,T):- plain_var(V). 
-if_plain_then(_,V,V).
+assign_plain_var_with(T,V,T):- plain_var(V). 
+assign_plain_var_with(_,V,V).
 
 pixel_colors0(GH,CC):- 
   term_singletons(GH,TS),
-  maplist(if_plain_then(wbg),TS,TS),
+  maplist(assign_plain_var_with(wbg),TS,TS),
   pixel_colors1(GH,CC).
 
 pixel_colors1(GH,CC):- is_grid(GH),!,mapgrid(only_color_data_or(wbg),GH,Cs),append(Cs,CC).
@@ -77,13 +77,13 @@ into_cc1(N-C,cc(Nm,CN)):- CN is N,!,color_name(C,Nm).
 colors_count_black_first(G,BF):- colors(G,SK),black_first(SK,BF).
 colors_count_no_black(G,BF):- colors(G,SK),no_black(SK,BF).
 
-:- decl_pt(prop_h,all_colors_count(is_object_or_grid, list)).
+:- decl_pt(prop_g,all_colors_count(is_object_or_grid, list)).
 all_colors_count(G,CC):- 
   pixel_colors(G,All), 
   findall(Nm-C,(enum_colors_test(C),occurs:count((sub_term(Sub, All), \+ \+ cmatch(C,Sub)), Nm)),BF),
   into_cc(BF,CC),!.
 
-:- decl_pt(prop_h,some_colors_count(is_object_or_grid, list)).
+:- decl_pt(prop_g,some_colors_count(is_object_or_grid, list)).
 some_colors_count(G,CC):- 
   pixel_colors(G,All), 
   findall(Nm-C,(enum_colors_test(C),occurs:count((sub_term(Sub, All), \+ \+ cmatch(C,Sub)), Nm),Nm\==0),BF),
@@ -161,7 +161,6 @@ shoot_ray(ColorTrail,Origin,Dir,Color,Fuel,Width,WidenSpeed,Skip,ColorRules,G0,G
     shoot_ray(ColorTrail,Origin,Dir,Color,FuelReduced,Width2,WidenSpeed,Skip,ColorRules,G1,G9).
 
 
-%fill_from_point(Point,Color,DirsAllow):-
 
 trim_to_square(G0,G9):- get_bgc(BG),
   into_grid(G0,G),
@@ -284,15 +283,6 @@ set_local_points(Point,Grid,GridO):- arcST,ignore((rrtrace((replace_local_points
 %set_local_points(Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
 %set_local_points(Point,Grid,Grid):-  wdmsg(warn(skip(set_local_points(Point)))).
 
-replace_grid_point(H,V,NewC,OldC,Grid,Grid):- %copy_term(OldC,OldCC),
-  nth1(V,Grid,Row),ignore((nth1(H,Row,OldCC),!, OldCC\==NewC, ( \+ OldCC \= OldC), nb_set_nth1(H,Row,NewC))),!,
-   nb_set_nth1(V,Grid,Row).
-replace_grid_point(_H,_V,_NewC,_OldC,Grid,Grid):-!.
-
-
-nb_set_nth1(1,Row,C):- !, (Row==[]->true; nb_setarg(1,Row,C)).
-%nb_set_nth1(1,Row,C):- !, nb_setarg(1,Row,C).
-nb_set_nth1(N,[_|Row],C):- Nm1 is N -1, nb_set_nth1(Nm1,Row,C).
 
 set_all_fg(C0,Grid,GridO):- color_code(C0,C),get_bgc(X),map_pred(if_not_bgc_then(X,C), Grid, GridO).
 if_not_bgc_then(X,C,B,A):- is_color_dat(B), \+ is_bg_or_var(X,B), A=C, !.
@@ -313,9 +303,7 @@ compute_next_color(Color1,Grid,Grid):- colors_count_no_black(Grid,[_,cc(Color1,_
 
 subst_color(Color1,Color2,Grid,NewGrid):- 
   quietly((
-   color_code(Color1,Num1),
-   color_code(Color2,Num2),
-   subst001(Grid,Num1,Num2,NewGrid))).
+   subst001(Grid,Color1,Color2,NewGrid))).
 
 equal_color(Color,Color).
 
@@ -344,9 +332,11 @@ remove_color0(Color,Grid,NewGrid):-
 
 
 blank_color(Color1,Grid,NewGrid):- get_bgc(Cell), subst_color(Color1,Cell,Grid,NewGrid).
-swap_colors(Color1,Color2,Grid,NewGrid):- subst_color(Color1,Swap1,Grid,MGrid),
-                                          subst_color(Color2,Color1,MGrid,NewGrid),
-                                          color_code(Color2,Swap1).
+swap_colors(Color1,Color2,Grid,GridO):- subst001(Grid,Color1,Var1,Grid1),
+                                        subst001(Grid1,Color2,Var2,GridO),
+                                        Var1 = Color2,
+                                        Var2 = Color1.
+                                          
 
 
 do_set_all_fg_colors(Color,I,O):- \+ compound(I),is_fg_color(I),O=Color.
@@ -419,6 +409,85 @@ add_borders(Color,Grid,GridO):-
   replace_col_e(1,Color,Grid1,Grid2),
   replace_col_e(H,Color,Grid2,GridO),!.
 
+fillFromBorder(FillColor,In,Out):- is_grid(In),!,  
+  grid_edges(In,Edges),
+  likely_bg(Edges,BG),
+  IIn = in(In),
+  grid_size(In,H,V),
+  forall(between(1,H,Hi),
+    forall(between(1,V,Vi),
+         ( fif((hv_c_value(IIn,Color,Hi,1),Color==BG),
+             fill_from_point(IIn,Hi,1,FillColor)),
+           fif((hv_c_value(IIn,Color,Hi,V),Color==BG),
+             fill_from_point(IIn,Hi,V,FillColor)),
+           fif((hv_c_value(IIn,Color,1,Vi),Color==BG),
+             fill_from_point(IIn,1,Vi,FillColor)),
+           fif((hv_c_value(IIn,Color,H,Vi),Color==BG),
+             fill_from_point(IIn,H,Vi,FillColor))))),
+   dref_grid(IIn,Out).
+fillFromBorder(Color,In,Out):-
+ cast_to_grid(In,Grid,UnCast),
+ fillFromBorder(Color,Grid,GridO),
+ uncast(In,UnCast,GridO,Out).
+
+likely_bg(Grid,BGC):- colors_count_black_first(Grid,CCBF), 
+    (CCBF=[cc(black,0),cc(BGC,_)|_]-> true ; CCBF=[cc(BGC,_)|_]).
+
+fill_from_point(IIn,H,V,FillColor):-
+  hv_c_value(IIn,Color,H,V),
+  fill_from_point(IIn,Color,H,V,FillColor).
+
+fill_from_point(IIn,Color,H,V,FillColor):-
+  nb_set_grid_color(IIn,FillColor,H,V),
+  is_adjacent_hv(H,V,Dir,HH,VV), Dir\==c, 
+  (is_bg_color(Color) -> \+ is_diag(Dir) ; true),
+  once((once(hv_c_value(IIn,AColor,HH,VV)),
+    AColor == Color,
+    fill_from_point(IIn,Color,HH,VV,FillColor))),
+  fail.
+
+dref_grid(IIn,Grid):- is_grid(IIn),!,Grid=IIn.
+dref_grid(IIn,Grid):- arg(_,IIn,Grid),is_grid(Grid),!.
+
+nb_set_grid_color(IIn,NewC,H,V):- 
+  dref_grid(IIn,Grid),
+  replace_grid_point(H,V,NewC,_OldC,Grid,Grid).
+
+replace_grid_point(H,V,NewC,OldC,Grid,GridO):- %copy_term(OldC,OldCC),
+  nth1(V,Grid,Row),
+   ignore((nth1(H,Row,OldCC),!, OldCC\==NewC, ( \+ OldCC \= OldC), nb_set_nth1(H,Row,NewC))),!,
+   nb_set_nth1(V,Grid,Row),
+   ignore(GridO = Grid).
+
+replace_grid_point(_H,_V,_NewC,_OldC,Grid,Grid):-!.
+
+
+nb_set_nth1(1,Row,C):- !, (Row==[]->true; nb_setarg(1,Row,C)).
+%nb_set_nth1(1,Row,C):- !, nb_setarg(1,Row,C).
+nb_set_nth1(N,[_|Row],C):- Nm1 is N -1, nb_set_nth1(Nm1,Row,C).
+
+  
+:- decl_pt(prop_o,grid_edges(is_grid,grid)).
+grid_edges(In,Edges):-
+  into_grid(In,Grid),
+  get_edges(Grid,Top,Bottem,Left,Right),
+  % append([Top,Bottem,Left,Right],List), rectify(List,Rect), 
+  append(Top,Left,TL), append(Bottem,Right,BR), Rect = [TL,BR],
+  grav_rot(Rect,_,Edges).
+
+suggest_h1(17). suggest_h1(13). suggest_h1(11). suggest_h1(7). suggest_h1(5). suggest_h1(3).
+as_whole(X,H):- H is floor(X), H =:= X.  
+suggest_h(_,H):- X is sqrt(H), as_whole(X,H),!.
+suggest_h(L,H):- suggest_h1(H),  X is L/H, as_whole(X,H),!.
+suggest_h(L,H):- L2 is floor(L/3), between(1,L2,D), X is L2-D, \+ suggest_h1(X), X is L/H, as_whole(X,H),!.
+suggest_h(_,1):- !.
+rectify(List,Rect):- length(List,L), suggest_h(L,H), H<L, V is L/H, make_grid(H,V,Rect),append(Rect,List).
+
+get_edges(In,Top,Bottem,Left,Right):-
+  append([Top|Middle],[Bottem],In),
+  rot90(Middle,Middle90),append([Left|_],[Right],Middle90).
+%get_top_bottem(In,Top,Bottem):- append([Top|_],[Bottem],In).
+
 
 
 cls_with(Color1,G,Grid):- into_grid(G,Old),grid_color_code(Color1,Num1),cls_with_0(Num1,Old,Grid),!.
@@ -486,13 +555,13 @@ grid_size_term(I,size(X,Y)):- grid_size(I,X,Y),!.
 
 %grid_size(Points,H,V):- is_map(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(NIL,1,1):- NIL==[],!.
+grid_size(I,X,Y):- is_object(I),indv_props(I,L),(member(grid_size(X,Y),L);member(iz(grid_sz(X,Y)),L);member(v_hv(X,Y),L)),!.
 grid_size(Points,H,V):- is_points_list(Points),!,points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
 grid_size(G,H,V):- is_graid(G,GG),!, grid_size(GG,H,V).
 grid_size(G,H,V):- is_map(G),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
 grid_size(G,H,V):- is_grid(G),!,grid_size_nd(G,H,V),!.
 grid_size(G,X,Y):- is_group(G),!,mapgroup(grid_size_term,G,Offsets),sort(Offsets,HighToLow),last(HighToLow,size(X,Y)).
-grid_size(I,X,Y):- is_object(I),indv_props(I,L),(member(grid_size(X,Y),L);member(v_hv(X,Y),L)),!.
 %grid_size(Points,H,V):- points_range(Points,LoH,LoV,HiH,HiV,_,_), H is HiH-LoH+1, V is HiV-LoV+1.
 %grid_size(G,H,V):- quietly(is_object(G)), !, v_hv(G,H,V).
 %grid_size([G|G],H,V):- is_list(G), length(G,H),length([G|G],V),!.

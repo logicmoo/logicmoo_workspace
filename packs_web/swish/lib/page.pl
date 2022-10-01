@@ -834,12 +834,17 @@ swish_resources -->
 swish_js  --> html_post(head, \include_swish_js).
 swish_css --> html_post(head, \include_swish_css).
 
+include_butterfly_js1 -->
+ ['<script src="https://unpkg.com/gojs@2.2.15/release/go-debug.js"></script>
+   <script src="https://unpkg.com/gojs@2.2.15/extensions/Figures.js"></script>
+   <script src="https://unpkg.com/gojs@2.2.15/extensions/DrawCommandHandler.js"></script>'].
 include_butterfly_js -->
  ['
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> <!-- necessary for the "draggable" ui  -->
 <script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Popup-plugin.js"></script>
 <script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Example.js"></script>
+<script src="https://unpkg.com/gojs/release/go-debug.js"></script>
 
 <link rel="shortcut icon" href="/static/images/favicon.png?">
 <link rel="stylesheet" type="text/css" href="/swish/css/menu.css">
@@ -869,7 +874,7 @@ include_butterfly_js -->
 % // Trill's ga(''create'', ''UA-16202613-11'', ''auto''); 
 include_swish_js -->
 
-  % include_butterfly_js,
+  include_butterfly_js,
 	html(script([],[
       '(function(i,s,o,g,r,a,m){i[''GoogleAnalyticsObject'']=r;i[r]=i[r]||function(){
        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

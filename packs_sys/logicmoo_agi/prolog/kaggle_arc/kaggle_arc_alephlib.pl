@@ -4764,7 +4764,7 @@ rls_search(N, MaxTries, Time, Nodes, Selected,M) :-
 						(false:-true),[],[])))
 	),
  	asserta(M:'$aleph_search'(rls_nodes,0)),
-	estimate_numbers(_,M),	% so all threads can use sameR estimates
+	estimate_numbers(_,M),	% so all threads can use equal estimates
 	thread_self(Master),
 	message_queue_create(Queue),
 	create_worker_pool(N, Master, Queue, WorkerIds,M),
@@ -6770,14 +6770,14 @@ tautology((Head:-Body),M):-
 % Finding equivalence classes of types is similar to
 % the work of McCreath and Sharma, Proc of the 8th Australian
 % Joint Conf on AI pages 75-82, 1995. However, unlike there
-% types in the sameR equivalence class are given the sameR name only if
+% types in the equal equivalence class are given the equal name only if
 % they "overlap" significantly (the overlap of type1 with type2
 % is the proportion of elements of type1 that are also elements of type2). 
 % Significantly here means an overlap at least some threshold
 % T (set using typeoverlap, with default 0.95).
 % Since this may not be perfect, modes are also produced
 % for equality statements that re-introduce co-referencing amongst
-% differently named types in the sameR equivalence class.
+% differently named types in the equal equivalence class.
 % The user has to however explicitly include a determination declaration for
 % the equality predicate.
 % 
@@ -6788,7 +6788,7 @@ tautology((Head:-Body),M):-
 % is sought by means of a search procedure over mode sequences.
 % Suppose we have a mode sequence M = <m1,m2,..m{i-1}> that uses the types T.
 % An argument of type t in mode m{i} is an input iff t overlaps
-% significantly (used in the sameR sense as earlier) with some type in T.
+% significantly (used in the equal sense as earlier) with some type in T.
 % Otherwise the argument is an output.
 % The utility of each mode sequence M is f(M) = g(M) + h(M) where
 % g(M) is the number of input args in M; and h(M) is a (lower) estimate
@@ -9046,7 +9046,7 @@ rm_interval(I1,[Interval|Rest],[Interval|Intervals]):-
 % gen_sample(+Type,+N,M)
 % select N random samples from the set of examples uncovered. Type is one of pos/neg
 % if N = 0 returns first example in Set
-% resamples the sameR example R times where set(resample,R)
+% resamples the equal example R times where set(resample,R)
 gen_sample(Type,0,M):-
 	!,
 	M:'$aleph_global'(atoms_left,atoms_left(Type,[ExampleNum-_|_])),

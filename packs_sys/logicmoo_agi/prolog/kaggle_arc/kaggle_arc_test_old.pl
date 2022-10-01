@@ -5,7 +5,8 @@ Stuff created by otehr arc participants
 
 */
 
-easy_test(VX,(tst+Y)):- easytest(X,Y,_),fix_test_name(X,_,VX).
+arc_easy_test(VX):- easytest(X,_,_),atom_id(X,VX).
+easy_test(VX>Ex):- easytest(X,Y,_),fix_test_name(X>(tst+Y),VX,Ex).
 % 450 teams were able to pass test 4769ccfe
 easytest('4769ccfe',0,450).
 easytest('14f3ce43',0,395).

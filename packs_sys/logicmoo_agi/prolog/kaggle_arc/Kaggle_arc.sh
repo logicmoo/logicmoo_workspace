@@ -5,13 +5,16 @@ export ARC_DIR=$(dirname $SCRIPT)
 echo ARC_DIR=$ARC_DIR
 
 if [[ $# -gt 2 ]] ; then
-  echo fuser -n tcp -k 17666
+  echo fuser -n tcp -k 1766
 fi
 
 
 cd $ARC_DIR
-rm -rf out
-git checkout out
+# rm -rf out
+# git checkout out
+
+mkdir -p data
+chmod 777 data
 
 export BCMD="cd ${ARC_DIR} ; pwd ;  swipl -l kaggle_arc.pl ${@}"
 

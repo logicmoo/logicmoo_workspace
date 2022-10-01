@@ -587,7 +587,7 @@ S="
  _________",
  into_g666(S,G1),Same=_,once(subst001(G1,blue,Same,G)).
 
-h666(_Ham,G):- into_grid(v(aa4ec2a5)*(tst+0)*in,G).
+h666(_Ham,G):- into_grid(v(aa4ec2a5)>(tst+0)*in,G).
 
 
 h666(_Ham,

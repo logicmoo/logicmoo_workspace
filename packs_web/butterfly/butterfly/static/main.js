@@ -1,7 +1,7 @@
 
-(function() {
+(function () {
   var $, State, Terminal, cancel, cols, isMobile, openTs, quit, rows, s, ws,
-    indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+    indexOf = [].indexOf || function (item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   cols = rows = null;
 
@@ -16,7 +16,7 @@
 
   $ = document.querySelectorAll.bind(document);
 
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     var close, ctl, error, init_ctl_ws, init_shell_ws, open, path, reopenOnClose, rootPath, term, write, write_request, wsUrl;
     term = null;
     if (location.protocol === 'https:') {
@@ -37,7 +37,7 @@
     path += location.search;
     ws.shell = new WebSocket(wsUrl + '/ws' + path);
     ws.ctl = new WebSocket(wsUrl + '/ctl' + path);
-    open = function() {
+    open = function () {
       console.log("WebSocket open", arguments);
       if (term) {
         term.body.classList.remove('stopped');
@@ -61,10 +61,10 @@
       }
       return console.log("WebSocket open end", arguments);
     };
-    error = function() {
+    error = function () {
       return console.error("WebSocket error", arguments);
     };
-    close = function() {
+    close = function () {
       console.log("WebSocket closed", arguments);
       if (quit) {
         return;
@@ -77,8 +77,8 @@
         return window.open('', '_self').close();
       }
     };
-    reopenOnClose = function() {
-      return setTimeout(function() {
+    reopenOnClose = function () {
+      return setTimeout(function () {
         if (quit) {
           return;
         }
@@ -86,28 +86,28 @@
         return init_shell_ws();
       }, 100);
     };
-    write = function(data) {
+    write = function (data) {
       if (term) {
         return term.write(data);
       }
     };
-    write_request = function(e) {
+    write_request = function (e) {
       return setTimeout(write, 1, e.data);
     };
-    ctl = function(e) {
+    ctl = function (e) {
       var cmd;
       cmd = JSON.parse(e.data);
       if (cmd.cmd === 'size') {
         return term.resize(cmd.cols, cmd.rows, true);
       }
     };
-    init_shell_ws = function() {
+    init_shell_ws = function () {
       ws.shell.addEventListener('open', open);
       ws.shell.addEventListener('message', write_request);
       ws.shell.addEventListener('error', error);
       return ws.shell.addEventListener('close', reopenOnClose);
     };
-    init_ctl_ws = function() {
+    init_ctl_ws = function () {
       ws.ctl.addEventListener('open', open);
       ws.ctl.addEventListener('message', ctl);
       ws.ctl.addEventListener('error', error);
@@ -115,14 +115,14 @@
     };
     init_shell_ws();
     init_ctl_ws();
-    return addEventListener('beforeunload', function() {
+    return addEventListener('beforeunload', function () {
       if (!quit) {
         return 'This will exit the terminal session';
       }
     });
   });
 
-  cancel = function(ev) {
+  cancel = function (ev) {
     if (ev.preventDefault) {
       ev.preventDefault();
     }
@@ -133,7 +133,7 @@
     return false;
   };
 
-  isMobile = function() {
+  isMobile = function () {
     return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   };
 
@@ -153,17 +153,17 @@
   window.consoleSuspend = false;
   window.consoleSuspendTimer = false;
 
-  Terminal = (function() {
+  Terminal = (function () {
     Terminal.hooks = {};
 
-    Terminal.on = function(hook, fun) {
+    Terminal.on = function (hook, fun) {
       if (Terminal.hooks[hook] == null) {
         Terminal.hooks[hook] = [];
       }
       return Terminal.hooks[hook].push(fun);
     };
 
-    Terminal.off = function(hook, fun) {
+    Terminal.off = function (hook, fun) {
       if (Terminal.hooks[hook] == null) {
         Terminal.hooks[hook] = [];
       }
@@ -174,7 +174,7 @@
       var div;
       this.parent = parent;
       this.out = out;
-      this.ctl = ctl1 != null ? ctl1 : function() {};
+      this.ctl = ctl1 != null ? ctl1 : function () { };
       this.document = this.parent.ownerDocument;
       this.html = this.document.getElementsByTagName('html')[0];
       this.body = this.document.getElementsByTagName('body')[0];
@@ -200,6 +200,12 @@
       this.cursorBlink = true;
       this.cursorState = 0;
       this.inComposition = false;
+
+      this.isMonospace = false;
+      this.isHtmlMode = false;
+      this.maybeEscapingHtmlMode = false;
+      this.htmlBuffer = "";
+
       this.compositionText = "";
       this.resetVars();
       this.focus();
@@ -209,41 +215,42 @@
       this.inputHelper.addEventListener('compositionend', this.compositionEnd.bind(this));
       addEventListener('keydown', this.keyDown.bind(this));
       addEventListener('keypress', this.keyPress.bind(this));
-      addEventListener('keyup', (function(_this) {
-        return function() {
-			if(!window.consoleSuspend) return _this.inputHelper.focus();
+      addEventListener('keyup', (function (_this) {
+        return function () {
+          if (!window.consoleSuspend) return _this.inputHelper.focus();
         };
       })(this));
       if (isMobile()) {
-        addEventListener('click', (function(_this) {
-          return function() {
-            if(!window.consoleSuspend) return _this.inputHelper.focus();
+        addEventListener('click', (function (_this) {
+          return function () {
+            if (!window.consoleSuspend) return _this.inputHelper.focus();
           };
         })(this));
       }
       addEventListener('focus', this.focus.bind(this));
       addEventListener('blur', this.blur.bind(this));
-      addEventListener('resize', (function(_this) {
-        return function() {
+      addEventListener('resize', (function (_this) {
+        return function () {
           return _this.resize();
         };
       })(this));
-      this.body.addEventListener('load', (function(_this) {
-        return function() {
+      this.body.addEventListener('load', (function (_this) {
+        return function () {
           return _this.nativeScrollTo();
         };
       })(this), true);
       this.initmouse();
-      addEventListener('load', (function(_this) {
-        return function() {
+      addEventListener('load', (function (_this) {
+        return function () {
           return _this.resize();
         };
       })(this));
       this.emit('load');
       this.active = null;
     }
+    lastWasHTML = false;
 
-    Terminal.prototype.emit = function(hook, obj) {
+    Terminal.prototype.emit = function (hook, obj) {
       var fun, k, len, ref, results;
       if (Terminal.hooks[hook] == null) {
         Terminal.hooks[hook] = [];
@@ -252,8 +259,8 @@
       results = [];
       for (k = 0, len = ref.length; k < len; k++) {
         fun = ref[k];
-        results.push(setTimeout((function(f) {
-          return function() {
+        results.push(setTimeout((function (f) {
+          return function () {
             return f.call(this, obj);
           };
         })(fun), 10));
@@ -261,7 +268,7 @@
       return results;
     };
 
-    Terminal.prototype.cloneAttr = function(a, char) {
+    Terminal.prototype.cloneAttr = function (a, char) {
       if (char == null) {
         char = null;
       }
@@ -281,49 +288,74 @@
       };
     };
 
-    Terminal.prototype.equalAttr = function(a, b) {
-      if(a===undefined) return false;
-      if(b===undefined) return false;
+    Terminal.prototype.equalAttr = function (a, b) {
+      if (a === undefined) return false;
+      if (b === undefined) return false;
       return a.bg === b.bg && a.fg === b.fg && a.bold === b.bold && a.underline === b.underline && a.blink === b.blink && a.inverse === b.inverse && a.invisible === b.invisible && a.italic === b.italic && a.faint === b.faint && a.crossed === b.crossed;
     };
 
-    Terminal.prototype.putChar = function(c, placeholder) {
+    Terminal.prototype.putChar = function (c, placeholder) {
       var newChar, chint;
       if (placeholder == null) {
         placeholder = false;
       }
-	  chint = c.charCodeAt();
-      if (c == "&") {
-        c = "&amp;";
-      } else if (c == "<") {
-        c = "&lt;";
-      } else if (c == ">") {
-        c = "&gt;";
-      } else if (c == "®") {
-        c = "@";
-      } else if (chint == 32) {
-        c = "&nbsp;"
-      } else if (chint > 160) {
-        c = "&#" + chint + ";"
+      if (c == '\0HTML') {
+        c = this.htmlBuffer;
+        this.htmlBuffer = "";
+        newChar = this.cloneAttr(this.curAttr, c);
+        newChar.html = c;
       } else {
-        c = '' + c;
-	  }
-      
-      c = '<span class="mc-10">' + c + '</span>';
-      newChar = this.cloneAttr(this.curAttr, c);	  
+        chint = c.charCodeAt();
+        if (this.isHtmlMode) {
+          this.htmlBuffer += c;
+          return;
+
+        } else {
+          if (c == "&") {
+            c = "&amp;";
+          } else if (c == "<") {
+            c = "&lt;";
+          } else if (c == ">") {
+            c = "&gt;";
+            /* }else if (c == "®") {
+              c = "@";*/
+          } else if (chint == 32) {
+            //  c = "&nbsp;"
+            c = '' + c;
+          } else if (chint >= 160 || chint < 32) {
+            c = "&#" + chint + ";";
+          } else {
+            c = '' + c;
+          }
+          if (this.isMonospace) {
+            if (c.indexOf("<span ") == -1) {
+              c = '<span class="mc-10">' + c + '</span>';
+            }
+          }
+          if (this.htmlBuffer.length > 0) {
+            c = this.htmlBuffer + c;
+            this.htmlBuffer = "";
+            newChar.html = c;
+            newChar = this.cloneAttr(this.curAttr, c);
+          } else {
+            newChar = this.cloneAttr(this.curAttr, c);
+          }
+        }
+      }
+
       newChar.placeholder = placeholder;
       if (this.insertMode) {
-		  this.checkUndefined(newChar);
+        this.checkUndefined(newChar);
         this.screen[this.y + this.shift].chars.splice(this.x, 0, newChar);
         this.screen[this.y + this.shift].chars.pop();
       } else {
-		  this.checkUndefined(newChar);
+        this.checkUndefined(newChar);
         this.screen[this.y + this.shift].chars[this.x] = newChar;
       }
       return this.screen[this.y + this.shift].dirty = true;
     };
 
-    Terminal.prototype.resetVars = function() {
+    Terminal.prototype.resetVars = function () {
       var k, ref, row;
       this.x = 0;
       this.y = 0;
@@ -370,7 +402,7 @@
       return this.skipNextKey = null;
     };
 
-    Terminal.prototype.computeCharSize = function() {
+    Terminal.prototype.computeCharSize = function () {
       var line, testSpan;
       testSpan = document.createElement('span');
       testSpan.textContent = '0123456789';
@@ -383,14 +415,14 @@
       return line.removeChild(testSpan);
     };
 
-    Terminal.prototype.eraseAttr = function() {
+    Terminal.prototype.eraseAttr = function () {
       var erased;
       erased = this.cloneAttr(this.defAttr);
       erased.bg = this.curAttr.bg;
       return erased;
     };
 
-    Terminal.prototype.focus = function() {
+    Terminal.prototype.focus = function () {
 
 
       var old_sl;
@@ -407,7 +439,7 @@
       return this.scrollLock = old_sl;
     };
 
-    Terminal.prototype.blur = function() {
+    Terminal.prototype.blur = function () {
       var old_sl;
       old_sl = this.scrollLock;
       this.scrollLock = true;
@@ -422,10 +454,10 @@
       return this.scrollLock = old_sl;
     };
 
-    Terminal.prototype.initmouse = function() {
+    Terminal.prototype.initmouse = function () {
       var encode, getButton, getCoords, pressed, sendButton, sendEvent, sendMove;
       pressed = 32;
-      sendButton = function(ev) {
+      sendButton = function (ev) {
         var button, pos;
         button = getButton(ev);
         pos = getCoords(ev);
@@ -435,7 +467,7 @@
         sendEvent(button, pos, ev.type);
         return pressed = button;
       };
-      sendMove = function(ev) {
+      sendMove = function (ev) {
         var button, pos;
         button = pressed;
         pos = getCoords(ev);
@@ -445,31 +477,31 @@
         button += 32;
         return sendEvent(button, pos, ev.type);
       };
-      encode = (function(_this) {
-        return function(data, ch) {
+      encode = (function (_this) {
+        return function (data, ch) {
           if (!_this.utfMouse) {
             if (ch === 255) {
               return data.push(0);
             }
-			if (ch > 127) {
-			  console.log("PUSHUTF = &#"+ch+";");
-			   return data.push("&#"+ch+";");
-			}
+            if (ch > 127) {
+              console.log("PUSHUTF = &#" + ch + ";");
+              return data.push("&#" + ch + ";");
+            }
             return data.push(ch);
           } else {
             if (ch === 2047) {
               return data.push(0);
             }
-			if (ch > 160) {				
+            if (ch > 160) {
               //console.log("PUSH = &#"+ch+";");
               //return data.push("&#"+ch+";");
-			}
+            }
             if (ch < 127) {
               return data.push(ch);
             } else {
               if (ch > 2047) {
-				  debugger;
-               // ch = 2047;
+                debugger;
+                // ch = 2047;
               }
               data.push(0xC0 | (ch >> 6));
               return data.push(0x80 | (ch & 0x3F));
@@ -477,8 +509,8 @@
           }
         };
       })(this);
-      sendEvent = (function(_this) {
-        return function(button, pos, type) {
+      sendEvent = (function (_this) {
+        return function (button, pos, type) {
           var data;
           if (_this.urxvtMouse) {
             pos.x -= 32;
@@ -502,12 +534,12 @@
           return _this.send("\x1b[M" + String.fromCharCode.apply(String, data));
         };
       })(this);
-      getButton = (function(_this) {
-        return function(ev) {
+      getButton = (function (_this) {
+        return function (ev) {
           var button, ctrl, meta, mod, shift;
           switch (ev.type) {
             case "mousedown":
-              button = ev.button != null ? +ev.button : (ev.which != null ? ev.which - 1 : null);			  
+              button = ev.button != null ? +ev.button : (ev.which != null ? ev.which - 1 : null);
               break;
             case "mouseup":
               button = 3;
@@ -529,8 +561,8 @@
           return (32 + (mod << 2)) + button;
         };
       })(this);
-      getCoords = (function(_this) {
-        return function(ev) {
+      getCoords = (function (_this) {
+        return function (ev) {
           var h, w, x, y;
           x = ev.pageX;
           y = ev.pageY - window.scrollY;
@@ -559,38 +591,38 @@
           };
         };
       })(this);
-      addEventListener("contextmenu", (function(_this) {
-        return function(ev) {
+      addEventListener("contextmenu", (function (_this) {
+        return function (ev) {
           if (!_this.mouseEvents) {
             return;
           }
           return cancel(ev);
         };
       })(this));
-      addEventListener("mousedown", (function(_this) {
+      addEventListener("mousedown", (function (_this) {
 
-        return function(ev) {
+        return function (ev) {
 
-		  var localName = ev.target.localName;
-		  var oldConsoleSuspend = window.consoleSuspend;
-		  window.consoleSuspend = (localName=="input" || localName=="textarea" || 
-								   localName=="select" || localName=="button" || 
-								   localName=="label"|| localName=="form");
-		  if(window.consoleSuspend!=oldConsoleSuspend) {
-			  if(window.consoleSuspend) {
-				  if (!window.consoleSuspendTimer) {
-					  setTimeout(() => { 
-						  if (window.consoleSuspendTimer) {
-							  window.consoleSuspendTimer = false; 
-							  window.consoleSuspend = false; 
-						  }
-					  }, 10000);
-					  window.consoleSuspendTimer = true;
-				  }
-			  }
-			  console.log("window.consoleSuspend="+window.consoleSuspend + " " + localName + " "+ev.target + " " + ev.target.classList);
-		  }
-		  
+          var localName = ev.target.localName;
+          var oldConsoleSuspend = window.consoleSuspend;
+          window.consoleSuspend = (localName == "input" || localName == "textarea" ||
+            localName == "select" || localName == "button" ||
+            localName == "label" || localName == "form");
+          if (window.consoleSuspend != oldConsoleSuspend) {
+            if (window.consoleSuspend) {
+              if (!window.consoleSuspendTimer) {
+                setTimeout(() => {
+                  if (window.consoleSuspendTimer) {
+                    window.consoleSuspendTimer = false;
+                    window.consoleSuspend = false;
+                  }
+                }, 10000);
+                window.consoleSuspendTimer = true;
+              }
+            }
+            console.log("window.consoleSuspend=" + window.consoleSuspend + " " + localName + " " + ev.target + " " + ev.target.classList);
+          }
+
 
           var sm, up;
           if (!_this.mouseEvents) {
@@ -600,7 +632,7 @@
           sm = sendMove.bind(_this);
           addEventListener("mousemove", sm);
           if (!_this.x10Mouse) {
-            addEventListener("mouseup", up = function(ev) {
+            addEventListener("mouseup", up = function (ev) {
               sendButton(ev);
               removeEventListener("mousemove", sm);
               removeEventListener("mouseup", up);
@@ -610,8 +642,8 @@
           return cancel(ev);
         };
       })(this));
-      return addEventListener("wheel", (function(_this) {
-        return function(ev) {
+      return addEventListener("wheel", (function (_this) {
+        return function (ev) {
           if (_this.mouseEvents) {
             if (_this.x10Mouse) {
               return;
@@ -623,7 +655,7 @@
       })(this));
     };
 
-    Terminal.prototype.getClasses = function(data) {
+    Terminal.prototype.getClasses = function (data) {
       var classes, fg, styles;
       classes = [];
       styles = [];
@@ -671,15 +703,15 @@
       return [classes, styles];
     };
 
-    Terminal.prototype.isCJK = function(ch) {
+    Terminal.prototype.isCJK = function (ch) {
       return ("\u4e00" <= ch && ch <= "\u9fff") || ("\u3040" <= ch && ch <= "\u30ff") || ("\u31f0" <= ch && ch <= "\u31ff") || ("\u3190" <= ch && ch <= "\u319f") || ("\u3301" <= ch && ch <= "\u3356") || ("\uac00" <= ch && ch <= "\ud7ff") || ("\u3000" <= ch && ch <= "\u303f") || ("\uff00" <= ch && ch <= "\uff60") || ("\uffe0" <= ch && ch <= "\uffe6");
     };
 
-    Terminal.prototype.charToDom = function(data, attr, cursor) {
+    Terminal.prototype.charToDom = function (data, attr, cursor) {
       var ch, char, code, classes, ref, styles;
-	  attr = attr || this.cloneAttr(this.defAttr);
+      attr = attr || this.cloneAttr(this.defAttr);
       ch = data.ch;
-	  char = '';
+      char = '';
 
       if (data.placeholder) {
         return;
@@ -691,24 +723,24 @@
 
       if (!this.equalAttr(data, attr)) {
         if (!this.equalAttr(attr, this.defAttr)) {
-          char += "</span>";	   
-		  this.checkUndefined(char);
+          char += "</span>";
+          this.checkUndefined(char);
         }
         if (!this.equalAttr(data, this.defAttr)) {
           ref = this.getClasses(data), classes = ref[0], styles = ref[1];
           char += "<span class=\"" + (classes.join(" ")) + "\"";
-		  
+
           if (styles.length) {
             char += " style=\"" + styles.join("; ") + "\"";
           }
           char += ">";
-		  this.checkUndefined(char);
+          this.checkUndefined(char);
         }
       }
       if (cursor) {
         char += "<span class=\"" + (this.cursorState ? "reverse-video " : "") + "cursor\">";
       }
-	  this.checkUndefined(char);
+      this.checkUndefined(char);
       switch (ch) {
         case "&":
           char += "&amp;";
@@ -717,32 +749,40 @@
           char += "&lt;";
           break;
         case ">":
-			char += "&gt;";
-			break;
+          char += "&gt;";
+          break;
         case " ":
           char += '<span class="nbsp">\u2007</span>';
           break;
-	  default:
-		  code = ch.charCodeAt();
-		  if (code >= 160) {
-			  char = "<pre>&#"+code+";</pre>";
-			console.log("CH2 = "+char+";");
-		  } else if (ch == " ") {
-			char += "&nbsp;";
-		  } else if (ch <= " ") {
-			char += "&nbsp;"+code;
-          } else if (!(this.forceWidth || this.isCJK(ch))) {
-              		  if ((""+ch)==("undefined")) {
-						 return char; 
-					  }
-			  this.checkUndefined(ch);
+        default:
+          if (ch.length > 1) {
             char += ch;
-			this.checkUndefined(char);
+            if (cursor) {
+              char += "</span>";
+            }
+            return char;
+          }
+
+          code = ch.charCodeAt();
+          if (code >= 160) {
+            char += "&#" + code + ";"
+            console.log("CH2 = " + char + ";");
+          } else if (ch == " ") {
+            char += "&nbsp;";
+          } else if (ch <= " ") {
+            char += "&#" + code + ";"
+          } else if (!(this.forceWidth || this.isCJK(ch))) {
+            if (("" + ch) == ("undefined")) {
+              return char;
+            }
+            this.checkUndefined(ch);
+            char += ch;
+            this.checkUndefined(char);
           } else {
             if (ch <= "~") {
-				this.checkUndefined(ch);
+              this.checkUndefined(ch);
               char += ch;
-			  this.checkUndefined(char);
+              this.checkUndefined(char);
             } else if (this.isCJK(ch)) {
               char += "<span style=\"display: inline-block; width: " + (2 * this.charSize.width) + "px\">" + ch + "</span>";
             } else {
@@ -753,11 +793,11 @@
       if (cursor) {
         char += "</span>";
       }
-	  this.checkUndefined(char);
+      this.checkUndefined(char);
       return char;
     };
 
-    Terminal.prototype.lineToDom = function(y, line, active) {
+    Terminal.prototype.lineToDom = function (y, line, active) {
       var cursorX, eol, k, ref, results, x;
       if (active) {
         cursorX = this.x;
@@ -765,25 +805,25 @@
       results = [];
       for (x = k = 0, ref = this.cols; 0 <= ref ? k <= ref : k >= ref; x = 0 <= ref ? ++k : --k) {
         if (x !== this.cols) {
-		   var cx = line.chars[x];
-		   this.checkUndefined(cx);
-		   var cxm1 = line.chars[x - 1];
-		  // this.checkUndefined(cxm1);
-		   var sameX = (x === cursorX);
-		   var v = this.charToDom(cx, cxm1, sameX);
-		  if ((""+v)==("undefined")) {
-			 //  this.checkUndefined(v);
-		  } else {
-			  results.push(v);
-		  }
+          var cx = line.chars[x];
+          this.checkUndefined(cx);
+          var cxm1 = line.chars[x - 1];
+          // this.checkUndefined(cxm1);
+          var sameX = (x === cursorX);
+          var v = this.charToDom(cx, cxm1, sameX);
+          if (("" + v) == ("undefined")) {
+            //  this.checkUndefined(v);
+          } else {
+            results.push(v);
+          }
         } else {
           eol = '';
-		  var cxm1 = line.chars[x - 1];
-		  this.checkUndefined(cxm1);
+          var cxm1 = line.chars[x - 1];
+          this.checkUndefined(cxm1);
           if (!this.equalAttr(cxm1, this.defAttr)) {
             eol += '</span>';
           }
-		  this.checkUndefined(eol);
+          this.checkUndefined(eol);
           if (line.wrap) {
             eol += '\u23CE';
           }
@@ -794,31 +834,98 @@
           }
         }
       }
-	  this.checkUndefined(results);
+      this.checkUndefined(results);
 
       return results;
     };
 
- Terminal.prototype.checkUndefined = function(str) {
-	 if((""+str).indexOf("undefined"+"u")>-1) {
-		 debugger;
-		 //alert(str);
-	 }
-	 if((""+str)==("undefined")) {
-		 debugger;
-		 //alert(str);
-	 }
- }
+    Terminal.prototype.checkUndefined = function (str) {
+      return;
+      if (("" + str).indexOf("undefined" + "u") > -1) {
+        debugger;
+        //alert(str);
+      }
+      if (("" + str) == ("undefined")) {
+        debugger;
+        //alert(str);
+      }
+    }
 
-    Terminal.prototype.screenToDom = function(force) {
+    Terminal.prototype.screenToDom = function (force) {
       var active, div, k, len, line, ref, results, y;
       ref = this.screen;
       results = [];
+      var blankLines = 0;
       for (y = k = 0, len = ref.length; k < len; y = ++k) {
         line = ref[y];
-		this.checkUndefined(line);
+        this.checkUndefined(line);
         if (line.dirty || force) {
           active = y === this.y + this.shift && !this.cursorHidden;
+
+          var arj = (this.lineToDom(y, line, active));
+          this.checkUndefined(arj);
+
+          var jarj = arj.join('');
+
+          // Skip blank lines if their are too many 
+          if (jarj.split("&nbsp;").join('').split(" ").join('').
+            split("&#32;").join('').split('<pre>').join('').
+            split('</pre>').join('').split("&#160;").join('').
+            split("&#10;").join('').split("&#13;").join('').
+            split("\n").join('').split("\r").
+            join('').length == 0) {
+            blankLines++;
+            if (blankLines > 1) {
+              if (blankLines == 4) console.log("skip blankLines>2");
+              //results.push(void 0);
+              continue;
+            }
+          }
+
+
+
+          // skip ammount of spaces crazy 
+          const tenSp = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+          const sixtyTwoSP = tenSp + tenSp + tenSp + tenSp + tenSp + tenSp + '&nbsp;&nbsp;&nbsp;&nbsp;'
+          jarj = jarj.split(sixtyTwoSP).join(" " + tenSp);
+          jarj = jarj.split(sixtyTwoSP).join(tenSp + " ");
+
+          // trim ends ?
+          if (false) {
+            while (jarj.endsWith('&nbsp')) {
+              jarj = jarj.substring(0, jarj.length - 6);
+            }
+            while (jarj.endsWith(' ')) {
+              jarj = jarj.substring(0, jarj.length - 1);
+            }
+            while (jarj.endsWith('<br/>')) {
+              jarj = jarj.substring(0, jarj.length - 5);
+            }
+          }
+
+
+          /*
+          var twentyFour = tenSp + tenSp + '&nbsp;&nbsp;' + '&nbsp;&nbsp;'
+          leftOver = jarj.
+          split("&#10;").join('<br/>').
+          var end = " </span>";
+          while (leftOver.endsWith(end)) {
+            leftOver = leftOver.substring(0, leftOver.length - end.length) + "</span>";
+          }
+          if (leftOver.split("</span>").join("").indexOf("<pre") > -1) {
+            console.log("DIV=" + leftOver);
+            debugger;
+          }
+          var leftOver = jarj.
+            split("&#13;&#10;").join('<br/>').
+            split("\r\n").join('<br/>').
+            split("&#10;").join('<br/>').
+            split("\n").join('<br/>').
+            split("&#13;").join('<br/>').
+            split("\r").join('<br/>');
+
+          */
+
           div = document.createElement('div');
           div.classList.add('line');
           if (active) {
@@ -827,20 +934,37 @@
           if (line.extra) {
             div.classList.add('extended');
           }
-		  var arj = (this.lineToDom(y, line, active));
-		  this.checkUndefined(arj);
 
-		  var jarj = arj.join('');
-		  this.checkUndefined(jarj);
+          //sometimes convert into valilla html
+          if (!active) {
+            if (jarj.indexOf("<pre") == -1) {
+              if (jarj.indexOf('pl-fun') > -1
+                || //something other than spans 
+                jarj.split("</span>").join("").split("<span ").join("").
+                  indexOf('<') > -1) {
+                div = document.createElement('pre');
+                div.classList.add("was-div-line");
+                if (line.extra) {
+                  div.classList.add('extended');
+                }
+                // jarj = jarj + "\n";
+              }
+              results.push(jarj);
+              continue;
+            } else {
+              div.style['white-space'] = "pre";
+            }
+          }
 
-		  div.innerHTML = jarj;
-		  this.checkUndefined(div.innerHTML);
+          div.innerHTML = jarj;
+          this.checkUndefined(div.innerHTML);
 
           if (active) {
             this.active = div;
             this.cursor = div.querySelectorAll('.cursor')[0];
           }
-		  this.checkUndefined(div.innerHTML);
+          this.checkUndefined(div.innerHTML);
+          blankLines = 0;
           results.push(div);
         } else {
           results.push(void 0);
@@ -849,12 +973,12 @@
       return results;
     };
 
-    Terminal.prototype.writeDom = function(dom) {
+    Terminal.prototype.writeDom = function (dom) {
       var frag, k, len, line, r, y;
       r = Math.max(this.term.childElementCount - this.rows, 0);
-	  if(lastWasHTML) {
-		  // debugger;
-	  } 
+      if (lastWasHTML) {
+        // debugger;
+      }
       for (y = k = 0, len = dom.length; k < len; y = ++k) {
         line = dom[y];
         if (!line) {
@@ -875,7 +999,7 @@
       return this.screen = this.screen.slice(-this.rows);
     };
 
-    Terminal.prototype.refresh = function(force) {
+    Terminal.prototype.refresh = function (force) {
       var dom, ref;
       if (force == null) {
         force = false;
@@ -895,7 +1019,7 @@
       return this.emit('refresh');
     };
 
-    Terminal.prototype._cursorBlink = function() {
+    Terminal.prototype._cursorBlink = function () {
       this.cursorState ^= 1;
       if (!this.cursor) {
         return;
@@ -907,7 +1031,7 @@
       }
     };
 
-    Terminal.prototype.showCursor = function() {
+    Terminal.prototype.showCursor = function () {
       if (!this.cursorState) {
         this.cursorState = 1;
         this.screen[this.y + this.shift].dirty = true;
@@ -915,19 +1039,19 @@
       }
     };
 
-    Terminal.prototype.startBlink = function() {
+    Terminal.prototype.startBlink = function () {
       if (!this.cursorBlink) {
         return;
       }
-      this._blinker = (function(_this) {
-        return function() {
+      this._blinker = (function (_this) {
+        return function () {
           return _this._cursorBlink();
         };
       })(this);
       return this.t_blink = setInterval(this._blinker, 500);
     };
 
-    Terminal.prototype.refreshBlink = function() {
+    Terminal.prototype.refreshBlink = function () {
       if (!this.cursorBlink) {
         return;
       }
@@ -935,7 +1059,7 @@
       return this.t_blink = setInterval(this._blinker, 500);
     };
 
-    Terminal.prototype.scroll = function() {
+    Terminal.prototype.scroll = function () {
       var i, k, ref, ref1, results;
       if (this.normal || this.scrollTop !== 0 || this.scrollBottom !== this.rows - 1) {
         this.screen.splice(this.shift + this.scrollBottom + 1, 0, this.blankLine());
@@ -951,7 +1075,7 @@
       }
     };
 
-    Terminal.prototype.unscroll = function() {
+    Terminal.prototype.unscroll = function () {
       var i, k, ref, ref1, results;
       this.screen.splice(this.shift + this.scrollTop, 0, this.blankLine(true));
       this.screen.splice(this.shift + this.scrollBottom + 1, 1);
@@ -962,7 +1086,7 @@
       return results;
     };
 
-    Terminal.prototype.nativeScrollTo = function(scroll) {
+    Terminal.prototype.nativeScrollTo = function (scroll) {
       if (scroll == null) {
         scroll = 2000000000;
       }
@@ -972,11 +1096,11 @@
       return window.scrollTo(0, scroll);
     };
 
-    Terminal.prototype.scrollDisplay = function(disp) {
+    Terminal.prototype.scrollDisplay = function (disp) {
       return this.nativeScrollTo(window.scrollY + disp * this.charSize.height);
     };
 
-    Terminal.prototype.nextLine = function() {
+    Terminal.prototype.nextLine = function () {
       this.y++;
       if (this.y > this.scrollBottom) {
         this.y--;
@@ -984,7 +1108,7 @@
       }
     };
 
-    Terminal.prototype.prevLine = function() {
+    Terminal.prototype.prevLine = function () {
       this.y--;
       if (this.y < this.scrollTop) {
         this.y++;
@@ -992,13 +1116,29 @@
       }
     };
 
-    Terminal.prototype.write2 = function(data) { //HTML
+    Terminal.prototype.write2 = function (data) { //HTML
       var chint, attr, b64, c, ch, content, cs, i, k, l, len, line, m, mime, num, pt, ref, ref1, ref2, ref3, safe, type, valid, x, y;
+      const dataO = data;
       i = 0;
       l = data.length;
 
+      this.maybeEscapingHtmlMode = false;
+
       while (i < l) {
         ch = data.charAt(i);
+
+        const dataRest = data.substring(i);
+        const dataPrev = data.substring(0, i);
+
+        if (this.isHtmlMode) {
+          if (ch == "\x1b") {
+            this.maybeEscapingHtmlMode = true;
+          } else if (!this.maybeEscapingHtmlMode) {
+            this.htmlBuffer += ch;
+            i++;
+            continue;
+          }
+        }
 
         switch (this.state) {
           case State.normal:
@@ -1053,7 +1193,7 @@
                   } else {
                     break;
                   }
-				  this.checkUndefined(ch);
+                  this.checkUndefined(ch);
                   this.screen[y].chars[x].ch += ch;
                   break;
                 }
@@ -1195,8 +1335,8 @@
                       line.dirty = true;
                       for (c = m = 0, ref2 = line.chars.length; 0 <= ref2 ? m <= ref2 : m >= ref2; c = 0 <= ref2 ? ++m : --m) {
                         var ca = this.cloneAttr(this.curAttr, "E");
-						this.checkUndefined(ca);
-						line.chars[c] = ca;
+                        this.checkUndefined(ca);
+                        line.chars[c] = ca;
                       }
                     }
                     this.x = this.y = 0;
@@ -1278,16 +1418,46 @@
               if (ch === "\x1b") {
                 i++;
               }
-			  if (ch === "\x07") {
-				  debugger;
-			  }
               this.params.push(this.currentParam);
-              switch (this.params[0]) {
+              const v = this.params[0];
+              const v2 = this.params[1];
+
+              if (v2.indexOf("+Monospace") > -1) {
+                this.isMonospace = true;
+              } else if (v2.indexOf("-Monospace") > -1) {
+                this.isMonospace = false;
+              } else if (v2.indexOf("+HtmlMode") > -1) {
+                this.maybeEscapingHtmlMode = false;
+                if (this.htmlBuffer.length > 0) {
+                  console.warn("Should have empty buffer! not: " + htmlBuffer);
+                  debugger;
+                  this.putChar('\0HTML');
+                }
+                this.isHtmlMode = true;
+              } else if (v2.indexOf("-HtmlMode") > -1) {
+                this.maybeEscapingHtmlMode = false;
+                if (this.isHtmlMode) {
+                  if (this.htmlBuffer.length > 0) {
+                    console.log("HTML OUT:" + this.htmlBuffer);
+                    this.putChar('\0HTML');
+                    this.isHtmlMode = false;
+                  } else {
+                    this.isHtmlMode = false;
+                    var dataState = dataPrev + "<HERE>" + dataRest;
+                    //debugger;
+                    if (false) console.debug("Should have bufered something: " + dataState);
+                  }
+                }
+              }
+              //debugger;
+              switch (v) {
+                case 30:
+                // dumbly used on stackoverflow.com
                 case 0:
                 case 1:
                 case 2:
-                  if (this.params[1]) {
-                    this.title = this.params[1] + " - ƸӜƷ butterfly";
+                  if (v2) {
+                    this.title = v2 + " - ƸӜƷ ARC/LOGICMOO butterfly";
                     this.handleTitle(this.title);
                   }
               }
@@ -1460,51 +1630,43 @@
               if (ch === "\x1b") {
                 i++;
               } else {
-				 // debugger;
-			  }
-			  //debugger;
+                // debugger;
+              }
+              //debugger;
               switch (this.prefix) {
                 case "":
                   pt = this.currentParam;
                   if (pt[0] !== ';') {
                     /// console.error("Unknown DECUDK: " + pt[0]);
-					 // debugger;
-                     break;
+                    // debugger;
+                    break;
                   }
                   pt = pt.slice(1);
                   ref3 = pt.split('|', 2), type = ref3[0], content = ref3[1];
-				  if (!content) {
-					//debugger;
-					//console.error("No content for inline DECUDK: " + pt);
-					break;
-				  }
+                  if (!content) {
+                    //debugger;
+                    //console.error("No content for inline DECUDK: " + pt);
+                    break;
+                  }
                   switch (type) {
                     case "HTML":
-                      safe = content;
-					  lastWasHTML = true;
-					  ty = false; //this.y;
-					  tx = false; //this.x;
-					  /*
-					  safe = html_sanitize(content, function(l) {
-                        return l;
-                      });
-					  */
-					  var wasValidHTML = isValidHTML(safe);
-					  if (wasValidHTML != true) {
-						  console.log("!wasValidHTML=" + safe);	  
-						  wasValidHTML = true;
-					  }
-					  if (wasValidHTML != true || safe.charAt(safe.length-1) != ">") {
-						  // safe = "<pre class=\"inline-html\">" + safe + "</pre>";
-					  }
-					  attr = this.cloneAttr(this.curAttr);
-					  attr.html = safe;
-					  this.checkUndefined(attr);
-                      this.screen[this.y + this.shift].chars[this.x] = attr;					  
+                      if (this.htmlBuffer.length > 0) {
+                        console.log("HTML CLR BUFFER:" + this.htmlBuffer);
+                        this.putChar('\0HTML');
+                      }
+                      /*
+                      this.htmlBuffer = content;
+                      if (this.htmlBuffer.length > 0) {
+                        console.log("HTML OUT:" + this.htmlBuffer);
+                        this.putChar('\0HTML');
+                      }*/
+                      console.log("HTML OUTPUT:" + content);
+                      attr = this.cloneAttr(this.curAttr);
+                      attr.html = content;
+                      attr.placeholder = false;
+                      this.checkUndefined(attr);
+                      this.screen[this.y + this.shift].chars[this.x] = attr;
                       this.resetLine(this.screen[this.y + this.shift]);
-                      this.nextLine();	  
-				     // ty = this.y;
-					  //tx = this.x;
                       break;
                     case "IMAGE":
                       content = encodeURI(content);
@@ -1517,7 +1679,7 @@
                       }
                       attr = this.cloneAttr(this.curAttr);
                       attr.html = "<img class=\"inline-image\" src=\"data:" + mime + ";base64," + b64 + "\" />";
-					  this.checkUndefined(attr);
+                      this.checkUndefined(attr);
                       this.screen[this.y + this.shift].chars[this.x] = attr;
                       this.resetLine(this.screen[this.y + this.shift]);
                       break;
@@ -1588,158 +1750,56 @@
         i++;
       }
 
-	  return;
+      return;
 
     };
 
-	function isValidHTML(html) {
-		const parser = new DOMParser();
-		const doc = parser.parseFromString("<html><head></head>"+html+"</html>", 'text/xml');
-		if (doc.documentElement.querySelector('parsererror')) {
-		  return doc.documentElement.querySelector('parsererror').innerText;
-		} else {
-		  return true;
-		}
-	  }
+    function isValidHTML(html) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString("<html><head></head>" + html + "</html>", 'text/xml');
+      if (doc.documentElement.querySelector('parsererror')) {
+        return doc.documentElement.querySelector('parsererror').innerText;
+      } else {
+        return true;
+      }
+    }
 
-	Terminal.prototype.dirtyRefresh = function() {
-	   this.screen[this.y + this.shift].dirty = true;
-	   return this.refresh();
-	};
-
-	Terminal.prototype.write = function(data) {
-		lastWasHTML = false;
-		var l = data.length;
-        
-		if (l < 3 && buffer.length==0) {
-			this.write2(data);
-		} else {
-			this.write1(data);
-		}
-		var dr = this.dirtyRefresh();
-		if(lastWasHTML) {
-		   if(tx) this.x = tx ;
-		   if(ty) this.y = ty ;
-	       //ty = false; //this.y;
-		   //tx = false; //this.x;
-		}
-		return dr;
-	};
-
-    Terminal.prototype.writeln = function(data) {
-	  if(true) {
-		//  return this.write(data + "\r\n");
-	  }
-      this.write1(data);
-	  this.write2("\r\n");
-	  return this.dirtyRefresh();
+    Terminal.prototype.dirtyRefresh = function () {
+      this.screen[this.y + this.shift].dirty = true;
+      return this.refresh();
     };
 
-	var buffer = "";
-	var tx = false;
-	var ty = false;
-	var htmlBuffer = "";
-	var bfly_in = "\x07;HTML|";
-	var bfly_out = "\x07";
-	var remainInHTML = false;
-	var lastWasHTML = false;
+    Terminal.prototype.write = function (data) {
+      lastWasHTML = false;
+      this.write2(data);
+      var dr = this.dirtyRefresh();
+      if (lastWasHTML && false) {
+        if (tx) this.x = tx;
+        if (ty) this.y = ty;
+        //ty = false; //this.y;
+        //tx = false; //this.x;
+      }
+      return dr;
+    };
 
+    Terminal.prototype.writeln = function (data) {
+      this.write2(data + "\r\n");
+      return this.dirtyRefresh();
+    };
 
-	Terminal.prototype.writeHTML = function(data) {
-	  var attr = this.cloneAttr(this.curAttr);
-	  attr.html = data;
-	  this.checkUndefined(attr);
-	  this.screen[this.y + this.shift].chars[this.x] = attr;
-	  this.resetLine(this.screen[this.y + this.shift]);
-	};
-
-	Terminal.prototype.write1 = function(data) { //HTML
-
-			if(false) {
-				this.write2(data);
-				return;
-			}
-			if(buffer.length!=0) {
-                if(data.trim() === '') {
-					return;
-				}
-				data = buffer+data;
-				buffer = "";
-			}
-			
-		var l = data.length;
-		if (l < 2) {
-			this.write2(data);
-			return;
-		}
-
-		var leftSide = data.charAt(0);
-		while (leftSide=='\n' || leftSide=='\r'|| leftSide==' ') {
-			this.write2(leftSide);
-			data = data.substring(1);
-            leftSide = data.charAt(0);
-			l--;
-		}
-
-		var indexOf = data.indexOf(bfly_in);
-
-		if(indexOf > -1) {
-			leftSide = data.substring(0,indexOf);
-			data = data.substring(indexOf);
-			if(indexOf > 0 ) this.write2(leftSide);
-			indexOf = data.indexOf(bfly_out, 2);
-			if(false && indexOf==-1) {
-				//debugger;
-				console.log("Buffer: "+ data);
-				buffer = data;
-				return;
-			}
-			if(true) {
-				this.write2(data);
-				return;
-			}
-
-			leftSide = data.substring(0, indexOf + (bfly_out.length));
-			data = data.substring(indexOf + (bfly_out.length));
-			l = data.length;
-			console.log("leftSide: "+ leftSide);
-			this.write2(leftSide);
-			if(l>0) {
-				console.log("data: "+ data);
-				this.write1(data);
-			} else {
-				console.log("no extra data ");		
-			}
-			//this.dirtyRefresh();
-			return;
-		}
-
-		var lastChar = data.charAt(l-1);
-		if (lastChar=='\n' || lastChar=='\r' || lastChar==' ') {
-			this.write1(data.substring(0, l-1));
-			this.write2(lastChar);
-			return;
-		}
-
-		if(leftSide=='<' && lastChar=='>') {	
-			// debugger;
-			if (true) { 
-				this.writeHTML(data); 
-				return;
-			} else if (false) {
-				//data = bfly_in+data;
-				remainInHTML = true;
-				this.write2(data);
-				return;
-			}
-			//data = bfly_in+data+bfly_out;
-		}
-		this.write2(data);   									
-	};
-
-    Terminal.prototype.updateInputViews = function() {
+    /*
+    todo fix this
+  Terminal.prototype.writeHTML = function(data) {
+    var attr = this.cloneAttr(this.curAttr);
+    attr.html = data;
+    this.checkUndefined(attr);
+    this.screen[this.y + this.shift].chars[this.x] = attr;
+    this.resetLine(this.screen[this.y + this.shift]);
+  };
+   */
+    Terminal.prototype.updateInputViews = function () {
       var cursorPos;
-	  if(this.cursor==undefined||this.cursor==null) return "";
+      if (this.cursor == undefined || this.cursor == null) return "";
       cursorPos = this.cursor.getBoundingClientRect();
       this.inputView.style['left'] = cursorPos.left + "px";
       this.inputView.style['top'] = cursorPos.top + "px";
@@ -1748,7 +1808,7 @@
       return this.inputHelper.value = "";
     };
 
-    Terminal.prototype.compositionStart = function(ev) {
+    Terminal.prototype.compositionStart = function (ev) {
       ev.preventDefault();
       ev.stopPropagation();
       this.updateInputViews();
@@ -1760,7 +1820,7 @@
       return false;
     };
 
-    Terminal.prototype.compositionUpdate = function(ev) {
+    Terminal.prototype.compositionUpdate = function (ev) {
       ev.preventDefault();
       ev.stopPropagation();
       this.compositionText = ev.data;
@@ -1768,14 +1828,14 @@
       return false;
     };
 
-    Terminal.prototype.compositionEnd = function(ev) {
+    Terminal.prototype.compositionEnd = function (ev) {
       ev.preventDefault();
       ev.stopPropagation();
       this.finishComposition();
       return false;
     };
 
-    Terminal.prototype.finishComposition = function() {
+    Terminal.prototype.finishComposition = function () {
       this.inComposition = false;
       this.showCursor();
       this.inputHelper.value = "";
@@ -1785,14 +1845,14 @@
       return this.inputHelper.focus();
     };
 
-    Terminal.prototype.keyDown = function(ev) {
+    Terminal.prototype.keyDown = function (ev) {
       var key, ref;
 
 
-	  // console.error("key=" + ev.keyCode);
-	  if(window.consoleSuspend) {
-	      return true;
-	  }
+      // console.error("key=" + ev.keyCode);
+      if (window.consoleSuspend) {
+        return true;
+      }
 
       if (this.inComposition) {
         if (ev.keyCode === 229) {
@@ -1805,8 +1865,8 @@
       if (ev.keyCode === 229) {
         ev.preventDefault();
         ev.stopPropagation();
-        setTimeout((function(_this) {
-          return function() {
+        setTimeout((function (_this) {
+          return function () {
             var char, e, val;
             if (!(_this.inComposition || _this.inputHelper.value.length > 1)) {
               val = _this.inputHelper.value;
@@ -1839,7 +1899,7 @@
         return false;
       }
       if ((ev.shiftKey || ev.ctrlKey) && ev.keyCode === 45) {
-		  //debugger;
+        //debugger;
         return true;
       }
       if ((ev.shiftKey && ev.ctrlKey) && ((ref = ev.keyCode) === 67 || ref === 86)) {
@@ -2048,22 +2108,22 @@
       return cancel(ev);
     };
 
-    Terminal.prototype.setgLevel = function(g) {
+    Terminal.prototype.setgLevel = function (g) {
       this.glevel = g;
       return this.charset = this.charsets[g];
     };
 
-    Terminal.prototype.setgCharset = function(g, charset) {
+    Terminal.prototype.setgCharset = function (g, charset) {
       this.charsets[g] = charset;
       if (this.glevel === g) {
         return this.charset = charset;
       }
     };
 
-    Terminal.prototype.keyPress = function(ev) {
-		if(window.consoleSuspend) {
-			return true;
-		}
+    Terminal.prototype.keyPress = function (ev) {
+      if (window.consoleSuspend) {
+        return true;
+      }
       var key, ref;
       if (this.skipNextKey === false) {
         this.skipNextKey = null;
@@ -2073,7 +2133,7 @@
         return true;
       }
       if ((ev.shiftKey || ev.ctrlKey) && ev.keyCode === 45) {
-		  //debugger;
+        //debugger;
         return true;
       }
       if ((ev.shiftKey && ev.ctrlKey) && ((ref = ev.keyCode) === 67 || ref === 86)) {
@@ -2094,11 +2154,12 @@
       }
       key = String.fromCharCode(key);
       this.showCursor();
+      this.scrollLock = false;
       this.send(key);
       return false;
     };
 
-    Terminal.prototype.bell = function(cls) {
+    Terminal.prototype.bell = function (cls) {
       if (cls == null) {
         cls = "bell";
       }
@@ -2106,14 +2167,14 @@
         return;
       }
       this.body.classList.add(cls);
-      return this.t_bell = setTimeout(((function(_this) {
-        return function() {
+      return this.t_bell = setTimeout(((function (_this) {
+        return function () {
           return _this.body.classList.remove(cls);
         };
       })(this)), this.visualBell);
     };
 
-    Terminal.prototype.resize = function(x, y, notif) {
+    Terminal.prototype.resize = function (x, y, notif) {
       var h, insert, k, len, len1, len2, len3, line, m, n, o, oldCols, oldRows, ref, ref1, ref2, ref3, w;
       if (x == null) {
         x = null;
@@ -2223,14 +2284,14 @@
       }
     };
 
-    Terminal.prototype.resizeWindowPlease = function(cols) {
+    Terminal.prototype.resizeWindowPlease = function (cols) {
       var margin, width;
       margin = window.innerWidth - this.body.clientWidth;
       width = cols * this.charSize.width + margin;
       return resizeTo(width, window.innerHeight);
     };
 
-    Terminal.prototype.setupStops = function(i) {
+    Terminal.prototype.setupStops = function (i) {
       var results;
       if (i != null) {
         if (!this.tabs[i]) {
@@ -2248,7 +2309,7 @@
       return results;
     };
 
-    Terminal.prototype.prevStop = function(x) {
+    Terminal.prototype.prevStop = function (x) {
       if (x == null) {
         x = this.x;
       }
@@ -2266,7 +2327,7 @@
       }
     };
 
-    Terminal.prototype.nextStop = function(x) {
+    Terminal.prototype.nextStop = function (x) {
       if (x == null) {
         x = this.x;
       }
@@ -2284,7 +2345,7 @@
       }
     };
 
-    Terminal.prototype.eraseRight = function(x, y) {
+    Terminal.prototype.eraseRight = function (x, y) {
       var line;
       line = this.screen[y + this.shift].chars;
       while (x < this.cols) {
@@ -2294,26 +2355,26 @@
       return this.resetLine(this.screen[y + this.shift]);
     };
 
-    Terminal.prototype.eraseLeft = function(x, y) {
+    Terminal.prototype.eraseLeft = function (x, y) {
       x++;
       while (x--) {
         this.screen[y + this.shift].chars[x] = this.eraseAttr();
-		this.checkUndefined(this.screen[y + this.shift].chars[x]);
+        this.checkUndefined(this.screen[y + this.shift].chars[x]);
       }
       return this.resetLine(this.screen[y + this.shift]);
     };
 
-    Terminal.prototype.eraseLine = function(y) {
+    Terminal.prototype.eraseLine = function (y) {
       return this.eraseRight(0, y);
     };
 
-    Terminal.prototype.resetLine = function(l) {
+    Terminal.prototype.resetLine = function (l) {
       l.dirty = true;
       l.wrap = false;
       return l.extra = '';
     };
 
-    Terminal.prototype.blankLine = function(cur, dirty) {
+    Terminal.prototype.blankLine = function (cur, dirty) {
       var attr, i, line;
       if (cur == null) {
         cur = false;
@@ -2336,7 +2397,7 @@
       };
     };
 
-    Terminal.prototype.ch = function(cur) {
+    Terminal.prototype.ch = function (cur) {
       if (cur) {
         return this.eraseAttr();
       } else {
@@ -2344,46 +2405,46 @@
       }
     };
 
-    Terminal.prototype.isterm = function(term) {
+    Terminal.prototype.isterm = function (term) {
       return ("" + this.termName).indexOf(term) === 0;
     };
 
-    Terminal.prototype.send = function(data) {
+    Terminal.prototype.send = function (data) {
       return this.out(data);
     };
 
-    Terminal.prototype.handleTitle = function(title) {
+    Terminal.prototype.handleTitle = function (title) {
       return document.title = title;
     };
 
-    Terminal.prototype.index = function() {
+    Terminal.prototype.index = function () {
       this.nextLine();
       return this.state = State.normal;
     };
 
-    Terminal.prototype.reverseIndex = function() {
+    Terminal.prototype.reverseIndex = function () {
       this.prevLine();
       return this.state = State.normal;
     };
 
-    Terminal.prototype.reset = function() {
+    Terminal.prototype.reset = function () {
       this.resetVars();
       return this.refresh(true);
     };
 
-    Terminal.prototype.clearScrollback = function() {
+    Terminal.prototype.clearScrollback = function () {
       while (this.term.childElementCount > this.rows) {
         this.term.firstChild.remove();
       }
       return this.emit('clear');
     };
 
-    Terminal.prototype.tabSet = function() {
+    Terminal.prototype.tabSet = function () {
       this.tabs[this.x] = true;
       return this.state = State.normal;
     };
 
-    Terminal.prototype.cursorUp = function(params) {
+    Terminal.prototype.cursorUp = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2395,7 +2456,7 @@
       }
     };
 
-    Terminal.prototype.cursorDown = function(params) {
+    Terminal.prototype.cursorDown = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2407,7 +2468,7 @@
       }
     };
 
-    Terminal.prototype.cursorForward = function(params) {
+    Terminal.prototype.cursorForward = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2419,7 +2480,7 @@
       }
     };
 
-    Terminal.prototype.cursorBackward = function(params) {
+    Terminal.prototype.cursorBackward = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2431,7 +2492,7 @@
       }
     };
 
-    Terminal.prototype.cursorPos = function(params) {
+    Terminal.prototype.cursorPos = function (params) {
       var col, row;
       row = params[0] - 1;
       if (params.length >= 2) {
@@ -2457,7 +2518,7 @@
       return this.y = row + (this.originMode ? this.scrollTop : 0);
     };
 
-    Terminal.prototype.eraseInDisplay = function(params) {
+    Terminal.prototype.eraseInDisplay = function (params) {
       var j, results, results1, results2;
       switch (params[0]) {
         case 0:
@@ -2489,7 +2550,7 @@
       }
     };
 
-    Terminal.prototype.eraseInLine = function(params) {
+    Terminal.prototype.eraseInLine = function (params) {
       switch (params[0]) {
         case 0:
           return this.eraseRight(this.x, this.y);
@@ -2500,7 +2561,7 @@
       }
     };
 
-    Terminal.prototype.charAttributes = function(params) {
+    Terminal.prototype.charAttributes = function (params) {
       var i, l, p, results;
       if (params.length === 1 && params[0] === 0) {
         this.curAttr = this.cloneAttr(this.defAttr);
@@ -2593,7 +2654,7 @@
       return results;
     };
 
-    Terminal.prototype.deviceStatus = function(params) {
+    Terminal.prototype.deviceStatus = function (params) {
       var ref, ref1;
       if (!this.prefix) {
         switch (params[0]) {
@@ -2611,12 +2672,12 @@
             this.send('\x1b[?R');
             return;
           }
-          return (ref1 = navigator.geolocation) != null ? ref1.getCurrentPosition((function(_this) {
-            return function(position) {
+          return (ref1 = navigator.geolocation) != null ? ref1.getCurrentPosition((function (_this) {
+            return function (position) {
               return _this.send("\x1b[?" + position.coords.latitude + ";" + position.coords.longitude + "R");
             };
-          })(this), (function(_this) {
-            return function(error) {
+          })(this), (function (_this) {
+            return function (error) {
               return _this.send('\x1b[?R');
             };
           })(this)) : void 0;
@@ -2624,7 +2685,7 @@
       }
     };
 
-    Terminal.prototype.insertChars = function(params) {
+    Terminal.prototype.insertChars = function (params) {
       var j, param, row;
       param = params[0];
       if (param < 1) {
@@ -2639,7 +2700,7 @@
       return this.screen[row + this.shift].dirty = true;
     };
 
-    Terminal.prototype.cursorNextLine = function(params) {
+    Terminal.prototype.cursorNextLine = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2652,7 +2713,7 @@
       return this.x = 0;
     };
 
-    Terminal.prototype.cursorPrecedingLine = function(params) {
+    Terminal.prototype.cursorPrecedingLine = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2665,7 +2726,7 @@
       return this.x = 0;
     };
 
-    Terminal.prototype.cursorCharAbsolute = function(params) {
+    Terminal.prototype.cursorCharAbsolute = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2674,7 +2735,7 @@
       return this.x = param - 1;
     };
 
-    Terminal.prototype.insertLines = function(params) {
+    Terminal.prototype.insertLines = function (params) {
       var i, k, param, ref, ref1, results;
       param = params[0];
       if (param < 1) {
@@ -2691,7 +2752,7 @@
       return results;
     };
 
-    Terminal.prototype.deleteLines = function(params) {
+    Terminal.prototype.deleteLines = function (params) {
       var i, k, node, param, ref, ref1, results;
       param = params[0];
       if (param < 1) {
@@ -2702,8 +2763,8 @@
         this.screen.splice(this.y + this.shift, 1);
         if (!(this.normal || this.scrollTop !== 0 || this.scrollBottom !== this.rows - 1)) {
           node = this.term.childElementCount - this.rows + this.y + this.shift;
-		  var remnode = this.term.childNodes[node];		  
-		  if(remnode!=undefined) remnode.remove();
+          var remnode = this.term.childNodes[node];
+          if (remnode != undefined) remnode.remove();
         }
       }
       if (this.normal || this.scrollTop !== 0 || this.scrollBottom !== this.rows - 1) {
@@ -2715,7 +2776,7 @@
       }
     };
 
-    Terminal.prototype.deleteChars = function(params) {
+    Terminal.prototype.deleteChars = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2728,7 +2789,7 @@
       return this.resetLine(this.screen[this.y + this.shift]);
     };
 
-    Terminal.prototype.eraseChars = function(params) {
+    Terminal.prototype.eraseChars = function (params) {
       var j, param;
       param = params[0];
       if (param < 1) {
@@ -2737,13 +2798,13 @@
       j = this.x;
       while (param-- && j < this.cols) {
         var ea = this.eraseAttr();
-		this.checkUndefined(ea);
+        this.checkUndefined(ea);
         this.screen[this.y + this.shift].chars[j++] = ea;
       }
       return this.resetLine(this.screen[this.y + this.shift]);
     };
 
-    Terminal.prototype.charPosAbsolute = function(params) {
+    Terminal.prototype.charPosAbsolute = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2755,7 +2816,7 @@
       }
     };
 
-    Terminal.prototype.HPositionRelative = function(params) {
+    Terminal.prototype.HPositionRelative = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2767,7 +2828,7 @@
       }
     };
 
-    Terminal.prototype.sendDeviceAttributes = function(params) {
+    Terminal.prototype.sendDeviceAttributes = function (params) {
       if (params[0] > 0) {
         return;
       }
@@ -2794,7 +2855,7 @@
       }
     };
 
-    Terminal.prototype.linePosAbsolute = function(params) {
+    Terminal.prototype.linePosAbsolute = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2806,7 +2867,7 @@
       }
     };
 
-    Terminal.prototype.VPositionRelative = function(params) {
+    Terminal.prototype.VPositionRelative = function (params) {
       var param;
       param = params[0];
       if (param < 1) {
@@ -2818,7 +2879,7 @@
       }
     };
 
-    Terminal.prototype.HVPosition = function(params) {
+    Terminal.prototype.HVPosition = function (params) {
       if (params[0] < 1) {
         params[0] = 1;
       }
@@ -2835,7 +2896,7 @@
       }
     };
 
-    Terminal.prototype.setMode = function(params) {
+    Terminal.prototype.setMode = function (params) {
       var i, l, normal;
       if (typeof params === "object") {
         l = params.length;
@@ -2919,7 +2980,7 @@
       }
     };
 
-    Terminal.prototype.resetMode = function(params) {
+    Terminal.prototype.resetMode = function (params) {
       var i, l;
       if (typeof params === "object") {
         l = params.length;
@@ -2998,7 +3059,7 @@
       }
     };
 
-    Terminal.prototype.setScrollRegion = function(params) {
+    Terminal.prototype.setScrollRegion = function (params) {
       if (this.prefix) {
         return;
       }
@@ -3008,17 +3069,17 @@
       return this.y = 0;
     };
 
-    Terminal.prototype.saveCursor = function(params) {
+    Terminal.prototype.saveCursor = function (params) {
       this.savedX = this.x;
       return this.savedY = this.y;
     };
 
-    Terminal.prototype.restoreCursor = function(params) {
+    Terminal.prototype.restoreCursor = function (params) {
       this.x = this.savedX || 0;
       return this.y = this.savedY || 0;
     };
 
-    Terminal.prototype.cursorForwardTab = function(params) {
+    Terminal.prototype.cursorForwardTab = function (params) {
       var param, results;
       param = params[0] || 1;
       results = [];
@@ -3028,7 +3089,7 @@
       return results;
     };
 
-    Terminal.prototype.scrollUp = function(params) {
+    Terminal.prototype.scrollUp = function (params) {
       var i, k, param, ref, ref1, results;
       param = params[0] || 1;
       while (param--) {
@@ -3042,7 +3103,7 @@
       return results;
     };
 
-    Terminal.prototype.scrollDown = function(params) {
+    Terminal.prototype.scrollDown = function (params) {
       var i, k, param, ref, ref1, results;
       param = params[0] || 1;
       while (param--) {
@@ -3056,11 +3117,11 @@
       return results;
     };
 
-    Terminal.prototype.initMouseTracking = function(params) {};
+    Terminal.prototype.initMouseTracking = function (params) { };
 
-    Terminal.prototype.resetTitleModes = function(params) {};
+    Terminal.prototype.resetTitleModes = function (params) { };
 
-    Terminal.prototype.cursorBackwardTab = function(params) {
+    Terminal.prototype.cursorBackwardTab = function (params) {
       var param, results;
       param = params[0] || 1;
       results = [];
@@ -3070,7 +3131,7 @@
       return results;
     };
 
-    Terminal.prototype.repeatPrecedingCharacter = function(params) {
+    Terminal.prototype.repeatPrecedingCharacter = function (params) {
       var ch, line, param;
       param = params[0] || 1;
       line = this.screen[this.y + this.shift].chars;
@@ -3081,7 +3142,7 @@
       return this.screen[this.y + this.shift].dirty = true;
     };
 
-    Terminal.prototype.tabClear = function(params) {
+    Terminal.prototype.tabClear = function (params) {
       var param;
       param = params[0];
       if (param <= 0) {
@@ -3093,15 +3154,15 @@
       }
     };
 
-    Terminal.prototype.mediaCopy = function(params) {};
+    Terminal.prototype.mediaCopy = function (params) { };
 
-    Terminal.prototype.setResources = function(params) {};
+    Terminal.prototype.setResources = function (params) { };
 
-    Terminal.prototype.disableModifiers = function(params) {};
+    Terminal.prototype.disableModifiers = function (params) { };
 
-    Terminal.prototype.setPointerMode = function(params) {};
+    Terminal.prototype.setPointerMode = function (params) { };
 
-    Terminal.prototype.softReset = function(params) {
+    Terminal.prototype.softReset = function (params) {
       this.cursorHidden = false;
       this.insertMode = false;
       this.originMode = false;
@@ -3117,21 +3178,21 @@
       return this.charsets = [null];
     };
 
-    Terminal.prototype.requestAnsiMode = function(params) {};
+    Terminal.prototype.requestAnsiMode = function (params) { };
 
-    Terminal.prototype.requestPrivateMode = function(params) {};
+    Terminal.prototype.requestPrivateMode = function (params) { };
 
-    Terminal.prototype.setConformanceLevel = function(params) {};
+    Terminal.prototype.setConformanceLevel = function (params) { };
 
-    Terminal.prototype.loadLEDs = function(params) {};
+    Terminal.prototype.loadLEDs = function (params) { };
 
-    Terminal.prototype.setCursorStyle = function(params) {};
+    Terminal.prototype.setCursorStyle = function (params) { };
 
-    Terminal.prototype.setCharProtectionAttr = function(params) {};
+    Terminal.prototype.setCharProtectionAttr = function (params) { };
 
-    Terminal.prototype.restorePrivateValues = function(params) {};
+    Terminal.prototype.restorePrivateValues = function (params) { };
 
-    Terminal.prototype.setAttrInRectangle = function(params) {
+    Terminal.prototype.setAttrInRectangle = function (params) {
       var attr, b, i, l, line, r, results, t;
       t = params[0];
       l = params[1];
@@ -3152,27 +3213,27 @@
       return results;
     };
 
-    Terminal.prototype.savePrivateValues = function(params) {};
+    Terminal.prototype.savePrivateValues = function (params) { };
 
-    Terminal.prototype.manipulateWindow = function(params) {};
+    Terminal.prototype.manipulateWindow = function (params) { };
 
-    Terminal.prototype.reverseAttrInRectangle = function(params) {};
+    Terminal.prototype.reverseAttrInRectangle = function (params) { };
 
-    Terminal.prototype.setTitleModeFeature = function(params) {};
+    Terminal.prototype.setTitleModeFeature = function (params) { };
 
-    Terminal.prototype.setWarningBellVolume = function(params) {};
+    Terminal.prototype.setWarningBellVolume = function (params) { };
 
-    Terminal.prototype.setMarginBellVolume = function(params) {};
+    Terminal.prototype.setMarginBellVolume = function (params) { };
 
-    Terminal.prototype.copyRectangle = function(params) {};
+    Terminal.prototype.copyRectangle = function (params) { };
 
-    Terminal.prototype.enableFilterRectangle = function(params) {};
+    Terminal.prototype.enableFilterRectangle = function (params) { };
 
-    Terminal.prototype.requestParameters = function(params) {};
+    Terminal.prototype.requestParameters = function (params) { };
 
-    Terminal.prototype.selectChangeExtent = function(params) {};
+    Terminal.prototype.selectChangeExtent = function (params) { };
 
-    Terminal.prototype.fillRectangle = function(params) {
+    Terminal.prototype.fillRectangle = function (params) {
       var b, ch, i, l, line, r, results, t;
       ch = params[0];
       t = params[1];
@@ -3193,12 +3254,12 @@
       return results;
     };
 
-    Terminal.prototype.enableLocatorReporting = function(params) {
+    Terminal.prototype.enableLocatorReporting = function (params) {
       var val;
       return val = params[0] > 0;
     };
 
-    Terminal.prototype.eraseRectangle = function(params) {
+    Terminal.prototype.eraseRectangle = function (params) {
       var b, i, l, line, r, results, t;
       t = params[0];
       l = params[1];
@@ -3218,20 +3279,20 @@
       return results;
     };
 
-    Terminal.prototype.setLocatorEvents = function(params) {};
+    Terminal.prototype.setLocatorEvents = function (params) { };
 
-    Terminal.prototype.selectiveEraseRectangle = function(params) {};
+    Terminal.prototype.selectiveEraseRectangle = function (params) { };
 
-    Terminal.prototype.requestLocatorPosition = function(params) {};
+    Terminal.prototype.requestLocatorPosition = function (params) { };
 
-    Terminal.prototype.insertColumns = function() {
+    Terminal.prototype.insertColumns = function () {
       var i, l, param, results;
       param = params[0];
       l = this.rows + this.shift;
       results = [];
       while (param--) {
         i = this.shift;
-        results.push((function() {
+        results.push((function () {
           var results1;
           results1 = [];
           while (i < l) {
@@ -3246,14 +3307,14 @@
       return results;
     };
 
-    Terminal.prototype.deleteColumns = function() {
+    Terminal.prototype.deleteColumns = function () {
       var i, l, param, results;
       param = params[0];
       l = this.rows + this.shift;
       results = [];
       while (param--) {
         i = this.shift;
-        results.push((function() {
+        results.push((function () {
           var results1;
           results1 = [];
           while (i < l) {

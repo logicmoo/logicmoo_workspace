@@ -124,13 +124,13 @@ stuff_options1(overlapType,use_disjunction).
 stuff_options(overlapType,use_missing_stuff).
 
 get_in_out(NeuralVM,_,IIn,OOut):-  set_prop_of(NeuralVM,NeuralVM,in,IIn), set_prop_of(NeuralVM,NeuralVM,out,OOut).
-%get_in_out(NeuralVM,TestID*ExampleNum,IIn,OOut):- kaggle_arc(TestID,ExampleNum,IIn,OOut).
+%get_in_out(NeuralVM,TestID>ExampleNum,IIn,OOut):- kaggle_arc(TestID,ExampleNum,IIn,OOut).
 
 get_self_xform(_NeuralVM,_PairName,In,In):- nonvar(In).
 get_self_xform(NeuralVM,_PairName,_In,In):- get_prop_of(NeuralVM,NeuralVM,in,In).
 get_self_temp_xform(NeuralVM,_PairName,In,Buffer):- get_prop_of(NeuralVM,In,buffer,Buffer).
 get_self_shared_xform(NeuralVM,_PairName,In,Buffer):- get_prop_of(NeuralVM,In,shared_xform,Buffer),!.
-get_other_xform(NeuralVM,TestID*ExampleNum,In,Out):- get_in_out(NeuralVM,TestID*ExampleNum,IIn,OOut),(IIn=@=In->OOut=Out;OOut=@=Out->In=IIn;fail).
+get_other_xform(NeuralVM,TestID>ExampleNum,In,Out):- get_in_out(NeuralVM,TestID>ExampleNum,IIn,OOut),(IIn=@=In->OOut=Out;OOut=@=Out->In=IIn;fail).
 get_other_temp_xform(NeuralVM,PairName,In,Buffer):- get_other_xform(NeuralVM,PairName,In,Out),get_self_temp_xform(NeuralVM,PairName,Out,Buffer).
 get_other_shared_xform(NeuralVM,PairName,In,Buffer):- get_other_xform(NeuralVM,PairName,In,Out),get_self_shared_xform(NeuralVM,PairName,Out,Buffer).
 

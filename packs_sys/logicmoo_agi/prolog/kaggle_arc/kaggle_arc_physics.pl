@@ -43,7 +43,7 @@ flip_Once(flipDV,X,Y):-  flipDV(X,Y).
 flip_Many(Rot,X,Y):- flip_Once(Rot,X,Y),X\=@=Y.
 flip_Many(sameR,X,X).
 
-normal_w(_,CC,N):- plain_var(CC),N=0,!.
+normal_w(_,CC,N):- plain_var(CC),N is -2,!.
 normal_w(_,CC,N):- integer(CC),N=CC,!.
 normal_w(L,CC,N):- nth1(N,L,C),C==CC,!.
 normal_w(_,CC,N):- color_mass_int(CC,N).
@@ -55,7 +55,7 @@ color_mass_int(Cell,0):- is_bg_color(Cell),!.
 %color_mass_int(Cell,N):- color_int(Cell,N),!.
 color_mass_int(_,0).
 
-grid_mass_ints(Grid,GridIII):- unique_colors(Grid,CC), mapgrid(normal_w(CC),Grid,GridIII),!.
+grid_mass_ints(Grid,GridIII):- unique_colors(Grid,CC),include(is_fg_color,CC,FG),mapgrid(normal_w(FG),Grid,GridIII),!.
 
 grav_rot(Grid,RotG,Rotated):- 
   must_det_ll((into_grid(Grid,GridII),
@@ -67,11 +67,14 @@ best_grav_rot(Shape,RotG,Rotated):- must_be_free(Rotated),
     cast_to_grid(Shape,Grid,Uncast),
     best_grav_rot_grid(Grid,RotG,Final),
     uncast(Shape,Uncast,Final,Rotated))),!.
+
 best_grav_rot_grid(Grid,RotG,Rotated):- must_be_free(Rotated), 
  must_det_ll(( is_grid(Grid), 
     w(W,Rotated,RotG)=Template,
     findall(Template,(flip_Many(RotG,Grid,Rotated),rot_mass(Rotated,W)),Pos),
     sort(Pos,LPos),last(LPos,Template))).
+ 
+    
 
 rot_mass(Grid,Mass):- 
  into_grid(Grid,LP0), !,
@@ -81,10 +84,11 @@ rot_mass(Grid,Mass):-
 
 rot_mass(Grid,OMass):- into_grid(Grid,LP0), 
  LP = [C|_],
- must_det_ll(( mapgrid(color_mass_int,LP0,LP),
-    length(C,Len),map_row_size(10,Len,LP,Mass),
-   (is_top_heavy(LP)->Bonus=16;Bonus=8),
-   (is_left_heavy(LP)->Bonus2=2;Bonus2=1),
+ must_det_ll(( 
+  mapgrid(color_mass_int,LP0,LP),
+  length(C,Len),map_row_size(10,Len,LP,Mass),
+   (is_top_heavy(LP)->Bonus is -1; Bonus is 1),
+   (is_left_heavy(LP)->Bonus2 is 16 ;Bonus2 is -16),
    OMass is Mass*Bonus*Bonus2)).
 
 map_row_size(_,Len,[],Len):-!.
@@ -116,7 +120,7 @@ tips_to_rot(Grid,H,V,[rot90|RotOut],Final):- is_top_heavy(Grid), !, rot270(Grid,
 tips_to_rot(Grid,_H,_V,RotOut,Final):- is_left_heavy(Grid)-> (RotOut=[rot180],rot180(Grid,Final)); (RotOut=[sameR],Final=Grid).
 
 is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,rot_mass(Top,TopM),rot_mass(Bottem,BottemM),!,BottemM>TopM.
-is_left_heavy(Grid0):- rot90(Grid0,Grid),!,is_top_heavy(Grid).
+is_left_heavy(Grid0):- rot270(Grid0,Grid),!,is_top_heavy(Grid).
 split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),length(Bottem,H),
     my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
 
@@ -207,6 +211,7 @@ grid_flipD(I,O):- grid_size(I,H,V),make_grid(V,H,O),
 
 
 unrotate(UnRot,X,Y):- unrotate(UnRot,Rot),!,call_rot(Rot,X,Y).
+
 unrotate(rot90,rot270):-!.
 unrotate(rot270,rot90):-!.
 unrotate(X,X).

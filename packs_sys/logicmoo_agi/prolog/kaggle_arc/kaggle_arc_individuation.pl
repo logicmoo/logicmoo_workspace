@@ -42,6 +42,7 @@ ig(ROptions,GridIn):-
   do_ig(ROptions,GridIn,IndvS),
   into_grid(GridIn,GridOut),
   locally(nb_setval(debug_as_grid,nil),show_ig(ig,ROptions,GridIn,GridOut,IndvS)).
+
 igo(ROptions,GridIn):-
   do_ig(ROptions,GridIn,IndvS),
   into_grid(GridIn,GridOut),
@@ -87,12 +88,15 @@ not_io(O):- \+ has_prop(iz(g(out)),O), \+ has_prop(iz(g(in)),O).
 show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC,OutC):- 
   grid_to_tid(GridIn,ID1),  grid_to_tid(GridOut,ID2),
   print_side_by_side(green,GridIn,gridIn(ID1),_,GridOut,gridOut(ID2)),
+  as_ngrid(GridIn,GridIn1),as_ngrid(GridOut,GridOut1),
+  print_side_by_side(green,GridIn1,ngridIn(ID1),_,GridOut1,ngridOut(ID2)),
   dash_chars,
-  luser_setval(no_rdot,true),
-  grid_size(GridIn,IH,IV), grid_size(GridOut,OH,OV),
-  ((InC==OutC, InC==[]) -> pp(yellow,nothing_individuated(PairName)) ;
-    show_pair_diff_code(IH,IV,  OH, OV,individuated(ROptions,ID1),individuated(ROptions,ID2),PairName,InC,OutC)),!,
-  luser_setval(no_rdot,false).
+  setup_call_cleanup(
+    luser_setval(no_rdot,true),
+    (grid_size(GridIn,IH,IV), grid_size(GridOut,OH,OV),
+    ((InC==OutC, InC==[]) -> pp(yellow,nothing_individuated(PairName)) ;
+      show_pair_diff_code(IH,IV,  OH, OV,individuated(ROptions,ID1),individuated(ROptions,ID2),PairName,InC,OutC)),!),
+    luser_setval(no_rdot,false)).
 
 
 
@@ -278,7 +282,7 @@ individuation_macros(do_ending, [
   find_touches,    
   find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
   % find_contained, % mark any "completely contained points"
-  combine_same_globalpoints, % make sure any objects are perfectly the sameR part of the image are combined 
+  combine_same_globalpoints, % make sure any objects are perfectly the equal part of the image are combined 
   %label_sizes,
   %combine_objects,
   end_of_macro]).
@@ -296,9 +300,13 @@ sub_individuation_macro(S,Some):-
 individuation_macros(complete, ListO):- test_config(indiv(ListO))-> true;
 %individuation_macros(complete, ListO):-  \+ test_config(indiv(_)),!, %reset_points, %sub_individuate(force_by_color,subshape_both), %TODO %
   findall(save_as_objects(From),individuator(From,_),ListM),
-  append(ListM,[/*gather_cached*/
-    pointless([sub_indiv([save_as_objects(force_by_color),save_as_objects(i_colormass),save_as_objects(i_nsew)]),do_ending])],ListO).
+  append([
+   [gather_texture],
+   ListM,
+   [pointless([sub_indiv([save_as_objects(force_by_color),save_as_objects(i_colormass),save_as_objects(i_nsew)])])],
+   [do_ending]],ListO).
 %use_individuator(Some):- individuator(Some,_).
+
 
   
 %individuator(i_hammer,[shape_lib(hammer),do_ending]).
@@ -411,7 +419,7 @@ individuation_macros(standard, [
    +max_learn_objects(hv_line(_),ThreeO),
    +max_learn_objects(dg_line(_),ThreeO),
     %nsew,
-    %+recalc_sizes, % blobs of any shape that are the sameR color  
+    %+recalc_sizes, % blobs of any shape that are the equal color  
     % @TODO DISABLED FOR TESTS   colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
     subshape_main, % macro for sharing code with "subshape_in_object"
     connects(jumps(X),jumps(X)), % connected jumps    
@@ -451,6 +459,38 @@ preserve_vm(VM,Goal):-
     maplist(arc_setval(VM),DPairs)),
   set_vm(VM).
 
+
+remove_texture(Cell,C-Point):- color_texture_point_data(Cell,C,_Texure,Point).
+is_texture(List,Cell):- color_texture_point_data(Cell,_C,Texture,_Point),member(T,List),Texture==T,!.
+is_fti_step(gather_texture).
+gather_texture(VM):-
+ must_det_ll((
+    Grid = VM.grid,
+    as_ngrid(Grid,GMap),!,
+    grid_size(Grid,H,V),
+    grid_to_points(GMap,H,V,TPoints),
+    my_partition(is_fgp,TPoints,FGPoints,BGPoints),
+    
+    my_partition(is_texture([0]),FGPoints,Zeros,Rest),
+    my_partition(is_texture(['V','<','^','v','>']),Rest,Shooters,NFGPoints),
+    append(BGPoints,NFGPoints,NPoints),
+    maplist(remove_texture,NPoints,CPoints),!,
+    points_to_grid(H,V,CPoints,NewGrid0),!,
+    mapgrid(assign_plain_var_with(wbg),NewGrid0,NewGrid),
+    set(VM.points_o)=CPoints,
+    set(VM.grid)=NewGrid,
+    as_ngrid(NewGrid,NewGMap),!,
+    print_side_by_side(green,GMap,nGrid(1),_,NewGMap,nGrid(2)),
+    maplist(make_textured_point_object(VM,[birth(texture)]),Zeros,_),
+    maplist(make_textured_point_object(VM,[birth(texture)]),Shooters,_))),!.
+
+
+make_textured_point_object(VM,Overrides,Cell,Indv):-
+   color_texture_point_data(Cell,C,Texture,Point),
+   make_point_object(VM,[iz(dot),iz(shaped),texture(Texture)|Overrides],(C-Point),Indv).
+
+%most_d_colors
+
 /*
 % =====================================================================
 is_fti_step(sub_individuate).
@@ -482,7 +522,7 @@ sub_indiv(SubProgram,VM):-
 individuate_object(VM,GID,SubProgram,OnlyNew,WasInside):-
  must_det_ll((
    object_grid(OnlyNew,OGrid),
-   mapgrid(if_plain_then(black),OGrid,Grid),
+   mapgrid(assign_plain_var_with(black),OGrid,Grid),
    object_glyph(OnlyNew,Glyph),
    loc(OnlyNew,X,Y),
    atomic_list_concat([GID,'_',Glyph,'_sub'],NewGID),
@@ -604,7 +644,7 @@ individuation_reserved_options(ROptions,Reserved,Options):-
 
 
 %individuate_second_pass(Grid,IndvS):- individuate([second_pass],Grid,IndvS).
-%?- i(v(e41c6fd3)*(trn+0)*in).
+%?- i(v(e41c6fd3)>(trn+0)*in).
 
 :- multifile(prolog:make_hook/2).
 :- dynamic(prolog:make_hook/2).
@@ -645,7 +685,7 @@ allow_out_in :- fail.
 
 first_grid_same_areas(In,Out,IO):-
   unique_color_count(In,ISize), unique_color_count(Out,OSize), 
-  ((OSize>ISize) -> (IO=out_in);(IO=in_out)).
+  ((OSize> ISize) -> (IO=out_in);(IO=in_out)).
 first_grid_same_areas(In,Out,IO):-
   mass(In,ISize), mass(Out,OSize), 
   ((OSize<ISize) -> (IO=out_in);(IO=in_out)).
@@ -855,7 +895,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
    %training:_,
      %compare:_, 
    grid_target:_,  last_key:_,  
-   % Options and TODO List (are actually sameR things)
+   % Options and TODO List (are actually equal things)
    program_i:Options, options:OOptions, roptions:ROptions, %todo_prev:[],
    % how much time is left before we turn on debugger
    timeleft:Timeleft, objs_max_len:Max, objs_min_mass:_, objs_max_mass:_,
@@ -1393,7 +1433,7 @@ sa_point(C-P2,Points):- select_always(C-P2,Points,Points0),
 is_fti_step(alone_dots).
 is_fti_step(maybe_alone_dots).
 % =====================================================================
-% alone_dots that have no adjacent points of the sameR color (could be gathered first)
+% alone_dots that have no adjacent points of the equal color (could be gathered first)
 
 is_sa(Points,C-P2):-  \+ (is_adjacent_point(P2,Dir,P3), Dir\==c, member(C-P3,Points), \+ is_diag(Dir)),!.
 
@@ -1427,7 +1467,7 @@ maybe_lo_dots(_):-!.
 % =====================================================================
 is_fti_step(lo_dots).
 % =====================================================================
-% lo_dots may have adjacent points of the sameR color (because we are in 'lo_dots' mode)
+% lo_dots may have adjacent points of the equal color (because we are in 'lo_dots' mode)
 mostly_fgp(Points,LO_POINTS):- length(Points,Len), Len =< 49,!, Points=LO_POINTS.
 mostly_fgp(Points,FG_POINTS):- my_partition(is_fgp,Points,FG_POINTS,_),!.
 
@@ -1575,7 +1615,7 @@ rectangles_from_grid(Grid,VM):-
   print_side_by_side(C,NewGrid,'grid',_,RowsInvolvedClipped,clipped(Width,N)),
   mapgrid(only_color_data,RowsInvolvedClipped,Textureless),
   localpoints(Textureless,NewObjPoints),!,
-  ignore((NewObjPoints\==[],make_indiv_object(VM,[birth(rectangles),iz(shape(rectangle))],NewObjPoints,_Obj))),
+  ignore((NewObjPoints\==[],make_indiv_object(VM,[birth(rectangles),iz(poly(rectangle))],NewObjPoints,_Obj))),
   ignore((NewGrid\==[], print_grid(newGrid, NewGrid),!, rectangles_from_grid(NewGrid,VM))),
   !.
 rectangles_from_grid(_,_).
@@ -2135,7 +2175,7 @@ ok_color_with(C1,C1).
 ok_color_with(C1,C2):- my_assertion(is_color(C1)), 
   (plain_var(C2)->freeze(C2,ok_color_with(C1,C2));
     (luser_getval(color_mode,monochrome) -> 
-     (is_fg_color(C1)->is_fg_color(C2);is_bg_color(C2)) 
+     (is_fg_color(C1)-> is_fg_color(C2);is_bg_color(C2)) 
      ; (\+ (C1 \= C2)))).
 */
 

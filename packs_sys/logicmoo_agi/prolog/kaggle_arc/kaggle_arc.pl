@@ -9,8 +9,13 @@
 
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(stream_type_check,false).
+:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(load_arc_webui,true);true).
 
+:- dynamic('$messages':to_list/2).
+:- multifile('$messages':to_list/2).
+:- asserta(('$messages':to_list(In, List) :- ((is_list(In)-> List = In ; List = [In])),!)).
 
+catch_log(G):- format('~N'),ignore(catch(notrace(G),E,wdmsg(E=G))),format('~N').
 
 %:- pack_install('https://github.com/logicmoo/logicmoo_utils.git').
 %:- pack_upgrade(logicmoo_utils).
@@ -198,6 +203,28 @@ pfcAddF(P):-
 :- system:use_module(library(gvar_globals_api)).
 :- system:use_module(library(dictoo_lib)).
 
+:- current_prolog_flag(argv,C),wdmsg(current_prolog_flag(argv,C)),!.
+
+:- set_prolog_flag(no_sandbox,true).
+
+
+:- if(current_prolog_flag(load_arc_webui,true)).
+with_webui(Goal):- ignore(call(Goal)),!.
+:- endif.
+with_webui(Goal):- ignore(when_arc_webui(with_http(Goal))).
+%:- initialization arc_http_server.
+
+logicmoo_webui:-
+  system:use_module(library(xlisting/xlisting_web)),
+  system:use_module(library(xlisting/xlisting_web_server)),
+   exists_source(library(logicmoo_webui)), use_module(library(logicmoo_webui)), 
+   catch_log(dmsg((?-webui_start_swish_and_clio))),
+   nop(catch_log(call(call,webui_start_swish_and_clio))).
+logicmoo_webui.
+
+:- (current_prolog_flag(load_arc_webui,true)->catch_log(logicmoo_webui) ; true).
+
+
 %:- autoload_all.
 
 
@@ -236,19 +263,18 @@ must_det_ll(once(A)):- !, once(must_det_ll(A)).
 must_det_ll(X):- 
   strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
     nop(trace(M:F/A,-fail))).
-
-must_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/writeq(E=X),pp(rrtrace=X),rrtrace(X)))).
+  
+must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> throw(E);(/*arcST,*/writeq(E=X),pp(rrtrace=X),rrtrace(X)))).
 
 must_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,rrtrace(X),!.
 % must_det_ll(X):- must_det_ll(X),!.
 
+rrtrace(X):- nb_current(cant_rrtrace,t),!,nop((wdmsg(cant_rrtrace(X)))),!,fail.
 rrtrace(X):- !, rtrace(X).
 rrtrace(X):- notrace,nortrace, arcST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> rtrace(X); (trace,call(X))).
 
 remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
 remove_must_dets(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.
-
-:- current_prolog_flag(argv,C),wdmsg(current_prolog_flag(argv,C)),!.
 
 
 % goal_expansion(must_det_l(G),I,must_det_ll(G),O):- nonvar(I),source_location(_,_), nonvar(G),I=O.
@@ -447,6 +473,14 @@ suggest_arc_user(ID):- catch((if_arc_webui(xlisting_web:find_http_session(ID))),
 suggest_arc_user(ID):- catch((pengine:pengine_user(ID)),_,fail),!.
 suggest_arc_user(ID):- catch((http_session:session_data(_,username(ID))),_,fail),!.
 
+arc_webui:-  notrace(arc_webui0).
+arc_webui0:- toplevel_pp(http),!.
+arc_webui0:- in_pp(http),!.
+arc_webui0:- toplevel_pp(swish),!.
+arc_webui0:- in_pp(swish),!,fail.
+arc_webui0:- in_pp(bfly),!.
+arc_webui0:- is_webui,!.
+
 arc_user(TID, ID):- \+ arc_webui,!,TID=ID,!.
 arc_user(TID, ID):- catch((http_session:session_data(TID,username(ID))),_,fail),!.
 arc_user(TID, ID):- suggest_arc_user(ID), TID\=ID,!.
@@ -464,8 +498,14 @@ luser_linkval(N,V):- arc_user(ID),luser_linkval(ID,N,V),!.
 luser_linkval(ID,N,V):- nb_linkval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
 :- meta_predicate(if_arc_webui(-)).
-if_arc_webui(_):- \+ arc_webui,!,fail.
 if_arc_webui(Goal):- arc_webui,!,g_out(call(Goal)).
+if_arc_webui(_):- \+ arc_webui,!,fail.
+
+:- meta_predicate(when_arc_webui(-)).
+when_arc_webui(G):- toplevel_pp(http),call(G),!.
+when_arc_webui(G):- toplevel_pp(swish),call(G),!.
+when_arc_webui(G):- ignore(if_arc_webui(G)).
+
 
 luser_getval(N,V):- if_arc_webui(((get_param_req_or_session(N,V), V\=='',V\==""))).
 luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
@@ -544,7 +584,7 @@ arc3:- clsmake, arc1(v('009d5c81')).
 arc4:- clsmake, arc1(t('25d487eb')).
 arc5:- clsmake, arc1(v('1d398264')).
 
-fav3:- clsmake, arc1(t('3631a71a')*(_+_)),!.
+fav3:- clsmake, arc1(t('3631a71a')>(_+_)),!.
 fav:- clsmake,forall(fav11,true).
 favr:- clsmake,forall(fav22,true).
 fav1:- clsmake, test_names_by_hard_rev(X), whole_test(X).
@@ -588,11 +628,11 @@ cls1:- nop(catch(cls_z,_,true)).
 
 list_to_rbtree_safe(I,O):- must_be_free(O), list_to_rbtree(I,M),!,M=O.
 :- dynamic(is_buggy_pair/2).
-%is_buggy_pair(v(fd096ab6)*(trn+0), "BUG: System Crash").
-%is_buggy_pair(t('3631a71a')*(tst+0),"segv").
-%is_buggy_pair(t('27a28665')*(tst+2), "BUG: Re-Searcher gets stuck!").
+%is_buggy_pair(v(fd096ab6)>(trn+0), "BUG: System Crash").
+%is_buggy_pair(t('3631a71a')>(tst+0),"segv").
+%is_buggy_pair(t('27a28665')>(tst+2), "BUG: Re-Searcher gets stuck!").
 
-run_arc_io(TestID,ExampleNum):- Pair = TestID*ExampleNum, is_buggy_pair(Pair,Why),!,format("~N1 % Skipping ~q because: ~w ~n~n",[Pair,Why]).
+run_arc_io(TestID,ExampleNum):- Pair = (TestID>ExampleNum), is_buggy_pair(Pair,Why),!,format("~N1 % Skipping ~q because: ~w ~n~n",[Pair,Why]).
 run_arc_io(TestID,ExampleNum):- 
   time(train_test(TestID)),
   time(solve_test(TestID,ExampleNum)).
@@ -782,8 +822,8 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
  	 grid_size(In,IH,IV), grid_size(Out,OH,OV),
 	 ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
    
-   into_fti(TestID*(Trn+N1)*IO1,ModeIn,In,InVM),!,
-   into_fti(TestID*(Trn+N2)*IO2,ModeOut,Out,OutVM)]),!,
+   into_fti(TestID>(Trn+N1)*IO1,ModeIn,In,InVM),!,
+   into_fti(TestID>(Trn+N2)*IO2,ModeOut,Out,OutVM)]),!,
 
    %InVM.compare=OutVM, 
    set(InVM.grid_target)=Out,
@@ -885,19 +925,21 @@ solve_test_trial(Trial,TestID,ExampleNum):-
 solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
   forall(trial_non_human(Trial),solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut)).
 
+  
 solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
    must_det_ll((    
     name_the_pair(TestID,ExampleNum,TestIn,ExpectedOut,PairName))),
-   must_det_ll((    
+   must_det_ll((       
     grid_size(TestIn,IH,IV), grid_size(ExpectedOut,OH,OV),
     ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
     print_testinfo(TestID))), 
    must_det_ll((
+   try_easy_io(TestID>ExampleNum,TestIn,ExpectedOut),
     dash_chars, dash_chars,
     show_pair_grid(green,IH,IV,OH,OV,'Test TestIn','Solution ExpectedOut (Not computed by us)',PairName,TestIn,ExpectedOut),!,  
     get_training(Training))),
     flag(indiv,_,0),    
-    into_fti(TestID*ExampleNum*in,in,TestIn,InVM),!,
+    into_fti(TestID>ExampleNum*in,in,TestIn,InVM),!,
     set(InVM.objs) = [],
     %set(InVM.points) = [],
     %set(InVM.training) = Training,
@@ -911,15 +953,15 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     %print_testinfo(TestID),
     do_sols_for(Trial,"Taking Test",InVM,TestID,ExampleNum))).
 
-    % find indiviuation one each side that creates the sameR number of changes
+    % find indiviuation one each side that creates the equal number of changes
     
 do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
- must_det_ll(( ppt("BEGIN!!!"+Why+TestID*ExampleNum), 
+ must_det_ll(( ppt("BEGIN!!!"+Why+TestID>ExampleNum), 
     kaggle_arc_io(TestID,ExampleNum,out,ExpectedOut),
     forall(sols_for(TestID,Trial,SolutionProgram),
      ignore(((
       once((pp(cyan,trial=Trial),
-       ppt(cyan,run_dsl(TestID*ExampleNum,Trial,SolutionProgram)),!,
+       ppt(cyan,run_dsl(TestID>ExampleNum,Trial,SolutionProgram)),!,
        (time((
               maybe_set_vm(InVM),
               kaggle_arc_io(TestID,ExampleNum,in,TestIn),
@@ -933,7 +975,7 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
            (Errors==0 -> 
               (banner_lines(green),arcdbg(pass(Why,TestID,ExampleNum,SolutionProgram)),banner_lines(green))
               ; (banner_lines(red), arcdbg(fail(Why,Errors,TestID,ExampleNum,SolutionProgram)),
-               test_info(TestID,InfoF),wqnl(fav(TestID*ExampleNum,InfoF)),
+               test_info(TestID,InfoF),wqnl(fav(TestID>ExampleNum,InfoF)),
                banner_lines(red)))))
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))))),
     print_grid("our grid", InVM.grid),!,
@@ -991,8 +1033,6 @@ test_regressions:- make, forall((clause(mregression_test,Body),ppt(Body)),must_d
 %:- initialization(demo,main).
 %:- initialization(demo,after_load).
 :- muarc_mod(M), arc_history1((module(M))).
-:- add_history1((cls_z,make,demo)).
-:- add_history1((demo)).
 
 %:- muarc_mod(M), M:show_tests.
 :- load_last_test_name.
@@ -1010,7 +1050,9 @@ saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
 
 
 :- set_prolog_flag(arc_term_expansion, true).
-:- ensure_loaded('kaggle_arc_fwd.pfc').
+
+%:- ensure_loaded('kaggle_arc_fwd.pfc').
+
 %:- set_prolog_flag(arc_term_expansion, false).
 
 %:- if(prolog_load_context(reload,false)).
@@ -1018,18 +1060,52 @@ saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
 %:- endif.
 
 %:- fixup_module_exports_now.  
-user:portray(Grid):- 
+user:portray(Grid):-
    \+ nb_current(arc_can_portray,nil),
    current_predicate(bfly_startup/0), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
 
+
 %:- ignore(check_dot_spacing).
-bfly_startup:- 
-   start_arc_server,
-   webui_tests,
-   print_test, menu, nop((next_test,previous_test)),demo.
+
+   
+:- add_history((print_test)).
+:- add_history((webui_tests)).
+:- add_history((bfly_test(a1))).
+:- add_history((bfly_tests)).
+:- add_history((test_pp)).
+:- add_history((bfly_startup)).
+%:- add_history1((cls_z,make,demo)).
+:- add_history1((demo)).
+
+
+:- nb_setval(arc_can_portray,nil).
+:- nb_setval(arc_can_portray,t).
+%:- \+ nb_current(arc_can_portray,nil).
 
 :- fixup_module_exports_into(baseKB).
 :- fixup_module_exports_into(system).
+
+:- set_stream(current_output,encoding(utf8)).
+
+:- current_prolog_flag(load_arc_webui,true) -> catch_log(start_arc_server) ; true.
+
+bfly_startup:-    
+   asserta(was_inline_to_bfly),inline_to_bfly_html,
+ %  bfly,
+   catch_log(webui_tests),
+   catch_log(print_test),
+   catch_log(menu),
+   %with_pp(bfly,catch_log(menu)),
+   nop((next_test,previous_test)),!.
+
+
+ansi_startup:- 
+   ansi,
+   catch_log(webui_tests),
+   catch_log(print_test),
+   catch_log(menu),
+   %with_pp(bfly,catch_log(menu)),
+   nop((next_test,previous_test)),!.
 
 
 

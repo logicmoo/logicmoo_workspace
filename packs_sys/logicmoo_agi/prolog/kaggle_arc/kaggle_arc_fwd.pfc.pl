@@ -36,9 +36,6 @@
  op(300,fx,'-'),
  op(1199,fx,('==>'))))).
 
-end_of_file.
-
-/*
 
 
 %:- def_pfc_operators.
@@ -62,7 +59,7 @@ never_all_free==>cindv(_,_,_).
 ==> startAll.
 
 
-startAll_1==>((kaggle_arc_io(TestID,ExampleNum,IO,G)/((ID=(TestID*ExampleNum*IO)),term_to_oid(ID,GID)))
+startAll_1==>((kaggle_arc_io(TestID,ExampleNum,IO,G)/((ID=(TestID>ExampleNum*IO)),term_to_oid(ID,GID)))
   ==>(tid_to_gids(ID,GID),gid_to_grid(GID,G))).
 
 %tid_to_gids(T,A) :- zwc,!, term_to_oid(T,A).
@@ -105,10 +102,10 @@ assert_obj_global_points==>
 
 
 arc_test_property(T, common(comp(o-o, area)), area(n(1, 1, d(0), a(0), r(1))))==> arc_note(T,"output always size 1").
-arc_test_property(T, common(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/var(X)==> arc_note(T,"output size always sameR as input").
-%arc_test_property(T, common(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> arc_note(T,"output size always sameR as input").
+arc_test_property(T, common(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/var(X)==> arc_note(T,"output size always equal as input").
+%arc_test_property(T, common(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> arc_note(T,"output size always equal as input").
 
-%:- forall_assert(kaggle_arc_io(TestID,ExampleNum,IO,_),some_grid_tid(TestID*ExampleNum*IO)).
+%:- forall_assert(kaggle_arc_io(TestID,ExampleNum,IO,_),some_grid_tid(TestID>ExampleNum*IO)).
 :- set_prolog_flag(pfc_term_expansion,false).
 
 
@@ -118,4 +115,4 @@ arc_test_property(T, common(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/v
 
 %:- module(system).
 
-*/
+
