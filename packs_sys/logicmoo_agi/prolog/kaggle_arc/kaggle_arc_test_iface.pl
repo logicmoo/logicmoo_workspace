@@ -10,7 +10,7 @@
 :- use_module(library(pengines)).
 
 test_menu :- with_webui(menu).
-menu :- write_menu('i').
+menu :- bfly_html_goal(with_pp(bfly,write_menu('i'))).
 
 write_menu(Mode):-
   get_current_test(TestID),!,
@@ -144,13 +144,24 @@ switch_test(TestID):- wqnl(['Swithing to test: ',TestID]),set_current_test(TestI
 
 
 :- dynamic(wants_exit_menu/0).
-interact:- list_of_tests(L), length(L,SelMax),!,
-  repeat, format('~N Your menu(?) selection: '), 
-  %get_single_char(Code), wdmsg(code=Code), char_code(Key,Code),  put_char(Key), 
-   with_tty_raw(once(read_menu_chars('',SelMax,Key))),
+interact:- list_of_tests(L), length(L,SelMax),!,interact(SelMax).
+/*interact:- list_of_tests(L), length(L,SelMax),!,
+  repeat, 
+    i_key(SelMax,Key),
     writeq(Key),
    once((do_menu_key(Key))), 
    retract(wants_exit_menu),!.
+*/
+
+interact(SelMax):- i_key(SelMax,Key),
+    writeq(Key),
+    ignore((do_menu_key(Key))),interact(SelMax).
+
+i_key(SelMax,Key):-
+  format('~N Your menu(?) selection: '), 
+  %get_single_char(Code), wdmsg(code=Code), char_code(Key,Code),  put_char(Key), 
+   with_tty_raw(once(read_menu_chars('',SelMax,Key))),!.
+
 
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), arc_assert(wants_exit_menu).
 do_menu_key('?'):- !, write_menu_opts('i').

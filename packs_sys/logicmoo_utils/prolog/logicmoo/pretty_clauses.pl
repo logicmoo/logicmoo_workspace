@@ -1264,9 +1264,10 @@ with_real_pp(swish,http,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 with_real_pp(swish,swish,Goal):-wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
 
 our_pengine_output(Codes):- catch(text_to_string(Codes,Str),_,fail),Codes\==Str,!,our_pengine_output(Str).
-
 %our_pengine_output(SO):- toplevel_pp(http),!,format('<span class="swish">~w</span>',[SO]).
 %our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal((sformat(S,'<pre>~w</pre>',[SO]),print_raw_html_page(S))).
+%our_pengine_output(SO):- \+ atom(SO), catch(text_to_atom(SO,Atom),_,fail),SO\==Atom,!,our_pengine_output(Atom).
+our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_write_hs(SO).
 our_pengine_output(SO):- toplevel_pp(swish),!,pengines:pengine_output(SO),!.
 our_pengine_output(SO):- toplevel_pp(http),!,write(SO).
 our_pengine_output(SO):- bfly_write_hs(SO).

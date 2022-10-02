@@ -219,7 +219,7 @@ logicmoo_webui:-
   system:use_module(library(xlisting/xlisting_web_server)),
    exists_source(library(logicmoo_webui)), use_module(library(logicmoo_webui)), 
    catch_log(dmsg((?-webui_start_swish_and_clio))),
-   nop(catch_log(call(call,webui_start_swish_and_clio))).
+   (catch_log(call(call,webui_start_swish_and_clio))).
 logicmoo_webui.
 
 :- (current_prolog_flag(load_arc_webui,true)->catch_log(logicmoo_webui) ; true).
@@ -507,7 +507,7 @@ when_arc_webui(G):- toplevel_pp(swish),call(G),!.
 when_arc_webui(G):- ignore(if_arc_webui(G)).
 
 
-luser_getval(N,V):- if_arc_webui(((get_param_req_or_session(N,V), V\=='',V\==""))).
+luser_getval(N,V):- if_arc_webui(((current_predicate(get_param_req_or_session/2),get_param_req_or_session(N,V), V\=='',V\==""))).
 luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
 %luser_getval(ID,N,V):- thread_self(ID),nb_current(N,V),!.
 %luser_getval(ID,N,V):- !, ((arc_user_prop(ID,N,V);nb_current(N,V))*->true;arc_user_prop(global,N,V)).
@@ -1091,7 +1091,7 @@ user:portray(Grid):-
 
 bfly_startup:-    
    asserta(was_inline_to_bfly),inline_to_bfly_html,
- %  bfly,
+   bfly,
    catch_log(webui_tests),
    catch_log(print_test),
    catch_log(menu),
