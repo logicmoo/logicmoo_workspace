@@ -197,7 +197,7 @@ debug_indiv_obj(A):- Obj = obj(A), is_list(A),!,
   obj_to_oid(Obj,MyOID),
   %o2ansi(MyOID,MissGlyph),
   object_s_glyph(Obj,SGlyph),
-  append(AS0,[nth(MyOID)],AS),  
+  append(AS0,[],AS),  
   remove_too_verbose(MyOID,AS,TV0), include(not_too_verbose,TV0,TV),
 
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
@@ -276,12 +276,15 @@ remove_too_verbose(MyOID,iz(H),HH):- remove_too_verbose(MyOID,H,HH),!.
 remove_too_verbose(MyOID,link(Touched,ID,Dir),HH):- %number(MyOID),
   MyOID\==0,integer(ID),alt_id(MyOID,ID,Alt),o2ansi(ID,Glyph),
   remove_too_verbose(0,link(Touched,Alt,Dir,Glyph),HH).
+
 remove_too_verbose(MyOID,link(Touched,ID),HH):- % number(MyOID),
   MyOID\==0, integer(ID),alt_id(MyOID,ID,Alt),o2ansi(ID,Glyph),
   remove_too_verbose(0,link(Touched,Alt,Glyph),HH).
 
-remove_too_verbose(MyOID,TP,HH):- compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),
-   compound_name_arguments(TPP,F,A),!,remove_too_verbose(MyOID,TPP,HH).
+remove_too_verbose(MyOID,TP,OO):- compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),
+   compound_name_arguments(TPP,F,A),!,remove_too_verbose(MyOID,TPP,HH),
+   OO= g(HH),!.
+
 
 remove_too_verbose(MyOID,colors(H),HH):- !, remove_too_verbose(MyOID,H,HH).
 %remove_too_verbose(MyOID,loc(X,Y),loc(X,Y)).

@@ -343,6 +343,7 @@ arc_script_header_pt2:-
 <link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/selected/css/social.selection.css">
 <script type="text/javascript" src="/swish/js/cliopatria.js"></script>
 <link rel="stylesheet" type="text/css" href="/swish/css/butterfly_term.css">
+<script type="text/javascript" href="/swish/js/butterfly_term.js"></script>
 <link rel="stylesheet" type="text/css" href="/swish/css/term.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/2.1.0/json2html.min.js"></script>').
 
@@ -353,7 +354,7 @@ inline_to_bfly:- asserta(was_inline_to_bfly),inline_to_bfly_html.
 
 inline_to_bfly_html:- toplevel_pp(swish),!.
 inline_to_bfly_html:- 
-bfly_html_goal(format('~s',[
+ bfly_html_goal(format('~s',[
 `<link rel="stylesheet" type="text/css" href="/swish/css/menu.css">
 <link rel="stylesheet" type="text/css" href="/swish/css/cliopatria.css">
 <script src="https://unpkg.com/gojs@2.2.15/release/go.js"></script>

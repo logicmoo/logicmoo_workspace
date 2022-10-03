@@ -5,8 +5,9 @@ export ARC_DIR=$(dirname $SCRIPT)
 echo ARC_DIR=$ARC_DIR
 
 if [[ $# -gt 2 ]] ; then
-  echo fuser -n tcp -k 1766
+   fuser -n tcp -k 1766
 fi
+
 
 
 cd $ARC_DIR
@@ -29,7 +30,7 @@ fi
 
 if [[ $# -gt 2 ]] ; then
    fuser -n tcp -k 7771
-   fuser -n tcp -k 17666
+   fuser -n tcp -k 1766
 fi
 
 killall -9 xterm

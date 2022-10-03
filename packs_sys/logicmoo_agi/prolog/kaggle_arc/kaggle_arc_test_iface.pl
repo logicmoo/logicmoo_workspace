@@ -10,7 +10,7 @@
 :- use_module(library(pengines)).
 
 test_menu :- with_webui(menu).
-menu :- bfly_html_goal(with_pp(bfly,write_menu('i'))).
+menu :- write_menu('i').
 
 write_menu(Mode):-
   get_current_test(TestID),!,
@@ -153,6 +153,7 @@ interact:- list_of_tests(L), length(L,SelMax),!,interact(SelMax).
    retract(wants_exit_menu),!.
 */
 
+interact(_SelMax):- retract(wants_exit_menu),!.
 interact(SelMax):- i_key(SelMax,Key),
     writeq(Key),
     ignore((do_menu_key(Key))),interact(SelMax).
@@ -160,7 +161,7 @@ interact(SelMax):- i_key(SelMax,Key),
 i_key(SelMax,Key):-
   format('~N Your menu(?) selection: '), 
   %get_single_char(Code), wdmsg(code=Code), char_code(Key,Code),  put_char(Key), 
-   with_tty_raw(once(read_menu_chars('',SelMax,Key))),!.
+   (once(read_menu_chars('',SelMax,Key))),!.
 
 
 do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), arc_assert(wants_exit_menu).
@@ -223,7 +224,7 @@ do_menu_codes([27,91,66]):- !, next_pair.
 
 interactive_test(X):- set_current_test(X), print_test(X), interactive_test_menu.
 interactive_test_menu:- 
- my_menu_call((
+ ((
   repeat, write_menu('i'), 
    catch((interact),'$aborted',fail))),!.
 run_all_tests:- 

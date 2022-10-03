@@ -57,9 +57,12 @@ compile_and_save_test(TestID):-
   %ignore(retract(process_test(TestID))),
  once((
   retractall(arc_test_property(TestID,_,_)),
+  test_name_output_file(TestID,File),
+  unload_file(File),
+  (exists_file(File)->delete_file(File);true),
   arc_assert(saved_training(TestID)),
   arc_assert(process_test(TestID)),
-  detect_all_training_hints(TestID),  
+  detect_all_training_hints(TestID),
   nop(individuate_pairs_from_hints(TestID)),
   %train_test(TestID,train_using_io),  
   save_supertest(TestID))).
@@ -101,8 +104,8 @@ detect_all_training_hints:- clsmake, get_current_test(TestID),detect_all_trainin
 detect_all_training_hints(TestID):- 
   training_only_exmaples(ExampleNum), 
   dmsg(detect_all_training_hints(TestID>ExampleNum)),
-  forall(kaggle_arc(TestID,ExampleNum,In,Out),detect_pair_hints(TestID,ExampleNum,In,Out)),
-  color_print(magenta,call(((compute_and_show_test_hints(TestID))))).
+  forall(kaggle_arc(TestID,ExampleNum,In,Out),must_det_ll(detect_pair_hints(TestID,ExampleNum,In,Out))),
+  color_print(magenta,call(((must_det_ll(compute_and_show_test_hints(TestID)))))).
 training_only_exmaples(ExampleNum):- ignore(ExampleNum=(trn+_)).
 detect_test_hints1:- clsmake, get_current_test(TestID),detect_test_hints1(TestID).
 detect_test_hints1(TestID):- 
@@ -398,15 +401,18 @@ grid_hint_io(MC,IO,In,Out,comp(MC,IO,Hint)):- grid_size(In,IH,IV),grid_size(Out,
 
 grid_hint_io(MC,IO,In,Out,(=@=(MC,IO))):- In=@=Out, !.
 grid_hint_io(MC,IO,In,Out,comp(MC,IO,c(MC,IO,Hint))):- grid_hint_io_ogs(In,Out,Hint).
-grid_hint_io(MC,IO,In,Out,comp(MC,IO,rev(MC,IO,Hint))):- grid_hint_io_ogs(Out,In,Hint).
+grid_hint_io(MC,IO,In,Out,comp(MC,IO,c(MC,IOR,Hint))):- grid_hint_io_ogs(Out,In,Hint), io_r(IO,IOR).
 
 
-grid_hint_io_ogs(In,Out,mayb_ogs(R,XY)):-  all_ogs(  0,0,R,In,Out,XY),XY\==[].
-grid_hint_io_ogs(II,Out,trim_ogs(R,XY)):-  
-   trim_to_rect(II,In),!, II\=In, maybe_ogs(_,OX,OY,II,In),
-   all_ogs(OX,OY,R,In,Out,XY).
+io_r(I-O,O-I):-!.
+io_r(IO,io_r(IO)).
 
-all_ogs(OX,OY,R,In,Out,list(Len,XY)):- 
+grid_hint_io_ogs(In,Out,find_ogs(R,XY)):-  all_ogs(R,In,Out,XY),XY\==[].
+
+all_ogs(R,In,Out,notrim(list(Len,XY))):- OX=OY, OX is 0,
+  member(R,[strict,loose]), findall(loc(XX,YY),(maybe_ogs(R,X,Y,In,Out),XX is X+OX, YY is Y+OY),XY), XY\==[], length(XY,Len),!.
+
+all_ogs(R,II,Out,trim(list(Len,XY))):- trim_to_rect(II,In),!, II\=In, maybe_ogs(_,OX,OY,II,In),
   member(R,[strict,loose]), findall(loc(XX,YY),(maybe_ogs(R,X,Y,In,Out),XX is X+OX, YY is Y+OY),XY), XY\==[], length(XY,Len),!.
 
 maybe_ogs(R,X,Y,In,Out):- nonvar(R),!,(R==strict->find_ogs(X,Y,In,Out);ogs_11(X,Y,In,Out)).

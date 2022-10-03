@@ -1002,7 +1002,7 @@ ratio_for0(Ratio,Out,_In):- 0 is Out, !, Ratio is +0.0.
 ratio_for0(Ratio,Out,In):- catch(Ratio is rationalize(Out/In),error(evaluation_error(_Zero_divisor),_),fail),!.
 ratio_for0(Ratio,Out,In):- catch(NRatio is rationalize(In/Out),error(evaluation_error(_Zero_divisor),_),fail),!, Ratio is -NRatio.
 
-%:- decl_pt(prop_g,each_object(is_grid, set)).
+:- decl_pt(prop_g,each_object(is_grid, set)).
 
 %each_object(_Grid,[]):-!.
 each_object(Grid,ListO):- arc_memoized(individuate(complete,Grid,List)),!, simplify_objs(List,ListO).

@@ -264,14 +264,17 @@ must_det_ll(X):-
   strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
     nop(trace(M:F/A,-fail))).
   
-must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> throw(E);(/*arcST,*/writeq(E=X),pp(rrtrace=X),rrtrace(X)))).
+must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> throw(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
+  rrtrace(visible_rtrace([-all,+exception]),X)))).
 
-must_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,rrtrace(X),!.
+must_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,visible_rtrace([-all,+fail,+exception],X).
 % must_det_ll(X):- must_det_ll(X),!.
 
-rrtrace(X):- nb_current(cant_rrtrace,t),!,nop((wdmsg(cant_rrtrace(X)))),!,fail.
-rrtrace(X):- !, rtrace(X).
-rrtrace(X):- notrace,nortrace, arcST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> rtrace(X); (trace,call(X))).
+rrtrace(X):- rrtrace(etrace,X).
+
+rrtrace(P1,X):- nb_current(cant_rrtrace,t),!,nop((wdmsg(cant_rrtrace(P1,X)))),!,fail.
+rrtrace(P1,X):- !, call(P1,X).
+rrtrace(P1,X):- notrace,nortrace, arcST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> call(P1,X); (trace,call(P1,X))).
 
 remove_must_dets(G,GGG):- compound(G), G = must_det_ll(GG),!,expand_goal(GG,GGG),!.
 remove_must_dets(G,GGG):- compound(G), G = must_det_l(GG),!,expand_goal(GG,GGG),!.

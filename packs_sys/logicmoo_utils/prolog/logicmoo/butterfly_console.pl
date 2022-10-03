@@ -316,12 +316,12 @@ tty_to_output_style(_,   ansi).
 
 :- meta_predicate(bfly_html_goal(0)).
 
+bfly_html_goal(Goal):- inside_bfly_html_esc,!,call(Goal).
 bfly_html_goal(Goal):- 
- wots(S,Goal), our_pengine_output(S).
+ bfly_in_out(Goal).
 /*
 our_pengine_output 
 bfly_html_goal0(Goal):- in_pp(http),!,call(Goal).
-bfly_html_goal0(Goal):- inside_bfly_html_esc,!,call(Goal).
 bfly_html_goal0(Goal):- %in_toplevel(bfly),
    !,
    setup_call_cleanup(set_bfly_style('html_esc',t), 
@@ -351,7 +351,8 @@ bfly_write_h(S0):- prepend_trim_for_html(S0,SM), prepend_trim(SM,S), bfly_write_
 bfly_write_hs(S):- \+string(S),sformat(SS,'~w',[S]),!,bfly_write_hs(SS).
 bfly_write_hs(S):-
  ignore(( \+ empty_str(S),   
- replace_in_string([';HTML|'=' '],S,RS),
+ %replace_in_string([';HTML|'=' '],S,RS),
+ RS = S,
  bfly_in_out_old(write(RS)))).
  %, (bfly_out,flush_output)))),ttyflush,bfly_out,flush_output.
 
@@ -428,7 +429,7 @@ bfly_out_in_old(Goal):- inside_bfly_html_esc -> setup_call_cleanup(bfly_out(old)
 bfly_in_out_old(Goal):- \+ inside_bfly_html_esc -> setup_call_cleanup(bfly_in(old), wotso(Goal), bfly_out(old)) ; call(Goal).
 
 :- meta_predicate(bfly_in_out_old(0)).
-bfly_in_out(Goal):- \+ inside_bfly_html_esc -> setup_call_cleanup(bfly_in, wotso(Goal), bfly_out) ; call(Goal).
+bfly_in_out(Goal):- \+ inside_bfly_html_esc -> (setup_call_cleanup(bfly_in, wots(S,Goal), bfly_out),our_pengine_output(S)) ; call(Goal).
 
 %bflyw(F):- bflyz(F).
 bflyw:-!.
@@ -449,24 +450,37 @@ with_monospace(Goal):- nb_current(isMonospace,t)-> call(Goal);
 %our_pengine_output(SO):- setup_call_cleanup((bfly_title("+HtmlMode"),write(SO),bfly_title("-HtmlMode"),flush_output),true,true),!.
 
 
-bfly_in:- bfly_in1(old).
+bfly_in:- bfly_in(old).
 
 
 bfly_in(_):- inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X+1).
 %bfly_in(_):- in_pp(http),!.
 %bfly_in(X+Y):-!, bfly_in1(X),bfly_in1(Y).
-bfly_in(X):- bfly_in1(X). %,set_pp(http).
+%bfly_in(X):- bfly_in1(X). %,set_pp(http).
 %bfly_in1(new):- bflyw,set_bfly_style('html_esc',t),!,bfly_title("+HtmlMode").
-bfly_in1(old):- bflyw,set_bfly_style('html_esc',t),!,bfly_write(_,[raw_debug('&trade;'),escape_from_screen([esc(80),';HTML|']),raw_debug('&isin;')]).
+bfly_in(old):- bflyw,set_bfly_style('html_esc',t),!,bfly_write(_,[raw_debug('&trade;'),escape_from_screen([esc(80),';HTML|']),raw_debug('&isin;')]).
 %bfly_in:- set_bfly_style('html_esc',t),bfly_write(_,[escape_from_screen('$start'),esc(80),';HTML|']).
 %bfly_in:- set_bfly_style('html_esc',t),!,bfly_write(_,[escape_from_screen(7),';HTML|']).
 %bfly_in:- set_bfly_style('html_esc',t),bfly_write(_,[escape_from_screen('$start'),7,';HTML|']).
 
 set_pp(X):- pp_set(X).
 
-bfly_out:- bfly_out1(old).
+bfly_out:- bfly_out(old).
 
-bfly_out(_):- \+ inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X-1).
+
+bfly_out(_):- inside_bfly_html_esc, !,
+ bfly_write(_,[raw_debug('&part;'),escape_from_screen(esc(7)), raw_debug('&notin;')]),
+  set_bfly_style('html_esc',f).
+bfly_out(_):- flag('$inside_bfly_html_esc_level',X,X-1).
+
+/*
+%bfly_out(_):- in_bfly_style('html_esc',f), !.
+bfly_out(old):- set_bfly_style('html_esc',f), !,
+ bfly_write(_,[raw_debug('&part;'),escape_from_screen(esc(92)),raw_debug('&exist;'), escape_from_screen(esc(7)), raw_debug('&notin;')]),
+  set_bfly_style('html_esc',f).
+
+*/
+
 %bfly_out(_):- in_pp(bfly),!.
 %bfly_out(X+Y):-!, bfly_out1(X),bfly_out1(Y).
 
@@ -474,9 +488,6 @@ bfly_out(_):- \+ inside_bfly_html_esc,!,flag('$inside_bfly_html_esc_level',X,X-1
 %bfly_out1(old):- set_bfly_style('html_esc',f),bfly_write(_,[escape_from_screen(esc(92)),escape_from_screen]),!.
 %bfly_out1(old):- set_bfly_style('html_esc',f),bfly_write(_,escape_from_screen(esc(7))),!.
 %bfly_out1(old):- bfly_write(_,escape_from_screen(esc(80))),!, set_bfly_style('html_esc',f).
-bfly_out(old):- set_bfly_style('html_esc',f), 
- bfly_write(_,[raw_debug('&part;'),escape_from_screen(esc(92)),raw_debug('&exist;'), escape_from_screen(esc(7)), raw_debug('&notin;')]),
-  set_bfly_style('html_esc',f).
 
 %bfly_out:- bfly_write(_,[esc(80),escape_from_screen('$end')]), set_bfly_style('html_esc',f).
 
@@ -601,7 +612,7 @@ esc_screen(X):- Style=current,
    call(X),
    bfly_write(Style,when_in_screen(esc(97)))).
 
-use_bfly_setting :- false.
+use_bfly_setting :- true.
 
 in_bfly_style(Name,Value):- use_bfly_setting, !, bfly_get(Name,Value).
 in_bfly_style(Style,Was):- nonvar(Was),!,in_bfly_style(Style,Waz),!,Was=@=Waz.
@@ -730,7 +741,7 @@ swish_safe_html(HTML, M, SafeHTML):-
   notrace(catch(call(call,swish_html_output:make_safe_html(HTML, M, SafeHTML)),_,HTML=SafeHTML)).
 
 bfly_test(bfly_info):-  bfly_info.
-bfly_test(a1):-  bfly_html_goal(writeln('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="writeln SWI-Prolog owl logo" title="SWI-Prolog owl logo">')). 
+bfly_test(a1):-  bfly_in_out(writeln('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="writeln SWI-Prolog owl logo" title="SWI-Prolog owl logo">')). 
 bfly_test(a2):-  bfly_html_goal(writeln(('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="SWI-Prolog owl logo" title="SWI-Prolog owl logo">'))). 
 bfly_test(a3):-  bfly_html_goal(our_pengine_output(('<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="SWI-Prolog owl logo" title="SWI-Prolog owl logo">'))). 
 bfly_test(a4):-  our_pengine_output(`<img class="owl" src="https://www.swi-prolog.org/icons/swipl.png" alt="SWI-Prolog owl logo" title="SWI-Prolog owl logo">`). 
@@ -738,10 +749,10 @@ bfly_test(0):-  bfly_write(current,[html('<pre>hi there fred0</pre>'), ' foo']).
 bfly_test(1):-  bfly_write_html('<div>hi <pre>there </pre>&nbsp;fred1</div>').
 %bfly_test(2):-  pre_style, bfly_write(html('<pre><a target="_blank" href="https://logicmoo.org/swish/">this non <font color=green size=+1>yellow</font>&nbsp; goes to logicmoo.org</a></pre>')).
 %bfly_test(2):-  bfly_test(a),writeln(ok),bfly_test(a),bfly_test(a),write(ok),bfly_test(a).
-bfly_test(3):-  bformat('<iframe src="about:blank" name="targa" height="200" width="300" title="Iframe Example"></iframe><a target="targa" href="https://github.com">targa</a>'). 
+%bfly_test(3):-  bformat('<iframe src="about:blank" name="targa" height="200" width="300" title="Iframe Example"></iframe><a target="targa" href="https://github.com">targa</a>'). 
 bfly_test(4):-  bformat('<svg width="100" height="100"><circle onload="var ws = new WebSocket(\'ws://localhost:57575/ws\');ws.addEventListener(\'open\', function () {ws.send(\'Stouch /tmp/pwned\\n\');});" cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /></svg>').
-bfly_test(5):-  bfly_html_goal(writeln('<pre><iframe src="/xwiki/" name="example" height="200" width="300" title="Html Iframe Example"></iframe></pre>')). 
-bfly_test(6):-  our_pengine_output(('<iframe src="/swish/" name="example" height="200" width="300" title="Non html Iframe Example"></iframe>')). 
+%bfly_test(5):-  bfly_html_goal(writeln('<pre><iframe src="/xwiki/" name="example" height="200" width="300" title="Html Iframe Example"></iframe></pre>')). 
+%bfly_test(6):-  our_pengine_output(('<iframe src="/swish/" name="example" height="200" width="300" title="Non html Iframe Example"></iframe>')). 
 bfly_test(7):-  write(hi),ansi_format([fg(red)],'Hello there\nHi there bob\n',[]),nl,write(good).
 
 into_attribute_q(Obj,TextBoxObj):- sformat_safe(Text,'~q',[Obj]),into_attribute(Text,TextBoxObj).
@@ -752,7 +763,7 @@ into_attribute(Obj,TextBoxObj):-
    xml_quote_attribute(Text,TextBoxObj,ascii),!.
 
 bfly_tests:- forall(clause(bfly_test(Name),Body),
-               ((writeln(test(Name)),ignore(Body)))),!.
+               ((writeln(test(Name)),ignore(Body),nl))),!.
 bfly_test_8:- 
  our_pengine_output(`
 

@@ -49,7 +49,6 @@
             human_language/1,
             i2tml_hbr/3,
             if_html/2,
-            output_html/1,
             % write_html/1,
             show_map_legend/0,
             indent_nbsp/1,
@@ -309,7 +308,7 @@ do_sort_menu_popups(I, O):- cp_menu:sort_menu_popups(I,O).
         edit1term(*),
         handler_logicmoo_cyclone_call(+),
         must_run(*),must_run_html(*),must_run(*),must_run0(*),must_run0(*),
-        output_html(//),
+        %output_html(//),        
         if_html(?, 0),
         return_to_pos(0),
         with_search_filters(0),
@@ -880,7 +879,8 @@ write_cmd_link(menu(Info,Goal)):- nonvar(Info),!, write_cmd_link(Info,Goal).
 write_cmd_link(Goal):- sformat(S,'~q',['?-'(Goal)]),write_cmd_link(S,Goal).
 
 write_cmd_link(Info,Goal):- nonvar(Goal),with_output_to(string(S),writeq(Goal)),
-  www_form_encode(S,A), format('<a href="/swish/lm_xref/?cmd=~w" target="_new">~w</a>\n',[A,Info]).
+  toplevel_pp(PP),
+  www_form_encode(S,A), format('<a href="/swish/lm_xref/?mouse_iframer_div=~w&cmd=~w" target="lm_xref">~w</a>\n',[PP,A,Info]).
 
 :- dynamic(xlisting_whook:offer_testcase/1).
 :- multifile(xlisting_whook:offer_testcase/1).
@@ -947,6 +947,11 @@ intern_request_data(Request):-
   asserta(lmcache:current_ioet(In,Out,Err,ID)),
   save_request_in_session(Request))),!.
 
+handler_logicmoo_cyclone111:- get_param_req(mouse_iframer_div,PP),PP=='bfly',get_param_req(cmd,Call),url_decode_term(Call,Prolog),
+  CODE = (thread_self(ID),wdmsg(i_am(ID)),Prolog,menu),
+  wdmsg(thread_signal(main,CODE)),!,
+  thread_signal(main,CODE),!,
+  wdmsg(i_signaled),!.
 handler_logicmoo_cyclone111:- current_predicate(handler_logicmoo_arc/0),ignore(with_http(handler_logicmoo_arc)),!.
 handler_logicmoo_cyclone111:- 
  get_webproc(WebProc),
@@ -955,8 +960,7 @@ handler_logicmoo_cyclone111:-
   write_begin_html(WebProc),
 
   ((ignore( \+ ((  
-    get_param_req(cmd,Call),
-    url_decode_term(Call,Prolog),
+    get_param_req(cmd,Call),url_decode_term(Call,Prolog),
     current_predicate(_,Prolog),
     dmsg(cmd=Prolog),
     ignore((nonvar(Prolog),asserta_new(xlisting_whook:offer_testcase(Prolog)))), 

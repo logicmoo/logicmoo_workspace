@@ -281,7 +281,8 @@ individuation_macros(altro, [
 individuation_macros(do_ending, [
   find_touches,    
   find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
-  % find_contained, % mark any "completely contained points"
+  find_sees,
+  % find_contained_points, % mark any "completely contained points"
   combine_same_globalpoints, % make sure any objects are perfectly the equal part of the image are combined 
   %label_sizes,
   %combine_objects,
@@ -623,6 +624,7 @@ maybe_1_3rd_mass(VM):-
   ignore(((
    length(ThisGroup,Len),  Len >= Min,
    set(VM.points)=LeftOver,
+   meets_indiv_criteria(birth(by_color),ThisGroup),
    make_indiv_object(VM,[birth(by_color),iz(image)],ThisGroup,ColorObj),
    raddObjects(VM,ColorObj)))).
 
@@ -1694,6 +1696,7 @@ one_fti(VM,by_color(Min,C)):-
   ignore(((
    length(ThisGroup,Len),  Len >= Min,
    set(VM.points)=LeftOver,
+   meets_indiv_criteria(birth(by_color),ThisGroup),
    make_indiv_object(VM,[birth(by_color),iz(image),iz(shaped)],ThisGroup,ColorObj),
    raddObjects(VM,ColorObj)))).
 
@@ -1809,13 +1812,13 @@ release_points(VM):-
     globalpoints(VM.objs,NextScanPoints2),
     addCPoints(VM,NextScanPoints2).
 
-objs_into_single_hidden(VM):- objs_into(VM,[iz(combined),iz(hidden),iz(into_single)]).
-objs_into_single(VM):- objs_into(VM,[iz(combined),iz(into_single)]).
+objs_into_single_hidden(VM):- objs_into_single_now(VM,[iz(combined),iz(hidden),iz(into_single)]).
+objs_into_single(VM):- objs_into_single_now(VM,[iz(combined),iz(into_single)]).
 
-objs_into(Opts,VM):-
+objs_into_single_now(Opts,VM):-
     maplist(globalpoints,VM.objs,IndvPoints),
-    make_indiv_object(VM,Opts,IndvPoints,Indv),
     meets_indiv_criteria(into_single,IndvPoints),!,
+    make_indiv_object(VM,Opts,IndvPoints,Indv),    
     raddObjects(VM,Indv).
 
 % =====================================================================
@@ -1834,8 +1837,10 @@ is_fti_step(current_as_one).
 % =====================================================================
 current_as_one(VM):-
  Points = VM.points,
-   ignore((Points\==[],
-   set_html_stream_encoding, wdmsg(current_as_one=Points),
+   ignore((
+   Points\==[],
+   %set_html_stream_encoding, 
+   wdmsg(current_as_one=Points),
    make_indiv_object(VM,[iz(combined),birth(current_as_one)],Points,LeftOverObj), verify_object(LeftOverObj),
    raddObjects(VM,LeftOverObj),
    set(VM.points) = Points)).
@@ -1979,7 +1984,7 @@ one_fti(VM,merge_shapes(ShapeType1,ShapeType2)):-
       any_gpoint(HV1,C-P1), is_adjacent_point(P1,Dir,P2), any_gpoint(HV2,C-P2), 
       connection_direction(Option,Dir),
   %rot_left_45(Dir1,DirL),rot_left_45(DirL,Dir90),
-  % \+ (any_gpoint(HV1,C-P1C), any_gpoint(HV2,C-P2C),is_adjacent_point(P1C,_,P2C)),
+  % \+ (any_gpoint(HV1,C-P1C), any_gpoint(HV2,C-P2C),is_adjacent_point(P1C,_,P2C)),  
   combine_2objs(VM,HV1,HV2,[],[iz(Option)],Combined),
   set(VM.objs)=SofarLess,
   raddObjects(VM,Combined),
@@ -2016,7 +2021,7 @@ one_fti(VM,connects(ShapeType1,ShapeType2)):-
   selected_from(Sofar,ShapeType1,ShapeType2,HV1,HV2,SofarLess),
   any_gpoint(HV1,C-P1), is_adjacent_point(P1,Dir,P2), any_gpoint(HV2,C-P2), 
   connection_direction(Option,Dir),    
-  \+ (any_gpoint(HV1,C-P1C), any_gpoint(HV2,C-P2C),is_adjacent_point(P1C,_,P2C)),
+  \+ (any_gpoint(HV1,C-P1C), any_gpoint(HV2,C-P2C),is_adjacent_point(P1C,_,P2C)),  
   combine_2objs(VM,HV1,HV2,[],[iz(Option)],Combined),
   set(VM.objs)=SofarLess,
   raddObjects(VM,Combined),
@@ -2043,7 +2048,7 @@ one_fti(VM,jumps(ShapeType1)):-
   ignore(once((get_color_at_point(Grid,MP,MC),is_color(MC));MC=C)),
   \+ (any_gpoint(HV1,C-P1C), any_gpoint(HV2,C-P2C),is_adjacent_point(P1C,_,P2C)),
   % TODO: HACK WE MIGHT NOT WANT TO STEAL THE POINT?   
-  %once(select(MC-MP,Points,RestPoints);Points=RestPoints),
+  %once(select(MC-MP,Points,RestPoints);Points=RestPoints),  
   combine_2objs(VM,HV1,HV2,[MC-MP],[iz(Option)],Combined),
   set(VM.objs)=SofarLess,
   raddObjects(VM,Combined),
@@ -2061,19 +2066,20 @@ extends(ShapeType1,VM):-
   Points = VM.points,
   select(MC-MP,Points,ScanPoints),
   \+ (is_adjacent_point(P1,_,P2), is_adjacent_point(P2,_,MP),any_gpoint(HV1,_-P2)),
-  all_individuals_near(Dir,Option,C,[MC-MP],ScanPoints,NextScanPoints,IndvPoints),
+  all_individuals_near(Dir,Option,C,[MC-MP],ScanPoints,NextScanPoints,IndvPoints),  
   combine_2objs(VM,HV1,[],IndvPoints,[iz(Option)],Combined),
   set(VM.objs)=SofarLess,
   set(VM.points)=NextScanPoints,
   raddObjects(VM,Combined),
   cycle_back_in(VM,OptionC).
 
-
     combine_2objs(VM,HV1,HV2,NewPoints,IPROPS,Combined):-
-      globalpoints(HV1,GP1), globalpoints(HV2,GP2),      
+      globalpoints(HV1,GP1), globalpoints(HV2,GP2),    
       % indv_props(HV1,Props1),indv_props(HV2,Props2),
-      Props1=[],Props2=[],
-      my_append([GP1,GP2,NewPoints],GPoints), my_append([Props1,Props2,IPROPS],Info),
+      
+      append_sets([GP1,GP2,NewPoints],GPoints),      
+      Props1=[],Props2=[],flatten_sets([Props1,Props2,IPROPS],Info),
+      meets_indiv_criteria(Info,GPoints),
       make_indiv_object(VM,Info,GPoints,Combined).
 
 
@@ -2085,6 +2091,8 @@ one_ifti(VM,Option):-
    \+ exceeded_objs_max_len(VM),
    ( Option \== lo_dots), 
    find_one_individual(Option,Indv,VM),
+   globalpoints(Indv,IndvPoints),
+   meets_indiv_criteria(Option,IndvPoints),
    raddObjects(VM,Indv),!,
    one_ifti(VM,Option).
 
@@ -2162,7 +2170,10 @@ shape_min_points(VM,Shape,MinShapeO):- MS = VM.objs_min_mass, number(MS), length
   !,append(MinShape,_,MinShapeO),!,shape_min_points0(Shape,MinShapeO).
 shape_min_points(_VM,Shape,MinShapeO):-shape_min_points0(Shape,MinShapeO).
 
-%shape_min_points0(colormass,[_,_,_,_,_|_]):-!.
+%shape_min_points0(Kind,{_,_]):-!,fail.
+%shape_min_points0(Kind,Points):- nonvar(Points),shape_min_points0(Kind,PointsO),!,
+%  freeze(Points,PointsO = Points).
+% shape_min_points0(colormass,[_,_,_,_,_|_]):-!.
 %shape_min_points0(nsew,[_,_,_,_|_]):-!.
 %shape_min_points0(diamonds,[_,_,_,_|_]):-!.
 shape_min_points0(_,[_,_|_]).
@@ -2231,6 +2242,7 @@ shape_has_filtered_use(C,[_],_):- shape_filter(C,nsew),!.
 
 adjacent_groups(C1,Grp1,Dir,Grp2):- member(_-P1,Grp1),ok_color_with(C1,C2),member(C2-P2,Grp2),is_adjacent_point(P1,Dir,P2).
 adjacent_point(C,HV,HV2):- adjacent_point_allowed(C,HV,_Dir,HV2).
+
 adjacent_point_allowed(C,HV,Dir,HV2):- is_adjacent_point(HV,Dir,HV2), shape_filter(C,Shape),allow_dir_list(Shape,DirS),member(Dir,DirS).
 %adjacent_point_allowed(_,C,HV,Dir,HV2):- is_adjacent_point(HV,Dir,HV2), shape_filter(C,Shape),allow_dir_list(Shape,DirS),member(Dir,DirS).
 adjacent_disallowed(C,HV,Dir,HV2):- is_adjacent_point(HV,Dir,HV2), shape_filter(C,Shape),allow_dir_list(Shape,DirS), \+ member(Dir,DirS).

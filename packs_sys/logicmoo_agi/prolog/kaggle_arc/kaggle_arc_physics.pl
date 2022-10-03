@@ -353,70 +353,102 @@ print_side_by_side_d(C,A,AN,W,B,BN):- nop(print_side_by_side(C,A,AN,W,B,BN)).
 % ==============================================
 % TOUCHES
 % ==============================================
-
-%ft i(VM,[find_touches|set(VM.program_i)]):-
-  %cullObjectsOutsideOfRanges(VM),
-%  find_touches(VM).
+%ft i(VM,[find_touches|set(VM.program_i)]):- %cullObjectsOutsideOfRanges(VM), %  find_touches(How,VM).
 is_fti_step(find_touches).
+
 find_touches(VM):-
-  /*must_det_ll*/((Objs = VM.objs, find_touches(Objs,NewObjs))),
+  /*must_det_ll*/((Objs = VM.objs, pred_find_links(touching_object(non_overlapping_object_dir(dir_touching)),Objs,NewObjs))),
   gset(VM.objs) = NewObjs.
 
+touching_object(How,Dirs,O2,O1):- O1\==O2,
 
-find_touches(Objs,NewObjs):- /*must_det_ll*/((find_touches(Objs,Objs,NewObjs))).
-find_touches([],_,[]):-!.
-find_touches([Obj|ScanNext],OtherObjects,[NewObj|ScanRest]):-
-  /*must_det_ll*/(find_touches_objects(Obj,OtherObjects,DirNewTouches)),
-  /*must_det_ll*/(override_object(DirNewTouches,Obj,NewObj)),
-  /*must_det_ll*/(find_touches(ScanNext,OtherObjects,ScanRest)).
+  has_prop(o(Y,LC,_),O1), has_prop(o(Y,LC,_),O2),
+  has_prop(iz(shaped),O1), has_prop(iz(shaped),O2),
+  %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
+  globalpoints(O1,Ps1), globalpoints(O2,Ps2),
+  call(How,Ps2,Ps1,Dirs),!.
+
+dir_touching(Ps1,Ps2,Dir):- member(_-P1,Ps1), is_adjacent_point(P1,Dir,P2),  member(_-P2,Ps2).
+
+% ==============================================
+% SEES
+% ==============================================
+%ft i(VM,[find_sees|set(VM.program_i)]):- %cullObjectsOutsideOfRanges(VM), %  find_sees(How,VM).
+is_fti_step(find_sees).
+
+find_sees(VM):-
+  /*must_det_ll*/((Objs = VM.objs, pred_find_links(seeing_object(non_overlapping_object_dir(dir_seeing)),Objs,NewObjs))),
+  gset(VM.objs) = NewObjs.
+
+seeing_object(How,Dirs,O2,O1):- O1\==O2,
+  has_prop(iz(shaped),O1), has_prop(iz(shaped),O2),
+  %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
+  globalpoints(O1,Ps1), globalpoints(O2,Ps2),
+  call(How,Ps2,Ps1,Dirs),!.
+
+dir_seeing(Ps1,Ps2,Dir):- member(_-P1,Ps1), is_adjacent_point(P1,Dir,P2), \+ member(_-P2,Ps1), 
+  seeing_dir_soon(P1,Dir,Ps2).
+    
+seeing_dir_soon(P1,_Dir,Ps2):- member(_-P1,Ps2),!.
+seeing_dir_soon(P1,Dir,Ps2):- is_adjacent_point(P1,Dir,P2), seeing_dir_soon(P2,Dir,Ps2).
+
+
+% ==============================================
+% LINKS
+% ==============================================
+
+better_sdir(S,Iv,Dirs,link(S,Iv,[-LO])):- length(Dirs,7),subtract([n,s,e,w,nw,ne,sw,se],Dirs,[LO]).
+better_sdir(S,Iv,[n,s,e,w,nw,ne,sw,se],link(S,Iv,[c])).
+better_sdir(S,Iv,[n,s,e,w],link(S,Iv,[c])).
+better_sdir(S,Iv,[ne,se],O):- !,better_sdir(S,Iv,[e],O).
+better_sdir(S,Iv,[nw,sw],O):- !,better_sdir(S,Iv,[w],O).
+better_sdir(S,Iv,[nw,ne],O):- !,better_sdir(S,Iv,[n],O).
+better_sdir(S,Iv,[sw,se],O):- !,better_sdir(S,Iv,[s],O).
+better_sdir(S,Iv,Dirs,O):- member(sw,Dirs),subtract(Dirs,[s,w],NDirs),NDirs\==Dirs,!,better_sdir(S,Iv,NDirs,O).
+better_sdir(S,Iv,Dirs,O):- member(nw,Dirs),subtract(Dirs,[n,w],NDirs),NDirs\==Dirs,!,better_sdir(S,Iv,NDirs,O).
+better_sdir(S,Iv,Dirs,O):- member(se,Dirs),subtract(Dirs,[s,e],NDirs),NDirs\==Dirs,!,better_sdir(S,Iv,NDirs,O).
+better_sdir(S,Iv,Dirs,O):- member(ne,Dirs),subtract(Dirs,[n,e],NDirs),NDirs\==Dirs,!,better_sdir(S,Iv,NDirs,O).
+better_sdir(S,Iv,Dirs,link(S,Iv,Dirs)).
+
+
+non_overlapping_object_dir(_How,Ps1,Ps2,[overlap]):- member(P1,Ps1), \+ \+ member(P1,Ps2),!,fail.
+non_overlapping_object_dir(How,Ps1,Ps2,Dirs):- findall(Dir,(member(Dir,[n,s,e,w,nw,ne,sw,se]),
+  once(call(How,Ps1,Ps2,Dir))),Dirs),Dirs\==[].
+
+pred_find_links(How,Objs,NewObjs):- must_det_ll((find_links(How,Objs,Objs,NewObjs))).
+
+link_prop(T,A):- sub_term(A,T),atom(A),!.
+
+find_links(_How,[],_,[]):-!.
+find_links(How,[Obj|ScanNext],OtherObjects,[Obj|ScanRest]):-
+  link_prop(How,Prop),
+  has_prop(link(Prop,_,_),Obj),!,
+  find_links(How,ScanNext,OtherObjects,ScanRest).
+
+find_links(How,[Obj|ScanNext],OtherObjects,[NewObj|ScanRest]):-
+  /*must_det_ll*/(find_links_objects(How,Obj,OtherObjects,DirNewSees)),
+  /*must_det_ll*/(override_object(DirNewSees,Obj,NewObj)),
+  /*must_det_ll*/(find_links(How,ScanNext,OtherObjects,ScanRest)).
 
 /*
-mention_touches(Obj,[],Obj):-!.
-mention_touches(Obj,[link(Dir,Touched)|More],NewFObjO):- !,
-  mention_touches(Obj,Dir-Touched,MidObj),
-  mention_touches(MidObj,More,NewFObjO).
-mention_touches(Obj,Dir-Touched,NewObj):-
-  /*must_det_ll*/(obj_to_oid(Touched,Iv)),
-  /*must_det_ll*/(override_object(link(touches,Dir,Iv),Obj,NewObj)),!.
+mention_links(Obj,[],Obj):-!.
+mention_links(Obj,[link(Dir,Seen)|More],NewFObjO):- !,
+  mention_links(Obj,Dir-Seen,MidObj),
+  mention_links(MidObj,More,NewFObjO).
+mention_links(Obj,Dir-Seen,NewObj):-
+  /*must_det_ll*/(obj_to_oid(Seen,Iv)),
+  /*must_det_ll*/(override_object(link(links,Dir,Iv),Obj,NewObj)),!.
 */
 
-find_touches_objects(_,[],[]).
-find_touches_objects(Obj,_,[]):- has_prop(link(touched,_,_),Obj),!.
-%find_touches_objects(Obj,_,[]):- has_prop(iz(dots),Obj),!.
-find_touches_objects(Obj,[Touched|ScanNext],[BetterTouch|Engulfed]):-    
- once(touching_object(Dirs,Obj,Touched)),Dirs\==[],!,
- better_touched(Iv,Dirs,BetterTouch),
- /*must_det_ll*/(obj_to_oid(Touched,Iv)),
- /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
-find_touches_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_touches_objects(Obj,ScanNext,Engulfed)),!.
-
-better_touched(Iv,Dirs,link(touched,Iv,[-LO])):- length(Dirs,7),subtract([n,s,e,w,nw,ne,sw,se],Dirs,[LO]).
-better_touched(Iv,[n,s,e,w,nw,ne,sw,se],link(touched,Iv,[c])).
-better_touched(Iv,[n,s,e,w],link(touched,Iv,[c])).
-better_touched(Iv,[ne,se],O):- !,better_touched(Iv,[e],O).
-better_touched(Iv,[nw,sw],O):- !,better_touched(Iv,[w],O).
-better_touched(Iv,[nw,ne],O):- !,better_touched(Iv,[n],O).
-better_touched(Iv,[sw,se],O):- !,better_touched(Iv,[s],O).
-better_touched(Iv,Dirs,O):- member(sw,Dirs),subtract(Dirs,[s,w],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
-better_touched(Iv,Dirs,O):- member(nw,Dirs),subtract(Dirs,[n,w],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
-better_touched(Iv,Dirs,O):- member(se,Dirs),subtract(Dirs,[s,e],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
-better_touched(Iv,Dirs,O):- member(ne,Dirs),subtract(Dirs,[n,e],NDirs),NDirs\==Dirs,!,better_touched(Iv,NDirs,O).
-better_touched(Iv,Dirs,link(touched,Iv,Dirs)).
-
-touching_object(Dirs,O2,O1):- 
-  O1\==O2,
-  has_prop(iz(shaped),O1),
-  has_prop(iz(shaped),O2),
-  %\+ has_prop(birth(glyphic),O2),
-  %\+ has_prop(birth(glyphic),O1),
-  globalpoints(O1,Ps1),
-  globalpoints(O2,Ps2),
-  dir_touching_list(Ps2,Ps1,Dirs),!.
-
-dir_touching_list(Ps1,Ps2,[overlap]):- member(P1,Ps1), \+ \+ member(P1,Ps2),!.
-dir_touching_list(Ps1,Ps2,Dirs):- findall(Dir,(member(Dir,[n,s,e,w,nw,ne,sw,se]),
-  once(dir_touching_list0(Ps1,Ps2,Dir))),Dirs),Dirs\==[].
-dir_touching_list0(Ps1,Ps2,Dir):- member(_-P1,Ps1), member(_-P2,Ps2), is_adjacent_point(P1,Dir,P2),!.
+find_links_objects(_How,_,[],[]).
+%find_links_objects(How,Obj,_,[]):- has_prop(iz(dots),Obj),!.
+find_links_objects(How,Obj,[Seen|ScanNext],[BetterSee|WillSee]):-    
+ once(call(How,Dirs,Obj,Seen)),Dirs\==[],!,
+ link_prop(How,Prop),
+ better_sdir(Prop,Iv,Dirs,BetterSee),
+ /*must_det_ll*/(obj_to_oid(Seen,Iv)),
+ /*must_det_ll*/(find_links_objects(How,Obj,ScanNext,WillSee)),!.
+find_links_objects(How,Obj,[_|ScanNext],WillSee):- /*must_det_ll*/(find_links_objects(How,Obj,ScanNext,WillSee)),!.
 
 :- dynamic(individuated_cache/3).
 :- retractall(individuated_cache(_,_,_)).
@@ -450,14 +482,14 @@ find_engulfs([Obj|ScanNext],OtherObjects,[NewObj|ScanRest]):-
 find_engulfs_objects(_,[],[]).
 %find_engulfs_objects(Obj,_,[]):- has_prop(link(insideOf,_),Obj),!.
 find_engulfs_objects(Obj,_,[]):- has_prop(link(contains,_),Obj),!.
-find_engulfs_objects(Obj,[Touched|ScanNext],[link(insideOf,Iv)|Engulfed]):-    
- once(contained_object(Obj,Touched)),!,
- /*must_det_ll*/(obj_to_oid(Touched,Iv)),
+find_engulfs_objects(Obj,[Target|ScanNext],[link(insideOf,Iv)|Engulfed]):-    
+ once(contained_object(Obj,Target)),!,
+ /*must_det_ll*/(obj_to_oid(Target,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 find_engulfs_objects(Obj,_,[]):- amass(Obj,Mass),Mass<5,!.
-find_engulfs_objects(Obj,[Touched|ScanNext],[link(contains,Iv)|Engulfed]):-    
- once(contained_object(Touched,Obj)),!,
- /*must_det_ll*/(obj_to_oid(Touched,Iv)),
+find_engulfs_objects(Obj,[Target|ScanNext],[link(contains,Iv)|Engulfed]):-    
+ once(contained_object(Target,Obj)),!,
+ /*must_det_ll*/(obj_to_oid(Target,Iv)),
  /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 find_engulfs_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_engulfs_objects(Obj,ScanNext,Engulfed)),!.
 
@@ -481,15 +513,15 @@ contained_object(O2,O1):-
 % Contained
 % ==============================================
 % Find free points that are contained in objects and individuate them in their own way
-%fti(VM,[find_contained|set(VM.program_i)]):- find_contained(VM).
-is_fti_step(find_contained).
+%fti(VM,[find_contained_points|set(VM.program_i)]):- find_contained_points(VM).
+is_fti_step(find_contained_points).
 %fti(VM,[colormass_subshapes|set(VM.program_i)]):- colormass_subshapes(VM),!.
-find_contained(VM):-
-  show_vm_changes(VM,find_contained,find_contained(VM.h,VM.v,VM.id,VM.objs,set(VM.objs),VM.points,set(VM.points))),!.
+find_contained_points(VM):-
+  show_vm_changes(VM,find_contained_points,find_contained_points(VM.h,VM.v,VM.id,VM.objs,set(VM.objs),VM.points,set(VM.points))),!.
 
-find_contained(_H,_V,_ID,Sofar,Sofar,[],[]).
-find_contained(_H,_V,_ID,[],[],NextScanPoints,NextScanPoints).
-find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextScanPointsInstead):-
+find_contained_points(_H,_V,_ID,Sofar,Sofar,[],[]).
+find_contained_points(_H,_V,_ID,[],[],NextScanPoints,NextScanPoints).
+find_contained_points(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextScanPointsInstead):-
  must(nop(isz(Found,outline(_)))),
   once(find_contained_points(Found,NextScanPoints,ScanPointsInstead,ContainedPoints)),
   ContainedPoints\==[],
@@ -499,11 +531,11 @@ find_contained(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,NextSca
   %once(obj_to_oid(Found,ID,_);grid_to_tid(Grid,ID)),
   individuate(subshape_in_object,ContainedPoints,NewInside),
   mapgroup(mention_inside(Found),NewInside,NewInsideM))),
-  ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained",[Found|NewInsideM])))),
-  find_contained(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
+  ignore((length(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained_points",[Found|NewInsideM])))),
+  find_contained_points(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
   my_append(NewInsideM,SofarInstead,SofarInsteadM).
-find_contained(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScanPointsInstead):-
-  find_contained(H,V,ID,Sofar,SofarInstead,NextScanPoints,NextScanPointsInstead).
+find_contained_points(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScanPointsInstead):-
+  find_contained_points(H,V,ID,Sofar,SofarInstead,NextScanPoints,NextScanPointsInstead).
 
 
 mention_inside(Found,NewInside,NewInsideO):-

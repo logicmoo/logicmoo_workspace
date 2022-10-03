@@ -354,7 +354,8 @@ subClassOf([monochrome,contiguous,hv_line(v)],v_symmetric).
 subClassOf(hv_line(h),v_symmetric).
 subClassOf([monochrome,contiguous,hv_line(h)],h_symmetric).
 
-meets_indiv_criteria(_,_).
+meets_indiv_criteria(_Info,[C-P1,C-P2]):- is_adjacent_point(P1,_Dir,P2),!,fail.
+meets_indiv_criteria(_Info,_Points):- !.
 
 data_type(O,T):- nonvar(T),data_type(O,C),T=C,!.
 

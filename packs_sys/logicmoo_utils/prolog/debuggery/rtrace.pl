@@ -461,6 +461,8 @@ rtrace_break(Goal):- stop_rtrace,trace,debugCallWhy(rtrace_break(Goal),Goal).
 %
 ftrace(Goal):- visible_rtrace([-all,+unify,+fail,+exception],Goal).
 
+etrace(Goal):- visible_rtrace([-all,+exception],Goal).
+
 visible_rtrace(List,Goal):-
  restore_trace((
    visible(-all), visible(+exception),
