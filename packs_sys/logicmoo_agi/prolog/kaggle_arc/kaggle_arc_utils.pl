@@ -4,9 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+:- include(kaggle_arc_header).
 
 /*
 my_len(X,Y):- var(X),!,length(X,Y).
@@ -169,10 +167,22 @@ mapgrid(P2,Grid,GridN):- call(P2,Grid,GridN),!.
 mapgrid(P1,Grid):- is_list(Grid),!,maplist(mapgrid(P1),Grid).
 mapgrid(P1,Grid):- call(P1,Grid),!.
 
+
+maplist_ignore(_3,H,I,J):- (H==[];I==[],J==[]),!,(ignore(H=[]),ignore(I=[]),ignore(J=[])).
+maplist_ignore(P3,H,I,J):- \+ is_list(H),!, ignore(call(P3,H,I,J)).
+maplist_ignore(P3,[H|Grid],[I|GridN],[J|GridO]):- maplist_ignore(P3,H,I,J), !,maplist_ignore(P3,Grid,GridN,GridO).
+
+maplist_ignore(_2,H,I):- (H==[];I==[]),!,(ignore(H=[]),ignore(I=[])).
+maplist_ignore(P2,H,I):- \+ is_list(H),!, ignore(call(P2,H,I)).
+maplist_ignore(P2,[H|Grid],[I|GridN]):- maplist_ignore(P2,H,I), !,maplist_ignore(P2,Grid,GridN).
+
 subst_1L([],Term,Term):-!.
 subst_1L([X-Y|List], Term, NewTerm ) :-
   subst0011(X, Y, Term, MTerm ),
   subst_1L(List, MTerm, NewTerm ).
+
+subst_2L([],_,I,I).
+subst_2L([F|FF],[R|RR],I,O):- subst0011(F,R,I,M),subst_2L(FF,RR,M,O).
 
 
 subst001(I,F,R,O):- subst0011(F,R,I,O),!.

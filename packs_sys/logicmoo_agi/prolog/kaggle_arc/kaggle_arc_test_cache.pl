@@ -54,7 +54,7 @@ testcase(t('017c7c7b')>tst+0,"
   | s s s |     | o o o |
   |   s   |     |   o   |
   |   s   |     |   o   |
-  | s s s |                        ------- 
+  | s s s |      ------- 
   |   s   |                     
   |   s   |                     
    -------                      
@@ -611,8 +611,8 @@ testcase(t('1c786137')>tst+0,"
   | o   + e s   + o o o   o   e     |     |   + + s + + + + + |
   |   + + e + o   + s + o s + e o + |     | +   s         + + |
   | o   + e + s   s   o o + o e + + |     |   s + + o s     s |
-  |   +   e   o + + o o + o + e s o |                                                  ------------------- 
-  | o     e   o + +   +   s   e + o |                                               
+  |   +   e   o + + o o + o + e s o |      ------------------- 
+  | o     e   o + +   +   s   e + o |
   |   + + e   + + s + + + + + e + + |                                               
   | o o o e +   s         + + e +   |                                               
   | o +   e   s + + o s     s e + o |                                               
@@ -776,9 +776,7 @@ testcase(t('1f85a75f')>tst+0,"
   |           e                 o     +   e o   o               |                                                                           
   |                                 e         e                 |                                                                           
   |     +         +                   e       e               e |                                                                           
-   -------------------------------------------------------------                                                                            
-                                                                           
-").
+   -------------------------------------------------------------").
 %= fav(t('1f85a75f'),[no_sol(i(complete),resize_grid(3,5,Color),incomplete),out_grid([3,5]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,find_the_intruder,crop,'(2, 1)']).
 
 
@@ -1014,6 +1012,7 @@ testcase(t('239be575')>tst+1,"
                            
 ").
 %= fav(t('239be575'),[no_sol(i(complete),resize_grid(1,1,Color),incomplete),out_grid([1,1]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,detect_connectedness,associate_images_to_bools,'(6, 2)']).
+
 
 
 testcase(t('23b5c85d')>tst+0,"
@@ -6761,7 +6760,7 @@ testcase(t(caa06a1f)>tst+0,"
   | + x ~ + x ~ + x ~ + x ~ e e e e e e |     | x ~ + x ~ + x ~ + x ~ + x ~ + x ~ + |
   | x ~ + x ~ + x ~ + x ~ + e e e e e e |     | ~ + x ~ + x ~ + x ~ + x ~ + x ~ + x |
   | e e e e e e e e e e e e e e e e e e |     | x ~ + x ~ + x ~ + x ~ + x ~ + x ~ + |
-  | e e e e e e e e e e e e e e e e e e |     | ~ + x ~ + x ~ + x ~ + x ~ + x ~ + x |
+  |p e e e e e e e e e e e e e e e e e e |     | ~ + x ~ + x ~ + x ~ + x ~ + x ~ + x |
   | e e e e e e e e e e e e e e e e e e |     | x ~ + x ~ + x ~ + x ~ + x ~ + x ~ + |
   | e e e e e e e e e e e e e e e e e e |     | ~ + x ~ + x ~ + x ~ + x ~ + x ~ + x |
   | e e e e e e e e e e e e e e e e e e |     | x ~ + x ~ + x ~ + x ~ + x ~ + x ~ + |

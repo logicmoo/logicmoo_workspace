@@ -2344,7 +2344,7 @@ fmt_cl(P):- \+ \+ (pretty_numbervars(P,PP),numbervars(PP,126,_,[attvar(skip),sin
 fmt_cl(S,_):- term_is_ansi(S), !, write_keeping_ansi(S).
 fmt_cl(G,_):- is_grid(G),write('"'),user:print_grid(G),write('"'),!.
 % fmt_cl(P,_):- catch(arc_portray(P),_,fail),!.
-fmt_cl(P,_):- is_list(P),catch(print_tree_nl(P),_,fail),!.
+fmt_cl(P,_):- is_list(P),catch(pp_no_nl(P),_,fail),!.
 %ptg(PP,Opts):- is_list(PP),select(portray_goal(ptg),Opts,Never),write_term(PP,Never). 
 
 unwrap_litr(C,CCC+VS):- copy_term(C,CC,VS),

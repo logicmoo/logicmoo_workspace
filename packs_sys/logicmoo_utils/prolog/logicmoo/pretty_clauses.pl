@@ -1267,9 +1267,11 @@ our_pengine_output(Codes):- catch(text_to_string(Codes,Str),_,fail),Codes\==Str,
 %our_pengine_output(SO):- toplevel_pp(http),!,format('<span class="swish">~w</span>',[SO]).
 %our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_html_goal((sformat(S,'<pre>~w</pre>',[SO]),print_raw_html_page(S))).
 %our_pengine_output(SO):- \+ atom(SO), catch(text_to_atom(SO,Atom),_,fail),SO\==Atom,!,our_pengine_output(Atom).
-our_pengine_output(SO):- toplevel_pp(bfly),!,bfly_write_hs(SO).
 our_pengine_output(SO):- toplevel_pp(swish),!,pengines:pengine_output(SO),!.
 our_pengine_output(SO):- toplevel_pp(http),!,write(SO).
+%our_pengine_output(SO):- toplevel_pp(bfly),!,write(SO).
+%our_pengine_output(SO):- toplevel_pp(bfly),!,(inside_bfly_html_esc->write(SO); bfly_write_hs(SO)).
+our_pengine_output(SO):- in_pp(ansi),!,write(SO).
 our_pengine_output(SO):- bfly_write_hs(SO).
 %our_pengine_output(SO):- setup_call_cleanup((bfly_title("+HtmlMode"),write(SO),bfly_title("-HtmlMode"),flush_output),true,true),!.
 
@@ -1305,10 +1307,13 @@ pp_set(X):- bfly_set(pp_output,X).
 
 is_pp_set(X):- bfly_tl:bfly_setting(pp_output,X),!.
 
+set_toplevel_pp(PP):- set_prolog_flag('$fake_toplevel_pp',PP).
 
 toplevel_pp(X):- nonvar(X), toplevel_pp(Y), !, X==Y.
 toplevel_pp(swish):- on_x_log_fail(nb_current('$pp_swish',t);pengines:pengine_self(_Self)),!.
 toplevel_pp(http):- on_x_log_fail(httpd_wrapper:http_current_request(_)),!.
+% Fake only for testing between bfly/ansi
+toplevel_pp(PP):- current_prolog_flag('$fake_toplevel_pp',PP),PP\==[],!.
 toplevel_pp(bfly):- getenv('TERM','xterm-256color'),!.
 toplevel_pp(ansi):- getenv('TERM','xterm'),!.
 toplevel_pp(bfly):- current_predicate(bfly_get/2), bfly_get(butterfly,t),!.
@@ -1408,17 +1413,24 @@ prefix_spaces1(Tab):- Floor is floor(Tab/2)+1, prefix_spaces0(Floor).
 :- system:import(ansi/0).
 :- export(bfly/0).
 :- system:import(bfly/0).
-ansi:- bfly_set(butterfly,f),set_pp(ansi).
-bfly:- bfly_set(butterfly,t),set_pp(bfly),bflyw.
+ansi:- bfly_set(butterfly,f),set_pp(ansi),set_toplevel_pp(ansi).
+bfly:- bfly_set(butterfly,t),set_pp(bfly),bflyw,set_toplevel_pp([]).
 
+az_ansi(Goal):- toplevel_pp(ansi),!,call(Goal).
+az_ansi(Goal):- toplevel_pp(bfly),in_pp(bfly),!,wots(S,setup_call_cleanup(ansi,Goal,bfly)), bfly_write_pre(S).
+az_ansi(Goal):- toplevel_pp(http),in_pp(bfly),!,setup_call_cleanup(ansi,Goal,bfly).
+az_ansi(Goal):- call(Goal).
+
+pl_span_c(_Class):- no_more_folding,!.
 pl_span_c(Class):- pformat(html('<span class="pl-~w">',Class)).
+pl_span_e:- no_more_folding,!.
 pl_span_e:- pformat(html('</span>')).
+
 pl_span_s(Class, Goal):- pl_span_goal(Class, Goal).
 
-pl_span_goal(_, Goal):- ansi_ansi,!,call(Goal).
-pl_span_goal(Class, Goal):- setup_call_cleanup(pl_span_c(Class),Goal,pl_span_e).
-
-pt_s_e(S, Goal, E):- setup_call_cleanup(pformat(S),Goal,pformat(E)).
+pl_span_goal(_, Goal):- ansi_ansi,!,call(incr_term_depth(Goal)).
+pl_span_goal(Class, Goal):- setup_call_cleanup(pl_span_c(Class),incr_term_depth(Goal),pl_span_e).
+pt_s_e(S, Goal, E):- setup_call_cleanup(pformat(S),incr_term_depth(Goal),pformat(E)).
 
 :- fixup_exports.
 
@@ -1456,7 +1468,7 @@ with_nb_var(Var,TF,Goal):-
 
 increase_print_depth(Goal):- 
   \+ using_folding_depth 
-  -> Goal 
+  -> incr_term_depth(Goal) 
   ; setup_call_cleanup(flag('$fold_this_round',N,N-1),
       Goal,
       flag('$fold_this_round',_,N)).
@@ -1474,10 +1486,17 @@ with_folding_depth(Depth,Goal):-
       with_folding(t,Goal),
       flag('$fold_this_round',_,N)).
 
+no_more_folding:- flag('$term_depth',N, N), N>0.
+
+incr_term_depth(Goal):- 
+ setup_call_cleanup(flag('$term_depth',N, N + 1),
+      Goal,
+      flag('$term_depth',_,N)).
+
 pformat_e_args(E, Goal):- using_folding_depth, !, 
   increase_print_depth(( 
           pformat_ellipsis(E),  
-          (fold_this_round -> with_folding(f,pl_span_goal('args, fold',Goal)) ; pl_span_goal('args',Goal)))),!.
+          (fold_this_round -> with_folding(f,pl_span_goal('args fold',Goal)) ; pl_span_goal('args',Goal)))),!.
 
 pformat_e_args(E, Goal):- pformat_ellipsis(E), !, pl_span_goal('args',Goal),!.
 
@@ -1486,7 +1505,7 @@ pformat_functor(F):- pl_span_goal('functor',pformat(F)).
 
 pformat_ellipsis(_):- ansi_ansi,!.
 pformat_ellipsis(E):- fold_this_round, !, pl_span_goal('ellipsis clickprev',ellipsis_html(E)),!.
-pformat_ellipsis(E):- pl_span_goal('ellipsis, clickprev, fold',ellipsis_html(E)),!.
+pformat_ellipsis(E):- pl_span_goal('ellipsis clickprev fold',ellipsis_html(E)),!.
 
 ellipsis_html(E):- ignore(pformat_html(pre(call(write_ellipsis(E))))).
 
@@ -1564,11 +1583,20 @@ print_tree_width(W120):- W120=120.
 maybe_prefix_spaces(V,Tab):- ignore(( \+ as_is(V),prefix_spaces(Tab) )).
 maybe_print_tab_term(Tab,V):- maybe_prefix_spaces(V,Tab), print_tree_no_nl( V ).
 
-write_keeping_ansi(S):- string(S),!, write('"'),write(S),write('"').
-write_keeping_ansi(S):- \+ atom(S),!, write(S).
-write_keeping_ansi(S):- is_ansi_color(S), !, real_ansi_format([bold, hfg(S)], '~q',[S]).
+print_indented_str(S):- split_string(S,"\n\r\0","",LS), current_output_line_position(Pos), print_indented_str(Pos,LS).
+
+print_indented_str(_,[]):-!.
+print_indented_str(_Pos,[S]):- write(S).
+print_indented_str(Pos,[H|S]):- write(H),maybe_prefix_spaces(S,Pos), print_indented_str(Pos,S).
+
+write_keeping_ansi(S):- wots(SS,write_keeping_ansi0(S)),!,print_indented_str(SS).
+
+write_keeping_ansi0(S):- string(S),!, write('"'),write(S),write('"').
+write_keeping_ansi0(S):- atom(S),!, write("'"),write(S),write("'").
+write_keeping_ansi0(S):- \+ atom(S),!, write(S).
+write_keeping_ansi0(S):- is_ansi_color(S), !, real_ansi_format([bold, hfg(S)], '~q',[S]).
 %write_keeping_ansi(S):- write('\''),write(S),write('\'').
-write_keeping_ansi(S):- write(S).
+write_keeping_ansi0(S):- write(S).
 
 
 term_is_ansi(S):- compound(S),!,fail.
@@ -1599,7 +1627,7 @@ pt1(_, Tab,Term) :-
   with_no_hrefs(t,(if_defined(rok_linkable(Term),fail), !,
   prefix_spaces(Tab), write_atom_link(Term))),!.
 
-pt1(_FS,Tab,[H|T]) :- is_codelist([H|T]), !,
+pt1(_FS,Tab,[H|T]) :- is_codelist([H|T]), !,  
    sformat(S, '`~s`', [[H|T]]),
    pformat([ps(Tab),S]).
 
@@ -1811,7 +1839,7 @@ splice_off([A0,A|As],[A0|Left],[R|Rest]):-
 
 
 
-pt_args_arglist( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis, clickprev, fold',true),pl_span_goal('args',true)),E).
+pt_args_arglist( _, _, S,_,E,[]):- pt_s_e(S, (pl_span_goal('ellipsis clickprev fold',true),pl_span_goal('args',true)),E).
 pt_args_arglist(FS,Tab,S,M,E,[H|T]):-
  pt_s_e(S,  
   pformat_e_args([H|T],      
@@ -2189,6 +2217,7 @@ defaults([ output(user_output),
            left_margin(0),
            right_margin(172),
            depth(0),
+           fold_depth(0),
            indent(0),
            indent_arguments(auto),
            operators(true),
@@ -2584,7 +2613,8 @@ bfly_term(Term, Options) -->
     { must_be(acyclic, Term),
       merge_options(Options,
                     [ priority(1200),
-                      max_depth(1 000 000 000),
+                      %max_depth(1 000 000 000),
+                       max_depth(3),
                       depth(0)
                     ],
                     Options1),

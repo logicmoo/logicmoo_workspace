@@ -4,9 +4,8 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+:- include(kaggle_arc_header).
+
 :- discontiguous stuff_options1/2.
 :- discontiguous stuff_options1/3.
 :- discontiguous stuff_options/2.
@@ -220,6 +219,8 @@ stuff_options(whatWithType,change_stuff_not_matching).
 stuff_options(whatWithType,add_stuff_missing).
 
 
-
 :- fixup_exports.
+
+end_of_file.
+
 

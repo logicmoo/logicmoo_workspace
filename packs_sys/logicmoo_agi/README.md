@@ -5,6 +5,11 @@ This is a SWI-Prolog pack that runs LM489
 - LOGICMOO IRC channel #logicmoo on [freenode.net](irc://irc.freenode.net:+6697/logicmoo).
 - LOGICMOO Telegram at [https://t.me/LogicMoo](https://t.me/LogicMoo)
 
+# If you are part of our ARC challenge 
+
+You might be wanting to look at this [prolog/kaggle_arc/README.md](prolog/kaggle_arc/README.md) instead!
+
+
 
 
 # Installation

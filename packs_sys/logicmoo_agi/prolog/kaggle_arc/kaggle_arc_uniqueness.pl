@@ -4,10 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
-
+:- include(kaggle_arc_header).
 
 
 saved_group(Why,IndvS):-
@@ -15,8 +12,9 @@ saved_group(Why,IndvS):-
 
 is_why_grouped(TestID,Count,Why,IndvS):-
   is_why_grouped_g(TestID,Count,Why,IndvSG),
-  maplist(oid_to_object,IndvSG,IndvS).
+  maplist(must_oid_to_object,IndvSG,IndvS).
 
+must_oid_to_object(ID,O):- must_det_ll(oid_to_object(ID,O)).
 
 save_grouped(Why,G):-
   into_group(G,GS),
@@ -48,14 +46,17 @@ select_group(TestID,Group,How):- select_group0(TestID,Group,How).
 select_group0(TestID,Group,How):-
   ((is_why_grouped(TestID,_,How1,Group1), % dif(Group1,Group2), 
     is_why_grouped(TestID,_,How2,Group2),
+    Group1\==[], Group2\==[],
     Group1\==Group2,
     once((sub_term(E,How1),sub_var(E,How2))),
     %length(Group1,G1), length(Group2,G2), G1>G2,
   once((sub_term(E,How1),sub_var(E,How2))),
   %member(M1,Group1),member(M2,Group2),M1=M2,
   my_append(Group1,Group2,GroupJ), sort(GroupJ,Group),
-  How = [How1,How2]))  *-> true ; is_why_grouped(TestID,_,How,Group).
-select_group0(TestID,Group,obj_cache):- findall(O,obj_cache(TestID,O,_),GroupJ),sort(GroupJ,Group).
+  How = [How1,How2])) 
+    *-> true ; is_why_grouped(TestID,_,How,Group).
+
+select_group0(TestID,Group,obj_cache):- findall(O,obj_cache(TestID,O,_),GroupJ), GroupJ\==[], sort(GroupJ,Group).
 
 :- arc_history(test_what_unique).
 test_what_unique:- get_current_test(TestID), what_unique(TestID,n=0,n>10).
@@ -80,13 +81,13 @@ most_unique(symmetry,VM):-
 
 what_unique:- get_current_test(TestID),what_unique(TestID).
 
-what_unique(TestID):- get_vm(VM),
-   fif((VM.id \= (TestID * _ * _)), ndividuator1),
-   get_vm(VM2),
-   explain_uniqueness(VM2.objs).
+what_unique(TestID):- 
+   get_vm(VM),
+   ((VM.id \= (TestID > _ * _)), ndividuator),
+   get_vm(VM2), explain_uniqueness(VM2.objs).
 
 what_unique(TestID,Dict):- is_map(Dict),!,what_unique_dict(TestID,Dict).
-what_unique(TestID,Obj):- get_current_test(TestID),select_group(TestID,Group,_How), member(Obj,Group), what_unique(TestID,Obj,Group).
+what_unique(TestID,Obj):- get_current_test(TestID),select_group(TestID,Group,_How), member(Obj,Group), must_det_ll(what_unique(TestID,Obj,Group)).
 what_unique(TestID,Obj,Group):- (is_group(Group);is_object(Obj)),!,what_unique_obj(TestID,Obj,Group).
 what_unique(TestID,CountMask,GroupSizeMask):-
   get_new_uniq_dict(Dict),
@@ -95,6 +96,23 @@ what_unique(TestID,CountMask,GroupSizeMask):-
   what_unique_dict(TestID,Dict),
   report_unique(Dict).
 
+get_peers(Obj,Peers):- 
+  get_current_test(TestID),select_group(TestID,Group,_How), select(Obj,Group,Peers).
+
+peerless_props(O1,Peers,PeerlessProps):-
+ must_det_ll(( indv_props(O1,Props),
+               (var(Peers)->get_peers(O1,Peers);true),
+               (select(O1,Peers,PeersU)->true;PeersU=Peers),
+  include(is_peerless_prop(PeersU),Props,PeerlessProps))).
+
+not_peerless_props(O1,Peers,PeerlessProps):-
+ must_det_ll(( indv_props(O1,Props),
+               (var(Peers)->get_peers(O1,Peers);true),
+               (select(O1,Peers,PeersU)->true;PeersU=Peers),
+  include(not_peerless_prop(PeersU),Props,PeerlessProps))).
+
+is_peerless_prop(Peers,Prop):- \+ sub_var(Prop,Peers).
+not_peerless_prop(Peers,Prop):- sub_var(Prop,Peers).
 
 what_unique_obj:- get_current_test(TestID),what_unique_obj(TestID,_,_).
 what_unique_obj(TestID,Obj,Group):- 
@@ -122,7 +140,7 @@ report_unique(Dict):-
   maplist_e(tersify,Group,GroupO),
   maplist_e(tersify,Obj,ObjO),
   %(Obj\==[] -> ignore(print_grid(Obj)) ; true),
-  format('~N'), print_tree_nl(what_unique(ObjO=[ActualCount/ActualGroupSize-Trait],sharedWith=SharedWithO,
+  format('~N'), pp(what_unique(ObjO=[ActualCount/ActualGroupSize-Trait],sharedWith=SharedWithO,
   setL/listL=SetL/ListL,others=HTraitSetO,how=How,
   groupSizeMask=GroupSizeMask,group:GroupO,countMask=CountMask,otherL=OtherL)))).
 
@@ -180,7 +198,7 @@ explain_uniqueness(GroupWhole):-
 
 
 % touching vs each dir
-% size
+% size2D
 
 
 
@@ -283,6 +301,7 @@ good_overlap(rotation).
 
 too_non_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_non_unique(F).
 too_non_unique(grid_size).
+too_non_unique(grid_sz).
 %too_non_unique(birth).
 too_non_unique(grid).
 too_non_unique(changes).
@@ -296,13 +315,13 @@ length_criteria(List,N):- length(List,N).
 
 tesT_compare_objects:- compare_objects([
     obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),
-      v_hv(1,1),rotation(sameR),loc(4,9),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,9),% obj_to_oid(t(af902bf9)>(tst+0)*in,37),globalpoints([yellow-point_04_09]),
+      vis2D(1,1),rotation(sameR),loc2D(4,9),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center2D(4,9),% obj_to_oid(t(af902bf9)>(tst+0)*in,37),globalpoints([yellow-point_04_09]),
       grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(4,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(4,6),obj_to_oid(t(af902bf9)>(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(1,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(1,6),obj_to_oid(t(af902bf9)>(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(10,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,5),obj_to_oid(t(af902bf9)>(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(6,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,5),obj_to_oid(t(af902bf9)>(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(10,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(10,1),obj_to_oid(t(af902bf9)>(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
-    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),v_hv(1,1),rotation(sameR),loc(6,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center(6,1),obj_to_oid(t(af902bf9)>(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rotation(sameR),loc2D(4,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center2D(4,6),obj_to_oid(t(af902bf9)>(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rotation(sameR),loc2D(1,6),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center2D(1,6),obj_to_oid(t(af902bf9)>(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rotation(sameR),loc2D(10,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center2D(10,5),obj_to_oid(t(af902bf9)>(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rotation(sameR),loc2D(6,5),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center2D(6,5),obj_to_oid(t(af902bf9)>(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rotation(sameR),loc2D(10,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center2D(10,1),obj_to_oid(t(af902bf9)>(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
+    obj([amass(1),shape([point_01_01]),colors([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rotation(sameR),loc2D(6,1),changes([]),iz(dots),iz(shape(dot)),iz(solid),iz(jagged(true)),center2D(6,1),obj_to_oid(t(af902bf9)>(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
     OUTPUT),
   print(OUTPUT).

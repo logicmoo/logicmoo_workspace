@@ -5,33 +5,31 @@
   unless permission or license is granted (contact at business@logicmoo.org)
 */
 
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
-
-
+:- include(kaggle_arc_header).
 
 
 solve_easy:- get_current_test(Name),solve_easy(Name).
 
 solve_easy(Name):- 
   fix_test_name(Name,TestID,ExampleNum),
-  ignore(luser_getval(example,ExampleNum)),
+  some_current_example_num(ExampleNum),
   forall(kaggle_arc(TestID,ExampleNum,In,Out),try_easy_io(TestID>ExampleNum,In,Out)),
   ((ExampleNum\=tst+_)-> 
     forall(kaggle_arc(TestID,tst+N,In,Out),try_easy_io(TestID>tst+N,In,Out))).
 
 try_something_easy(rot180).
 try_something_easy(=).
-try_something_easy(run_dsl(E)):- test_info(_,human(E)).
+try_something_easy(run_dsl(E)):- fail, test_info(_,human(E)).
 
 maybe_try_something_easy(I,M,P2):-  try_something_easy(P2), call(P2,I,M).
 maybe_try_something_easy(I,M,Did):- fail_over_time(4,try_something(Did,I,M),fail),!.
 
 try_easy_io(Name,I,O):-
  ignore((
-  Template = try_something(W,Did,I,M),
-  findall(Template,(maybe_try_something_easy(I,M,Did),count_changes(M,O,1,W),(W==1->!;true)),List),
+  Template = try_something(W,Did,I,M,SS),
+  findall(Template,
+    (wots(SS,weto(maybe_try_something_easy(I,M,Did))),count_changes(M,O,1,W),(W==1->!;true)),
+     List),
   sort(List,[Template|_]),
   %ignore((call(P2,I,II),call(P2,O,OO),
   %reduce_grid(GridIn+GridOut,IOps,II+OO),!,
@@ -116,8 +114,8 @@ relax_prop(S1,R1):- R1 = S1.
 relax_prop1(S1,R1):- relax_prop2(S1,R1)*->true;generalize(S1,R1).
 
 relax_prop2(o(X,Y,_),o(X,Y,_)).
-relax_prop2(loc(X,_),loc(X,_)).
-relax_prop2(loc(_,Y),loc(_,Y)).
+relax_prop2(loc2D(X,_),loc2D(X,_)).
+relax_prop2(loc2D(_,Y),loc2D(_,Y)).
 
 
 simplify_props(IndvS,[R1|Props],SPropsF):- never_group_on(R1), !,simplify_props(IndvS,Props,SPropsF).
@@ -134,12 +132,12 @@ simplify_props(_,A,A).
 
 pregroup1(iz(shaped)).
 pregroup1(iz(image)).
-pregroup1(iz(chromatic(N))):- between(1,10,N).
-pregroup1(o(How,lf(_),_)):- dif(How,i_repair_mirrors).
+pregroup1(iz(chromatic(N,BGN))):- between(1,10,N),between(0,2,BGN).
+pregroup1(o(sf(_),_,How)):- dif(How,i_repair_patterns).
 
 
 never_uprop(localpoints(_)).
-never_group_on(o(I,_,_)):- I == i_repair_mirrors.
+never_group_on(o(I,_,_)):- I == i_repair_patterns.
 never_group_on(P):- never_uprop(P).
 
 regroups(IndvS,[Why1,Why2],[Obj|Grp]):-
@@ -162,7 +160,7 @@ propset_indivs(PropsSet,OtherProps,IndvS,Why,Grp):-
 haz_prop(P,O):- has_prop(P,O).
 
 :- export(grid_part/2).
-grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(luser_getval(example,ExampleNum)),!,
+grid_part(Grid,Info):- var(Grid), get_current_test(TestID), some_current_example_num(ExampleNum),!,
   kaggle_arc_io(TestID,ExampleNum,_,Grid),
   grid_part(Grid,Info).
 
@@ -175,7 +173,7 @@ grid_part(Grid,Info):- var(Grid), get_current_test(TestID), ignore(luser_getval(
 number_obj(N,obj(List),obj([ord(N)|List])).
 /*
   Obj = obj(List),
-  loc(Obj,X,Y),obj_to_oid(Obj,_,MyID),
+  loc2D(Obj,X,Y),obj_to_oid(Obj,_,MyID),
  % atomic_list_concat([obj,X,Y],'_',Key),
   localpoints_include_bg(Obj,LocalPoints),
   points_to_grid(X,Y,LocalPoints,Grid),mapgrid(sometimes_assume(=,bg),Grid),
@@ -192,7 +190,8 @@ number_obj(N,obj(List),obj([ord(N)|List])).
 %grid(Type,ConstructorData,[rot270]),CacheOfCalls).
 
 %is_graid(TestID>ExampleNum*IO,TestID,ExampleNum,IO).
-is_graid((TestID>ExampleNum*IO),G):- kaggle_arc_io(TestID,ExampleNum,IO,G).
+
+is_graid((TestID > (ExampleNum*IO)),G):- kaggle_arc_io(TestID,ExampleNum,IO,G).
 
 :- export(is_graid/2).
 %grid_aid(ID,TestID>ExampleNum*IO):- is_graid(Grid,TestID,ExampleNum,IO),format(ID,).

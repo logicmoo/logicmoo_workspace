@@ -33,6 +33,7 @@ loadSumo(File):- with_lisp_translation_cached(File,sumo_to_pdkb,nop).
 
 
 %skip_sumo:- app_argv('--nosumo'),!.
+skip_sumo:- !,fail.
 skip_sumo:- app_argv(List), (member('--nosumo',List) ; (\+ member('--sumo',List), \+ member('--snark',List), \+ member('--all',List))),!.
 
 clone_ontologyportal_sumo:- skip_sumo,!.

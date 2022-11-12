@@ -2,7 +2,7 @@
    which uses `.cm-s-prolog span.cm-atom`, etc.
 */
 .fold             {display:none;}
-.pl-ellipsis\,      {text-decoration:underline; color: rgb(64, 255, 255); mix-blend-mode: difference; font-style: italic;}
+.pl-ellipsis      {text-decoration:underline; color: rgb(64, 255, 255); mix-blend-mode: difference; font-style: italic;}
 .pl-functor:hover {text-decoration:underline;}
 .pl-infix:hover   {text-decoration:underline;}
 

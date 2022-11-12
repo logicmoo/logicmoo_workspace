@@ -1663,12 +1663,28 @@ woto_tty(S,TTY,Goal):- with_output_to(S,(set_stream(current_output,tty(TTY)),Goa
 
 :- meta_predicate(woto(+,0)).
 :- export(woto/2).
-woto(S,Goal):- use_tty(S,TTY),woto_tty(S,TTY,Goal).
+woto(S,Goal):- use_tty(S,TTY),
+  get_stream_setup(Setup), woto_tty(S,TTY,(Setup,Goal)).
 
+get_stream_setup(S):-
+ %G = (current_output(CO),maplist(call,Setup)),
+ G = maplist(call,Setup),
+ %S = (writeln(user_output,G),call(G)),
+ G = S,
+ Out = current_output,
+ Template = notrace(((current_output(CO),catch(set_stream(CO,Prop),E,nop(writeln(Prop=E)))))),
+  bagof(Template,(stream_setup(Prop),stream_property(Out,Prop)),Setup). 
+
+stream_setup(encoding(_)).
+stream_setup(tty(_)).
+stream_setup(representation_errors(_)).
 
 :- meta_predicate(wots(-,0)).
 :- export(wots/2).
-wots(S,Goal):- woto(string(S),Goal).
+wots(S,Goal):-  
+   (nb_current('$wots_stack',Was);Was=[]),
+   current_output(Out),
+     locally(nb_setval('$wots_stack',[Out|Was]),woto(string(S),Goal)).
 
 :- meta_predicate(wotso(0)).
 :- export(wotso/1).
@@ -1688,14 +1704,14 @@ weto(G):-
   once(stream_property(CE,alias(current_error));CE=UE),
   once(stream_property(CO,alias(current_output));current_output(CO)),!,
   setup_call_cleanup(
-     (set_stream_safe(CO,alias(user_error)),set_stream_safe(CO,alias(user_output)),
-         set_stream_safe(CO,alias(current_error)),set_stream_safe(CO,alias(current_output))),
+     (set_stream_nop(CO,alias(user_error)),set_stream_nop(CO,alias(user_output)),
+         set_stream_nop(CO,alias(current_error)),set_stream_nop(CO,alias(current_output))),
      locally_tl(thread_local_error_stream(CO),G), 
-     (set_stream_safe(UE,alias(user_error)),set_stream_safe(CE,alias(current_error)),
-         set_stream_safe(UO,alias(user_output)),set_stream_safe(CO,alias(current_output)))).
+     (set_stream_nop(UE,alias(user_error)),set_stream_nop(CE,alias(current_error)),
+         set_stream_nop(UO,alias(user_output)),set_stream_nop(CO,alias(current_output)))).
 weto(G):- call(G).
 
-set_stream_safe(S,P):- nop(set_stream(S,P)).
+set_stream_nop(S,P):- nop(set_stream(S,P)).
 
 :- meta_predicate(wets(+,0)).
 :- export(wets/2).
@@ -1845,7 +1861,7 @@ keep_line_pos_w_w(S, G) :-
 line_pos(S,LPos):- stream_property(S, position(Pos)),stream_position_data(line_position, Pos, LPos).
 
 set_stream_line_position_safe(S,Pos):-
-  catch(set_stream_safe(S, line_position(Pos)),E,dmsg(error(E))).
+  catch(set_stream_nop(S, line_position(Pos)),E,dmsg(error(E))).
 
 :- multifile(tlbugger:term_color0/2).
 :- dynamic(tlbugger:term_color0/2).

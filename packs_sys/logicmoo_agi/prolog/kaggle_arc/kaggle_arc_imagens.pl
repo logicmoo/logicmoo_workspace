@@ -4,20 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
-
-:- discontiguous make_shape/2.
-:- dynamic make_shape/2.
-:- discontiguous decl_sf/1.
-
-:- multifile is_fti_step/1.
-:- discontiguous is_fti_step/1.
-
-:- discontiguous in_shape_lib/2.
-:- multifile in_shape_lib/2.
-:- dynamic in_shape_lib/2.
+:- include(kaggle_arc_header).
 
 
 do_gp([],Pixels,Pixels):- !.
@@ -129,7 +116,7 @@ the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 the_hammer(Color,ColorComplex):- 
   ColorComplex = obj([amass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
-  Color-point_02_02, Color-point_03_02]), v_hv(3, 3), rotation(sameR), loc(2, 5), 
+  Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rotation(sameR), loc2D(2, 5), 
   changes([]), iz(rectangle), iz(hammer), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
@@ -177,7 +164,7 @@ into_lib_object2(ShapeProps,ScaledGrid,LibObj):-
   %grid_colors(ScaledGrid,CGPoints),
   %ppa(grid_colors(ScaledGrid,SPoints)),
   globalpoints_maybe_bg(ScaledGrid,SPoints)))),
-  G = make_indiv_object_no_vm(into_lib_object2,H,V,[iz(into_lib_object),grid(ScaledGrid),v_hv(H,V)|ShapeProps],SPoints,LibObj),
+  G = make_indiv_object_no_vm(into_lib_object2,H,V,[iz(into_lib_object),grid(ScaledGrid),vis2D(H,V)|ShapeProps],SPoints,LibObj),
   catch(G,E,(arcST,wdmsg(E=G),trace,G)).
 
 % todo temp
@@ -214,18 +201,20 @@ searchable(Shape,Searchable):- object_grid(Shape,Grid), constrain_grid(f,_CheckT
 is_fti_step(into_monochrome).
 % =====================================================================
 into_monochrome(VM):- Grid = VM.grid,
-  into_monochrome(Grid,NewGrid),!,
+  into_monochrome2(Grid,NewGrid),!,
   set(VM.grid) = NewGrid,  
   print_side_by_side(silver,Grid,into,_,NewGrid,monochrome).
 
-into_monochrome(NoBlack,Mono):- 
+into_monochrome(Color,Mono):- called_gid('_mono', into_monochrome2, Color,Mono),!.
+
+into_monochrome2(NoBlack,Mono):-  get_black(Black),
   colors_count_black_first(NoBlack,CCBF), 
-    CCBF=[cc(black,0),cc(BGC,_)|_],!, 
-  into_monochrome(fg,BGC,NoBlack,Mono).
-into_monochrome(Color,Mono):- into_monochrome(fg,black,Color,Mono).
+    CCBF=[cc(Black,0),cc(BGC,_)|_],!, 
+  into_monochrome4(fg,BGC,NoBlack,Mono).
+into_monochrome2(Color,Mono):- get_black(Black),into_monochrome4(fg,Black,Color,Mono).
 
 
-into_monochrome(FG,BG,Color,Mono):- into_monochrome(from_monochrome4(FG,BG),Color,Mono).
+into_monochrome4(FG,BG,Color,Mono):- into_monochrome3(from_monochrome4(FG,BG),Color,Mono).
 
 
 from_monochrome4(_FG,_BG,Color,Mono):- is_bg_color(Color), decl_bg_color(Mono),!,cv(Mono,Color).
@@ -236,17 +225,20 @@ from_monochrome4(FG,_BG,Color,Mono):- is_fg_color(Color), apply_recolor(FG,Color
 apply_recolor(Izer,Color,Mono):- 
   (is_color(Izer)->copy_term(Izer,Mono);( \+ missing_arity(Izer,2) -> call(Izer,Color,Mono); ( \+ missing_arity(Izer,1) -> call(Izer,Mono)))).
 
-into_monochrome(MonoP2,Color,Mono):- is_color(Color),call(MonoP2,Color,Mono),!.
-into_monochrome(_MonoP2,Color,Mono):- is_bg_color(Color), decl_bg_color(Mono),!, cv(Mono,Color).
-into_monochrome(_MonoP2,Color,Mono):- is_fg_color(Color), decl_many_fg_colors(Mono),!, cv(Mono,Color).
-into_monochrome(_MonoP2,Color,Mono):- \+ compound(Color), Mono=Color.
-into_monochrome(MonoP2,Color,Mono):- is_group(Color),!,mapgroup(into_monochrome(MonoP2),Color,Mono).
-into_monochrome(MonoP2,Color,Mono):- is_grid(Color),!,mapgrid(cell_into_monochrome(MonoP2),Color,Mono).
-into_monochrome(MonoP2,Color,Mono):- is_list(Color),!,maplist(into_monochrome(MonoP2),Color,Mono).
-into_monochrome(MonoP2,I,O):- compound(I), !, compound_name_arguments(I,F,IA), 
-  maplist(into_monochrome(MonoP2),IA,OA), compound_name_arguments(O,F,OA).
-into_monochrome(_MonoP2,I,I).
-cell_into_monochrome(MonoP2,I,O):- into_monochrome(MonoP2,I,O).
+
+into_monochrome3(MonoP2,Color,Mono):- into_mono3(MonoP2,Color,Mono).
+
+into_mono3(MonoP2,Color,Mono):- is_color(Color),call(MonoP2,Color,Mono),!.
+into_mono3(_MonoP2,Color,Mono):- is_bg_color(Color), decl_bg_color(Mono),!, cv(Mono,Color).
+into_mono3(_MonoP2,Color,Mono):- is_fg_color(Color), decl_many_fg_colors(Mono),!, cv(Mono,Color).
+into_mono3(_MonoP2,Color,Mono):- \+ compound(Color), Mono=Color.
+into_mono3(MonoP2,Color,Mono):- is_group(Color),!,mapgroup(into_mono3(MonoP2),Color,Mono).
+into_mono3(MonoP2,Color,Mono):- is_grid(Color),!,mapgrid(cell_into_monochrome(MonoP2),Color,Mono).
+into_mono3(MonoP2,Color,Mono):- is_list(Color),!,maplist(into_mono3(MonoP2),Color,Mono).
+into_mono3(MonoP2,I,O):- compound(I), !, compound_name_arguments(I,F,IA), 
+  maplist(into_mono3(MonoP2),IA,OA), compound_name_arguments(O,F,OA).
+into_mono3(_MonoP2,I,I).
+cell_into_monochrome(MonoP2,I,O):- into_mono3(MonoP2,I,O).
 
 /*
 into_monochrome(FGC,BGC,Color,Mono):- is_points_list(Color),!,maplist(points_into_monochrome(FGC,BGC),Color,Mono).
@@ -349,15 +341,17 @@ pad_sides(Fill,Row):- my_append([_|Fill],[_],Row).
 pad_sides(P1,Fill,Row):- call(P1,C1),call(P1,C2),my_append([C1|Fill],[C2],Row).
 pad_sides(C1,Fill,C2,Row):- my_append([C1|Fill],[C2],Row).
 
+:- decl_pt(ensure_grid(prefer_grid)).
+ensure_grid(Grid):- var(Grid),!, arc_grid(_,Grid).
 ensure_grid(Grid):- is_grid(Grid),!.
 ensure_grid(Grid):- between(1,30,H),between(1,30,V),make_grid(H,V,Grid).
 
 
-decl_pt(P):- var(P), clause(decl_sf(Q),true), append_term(Q,+,P).
-decl_sf(Q):- var(Q), clause(decl_pt(P),true), P=..L, my_append(MI,[+],L), Q=..MI.
+is_decl_pt(P):- var(P), clause(is_decl_sf(Q),true), append_term(Q,+,P).
+is_decl_sf(Q):- var(Q), clause(is_decl_pt(P),true), P=..L, my_append(MI,[+],L), Q=..MI.
 
-enum_make_shape(P):- var(P),!,decl_sf(Q),functor(Q,F,A),functor(P,F,A), \+ \+ check_args(Q,P).
-enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),decl_sf(Q), \+ \+ check_args(Q,P).
+enum_make_shape(P):- var(P),!,is_decl_sf(Q),functor(Q,F,A),functor(P,F,A), \+ \+ check_args(Q,P).
+enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),is_decl_sf(Q), \+ \+ check_args(Q,P).
 
 likely_fgc(Var):- var(Var),!,get_fgc(Var).
 likely_fgc(_).
@@ -448,7 +442,7 @@ make_row_n_times(H,V,C,L,R,[Row|Rest]):- plus(M,1,V),
   make_row_n_times(H,M,C,L,R,Rest).
 
 
-:- decl_sf(box_grid_n_times(size,fg_color,grid)).
+:- decl_sf(box_grid_n_times(size2D,fg_color,grid)).
 box_grid_n_times(0,_C,Grid,D):- Grid=D,!.
 box_grid_n_times(N,C,Grid,D):- !,
   make_shape(box_grid(C,Grid),G), plus(M,1,N),
@@ -457,7 +451,7 @@ box_grid_n_times(N,C,Grid,D):- !,
 restructure(X,Y):- is_list(X),!,maplist(restructure,X,Y).
 restructure(X,X).
 
-:- decl_sf(solid_square(fg_color,size)).
+:- decl_sf(solid_square(fg_color,size2D)).
 solid_square(C,HW,Grid):-  
   likely_fgc(C), 
   between(1,30,HW),
@@ -468,10 +462,7 @@ solid_square(C,HW,Grid):-
   restructure(FillRows,Grid).
 
 
-decl_sf(hollow_square(fg_color,bg_color,size)).
-
-
-
+:- decl_sf(hollow_square(fg_color,bg_color,size2D)).
 
 hollow_square(C,HW,D):- get_bgc(BG),!,hollow_square(C,BG,HW,D).
 hollow_square(C,BG,HW,D):-
@@ -500,7 +491,7 @@ clear_shape_lib:- findall(Name,in_shape_lib(Name,_Obj),Gallery),
 
 % ===========================================================
 show_shape(Shape):- is_grid(Shape),!,
- dash_chars, writeln(grid_based_shape), print_grid(Shape).
+  print_grid(grid_based_shape,Shape).
 
 show_shape(Shape):- ground(Shape),!,  
   ignore(print_info(Shape)),
@@ -514,7 +505,7 @@ show_shape(Shape):-
 
 
 print_shape_0(Shape):-
-  v_hv(Shape,H,V),
+  vis2D(Shape,H,V),
   localpoints(Shape,Points),
   
   numbervars(Points,0,_,[attvar(bind)]),
@@ -571,7 +562,7 @@ shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
 
 
 % ===========================================================
-% Stretches a grid to double its size
+% Stretches a grid to double its size2D
 :- decl_sf(double_size(grid)).
 % ===========================================================
 double_size(Grid,Double):- is_grid(Grid),!,
@@ -586,7 +577,7 @@ double_rows([],[]):-!.
 double_rows([D|DRows90],[D,D|DRows90D]):- double_rows(DRows90,DRows90D).
 
 % ===========================================================
-% Stretches a grid to increase its size
+% Stretches a grid to increase its size2D
 :- decl_sf(increase_size(size_int,grid)).
 % ===========================================================
 increase_size(N,Grid,Double):- is_grid(Grid),!,
@@ -601,7 +592,7 @@ increase_rows(_,[],[]):-!.
 increase_rows(N,[D|DRows90],O):- make_list_inited(N,D,DD),increase_rows(N,DRows90,DRows90D),my_append(DD,DRows90D,O).
 
 % ===========================================================
-% Stretches a grid border to increase its size
+% Stretches a grid border to increase its size2D
 :- decl_sf(increase_border(size_int,grid)).
 % ===========================================================
 increase_border(N,Grid,Double):- is_grid(Grid),!,

@@ -38,6 +38,7 @@
 
 :- module(swish_page,
 	  [ swish_reply/2,			% +Options, +Request
+      swish_reply2a/2,
 	    swish_reply_resource/1,		% +Request
 	    swish_page//1,			% +Options
 
@@ -158,7 +159,8 @@ swish_reply2(_, Request) :-
 swish_reply2(Options, Request) :-
 	swish_reply_config(Request, Options), !.
 
-swish_reply2(SwishOptions, Request) :-
+swish_reply2(SwishOptions, Request):- swish_reply2a(SwishOptions, Request),!.
+swish_reply2a(SwishOptions, Request) :-
 	Params = [ code(_,	  [optional(true)]),
 		   show_beware(_, [optional(true)]),
 		   background(_,  [optional(true)]),

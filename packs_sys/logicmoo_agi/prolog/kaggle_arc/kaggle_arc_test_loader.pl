@@ -4,10 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
-
+:- include(kaggle_arc_header).
 
 /*  
 
@@ -41,19 +38,43 @@ load_json_file(F, UBaseName, FullName):- no_uscore(UBaseName,BaseName), Testname
   setup_call_cleanup(open(FullName,read,In),
    json:json_read(In,Term,[]),
    close(In)),
-  load_json_of_file(Testname,file,Term),!.
+  load_json_of_file(Testname,file,Term),!,
+  ignore((
+  add_test_info_prop(Testname,fullname,FullName),
+  split_string(FullName, "\\/",'./',L),append(_,[Dir,_],L),
+  atom_string(ADir,Dir),
+  add_test_info_prop(Testname,test_suite,ADir),
+  asserta_if_new(dir_test_suite_name(ADir)))).
+
 
   load_json_of_file(Name,Type,json(Term)):-! , load_json_of_file(Name,Type,Term).
   load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
   load_json_of_file(Name,train,T):-!,load_json_of_file(Name,trn,T).
   load_json_of_file(Name,test,T):-!,load_json_of_file(Name,tst,T).
-    load_json_of_file(Testname,ExampleNum,[input=In,output=Out]):-
-       json_to_colors(In,InColor),
-       json_to_colors(Out,OutColor),
-       assert_if_new(kaggle_arc_json(Testname,ExampleNum,InColor,OutColor)),!.
-  load_json_of_file(Name,Type,[input=In,output=Out]):-assert_if_new(kaggle_arc_json(Name,Type,In,Out)),!.
-  load_json_of_file(Name,Type,[H|T]):- !, forall(nth00(N,[H|T],E), load_json_of_file(Name,Type+N,E)).
-  load_json_of_file(N,T,V):- wdmsg(load_json_of_file(N,T,V)),!.
+  load_json_of_file(Name,Type,[id=_|T]):- !, load_json_of_file(Name,Type,T).
+
+  load_json_of_file(Name,Type,[input=In,output=Out]):- assert_kaggle_arc_json(Name,Type,In,Out),!.
+  load_json_of_file(Name,Type,[input=In]):-assert_kaggle_arc_json(Name,Type,In,_Out),!.
+
+  load_json_of_file(Name,A,V):- atom(A),atomic(V),!,add_test_info_prop(Name,A,V).
+  load_json_of_file(Name,Type,[H|T]):- atom(Type),is_list(T),!,forall(nth00(N,[H|T],E), load_json_of_file(Name,Type+N,E)).    
+  load_json_of_file(Name,A,V):- wdmsg(load_json_of_file(Name,A,V)),!, add_test_info_prop(Name,A,V).
+
+assert_kaggle_arc_json(Name,Type,In0,Out0):- 
+  json_to_colors(In0,In), json_to_colors(Out0,Out), 
+  assert_kaggle_arc_json_now(Name,Type,In,Out).
+
+assert_kaggle_arc_json_now(Name,Type,In,Out):- kaggle_arc_json(Name,Type,In,OutO),Out=OutO,!.
+assert_kaggle_arc_json_now(Name,Type,In,Out):- assert_if_new(kaggle_arc_json(Name,Type,In,Out)).
+
+add_test_info_prop(Name,A,[V]):- nonvar(V), !, add_test_info_prop(Name,A,V).
+add_test_info_prop(Name,A,V):- n_v_to_nv(A,[V],TV),assert_if_new(some_test_info_prop(Name,TV)).
+
+:- multifile(dir_test_suite_name/1).
+:- dynamic(dir_test_suite_name/1).
+
+n_v_to_nv(T,V,TV):- atom(T),TV=..[T,V],!.
+n_v_to_nv(T,V,TV):- TV=(T=V),!.
 
 nth00(N,HT,E):- integer(N),!,length(Left,N),append(Left,[E|_Right],HT).
 nth00(N,HT,E):- append(Left,[E|_Right],HT), length(Left,N).
@@ -94,9 +115,14 @@ arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),absolute_di
 
 :- export(arc_sub_path/2).
 
+
 :- load_json_files(t,'./data/training/*.json').
 :- load_json_files(v,'./data/evaluation/*.json').
+%:- load_json_files(v,'./data/test_100/*.json').
+%:- load_json_files(t,'./data/test_nar_10x10/*.json').
 :- load_json_files(t,'./data/1D_testset/*.json').
+:- load_json_files(t,'./dbigham/Data/MyTrainingData/*.json').
+
 %:- load_json_files(v,'./data/test/*.json').
 :- export(kaggle_arc/4).
 kaggle_arc(TName,ExampleNum,In,Out):- kaggle_arc_json(TName,ExampleNum,In,O), disallow_test_out(ExampleNum,O,Out).
@@ -105,6 +131,7 @@ disallow_test_out(trn+_,OO,OO):-!.
 %disallow_test_out(tst+_, O,OO):- grid_size(O,H,V),make_grid(H,V,OO).
 disallow_test_out(_,OO,OO).
 
+tasks_split(ID,String):- split_string(String,",[] \n\r\t\s",",[] \n\r\t\s",L),member(S,L),atom_string(E,S),atom_id_e(E,ID).
 
 icu('007bbfb7', x + 3 ).
 icu('00d62c1b', x + 3 ).
@@ -507,3 +534,274 @@ icu('feca6190', 3 ).
 icu('ff28f65a', -1 ).
 icu('ff805c23', -1 ).
 
+%Personally Created Training Tasks (15)
+suite_tag(dbigham_personal,'
+jnohuorzh-easier
+ihiz27k2n
+jnohuorzh
+0uduqqj6f
+2wfys5w64
+2wfys5w64-relative-right-side
+n1hczotml
+ifmyulnv8
+ifmyulnv8-shape
+ifmyulnv8-dynamic-shape
+referenceable-components
+178fcbfb-easier
+middle
+surface-pixel-count
+4938f0c2-easy
+').
+
+% Core ARC Training Tasks (91)
+
+suite_tag(dbigham_train_core,'
+0ca9ddb6
+3c9b0459
+1caeab9d
+b60334d2
+25ff71a9
+3ac3eb23
+e76a88a6
+c0f76784
+321b1fc6
+05f2a901
+08ed6ac7
+a61f2674
+253bf280
+25d8a9c8
+c8f0f002
+31aa019c
+363442ee
+25d487eb
+0962bcdd
+0d3d703e
+1bfc4729
+178fcbfb
+1f876c06
+22eb0ac0
+746b3537
+6f8cd79b
+72ca375d
+a79310a0
+40853293
+95990924
+be94b721
+ed36ccf7
+a740d043
+b9b7f026
+c59eb873
+d631b094
+5614dbcf
+694f12f3
+8be77c9e
+46442a0e
+2dee498d
+3af2c5a8
+d0f5fe59
+beb8660c
+272f95fa
+6773b310
+8e5a5113
+b91ae062
+74dd1130
+7468f01a
+5117e062
+67385a82
+ac0a08a4
+28bf18c6
+496994bd
+d2abd087
+5582e5ca
+0bb8dee
+d9f24cd1
+0520fde7
+94f9d214
+f25ffba3
+9ecd008a
+29ec7d0e
+bda2d7a6
+d5d6de2d
+44f52bb0
+3bd67248
+3631a71a
+b8825c91
+d13f3404
+feca6190
+4938f0c2
+8eb1be9a
+eb281b96
+91413438
+a5f85a15
+97999447
+6d75e8bb
+63613498
+29c11459
+b6afb2da
+963e52fc
+d364b489
+1e0a9b12
+7e0986d6
+868de0fa
+56dc2b01
+d6ad076f
+f8a8fe49
+5168d44c
+').
+
+% Training Tasks (86)
+% The following ARC training tasks started passing after some different task was implemented.
+suite_tag(dbigham_train_pass,'
+ea32f347
+5521c0d9
+6c434453
+6e82a1ae
+aabf363d
+b1948b0a
+d511f180
+88a10436
+d037b0a7
+4347f46a
+56ff96f3
+4be741c5
+90c28cc7
+a87f7484
+e9afcf9a
+f8ff0b80
+1cf80156
+23b5c85d
+445eab21
+4258a5f9
+913fb3ed
+a61ba2ce
+810b9b61
+27a28665
+6e02f1e3
+b2862040
+de1cd16c
+9172f3a0
+d4469b4b
+9af7a82c
+42a50994
+6150a2bd
+50cb2852
+b230c067
+bb43febb
+bdad9b1f
+794b24be
+85c4e7cd
+ba97ae07
+ff28f65a
+67a3c6ac
+68b16354
+a8c38be5
+62c24649
+67e8384a
+6d0aefbc
+6fa7a44f
+7fe24cdd
+c9e6f938
+88a62173
+54d9e175
+5bd6f4ac
+4c4377d9
+8d5021e8
+a416b8f3
+f25fbde4
+9dfd6313
+8efcae92
+aedd82e4
+1b2d62fb
+99b1bc43
+3428a4f5
+44d8ac46
+6430c8c4
+ce4f8723
+f2829549
+dae9d2b5
+fafffa47
+ff805c23
+dc0a314f
+0dfd9992
+484b58aa
+c3f564a4
+d10ecb37
+2dc579da
+b8cdaf2b
+1190e5a7
+3aa6fb7a
+60b61512
+3618c87e
+8d510a79
+9565186b
+af902bf9
+ba26e723
+dc1df850
+3bdb4ada').
+
+% Evaluation Tasks (56)
+% The following ARC evaluation tasks are passing. My intention is to not analyzed or implemented evaluation examples specifically, 
+% but I have implemented a few accidentally.
+suite_tag(dbigham_eval_pass,'
+84f2aca1
+66e6c45b
+f45f5ca7
+fc754716
+e21a174a
+070dd51e
+1a2e2828
+64a7c07e
+ae58858e
+37d3e8b2
+4364c1c4
+60c09cac
+85b81ff1
+e41c6fd3
+3194b014
+7953d61e
+833dafe3
+b1fc8b8e
+bc4146bd
+00576224
+59341089
+c48954c1
+0c786b71
+ed98d772
+3979b1a8
+be03b35f
+d4b1c2b1
+0bb8deee
+9110e3c5
+9a4bb226
+ca8de6ea
+cd3c21df
+00dbd492
+34b99a2b
+0c9aba6e
+195ba7dc
+31d5ba1a
+506d28a5
+5d2a5c43
+66f2d22f
+d19f7514
+e133d23d
+e345f17b
+67b4a34d
+e66aafb8
+f4081712
+1d0a4b61
+5207a7b5
+c663677b
+e95e3d8e
+73ccf9c2
+d56f2372
+903d1b4a
+981571dc
+42a15761
+e872b94a
+2b01abd0
+817e6c09
+8ee62060
+e5790162
+27a77e38
+').

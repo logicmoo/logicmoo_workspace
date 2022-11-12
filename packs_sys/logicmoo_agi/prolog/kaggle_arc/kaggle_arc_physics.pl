@@ -4,12 +4,13 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+:- include(kaggle_arc_header).
 
 
-area(Obj,Area):- v_hv(Obj,H,V), Area is H * V.
+area(Obj,Area):- vis2D(Obj,H,V), Area is H * V.
+
+area_or_len(Obj,Area):- is_points_list(Obj),!,length(Obj,Area).
+area_or_len(Obj,Area):- vis2D(Obj,H,V), Area is H * V.
 
 density(Obj,Density):- area(Obj,Area),amass(Obj,Mass), Density is Mass/Area.
 
@@ -55,9 +56,11 @@ color_mass_int(Cell,0):- is_bg_color(Cell),!.
 %color_mass_int(Cell,N):- color_int(Cell,N),!.
 color_mass_int(_,0).
 
+%grid_mass_ints(Grid,[[1]]):- Grid=@=[[_]],!. 
 grid_mass_ints(Grid,GridIII):- unique_colors(Grid,CC),include(is_fg_color,CC,FG),mapgrid(normal_w(FG),Grid,GridIII),!.
 
-grav_rot(Grid,RotG,Rotated):- 
+grav_rot(Grid,sameR,Grid):- \+ \+ Grid=[[_]],!.
+grav_rot(Grid,RotG,Rotated):-
   must_det_ll((into_grid(Grid,GridII),
    grid_mass_ints(GridII,GridIII),
    best_grav_rot(GridIII,RotG,_),
@@ -110,8 +113,14 @@ call_rot([H|T],I,O):- !,
   call_rot(T,M,O).
 call_rot(T,I,O):- call(T,I,O).
 
+call_rot_c([],I,I):- !.
+call_rot_c([H|T],I,O):- !,
+  call_rot(H,I,M),I\=@=M,
+  call_rot_c(T,M,O).
+call_rot_c(T,I,O):- call(T,I,O),I\=@=O.
+
 grav_mass(Grid,sameR):- iz(Grid,hv_symmetric),!.
-grav_mass(Grid,RotOut):- v_hv(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut,_).
+grav_mass(Grid,RotOut):- vis2D(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut,_).
 
 % make things bottem heavy
 tips_to_rot(Grid,H,V,[rot270|RotOut],Final):- H<V, !, rot90(Grid,Grid90),!,trace,tips_to_rot(Grid90,V,H,RotOut,Final).
@@ -125,9 +134,12 @@ split_50_v(Grid,Top,Bottem):- length(Grid,N),H is floor(N/2), length(Top,H),leng
     my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
 
 
-
+ensure_dir(s). ensure_dir(e). ensure_dir(w). ensure_dir(n).
+ensure_int(1). ensure_int(2).
 gravity:- test_p2(gravity(4,w)).
 gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
+gravity(N,D,G,GR):- var(D),!,ensure_dir(D),gravity(N,D,G,GR).
+gravity(N,D,G,GR):- var(N),!,ensure_int(N),gravity(N,D,G,GR).
 gravity(1,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridNew).
 gravity(N,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridM),(Grid\=@=GridM->(Nm1 is N-1,gravity(Nm1,n,GridM,GridNew));GridNew=GridM).
 gravity(N,s,Grid,GridNew):-!,flipV(Grid,FlipV),gravity(N,n,FlipV,GridM),flipV(GridM,GridNew).
@@ -141,7 +153,7 @@ gravity_1_n_0([Row1,Row2|Grid],GridNew):- nth1(Col,Row1,E1),nth1(Col,Row2,E2),
   gravity_1_n_0([Row1Mod,Row2Mod|Grid],GridNew).
 gravity_1_n_0([Row1|Grid],[Row1|GridNew]):- gravity_1_n_0(Grid,GridNew).
 
-
+:- decl_pt(any_xform(p2,prefer_grid,prefer_grid)).
 any_xform(Rot90,Any,NewAny):- 
   cast_to_grid(Any,RealGrid,UnconvertClosure),!,
   grid_xform(Rot90,RealGrid,NewRealGrid),
@@ -183,6 +195,7 @@ sameR(X,X).
 
 test_rot:- test_p2(rot270),test_p2(rot90).
 %srot90V,flipV
+%rot90(A,B):- A==[],!,B=[].
 rot90( Grid,NewAnyWUpdate):- rot180( Grid,M),rot270( M,NewAnyWUpdate).
 rot180( Grid,NewAnyWUpdate):- any_xform(grid_rot180,Grid,NewAnyWUpdate).
 rot270( Grid,NewAnyWUpdate):- any_xform(grid_rot270,Grid,NewAnyWUpdate).
@@ -295,7 +308,7 @@ move_rightof_itself(I,M):- move_dir_itself(1,e,I,M).
 
 :- decl_pt(move_dir_itself(int,dir,object,+)).
 %move_dir_itself(N,D,I,M):- check_args(move_dir_itself(N,D,I,M),MaybeCut),(MaybeCut==t->!;true).
-move_dir_itself(N,D,I,M):- is_object(I),v_hv(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
+move_dir_itself(N,D,I,M):- is_object(I),vis2D(I,SX,SY), move_scale_dir_object(SX,SY,N,D,I,M).
 move_dir_itself(N,D,L,LM):- is_group(L),!,mapgroup(move_dir_itself(N,D),L,LM).
 move_dir_itself(N,D,I,O):- into_group(I,M),M\=@=I,!,move_dir_itself(N,D,M,O).
 
@@ -303,7 +316,7 @@ move_dir_object(N,D,I,M):- move_scale_dir_object(1,1,N,D,I,M).
 
 move_scale_dir_object(X,Y,N,D,I,M):- is_object(I),!,
  /*must_det_ll*/((
-  loc(I,OX,OY),
+  loc2D(I,OX,OY),
   move_dir(N,OX,OY,D,X,Y,NX,NY),
   (NY<1 -> M=I ; move_object(NX,NY,I,M)))).
 move_scale_dir_object(N,D,L,LM):- is_group(L),!,mapgroup(move_scale_dir_object(N,D),L,LM).
@@ -314,7 +327,7 @@ move_object(NX,NY,I,M):- is_object(I),!,
   (NY<1 -> M=I ;
   ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
-    setq(I,[globalpoints(GPoints),loc(NX,NY)],M))))).
+    setq(I,[globalpoints(GPoints),loc2D(NX,NY)],M))))).
 move_object(H,V,L,LM):- is_group(L),!,mapgroup(move_object(H,V),L,LM).
 move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
@@ -363,12 +376,14 @@ find_touches(VM):-
 touching_object(How,Dirs,O2,O1):- O1\==O2,
 
   has_prop(o(Y,LC,_),O1), has_prop(o(Y,LC,_),O2),
-  has_prop(iz(shaped),O1), has_prop(iz(shaped),O2),
+  is_physical_object(O1), is_physical_object(O2),
   %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
   globalpoints(O1,Ps1), globalpoints(O2,Ps2),
   call(How,Ps2,Ps1,Dirs),!.
 
 dir_touching(Ps1,Ps2,Dir):- member(_-P1,Ps1), is_adjacent_point(P1,Dir,P2),  member(_-P2,Ps2).
+
+
 
 % ==============================================
 % SEES
@@ -381,7 +396,7 @@ find_sees(VM):-
   gset(VM.objs) = NewObjs.
 
 seeing_object(How,Dirs,O2,O1):- O1\==O2,
-  has_prop(iz(shaped),O1), has_prop(iz(shaped),O2),
+  is_physical_object(O1), is_physical_object(O2),
   %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
   globalpoints(O1,Ps1), globalpoints(O2,Ps2),
   call(How,Ps2,Ps1,Dirs),!.
@@ -391,6 +406,24 @@ dir_seeing(Ps1,Ps2,Dir):- member(_-P1,Ps1), is_adjacent_point(P1,Dir,P2), \+ mem
     
 seeing_dir_soon(P1,_Dir,Ps2):- member(_-P1,Ps2),!.
 seeing_dir_soon(P1,Dir,Ps2):- is_adjacent_point(P1,Dir,P2), seeing_dir_soon(P2,Dir,Ps2).
+
+is_physical_object(O):- has_prop(iz(shape),O).
+
+% ==============================================
+% OVERLAPS
+% ==============================================
+%ft i(VM,[find_overlaps|set(VM.program_i)]):- %cullObjectsOutsideOfRanges(VM), %  find_overlaps(How,VM).
+is_fti_step(find_overlaps).
+
+find_overlaps(VM):-
+  /*must_det_ll*/((Objs = VM.objs, pred_find_links(overlap,Objs,NewObjs))),
+  gset(VM.objs) = NewObjs.
+
+overlap(overlaping,O2,O1):- O1\==O2,
+  is_physical_object(O1), is_physical_object(O2),
+  %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
+  globalpoints(O1,Ps1), globalpoints(O2,Ps2),
+  \+ \+ (member(P,Ps1), member(P,Ps2)),!.
 
 
 % ==============================================
@@ -497,9 +530,9 @@ find_engulfs_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_engulfs_o
 contained_object(O2,O1):-
   O1 \== O2,
   % \+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
-  loc(O1,LowH1,LowV1),loc(O2,LowH2,LowV2), 
+  loc2D(O1,LowH1,LowV1),loc2D(O2,LowH2,LowV2), 
   LowH2 > LowH1, LowV2 > LowV1,
-  v_hv(O1,H1,V1),v_hv(O2,H2,V2), 
+  vis2D(O1,H1,V1),vis2D(O2,H2,V2), 
   H1> H2, V1> V2,
   HighH1 is LowH1+H1, HighV1 is LowV1+V1,
   HighH2 is LowH2+H2, HighV2 is LowV2+V2,
@@ -556,10 +589,10 @@ object_surrounds_point(Obj,_-Point):- point_in_obj_view(Point,Obj),
 
 point_in_obj_view(Next,Obj):- 
   hv_point(H,V,Next),
-  loc(Obj,X,Y),!,
+  loc2D(Obj,X,Y),!,
   VV is V-Y, VV>=0,
   HH is H - X, HH>=0,
-  v_hv(Obj,XX,YY),!,
+  vis2D(Obj,XX,YY),!,
   VV<YY, HH<XX.
 
 scan_to_colider1(_Obj,Next,_Dir,_ObjPoints,[]):- hv_point(H,V,Next), (\+ between(1,32,H); \+ between(1,32,V)),!.

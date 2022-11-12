@@ -200,7 +200,10 @@ sandbox:safe_meta_predicate(system:call/1).
 
 :- use_module(library(logicmoo_web_long_message)).
 :- set_long_message_server('https://logicmoo.org').
+
+:- if(exists_source(library('../../shrdlu/prolog/logicmoo_shrdlu'))).
 :- use_module(library('../../shrdlu/prolog/logicmoo_shrdlu')).
+:- endif.
 
 inoxf(Goal):- in_lm_ws(ignore(notrace(catch(Goal,E,format(user_error,'~N~ncall(~q) caused: ~q!~n~n',[Goal,E]))))).
 %inoxf(Goal):- catch(Goal),!.

@@ -1127,6 +1127,9 @@ any_to_charlist(A,C):- any_to_string(A,S),atom_chars(S,C).
 is_codelist(L):- ground(L), L\==[], is_list(L),!,maplist(is_codelist_code,L).
 
 :- export(is_codelist_code/1).
+is_codelist_code(H):- \+ integer(H),!,fail.
+is_codelist_code(H):- H<32,!,fail.
+is_codelist_code(H):- H>=128,!,fail. 
 is_codelist_code(H):- integer(H), swish_render_codes_charset_code(_,H),!.
 
 swish_render_codes_charset_code(_,9).

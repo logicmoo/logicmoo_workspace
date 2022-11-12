@@ -32,6 +32,9 @@
 /** <examples>
 ?- induce_tree(Program).
 */
+
+:- include(kaggle_arc_header).
+
 :- if(current_module(trill)).
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.

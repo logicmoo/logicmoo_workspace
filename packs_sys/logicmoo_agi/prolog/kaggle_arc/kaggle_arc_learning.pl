@@ -4,9 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+:- include(kaggle_arc_header).
 
 
 
@@ -46,7 +44,7 @@ print_rule(M,O):- \+ \+ (( orpt(M=[O]))).
 orpt(G):- \+ \+ ((numbervars(G,0,_,[attvar(bind),singletons(true)]), format('~N'), pp(orange,(call(print(G)))))).
 
 save_learnt_rule(TestID,In,InKey,RuleDir,Out):-
-  nop_now(save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out))).
+  if_learn_ok(save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out))).
 
 save_learnt_rule(RuleIn):- save_learnt_rule(RuleIn,RuleIn,RuleIn).
 save_learnt_rule(RuleIn,InGoal,OutGoal):-  
@@ -55,9 +53,6 @@ save_learnt_rule(RuleIn,InGoal,OutGoal):-
   subst_rvars(InSet,InVars,RuleIn,NewRuleIn),!,
   Assert = (NewRuleIn:-was_once(InSet,InVars)), 
   assert_visually(Assert),!.    
-
-has_prop(P,Props):- is_list(Props),!,member(Q,Props), (Q=@=P -> true ; ( \+ Q \= P)).
-has_prop(P,Obj):- indv_props(Obj,Props),!,member(Q,Props), (Q=@=P -> true ; ( \+ Q \= P)).
 
 
 learn_group(What,Objs):- assert_visually(group_associatable(What,Objs)).
@@ -70,23 +65,24 @@ learn_about_group(In):-
 not_for_matching(_Why,_,Var):- var(Var),!,fail.
 not_for_matching(_Why,_,C):- notrace((sub_term(E,C), compound(E))), E= '$VAR'(_),!,fail.
 not_for_matching(_Why,_,iz(combined)).
+not_for_matching(_Why,_,giz(_)).
 not_for_matching(_Why,_,iz(colormass)).
 not_for_matching(_Why,_,iz(nsew)).
 not_for_matching(_Why,_,iz(image)).
 not_for_matching(_Why,_,iz(monochrome)).
 not_for_matching(_Why,_,iz(C)):- atom(C),!,fail.
-not_for_matching(_Why,_,iz(C)):- sub_term(E,C), number(E),E\==1.
+%not_for_matching(_Why,_,iz(C)):- sub_term(E,C), number(E),E\==1.
 not_for_matching(_Why,_,iz(_)):- !, fail.
 %not_for_matching(_Why,localpoints(_)).
-not_for_matching(_Why,_,link(_,_,_)).
+%not_for_matching(_Why,_,link(_,_,_)).
 not_for_matching(_Why,_,birth(_)).
 not_for_matching(_Why,_,obj_to_oid(_,_)).
 %not_for_matching(_Why,L,form(_)):- !, member(localpoints(_),L).
 not_for_matching(_Why,L,localpoints(XX)):- !, started_is_list(XX), member(shape(_),L).
 not_for_matching(_Why,L,globalpoints(XX)):- !, started_is_list(XX), (member(shape(_),L);member(localpoints(_),L)).
 
-not_for_matching(_Why,_,center(H,V)):- (H\==1,V\==1,H\==2,V\==2,H\==3,V\==3).
-%not_for_matching(_Why,_,loc(H,V)):- (H\==1;V\==1).
+%not_for_matching(_Why,_,center2D(H,V)):- (H\==1,V\==1,H\==2,V\==2,H\==3,V\==3).
+%not_for_matching(_Why,_,loc2D(H,V)):- (H\==1;V\==1).
 %not_for_matching(_Why,_,M):- too_unique(M),!.
 %not_for_matching(_Why,_,M):- too_non_unique(M),!.
 
@@ -165,8 +161,8 @@ learn_rule_o(in_in,_InVM,_OutVM):- !.
 learn_rule_o(Mode,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
  in_out = Mode,
  maplist(must_det_ll,[
-  InGrid = InVM.grid, InObjs0 = InVM.objs,  
-  OutGrid = OutVM.grid, OutObjs0 = OutVM.objs,
+  InGrid = InVM.grid_o, InObjs0 = InVM.objs,  
+  OutGrid = OutVM.grid_o, OutObjs0 = OutVM.objs,
   ignore(InVM.grid_target = OutGrid),
   maplist(simplify_for_matching(lhs),InObjs0,InObjs),
   %maplist(simplify_for_matching,OutObjs0,OutObjs),
@@ -184,29 +180,36 @@ learn_rule_o(Mode,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
   training_info(TestID,Info),
   length(Info,Len),
   ptc(orange,format('~N~n% Rules so far for ~w: ~w~n~n',[TestID,Len])),!,
-  nop_now(confirm_reproduction(InObjs,InObjs0,InGrid)),!,
-  nop_now(confirm_reproduction(OutObjs,OutObjs0,OutGrid)),!,
+  if_learn_ok(confirm_reproduction(InObjs,InObjs0,InGrid)),!,
+  if_learn_ok(confirm_reproduction(OutObjs,OutObjs0,OutGrid)),!,
+
+
+
   confirm_learned(InGrid,OutGrid),!,
   nop(show_proof(InGrid,OutGrid))]),!.
+
 
 learn_rule_i_o(Mode,In,Out):- 
   forall(learn_rule_in_out(1,Mode,In,Out),true).
 
 is_reproduction_obj(O):- \+ is_object(O),!.
-is_reproduction_obj(O):-  iz(O,shaped),!.
+is_reproduction_obj(O):-  \+ iz(O,hidden).
 
 reproduction_objs(O,Os):- include(is_reproduction_obj,O,Os).
 
 confirm_reproduction(Objs0,DebugObjs0,ExpectedOut):-    
+ must_det_ll((
   grid_size(ExpectedOut,H,V),
+  grid_size(DebugObjs0,DH,DV),
   reproduction_objs(Objs,Objs0), 
   reproduction_objs(DebugObjs0,DebugObjs),
   length(Objs0,Len0),
   length(Objs,Len),
   globalpoints(Objs,OGPoints),
-  points_to_grid(H,V,OGPoints,Solution),
+  call((points_to_grid(H,V,OGPoints,Solution)->true;points_to_grid(DH,DV,OGPoints,Solution))),
+  count_difs(ExpectedOut,Solution,Errors),
   show_result("Our Reproduction"=Len0/Len, Solution,ExpectedOut,Errors),
-  (Errors==0 -> true; maplist(debug_reproduction(H,V),Objs,DebugObjs)).
+  (Errors==0 -> true; maplist(debug_reproduction(H,V),Objs,DebugObjs)))).
 
 debug_reproduction(H,V,Obj,DObj):- 
   globalpoints(Obj,Points),
@@ -216,14 +219,25 @@ debug_reproduction(H,V,Obj,DObj):-
   pp(dobj(ID1,ID2)=DObj),!.
 
 show_result(What,Solution,ExpectedOut,Errors):-
- get_current_test(TestID),
- ignore((count_difs(ExpectedOut,Solution,Errors),
-   print_side_by_side(blue,Solution,What,_,ExpectedOut,"Expected"),
-      (Errors==0 -> 
-           arcdbg_info(green,pass(What,TestID))
-         ; arcdbg_info(red,fail(What,Errors,TestID))))),
- test_info(TestID,InfoF),wqnl(fav(TestID,InfoF)),!.
+  show_sameness_or_lameness(green,red,What,Solution,ExpectedOut,Errors).
 
+show_sameness_or_lameness(Green,Red,What,OurOut,ExpectOut,Errors):- 
+   ignore(( get_current_test(TestID), test_info(TestID,InfoF))), !,
+   ignore(( (var(Errors)->count_difs(OurOut,ExpectOut,Errors);true),
+    (Errors==0 -> 
+      ColorMessage=wqs(Green,pass(What,TestID));
+      ColorMessage=wqs(Red,fail(errors(Errors),What,TestID))),
+    ColorMessage = wqs(Color,Message),    
+    banner_grids(Color,OurOut,Message,ExpectOut,fav(TestID,InfoF)))).
+
+banner_grids(Color,I,Message1,O,Message2):- 
+ ignore((
+    banner_lines(Color),
+    print_side_by_side(Color,I,Message1,_,O,Message2),
+    format('~N'),pp(Color,Message1),
+    format('~N'),pp(Color,Message2),
+    format('~N'),
+    banner_lines(Color))).
 
 arcdbg_info(Color, Info):- banner_lines(Color), arcdbg(Info), banner_lines(Color).
 
@@ -256,15 +270,15 @@ learn_rule_in_out(Depth,Mode,In,Out):- is_list(In), is_list(Out),
 %learn_rule_in_out(Depth,out_out,I,O):- !, ignore(( is_grid(O), save_learnt_rule(oout_associatable(I,O)))).
 
 compare_objs_how([perfect]).
-compare_objs_how([turned,+loc]).
-compare_objs_how([turned,-loc]).
+compare_objs_how([turned,+loc2D]).
+compare_objs_how([turned,-loc2D]).
 compare_objs_how([moved]).
 compare_objs_how([sameO]).
 compare_objs_how(_).
 
 /*
-v_hv(5,5), amass(25),
-center(9,14),loc(7,12),
+vis2D(5,5), amass(25),
+center2D(9,14),loc2D(7,12),
 colors([cc(PURPLE,21),cc(BLACK,4)]),
 localpoints
 */
@@ -276,8 +290,46 @@ diff_2props(I,O):- comparable_2props(I,O), I \=@= O.
 
 
 % form, 
-% v_hv, mass
-% center
+% vis2D, mass
+% center2D
+
+
+% symmetrical object
+% non-symmetrical
+% object with exact mass
+% object with most mass
+% object with least mass
+% distinctive color
+% square object
+% rectangular object
+% hollow object
+% solid object
+% object count
+/*
+ test_tag(count_different_colors).
+ test_tag(count_hor_lines).
+ test_tag(count_patterns).
+ test_tag(count_shapes).
+ test_tag(count_tiles).
+ test_tag(count_ver_lines).
+  test_tag(associate_color_to_bools).
+ test_tag(associate_colors_to_bools).
+ test_tag(associate_colors_to_colors).
+ test_tag(associate_colors_to_images).
+ test_tag(associate_colors_to_numbers).
+ test_tag(associate_colors_to_patterns).
+ test_tag(associate_colors_to_ranks).
+ test_tag(associate_colors_to_shapes).
+ test_tag(associate_images_to_bools).
+ test_tag(associate_images_to_colors).
+ test_tag(associate_images_to_images).
+ test_tag(associate_images_to_numbers).
+ test_tag(associate_images_to_patterns).
+
+ test_tag(associate_patterns_to_colors).
+ test_tag(associate_patterns_to_patterns).
+*/
+
 
 :- discontiguous(learn_rule_in_out/4).
 learn_rule_in_out(_,in_out,In,Out):- is_list(In),is_list(Out),
@@ -287,12 +339,16 @@ learn_rule_in_out_sames(In,Out):- fail,
   is_list(In),is_list(Out),
   average_or_mid(mass,Out,MinMass),
   member(I,In),member(O,Out),
-  mass(O,Mass), Mass>MinMass, mass(I,Mass),
+  mass(O,Mass), Mass>MinMass,
+  mass(I,Mass),
   once((compare_objs_how(How), nonvar(How), compare_objs1(How,I,O))),
   pp(How),
+  learn_rule_in_out_objects(How,I,O).
+
+learn_rule_in_out_objects(How,I,O):-   
   simplify_for_matching(lhs,I,II),
   simplify_for_matching(rhs,O,OO),
-  save_learnt_rule(test_solved(How,II,OO),I,O),!.
+  save_learnt_rule(test_solved(How,II,OO),I+O,I+O),!.
 
 average_or_mid(_P2,_Out,2):-!.
 average_or_mid(P2,Out,MinMass):- is_list(Out),!,
@@ -348,7 +404,7 @@ learn_rule_in_out(Depth,Mode,In,Out):-
   is_group(In),is_group(Out),
   length(In,IL),length(Out,OL),
   Depth2 is Depth+1, 
-  fif((IL=<7,OL=<7),
+  if_t((IL=<7,OL=<7),
    forall(member(I,In),
      forall(member(O,Out),
        learn_rule_in_out_now(Depth2,Mode,I,O)))).
@@ -425,26 +481,13 @@ assert_visually( H  ):- unnumbervars(H,HH),assert_visually1(HH,true).
 assert_visually1(H,B):- get_current_test(TestID), arg(1,H,W),W\==TestID,!, H=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
 assert_visually1(H,B):- assert_visually2(H,B).
 
-assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,nop(pp(cyan,known_exact(H:-B))).
+assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,(pp(cyan,known_exact(H:-B))).
 assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,pp(cyan,known(H:-B)).
 assert_visually2(H,B):- functor(H,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(H:-B)), my_asserta_if_new((H:-B)).
 
-nop_now(_).
+if_learn_ok(G):- call(G).
 
-clear_training(TestID):-  
-  %retractall(individuated_cache(_,_,_)),
-  set_bgc(_),
-  set_flag(indiv,0),
-  forall(test_local_dyn(F),
-   forall((current_predicate(F/A),A\==0),
-    ((functor(X,F,A),
-      forall((clause(X,_,Ref),arg(1,X,E),E==TestID),
-       erase(Ref)))))),
-  nb_delete(grid_bgc),
-  luser_linkval(test_rules, [rules]),
-  wno((clear_shape_lib(test), clear_shape_lib(noise), 
-   retractall(grid_nums(_,_)), retractall(grid_nums(_)))),
-  nop(retractall(g_2_o(_,_))),!.
+
  
 
 learn_rule(In,Out):-
@@ -630,7 +673,7 @@ never_labels_in(iz(_)).
 never_labels_in(shape(_)).
 never_labels_in(amass(1)).
 never_labels_in(mass(1)).
-never_labels_in(loc(_,_)).
+never_labels_in(loc2D(_,_)).
 
 
 never_unbind_label(G):- var(G),!.
@@ -652,7 +695,7 @@ maybe_unbind_label(G):- is_color(G).
 %maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
 
 subst_rvars([],[],A,A):-!. 
-subst_rvars([F|FF],[R|RR],S,D):- debug_var(F,R),subst_rvars_1(F,R,S,M), subst_rvars(FF,RR,M,D).
+subst_rvars([F|FF],[R|RR],S,D):- ignore(debug_var(F,R)),subst_rvars_1(F,R,S,M), subst_rvars(FF,RR,M,D).
 
 map_find_onto_replace(Var,Var):-var(Var),!.
 map_find_onto_replace('$VAR'(X),'$VAR'(X)):-!.
@@ -698,7 +741,7 @@ subtractGrid(Out,In,Alien):- plain_var(In),!,remove_global_points(Alien,Out,In).
 find_by_shape(Grid,_Find,_Founds):- Grid==[],!,fail.
 find_by_shape(Grid,Find,Founds):- 
  get_vm(VM),
- v_hv(Find,GH,GV),
+ vis2D(Find,GH,GV),
  decolorize(Find,F), 
  Prog = 
   (all_rotations(F,F1),
@@ -707,7 +750,7 @@ find_by_shape(Grid,Find,Founds):-
 
    grid_to_points(F1,GH,GV,Points),
    pp(Points),
-   make_indiv_object(VM,[iz(find_by_shape),F1,loc(H,V),alt_grid_size(GH,GV)],Points,F2)),
+   make_indiv_object(VM,[iz(find_by_shape),F1,loc2D(H,V),alt_grid_size(GH,GV)],Points,F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).
 
@@ -817,7 +860,7 @@ name_the_pair(TestID,ExampleNum,In,Out,PairName):-
   GridNameOut= PairName*out,
   set_grid_tid(In,GridNameIn),
   set_grid_tid(Out,GridNameOut),  
-  test_info(TestID,Info), pp(fav(TestID,Info)),nl)).
+  test_info(TestID,Info), pp(fav(TestID,Info)=ExampleNum),nl)).
   
 
 

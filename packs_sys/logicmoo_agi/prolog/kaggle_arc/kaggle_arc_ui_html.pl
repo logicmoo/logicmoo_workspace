@@ -18,9 +18,7 @@
   ]
 ).
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+:- include(kaggle_arc_header).
 
 :- use_module(library(thread_pool)).
 :- use_module(library(http/thread_httpd)).
@@ -60,13 +58,13 @@ collapsible_section(Type,Title,true,Goal):-
   length(Was,Depth),
   setup_call_cleanup(format('~N~@!mu~w! ~@ |~n',[dash_chars(Depth,' '), Type, print_title(Title)]),
                      locally(b_setval('$collapsible_section',[Type|Was]),wots(S,Goal)), 
-                     format('~N~w~@¡mu~w¡~n',[S,dash_chars(Depth,' '), Type])).
+                     format('~N~w~@\u00A1mu~w\u00A1~n',[S,dash_chars(Depth,' '), Type])).
 */
 collapsible_section(Tag,Title,_,Goal):-
   once(nb_current('$collapsible_section',Was);Was=[]), length(Was,Depth),!,wots(Ident,dash_chars(Depth,' ')),
   setup_call_cleanup(format('~N~w!mu~w! ~@ |~n',[Ident, Tag, print_title(Title)]),
                      locally(b_setval('$collapsible_section',[c(Tag)|Was]),tabbed_print_im(Depth+2,Goal)), 
-                     format('~N~w¡mu~w¡ ',[Ident, Tag])).
+                     format('~N~w\u00A1mu~w\u00A1 ',[Ident, Tag])).
 
 with_tagged(Tag,Goal):- 
   once(nb_current('$collapsible_section',Was);Was=[]), length(Was,Depth),!,wots(Ident,dash_chars(Depth,' ')),
@@ -241,6 +239,7 @@ set_test_param:-
   ignore((when_arc_webui((get_param_sess(task,Task), Task\=='',  Task\=="",
   atom_id(Task,ID), dmsg(Task-> ID), set_current_test(ID))))),!.
 
+:- http_handler('/swish', http_redirect(moved, '/swish/'), []).
 
 swish_arc(Request):-   
   muarc_tmp:arc_directory(ARC_DIR),
@@ -248,7 +247,11 @@ swish_arc(Request):-
 
 swish_arc_root(Request):-   
   arc_sub_path('.',DEMO),
-  http_reply_from_files(DEMO, [], Request).
+  http_reply_from_files(DEMO, [], Request),!.
+swish_arc_root(Request):- 
+  Options = [],
+  call(call,swish_page:swish_reply2(Options, Request)),!.
+
 
 %arcproc_left(Request):- xlisting_web:handler_logicmoo_cyclone(Request),!.
 arcproc_left(Request):-  
@@ -268,7 +271,7 @@ arcproc_left(Request):-
     ensure_colapsable_script,
     write_end_html])))))).
 
-arc_html_format(TextAndGoal):- call(call,inline_html_format(TextAndGoal)).
+arc_html_format(TextAndGoal):- bfly_in_out(call(call,inline_html_format(TextAndGoal))).
 
 % arc_find_tests(menu):- ignore(menu).
 arc_find_tests(F):- find_tests(F).
@@ -280,7 +283,7 @@ xlisting_whook:offer_testcase(F):- arc_find_tests(F).
 handler_logicmoo_right:-   
  when_arc_webui(arc_html_format([
    ignore((get_http_current_request(Request))),write('<pre>'),
-   print_tree(Request),offer_testcases,show_http_session,
+   pp(Request),offer_testcases,show_http_session,
    write('</pre>')])).
 
 handler_logicmoo_arc:- when_arc_webui(arc_html_format([call(handler_logicmoo_left)])).
@@ -352,9 +355,9 @@ arc_script_header_pt2:-
 inline_to_bfly:- was_inline_to_bfly,!.
 inline_to_bfly:- asserta(was_inline_to_bfly),inline_to_bfly_html.
 
-inline_to_bfly_html:- toplevel_pp(swish),!.
-inline_to_bfly_html:- 
- bfly_html_goal(format('~s',[
+inline_to_bfly_html:- toplevel_pp(swish),!,ensure_colapsable_styles.
+inline_to_bfly_html:- catch_log(ensure_colapsable_styles),
+ arc_html_format(
 `<link rel="stylesheet" type="text/css" href="/swish/css/menu.css">
 <link rel="stylesheet" type="text/css" href="/swish/css/cliopatria.css">
 <script src="https://unpkg.com/gojs@2.2.15/release/go.js"></script>
@@ -375,14 +378,16 @@ inline_to_bfly_html:-
 <link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/selected/css/social.selection.css">
 <script type="text/javascript" src="/swish/js/cliopatria.js"></script>
 <link rel="stylesheet" type="text/css" href="/swish/css/butterfly_term.css">
+<script type="text/javascript" href="/swish/js/butterfly_term.js"></script>
+<script type="text/javascript" href="/swish/js/butterfly_term.js"></script>
 <link rel="stylesheet" type="text/css" href="/swish/css/term.css">
 <script data-main="/swish/js/swish" src="https://logicmoo.org/node_modules/requirejs/require.js"></script>
 
-`])).
+`).
 
 
 arc_script_header2:- 
-  (arc_html_format(write('<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+  arc_html_format((('<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> <!-- necessary for the "draggable" ui  -->
 <script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Popup-plugin.js"></script>
 <script src="/swish/lm_xref/pixmapx/popupmenu/scripts/Example.js"></script>
@@ -414,14 +419,14 @@ invoke_arc_cmd(Prolog):-
    asserta_new(xlisting_whook:offer_testcase(Prolog)), !,
    catch(weto(Prolog),E,wdmsg(E)),!.
 
-:- luser_defval(cmd,print_test).
-:- luser_defval(tc_cmd,ndividuatorO1).
-:- luser_defval(footer_cmd,statistics).
+:- luser_default(cmd,print_test).
+:- luser_default(tc_cmd,ndividuatorO1).
+:- luser_default(footer_cmd,statistics).
 
 current_arc_cmd(Prolog):- current_arc_cmd(cmd,Prolog).
-current_arc_cmd(cmd,Prolog):- luser_getval(cmd,Prolog).
-current_arc_cmd(tc_cmd,Prolog):- luser_getval(tc_cmd,Prolog).
-current_arc_cmd(footer_cmd,Prolog):- luser_getval(footer_cmd,Prolog).
+%current_arc_cmd(cmd,Prolog):- luser_getval(cmd,Prolog).
+%current_arc_cmd(tc_cmd,Prolog):- luser_getval(tc_cmd,Prolog).
+current_arc_cmd(V,Prolog):- luser_getval(V,Prolog).
 %current_arc_cmd(footer_cmd,Prolog):- (\+ current_arc_cmd(cmd,menu) -> luser_getval(footer_cmd,Prolog,menu) ; luser_getval(footer_cmd,Prolog,edit1term)).
 
 
@@ -429,11 +434,23 @@ current_arc_cmd(footer_cmd,Prolog):- luser_getval(footer_cmd,Prolog).
 
  % our_pengine_output(`<script src="https://unpkg.com/gojs/release/go-debug.js"></script>`).
 
+:-   ignore((predicate_property(phil:'$exported_op'(_,_,_),(discontiguous)),
+  \+ predicate_property(phil:'$exported_op'(_,_,_),number_of_clauses(_)),
+     abolish(phil:'$exported_op',3))),
+  ignore((predicate_property(rdf11:'$exported_op'(_,_,_),(discontiguous)),
+\+ predicate_property(rdf11:'$exported_op'(_,_,_),number_of_clauses(_)),
+  abolish(rdf11:'$exported_op',3))),
+     ignore((predicate_property(lemur:'$exported_op'(_,_,_),(discontiguous)),
+  \+ predicate_property(lemur:'$exported_op'(_,_,_),number_of_clauses(_)),
+     abolish(lemur:'$exported_op',3))).
 
 :- include(kaggle_arc_ui_html_go1).
 :- include(kaggle_arc_ui_html_go2).
+/*
 
-
+:- abolish(lemur:'$exported_op',3).
+:- abolish(rdf11:'$exported_op',3).
+*/
 :- fixup_exports.
 
 

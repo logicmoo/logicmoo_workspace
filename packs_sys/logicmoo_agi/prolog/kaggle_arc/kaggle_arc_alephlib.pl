@@ -102,9 +102,8 @@ please contact Ashwin Srinivasan first.                                 %
 @author Ashwin Srinivasan, Fabrizio Riguzzi and Paolo Niccolò Giubelli.
 @copyright Ashwin Srinivasan
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+
+:- include(kaggle_arc_header).
 
 
 :- use_module(library(arithmetic)). 

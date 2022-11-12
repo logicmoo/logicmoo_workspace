@@ -10,7 +10,375 @@ make_keypad([[_,_,_],[_,_,_],[_,_,_]]).
 key_pad_tests(TestID):-  kaggle_arc(TestID,tst+0,In,Out), once((make_keypad(In), make_keypad(Out))).
 key_pad_tests(TestID):-  kaggle_arc(TestID,tst+0,In,Out), once((make_keypad(Out), \+ make_keypad(In))).
 key_pad_tests(TestID):-  kaggle_arc(TestID,tst+0,In,Out), once((make_keypad(In), \+ make_keypad(Out))).
+
+
+forall_count(P,Q):-
+  forall_count(P,Q,EP,ET),
+  wdmsg(EP/ET=forall_count(P,Q)).
+
+forall_count(P,Q,EP,ET):-
+  setup_call_cleanup(flag('$fac_t',W,0),
+    setup_call_cleanup(flag('$fac_p',W2,0),
+      forall((P,flag('$fac_t',X,X+1)),
+        ignore(once((Q,flag('$fac_p',Y,Y+1))))),
+      flag('$fac_p',EP,W2)),
+    flag('$fac_t',ET,W)).
+
+
+/*
+solves_all_pairs(TestID,P,P2S):- kaggle_arc(TestID,tst+0,_,_), 
+ findall(P2,(easy_solve_by(TestID,P2),
+   findall(try_p2(P2,In,Out),
+     kaggle_arc(TestID,_,In,Out),AllTrue),maplist(grid_call,AllTrue)),[P|P2S]).
+*/
+/*
+test_easy:- clsmake, forall_count(arc_test_name(TestID),test_easy(TestID)).
+test_easy(TestID):- 
+  solves_all_pairs(TestID,P2), dash_chars, dmsg(P2), print_test(TestID), dmsg(P2), dash_chars.
+
+solves_all_pairs(TestID,P2):- !,
+   easy_solve_by(TestID,P2),
+   kaggle_arc(TestID,tst+0,EI,EO), 
+   grid_call(P2,EI,EM),EM=@=EO,!.
+
+solves_all_pairs(TestID,P2):-
+   easy_solve_by(TestID,P2),
+   findall(grid_call(P2,In,Out),kaggle_arc(TestID,_,In,Out),AllTrue),   
+   nop(maplist(grid_call,AllTrue)),
+   kaggle_arc(TestID,trn+0,TI,TO),
+   try_p2(P2,TI,TO), 
+   kaggle_arc(TestID,tst+0,EI,EO), 
+   try_p2(P2,EI,EO).
+*/
+
+        
+%test_easy_solve_by:- clsmake, fail.
+/*
+test_easy_solve_by:- get_pair_mode(single_pair),!,
+  get_current_test(TestID),some_current_example_num(ExampleNum),
+  forall_count(kaggle_arc(TestID,ExampleNum,I,O),test_easy_solve_test_pair(TestID,ExampleNum,I,O)).
+%test_easy_solve_by:- test_p2(test_easy_solve_pair).
+%test_easy_solve_by:- test_p2(simple_todolist(_)).
+*/
+test_easy_solve_by:- get_pair_mode(entire_suite),clsmake,!,forall_count(all_arc_test_name(TestID),easy_solve_whole_test(TestID)).
+test_easy_solve_by:- get_pair_mode(whole_test),clsmake, get_current_test(TestID),!,must_det_ll(ignore(easy_solve_whole_test(TestID))).
+test_easy_solve_by:- test_p2(test_easy_solve_pair).
+
+:- luser_default(cmd,test_easy_solve_by). 
+
+test_easy_solve_pair(I,O):- %set_current_test(I),
+ (kaggle_arc(TestID,ExampleNum,I,O) *-> test_easy_solve_test_pair(TestID,ExampleNum,I,O) ; 
+   (test_example_grid(I),test_example_grid(O))).
+
+test_easy_solve_test_pair(TestID,ExampleNum,I,O):- var(TestID),get_current_test(TestID),nonvar(TestID),!,test_easy_solve_test_pair(TestID,ExampleNum,I,O).
+
+test_easy_solve_test_pair(TestID,ExampleNum,I,O):- var(ExampleNum),some_current_example_num(ExampleNum),!,test_easy_solve_test_pair(TestID,ExampleNum,I,O).
+test_easy_solve_test_pair(TestID,ExampleNum,I,O):- 
+   ignore((nonvar(TestID), set_current_test(TestID))),
+   ignore(kaggle_arc(TestID,ExampleNum,I,O)),
+   continue_test(TestID),
+   put_attr(EM,expect_p2,O),
+   (CALL=  ?-(test_easy_solve_test_pair(TestID,ExampleNum,'$VAR'('I'),'$VAR'('O')))),   
+   findall(P2,(easy_solve_by(TestID,P2),grid_call(P2,I,EM),nonvar(EM),EM=@=O),P2SI),!,
+   (P2SI\==[]->P2S=P2SI;findall(unify(P2),(easy_solve_by(TestID,P2),grid_call(P2,I,EM),nonvar(EM),EM=O),P2S)),
+   nl_if_needed,
+   (P2S\==[] -> wqs(["Passed: ",CALL,"using\n ",call(maplist(pp(yellow),P2S))]) ; ( \+ get_pair_mode(entire_suite),wqs(["failed: ",b(q(CALL))]),!,fail)).
+
+:- meta_predicate(grid_call(+,+,-)).
+
+grid_call(P2,I,O):- call(P2,I,O).
+
+test_example_grid(I):- var(I),!.
+test_example_grid(I):- kaggle_arc(TestID,ExampleNum,I,O),!,test_easy_solve_test_pair(TestID,ExampleNum,I,O).
+test_example_grid(O):- kaggle_arc(TestID,ExampleNum,_,O),!,test_easy_solve_test_pair(TestID,ExampleNum,O,_).
+test_example_grid(T):- is_valid_testname(T),set_current_test(T),!,kaggle_arc(T,ExampleNum,I,O),test_easy_solve_test_pair(T,ExampleNum,I,O).
+test_example_grid(G):- set_current_test(G),!,get_current_test(TestID),easy_solve_whole_test(TestID).
+
+easy_solve_by(_TestID,P2):- ground(P2),!.
+easy_solve_by( TestID,P2):- nonvar(P2),!, copy_term(P2,P2T), findall(P2T,(easy_solve_by(TestID,P2T),P2\=@=P2T),List), member(P2,[P2|List]).
+easy_solve_by( TestID,flip_Once(_)):- get_black(Black),user:arc_test_property(TestID,common,comp(cbg(Black),i-o,grav_rot),_).
+easy_solve_by(_TestID,P2):- easy_p2(P2).
+%easy_solve_by( TestID,repair_and_select(_How,_M)):- is_symgrid(TestID),!.
+%easy_p2(flip_Once(_)).
+
+%easy_p2(repair_and_select_property([unbind_color(_),now_fill_in_blanks_good],repairedResult)).
+easy_p2(repair_and_select(_How,_M)).
+easy_p2(blur_flipV_flipH).
+
+easy_p2(blur_rot90).
+%easy_p2(unbind_and_fill_in_blanks(_Code)).
+easy_p2(simple_todolist([trim_blank_lines,grow_2])).
+easy_p2(simple_todolist(_)).
+easy_p2(P2):- easy0(_,P2).
+%easy_p2(two_ops(repair_in_vm(repair_repeats(black)),get(repaired))).
+
+try_p2(P2,In,Out):- grid_call(P2,In,Mid),Out=@=Mid,!.
+%try_p2(P2,In,Out):- grid_call(P2,In,Out),!.
+%try_p2(P2,In,Out):- grid_call(P2,In,Out),!.
+
+expect_p2:attr_unify_hook(_,_).
+
+do_simple_todolist(C,I,O):- var(C),!,throw(var_do_simple_todolist(C,I,O)).
+do_simple_todolist([],I,O):- !,I=O.
+do_simple_todolist([H|T],I,O):- !, do_simple_todolist(H,I,M),do_simple_todolist(T,M,O).
+do_simple_todolist(C,I,O):- \+ callable(C),!,throw(not_callable_do_simple_todolist(C,I,O)).
+do_simple_todolist(P2,I,O):- grid_call(P2,I,O).
+
+repair_and_select(How,M,I,O):- induce_from_training(repair_and_select_property(How,M),I,O).
+repair_and_select_property(How,M,I,O):- 
+ %\+ is_grid_symmetricD(I), 
+    %How=[_|_],
+    unbind_and_repair(How,I,Mid), %is_grid_symmetricD(Mid), !, 
+    which_member(I,Mid,M,EO), EO=O.
+
+unbind_and_repair(Code,Grid,RepairedResultO):-
+ unbind_and_fill_in_blanks(Code,Grid,RepairedResultO).
+
+unbind_and_repair(Code,Grid,RepairedResultO):-
+ Code = [blur_rot90], blur_rot90(Grid,RepairedResultO).
+
+which_member(I,Mid,M,EO):- which_member(I,Mid,NVs), member(M-EO,NVs).
+
+which_member(Grid,RepairedResultG,Results):-
+  once((localpoints_include_bg(Grid,OriginalPoints),
+  grid_size(Grid,H,V),
+  localpoints_include_bg(RepairedResultG,RepairedPoints),
+  intersection(OriginalPoints,RepairedPoints,Unchanged,NeededChanged,Changed),
+  points_to_grid(H,V,Changed,ChangedG),
+  trim_to_rect(Changed,TrimChangedG),
+  points_to_grid(H,V,Unchanged,UnchangedG),
+  points_to_grid(H,V,NeededChanged,NeededChangedG))),
+  Results = [changed-TrimChangedG,
+             repairedResult-RepairedResultG,
+             changedUntrimmed-ChangedG,
+             unchanged-UnchangedG,
+             neededChanged-NeededChangedG].
   
+
+
+%print_side_by_side_io(P2,I,O):- !, % \+ is_gridoid(P2),
+%  print_side_by_side(green,I,in(P2),_,O,out(P2)),!.
+print_side_by_side_io(P2,I,O):-
+  training_pp_msg_color(P2,Color), !, 
+  print_side_by_side(Color,I,[P2|in],_,O,out(P2)),!.
+
+training_pp_msg_color(P2,Color):- sub_term(E,P2),compound(P2),arg(1,P2,E),atomic(E),pp_msg_color(E,Color).
+training_pp_msg_color(P2,Color):- pp_msg_color(P2,Color).
+
+induce_from_training(P2,I,O):- \+ is_grid(I),!,into_grid(I,G),induce_from_training(P2,G,O).
+%induce_from_training(P2,I,O):- nonvar(O),!,
+induce_from_training(P2,I,O):- ground_enough(P2),!,wdmsg(ground_enough(P2)),grid_call(P2,I,O).
+induce_from_training(P2,I,O):- get_current_test(TestID), !, induce_from_training(TestID, P2,I,O).
+
+induce_from_training(TestID, P2,I,O):-  (nonvar(O) ; (kaggle_arc(TestID,Ex1,I,O),(Ex1 = trn+_))), !, induce_from_training_pair(P2,Ex1,I,O).
+induce_from_training(TestID, P2,I,O):- !,
+  (ExampleNum = trn+_),
+  findall(sample(ExampleNum,II0,OO0), 
+     (kaggle_arc(TestID,ExampleNum,II0,OO0),I\==II0),TrainingPairs),
+  TrainingPairs\==[],!,
+  induce_from_training_pairs(P2,TrainingPairs,TrainingPairs,I,O),!.
+induce_from_training(TestID, P2,I,O):- %copy_term(P2,P22),!,
+  (ExampleNum = trn+_ ),
+  findall(sample(ExampleNum,II0,OO0), (kaggle_arc(TestID,ExampleNum,II0,OO0),I\==II0),TrainingPairs),
+  select(sample(Ex1,II1,OO1),TrainingPairs,More), induce_from_training_pair(P2,Ex1,II1,OO1),
+  member(sample(Ex2,II2,OO2),  More),             induce_from_training_pair(P2,Ex2,II2,OO2),
+  induce_from_testing_pair(P2,Ex1,I,O).
+
+
+
+induce_from_testing_pair(P2,Ex1,I,O):- 
+   with_io_training_context(I,O,
+     ((grid_call(P2,I,O), print_side_by_side_io(
+        induce_from_testing_pair_pass2(P2,Ex1),I,O)))),!.
+
+induce_from_training_pairs(P2,[],_TP,I,O):- !, induce_from_testing_pair(P2,tst+0,I,O).
+induce_from_training_pairs(P2,TrainingPairs,TP,I,O):-  
+  select(sample(Ex1,II1,OO1),TrainingPairs,More), induce_from_training_pair(P2,Ex1,II1,OO1),!, 
+  induce_from_training_pairs(P2,More,TP,I,O).
+
+induce_from_training_pair(P2,Ex1,II1,OO1):-   
+  with_io_training_context(II1,OO1, 
+   (((grid_call(P2,II1,OO1) *-> pp(induce_from_training_continue(P2,Ex1)) ;
+       ((fail, nonvar(OO1), grid_call(P2,II1,_)) -> true ; (pp(induce_from_training_fail_cont(P2,Ex1)),fail))),
+      ignore(( warn_and_fail_on_bad_p2(cyan,orange,checking_training(P2,Ex1),P2,II1,OO1)))))).
+
+warn_and_fail_on_bad_p2(Cyan,Orange,Ex1,P2,I,Expect):- 
+ \+ \+ with_io_training_context(I,Expect,   
+ ((put_attr(M,expect_p2,Expect),
+   (grid_call(P2,I,M)->OurOut=M;OurOut=I),
+   count_difs(OurOut,Expect,Errors),
+   (Errors = 0 
+     -> banner_grids(Cyan,I,pass_p2(P2,Ex1),OurOut,"MATCH") 
+     ; (banner_grids(Orange,OurOut,fail(Errors,P2,Ex1),Expect,"MISMATCH"),
+        banner_grids(red,I,fail(Errors,P2,Ex1),OurOut,"WRONG"),
+        nop(show_sameness_or_lameness(Cyan,Orange,warn_and_fail_on_bad_p2(P2,Ex1),OurOut,Expect,Errors)),!,fail))))).
+     
+
+
+  /*  
+induce_from_training_pair(P2,Ex1,II1,OO1):- 
+  print_side_by_side_io(induce_from_training(P2,Ex1),II1,OO1), 
+   with_io_training_context(II1,OO1,((grid_call(P2,II1,OO1),
+      grid_call(P2,II1,OOO1),print_side_by_side_io(checking_training(P2,Ex1),II1,OOO1)))),!.
+*/
+easy_solve_whole_test(TestID):- 
+  % once(print_test(TestID)),
+  arcdbg_info(green,"BEGIN_TEST"=TestID),!,
+  my_time(easy_solve_whole_test1(TestID)).
+easy_solve_whole_test1(TestID):- 
+  (easy_solve_training(TestID,P2)*-> 
+    (easy_solve_testing(TestID,P2)*-> arcdbg_info(green,success(TestID,P2)) ; arcdbg_info(yellow,didnt_work(TestID,P2)))
+     ; (arcdbg_info(red,failed_finding_plan_to_solve_training(TestID)),fail)),!.
+easy_solve_whole_test1(TestID):- arcdbg_info(red,failed_test(TestID)).
+
+  
+easy_solve_training(TestID,P2):- 
+   once((
+   kaggle_arc(TestID,trn+Some,TI1,TO1), 
+   easy_solve_by(TestID,P2),
+   pp(?-easy_solve_training(TestID,P2)),
+   try_p2(P2,TI1,TO1),
+   dif(Other,Some), 
+   kaggle_arc(TestID,trn+Other,TI2,TO2),
+   warn_and_fail_on_bad_p2(cyan,orange,generalness,P2,TI2,TO2))).
+
+easy_solve_testing(TestID,P2):- 
+   easy_solve_by(TestID,P2),
+   pp(?-easy_solve_whole_test(TestID,P2)),
+   kaggle_arc(TestID,tst+0,EI,EO),!,
+   warn_and_fail_on_bad_p2(green,red,final_test,P2,EI,EO),!.
+
+:- meta_predicate(with_io_training_context(+,+,0)).
+with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.grid_o  =@=I),!, set(PrevVM.grid_target)=O, call(G).
+with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.grid_o \=@=I),!,
+ call_cleanup(with_io_training_context1(I,O,G),set_vm(PrevVM)),!.
+with_io_training_context(I,O,G):- with_io_training_context1(I,O,G).
+:- meta_predicate(with_io_training_context1(+,+,0)).
+with_io_training_context1(I,O,G):- 
+  %get_current_test(TestID),
+  %kaggle_arc(TestID,ExampleNum,I,O),
+  grid_to_tid(I,ID), into_fti(ID,in_out,I,VM),
+  set(VM.grid)=I,
+  set(VM.grid_target)=O,
+  set_vm(VM),
+  call(G).
+
+
+
+ground_enough(P2):- ground(P2),!.
+ground_enough(P2):- compound(P2),arg(1,P2,E),ground_enough(E),!.
+
+if_hint(_).
+%easy0(X):- easy_sol(X).
+%easy0(_,=).
+easy0(0,trim_hv_repeats).
+easy0(0,trim_to_rect).
+
+easy0(1,trim_blank_lines).
+easy0(1,gravity(s,1)):- if_hint(mass(i)==mass(o)).
+
+easy0(2,flip_Once(_)).
+easy0(3,swap_two_colors(_,_)).
+easy0(4,blur_flipV).
+easy0(4,blur_flipV_flipH).
+easy0(5,increase_size_by_grid_mass). %ac0a08a4
+easy0(5,increase_size_by_color_count). %ac0a08a4
+easy0(5,grow_4):- if_hint(mass(i)*4==mass(o)).% 3af2c5a8
+easy0(5,grow_2). % 963e52fc
+easy0(5,grow_flip_2). % 963e52fc
+easy0(5,double_size).
+easy0(5,increase_size(N)):- if_hint(mass(i)*N==mass(o)), ignore(N=4).
+easy0(5,crop_by(_)).
+
+simple_todolist(List,I,OO):- nonvar(List),!, do_simple_todolist(List,I,OO).
+simple_todolist(List,I,OO):- ignore(get_attr(OO,expect_p2,O)),nonvar(O),!,simple_todolist(List,I,O).
+/*
+simple_todolist( [],I,O):- I=O,!.
+simple_todolist([P2|List],I,O):-
+  easy0(_,P2),grid_call(P2,I,M),
+  fits_grid(O,M),
+  simple_todolist(List,M,O).
+*/
+simple_todolist(List,I,OO):-
+  ignore(get_attr(OO,expect_p2,O)),
+  guess_simple_todolist(0,[],[],List,I,O,OO),!.
+
+/*
+guess_simple_todolist(N,SolSoFar,DoneSoFar,Plan,I,O,OO):- !,
+ ((fits_grid(O,I),N>0) 
+-> (Plan=DoneSoFar,OO=I) 
+;(findall(h_g(H1,I1),(easy0(N,H1),grid_call(H1, I,I1), (H1=='=' -> true ; (is_a_change(I,I1), \+ member(I1,SolSoFar)))), H1G),
+  predsort(using_compare(arg(2)),H1G,H1GSS),sort(H1GSS,H1GS),
+  maplist(arg(2),H1GS,SOFAR),append(SolSoFar,SOFAR,NewSOFAR),
+  member(h_g(H1,I1),H1GS),
+  Next is N+1,
+  guess_simple_todolist(Next,NewSOFAR,[H1|DoneSoFar],Plan,I1,O,OO))).
+*/
+guess_simple_todolist(N,_,_,_,_,_,_):- N> 10,!,fail.
+guess_simple_todolist(N,_Failed,IPlan,Plan,I,O,OO):- N\==0, fits_grid(O,I),!,OO=I,reverse(IPlan,Plan).
+/*
+guess_simple_todolist(N,Failed,Planned,Plan,I,O,OO):- Next is N+1,
+  findall(h_g(H1,I1),(easy0(N,H1),grid_call(H1, I,I1), (H1=='='-> true ; nop((is_a_change(I,I1), \+ member(h_g(_,I1),Failed))))), H1G),
+  predsort(using_compare(arg(2)),H1G,H1GS),
+  select(h_g(H1,I1),H1GS,Rest),
+  %append(Rest,Failed,NewFailed), 
+  Rest=NewFailed, 
+  guess_simple_todolist(Next,NewFailed,[H1|Planned],Plan,I1,O,OO).
+*/
+guess_simple_todolist(N,Failed,Planned,Plan,I,O,OO):-
+  Next is N+1, guess_simple_todolist(Next,Failed,Planned,Plan,I,O,OO).
+
+guess_simple_todolist(N,Failed,Planned,Plan,I,O,OO):- Next is N+1,
+  easy0(N,H1), grid_call(H1, I,I1), is_a_change(I,I1), guess_simple_todolist(Next,Failed,[H1|Planned],Plan,I1,O,OO).
+
+/*
+simple_todolist(SolSoFar,List,I,O,OO):-
+  findall(h_g(H1,I1),(easy0(H1),grid_call(H1, I,I1),\+ member(I1,SolSoFar)), H1G),
+  predsort(using_compare(arg(2)),H1G,H1GSS),sort(H1GSS,H1GS),
+  maplist(arg(2),H1GS,SOFAR),
+  member(h_g(H1,I1),H1GS),
+  ((findall(h_g(H2,I2),(easy2(H2),H1\==H2,grid_call(H2,I1,I2),\+ member(I2,SOFAR)),H2G),
+    predsort(using_compare(arg(2)),H2G,H2GSS),sort(H2GSS,H2GS),
+    member(h_g(H2,I2),H2GS),
+  ((fits_grid(O,I2),[H1,H2]=List,I2=OO))) 
+  ;((fits_grid(O,I1),[H1]=List,I1=OO)))
+  ,!,
+  nop(print_side_by_side(green,I,simple(List),_,OO,simple(List))),!.
+*/
+
+fits_grid(O,_):- var(O),!.
+fits_grid(O,I1):-O=@=I1.
+
+
+
+% ac0a08a4
+increase_size_by_grid_mass(In,Out):- mass(In,Mass),increase_size(Mass,In,Out).
+%b91ae062
+increase_size_by_color_count(In,Out):- fg_color_count(In,Size),increase_size(Size,In,Out).
+
+blur_rot90(I,O):- duplicate_term(I,II), unbind_color(red,II,M), blur(rot90,M,O).
+blur_flipV(I,O):- duplicate_term(I,II), blur(flipV,II,O).
+blur_flipV_flipH(I,O):- 
+  do_simple_todolist([
+    into_grid,
+    duplicate_term,
+    blur_or_not(rot90),
+    blur_or_not(rot90),
+    blur_or_not(rot90)],I,O).
+
+
+
+%unbind_and_fill_in_blanks([guess_unbind_color(black),P2],Grid,RepairedResultO):-
+%  now_fill_in_blanks(P2,Grid,RepairedResultO).
+
+crop_by(HH/H,In,Out):- grid_size(In,H,V),between(1,H,HH),HH<H,clip(1,1,HH,V,In,Out).
+grow_4(In,Out):- flipV(In,FlipV),append(In,FlipV,Left),flipH(Left,Right),append_left(Left,Right,Out).
+grow_2(In,Out):- append_left(In,In,Out).
+grow_flip_2(In,Out):- flipH(In,FlipH),append_left(In,FlipH,Out).
+swap_two_colors(Blue,CurrentColor,In,Out):- enum_fg_colors(Blue),enum_fg_colors(CurrentColor),CurrentColor\==Blue, swap_colors(Blue,CurrentColor,In,Out).
+shrink_grid(I,O):- grid_to_norm(I,_,O),!.
+
+
 %:- op(100,xfx,' * ').
 :- dynamic(fav/2).
 :- discontiguous fav/2.
@@ -23,24 +391,29 @@ last_indiv(I,R):- into_group(I,M),I\=@=M,!,predsort(sort_on(loc_term),M,O),rever
 
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
-%fav(t(d631b094),human(globalpoints,grid_target=[get(points)],maplist(arg(1)))).
-fav(t('d631b094'),[human(i(lo_dots),get(objs),learn_rule)]).
-fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,summarize,dominant_color,count_tiles,'(4, 1)']).
+fav(t('484b58aa'),[indiv(i_repair_patterns)]).
+fav(t('0dfd9992'),[indiv(i_repair_patterns)]).
+fav(v('af22c60d'),[indiv(i_repair_patterns)]).
+fav(v('903d1b4a'),[indiv(i_repair_patterns)]).
+fav(v('e66aafb8'),[indiv(i_repair_patterns)]).
+fav(v('4aab4007'),[indiv(i_repair_patterns)]).
+fav(v('1e97544e'),[indiv(i_repair_patterns)]).
+fav(t('b8825c91'),[indiv(i_repair_patterns)]).
+fav(v('47996f11'),[indiv(i_repair_patterns)]).
+fav(v('981571dc'),[indiv(i_repair_patterns)]).
+fav(v('929ab4e9'),[indiv(i_repair_patterns)]).
+fav(t('ff805c23'),[indiv(i_repair_patterns),human(repair_in_vm(repair_fourway),get(changed),trim_to_rect)]). fav(t('ff805c23'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']). %fav(t('ff805c23'),[human(repair_in_vm(repair_repeats(blue)),get(changed),trim_to_rect)]).
+%fav(TestID,[indiv(i_repair_patterns)]):- is_symgrid(TestID).
+fav(t('3631a71a'),[indiv(i_repair_patterns)]).   fav(t('3631a71a'),[human(repair_in_vm(repair_fourway),get(repaired))]). fav(t('3631a71a'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
+fav(t('29ec7d0e'),[indiv(i_repair_patterns),human(repair_in_vm(repair_repeats(Black)),get(repaired))]):- get_black(Black). fav(t('29ec7d0e'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_repetition,pattern_expansion,image_filling,detect_grid,'(4, 1)']).
+fav(v('de493100'),[indiv(i_repair_patterns)]). fav(v(de493100),[out_grid(8,6),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(4, 1) ']).
+fav(t('9ecd008a'),[indiv(i_repair_patterns), human([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).
+fav(t('73251a56'),[indiv(i_repair_patterns),learn([learn_mapping_stateful]),human([apply_mapping_stateful])]).
 
-%fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
-fav(t('0d3d703e'),[human(i([columns,done]),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
-%fav(t('a85d4709'),[human(i([rows,done]),o([rows,done]),   db(objs:shape,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
-fav(t('a85d4709'),[indiv(i_rows),learn(i([rows,done]),o([rows,done]),learn_rule),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
 
-fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,pattern_repetition,pattern_expansion,pattern_completion,'(3, 1)']).
-%fav(t('ff805c23'),[human(repair_in_vm(repair_repeats(blue)),get(changed),trim_to_rect)]).
-fav(t('ff805c23'),[human(repair_in_vm(repair_fourway),get(changed),trim_to_rect)]).
-fav(t('ff805c23'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,pattern_expansion,pattern_completion,crop,'(3, 1)']).
-%fav(t('3631a71a'),[indiv(i_repair_mirrors)]).
-%fav(t('3631a71a'),[human(repair_in_vm(repair_fourway),get(repaired))]).
-fav(t('3631a71a'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
-fav(t('29ec7d0e'),[human(repair_in_vm(repair_repeats(black)),get(repaired))]).
-fav(t('29ec7d0e'),[-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_repetition,pattern_expansion,image_filling,detect_grid,'(4, 1)']).
+fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([rectangle])],I),rest_indivdual(Is),put_inside(Is,I),
+  if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).
+
 fav(t('47c1f68c'),[hedra,
    human(compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1),blur(flipH),blur(flipV))]).
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,recolor,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
@@ -51,11 +424,27 @@ fav(t('27a28665'),[human(i(whole),learn_rule)]).
 fav(t('27a28665'),[learn([shape_to_color]),no_sol([make_box(1),shape_to_color(C),cls_with(C)])]).
 fav(t('27a28665'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,take_negative,associate_images_to_patterns,associate_colors_to_patterns,'(7, 3)']).
 %fav(t('44f52bb0'),[human(i(whole),print_grid,get_vm(objs,[Obj|_]),print_grid,(call(iz(Obj,h_symmetric))->(print_grid,set_out([[blue]]));(print_grid,set_out([[orange]]))))]).
+fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,pattern_repetition,pattern_expansion,pattern_completion,'(3, 1)']).
 fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
+
+fav(t('40853293'),[indiv(by_color(2))]).
+%fav(t(d631b094),human(globalpoints,grid_target=[get(points)],maplist(arg(1)))).
+fav(t('d631b094'),[indiv(lo_dots),human(i(lo_dots),get(objs),learn_rule)]).
+fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,summarize,dominant_color,count_tiles,'(4, 1)']).
+
+%fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
+fav(t('0d3d703e'),[indiv(i_columns),human(i([columns,done]),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,associate_colors_to_colors,'(4, 1)']).
+%fav(t('a85d4709'),[human(i([rows,done]),o([rows,done]),   db(objs:shape,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
+fav(t('a85d4709'),[indiv(i_rows),learn(i([rows,done]),o([rows,done]),learn_rule),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,summarize,separate_images,associate_colors_to_images,'(4, 1)']).
+
+fav(t('60b61512'),[indiv(i_pbox)]).
+
+fav(t('d0f5fe59'),[indiv(colormass),human(color(largest,Color),ray(Color-point_01_01,count),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,tt,training,separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
+
 /*
   Grid = [[1,1,1,1]]
   The Drawer does 
-  Draw Grid = loc(1,1),line_hv(h), pen(1), amass(4)
+  Draw Grid = loc2D(1,1),line_hv(h), pen(1), amass(4)
   
   % Grid<->Drawer   Drawer<->Grid
   
@@ -65,26 +454,27 @@ fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
   
   Slover = [- pen(1), + pen(2)]
   
-  DrawGrid = loc(1,1),line_hv(h), pen(2), amass(5)
+  DrawGrid = loc2D(1,1),line_hv(h), pen(2), amass(5)
   Grid = [[2,2,2,2,2]]
 */
 /*
-fav(t('44f52bb0'),[human(i(whole),call((
+fav(t('44f52bb0'),[human(i(whole),grid_call((
   get_vm(objs,[Obj|_]),(iz(Obj,h_symmetric)->set_vm(grid,[[blue]]);set_vm(grid,[[orange]])),set_vm(grid,[[orange]]))))]).
 fav(t('44f52bb0'),[lmDSL(into_monochrome,grid_to_individual(whole),one_obj,resize_grid(1,1,Color),db(largest:h_symmetric,Color)), -shape_match,-rotation_match,-mask_match,-color_match,tt,training,detect_symmetry,associate_images_to_bools,'(6, 2)']).
 */
 
-fav(t('f76d97a5'),[was__lmDSL([compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1)])]).
+fav(t('f76d97a5'),[indiv([include_black,force_by_color]),was__lmDSL([compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1)])]).
 
-fav(t('25d487eb'),[grid_size_same,human([rocketship]),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,draw_line_from_point,direction_guessing,color_guessing,'(3, 1)']).
+fav(t('25d487eb'),[indiv(colormass),human([rocketship])]).
+fav(t('25d487eb'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,draw_line_from_point,direction_guessing,color_guessing,'(3, 1)']).
 fav(v('762cd429'),[grid_size_same,human(i([shape_lib(filled_squares),delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects])),-rotation_match,-mask_match,+shape_match,+color_match,evaluation,'(3, 1) ']).
 
 %fav(t('6e82a1ae'),[human([rocketship])]).
-fav(v('e41c6fd3'),[human([forall(((iz(X,outl),color(X,cyan),vert_pos(X,Vert))),(iz(Y,outl),vert_pos(Y,Vert)))])]).
-fav(t('25d487eb'),[human([rocketship])]).
+fav(v('e41c6fd3'),[human([forall(((iz(X,outl),color(X,cyan),vert_pos(X,Vert))),
+                                                                               (iz(Y,outl),vert_pos(Y,Vert)))])]).
 fav(t(c444b776),[detect_grid]).
 fav(v('94133066'),[human([largest_indiv,trim_to_rect,rot90,flipV])]).
-fav(v('762cd429'),[human(i([shape_lib(filled_squares),delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects]))]).
+fav(v('762cd429'),[indiv(shape_lib(filled_squares)),human(delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects)]).
 fav(v(f9d67f8b),[grid_size_same,human([overlay_each_pattern]),-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(4, 1) ']).
 
 fav(t('e9bb6954'),[debug_indiv]).
@@ -92,20 +482,19 @@ fav(t('5582e5ca'),[grid_size_same,human([compute_max_color(_134548),cls_with(_13
 fav(t('6f8cd79b'),[grid_size_same,human([add_borders(cyan)]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,ex_nihilo,contouring,'(4, 1)']).
 fav(t('dae9d2b5'),[human([cut_in_half,overlay_all,set_all_fg(magenta)])]).
 fav(t('d6ad076f'),[human([find_smaller,shoot_at_other,wide_beam])]).
-fav(t('d511f180'),[human([swap_colors(cyan,silver)])]).
-fav(t('ae4f1146'),[learn([call(set_bgc(cyan))]),human([largest_indiv,trim_to_rect,set_bg(cyan)])]).
+fav(t('d511f180'),[indiv(i_by_color),human([swap_colors(cyan,silver)])]).
 fav(t('a79310a0'),[human([gravity(1,s),swap_colors(cyan,red)])]).
 fav(t('a48eeaf7'),[human([largest_indiv(I),tiny_individuals(Is),gravity_to(Is,I)])]).
 fav(t('97999447'),[human([find_ones,until_edges([copy_right(silver),copy_right(sameR)])])]).
 fav(t('8be77c9e'),[human([grow([[sameR],[flipV]])])]).
 fav(t('7f4411dc'),[human([shave_away_1s])]).
 fav(t('7b6016b9'),[human([fillFromBorder(green),subst_color(black,red)])]).
-fav(t('73251a56'),[learn([learn_mapping_stateful]),human([apply_mapping_stateful])]).
 fav(t('6f8cd79b'),[human([add_borders(cyan)])]).
 fav(t('6d58a25d'),[debug_indiv,print_grid,"the blue object is a downward beam maker, each beam must connect to one of its colors "]).
 fav(t('6cf79266'),[learn([find(nines),remove_them]),human(reverse_learned)]).
-fav(v(de493100),[-mask_match,-shape_match,-rotation_match,-color_match]).
 fav(v(f9d67f8b),[human([overlay_each_pattern])]).
+
+
 
 fav(t('9d9215db'),[human([overlay_each_pattern])]).
 fav(t('810b9b61'),[human([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
@@ -124,12 +513,6 @@ fav(t('3c9b0459'),[human([rot180])]).
 %fav(t('d511f180'),[human([compute_max_color(C1),compute_next_color(C2),swap_colors(C2,C1)])]).
 fav(t(dae9d2b5),[human([cut_in_half,overlay_all,set_all_fg(magenta)]),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,separate_images,recoloring,pattern_juxtaposition,'(5, 2)']).
 
-fav(t('9ecd008a'),[%indiv(i_repair_mirrors),
-    human([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).
-
-
-fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([rectangle])],I),rest_indivdual(Is),put_inside(Is,I),
-  if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).
 
 fav(v('4b6b68e5'),
  [ 
@@ -177,24 +560,11 @@ fav(t('8d5021e8'),[human_skip([grow([[rot180, flipV],[flipH, sameR],[rot180, fli
 
 fav(t('6150a2bd'),[clue(amass(in)=:=amass(out)),human(rot180),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(2, 1)']).
 fav(t('ed36ccf7'),[clue(amass(in)=:=amass(out)),human(rot270),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,image_rotation,'(4, 1)']).
-fav(t(b230c067),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,find_the_intruder,associate_colors_to_bools,'(2, 1)']).
-fav(t(d2abd087),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
-fav(v('0a2355a6'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(4, 1) ']).
-fav(v('37d3e8b2'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(3, 1) ']).
-fav(t('6e82a1ae'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
-fav(t(b6afb2da),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,replace_pattern,rectangle_guessing,recoloring,'(2, 1)']).
-fav(t(e509e548),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,homeomorphism,associate_colors_to_shapes,'(3, 1)']).
-fav(t(ea32f347),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,count_tiles,associate_colors_to_ranks,'(4, 1)']).
-fav(t('08ed6ac7'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,order_numbers,measure_length,associate_colors_to_ranks,'(2, 1)']).
-fav(v('626c0bcc'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(3, 1) ']).
-fav(v('639f5a19'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(2, 1) ']).
-
-fav(v('6ea4a07e'),[clue(amass(in)+amass(out)=9),human(use_clues),clue(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
 
 :- style_check(-singleton).
 fav(t(ff28f65a),[human(count_shapes,associate_images_to_numbers),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,count_shapes,associate_images_to_numbers,'(8, 3)']).
 fav(t('1b60fb0c'),[
- %indiv([i_repair_mirrors]),
+ %indiv([i_repair_patterns]),
  %human([new_things_are_a_color,fix_image]),
  skip_human(
    in_out(In,Out),
@@ -208,13 +578,13 @@ fav(t('1b60fb0c'),[grid_size_same, -rotation_match,-mask_match,-color_match,+sha
 %fav(t('db3e9e38'),[human([flipV,C1=orange,C2=blue,[],flipV]).
 %fav(t(_),[human([fillFromBorder(none,yellow)])]).
 
-fav(t('8d510a79'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,draw_line_from_point,direction_guessing,detect_wall,associate_colors_to_bools,'(2, 1)']).
+fav(t('8d510a79'),[indivs(find_grids,colormass),grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,tt,training,draw_line_from_point,direction_guessing,detect_wall,associate_colors_to_bools,'(2, 1)']).
 
-fav(v(d304284e),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(2, 1) ']).
+fav(v('d304284e'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(2, 1) ']).
 
-fav(t(d0f5fe59),[out_grid(4,4),non_human(color(largest,Color),ray(Color-point_01_01,count),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,tt,training,separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
 
-fav(t('7b6016b9'),[grid_size_same,human([fillFromBorder(green),subst_color(black,red)]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,loop_filling,color_guessing,background_filling,'(3, 1)']).
+fav(t('7b6016b9'),[grid_size_same,human([fillFromBorder(green),subst_color(Black,red)]),
+  -rotation_match,-mask_match,-color_match,+shape_match,tt,training,loop_filling,color_guessing,background_filling,'(3, 1)']):- get_black(Black).
 fav(t('1cf80156'),[out_grid(4,4),human([trim_to_rect]),-shape_match,-rotation_match,-mask_match,+color_match,tt,training,crop,'(3, 1)']).
 fav(t('8d5021e8'),[out_grid(4,9),human_skip([grow([[rot180,flipV],[flipH,sameR],[rot180,flipV]])]),-shape_match,-rotation_match,-mask_match,+color_match,tt,training,image_repetition,image_reflection,'(3, 1)']).
 fav(t('8be77c9e'),[out_grid(3,6),human_skip([grow([[sameR],[flipV]])]),-shape_match,-rotation_match,-mask_match,+color_match,tt,training,image_repetition,image_reflection,'(3, 1)']).
@@ -223,7 +593,8 @@ fav(t('5c2c9af4'),[grid_size_same,human([two_closest_dots_to_edge,make_a_box,gro
 fav(t('7f4411dc'),[grid_size_same,human([shave_away_1s]),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,remove_noise,rectangle_guessing,'(3, 1)']).
 fav(t('3c9b0459'),[grid_size_same,human([rot180]),-rotation_match,+shape_match,+mask_match,+color_match,tt,training,image_rotation,'(4, 1)']).
 fav(t('44d8ac46'),[grid_size_same,human([find_individuals([hollow,boxes,inside([rectangle])],_138006),indiv_fill_color(_138006,red)]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,rectangle_guessing,loop_filling,'(4, 1)']).
-fav(t(ae4f1146),[learn([call(set_bgc(cyan))]),human([largest_indiv,trim_to_rect,set_bg(cyan)]),-shape_match,-rotation_match,-mask_match,-color_match,tt,training,separate_images,crop,count_tiles,'(4, 1)']).
+fav(t('ae4f1146'),[indiv(i_mono_nsew),learn([call(set_bgc(cyan))]),human([largest_indiv,trim_to_rect,set_bg(cyan)])]).
+fav(t('ae4f1146'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,separate_images,crop,count_tiles,'(4, 1)']).
 fav(t('97999447'),[grid_size_same,human([find_ones,until_edges([copy_right(silver),copy_right(sameR)])]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_expansion,draw_line_from_point,'(3, 1)']).
 fav(t('6cf79266'),[grid_size_same,learn([find(nines),remove_them]),human(reverse_learned),-rotation_match,-mask_match,-color_match,+shape_match,+'Errors',tt,training,rectangle_guessing,recoloring,'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021','(3, 1)']).
 fav(t('810b9b61'),[grid_size_same,human([(iz(_140032,rectangle),iz(_140032,hollow),iz(_140032,thick1),iz(_140032,noexit)-->color(_140032,green))]),-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,detect_closed_curves,'(3, 1)']).
@@ -233,7 +604,7 @@ fav(v('4b6b68e5'),[grid_size_same,nthDSL(2,[gather_object(_145350,_145352,(iz(_1
 
 fav(t(d6ad076f),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,draw_line_from_point,connect_the_dots,bridges,'(3, 1)']).
 fav(t('9d9215db'),[grid_size_same,human([overlay_each_pattern]),-rotation_match,-mask_match,+shape_match,+color_match,tt,training,pattern_rotation,pattern_reflection,pattern_expansion,'(3, 1)']).
-fav(v(e41c6fd3),[grid_size_same,human([forall((iz(_141760,outl),color(_141760,cyan),vert_pos(_141760,_141780)),(iz(_141790,outl),vert_pos(_141790,_141780)))]),-rotation_match,-mask_match,+shape_match,+color_match,evaluation,'(3, 1) ']).
+fav(v(e41c6fd3),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,evaluation,'(3, 1) ']).
 fav(v('1d398264'),[grid_size_same,human([(iz(_140032,keypad),iz(_140032,multicolor),centerof(_140032,_140052)-->sunburst(_140052))]),-rotation_match,-mask_match,+shape_match,+color_match,test,evaluation,'(3, 2) ']).
 fav(v(e9bb6954),[grid_size_same,e('box of nine draw outward, if you hit a drawn line blacken it'),human([(iz(_142198,keypad),iz(_142198,monocolor),centerof(_142198,_142218)-->starburst(_142218))]),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(4, 1) ']).
 fav(t(d511f180),[grid_size_same,human([swap_colors(cyan,silver)]),-rotation_match,-color_match,+shape_match,+mask_match,+'Errors',training,'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021#760920',associate_colors_to_colors,'(3, 1)']).
@@ -241,6 +612,20 @@ fav(t('73251a56'),[grid_size_same,learn([learn_mapping_stateful]),human([apply_m
 fav(t(f76d97a5),[grid_size_same,was__lmDSL([compute_max_color(_134548),compute_next_color(_134558),remove_color(_134548),subst_color(_134558,_134548)]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,take_negative,recoloring,associate_colors_to_colors,'(3, 1)']).
 fav(t(ce22a75a),[grid_size_same,hint(grow_blue),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,replace_pattern,'(2, 1)']).
 fav(t(a79310a0),[grid_size_same,human([gravity(1,s),swap_colors(cyan,red)]),-rotation_match,-mask_match,-color_match,+shape_match,tt,training,recoloring,pattern_moving,pairwise_analogy,'(3, 1)']).
+
+fav(t(b230c067),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,find_the_intruder,associate_colors_to_bools,'(2, 1)']).
+fav(t(d2abd087),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
+fav(v('0a2355a6'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(4, 1) ']).
+fav(v('37d3e8b2'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test,evaluation,'(3, 1) ']).
+fav(t('6e82a1ae'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
+fav(t(b6afb2da),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,replace_pattern,rectangle_guessing,recoloring,'(2, 1)']).
+fav(t(e509e548),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,homeomorphism,associate_colors_to_shapes,'(3, 1)']).
+fav(t(ea32f347),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,separate_shapes,recoloring,count_tiles,associate_colors_to_ranks,'(4, 1)']).
+fav(t('08ed6ac7'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,order_numbers,measure_length,associate_colors_to_ranks,'(2, 1)']).
+fav(v('626c0bcc'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(3, 1) ']).
+fav(v('639f5a19'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(2, 1) ']).
+
+fav(v('6ea4a07e'),[clue(amass(in)+amass(out)=9),human(use_clues),clue(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,evaluation,'(6, 2) ']).
 
 
 fav(t(ba97ae07),[grid_size_same,-rotation_match,+shape_match,+mask_match,+color_match,tt,training,rettangle_guessing,recoloring,pattern_modification,pairwise_analogy,'(4, 1)']).
@@ -734,7 +1119,7 @@ fav(v('1d0a4b61'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shap
 fav(t('321b1fc6'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,pattern_repetition,pattern_juxtaposition,'(2, 1)']).
 fav(t('2204b7a8'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,proximity_guessing,'(3, 1)']).
 fav(t(c9f8e694),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,recoloring,pattern_repetition,color_palette,'(2, 1)']).
-fav(t(e76a88a6),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,pattern_repetition,pattern_juxtaposition,'(2, 1)']).
+fav(t(e76a88a6),[indiv(i_mono),grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,tt,training,pattern_repetition,pattern_juxtaposition,'(2, 1)']).
 fav(v(c7d4e6ad),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(2, 1) ']).
 fav(v(fafd9572),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,evaluation,'(2, 1) ']).
 fav(v(a680ac02),[out_grid(8,4),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(3, 1) ']).
@@ -958,7 +1343,6 @@ fav(v(ef26cbf6),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_
 fav(v('0a1d4ef5'),[-shape_match,-rotation_match,-mask_match,-color_match,test,evaluation,'(3, 1) ']).
 fav(t('6d0160f0'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,tt,training,separate_image,pattern_moving,find_the_intruder,detect_grid,'(4, 1)']).
 fav(v('0934a4d8'),[out_grid(4,4),-shape_match,-rotation_match,-mask_match,-color_match,test,evaluation,'(4, 1) ']).
-fav(v(de493100),[out_grid(8,6),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(4, 1) ']).
 fav(t('6ecd11f4'),[-shape_match,-rotation_match,-mask_match,-color_match,tt,training,recoloring,pattern_resizing,crop,color_palette,'(3, 1)']).
 fav(v(b0722778),[out_grid(2,11),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(2, 1) ']).
 fav(v(e66aafb8),[out_grid(5,8),-shape_match,-rotation_match,-mask_match,-color_match,evaluation,'(5, 1) ']).

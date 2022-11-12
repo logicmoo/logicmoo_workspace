@@ -53,7 +53,7 @@ function() {
 		$(this).toggleClass('fold')
 	}
 
-	var serverRoot = "https://logicmoo.org"
+	// var serverRoot = "https://logicmoo.org:17771"
 	var xrefDir = "/swish/lm_xref"
 	var ctrlPressed = false;
 	var shiftPressed = false;
@@ -197,7 +197,7 @@ function() {
 			href = xrefDir + "/" + href;
 		}
 		if (href.startsWith("/")) {
-			href = serverRoot + href;
+			// href = serverRoot + href;
 		}
 		window.open(href, 'lm_xref');
 	}

@@ -4,9 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+:- include(kaggle_arc_header).
 
 :- multifile learn_shapelib/7.
 :- multifile individuals_from_pair/9.
@@ -18,9 +16,9 @@ recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
    nop((set(VM.program_i) = [After,recalc_sizes|TODO])).
 /*
-   Ë amass(3) cc(blue,3.0) v_hv(1,3) loc(2,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(2,2) layer(in) nth(21)
-%amass(3) cc(cyan,3.0) v_hv(1,3) loc(1,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center(1,2) layer(in) nth(22)
-%  Iz(Non Diag):         Ê amass(3) cc(green,3.0) v_hv(1,3) loc(3,1) pen([]) birth(ifti3(nsew)) iz(nsew) iz(rectangulator) iz(symmetry(sym_hv)) center(3,2) layer(in) nth(20)
+   ï¿½ amass(3) cc(blue,3.0) vis2D(1,3) loc2D(2,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center2D(2,2) layer(in) nth(21)
+%amass(3) cc(cyan,3.0) vis2D(1,3) loc2D(1,1) pen([]) birth(ifti3(nsew)) iz(symmetry(sym_hv)) center2D(1,2) layer(in) nth(22)
+%  Iz(Non Diag):         ï¿½ amass(3) cc(green,3.0) vis2D(1,3) loc2D(3,1) pen([]) birth(ifti3(nsew)) iz(nsew) iz(rectangulator) iz(symmetry(sym_hv)) center2D(3,2) layer(in) nth(20)
 
 */
 
@@ -29,7 +27,7 @@ recalc_sizes(VM):- is_map(VM),
    computeMassIndex(VM,Sizes),
    computeMinMass(VM,Sizes,Count,Min),
    computeMaxMass(VM,Sizes,Count,Max),
-   fif(
+   if_t(
      (VM.objs_min_mass \== Min ; VM.objs_max_mass \== Max),
       pp(yellow,decide_min_max_size(Sizes,Max,Min))),
 
@@ -156,7 +154,7 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
   individu ate([],options([solid(rectangle),defaults]),ImO,NewImO), 
   add_shape_lib(pair,NewImO),
   show_pair_no_i(IH,IV,OH,OV,'Filter noise',PairName,ImO,OmI),
-  add_comparitor(-size),
+  add_comparitor(-size2D),
   show_pair_no_i(IH,IV,OH,OV,'Filter noise',PairName,RestOfInObjs,OmI),
   add_shape_lib(in,RestOfInObjs),
   add_action(show_pair_no_i),
@@ -224,7 +222,8 @@ one_is_zero(IMass,OMass):-
 
 remove_colors([],Out,Out):-!.
 remove_colors([C|IPLs],In,Out):- 
- subst001(In,C,black,Mid),
+ get_black(Black),
+ subst001(In,C,Black,Mid),
  remove_colors(IPLs,Mid,Out).
 
 

@@ -90,7 +90,7 @@ user:portray(List):- compound(List),compound_name_arity([_,_],F,A),compound_name
 
 user_portray_dcg_seq(List):- \+ is_list(List),!,between(32,1,Len),length(Left,Len),append(Left,_,List), ground(Left),!,
    catch(atom_codes(W,Left),_,fail),format("|~w ___|",[W]).
-user_portray_dcg_seq(List):- catch(atom_codes(Atom,List),_,fail),length(List,Len),
+user_portray_dcg_seq(List):- is_codelist(List), catch(atom_codes(Atom,List),_,fail),length(List,Len),
   (Len < 32 -> format("`~w`",[Atom]) ;  
     (length(Left,26),append(Left,_Rest,List),format(atom(Print),"~s",[Left]),format("|~w ... |",[Print]))).
 

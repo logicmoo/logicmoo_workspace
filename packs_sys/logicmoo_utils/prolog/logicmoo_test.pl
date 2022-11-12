@@ -811,6 +811,7 @@ shorten_and_clean_name(Name,Size,RSName):-
   ensure_compute_file_link(Name,Name0),
   replace_in_string(
   ['https://logicmoo.org:2082/gitlab/logicmoo/'="",
+   'https://gitlab.logicmoo.org/gitlab/logicmoo/'="",
    '-/blob/'='',
    '/'='_',
    '_master_packs_'='_'],Name0,Name1),

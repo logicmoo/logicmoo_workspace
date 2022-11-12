@@ -10,49 +10,36 @@
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(stream_type_check,false).
 :- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(load_arc_webui,true);true).
+:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(use_arc_webui,true);set_prolog_flag(use_arc_webui,false)).
 
 :- dynamic('$messages':to_list/2).
 :- multifile('$messages':to_list/2).
 :- asserta(('$messages':to_list(In, List) :- ((is_list(In)-> List = In ; List = [In])),!)).
+%my_time(Goal):- !,call(Goal).
 
-catch_log(G):- format('~N'),ignore(catch(notrace(G),E,wdmsg(E=G))),format('~N').
+:- use_module(library(statistics)).
+:- import(prolog_statistics:time/1).
+my_time(Goal):- time(Goal).
+
+catch_log(G):- ignore(catch(notrace(G),E,writeln(E=G))).
+catch_nolog(G):- ignore(catch(notrace(G),E,nop(wdmsg(E=G)))).
 
 %:- pack_install('https://github.com/logicmoo/logicmoo_utils.git').
-%:- pack_upgrade(logicmoo_utils).
+:- catch_log(pack_install(logicmoo_utils,[
+  %url('https://github.com/logicmoo/logicmoo_utils.git'),
+  interactive(false),
+  upgrade(true),git(true)])).
+:- pack_upgrade(logicmoo_utils),!.
 % :- pack_install(dictoo).
 % :- pack_upgrade(dictoo).
+
+
 
 %:- module(system).
 
 :- set_prolog_flag(arc_term_expansion, false).
-:- dynamic((ap/1,apv/2)).
-:- dynamic(cmem/3).
-:- dynamic(cmemo/3).
-:- dynamic(grid_nums/1).
-:- dynamic(grid_nums/2).
 
-:- multifile(fav/2).
-:- discontiguous(fav/2).
-:- dynamic(fav/2).
-:- export(fav/2).
-
-:- multifile(user:portray/1).
-:- dynamic(user:portray/1).
-:- discontiguous(user:portray/1).
-
-:- dynamic(kaggle_arc/4).
-:- discontiguous(kaggle_arc/4).
-:- multifile(kaggle_arc/4).
-:- export(kaggle_arc/4).
-
-:- dynamic(arc_test_property/3).
-:- discontiguous(arc_test_property/3).
-:- multifile(arc_test_property/3).
-
-:- dynamic(individuation_macros/2).
-:- discontiguous(individuation_macros/2).
-:- multifile(individuation_macros/2).
-
+:- include(kaggle_arc_header).
 
 arc_history(_).
 arc_history1(_).
@@ -66,37 +53,34 @@ my_asserta_if_new(HB):- my_asserta_if_new(HB:-true).
 my_assertz_if_new((H:-B)):- !, (my_is_clause(H,B) -> true ; assertz(H:-B)).
 my_assertz_if_new(HB):- my_assertz_if_new(HB:-true).
 
-:- multifile(decl_sf/1).
-:- discontiguous(decl_sf/1).
-:- dynamic(decl_sf/1).
-decl_sf(G):- ground(G), !, my_assertz_if_new(decl_sf(G)).
-:- multifile(decl_pt/2).
-:- discontiguous(decl_pt/2).
-:- dynamic(decl_pt/2).
-:- multifile(decl_pt/1).
-:- discontiguous(decl_pt/1).
-:- dynamic(decl_pt/1).
-decl_pt(G):- ground(G), !, my_assertz_if_new(decl_pt(plain,G)).
-decl_pt(How,G):- nonvar(How),ground(G), !, my_assertz_if_new(decl_pt(How,G)).
+%:- multifile(decl_sf/1).
+%:- discontiguous(decl_sf/1).
+%:- dynamic(decl_sf/1).
+:- dynamic(is_decl_sf/1).
+decl_sf(G):- must_det_ll((nonvar(G), !, my_assertz_if_new(is_decl_sf(G)))).
+%:- multifile(decl_pt/2).
+%:- discontiguous(decl_pt/2).
+%:- dynamic(decl_pt/2).
+%:- multifile(decl_pt/1).
+%:- discontiguous(decl_pt/1).
+%:- dynamic(decl_pt/1).
+:- dynamic(is_decl_pt/2).
+:- discontiguous(is_decl_pt/2).
+:- multifile(is_decl_pt/2).
+
+decl_pt(G):- must_det_ll((nonvar(G), !, my_assertz_if_new(is_decl_pt(plain,G)))).
+decl_pt(How,G):- must_det_ll((nonvar(How),nonvar(G), !, my_assertz_if_new(is_decl_pt(How,G)))).
 :- set_prolog_flag(color_term,true).
 :- set_stream(current_output, tty(true)).
+:- set_stream(user_output, tty(true)).
+:- set_stream(user_error, tty(true)).
+%:- set_stream(user_output, newline(unix)).
+
 :- stream_property(S,file_no(2)), set_stream(S,tty(true)).
 :- stream_property(S,file_no(1)), set_stream(S,tty(true)).
-:- multifile is_fti_step/1.
-:- multifile is_fti_stepr/1.
-:- discontiguous is_fti_step/1.
-:- discontiguous is_fti_stepr/1.
 
-
-:- discontiguous is_changeable_param/1.
-:- multifile is_changeable_param/1.
-:- dynamic is_changeable_param/1.
-
-:- discontiguous ping_indiv_grid/1.
-:- multifile ping_indiv_grid/1.
-
-:- meta_predicate(fif(0,0)).
-fif(IF, THEN) :- (   call(IF) ->  call(THEN) ;   true ).
+:- meta_predicate(if_t(0,0)).
+if_t(IF, THEN) :- (   call(IF) ->  call(THEN) ;   true ).
 :- meta_predicate(quietlyd(0)).
 :- export(quietlyd/1).
 quietlyd(G):- quietly(G),!.
@@ -181,48 +165,32 @@ pfcAddF(P):-
 %:- set_prolog_flag(verbose_load,true).  
 %:- set_prolog_flag(verbose_autoload,true).
 
-:- system:use_module(library(quasi_quotations)).
-:- system:use_module(library(hashtable)).
-:- system:use_module(library(gensym)).
-:- system:use_module(library(sort)).
-:- system:use_module(library(writef)).
-:- system:use_module(library(rbtrees)).
-:- system:use_module(library(dicts)).
-:- system:use_module(library(edinburgh)).
-%:- system:use_module(library(lists)).
-:- system:use_module(library(statistics)).
-:- system:use_module(library(nb_set)).
-:- system:use_module(library(assoc)).
-:- system:use_module(library(pairs)).
-:- system:use_module(library(logicmoo_common)).
-:- system:use_module(library(prolog_trace)).
-:- system:use_module(library(prolog_clause)).
-:- system:use_module(library(prolog_source)).
- %library(trace/clause) 
-%:- autoload_all.
-:- system:use_module(library(gvar_globals_api)).
-:- system:use_module(library(dictoo_lib)).
+
 
 :- current_prolog_flag(argv,C),wdmsg(current_prolog_flag(argv,C)),!.
 
 :- set_prolog_flag(no_sandbox,true).
 
 
-:- if(current_prolog_flag(load_arc_webui,true)).
-with_webui(Goal):- ignore(call(Goal)),!.
-:- endif.
+with_webui(_Goal):- \+ current_prolog_flag(use_arc_webui,true),!.
 with_webui(Goal):- ignore(when_arc_webui(with_http(Goal))).
 %:- initialization arc_http_server.
 
-logicmoo_webui:-
+:- exists_source(library(xlisting/xlisting_web)) -> system:use_module(library(xlisting/xlisting_web)) ; true.
+
+ld_logicmoo_webui:-
+   exists_source(library(logicmoo_webui)), use_module(library(logicmoo_webui)), 
   system:use_module(library(xlisting/xlisting_web)),
   system:use_module(library(xlisting/xlisting_web_server)),
-   exists_source(library(logicmoo_webui)), use_module(library(logicmoo_webui)), 
-   catch_log(dmsg((?-webui_start_swish_and_clio))),
-   (catch_log(call(call,webui_start_swish_and_clio))).
-logicmoo_webui.
+  catch_log(dmsg((?-webui_start_swish_and_clio))).
+ld_logicmoo_webui.
 
-:- (current_prolog_flag(load_arc_webui,true)->catch_log(logicmoo_webui) ; true).
+logicmoo_webui:- ld_logicmoo_webui,catch_log(call(call,webui_start_swish_and_clio)).
+
+:- ld_logicmoo_webui.
+:- (current_prolog_flag(load_arc_webui,true)->catch_log(ld_logicmoo_webui) ; true).
+
+    
 
 
 %:- autoload_all.
@@ -248,13 +216,18 @@ check_len(_).
 
 %must_det_ll(G):- !, call(G).
 %must_det_ll(X):- !,must_not_error(X).
+must_det_ll(X):- \+ callable(X), !, throw(must_det_ll_not_callable(X)).
+must_det_ll((X,!)):- !, (must_det_ll(X),!).
+must_det_ll((X,!,Y)):- !, (must_det_ll(X),!,must_det_ll(Y)).
+must_det_ll((X,Y)):- !, (must_det_ll(X),must_det_ll(Y)).
+%must_det_ll(X):- notrace(catch(X,_,fail)),!.
 must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(must_det_ll,List).
 must_det_ll(must_det_ll(X)):- !, must_det_ll(X).
-must_det_ll((X,Y,Z)):- !, (must_det_ll(X)->must_det_ll(Y)->must_det_ll(Z)).
-must_det_ll((X,Y)):- !, (must_det_ll(X)->must_det_ll(Y)).
-must_det_ll(fif(X,Y)):- !, fif(must_not_error(X),must_det_ll(Y)).
-must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
+%must_det_ll((X,Y,Z)):- !, (must_det_ll(X)->must_det_ll(Y)->must_det_ll(Z)).
+%must_det_ll((X,Y)):- !, (must_det_ll(X)->must_det_ll(Y)).
+must_det_ll(if_t(X,Y)):- !, if_t(must_not_error(X),must_det_ll(Y)).
 must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
+must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
 must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
 %must_det_ll((M:Y)):- nonvar(M), !, M:must_det_ll(Y).
@@ -267,6 +240,13 @@ must_det_ll(X):-
 must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> throw(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
   rrtrace(visible_rtrace([-all,+exception]),X)))).
 
+
+odd_failure(G):- call(G),!.
+odd_failure(G):- wdmsg(odd_failure(G)),fail.
+odd_failure(G):- rrtrace(G).
+
+
+%must_det_ll_failed(X):- predicate_property(X,number_of_clauses(1)),clause(X,(A,B,C,Body)), (B\==!),!,must_det_ll(A),must_det_ll((B,C,Body)).
 must_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,visible_rtrace([-all,+fail,+exception],X).
 % must_det_ll(X):- must_det_ll(X),!.
 
@@ -469,14 +449,16 @@ doit(set(E.v)):- that.
 :- style_check(+singleton).
 */
 
-arc_user(main):-!.
-%arc_user(ID):- thread_self(TID),arc_user(TID, ID).
+%arc_user(main):- !.
+arc_user(ID):- thread_self(TID),arc_user(TID, ID).
 
 suggest_arc_user(ID):- catch((if_arc_webui(xlisting_web:find_http_session(ID))),_,fail),!.
 suggest_arc_user(ID):- catch((pengine:pengine_user(ID)),_,fail),!.
 suggest_arc_user(ID):- catch((http_session:session_data(_,username(ID))),_,fail),!.
 
 arc_webui:-  notrace(arc_webui0).
+
+arc_webui0:- current_prolog_flag(use_arc_webui,false),!,fail.
 arc_webui0:- toplevel_pp(http),!.
 arc_webui0:- in_pp(http),!.
 arc_webui0:- toplevel_pp(swish),!.
@@ -495,27 +477,42 @@ arc_user(TID, ID):- suggest_arc_user(ID), TID\=ID,!.
 luser_setval(N,V):- arc_user(ID),luser_setval(ID,N,V),!.
 luser_setval(ID,N,V):- nb_setval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
-luser_defval(N,V):- luser_setval(global,N,V).
+luser_default(N,V):- luser_setval(global,N,V).
 
 luser_linkval(N,V):- arc_user(ID),luser_linkval(ID,N,V),!.
 luser_linkval(ID,N,V):- nb_linkval(N,V),retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
 
 :- meta_predicate(if_arc_webui(-)).
-if_arc_webui(Goal):- arc_webui,!,g_out(call(Goal)).
+%if_arc_webui(Goal):- !, fail,Goal.
 if_arc_webui(_):- \+ arc_webui,!,fail.
+if_arc_webui(Goal):- arc_webui,!,g_out(call(Goal)).
+
 
 :- meta_predicate(when_arc_webui(-)).
 when_arc_webui(G):- toplevel_pp(http),call(G),!.
 when_arc_webui(G):- toplevel_pp(swish),call(G),!.
 when_arc_webui(G):- ignore(if_arc_webui(G)).
 
+:- luser_default(grid_size_only,f).
+:- luser_default(extreme_cache,t).
+%arc_option(grid_size_only):- !,fail.
+arc_option(P):- luser_getval(P,t).
+
+:- luser_default(no_individuator, f).
+
+with_luser(N,V,Goal):-
+  luser_getval(N,OV),
+  setup_call_cleanup(
+    luser_setval(N,V),
+    Goal,
+    luser_getval(N,OV)).
 
 luser_getval(N,V):- if_arc_webui(((current_predicate(get_param_req_or_session/2),get_param_req_or_session(N,V), V\=='',V\==""))).
 luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
 %luser_getval(ID,N,V):- thread_self(ID),nb_current(N,V),!.
 %luser_getval(ID,N,V):- !, ((arc_user_prop(ID,N,V);nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 luser_getval(ID,N,V):- !,
- (nb_current(N,Val)*->Val=V;
+ ((nb_current(N,Val),Val\==[])*->Val=V;
   (arc_user_prop(ID,N,V)*->true;arc_user_prop(global,N,V))).
 
 /*
@@ -523,7 +520,10 @@ luser_getval(ID,N,V):-
  (arc_user_prop(ID,N,V)*->true;
   (nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 */
-:- luser_defval(example,trn+0).
+:- luser_default(example,trn+0).
+
+
+:- luser_default(no_diags,t).
 
 %c:- forall(clause(fav(A,B),true),arc_history1((fav(A,B)))).
 :- arc_history1(fav2).
@@ -537,40 +537,7 @@ luser_getval(ID,N,V):-
 :- multifile(mregression_test/0).
 :- dynamic(mregression_test/0).
 
-:- enable_arc_expansion.
-
-%:- set_prolog_flag(verbose_load,true).  
-%:- set_prolog_flag(verbose_autoload,true).
-
-%:- learn_shapes.
-:- ensure_loaded(kaggle_arc_utils).
-:- ensure_loaded(kaggle_arc_ui_ansi).
-:- ensure_loaded(kaggle_arc_interpreter).
-:- ensure_loaded(kaggle_arc_test_loader).
-:- ensure_loaded(kaggle_arc_domaintypes).
-:- ensure_loaded(kaggle_arc_test_iface).
-:- ensure_loaded(kaggle_arc_explaination).
-:- ensure_loaded(kaggle_arc_howdiff).
-:- ensure_loaded(kaggle_arc_imageproc).
-:- ensure_loaded(kaggle_arc_physics).
-:- ensure_loaded(kaggle_arc_db).
-:- ensure_loaded(kaggle_arc_heuristics).
-:- ensure_loaded(kaggle_arc_intruder).
-:- ensure_loaded(kaggle_arc_test_cache).
-:- ensure_loaded(kaggle_arc_individuation).
-
-:- ensure_loaded(kaggle_arc_object).
-:- ensure_loaded(kaggle_arc_boards).
-:- ensure_loaded(kaggle_arc_learning).
-:- ensure_loaded(kaggle_arc_imagens).
-:- ensure_loaded(kaggle_arc_recognise).
-:- ensure_loaded(kaggle_arc_uniqueness).
-:- ensure_loaded(kaggle_arc_ui_html).
-:- ensure_loaded(kaggle_arc_test_easy).
-:- ensure_loaded(kaggle_arc_test_old).
-:- set_prolog_flag(verbose_load,false).
-:- set_prolog_flag(verbose_autoload,false).
-
+:- include(kaggle_arc_footer).
 
 %:- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
 
@@ -626,7 +593,7 @@ is_detatched_thread:- arc_webui,!.
 is_detatched_thread:- \+ (thread_self(Main) -> Main == main ; main==0),!.
 
 cls_z:- is_detatched_thread,!.
-cls_z:- catch(cls,_,true).
+cls_z:- catch(cls,_,true),clear_tee,clear_test_html.
 cls1:- nop(catch(cls_z,_,true)).
 
 list_to_rbtree_safe(I,O):- must_be_free(O), list_to_rbtree(I,M),!,M=O.
@@ -670,14 +637,14 @@ set_vm_obj(Prop,Or,Value):- set_vm(Prop,Value),ignore(set_vm_obj1(Prop,Or,Value)
 set_vm_obj1(Prop,Or,Value):- is_grid(Value),!,
   localpoints_include_bg(Value,IndvPoints),
   grid_size(Value,H,V),
-  fif(IndvPoints\==[],
+  if_t(IndvPoints\==[],
     (get_vm(VM),
-          make_indiv_object(VM,[iz(Prop),v_hv(H,V),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
+          make_indiv_object(VM,[iz(Prop),vis2D(H,V),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
           %addObjects(VM,Obj),
           print_grid(H,V,Prop,Value))),!.
 
 set_vm_obj1(Prop,Or,IndvPoints):- is_points_list(IndvPoints),!,
-  fif(IndvPoints\==[],
+  if_t(IndvPoints\==[],
     (get_vm(VM),          
       make_indiv_object(VM,[iz(Prop),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
       %addObjects(VM,Obj),
@@ -731,7 +698,8 @@ make_training(TestID,VMO):-
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
 train_test:- notrace(get_current_test(TestID)), once(train_test(TestID)).
-train_test(TestID):- clear_training(TestID),
+train_test(TestID):- 
+  clear_training(TestID),
   compile_and_save_test(TestID),
   train_test(TestID,train_using_oo_ii_io).
 train_test(TestID,P2):-   
@@ -748,8 +716,6 @@ train_test(TestID,P2):-
   my_time(call(P2,TestID,Dictation,DictOut)),
   set_training(DictOut),!.
 
-my_time(Goal):- !,call(Goal).
-my_time(Goal):- statistics:time(Goal).
 
 train_using_oo_ii_io(TestID,DictIn,DictOut):- 
   train_using_oo_ii_io(TestID,trn,0,DictIn,DictOut).
@@ -823,7 +789,7 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    into_grid(InA,In), into_grid(OutA,Out),!,
    name_the_pair(TestID,ExampleNum,In,Out,PairName),
  	 grid_size(In,IH,IV), grid_size(Out,OH,OV),
-	 ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
+	 ignore((IH+IV \== OH+OV , writeln(io(size2D(IH,IV)->size2D(OH,OV))))),
    
    into_fti(TestID>(Trn+N1)*IO1,ModeIn,In,InVM),!,
    into_fti(TestID>(Trn+N2)*IO2,ModeOut,Out,OutVM)]),!,
@@ -884,7 +850,8 @@ show_pair_code(In,Out):-
   dash_chars,dash_chars.
 
 print_testinfo(TestID):-
-  ignore(((test_info(TestID,F),forall(member(I,F),pp(test_info=I))))).
+  forall(test_info_recache(TestID,F),pp(fav(TestID,F))).
+  %forall(test_info(TestID,F),forall(member(I,F),pp(test_info=I))).
 
 % trials(learn). trials(clue).   
 trials(human). trials(sol).
@@ -905,7 +872,7 @@ appended_trial(human,[learn_rule]).
 solve_test:- forall(trial_non_human(Trial),solve_test_trial(Trial)).
 
 solve_test_trial(Trial):- mmake,
- my_menu_call((get_current_test(TestID), catch(solve_test_trial(Trial,TestID,(tst+_)),E,wdmsg(E=solve_test_trial(Trial,TestID,(tst+_)))))),!.
+ my_time((my_menu_call((get_current_test(TestID), catch(solve_test_trial(Trial,TestID,(tst+_)),E,wdmsg(E=solve_test_trial(Trial,TestID,(tst+_)))))))),!.
 
 solve_test_training_too:- 
  solve_test,
@@ -934,7 +901,7 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     name_the_pair(TestID,ExampleNum,TestIn,ExpectedOut,PairName))),
    must_det_ll((       
     grid_size(TestIn,IH,IV), grid_size(ExpectedOut,OH,OV),
-    ignore((IH+IV \== OH+OV , writeln(io(size(IH,IV)->size(OH,OV))))),
+    ignore((IH+IV \== OH+OV , writeln(io(size2D(IH,IV)->size2D(OH,OV))))),
     print_testinfo(TestID))), 
    must_det_ll((
    try_easy_io(TestID>ExampleNum,TestIn,ExpectedOut),
@@ -965,7 +932,7 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
      ignore(((
       once((pp(cyan,trial=Trial),
        ppt(cyan,run_dsl(TestID>ExampleNum,Trial,SolutionProgram)),!,
-       (time((
+       (my_time((
               maybe_set_vm(InVM),
               kaggle_arc_io(TestID,ExampleNum,in,TestIn),
               gset(InVM.grid) = TestIn,
@@ -973,18 +940,20 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
               run_dsl(InVM,SolutionProgram,InVM,GridOut)))*->!;GridOut=InVM.grid),
        into_pipe(GridOut,Solution)))
        *->    
-       ignore((count_difs(ExpectedOut,Solution,Errors),
-        print_side_by_side(blue,Solution,"Our Ran Solution",_,ExpectedOut,"Expected Solution"),
-           (Errors==0 -> 
-              (banner_lines(green),arcdbg(pass(Why,TestID,ExampleNum,SolutionProgram)),banner_lines(green))
-              ; (banner_lines(red), arcdbg(fail(Why,Errors,TestID,ExampleNum,SolutionProgram)),
-               test_info(TestID,InfoF),wqnl(fav(TestID>ExampleNum,InfoF)),
-               banner_lines(red)))))
+      ignore((count_difs(ExpectedOut,Solution,Errors),
+       print_side_by_side(blue,Solution,"Our Ran Solution",_,ExpectedOut,"Expected Solution"),
+          (Errors==0 -> 
+             arcdbg_info(green,pass(Why,TestID,ExampleNum,SolutionProgram))
+             ; (banner_lines(red), arcdbg(fail(Why,Errors,TestID,ExampleNum,SolutionProgram)),
+                test_info(TestID,InfoF),wqnl(fav(TestID>ExampleNum,InfoF)),
+                banner_lines(red)))))
+
+     
+
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))))),
     print_grid("our grid", InVM.grid),!,
     print_list_of("our objs",InVM.objs),
     ppt("END!!!"+Why+TestID+ExampleNum))),!.
-   
 
 
 :- luser_linkval(test_rules,[rules]).
@@ -1063,9 +1032,11 @@ saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
 %:- endif.
 
 %:- fixup_module_exports_now.  
-user:portray(Grid):-
+user:portray(Grid):- fail, 
+   current_prolog_flag(debug,false),
+    \+ tracing,
    \+ nb_current(arc_can_portray,nil),
-   current_predicate(bfly_startup/0), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!.
+   current_predicate(bfly_startup/0), \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!, flush_output.
 
 
 %:- ignore(check_dot_spacing).
@@ -1083,23 +1054,30 @@ user:portray(Grid):-
 
 :- nb_setval(arc_can_portray,nil).
 :- nb_setval(arc_can_portray,t).
+:- nb_setval(arc_can_expand_query,nil).
+:- nb_setval(arc_can_expand_query,t).
 %:- \+ nb_current(arc_can_portray,nil).
 
 :- fixup_module_exports_into(baseKB).
 :- fixup_module_exports_into(system).
 
-:- set_stream(current_output,encoding(utf8)).
+:- catch_log(set_stream(current_output,encoding(utf8))).
 
+:- (current_prolog_flag(load_arc_webui,true)->catch_log(logicmoo_webui) ; true).
 :- current_prolog_flag(load_arc_webui,true) -> catch_log(start_arc_server) ; true.
 
-bfly_startup:-    
+:- catch_log(set_long_message_server('https://logicmoo.org:17771')).
+
+bfly_startup:-
+   set_toplevel_pp(bfly),
    asserta(was_inline_to_bfly),inline_to_bfly_html,
    bfly,
    catch_log(webui_tests),
    catch_log(print_test),
    catch_log(menu),
    %with_pp(bfly,catch_log(menu)),
-   nop((next_test,previous_test)),!.
+   nop((next_test,previous_test)),!,
+   ansi.
 
 
 ansi_startup:- 
@@ -1110,5 +1088,7 @@ ansi_startup:-
    %with_pp(bfly,catch_log(menu)),
    nop((next_test,previous_test)),!.
 
-
+:- luser_setval(cmd,test_easy_solve_by).
+:- luser_setval(individuated_cache,true).
+:- gen_gids.
 

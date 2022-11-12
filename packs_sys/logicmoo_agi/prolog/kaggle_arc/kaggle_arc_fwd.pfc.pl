@@ -4,9 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
-:- if(current_module(trill)).
-:- set_prolog_flag_until_eof(trill_term_expansion,false).
-:- endif.
+:- include(kaggle_arc_header).
 
 %%:- module(user).
 
@@ -101,9 +99,9 @@ assert_obj_global_points==>
   ((cindv( Obj, localpoints, _)/(obj_to_oid(Obj,GID),globalpoints(Obj,GPS)))==> {assert_id_cells(GID,GPS)}).
 
 
-arc_test_property(T, common(comp(o-o, area)), area(n(1, 1, d(0), a(0), r(1))))==> arc_note(T,"output always size 1").
-arc_test_property(T, common(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/var(X)==> arc_note(T,"output size always equal as input").
-%arc_test_property(T, common(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> arc_note(T,"output size always equal as input").
+arc_test_property(T, common,(comp(o-o, area)), area(n(1, 1, d(0), a(0), r(1))))==> arc_note(T,"output always size2D 1").
+arc_test_property(T, common,(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/var(X)==> arc_note(T,"output size2D always equal as input").
+%arc_test_property(T, common,(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> arc_note(T,"output size2D always equal as input").
 
 %:- forall_assert(kaggle_arc_io(TestID,ExampleNum,IO,_),some_grid_tid(TestID>ExampleNum*IO)).
 :- set_prolog_flag(pfc_term_expansion,false).

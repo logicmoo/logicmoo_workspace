@@ -322,7 +322,7 @@
       }
     }
 
-    if ( ctype.symbol(ch) ) {
+    if ( (!(typeof ctype.symbol === 'undefined')) && ctype.symbol(ch) ) {
       stream.eatWhile(ctype.symbol);
       var atom = stream.current();
       if ( atom == "." && peekSpace(stream) ) {

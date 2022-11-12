@@ -618,7 +618,7 @@ once_per_request(pformat_write(`<style>
   content: "\\2212";
 }
 
-.colapsed {
+.collapsed-c {
   padding: 0 18px;
   max-height: 0;
   overflow: hidden;
