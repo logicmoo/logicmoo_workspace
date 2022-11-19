@@ -152,7 +152,9 @@ repair_symmetry0:-
   is_symgrid(TestID), 
   %arc_test_name(TestID),
   ignore(repair_symmetry(TestID))).
-  
+
+repair_symmetry:- get_current_test(TestID),repair_symmetry(TestID).
+
 repair_symmetry(TestID):- \+ is_grid(TestID), 
  fix_id(TestID,TTestID), TTestID \== TestID, repair_symmetry(TestID).
 repair_symmetry(TestID):- \+ is_grid(TestID),
@@ -198,7 +200,7 @@ repair_symmetry_code(Grid,RepairedResult,Code):-
      *-> 
       (if_t(GridS\==[],print_grid(test_RepairedResult,GridS)),
        if_t(Orig\==Grid,print_side_by_side(green,Orig,orig(ID),_,Grid,altered(ID))),
-       print_side_by_side(green,Orig,gridIn(ID),_,RepairedResult,repairedResult(ID)),
+       print_side_by_side(green,Orig,gridIn(ID),_,RepairedResult,repaired(ID)),       
        print_info_l(GridS),
        Errors = _,
        if_t(is_grid(Out),
@@ -382,7 +384,7 @@ get_center_rays(CRef,Grid9x9,Center,Rays):-
              obj([grid(CWR),rot(rot180),loc2D(CRef,-1,0)|CommonR]),
              obj([grid(CSR),rot(rot90), loc2D(CRef,0,1)|CommonR]),
              obj([grid(CNR),rot(rot270),loc2D(CRef,0,-1)|CommonR])],
-   Center =  [obj([grid(CC),rot(sameR),loc2D(CRef,0,0)|iz(center2D(CRef))])],!.
+   Center =  [obj([grid(CC),rot(sameR),loc2D(CRef,0,0)|iz(center2G(CRef))])],!.
 
 
 filter_empty_grids(List,ListO):- include(obj_has_form,List,ListO).
@@ -536,6 +538,7 @@ sometimes_assume(P2,X,Y):- ignore(call(P2,X,Y)).
 sometimes_assume(P1,X):- ignore(call(P1,X)).
 
 count_changes(G,R,S,S):- G=@=R,!.
+count_changes(G,R,S,S):- G=R,!.
 count_changes(G,R,S,E):- (\+ is_list(G), \+ is_list(R)),!,plus(S,1,E).
 count_changes(G,R,S,E):- (\+ is_list(G) ; \+ is_list(R)),!,plus(S,10_000,E).
 count_changes([G|Grid],[R|RepairedResult],S,E):-
@@ -590,18 +593,29 @@ is_fti_step(maybe_repair_in_vm).
 % =====================================================================
 maybe_repair_in_vm(_P4,VM):- VM.option_repair_grid==false,!.
 maybe_repair_in_vm(P4,VM):- var(VM.option_repair_grid), !, 
- (need_repair_grid(VM.id) -> (set(VM.option_repair_grid) = true) ; (set(VM.option_repair_grid) = false)),
+ (need_repair_grid(VM) 
+   -> (set(VM.option_repair_grid) = true) 
+    ; (set(VM.option_repair_grid) = false)),
   maybe_repair_in_vm(P4,VM).
 maybe_repair_in_vm(P4,VM):- repair_in_vm(P4,VM),!.
 
 need_repair_grid(VM):- 
   VM.h >= 14, VM.v >= 14,
   testid_name_num_io(VM.id,TestID,_Example,_Num,in),!,
-  kaggle_arc(TestID,trn+0,I,O), is_grid_symmetricD(O), !, \+ is_grid_symmetricD(I),  
-  Grid=VM.grid,
-  mass(Grid,GridMass),
-  Area is VM.h * VM.v,  
-  GridMass/Area > 0.39.
+  test_need_repair_grid(TestID),!.
+
+test_need_repair_grid(_):- test_config(giz([never_repair])),!,fail.
+test_need_repair_grid(TestID):- 
+  kaggle_arc(TestID,trn+_,I,O), 
+  \+ is_trim_symmetricD(I), 
+  grid_size(I,IH,IV),
+  mass(I,GridMass),
+  Area is IH * IV,  
+  GridMass/Area > 0.39,!,
+  grid_size(O,OH,OV),
+  once(
+    (is_trim_symmetricD(O),IH=OH,IV=OV) 
+    ;(IH>=(OH*3),IV>=(OV*3))).
 
 % =====================================================================
 is_fti_step(repair_in_vm).
@@ -611,28 +625,37 @@ repair_in_vm(P4,VM):-
   maybe_set_vm(VM),
   VM.h >= 7, VM.v >= 7,
   VM.option_repair_grid == true,
-  Grid=VM.grid,
+  Grid = VM.grid,
+  call(P4,VM,Grid,RepairedResult,Steps),
+  set(VM.option_repair_grid) = false,
+  Grid \== RepairedResult, !,  
+  diff_repaired(RepairedResult,VM),
+  set(VM.grid)= RepairedResult,
+  addProgramStep(VM,[repair_in_vm(P4)|Steps]))).
+
+% =====================================================================
+is_fti_step(remember_repaired).
+% =====================================================================
+remember_repaired(VM):- diff_repaired(VM.grid,VM).
+
+% =====================================================================
+is_fti_step(diff_repaired).
+% =====================================================================
+diff_repaired(RepairedResult,VM):-
+ must_det_ll((
   localpoints_include_bg(VM.grid_o,OriginalPoints),
-  call(P4,VM,Grid,RepairedResult,Steps),!,
   localpoints_include_bg(RepairedResult,RepairedPoints),
-  intersection(OriginalPoints,RepairedPoints,_Retained,NeededChanged,Changed),
-  maplist(must_det_ll,[
-%  set_vm_obj(neededChanged,NeededChanged),
-  set_vm_obj(changed,[iz(image)],Changed),
-  %write_attvars(nc=NeededChanged),nl,nl,
-  set_vm_obj(repaired,[iz(image)],RepairedPoints),
-  %writeq(c=Changed),nl,nl,
-  %turned_to_black(NeededChanged,
-  %trace,  
-  %set_vm_obj(grid,NeededChanged),
-  %((print_side_by_side(silver,Grid,repair_in_vm,_,RepairedResult,P4))),
-  %(Grid\=@=RepairedResult -> (set(VM.points) = []) ; true),
-  addProgramStep(VM,[repair_in_vm(P4)|Steps])]),
-  set(VM.neededChanged)=NeededChanged,
-  if_t(NeededChanged\==[], 
-         (make_indiv_object(VM,[iz(neededChanged),iz(invisible),iz(shaped)],NeededChanged,ColorObj),!,
-            set(VM.option_repair_grid) = false,
-            addInvObjects(VM,ColorObj))))),!.
+  intersection(OriginalPoints,RepairedPoints,Unchanged,NeededChanged,ChangedPoints),  
+  set_vm_obj(unchanged,[iz(image)],Unchanged),
+  set_vm_obj(original,[iz(image),iz(hidden)],OriginalPoints),
+  set_vm_obj(repaired,[iz(image),iz(always_keep)],RepairedPoints),
+  set_vm_obj(neededChanged,[iz(image),iz(hidden),iz(shaped),iz(always_keep)],NeededChanged),
+  set_vm_obj(changedUntrimmed,[iz(image),iz(always_keep)],ChangedPoints),
+  points_to_grid(VM.h,VM.v,ChangedPoints,Changed),
+  trim_to_rect(Changed,TrimChangedG),
+  localpoints_include_bg(TrimChangedG,TrimChangedPoints),
+  set_vm_obj(changed,[iz(image),iz(always_keep)],TrimChangedPoints))).
+
 
 column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row),!. 
 column_or_row(Grid,Color):- rot90(Grid,Grid0),!,member(Row,Grid0), maplist(==(Color),Row),!. 
@@ -647,9 +670,56 @@ contains_color(Color,Out):- unique_colors(Out,Colors),member(Color,Colors).
 test_blur_least:-
   test_p2(blur_least(_,_)).
 
+/*
+blur_least(B,Mix,I,O):-
+  blur_list(B,Mix,I,L),
+  predsort(sort_on(minimal_changes(I),L,S),
+  S=[O-pp(blur_some(B,Mix))|_].
+*/
+
 blur_least(B,Mix,I,O):-
   blur_list(B,Mix,I,S),
   S=[O-pp(blur_some(B,Mix))|_].
+
+replace_non_fg_least(C,Black,C):- \+ is_fg_color(Black),!.
+replace_non_fg_least(_,C,C).
+
+blur_or_not_least(Op,G0,GG):- 
+  into_grid(G0,GD),duplicate_term(GD,G),
+  grid_call(Op,G,GGG),
+  WHY = blur_or_not_least(Count,Op,GG,OH,OV),
+  findall(WHY, 
+    (between(1,13,IH),OH is IH-7,between(1,13,IV),OV is IV-7,
+      duplicate_term(GGG,GGGO),
+      offset_layover(GGGO,OH,OV,GGGG),
+      mapgrid(replace_non_fg_least,GGGG,G,GG),
+      change_count(G,GG,Count),
+      nop(print_grid(WHY,GG))),L),
+  predsort(sort_on(/*pointy_mass*/ change_count(G)),L,S),
+  S=[WHY|_],
+  print_grid(blur_or_not_least(Count,Op,OH,OV),GG).
+
+offset_layover(GGG,OH,OV,GGGG):-
+  push_downward(GGG,OV,GG), rot90(GG,GG90),
+  push_downward(GG90,OH,GGG90), rot270(GGG90,GGGG).
+
+push_downward(G,OV,NewTop):- OV>0,!,
+  grid_size(G,H,V),
+  make_grid(H,OV,Top),
+  append(Top,G,Grid0),
+  length(NewTop,V),
+  append(NewTop,NewBot,Grid0),!,  
+  mapgrid(==(black),NewBot),
+  mapgrid(=(black),Top).
+push_downward(G,OV,NewBot):- OV<0,!,
+  grid_size(G,H,V),
+  make_grid(H,OV,Bot),
+  append(G,Bot,Grid0),
+  length(NewBot,V),
+  append(NewTop,NewBot,Grid0),!,
+  mapgrid(==(black),NewTop),
+  mapgrid(=(black),Bot).
+push_downward(G,0,G).
 
 /*
 ?- into_grid(t('1b60fb0c')>_*_,I),blur_list(B,Mix,I,O),maplist(print_side_by_side(I),O).
@@ -657,16 +727,25 @@ blur_least(B,Mix,I,O):-
 */
 blur_list(B,Mix,I,S):-
   findall(O-pp(blur_some(B,Mix)),blur_some(B,Mix,I,O),L),
-  predsort(sort_on(pointy_mass),L,S).
+  %print_side_by_side(L),
+  predsort(sort_on(/*pointy_mass*/ change_count(I)),L,S).
+
+change_count(I,G,Changes):- arg(_,G,E), is_grid(E),!,count_changes(I,E,0,Changes).
+
 
 pointy_mass(P,Mass):- is_pointy(P),!,mass(P,Mass).
 pointy_mass(T,Mass):- arg(_,T,E), compound(E), pointy_mass(E,Mass),!.
 
-blur_some(B,Mix,I,O):- (var(B)->blur_turn(B);true),(once(call(B,I,M)),I\=@=M), mapgrid(mix_cellr(Mix),I,M,O).
 
+blur_some(B,Mix,I,O):- 
+ %duplicate_term(In,I),
+ (var(B)->blur_turn(B);true),once(grid_call_alters(blur(B),I,M)), 
+  mapgrid(mix_cellr(Mix),I,M,O).
+
+blur_turn(flipD).
 blur_turn(rot90). blur_turn(rot270). 
 blur_turn(flipV). blur_turn(flipH). blur_turn(rot180). 
-blur_turn(flipDHV). blur_turn(flipD). blur_turn(flipDV). blur_turn(flipDH).
+blur_turn(flipDHV).  blur_turn(flipDV). blur_turn(flipDH).
 blur_mix(fg). blur_mix(bg). blur_mix(not_color(Black)):- get_black(Black).
 
 cv(FG,OC):- once(FG==fg;OC==fg;FG==bg;OC==bg),!.
@@ -677,6 +756,10 @@ mix_cellr(Mix,I,M,O):- mix_cell(Mix,M,I,O).
 mix_cellr(blanks,OC,FG,New):- !, (var(OC)->New=FG;New=OC).
 mix_cell(Mix,I,M,O):- var(Mix),!,blur_mix(Mix),mix_cell(Mix,I,M,O).
 
+mix_cell(blur_mixer,OC,FG,FG):- var(OC),!.
+mix_cell(blur_mixer,_,FG,FG):- is_fg_color(FG),!.
+mix_cell(blur_mixer,OC,_,OC):-!.
+
 mix_cell(fg,OC,FG,FG):- OC==FG,!.
 mix_cell(fg,OC,FG,FG):- is_fg_color(FG),(is_real_color(FG); \+ is_fg_color(OC)),!,cv(FG,OC).
 mix_cell(fg,FG,OC,FG):- is_fg_color(FG),(is_real_color(FG); \+ is_fg_color(OC)),!,cv(FG,OC).
@@ -686,6 +769,7 @@ mix_cell(fg,FG,OC,FG):- \+ is_color(OC),!,cv(FG,OC).
 mix_cell(fg,OC,FG,FG):- \+ is_color(OC),!,cv(FG,OC).
 mix_cell(fg,OC,FG,FG):- is_color(FG),!,cv(FG,OC).
 mix_cell(fg,FG,OC,FG):- is_color(FG),!,cv(FG,OC).
+
 
 mix_cell(bg,OC,FG,FG):- OC==FG,!.
 mix_cell(bg,OC,BG,BG):- is_bg_color(BG),(is_real_color(BG); \+ is_bg_color(OC)),!,cv(BG,OC).
@@ -1138,7 +1222,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
 
-  set_vm_obj(full_grid,[iz(image)],GridO),
+  set_vm_obj(full_grid,[iz(image),iz(always_keep)],GridO),
   clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
   
 
@@ -1147,7 +1231,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   gset(VM.points) = [],
   OriginalPoints = VM.points_o,
   include(was_color(Cs),OriginalPoints,NeededChanged),  
-  %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,[iz(neededChanged),iz(invisible)],NeededChanged,ColorObj),!, addObjects(VM,ColorObj),
+  %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,[iz(neededChanged),iz(hidden)],NeededChanged,ColorObj),!, addObjects(VM,ColorObj),
   set_vm_obj(neededChanged,[iz(image)],NeededChanged),  
 
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
@@ -1513,7 +1597,7 @@ repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,KeepNewState,Rep
   max_hv(Objects,H,V),
   writeln('Training hard...'),
   prefect_result(VM,H,V,Ordered,Grids,RepairedResult,ColorAdvice),
-  %print_grid(_,_,repairedResult,RepairedResult),
+  %print_grid(_,_,repaired,RepairedResult),
   localpoints_include_bg(RepairedResult,LPoints),
 %  pp(RepairedResult),
   %pp(LPoints),

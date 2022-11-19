@@ -23,7 +23,7 @@ nb_subst(_Obj,_New,_Old).
 :- thread_local(in_memo_cached/5).
 :- multifile(prolog:make_hook/2).
 :- dynamic(prolog:make_hook/2).
-prolog:make_hook(before, Some):- Some \==[], retractall(in_memo_cached(_,_,_,_,_)), fail.
+prolog:make_hook(before, Some):- Some \==[], \+ luser_getval(extreme_caching,true), retractall(in_memo_cached(_,_,_,_,_)), fail.
 %arc_memoized(G):- !, call(G).
 arc_memoized(G):-
   copy_term(G,C,GT),
@@ -75,6 +75,20 @@ show_rules:-
  luser_getval(test_rules,TRules), maplist(pp(blue),TRules),
  !.
   
+sub_atom_value(TestID,A):- sub_term(A,TestID),(atom(A);string(A)).
+
+my_list_to_set(List, Set):- my_list_to_set(List, (=) ,Set).
+my_list_to_set_variant(List, Set):- my_list_to_set(List, (=@=) ,Set).
+my_list_to_set_cmp(List, Set):- my_list_to_set(List, (=@=) ,Set).
+
+my_list_to_set([E|List],P2, Set):- select(C,List,Rest), call(P2,E,C), !, my_list_to_set([E|Rest],P2, Set).
+my_list_to_set([E|List],P2, [E|Set]):-!, my_list_to_set(List,P2, Set).
+my_list_to_set([],_,[]).
+
+my_list_to_set_cmp([E|List],C3, Set):- select(C,List,Rest), call(C3,R,E,C), 
+   R== (=), my_list_to_set_cmp([C|Rest],C3, Set),!.
+  my_list_to_set_cmp([E|List],C3, [E|Set]):-!, my_list_to_set_cmp(List,C3, Set).
+my_list_to_set_cmp([],_,[]).
 
 
 contains_nonvar(N,Info):- sub_term(E,Info),nonvar_or_ci(E),E=N,!.
@@ -93,6 +107,9 @@ as_debug(_,C,G):- ignore(catch((call(C)->wots(S,G),format('~NDEBUG: ~w~N',[S]);t
 
 count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
+
+count_each_inv([],_,[]).
+count_each_inv([C|L],GC,[C-Len|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each_inv(L,GC,LL).
 
 maplist_n(N,P,[H1|T1]):-
   call(P,N,H1), N1 is N+1,
@@ -326,7 +343,7 @@ parse_expansions(FF, Vs0, Vs, Cmpd0, Cmpd):-
 dont_include_var(Vs0,Vs,Var):- select(_=VV,Vs0,Vs),VV==Var,!.
 dont_include_var(Vs,Vs,_).
   
-append_sets(Sets,Set):- my_append(Sets,List),list_to_set(List,Set).
+append_sets(Sets,Set):- append(Sets,List),list_to_set(List,Set).
 flatten_sets(Sets,Set):- flatten(Sets,List),list_to_set(List,Set).
 
 print_prop_val(N=V):- to_prop_name(N,P),format('~N\t\t'),print(P=V),nl.

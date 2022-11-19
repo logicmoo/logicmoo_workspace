@@ -173,20 +173,6 @@ sortshapes(List,Set):- my_list_to_set_cmp(List, using_compare(shape_key), Set).
 %sortshapes(List,ListS):- sort(List,ListS),!.
 
 
-my_list_to_set(List, Set):- my_list_to_set(List, (=) ,Set).
-my_list_to_set_variant(List, Set):- my_list_to_set(List, (=@=) ,Set).
-my_list_to_set_cmp(List, Set):- my_list_to_set(List, (=@=) ,Set).
-
-my_list_to_set([E|List],P2, Set):- select(C,List,Rest), call(P2,E,C), !, my_list_to_set([E|Rest],P2, Set).
-my_list_to_set([E|List],P2, [E|Set]):-!, my_list_to_set(List,P2, Set).
-my_list_to_set([],_,[]).
-
-my_list_to_set_cmp([E|List],C3, Set):- select(C,List,Rest), call(C3,R,E,C), 
-   R== (=), my_list_to_set_cmp([C|Rest],C3, Set),!.
-  my_list_to_set_cmp([E|List],C3, [E|Set]):-!, my_list_to_set_cmp(List,C3, Set).
-my_list_to_set_cmp([],_,[]).
-
-
 frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),singletons(true)]).
 
 shape_key(Shape,Key):- into_grid(Shape,Key1),frozen_key(Key1,Key).

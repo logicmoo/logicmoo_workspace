@@ -12,7 +12,7 @@ solve_easy:- get_current_test(Name),solve_easy(Name).
 
 solve_easy(Name):- 
   fix_test_name(Name,TestID,ExampleNum),
-  some_current_example_num(ExampleNum),
+  ignore(some_current_example_num(ExampleNum)),
   forall(kaggle_arc(TestID,ExampleNum,In,Out),try_easy_io(TestID>ExampleNum,In,Out)),
   ((ExampleNum\=tst+_)-> 
     forall(kaggle_arc(TestID,tst+N,In,Out),try_easy_io(TestID>tst+N,In,Out))).

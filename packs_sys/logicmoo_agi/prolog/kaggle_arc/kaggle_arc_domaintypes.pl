@@ -312,16 +312,17 @@ allow_dir_list(nsew,[n,s,e,w]). %s,e,n,w
 allow_dir_list(nsew_5,[n,s,e,w]). %s,e,n,w 
 
 allow_dir_list(s_e,[s,e]). %s,e,n,w 
-allow_dir_list(n_w,[n,w]). %s,e,n,w 
+allow_dir_list(n_e,[n,e]). %s,e,n,w 
+allow_dir_list(ne_sw,[ne,sw]). %s,e,n,w 
+allow_dir_list(nw_se,[nw,se]). %s,e,n,w 
 %allow_dir_list(rectangles,[s,e]). 
 
-allow_dir_list(colormass,[n,s,e,w]):- arc_option(no_diags),!.
-
-allow_dir_list(colormass,[n,s,e,w,nw,ne,se,sw]). 
+%allow_dir_list(colormass,[n,s,e,w]):- arc_option(no_diags),!.
+%allow_dir_list(colormass,[n,s,e,w,nw,ne,se,sw]). 
 allow_dir_list(diamonds,[nw,sw,se,ne]).
 allow_dir_list(colormass,[n,s,e,w,nw,sw,se,ne]).
 
-allow_dir_list(all,[n,s,e,w]):- arc_option(no_diags),!.
+%allow_dir_list(all,[n,s,e,w]):- arc_option(no_diags),!.
 allow_dir_list(all,   [nw,sw,se,ne,n,w,s,e]).
 allow_dir_list(hv_line(h),[e,w]).
 allow_dir_list(hv_line(v),[n,s]).
@@ -334,7 +335,7 @@ inv_points_corner(diamonds,square).
 inv_points_corner(outline,none).
 inv_points_corner(all,none).
 
-points_corner_dir(Shape,Dir):- \+ inv_points_corner(Shape,_), allowed_dir(Shape,Dir).
+points_corner_dir(Shape,Dir):- \+ inv_points_corner(Shape,_), !, allowed_dir(Shape,Dir).
 points_corner_dir(Shape,Dir):- inv_points_corner(Shape,OShape), allowed_dir(OShape,Dir).
 
 shape_type_dirs(ST,DIRS):- allow_dir_list(ST,DIRS).

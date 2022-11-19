@@ -1,5 +1,5 @@
 #!/bin/bash
-[ -z "$TYPESCRIPT" ] && TYPESCRIPT=1 exec /usr/bin/script -f -e -a tee.ansi -c "TYPESCRIPT=1 $0 $@"
+[ -z "$TYPESCRIPT" ] && TYPESCRIPT=1 exec /usr/bin/script -f -e -a muarc_tmp/tee.ansi -c "TYPESCRIPT=1 $0 $@"
 
 chmod 777 tee.ansi
 
@@ -15,12 +15,18 @@ fi
 
 cd $ARC_DIR
 mkdir -p out
-chmod -R 777 out
+chmod -R 777 out/
 #rm -rf out/?*.ansi.pl
 # git checkout out
 
+chmod -R 777 muarc_output/
+
+chmod -R 777 muarc_cache/
+
 mkdir -p data
-chmod -R 777 data
+chmod -R 777 data/
+
+chmod -R 777 muarc_tmp/
 
 
 export BCMD="cd ${ARC_DIR} ; pwd ;  swipl -l kaggle_arc.pl ${@}"

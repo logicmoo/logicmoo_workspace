@@ -6,6 +6,48 @@
 */
 :- include(kaggle_arc_header).
 
+
+:- meta_predicate(grid_call(+,+,-)).
+grid_call(=,I,O):- !, I=O. 
+grid_call(T,I+O,II+OO):- !, grid_call(T,I,II),grid_call(T,O,OO).
+grid_call(Nil,I,I):- Nil==[],!. 
+grid_call([H|T],I,O):- nonvar(H), !, grid_call(H,I,M), grid_call(T,M,O).
+grid_call(T,I,O):- call(T,I,O).
+
+:- meta_predicate(object_call(+,+,-)).
+object_call(=,I,O):- !, I=O. 
+object_call(T,I+O,II+OO):- !, object_call(T,I,II),object_call(T,O,OO).
+object_call(Nil,I,I):- Nil==[],!. 
+object_call([H|T],I,O):- nonvar(H), !, object_call(H,I,M), object_call(T,M,O).
+object_call(T,I,O):- call(T,I,O).
+
+:- meta_predicate(grid_call_alters(+,+,-)).
+grid_call_alters([H|T],I,O):- !, grid_call_alters(H,I,M),grid_call_alters(T,M,O).
+grid_call_alters(T,I,O):- grid_call(T,I,O),I\=@=O.
+
+:- meta_predicate(try_p2(+,+,-)).
+try_p2(P2,In,Out):- grid_call(P2,In,Mid),Mid=@=Out.
+
+
+show_grid_call(P2,I+O,III+OOO):-!,   
+ must_det_ll((grid_to_gid(I,GIDI),grid_to_gid(O,GIDO),
+  copy_term(P2,P22),
+  grid_call_for_info(P2,I,III,S1),
+  once(((grid_call_for_info(P2,O,OOO,S2),Aligned=true)*-> true;
+       ((P2\=@=P22,grid_call_for_info(P22,O,OOO,S2),Aligned=copied)*-> true;
+       ((O=OOO,tersify(P22,S2),Aligned=false))))),  
+  if_t(((III+OOO)\=@=(I+O)), 
+     print_side_by_side(green,III,called(S1,left,from(GIDI)),_,OOO,aligned(Aligned,S2,right,from(GIDO)))))),!.
+
+show_grid_call(P2,I,III):-
+  grid_call_for_info(P2,I,III,S1),
+   if_t(((III)\=@=(I)), print_side_by_side(green,I,before(S1),_,III,after(S1))),!.
+
+grid_call_for_info(P2,I,III,S1):- once(grid_call(P2,I,II)),(grid_footer(II,III,F)-> tersify(s(F,P2),S1) ; (III=II,tersify(P2,S1))),!.
+grid_call_for_info(P2,I,III,S1):- II=I,(grid_footer(II,III,F)-> tersify(s(F,P2),S1) ; (III=II,tersify(P2,S1))),!.
+
+
+
 pass_thru_workflow(G):- var(G),!.
 pass_thru_workflow([]).
 pass_thru_workflow([options(V)]):- nonvar(V).
@@ -28,6 +70,7 @@ show_workflow(In,add(P),Out):- !,
 show_workflow(In,each(P),Out):- show_workflow_each(In,P,Out).
 show_workflow(In,P,Out):- must_det_ll(call(P,In,Out)),!.
 show_workflow(In,P,In):- arcdbg(warn(failed(show_workflow(P)))),!.
+
  
 show_workflow_each([],_P,[]):-!.
 
@@ -241,7 +284,7 @@ back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
   Ret = Dict.
 
 :- if( \+ current_predicate(any_to_ace_str/2)).
-:- include(kaggle_arc_pfc).
+:- include(pfc_3_0/pfc_3_0_0).
 %:- use_module(library(pfc_lib)).
 :- endif.
 
@@ -265,7 +308,7 @@ cast_to_grid(Grid,Grid, (=) ):- is_grid(Grid),!.
 cast_to_grid(gridOpFn(Grid,OP),GridO,reduce_grid):- !, unreduce_grid(Grid,OP,GridO).
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
-cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), object_grid(Grp,Grid),!.
+cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), group_to_grid(Grp,Grid),!.
 cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj=@=Var, !,cast_to_grid(Var,Grid,Closure).
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
 cast_to_grid(OID, Grid, (=) ):- atom(OID),oid_to_gridoid(OID,Grid),!.
@@ -290,6 +333,13 @@ recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points
          (arg(1,Success,false)->nb_setarg(1,Success,true);true))))))),!,
   Success = found_points(true).
 
+
+group_to_grid(Grp,Grid):-   
+  reproduction_objs(Grp,Objs),
+  grid_size(Objs,H,V),
+  maplist(globalpoints,Objs,Points),
+  append(Points,AllPoints),
+  points_to_grid(H,V,AllPoints,Grid),!.
 
 vm_objs(O,VM):- largest_first(VM.objs,List),!, member(O,List).
 % vm_objs(O):- get_vm(VM), vm_objs(O,VM).
@@ -399,16 +449,22 @@ save_atts(A,'$attrs'(A)).
 to_assertable(A,A):- ground(A),!.
 to_assertable(A,'$VAR'(N)):- plain_var(A),!,format(atom(N),'~q',[A]).
 
-grid_to_tid(Grid,ID):- var(Grid),!,known_gridoid(ID,Grid).
+grid_to_tid(Grid,TID):- var(Grid),!,known_gridoid(TID,Grid).
 grid_to_tid(obj(_),_):- !,fail.
-%grid_to_tid(Grid,ID):- atom(Grid),!,ID=Grid.
-grid_to_tid(Grid,ID):- \+ ground(Grid), to_assertable_grid(Grid,GGrid),!,grid_to_tid(GGrid,ID).
-grid_to_tid(Grid,ID):- grid_to_etid(Grid,ID).
-grid_to_tid(Grid,ID):- must_be_free(ID),makeup_gridname(Grid,ID), set_grid_tid(Grid,ID),!.
+%grid_to_tid(Grid,TID):- atom(Grid),!,TID=Grid.
+grid_to_tid(Grid,TID):- nonvar(TID),!,grid_to_tid(Grid,TID),must_det_ll(TID=TID).
+grid_to_tid(Grid,TID):- \+ ground(Grid), to_assertable_grid(Grid,GGrid),!,grid_to_tid(GGrid,TID).
+grid_to_tid(Grid,TID):- grid_to_etid(Grid,TID),!.
+grid_to_tid(Grid,TID):- must_be_free(TID),makeup_gridname(Grid,TID), set_grid_tid(Grid,TID),!.
 
-grid_to_etid(Grid,_ID):- assertion(nonvar(Grid)),!,fail.
-grid_to_etid(Grid,ID):- kaggle_arc_io(TestID,Trn+Num,IO,Grid),!,ID = (TestID>(Trn+Num)*IO).
-grid_to_etid(Grid,ID):- known_grid0(ID,GVar),Grid=@=GVar,!.
+grid_to_etid(Grid,_ID):- assertion(nonvar(Grid)),fail.
+grid_to_etid(Grid,TID):- is_grid_tid(Grid,TID),!.
+grid_to_etid(Grid,TID):- get_current_test(TestID), kaggle_arc_io(TestID,Trn+Num,IO,Grid), name_num_io_id(TestID,Trn,Num,IO,TID),!.
+grid_to_etid(Grid,TID):- kaggle_arc_io(TestID,Trn+Num,IO,Grid), name_num_io_id(TestID,Trn,Num,IO,TID),!.
+%grid_to_etid(Grid,TID):- was_grid_gid(Grid,TID),!.
+grid_to_etid(Grid,TID):- known_grid0(TID,GVar),Grid=@=GVar,!.
+
+name_num_io_id(TestID,Trn,Num,IO,ID):- must_det_ll((ID = (TestID>(Trn+Num)*IO))).
 
 into_oid(X,ID):- atom(X),!,X=ID.
 into_oid(X,ID):- is_grid(X),grid_to_gid(X,ID),!.
@@ -416,8 +472,18 @@ into_oid(X,ID):- is_object(X),obj_to_oid(X,ID),!.
 into_oid(X,ID):- tid_to_gids(X,ID),!.
 
 
-makeup_gridname(_Grid,GridName):- get_current_test(ID),
-  flag(made_up_grid,F,F+1),GridName = (ID>('ExampleNum'+F)*io),nop(dumpST).
+makeup_gridname(Grid,TID):- nonvar(TID),!,makeup_gridname(Grid,GridNameM),!,must_det_ll((GridNameM=TID)).
+makeup_gridname(Grid,TID):- get_current_test(TestID), kaggle_arc_io(TestID,Trn+Num,IO,Grid), name_num_io_id(TestID,Trn,Num,IO,TID),!.
+makeup_gridname(Grid,TID):- is_grid_tid(Grid,TID),!.
+%makeup_gridname(Grid,TID):- was_grid_gid(Grid,TID),!.
+makeup_gridname(Grid,TID):- get_current_test(TestID),
+  flag(made_up_grid,F,F+1),
+   get_example_num(Example+Num),
+   (ground(Example+Num)->atomic_list_concat([Example,Num,ex],'_',HH);HH= 'Example'),
+   name_num_io_id(TestID,HH,F,io,TID),
+   assert_grid_tid(Grid,TID), nop(dumpST), 
+    %nop
+    (print_grid(no_name(TestID,TID),Grid)).
 
 incomplete(X,X).
 
@@ -457,14 +523,6 @@ o2g(Obj,NewGlyph):- trace,o2g_f(Obj,NewGlyph).
   ; ((number(NewGlyph)->trace;true),NewGlyph=Glyph,(number(NewGlyph)->trace;true),set_glyph_to_object(NewGlyph,Obj))),
  set_glyph_to_object(NewGlyph,Obj).
 */
-
-o2c(Obj,Glyph):- color(Obj,Glyph),!.
-
-o2ansi(I,S):- integer(I),int2glyph(I,G),!,o2ansi(G,S). 
-o2ansi(G,S):- atom(G),!,g2o(G,O),o2ansi(O,S),!.
-o2ansi(Obj,S):- o2g(Obj,G),colors(Obj,Colors),maplist(arg(1),Colors,NColors),
-  wots(S,maplist(user:print_ncolors(G),NColors)).
-print_ncolors(G,C):- sformat(F,'~q',[G]),color_print(C,F).
 
 :- system:import(print_ncolors/2).
 
@@ -506,7 +564,8 @@ into_group(G,G,(=)) :- G==[],!.
 into_group(P,G,(=)):- is_group(P),!,G=P.
 into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
    (why_grouped(_Why, G)*->true; 
-     ((arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs)),
+     (arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs),
+       % tries again
       (why_grouped(_Why, G)*->true; G=Objs))).
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),G=VM.objs,is_group(G),!.
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),run_fti(VM),G=VM.objs,is_group(G),!.

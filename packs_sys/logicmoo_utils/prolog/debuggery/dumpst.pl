@@ -353,7 +353,7 @@ fdmsg1(goal=G):- do_fdmsg1(G).
 fdmsg1(clause=[F,L]):- directory_file_path(_,FF,F),'format'('  %  ~w:~w: ',[FF,L]),!.
 fdmsg1(clause=[F,L]):- fresh_line,'format'('%  ~w:~w: ',[F,L]),!.
 fdmsg1(clause=[]):-'format'(' /*DYN*/ ',[]),!.
-fdmsg1(G):- if_defined_mesg_color(G,Ctrl),ansicall(Ctrl,format(' ~q ',[G])),!.
+fdmsg1(G):- if_defined_mesg_color(G,Ctrl),ansicall(Ctrl,fmt_gg(G)),!.
 fdmsg1(M):-dmsg(failed_fdmsg1(M)).
 
 do_fdmsg1(G):- 
@@ -361,8 +361,9 @@ do_fdmsg1(G):-
   (GG\==G->write('#');true),
   do_fdmsg2(GG),!.
 
-term_contains_ansi_b(S,S):- \+ compound(S),!,string(S),sub_string(S,_,_,_,'\x1B').
-term_contains_ansi_b(S,N):- arg(_,S,E),term_contains_ansi_b(E,N),!.
+term_contains_ansi_b(S,N):- compound(S), !, arg(_,S,E),term_contains_ansi_b(E,N),!.
+term_contains_ansi_b(S,S):- string(S),!,sub_string(S,_,_,_,'\x1B').
+term_contains_ansi_b(S,S):- atom(S),!,sub_string(S,_,_,_,'\x1B').
 
 %do_fdmsg2(GG):- term_contains_ansi_b(GG,_),pt(GG),!.
 do_fdmsg2(GG):- term_contains_ansi_b(GG,_),write(GG),!.
@@ -371,8 +372,10 @@ do_fdmsg2(GG):-
   term_variables(GG,_Vars),
   copy_term_nat(GG,GGG), =(GG,GGG),
   numbervars(GGG,0,_,[attvar(skip)]),
-  if_defined_mesg_color(GGG,Ctrl),ansicall(Ctrl,format(' ~q. ',[GGG])),!.
+  if_defined_mesg_color(GGG,Ctrl),ansicall(Ctrl,fmt_gg(GGG)),!.
 
+fmt_gg(GGG):- term_contains_ansi_b(GGG,_),!,write(' '),write(GGG),write('. ').
+fmt_gg(GGG):- format(' ~q. ',[GGG]).
 
 %= 	 	 
 

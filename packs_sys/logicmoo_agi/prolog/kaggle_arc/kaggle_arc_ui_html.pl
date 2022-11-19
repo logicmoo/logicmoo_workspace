@@ -73,6 +73,7 @@ with_tagged(Tag,Goal):-
     locally(b_setval('$collapsible_section',[h(Tag)|Was]),tabbed_print_im(Depth+2,(Goal))),
     bfly_html_goal(format('~w</~w> ',[Ident,Tag]))).
 
+tabbed_print_im(_Tab,Goal):- !, call(Goal).
 tabbed_print_im(Tab,Goal):- Tab2 is Tab, tabbed_print(Tab2,Goal).
 
 :- meta_predicate(trim_newlines(0)).

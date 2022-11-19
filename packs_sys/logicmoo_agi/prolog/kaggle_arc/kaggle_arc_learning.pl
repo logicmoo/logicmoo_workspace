@@ -81,7 +81,7 @@ not_for_matching(_Why,_,obj_to_oid(_,_)).
 not_for_matching(_Why,L,localpoints(XX)):- !, started_is_list(XX), member(shape(_),L).
 not_for_matching(_Why,L,globalpoints(XX)):- !, started_is_list(XX), (member(shape(_),L);member(localpoints(_),L)).
 
-%not_for_matching(_Why,_,center2D(H,V)):- (H\==1,V\==1,H\==2,V\==2,H\==3,V\==3).
+%not_for_matching(_Why,_,center2G(H,V)):- (H\==1,V\==1,H\==2,V\==2,H\==3,V\==3).
 %not_for_matching(_Why,_,loc2D(H,V)):- (H\==1;V\==1).
 %not_for_matching(_Why,_,M):- too_unique(M),!.
 %not_for_matching(_Why,_,M):- too_non_unique(M),!.
@@ -201,7 +201,7 @@ confirm_reproduction(Objs0,DebugObjs0,ExpectedOut):-
  must_det_ll((
   grid_size(ExpectedOut,H,V),
   grid_size(DebugObjs0,DH,DV),
-  reproduction_objs(Objs,Objs0), 
+  reproduction_objs(Objs0,Objs), 
   reproduction_objs(DebugObjs0,DebugObjs),
   length(Objs0,Len0),
   length(Objs,Len),
@@ -212,11 +212,13 @@ confirm_reproduction(Objs0,DebugObjs0,ExpectedOut):-
   (Errors==0 -> true; maplist(debug_reproduction(H,V),Objs,DebugObjs)))).
 
 debug_reproduction(H,V,Obj,DObj):- 
+ must_det_ll((
   globalpoints(Obj,Points),
-  print_grid(H,V,Obj,Points),
+  tersify(Obj,Info),
+  print_grid(H,V,Info,Points),
   obj_to_oid(Obj,ID1),
   obj_to_oid(DObj,ID2),
-  pp(dobj(ID1,ID2)=DObj),!.
+  pp(dobj(ID1,ID2)=DObj))),!.
 
 show_result(What,Solution,ExpectedOut,Errors):-
   show_sameness_or_lameness(green,red,What,Solution,ExpectedOut,Errors).
@@ -278,7 +280,7 @@ compare_objs_how(_).
 
 /*
 vis2D(5,5), amass(25),
-center2D(9,14),loc2D(7,12),
+center2G(9,14),loc2D(7,12),
 colors([cc(PURPLE,21),cc(BLACK,4)]),
 localpoints
 */
@@ -291,7 +293,7 @@ diff_2props(I,O):- comparable_2props(I,O), I \=@= O.
 
 % form, 
 % vis2D, mass
-% center2D
+% center2G
 
 
 % symmetrical object
