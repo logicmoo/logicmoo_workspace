@@ -134,24 +134,15 @@ Tests that can still be passed by memorization code (ML) and deduction code (GOF
 
 * Updated Wiki page (link header/footer of this) with higher level what the files do
 * Should I tell Discord server about this work?
-* Maybe I’ll stream my daily work on the Internet? (16 hours a day)
-* I think the code will be still be ready for demo/explanation for SNET’s AI-DSL group 6/9/2022
-* How involved should SNET be ? I told Nils (5/25/2002) I could port to MeTTa… HOWEVER That would take me 70-160 hours to extend the MeTTa kernel (giving it the superpowers of backtracking and the GC to handle MUARC) ).. Would they want that if MeTTA already does everything they need? I need to ask for a description of what the MeTTa kernel does practically today. So far it seems to be a MiniKanren impl … Is the type of inference I do in MUARC even something they would want? Also what sort of time/performance hit would my code take?
 * Time taking options:
     * Guile-log (80 hours)
         * Will make my code run.. 2-3 times slower  
         * “Compatible” with OpenCog Prime.
         * Will be fixing bugs with in Guile-log
-        * Had Ben’s approval for a temporal inference engine i wrote (ARC would need to be confirmed again and wage renegotiated .. would need to sell him on the importance of ARC)
     * Yap (50 hours) or Sicstus (40 hours)
         * Yap make my code run 2 to 4 times faster
         * Sicstus would be 4 to 20 times faster
         * Very little little extra work
-    * MeTTA (160 hours)
-        * I’d need to add the type of basic inference that MUARC does to MeTTa in Rust
-        * Rust native version faster than speed of the current C version?
-        * I suppose it is less hours (40-80 hours?) if I make MeTTa call the C code
-        * The “pro” for SNET is 3 months from after I stop messing with the port. They can say that the SOTA in ARC runs in MeTTA. Is there a “pro” for me?
     * No port
         * Costs me no extra
         * Can continue to develop and make work better
