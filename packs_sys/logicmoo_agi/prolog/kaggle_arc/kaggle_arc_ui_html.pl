@@ -60,10 +60,11 @@ collapsible_section(Type,Title,true,Goal):-
                      locally(b_setval('$collapsible_section',[Type|Was]),wots(S,Goal)), 
                      format('~N~w~@\u00A1mu~w\u00A1~n',[S,dash_chars(Depth,' '), Type])).
 */
-collapsible_section(Tag,Title,_,Goal):-
+collapsible_section(Tag,Title,Showing,Goal):-
   once(nb_current('$collapsible_section',Was);Was=[]), length(Was,Depth),!,wots(Ident,dash_chars(Depth,' ')),
   setup_call_cleanup(format('~N~w!mu~w! ~@ |~n',[Ident, Tag, print_title(Title)]),
-                     locally(b_setval('$collapsible_section',[c(Tag)|Was]),tabbed_print_im(Depth+2,Goal)), 
+                     locally(b_setval('$collapsible_section',[c(Tag)|Was]),
+                                      tabbed_print_im(Depth+2,old_write_expandable(Showing,Tag=Title,Goal))), 
                      format('~N~w\u00A1mu~w\u00A1 ',[Ident, Tag])).
 
 with_tagged(Tag,Goal):- 
@@ -72,6 +73,34 @@ with_tagged(Tag,Goal):-
     bfly_html_goal(format('~w<~w> ~N',[Ident,Tag])),
     locally(b_setval('$collapsible_section',[h(Tag)|Was]),tabbed_print_im(Depth+2,(Goal))),
     bfly_html_goal(format('~w</~w> ',[Ident,Tag]))).
+
+
+title_to_html(Title,HtmlTitle):- with_pp(plain,into_attribute(Title,HtmlTitle)),!.
+
+
+old_write_expandable(Showing,Title,Goal):- (Showing==always; (flag('$old_write_expandable_depth',X,X), X>2)),ignore(ppt(Title)),!,call(Goal).
+old_write_expandable(Showing,Title,Goal):- title_to_html(Title,HtmlTitle),
+ (Showing == true -> Class=panel_shown; Class=panel_hidden),
+ setup_call_cleanup(flag('$old_write_expandable_depth',Depth,Depth+1), setup_call_cleanup(format(
+  '<button class="accordion">~w (click to un/expand)</button><div class="~w">',[HtmlTitle,Class]),
+  call(Goal),
+  format('</div>',[])),
+ flag('$old_write_expandable_depth',_,Depth)),
+ flush_tee_maybe.
+
+old_write_expandable3(Showing,Title,Goal):- 
+ on_xf_ignore_flush(ensure_colapable_styles), 
+ (Showing -> PX='128'; PX='600'),
+ (Showing -> Exp=''; Exp='collapsed-c'),
+  %with_pp(http,wots(S,weto(ignore(Goal)))),
+  setup_call_cleanup(format(
+   '~N<pre><button type="button" class="collapsible">~w (click to un/expand)</button><div class="~w" style="max-height: ~wpx"><pre>~n',
+  [Title,Exp,PX]), call(Goal),
+   format('~N</pre></div></pre>~n',[])), 
+  flush_tee_maybe.
+
+format_s(S):- atomic(S),!,format('~w',[S]).
+format_s(S):- format('~s',[S]).
 
 tabbed_print_im(_Tab,Goal):- !, call(Goal).
 tabbed_print_im(Tab,Goal):- Tab2 is Tab, tabbed_print(Tab2,Goal).
@@ -98,7 +127,6 @@ dumb_functor(Term):- compound_name_arity(Term,F,_),atom(F),upcase_atom(F,UC),!,d
 test_collapsible_section:- 
   collapsible_section(info,
     forall(nth0(N,[a,b,c,d],E),writeln(N=E))).
-     
      
 
 
@@ -452,6 +480,6 @@ current_arc_cmd(V,Prolog):- luser_getval(V,Prolog).
 :- abolish(lemur:'$exported_op',3).
 :- abolish(rdf11:'$exported_op',3).
 */
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 
 

@@ -47,15 +47,26 @@ print_list_of(Title,O):- print_list_of(print_info,Title,O).
 :- meta_predicate(print_list_of(1,+,+)).
 print_list_of(P1,Title,O):- \+ is_list(O),!,print_list_of(P1,Title,[O]).
 print_list_of(_,Title,[]):- pp(no_data(Title)),!.
-print_list_of(P1,Title,O):-
- length(O,Len),
- collapsible_section(info,Title,maybe,
- (((Title\=[] -> pp(Title=Len); pp(P1=Len)),
-  maybe_cache_glyphs(O),
-  %save_grouped(print_list_of(Title),O),
-  g_out( maplist(ignore_call(P1),O))))),!.
+print_list_of(P1,Title,O):- length(O,Len), 
+  wots_vs(SS,((Title\=[],Title\="",Title\='') -> pp(Title=print_list_of(Len)); ppt(P1=print_list_of(Len)))),
+  print_list_of(P1,SS,Len,O).
+:- meta_predicate(print_list_of(1,+,+,+)).
 
-ignore_call(P1,A):- ignore(call(P1,A)).
+print_list_of(P1,Title,Len,O):- fail, Len = 1,!,
+((
+  write(Title),
+  ignore(maybe_cache_glyphs(O)),
+  %save_grouped(print_list_of(Title),O),
+  g_out( maplist(ignore_call_p1(P1),O)))),!.
+
+print_list_of(P1,Title,_Len,O):-
+ collapsible_section(info,Title,maybe,
+((
+ ignore(maybe_cache_glyphs(O)),
+  %save_grouped(print_list_of(Title),O),
+  g_out( maplist(ignore_call_p1(P1),O))))),!.
+
+ignore_call_p1(P1,A):- ignore(call(P1,A)).
 
 maybe_cache_glyphs(O):- ignore((is_group(O),mapgroup(o2g,O,_))).
 
@@ -209,10 +220,12 @@ print_colors_on(Colors,_,Glyph):- atom_chars(Glyph,Chars),write('\''),print_colo
 print_colors_on(Colors,Glyph):- write('\''), user:maplist(print_ncolors(Glyph),Colors), write('\'').
 print_colors_on_s([],G):-  format('~s',[G]).
 print_colors_on_s([C],G):- sformat(GS,'~s',[G]),color_print(C,GS).
+print_colors_on_s([C|Color],Glyph):- length([C|Color],CL),length(Glyph,GL),CLL is CL div GL,CLL>1,length(GLL,CLL),append(GLL,More,Glyph),
+  sformat(G,'~s',[GLL]),!,color_print(C,G),print_colors_on_s(Color,More).
 print_colors_on_s([C|Color],[G|Glyph]):- color_print(C,G),print_colors_on_s(Color,Glyph).
 
 
-object_s_glyph2(Obj,S):- o2g(Obj,G),real_colors(Obj,Colors),maplist(arg(1),Colors,NColors),
+object_s_glyph2(Obj,S):- o2g(Obj,G),colors(Obj,Colors),maplist(arg(1),Colors,NColors),
   wots(S,maplist(user:print_ncolors1(G),NColors)),!.
 
 print_ncolors(G,C):- color_print(C,G).
@@ -288,9 +301,9 @@ is_arg_in(Only,P):- compound(P),arg(2,P,Ref),
 
 object_dglyphH(PA, OUTS):- 
   obj_to_oid(PA,GA),% mass(PA,Mass),
-  shape(PA,Shape),pen(PA,Pen),loc2D(PA,X,Y), rotation(PA,ROT),
+  shape(PA,Shape),pen(PA,Pen),loc2D(PA,X,Y), rotation(PA,ROT),vis2D(PA,XX,YY),
   shape_id(Shape,ShapeID),
-  OUT = objFn(GA,loc2D(X,Y),ROT,pen(Pen),ShapeID),
+  OUT = objFn(GA,[loc2D(X,Y),rotation(ROT),pen(Pen),vis2D(XX,YY),sid(ShapeID)]),
   colorize_oterms(OUT,OT),
   wots(SS,write(OT)),
   OUTS = SS.
@@ -309,6 +322,19 @@ show_touches0(Only,Obj):- Obj = obj(List),
   show_touches2(SGlyph,TPO))).
 show_touches2(_,[]):-!.
 show_touches2(SGlyph,TP):-   
+  remove_too_verbose(SGlyph,TP,OO),
+  format("~N~n% ~w:\t",[SGlyph]),wqs_l(OO),format('~N').
+
+dbg_show_touches(Only,Obj):- must_det_ll((into_obj(Obj,RealObj),dbg_show_touches0(Only,RealObj))).
+dbg_show_touches0(Only,Obj):- must_det_ll(( \+ is_not_in(Only,Obj))),!.
+dbg_show_touches0(Only,Obj):- Obj = obj(List), 
+ must_det_ll((
+  object_dglyphH_no_loop(Obj,SGlyph),
+  include(is_functor(link),List,TP),
+  include(is_arg_in(Only),TP,TPO),!,
+  dbg_show_touches2(SGlyph,TPO))).
+dbg_show_touches2(_,[]):-!.
+dbg_show_touches2(SGlyph,TP):-   
   remove_too_verbose(SGlyph,TP,OO),
   format("~N~n% ~w:\t",[SGlyph]),wqs_l(OO),format('~N').
 
@@ -481,6 +507,6 @@ debug_indiv(_,P,_,_):- pp(P).
 
 
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 
 

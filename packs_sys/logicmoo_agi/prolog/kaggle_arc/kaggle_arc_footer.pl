@@ -14,6 +14,7 @@
 :- ensure_loaded(kaggle_arc_deepening).
 :- ensure_loaded(kaggle_arc_typecheck).
 :- ensure_loaded(kaggle_arc_interpreter).
+:- ensure_loaded(kaggle_arc_test_favs).
 :- ensure_loaded(kaggle_arc_test_loader).
 :- ensure_loaded(kaggle_arc_domaintypes).
 :- ensure_loaded(kaggle_arc_test_iface).
@@ -40,4 +41,5 @@
 :- set_prolog_flag(verbose_load,false).
 :- set_prolog_flag(verbose_autoload,false).
 
-
+:- fixup_module_exports_now.
+:- fixup_exports.

@@ -63,8 +63,8 @@ gen_gids(Mask):-
 
 
 compile_and_save_test(TestID):- var(TestID),!,all_arc_test_name(TestID),compile_and_save_test(TestID).
-compile_and_save_test(Mask):- 
-  testid_name_num_io(Mask,TestID,_Example,_Num,_IO),
+compile_and_save_test(Mask):-  
+  fix_test_name(Mask,TestID),  
   %ignore(retract(saved_training(TestID))),
   %ignore(retract(process_test(TestID))),
 
@@ -81,18 +81,22 @@ compile_and_save_test(Mask):-
       save_supertest(TestID))).
 
 
+deduce_shapes(TestID):-
+  with_test_grids(TestID,Grid,test_deduce_grid_shapes(Grid)).
 
-test_deduce_shapes:- 
-  forall(grid_to_obj(Grid,O),nop(ignore(once((global_grid(O,OO),print_side_by_side(Grid,OO),writeq(O)))))),
+test_deduce_grid_shapes(Grid):-
+  forall(grid_to_obj(Grid,O),debug_as_grid(O)),
   print_hybrid_set.
 
-print_hybrid_set:-
+
+print_hybrid_set(TestID):- 
+  ensure_test(TestID),
   get_hybrid_set(Set),
   print_side_by_side(Set),
-  nop(forall(member(O,Set),print_hybrid_set(O))).
+  nop(forall(member(O,Set),print_hybrid_grid(O))).
 
-print_hybrid_set(O):- grid_to_norm(O,Ops,N),O\==N,print_side_by_side([ops(Ops)],O,N).
-
+print_hybrid_grid(G):- into_grid(G,O),grid_to_norm(O,Ops,N),
+  (O\==N->print_side_by_side([ops(Ops)],G,N); print_grid(O)).
 
 individuate_pairs_from_hints(TestID):- 
   arc_assert(individuate_test_grids(TestID)),
@@ -114,16 +118,21 @@ print_all_info_for_test:-
   print_hybrid_set.
 
 
-print_reduced_io:- forall(get_current_test(TestID),print_reduced_io(TestID)).
-print_reduced_io(TestID):-
+print_reduced_io(TestID):- ensure_test(TestID),
   with_test_pairs(TestID,ExampleNum,I,O,
     (print_side_by_side(green,I,orig_in(TestID,ExampleNum),_,O,orig_out(TestID,ExampleNum)),
      forall(show_reduced_io(I+O),true))).
 
-%show_reduced_io(I+O):-  maybe_easy(I,II,DidIn),same_reduction(DidIn,DidOut),maybe_easy(O,OO,DidOut), must_det_ll(print_side_by_side(green,II,DidIn,_,OO,DidOut)),!.
+
+
+show_reduced_io(IO):- 
+    once(show_grid_call(reduce_cutaway(_),IO,NextIO)),
+  if_t(((NextIO)\=@=(IO)), show_reduced_io(NextIO)).
+
+  %show_reduced_io(I+O):-  maybe_easy(I,II,DidIn),same_reduction(DidIn,DidOut),maybe_easy(O,OO,DidOut), must_det_ll(print_side_by_side(green,II,DidIn,_,OO,DidOut)),!.
 show_reduced_io(I0+O):- 
   once(( grid_size(I0,H,V), grid_size(O,OH,OV))),
-  ((H>OH;V>OV) , grid_call_alters(trim_to_rect,I0,I)),!,
+  ((H>OH;V>OV) , grid_call_alters(trim_to_rect,I0,I)),
  show_reduced_io(I+O).
 
 %show_reduced_io(I+O):- once(show_grid_call(reduce_grids_io(OPS),(I*O),(II*OO))),
@@ -143,7 +152,7 @@ show_reduced_io(_).
 
 op_grid_to_norm((Op),I,OO):- op_grid_to_norm1(Op,I,OO),!.
 op_grid_to_norm(([]),I,I).
-op_grid_to_norm1((Op),IO,IIOO):- compound(IO),IO=(I+O),op_grid_to_norm((Op),I,II),!,Op\==[],op_grid_to_norm((Op2),O,OO),!,Op=Op2,IIOO=II+OO.
+op_grid_to_norm1((Op),IO,IIOO):-  compound(IO),IO=(I+O),op_grid_to_norm((Op),I,II),!,Op\==[],op_grid_to_norm((Op2),O,OO),!,Op=Op2,IIOO=II+OO.
 op_grid_to_norm1((Op),I,OO):- (var(Op)->Op=[_|_];true),reduce_grid(I,Op,OO).
 %op_grid_to_norm([],I,I).
 
@@ -191,7 +200,7 @@ maybe_easy(I,I,==):- !.
 
 
 detect_all_training_hints:- clsbake, get_current_test(TestID),detect_all_training_hints(TestID).
-detect_all_training_hints(TestID):- 
+detect_all_training_hints(TestID):- ensure_test(TestID),
   training_only_exmaples(ExampleNum), 
   dmsg(detect_all_training_hints(TestID>ExampleNum)),
   forall(kaggle_arc(TestID,ExampleNum,In,Out),must_det_ll(detect_pair_hints(TestID,ExampleNum,In,Out))),
@@ -209,7 +218,7 @@ color_subst([O|OSC],[I|ISC],[O-I|O2I]):-
 color_subst(_OSC,_ISC,[]):-!.
 
 detect_pair_hints(TestID,ExampleNum,In,Out):- 
-  continue_test(TestID),
+  ensure_test(TestID),
   dmsg(detect_pair_hints(TestID,ExampleNum)),
   assert_id_grid_cells(In), assert_id_grid_cells(Out),
   detect_supergrid_tt_pair(TestID,ExampleNum,In,Out,_TT),  
@@ -222,7 +231,7 @@ detect_pair_hints(TestID,ExampleNum,In,Out):-
 guess_board(TT):- arc_setval(TT,guess_board,t).
 
 detect_supergrid_tt_pair(TestID,ExampleNum,In0,Out0,TT):-
- continue_test(TestID),
+ ensure_test(TestID),
  must_det_ll(((
   dash_chars, dash_chars,
   dmsg(detect_supergrid_tt_pair(TestID,ExampleNum)),
@@ -232,7 +241,7 @@ detect_supergrid_tt_pair(TestID,ExampleNum,In0,Out0,TT):-
  TT = _{} .
 
 show_recolor(TestID,_ExampleNum,In0,Out0,TT):- 
-  continue_test(TestID),
+  ensure_test(TestID),
   must_det_ll(((
   %show_patterns(In),show_patterns(Out),
   
@@ -320,13 +329,10 @@ show_found2(HO,VO,H,V,Info,F):-
   constrain_grid(f,_TrigF,OF,FF),!,
   print_grid(H,V,Info,FF),!.
 
-test_grid_hint:- clsbake, forall(arc_test_name(TestID),test_grid_hint(TestID)).
 
-save_grid_hints:-  forall(arc_test_name(TestID),test_grid_hint(TestID)),
+save_grid_hints:-  forall(ensure_test(TestID),compute_and_show_test_hints(TestID)),
   listing(arc_test_property/3).
 
-%test_grid_hint:- get_current_test(TestID),test_grid_hint(TestID).
-test_grid_hint(TestID):- compute_and_show_test_hints(TestID),!.
 
 
 
@@ -391,8 +397,7 @@ compute_and_show_test_hints(TestID):- format('~N'),
   nop()),
   list_common_props(TestID).
 */
-compute_and_show_test_hints(TestID):- format('~N'),
-  continue_test(TestID),
+compute_and_show_test_hints(TestID):- ensure_test(TestID),format('~N'),
   compute_all_test_hints(TestID),
   ignore(list_common_props_so_far(TestID)),!,
   %listing(arc_test_property(TestID,_,_)),
@@ -442,7 +447,7 @@ op_op(P2a,I,O,P2b):- call(P2a,I,II),call(P2a,O,OO),call(P2b,II,OO),!.
 v_area(I,Size):- vis2D(I,IH,IV), Size is IH * IV.
 
 %compute_all_test_hints(TestID):- arc_test_property(TestID,gh(1),PP,_),sub_var(i-i,PP),!.
-compute_all_test_hints(TestID):- in_smaller_than_out(TestID),!,
+compute_all_test_hints(TestID):- ensure_test(TestID), in_smaller_than_out(TestID),!,
   compute_test_ii_hints(TestID),
   compute_test_oo_hints(TestID),
   compute_test_io_hints(TestID),!.
@@ -470,6 +475,7 @@ compute_test_oo_hints(TestID):-
 
   maybe_compute_test_oo_hints(TestID,N,Out1,Out2):- forall(grid_hint_recolor(o-o,Out1,Out2,Hint),add_hint(TestID,Hint,N)).
 
+compute_test_ii_hints(_):-!.
 compute_test_ii_hints(TestID):- 
   forall(
     kaggle_arc_io(TestID,(trn+N),in,In1), 
@@ -675,10 +681,10 @@ grid_to_objs(Grid,How,Objs):- ensure_grid(Grid),ensure_how(How),individuate(How,
 %grid_to_objs(Grid,How,Objs):- (nonvar(Grid)->true;test_grids(_,Grid)), ensure_how(How), individuate(How,Grid,Objs).
 
 % one way to match or find an outlier is compressing things in sets minus one object.. the set that is second to the largest tells you what single object os the most differnt 
-objs_shapes(Objs,In):- get_current_test(TestID),test_shapes(TestID,Objs,In).
+objs_shapes(Objs,In):- ensure_test(TestID),test_shapes(TestID,Objs,In).
 
 test_shapes(_TestID, Objs,In):- member(Obj,Objs),object_grid(Obj,In), once(learn_hybrid_shape(In)),fail.
-test_shapes(_TestID,_Objs,In):- get_hybrid_set(Set),!,member(In,Set).
+test_shapes(TestID,_Objs,In):- ensure_test(TestID), get_hybrid_set(Set),!,member(In,Set).
  
 
 grid_to_obj_other(VM,Grid,O):- other_grid(Grid,Grid2), grid_to_obj_other_grid(VM,Grid,Grid2,O).
@@ -823,7 +829,7 @@ maybe_ogs(R,X,Y,In,Out):- maybe_ogs_color(R,X,Y,In,Out).
 maybe_ogs(call_ogs(P2,R),X,Y,In,Out):-  no_repeats(IIN,(rot_ogs(P2),once(grid_call_alters(P2,In,IIN)))), maybe_ogs_color(R,X,Y,IIN,Out).
 
 rot_ogs(trim_to_rect).
-rot_ogs(P2):- rotP2(P2).
+rot_ogs(P2):- rotP0(P2).
 rot_ogs([trim_to_rect,P2]):- rotP2(P2).
  
 

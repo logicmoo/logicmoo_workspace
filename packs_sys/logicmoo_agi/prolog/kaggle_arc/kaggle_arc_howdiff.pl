@@ -418,16 +418,15 @@ show_pair_now(TITLE,OO1,OO2):-
   format('~N~n'),
   nop(ignore((into_ngrid(O1,NO1),into_ngrid(O2,NO2), print_side_by_side(silver,NO1,ngrid(T1),_,NO2,ngrid(T2))))),
   debug_indiv_obj(O1),
-  debug_indiv_obj(O2),
-
+  debug_indiv_obj(O2),  
   if_t(nb_current(menu_key,'o'),
-   (dash_chars,
-    dash_chars,
-    findall(E,compare_objs1(E,O1,O2),L), pp(compare_objs1(showdiff_objects)=L),
+   collapsible_section(info,compare_objs1(TITLE),true,
+   (findall(E,compare_objs1(E,O1,O2),L), pp(compare_objs1(showdiff_objects)=L),
     indv_props(O1,S1),indv_props(O2,S2),
     intersection(S1,S2,Sames,SS1,SS2),
     proportional(SS1,SS2,lst(vals(_),len(_),PDiffs)),
-    show_sames_diffs_now(Sames,PDiffs))))).
+    show_sames_diffs_now(Sames,PDiffs)))))),
+  dash_chars, dash_chars.
 
 
 show_sames_diffs_now(Sames,PDiffs):- 
@@ -762,11 +761,12 @@ combine_same_globalpoints(VM):- combine_same_globalpoints(VM.objs,set(VM.objs)).
 
 combine_same_globalpoints(IndvS,IndvSO):- 
   append(NoDupes,[I|Rest],IndvS),
-  select(O,Rest,IndvS2),
-  same_globalpoints(I,O),!,
+  select(O,Rest,IndvS2),  
   %merge_2objs(VM,I,O,[],IO),
-  must_det_ll(indv_props(I,Props)),
-  my_partition(props_not_for_merge,Props,_Exclude,Include),
+  %must_det_ll(indv_props(O,OProps)),
+  must_det_ll(indv_props(I,IProps)),
+  same_globalpoints_and_window(I,O),
+  my_partition(props_not_for_merge,IProps,_Exclude,Include),
   must_det_ll(override_object([iz(merged(cgp))|Include],O,IO)),
   must_det_ll(combine_same_globalpoints([IO|IndvS2],NoMoreDupes)),
   must_det_ll(append(NoDupes,NoMoreDupes,IndvSO)),!.
@@ -1135,7 +1135,7 @@ maybe_label_colors(G,L):- is_grid(G),!,mapgrid(color_name,G,L),!,G\==L.
 
 non_grid_list(X):- is_list(X), \+ is_grid(X).
 
-unused_proportion(_,_,_):- \+ nb_current(allow_unused_proportion,t),!,fail.
+unused_proportion(_,_,_):- nb_current(allow_unused_proportion,t),!,fail.
 unused_proportion(Obj1,Obj2,Obj3):- unused_proportion1(Obj1,Obj2,Obj3),!.
 
 unused_proportion1( Obj1,Obj2,Obj1):- Obj1=@=Obj2.
@@ -1146,7 +1146,6 @@ unused_proportion1(_Obj1,Obj2,Obj2):- var(Obj2),!.
 %proportional(Obj1,Obj2,Obj3):- unused_proportion1(Obj1,Obj2,Obj3),!.
 proportional(A2,B2,List):- maybe_reorder_pair(A2,B2,A3,B3), !, proportional(A3,B3,List).
 proportional(L1,L2,List):- non_grid_list(L1),non_grid_list(L2),!,must_det_ll(proportional_lists(L1,L2,List)).
-proportional(size2D(H1,V1),size2D(H2,V2),HV):- proportional_size2D(H1,V1,H2,V2,HV).
 proportional(loc2D(H1,V1),loc2D(H2,V2),loc2D(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
 proportional(loc2G(H1,V1),loc2G(H2,V2),loc2G(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
 proportional(center2G(H1,V1),center2G(H2,V2),center2G(H,V)):- !, proportional_loc(H1,H2,H),proportional_loc(V1,V2,V).
@@ -1157,6 +1156,7 @@ proportional(N1,N2,N):- number(N1),number(N2),!,proportional_size(N1,N2,N).
 proportional(G1,G2,Out):- maybe_label_colors(G1,L1),!, proportional(L1,G2,Out).
 proportional(G1,G2,Out):- maybe_label_colors(G2,L2),!, proportional(G1,L2,Out).
 
+proportional(size2D(H1,V1),size2D(H2,V2),HV):- proportional_size2D(H1,V1,H2,V2,HV).
 proportional(A,B,C):- maybe_extract_values(B,BB), compound(A), \+ maybe_extract_values(A,_), proportional(A,BB,AABB),proportional(AABB,B,C),!.
 proportional(B,A,C):- maybe_extract_values(B,BB), compound(A), \+ maybe_extract_values(A,_), proportional(A,BB,AABB),proportional(AABB,B,C),!.
 
@@ -1182,6 +1182,7 @@ proportional(Obj1,Obj2,Out):- compound(Obj1), compound(Obj2),  fail,
   proportional_lists(Out1,Out2,Out),!.
 
 proportional(L1,L2,_List):- is_grid(L1),is_grid(L2),!,fail.
+
 proportional(N1,N2,N):- compound(N1),compound_name_arguments(N1,F,A1),compound_name_arguments(N2,F,A2),
   maplist(proportional_or_same,A1,A2,AR),compound_name_arguments(N,F,AR).
   
@@ -1230,32 +1231,6 @@ extract_vals(V2,[V2]).
 
 maybe_extract_values(Color,Values):- must_be_free(Values), compound(Color), Color=..[DF,vals(Values)|_],diff_f(DF),!,is_list(Values),!.
 maybe_extract_value(Color,Value):- maybe_extract_values(Color,Values),!,member(Value,Values).
-
-
-proportional_width(W1,W2,How):- W2=@=W1,!, How = (=).
-proportional_width(W1,W2,How):- W1>W2, !, proportional_width(W2,W1,IHow), How = o_i_swap(IHow).
-proportional_width(W1,W2,How):- pw5(W1,W2,0,0,N1,N2),How=ratio_of(N1,N2).
-proportional_width(W1,W2,How):- pw5(W1,W2,2,0,N1,N2),How=bordered_inner(N1,N2).
-proportional_width(W1,W2,How):- pw5(W1,W2,-1,1,N1,N2),How=ttt_outter(N1,N2).
-proportional_width(W1,W2,How):- pw5(W1,W2,1,1,N1,N2),How=gridded_outter(N1,N2).
-proportional_width(W1,W2,How):- pw5(W1,W2,2,0,N1,N2),How=bordered_outter(N1,N2).
-pw5(W1,W2,Upper,Lower,N1,N2):- N2 is (W2-Upper), N1 is (W1+Lower), 0 is N2 rem N1.
-
-
-
-proportional_size2D(H1,V1,H2,V2,size2D(How1,How2)):- proportional_width(H1,H2,How1),functor(How1,F,_), 
-                                                     proportional_width(V1,V2,How2),functor(How2,F,_),!.
-proportional_size2D(H1,V1,H2,V2,size(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
-proportional_size2D(V1,H1,H2,V2,size_inv(H,V)):- proportional_size(H1,H2,H),proportional_size(V1,V2,V).
-proportional_size2D(H1,V1,H2,V2,area(HV)):- !, HV1 is H1*V1, HV2 is H2*V2, proportional_size(HV1,HV2,HV).
-
-
-proportional_size(M1,N2,P):- maybe_number(M1,N1),M1\==N1, !, proportional_size(N1,N2,P).
-proportional_size(N1,M2,P):- maybe_number(M2,N2),M2\==N2, !, proportional_size(N1,N2,P).
-proportional_size(N1,N2,P):- unused_proportion(N1,N2,P),!.
-proportional_size(N1,N2,num(vals(Vals),+N,ratio(R))):- number(N1),number(N2),!,
-  into_vals(N1,N2,Vals), N is N2-N1,
- (calc_ratio(R,N1,N2)-> true ; catch(R is rationalize(N1/N2),_,true)).
 
 
 diff_f(lst).
@@ -1366,5 +1341,5 @@ prefer_grid(G):- is_object_or_grid(G).
 
 
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 

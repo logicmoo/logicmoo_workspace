@@ -142,10 +142,9 @@ if_arc_expanded_ge(if_arc_expanded(N),if_arc_expanded(N,T)):-
   source_loc_key(T),!,source_location(S,L),
   assert_if_new(pdtmp:arc_expands(T,S,L)).
 
-system:goal_expansion(G,O,GE,O):- compound(G),if_arc_expanded_ge(G,GE).
+system:goal_expansion(G,O,GE,O):- compound(G),current_predicate(if_arc_expanded_ge/2),if_arc_expanded_ge(G,GE).
+
 
 :- include(kaggle_arc_footer).
-
-:- fixup_exports.
 
 

@@ -32,5 +32,5 @@ do_forgotten_exports:-
 :- do_forgotten_exports.
 
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 

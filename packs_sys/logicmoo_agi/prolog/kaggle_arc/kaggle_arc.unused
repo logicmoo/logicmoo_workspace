@@ -1,0 +1,84 @@
+
+in_mc_10(G):- is_side(_),!,call(G).
+in_mc_10(Goal):- ansi_ansi,!,call(Goal).
+in_mc_10(Goal):- nb_current(in_mc_10,t),!,call(Goal).
+in_mc_10(Goal):- 
+  wots(S,locally(nb_setval(in_mc_10,t),Goal)),
+  mc10_print(S).
+
+mc10_print(G):- atom_contains(G,'<span '),!,write(G).
+mc10_print(SS):- sformat(S,'~w',[SS]),!,atom_chars(S,Chars),maplist(mc10_put,Chars).
+
+mc10_put(' '):- !,mc10_char('&nbsp;').
+mc10_put('&'):- !,mc10_char('&amp;').
+mc10_put('\t'):- !,mc10_char('&#9;').
+mc10_put('\n'):- !,write('<br/>'),!.
+mc10_put('\r'):- !.
+mc10_put('<'):- !,mc10_char('&lt;').
+mc10_put('>'):- !,mc10_char('&gt;').
+mc10_put(Char):- atom_codes(Char,[C]),C<32,mc10_code(C).
+mc10_put(Char):- atom_codes(Char,[C]),C>160,mc10_code(C).
+mc10_put(C):- mc10_char(C).
+
+
+
+
+mc10_code(C):- format('<span class="mc-10">&#~d;</span>',[C]).
+mc10_char(Char):- format('<span class="mc-10">~w</span>',[Char]).
+
+
+%color_sym(OS,[(black='°'),(blue='©'),(red='®'),(green=''),(yellow),(silver='O'),(purple),(orange='o'),(cyan= 248	ø ),(brown)]).
+  /*
+
+make_search_box_fresh(2,1,Center,In,Find,Cents,Inside,IBorder,OBorder):- 
+  Center = [], Cents = [],  [[W,E]] = In,  IBorder = [W,E], 
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+
+make_search_box_fresh(N,1,Center,In,Find,Cents,Inside,IBorder,OBorder):- 
+  Center = [], Cents = [],  [IBorder] = In,  length(IBorder,N),
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+*/
+/*
+make_search_box_fresh(1,2,Center,In,Find,Cents,Inside,IBorder,OBorder):- 
+  Center = [], Cents = [],  [[N],[S]] = In,  IBorder = [N,S], 
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+
+make_search_box_fresh(2,2,Center,In,Find,Cents,Inside,IBorder,OBorder):- 
+  Center = [], Cents = [],  [[NW,NE],[SW,SE]] = In,  IBorder = [NW,NE,SW,SE], 
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+
+make_search_box_fresh(3,2,Center,In,Find,Cents,Inside,IBorder,OBorder):-
+  Center = [], Cents = [],  [[NW,N,NE],[SW,S,SE]] = In,  IBorder = [NW,N,NE,SW,S,SE], 
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+
+make_search_box_fresh(2,3,Center,In,Find,Cents,Inside,IBorder,OBorder):-
+  Center = [], Cents = [],  [[NW,NE],[W,E],[SW,SE]] = In,  IBorder = [NW,W,NE,SW,E,SE],
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+*/
+
+/*
+make_search_box_fresh(3,2,Center,In,Find,Cents,Inside,IBorder,OBorder):-
+  Center = [[N],[S]], Cents = [N,S],  [[NW,N,NE],[SW,S,SE]] = In,  IBorder = [NW,N,NE,SW,S,SE], 
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+
+make_search_box_fresh(2,3,Center,In,Find,Cents,Inside,IBorder,OBorder):-
+  Center = [[W,E]], Cents = [W,E],  [[NW,NE],[W,E],[SW,SE]] = In,  IBorder = [NW,W,NE,SW,E,SE],
+  make_squarish(no_rule,In,  Find, Inside,OBorder).
+*/
+/*
+ 
+make_search_box_fresh(1,1,Center,In,Find,Cents,Inside,IBorder,OBorder):-
+ make_grid(2,2,Center),
+     make_squarish(no_rule,Center,  In, Cents, IBorder),
+     make_squarish(no_rule,In,  Find, Inside,OBorder).
+*/
+
+/*
+make_search_box_fresh(H,V,Center,In,Find,Cents,Inside,IBorder,OBorder):-
+  once((
+     make_grid(H,V,In),
+     HH is H+2 ,VV is V+2, make_grid(HH,VV,In),
+     make_squarish(no_rule,Center,  In, Cents, IBorder),
+     make_squarish(no_rule,In,  Find, Inside,OBorder))).
+*/
+

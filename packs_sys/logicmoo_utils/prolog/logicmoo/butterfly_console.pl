@@ -694,6 +694,7 @@ bfly_test(7):-  write(hi),ansi_format([fg(red)],'Hello there\nHi there bob\n',[]
 into_attribute_q(Obj,TextBoxObj):- sformat_safe(Text,'~q',[Obj]),into_attribute(Text,TextBoxObj).
 :- export(into_attribute/2).
 :- system:import(into_attribute/2).
+
 into_attribute(Obj,TextBoxObj):-
   (atomic(Obj)->sformat_safe(Text,'~w',[Obj]);sformat_safe(Text,'~q',[Obj])),
    xml_quote_attribute(Text,TextBoxObj,ascii),!.

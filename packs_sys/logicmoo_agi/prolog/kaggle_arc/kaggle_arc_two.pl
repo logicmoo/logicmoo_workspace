@@ -23,7 +23,8 @@ make_training(TestID,VMO):-
 
 %show_arc_pair_progress(TestID,ExampleNum,In,Out):- show_arc_pair_progress_sol(TestID,ExampleNum,In,Out),!.
 train_test:- notrace(get_current_test(TestID)), once(train_test(TestID)).
-train_test(TestID):- 
+train_test(TestID):- with_pair_mode(whole_test,train_whole_test(TestID)).
+train_whole_test(TestID):- 
   clear_training(TestID),
   compile_and_save_test(TestID),
   train_test(TestID,train_using_oo_ii_io).
@@ -86,6 +87,7 @@ train_for_objects_from_pair_with_mono(Dict0,TestID,Desc,In,Out,Dict9):-
   copy_term(MonoIn0,MonoIn),copy_term(MonoOut0,MonoOut),
  Desc = [_Trn,IsIO1,N1,IsIO2,N2], 
  MonoDesc = ['train_mono',IsIO1,N1,IsIO2,N2], 
+  ensure_other_grid(In,Out),
   with_other_grid(Out,train_for_objects_from_1pair(Dict0,TestID,Desc,In,Out,Dict1)),!,
   nop(train_for_objects_from_1pair(Dict1,TestID,MonoDesc,MonoIn,MonoOut,Dict9)),!,
    ignore(Dict1=Dict9))),!.

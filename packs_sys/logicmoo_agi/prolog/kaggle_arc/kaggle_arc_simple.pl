@@ -7,6 +7,8 @@
 
 :- include(kaggle_arc_header).
 
+:- ensure_loaded(kaggle_arc_grid_size).
+
 
 solve_easy:- get_current_test(Name),solve_easy(Name).
 
@@ -217,5 +219,5 @@ grid_object(Grid,amass(N),object(Points,Color)):-
   ColorHV4 = Color-HV4,
   findall(HV4,(member(ColorHV4,Rest),is_adjacent_point(HV1,_,HV5),is_adjacent_point(HV5,_,HV4)),AdjRest).
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 

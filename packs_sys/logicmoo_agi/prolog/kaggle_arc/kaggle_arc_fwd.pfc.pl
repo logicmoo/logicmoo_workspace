@@ -107,7 +107,7 @@ arc_test_property(T, common,(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/
 :- set_prolog_flag(pfc_term_expansion,false).
 
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 
 :- add_history((pfcAddF(startAll_3))).
 

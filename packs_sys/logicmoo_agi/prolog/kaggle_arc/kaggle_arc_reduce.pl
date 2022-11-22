@@ -18,7 +18,7 @@ unreduce_grid(GridO,GridO).
 unreduce_grid(G,OP,GO):- maybe_into_grid_io(G,GG),!,unreduce_grid(GG,OP,GO).
 unreduce_grid(G,[OP|List],GO):- !, unreduce_grid(G,OP,M),unreduce_grid(M,List,GO).
 unreduce_grid(G,[],G):-!.
-unreduce_grid(G,OP,GO):- call(OP,G,GO).
+unreduce_grid(G,OP,GO):- grid_call(OP,G,GO).
 
 /*
 reduce_op1_1(PassNo,Grid,blur(flipD),Left):- flipD(Grid,GridR), GridR==Grid,!,keep_flipD(Grid,Left).
@@ -56,9 +56,9 @@ reduce_op1(PassNo,A+B,OP,AA+BB):-
   reduce_op1_1(PassNo,B,OPB,BB),is_grid(BB),
   combin_pair_op(OPA,OPB,OP).
 
-reverse_p2(P2,R,RR):- nonvar(R), !, reverse(R,R1),call(P2,R1,RR1),reverse(RR1,RR).
-reverse_p2(P2,R,RR):- nonvar(RR), !, reverse(RR,RR1),call(P2,R1,RR1),reverse(R1,R).
-reverse_p2(P2,R,RR):- call(P2,R1,RR1),reverse(RR1,RR),reverse(R1,R).
+reverse_p2(P2,R,RR):- nonvar(R), !, reverse(R,R1),grid_call(P2,R1,RR1),reverse(RR1,RR).
+reverse_p2(P2,R,RR):- nonvar(RR), !, reverse(RR,RR1),grid_call(P2,R1,RR1),reverse(R1,R).
+reverse_p2(P2,R,RR):- grid_call(P2,R1,RR1),reverse(RR1,RR),reverse(R1,R).
 
 
 copy_first(1,[RowA|Right],[RowA,RowB|Right]):-  RowA=@=RowB.
@@ -73,14 +73,18 @@ first_second_half(Grid,GL,GR):- length(Grid,L),H is floor(L/2), length(GL,H), ap
 %reduce_op1_1(_,Grid,copy_first(N),GridR):- copy_first(N,GridR,Grid).
 %reduce_op1_1(_,Grid,copy_last(N),GridR):- copy_last(N,GridR,Grid).
 
-%reduce_op1_1(_,Grid,_,_):- too_small_Lreduce(Grid,2),!,fail.
+reduce_op1_1(_,Grid,_,_):- too_small_reduce(Grid,3),!,fail.
 % educe_op1_1(_,Grid,_,_):- length(Grid,L3),L3=<2,!,fail.
+
+reduce_op1_1(_,I,reapply_cutaway(LBR),O):- reduce_cutaway(LBR,I,O).
+reduce_op1_1(_,I,reapply_cutaway_row(LBR),O):- reduce_cutaway_row(LBR,I,O).
+reduce_op1_1(_,Grid,remove_row(Row),GridR):- get_black(Black), nth1(Row,Grid,Same,GridR),maplist(==(Black),Same),once(Row==1;length(Grid,Row)).
+reduce_op1_1(_,I,double_size,O):- half_size(I,O),!.
 reduce_op1_1(_,Grid,copy_row_ntimes(N1,2),GridR):- append(L,[A,B,C,D,E|R],Grid),A=@=B,B=@=C,C=@=D,D=@=E, append(L,[A,B,C|R],GridR),length([_|L],N1).
 reduce_op1_1(_,Grid,copy_row_ntimes(N1,2),GridR):- append(L,[A,B,C,D|R],Grid),A=@=B,B=@=C,C=@=D, append(L,[A,B|R],GridR),length([_|L],N1).
 %reduce_op1_1(_,Grid,copy_row_ntimes(N1,2),GridR):- append(L,[A,B,C|R],Grid),A=@=B,B=@=C, append(L,[A|R],GridR),length([_|L],N1).
 % reduce_op1_1(_,Grid,_,_):- length(Grid,L3),L3=<3,!,fail.
 % % %  
-reduce_op1_1(_,Grid,remove_row(Row),GridR):- get_black(Black), nth1(Row,Grid,Same,GridR),maplist(==(Black),Same),once(Row==1;length(Grid,Row)).
 %reduce_op1_1(_,Grid,_,_):- too_small_reduce(Grid,2),!,fail.
 % % % reduce_op1_1(_,Grid,copy_row(N1,N2),GridR):- nth1(N2,Grid,A),N2>1, between(1,N2,N1),N1<N2,nth1(N1,Grid,B,GridR), A=@=B, 1 is abs(N1-N2).
 /*
@@ -107,10 +111,10 @@ reduce_op1_1(_,Grid,left_right(Left,Reduced),GridR):- fail,
 reduce_1pair_op(PassNo,Grid, Op,GridR):- reduce_op1(PassNo,Grid,Op,GridR).
 reduce_1pair_op(PassNo,A+B,OOO,AA+BB):- 
   rot_pair(Rot90,Rot270),
-  call(Rot90,A,AL),call(Rot90,B,BL),  
+  grid_call(Rot90,A,AL),grid_call(Rot90,B,BL),  
   (A\==AL;B\==BL),
   reduce_op1(PassNo,AL+BL,Op,AR+BR),
-  call(Rot270,AR,AA),call(Rot270,BR,BB),
+  grid_call(Rot270,AR,AA),grid_call(Rot270,BR,BB),
   xfr_write_op(as_rot(Rot90,Rot270,Op),OOO).
 
 copy_rows(Grid1+Grid2,[delete_row(N1,Color)|More],GridR1+GridR2):- 
@@ -131,10 +135,10 @@ xfr_write_op(OOO,OOO).
 rot_pair(rot90,rot270).
 rot_pair(flipD,inverseRot(flipD)).
 
-inverseRot(Rot,X,Y):- call(Rot,X,Y).
+inverseRot(Rot,X,Y):- grid_call(Rot,X,Y).
 
 as_rot(L,R,Op,A+B,AA+BB):-!, as_rot(L,R,Op,A,AA),as_rot(L,R,Op,B,BB).
-as_rot(L,R,Op,X,Y):- call(L,X,Grid),unreduce_grid(Grid,Op,GridR),call(R,GridR,Y).
+as_rot(L,R,Op,X,Y):- grid_call(L,X,Grid),unreduce_grid(Grid,Op,GridR),grid_call(R,GridR,Y).
 left_right(LR,G,GOO):- into_grid_io(LR,Left), reverse(Left,Right),append([Left,G,Right],GO),mat_grid(GO,GOO).
 copy_row(N1,N2,G,GOO):- nth1(N1,G,Row),N12 is N2-1,length(Left,N12), append(Left,Right,G),append(Left,[Row|Right],GO),mat_grid(GO,GOO).
 mat_grid(A+B,AA+BB):-!, mat_grid(A,AA),mat_grid(B,BB).
@@ -158,7 +162,7 @@ reduce_grid(Grid,Grid).
 
 %ungrav_rot(G,sameR,G):-!.
 ungrav_rot(G,sameR,G):- too_small_reduce(G,3),!.
-ungrav_rot(G,UnRotG,GG):- grav_rot(G,RotG,GG),(G==GG->UnRotG=sameR;unrotate(RotG,UnRotG)).
+ungrav_rot(G,UnRotG,GG):- grav_rot(G,RotG,GG),(G==GG->UnRotG=sameR;unrotate_p2(RotG,UnRotG)).
 
 :- decl_pt(reduce_grid(grid,list,grid)).
 
@@ -180,7 +184,7 @@ reduce_grid_pair1(A+B,[g(ok)|ROPA],AR+BR):-
 reduce_grid_pair1(A+B,ROP,AAO+BBO):-
   reduce_grid_pass(1,A+B,[A+B],OP,AR+BR), 
   grav_rot(BR,UnRot,BB),
-  call(UnRot,AR,AA),
+  grid_call(UnRot,AR,AA),
   reduce_grid_pair2(ROP,OP,UnRot+UnRot,AR+BR,AA+BB,AAO+BBO).
 
 %reduce_grid_pair2(ROP,OP,UnRotGA+UnRotGB,AR+BR,AA+BB,AAO+BBO):- 
@@ -228,4 +232,30 @@ show_sf_if_lame(Info,Solution,ExpectedOut):-
 
 
 %reduce_grid(PassNo,Grid,res(Opers,Result)):- reduce_grid(PassNo,Grid,Opers,res(Opers,Result)),!.
+
+
+common_cutaway(lbr([C], [],  [C])):- is_fg_color(C).
+common_cutaway(lbr([C],[C],  [C])):- C= black.
+common_cutaway(lbr([C],[C,C],[C])):- is_fg_color(C).
+common_cutaway(lbr([], [C],  [])):- is_fg_color(C).
+common_cutaway(lbr([C],[C],  [])):- is_fg_color(C).
+common_cutaway(lbr([], [C], [C])):- is_fg_color(C).
+common_cutaway(lbr([], [C],  [])):- is_bg_color(C).
+common_cutaway(lbr([], [C,C],[])):- is_fg_color(C).
+
+reduce_cutaway(LBR,I,O):- h_and_v(reduce_cutaway_row(LBR),I,O).
+
+reduce_cutaway_row(LBR,I,O):-              LBR = lbr(Left,Between,Right),
+                                            once((member(Row,I), \+ maplist(=(_),Row))),
+                                            (var(Between) -> common_cutaway(LBR) ; true),                                                 
+                                            once((cutaway_row(Left,Between,Right,Row,_))),
+                                            do_cutaway_rows(LBR,I,O).
+
+do_cutaway_rows(lbr(L,B,R),I,O):- maplist(cutaway_row(L,B,R),I,O).
+cutaway_row(L,B,R,Row,NewRow):- append([L,Mid,R],Row),cut_mid(B,Mid,NewRow),!.
+
+cut_mid(_,[C],[C]).
+cut_mid(Between,[C|Mid],[C|NewRow]):-
+  append(Between,More,Mid),
+  cut_mid(Between,More,NewRow).
 

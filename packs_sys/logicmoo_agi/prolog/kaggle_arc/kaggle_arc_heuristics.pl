@@ -227,5 +227,5 @@ remove_colors([C|IPLs],In,Out):-
  remove_colors(IPLs,Mid,Out).
 
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 

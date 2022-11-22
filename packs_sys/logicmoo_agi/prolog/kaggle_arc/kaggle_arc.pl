@@ -11,6 +11,7 @@
 :- set_prolog_flag(stream_type_check,false).
 :- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(load_arc_webui,true);true).
 :- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(use_arc_webui,true);set_prolog_flag(use_arc_webui,false)).
+:- set_prolog_flag(arc_term_expansion,false).
 
 :- dynamic('$messages':to_list/2).
 :- multifile('$messages':to_list/2).
@@ -223,6 +224,8 @@ must_det_ll((X,Y)):- !, (must_det_ll(X),must_det_ll(Y)).
 %must_det_ll(X):- notrace(catch(X,_,fail)),!.
 must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(must_det_ll,List).
 must_det_ll(must_det_ll(X)):- !, must_det_ll(X).
+must_det_ll(grid_call(P2,I,O)):- !, must_grid_call(P2,I,O).
+must_det_ll(call(P2,I,O)):- !, must_grid_call(P2,I,O).
 %must_det_ll((X,Y,Z)):- !, (must_det_ll(X)->must_det_ll(Y)->must_det_ll(Z)).
 %must_det_ll((X,Y)):- !, (must_det_ll(X)->must_det_ll(Y)).
 must_det_ll(if_t(X,Y)):- !, if_t(must_not_error(X),must_det_ll(Y)).
@@ -241,7 +244,7 @@ must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> thro
   rrtrace(visible_rtrace([-all,+exception]),X)))).
 
 
-odd_failure(G):- call(G)*->true;(wdmsg(odd_failure(G)),rrtrace(G)).
+odd_failure(G):- call(G)*->true;(wdmsg(odd_failure(G)),fail,rrtrace(G)).
 
 
 %must_det_ll_failed(X):- predicate_property(X,number_of_clauses(1)),clause(X,(A,B,C,Body)), (B\==!),!,must_det_ll(A),must_det_ll((B,C,Body)).
@@ -527,7 +530,7 @@ luser_getval(ID,N,V):-
 :- multifile(mregression_test/0).
 :- dynamic(mregression_test/0).
 
-:- include(kaggle_arc_footer).
+:- fixup_exports.
 
 %:- forall((fav(_,P),flatten([P],Flat),member(E,Flat)), assert_if_new(fav_trait(E))).
 
@@ -567,8 +570,7 @@ arc1(TName):- arc1(true,TName).
 %arc1(G,TName):- arc2(G,TName,(_+0)).
 
 
-arc1(G,TName):-
- set_current_test(TName),
+arc1(G,TName):- 
  fix_test_name(TName,TestID,_UExampleNum), 
  locally(set_prolog_flag(gc,true),
   (clear_shape_lib(TestID),
@@ -583,6 +585,7 @@ is_detatched_thread:- arc_webui,!.
 is_detatched_thread:- \+ (thread_self(Main) -> Main == main ; main==0),!.
 
 cls_z:- is_detatched_thread,!,flush_tee.
+cls_z:- tracing,!.
 cls_z:- catch(cls,_,true), flush_tee, nop((clear_tee,clear_test_html)).
 cls1:- nop(catch(cls_z,_,true)).
 
@@ -624,6 +627,7 @@ luser_set_vm(VM,Prop,Value):-
 
 set_vm_obj(Prop,Or,Value):- set_vm(Prop,Value),ignore(set_vm_obj1(Prop,Or,Value)),!.
 
+set_vm_obj1(Prop,Or,Value):- Value==[],!, set_vm_obj_nil(Prop,Or).
 set_vm_obj1(Prop,Or,Value):- is_grid(Value),!,
   localpoints_include_bg(Value,IndvPoints),
   grid_size(Value,H,V),
@@ -650,6 +654,22 @@ set_vm_obj1(Prop,Or,Value):- is_object(Value),!,
   object_grid(NewObj,Grid),
   print_grid(Prop,Grid),!.
 
+set_vm_obj_nil(Prop,Or):- wdmsg(set_vm_obj_nil(Prop,Or)).
+/*
+ get_vm(VM), Value==[], H = VM.h, V = VM.v,
+
+  %points_to_grid(H,V,Points,Grid),
+  %Grid=[[wbg]],
+
+  make_indiv_object(VM,[iz(Prop),vis2D(1,1),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
+          %addObjects(VM,Obj),
+          make_bg_visible(Value,VValue),
+          print_grid(H,V,Prop,VValue))),
+  % set_vm_obj(Prop,Or,Grid),
+
+*/
+
+
 get_vm(Key,Value):-  get_vm(VM), get_kov(Key,VM,Value).
   
 get_kov(K,O,V):- get_kov1(K,O,V),!.
@@ -672,7 +692,7 @@ test_regressions:- make, forall((clause(mregression_test,Body),ppt(Body)),must_d
 :- strip_module(_,M,_), prolog_load_context(module,MM), retractall(muarc_2_mods(_,_)), asserta(muarc_2_mods(M,MM)).
 
 %:- forall(ping_indiv_grid(X),atom_concat(X,Y
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 %:- initialization(demo,program).
 %:- initialization(demo,restore_state).
 %:- initialization(demo,main).
@@ -770,6 +790,7 @@ ansi_startup:-
 :- luser_default(cmd2,print_all_info_for_test).
 :- luser_default(individuated_cache,true).
 :- luser_default(extreme_caching,true).
+:- scan_uses_test_id.
 :- make_grid_cache.
 :- gen_gids.
 

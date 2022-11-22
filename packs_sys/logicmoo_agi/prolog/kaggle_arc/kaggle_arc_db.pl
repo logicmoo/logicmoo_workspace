@@ -103,7 +103,7 @@ point_to_hvc(C-Point,H,V,C):- must(nonvar(Point)),must(hv_point(H,V,Point)),!.
 %point_ to_hvc(H,V,_,H,V).
 %point_ to_hvc(Inf,Inf,offset_ranges(_,_,_,_)).
 
-
+make_grid(H,V,Grid):- (H<1;V<1),!,wdmsg(make_grid(H,V,Grid)),break,!,fail.
 make_grid(H,V,Grid):- between(1,40,H),between(1,40,V),  % max_min(H,0,HH,_), max_min(V,0,VV,_), %max_min(HH,32,_,HHH),max_min(VV,32,_,VVV),!,    
    ensure_make_grid(H,V,G),G=Grid.
 
@@ -153,8 +153,15 @@ maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
 maybe_glyph(_,N,N).
 
 is_visible(Obj):- \+ has_prop(iz(hidden),Obj).
+
+is_pred_sorted_object_grid(O):- last(O,I), \+ is_visible(I).
+
+object_printables(Objs,GroupVis,GroupPP):- 
+ %is_pred_sorted_object_grid(Objs),
+ !,GroupVis=GroupPP,GroupVis=Objs.
+  
 object_printables(Objs,GroupVis,GroupPP):-
-  smallest_first(Objs,SF),
+  visible_first(Objs,SF),
   my_partition(is_visible,SF,GroupVis,GroupInv),
   append([GroupVis,GroupInv,Objs],GroupP),list_to_set(GroupP,GroupPP),!.
 
@@ -365,5 +372,5 @@ save_calc_movement(H,V,Dir,HO,VO):- H2 is HO+H, V2 is VO+V,
   
 is_adjacent_2points(HV,Dir,HV2,HV3):-  is_adjacent_point(HV,Dir,HV2),is_adjacent_point(HV2,Dir,HV3).
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 

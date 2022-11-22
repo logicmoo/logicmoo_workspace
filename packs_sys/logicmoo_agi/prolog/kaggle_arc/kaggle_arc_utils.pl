@@ -351,7 +351,7 @@ print_prop_val(N=V):- to_prop_name(N,P),format('~N\t\t'),print(P=V),nl.
 
 ignore_numvars(Name='$VAR'(Name)).
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 
 
 end_of_file.

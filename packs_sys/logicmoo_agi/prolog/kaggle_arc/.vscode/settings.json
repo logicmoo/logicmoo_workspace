@@ -1,0 +1,13 @@
+{
+    "git.ignoreLimitWarning": true,
+    "editor.tabCompletion": "on",
+    "editor.formatOnType": true,
+    "diffEditor.codeLens": true,
+    "editor.quickSuggestions": {
+        "other": "on",
+        "comments": true,
+        "strings": "off"
+    },
+    "prolog.executablePath": "C:/Program Files/swipl/bin/swipl.exe",
+    "prolog.linter.enableMsgInOutput": true
+}

@@ -16,15 +16,18 @@ fi
 cd $ARC_DIR
 mkdir -p out
 chmod -R 777 out/
+rm -f out/?*ansi.pl
 #rm -rf out/?*.ansi.pl
 # git checkout out
+
 
 chmod -R 777 muarc_output/
 
 chmod -R 777 muarc_cache/
+rm -f muarc_cache/?*ansi.pl
 
 mkdir -p data
-chmod -R 777 data/
+chmod -R 555 data/
 
 chmod -R 777 muarc_tmp/
 

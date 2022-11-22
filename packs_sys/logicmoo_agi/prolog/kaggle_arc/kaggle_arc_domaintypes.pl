@@ -313,6 +313,9 @@ allow_dir_list(nsew_5,[n,s,e,w]). %s,e,n,w
 
 allow_dir_list(s_e,[s,e]). %s,e,n,w 
 allow_dir_list(n_e,[n,e]). %s,e,n,w 
+allow_dir_list(n_w,[n,w]). %s,e,n,w 
+allow_dir_list(s_w,[s,w]). %s,e,n,w 
+allow_dir_list(dir_list(List),List). 
 allow_dir_list(ne_sw,[ne,sw]). %s,e,n,w 
 allow_dir_list(nw_se,[nw,se]). %s,e,n,w 
 %allow_dir_list(rectangles,[s,e]). 
@@ -616,11 +619,11 @@ apv(sub_points([])).
 color_and_rotation(Group,List):- override_group(color_and_rotation(Group,List)),!.
 color_and_rotation(Hammer0,Hammer):-
   all_rotations(Hammer0,Hammer1),
-     all_colors(Hammer1,Hammer).
+     into_any_color(Hammer1,Hammer).
 
-all_colors(Group,List):- override_group(all_colors(Group,List)),!.
-all_colors(RedHammer,Hammer):- change_color(RedHammer,Hammer).
-all_colors(RedHammer,RedHammer).
+into_any_color(Group,List):- override_group(into_any_color(Group,List)),!.
+into_any_color(RedHammer,Hammer):- change_color(RedHammer,Hammer).
+into_any_color(RedHammer,RedHammer).
 
 change_color_blue(Group,List):- change_color_to(blue,Group,List).
 
@@ -674,5 +677,5 @@ scale_grid(1,_GrowthChart,Grid,Grid).
 
 enum_scale(1).
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 

@@ -1,3 +1,8 @@
 xterm: no process found
 
-Script done on 2022-11-19 00:20:30-08:00 [COMMAND_EXIT_CODE="0"]
+Script done on 2022-11-22 08:41:44-08:00 [COMMAND_EXIT_CODE="0"]
+Script started on 2022-11-22 08:41:45-08:00 [COMMAND="TYPESCRIPT=1 ./Kaggle_arc.sh " TERM="xterm" TTY="/dev/pts/0" COLUMNS="231" LINES="67"]
+ARC_DIR=/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc
+BCMD=cd /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc ; pwd ; swipl -l kaggle_arc.pl
+^C
+Script done on 2022-11-22 08:41:46-08:00 [COMMAND_EXIT_CODE="130"]

@@ -341,9 +341,7 @@ grid_numbervars(GridIn,GridO):-
 
 offset_grid(H2,V2,FF,OF):-
   offset_v_grid(V2,FF,FF0),
-  rot90(FF0,FF1),
-  offset_v_grid(H2,FF1,FF2),
-  rot270(FF2,OF),!.
+  h_as_v(offset_v_grid(H2),FF0,OF).
 
 offset_v_grid(V2,FF,OF):-  
   vis2D(FF,GW,_), 
@@ -646,10 +644,8 @@ ascii_to_growthchart(Text,GrowthChart):-
 
 
 ascii_to_grid(Text,G):- maybe_fix_ascii(Text,Ascii0), !, ascii_to_grid(Ascii0,G).
-ascii_to_grid(Text,G):- atom_contains(Text,'____'),!,
-  atom_chars(Text,C),
-  make_grid(30,30,G0),
-  parse_text_to_grid(0,0,C,G0,G).
+ascii_to_grid(Text,G):- atom_contains(Text,'____'),!, atom_chars(Text,C), 
+  make_grid(30,30,G0), parse_text_to_grid(0,0,C,G0,G),!.
 ascii_to_grid(Text,G):- 
  ascii_to_growthchart(Text,GrowthChart),
  growthchart_to_grid(GrowthChart,6,5,G).
@@ -657,19 +653,22 @@ ascii_to_grid(Text,G):-
 :- luser_default(find_rule,regular).
 % ?- h666(X),text_to_grid(X,G).
 text_to_grid(Text,GO):- text_to_grid(Text,_HH,_VV,_ObjPoints,GO).
-text_to_grid(Text,HH,VV,ObjPoints,GO):-
+
+text_to_points(Text,GPs):- 
   ascii_to_grid(Text,G),
   % grid_to_tid(G,ID),
-  %print_grid(G),
-  globalpoints(G,GPs),!,
-  %print_grid(GPs),
+  globalpoints(G,GPs).
+
+text_to_grid(Text,HH,VV,ObjPoints,GO):-  
+ must_det_ll((
+  text_to_points(Text,GPs),!,
   points_range(GPs,_LoH_,_LoV_,HiH,HiV,_,_),
   LoH=1,LoV=1,
   deoffset_points(LoH,LoV,GPs,ObjPoints),  
   %print_grid(ObjPoints),
   HH is HiH - LoH + 1,
   VV is HiV - LoV + 1,
-  points_to_grid(HH,VV,ObjPoints,GO),!.
+  points_to_grid(HH,VV,ObjPoints,GO))),!.
 
 parse_text_to_grid(H,V,X,G,GO):- append(LEft,[' ','|'|Right],X), append(LEft,['|'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
 parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\r'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
@@ -711,7 +710,7 @@ insert_col_row_pad_open(H0,V0,G,GUU):-
    insert_col_pad_open(H0,G,GU),
    insert_row_pad_open(V0,GU,GUU).
 
-insert_col_pad_open(V0,GU,GUU):-  rot90(GU,GR), insert_row_pad_open(V0,GR,GRU), rot270(GRU,GUU).
+insert_col_pad_open(V0,GU,GUU):-  h_as_v(insert_row_pad_open(V0),GU,GUU).
 insert_row_pad_open(V0,GU,GridU):- functor(P,v,V0),P=..[v|L],append(L,GU,LGU), append(LGU,_,GridU).
 
 
@@ -890,23 +889,22 @@ f666(1,[[3]]).
 %f666(1,[[_]]).
 
 create_padding(GridIn,LowH,LowV,HiH,HiV,H,V,HH,VV,GridO):- 
-   fix_v_range(GridIn,LowV,HiV,H,V,VV,Grid1),
-   rot90(Grid1,Grid2),
-   fix_v_range(Grid2,LowH,HiH,VV,H,HH,Grid3),
-   rot270(Grid3,GridO).
+   fix_v_range(LowV,HiV,H,V,VV,GridIn,Grid1),
+   h_as_v(fix_v_range(LowH,HiH,VV,H,HH),Grid1,GridO).
+   
 
 
-fix_v_range(GridIn,1,HiV,H,V,VV,GridO):-
+fix_v_range(1,HiV,H,V,VV,GridIn,GridO):-
   make_row(Row,H), 
-  fix_v_range([Row|GridIn],2,HiV,H,V,V2,GridO), VV is V2+1.
+  fix_v_range(2,HiV,H,V,V2,[Row|GridIn],GridO), VV is V2+1.
 
-fix_v_range(GridIn,LowV,HiV,H,V,VV,GridO):- HiV==V,!, 
+fix_v_range(LowV,HiV,H,V,VV,GridIn,GridO):- HiV==V,!, 
   make_row(Row,H),
   append(GridIn,[Row],Grid2),
   HiV2 is HiV+1,
-  fix_v_range(Grid2,LowV,HiV2,H,V,V2,GridO),
+  fix_v_range(LowV,HiV2,H,V,V2,Grid2,GridO),
   VV is V2+1.
-fix_v_range(GridIn,_LowV,_HiV,_H,V,V,GridIn).
+fix_v_range(_LowV,_HiV,_H,V,V,GridIn,GridIn).
 
 
 perfect_result([['$VAR'(999),'$VAR'(1000),'$VAR'(1001),blue,blue,blue,'$VAR'(1002),'$VAR'(1003),'$VAR'(1004),'$VAR'(1005),'$VAR'(1006),'$VAR'(1007),'$VAR'(1008),'$VAR'(1009),'$VAR'(1010),'$VAR'(1011),'$VAR'(1012),'$VAR'(1013),'$VAR'(1014),blue,blue,blue,'$VAR'(1015),'$VAR'(1016),'$VAR'(1017)],['$VAR'(1018),'$VAR'(1019),'$VAR'(1020),'$VAR'(1021),blue,blue,'$VAR'(1022),'$VAR'(1023),'$VAR'(1024),'$VAR'(1025),'$VAR'(1026),'$VAR'(1027),'$VAR'(1028),'$VAR'(1029),'$VAR'(1030),'$VAR'(1031),'$VAR'(1032),'$VAR'(1033),'$VAR'(1034),'$VAR'(1035),blue,blue,'$VAR'(1036),'$VAR'(1037),'$VAR'(1038)],['$VAR'(1039),'$VAR'(1040),'$VAR'(1041),'$VAR'(1042),blue,'$VAR'(1043),'$VAR'(1044),'$VAR'(1045),blue,'$VAR'(1046),'$VAR'(1047),'$VAR'(1048),'$VAR'(1049),'$VAR'(1050),'$VAR'(1051),'$VAR'(1052),'$VAR'(1053),'$VAR'(1054),'$VAR'(1055),'$VAR'(1056),blue,'$VAR'(1057),'$VAR'(1058),'$VAR'(1059),blue],['$VAR'(1060),'$VAR'(1061),'$VAR'(1062),'$VAR'(1063),blue,blue,blue,blue,blue,'$VAR'(1064),'$VAR'(1065),'$VAR'(1066),'$VAR'(1067),'$VAR'(1068),'$VAR'(1069),'$VAR'(1070),'$VAR'(1071),red,red,'$VAR'(1072),blue,blue,blue,blue,blue],['$VAR'(1073),'$VAR'(1074),'$VAR'(1075),'$VAR'(1076),blue,blue,'$VAR'(1077),blue,blue,'$VAR'(1078),'$VAR'(1079),'$VAR'(1080),'$VAR'(1081),'$VAR'(1082),'$VAR'(1083),'$VAR'(1084),'$VAR'(1085),red,red,red,blue,blue,'$VAR'(1086),blue,blue],['$VAR'(1087),'$VAR'(1088),'$VAR'(1089),'$VAR'(1090),'$VAR'(1091),blue,'$VAR'(1092),'$VAR'(1093),'$VAR'(1094),'$VAR'(1095),'$VAR'(1096),'$VAR'(1097),'$VAR'(1098),'$VAR'(1099),'$VAR'(1100),'$VAR'(1101),'$VAR'(1102),red,'$VAR'(1103),'$VAR'(1104),'$VAR'(1105),blue,'$VAR'(1106),'$VAR'(1107),'$VAR'(1108)],['$VAR'(1109),'$VAR'(1110),'$VAR'(1111),'$VAR'(1112),blue,blue,'$VAR'(1113),'$VAR'(1114),'$VAR'(1115),'$VAR'(1116),'$VAR'(1117),'$VAR'(1118),'$VAR'(1119),'$VAR'(1120),'$VAR'(1121),'$VAR'(1122),'$VAR'(1123),'$VAR'(1124),'$VAR'(1125),'$VAR'(1126),blue,blue,'$VAR'(1127),'$VAR'(1128),'$VAR'(1129)],['$VAR'(1130),'$VAR'(1131),'$VAR'(1132),'$VAR'(1133),blue,blue,blue,'$VAR'(1134),'$VAR'(1135),'$VAR'(1136),'$VAR'(1137),'$VAR'(1138),'$VAR'(1139),'$VAR'(1140),'$VAR'(1141),'$VAR'(1142),'$VAR'(1143),'$VAR'(1144),'$VAR'(1145),'$VAR'(1146),blue,blue,blue,'$VAR'(1147),'$VAR'(1148)]],[[blue,blue,'$VAR'(1149)],[blue,blue,blue],[blue,'$VAR'(1150),'$VAR'(1151)]],false).
@@ -1427,6 +1425,6 @@ perfect_result([[blue,blue,blue,blue,blue],[blue,blue,blue,blue,blue],[blue,blue
 perfect_result([[red,red,red,red,red],[red,blue,blue,blue,red],[red,blue,red,blue,red],[red,blue,blue,blue,red],[red,red,red,red,red]],[[green]],false).
 perfect_result([[red,red,red,red,red],[red,blue,blue,blue,red],[red,blue,green,blue,red],[red,blue,blue,blue,blue],[red,red,red,red,red]],[[green]],true).
   
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 
 

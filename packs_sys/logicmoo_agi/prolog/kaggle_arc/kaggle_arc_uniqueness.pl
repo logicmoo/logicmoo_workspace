@@ -30,7 +30,7 @@ normal_group_form(Group,Group):-!.
 
 :- dynamic(is_why_grouped_g/4).
 why_grouped(Why,Group):-
-  arc_test_name(TestID),
+  ensure_test(TestID),
   why_grouped(TestID,Why,Group).
 
 why_grouped(TestID,Why,Group):- 

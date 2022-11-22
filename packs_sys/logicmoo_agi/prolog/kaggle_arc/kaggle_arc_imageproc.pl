@@ -9,6 +9,24 @@
 :- ensure_loaded(kaggle_arc_symmetry).
 %tell(s),ignore((nl,nl,test_pairs(Name,ExampleNum,In,Out),format('~N~q.~n',[test_pairs_cache(Name,ExampleNum,In,Out)]),fail)),told.
 
+safe_grid(I,T):- mapgrid(=,I,T).
+
+h_and_v(P2,Grid,Double):- a_as_g(h_and_v0(P2),Grid,Double).
+h_and_v0(P2,I,O):- safe_grid(I,T), grid_call(P2,T,M),h_as_v(P2,M,O),!.
+
+h_as_rv(P2,Grid,Double):- a_as_g(h_as_rv0(P2),Grid,Double).
+h_as_rv0(P2,I,O):- rot270(I,G90), safe_grid(G90,S90), grid_call(P2,S90,GG90), rot90(GG90,O).
+
+h_as_v(P2,Grid,Double):- a_as_g(h_as_v0(P2),Grid,Double).
+h_as_v0(P2,I,O):- rot90(I,G90), safe_grid(G90,S90), grid_call(P2,S90,GG90), rot270(GG90,O).
+
+
+into_p2(P2,I,O,PIO):- atom(P2),!,PIO=..[P2,I,O].
+into_p2(P2,I,O,PIO):- P2=..FArgs,append(FArgs,[I,O],FArgsIO),PIO=..FArgsIO.
+
+a_as_g(P2,Group,Double):- is_group(Group),!,into_p2(P2,Group,Double,PIO),override_group(PIO),!.
+a_as_g(P2,I,O):- cast_to_grid(I,II,UnCast),grid_call(P2,II,OO),uncast(I,UnCast,OO,O).
+
 
 
 :- dynamic(backfill/1).
@@ -68,13 +86,6 @@ is_real_color_or_var(C):- (var(C)->true;is_real_color(C)).
 
 unique_colors(G,SUCOR):- colors(G,GF),quietly((maplist(arg(1),GF,UC),include(is_real_color_or_var,UC,SUCO))),reverse(SUCO,SUCOR).
 unique_color_count(G,Len):- unique_colors(G,UC),length(UC,Len).
-
-real_colors(O,CCO):- colors(O,CC),into_mostly_real_colors(CC,CCO),!.
-into_mostly_real_colors(CC,CCO):- include(is_real_cc,CC,CCO),CCO\==[],!.
-into_mostly_real_colors(CC,CCO):- include(is_some_cc,CC,CCO),CCO\==[],!.
-into_mostly_real_colors(CC,CC):- !.
-is_real_cc(cc(C,N)):- N>0, is_real_color(C),!.
-is_some_cc(cc(_,N)):- N>0,!.
 
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
@@ -194,14 +205,13 @@ trim_v_repeats(G0,G9):- \+ is_list(G0),into_grid(G0,G1),!,trim_v_repeats(G1,G9).
 trim_v_repeats(G0,G9):- append(L,[R1,R2|R],G0),R1=@=R2,append(L,[R1|R],G5),!,trim_v_repeats(G5,G9).
 trim_v_repeats(G0,G0).
 
-trim_h_repeats(G0,G9):- \+ is_list(G0),into_grid(G0,G1),!,trim_h_repeats(G1,G9).
-trim_h_repeats(G0,G9):- rot90(G0,G5),trim_v_repeats(G5,G8),rot270(G8,G9).
+trim_h_repeats(G0,G9):- h_as_v(trim_v_repeats,G0,G9).
 
 easy_sol(trim_blank_lines).
 trim_blank_lines(G0,G9):- into_grid(G0,G8), get_bgc(BG), remove_color(BG,G8,G9).
- 
+
 easy_sol(trim_hv_repeats).
-trim_hv_repeats(G0,G9):- trim_v_repeats(G0,G1),rot90(G1,G5),trim_v_repeats(G5,G8),rot270(G8,G9).
+trim_hv_repeats(G0,G9):- h_and_v(trim_v_repeats,G0,G9).
 
 easy_sol(trim_to_rect).
 
@@ -210,7 +220,7 @@ easy_sol(trim_to_rect).
 
 trim_to_rect(Color,MGrid):- trim_to_rect2(Color,MGrid).
 %trim_to_rect(Color,MGrid):- called_gid('_trim_to_rect',trim_to_rect2,Color,MGrid).
-trim_to_rect2(G0,G8):- into_grid(G0,G),get_bgc(BG),trim_unused_vert(BG,G,G1),rot90(G1,G2),trim_unused_vert(BG,G2,G3),rot270(G3,G8).
+trim_to_rect2(G,G8):- get_bgc(BG), h_and_v(trim_unused_vert(BG),G,G8).
 
   trim_unused_vert(_,[],[]):-!.
   trim_unused_vert(BG,[Row|Grid],GridO):- maplist(is_bg_or_var(BG),Row),!,trim_unused_vert(BG,Grid,GridO).
@@ -336,24 +346,14 @@ subst_color(Color1,Color2,Grid,NewGrid):-
 
 equal_color(Color,Color).
 
-remove_color(Color,In0,Out):-
- duplicate_term(In0,In),copy_term(In0,In),
- remove_color0(Color,In,Out0),!,
- duplicate_term(Out0,Out),copy_term(Out0,Out),
- nop((print_side_by_side(silver,In,remove_color,_,Out,c(Color)))),!.
 
+remove_color_row(Color,Grid,NewGrid):-
+   select(Row,Grid,MidGrid),maplist(==(Color),Row),!,
+   remove_color_row(Color,MidGrid,NewGrid).
+remove_color_row(_,Grid,Grid):-!.
 
-remove_color0(Color,Grid,NewGrid):-
-   nth1(_,Grid,Row,MidGrid),maplist(==(Color),Row),!,
-   remove_color0(Color,MidGrid,NewGrid).
-remove_color0(Color,G,NewGrid):-
-   duplicate_term(G,G0),
-   rot90(G0,Grid),
-   nth1(_,Grid,Row,Rest),maplist(==(Color),Row),
-   duplicate_term(Rest,Rest0),
-   rot270(Rest0,MidGrid),!,
-   remove_color0(Color,MidGrid,NewGrid).
-remove_color0(Color,Grid,NewGrid):-
+remove_color(Color,G,NewGrid):- 
+  h_and_v(remove_color_row(Color),G,Grid),
    get_bgc(Cell), subst_color(Color,Cell,Grid,NewGrid),
    nop(set_vm(grid,NewGrid)).
 
@@ -449,45 +449,41 @@ add_borders(Color,Grid,GridO):-
   replace_col_e(1,Color,Grid1,Grid2),
   replace_col_e(H,Color,Grid2,GridO),!.
 
-fillFromBorder(FillColor,In,Out):- is_grid(In),!,  
-  grid_edges(In,Edges),
-  likely_bg(Edges,BG),
-  IIn = in(In),
+fillFromBorder(Color,In,Out):- grid_call(fillFromBorder_0(Color),In,Out).
+fillFromBorder_0(FillColor,In,Out):- gref_call(fillFromBorder_gref(FillColor),In,Out).
+fillFromBorder_gref(FillColor,IIn):-
+  grid_edges(In,Edges), likely_bg(Edges,BG),
   grid_size(In,H,V),
   forall(between(1,H,Hi),
     forall(between(1,V,Vi),
          ( if_t((hv_c_value(IIn,Color,Hi,1),Color==BG),
-             fill_from_point(IIn,Hi,1,FillColor)),
+             fill_from_point_gref(Hi,1,FillColor,IIn)),
            if_t((hv_c_value(IIn,Color,Hi,V),Color==BG),
-             fill_from_point(IIn,Hi,V,FillColor)),
+             fill_from_point_gref(Hi,V,FillColor,IIn)),
            if_t((hv_c_value(IIn,Color,1,Vi),Color==BG),
-             fill_from_point(IIn,1,Vi,FillColor)),
+             fill_from_point_gref(1,Vi,FillColor,IIn)),
            if_t((hv_c_value(IIn,Color,H,Vi),Color==BG),
-             fill_from_point(IIn,H,Vi,FillColor))))),
-   dref_grid(IIn,Out).
-fillFromBorder(Color,In,Out):-
- cast_to_grid(In,Grid,UnCast),
- fillFromBorder(Color,Grid,GridO),
- uncast(In,UnCast,GridO,Out).
+             fill_from_point_gref(H,Vi,FillColor,IIn))))).
+   
 
 likely_bg(Grid,BGC):- colors_count_black_first(Grid,CCBF), 
     get_black(Black),(CCBF=[cc(Black,0),cc(BGC,_)|_]-> true ; CCBF=[cc(BGC,_)|_]).
 
-fill_from_point(IIn,H,V,FillColor):-
-  hv_c_value(IIn,Color,H,V),
-  fill_from_point(IIn,Color,H,V,FillColor).
+fill_from_point(H,V,FillColor,In,Out):-
+  grid_call(gref_call(fill_from_point_gref(H,V,FillColor)),In,Out).
 
-fill_from_point(IIn,Color,H,V,FillColor):-
+fill_from_point_gref(H,V,FillColor,IIn):-
+  hv_c_value(IIn,Color,H,V),
+  fill_from_point_c_gref(Color,H,V,FillColor,IIn).
+
+fill_from_point_c_gref(Color,H,V,FillColor,IIn):-
   nb_set_grid_color(IIn,FillColor,H,V),
   is_adjacent_hv(H,V,Dir,HH,VV), Dir\==c, 
   (is_bg_color(Color) -> \+ is_diag(Dir) ; true),
   once((once(hv_c_value(IIn,AColor,HH,VV)),
     AColor == Color,
-    fill_from_point(IIn,Color,HH,VV,FillColor))),
+    fill_from_point_c_gref(Color,HH,VV,FillColor,IIn))),
   fail.
-
-dref_grid(IIn,Grid):- is_grid(IIn),!,Grid=IIn.
-dref_grid(IIn,Grid):- arg(_,IIn,Grid),is_grid(Grid),!.
 
 nb_set_grid_color(IIn,NewC,H,V):- 
   dref_grid(IIn,Grid),
@@ -574,16 +570,17 @@ get_dir_color(Grid,H,V,Dir,C):- move_dir(1,H,V,Dir,1,1,NX,NY), hv_c_value(Grid,C
 first_color(Grid1,C1):- sub_term(C1,Grid1),is_color(C1), \+ is_bg_color(C1).
 
 
-get_inf(30).
-get_neg_inf(X):- get_inf(Inf), X is 0-Inf.
+get_inf(44).
+get_neg_inf(X):- get_inf(Inf), X is -Inf.
 
 
-points_range(Points,LoH,LoV,HiH,HiV,H,V):- get_neg_inf(NInf), get_inf(Inf), 
+points_range(Points,LoH,LoV,HiH,HiV,H,V):- is_grid(Points),!,grid_size(Points,H,V),LoH=1,LoV=1,HiH=H,HiV=V.
+points_range(Points,LoH,LoV,HiH,HiV,H,V):- get_neg_inf(NInf), get_inf(Inf), !,
   calc_range(Inf,Inf,NInf,NInf,NInf,NInf,Points,LoH,LoV,HiH,HiV,H,V),!.
 
 
 points_range2(Points,offset_ranges(LoH,LoV,HiH,HiV,H,V)):- get_inf(Inf),  get_neg_inf(NInf),
-  calc_range(Inf,Inf,NInf,NInf,NInf,NInf,Points,LoH,LoV,HiH,HiV,H,V).
+  must_det_ll(calc_range(Inf,Inf,NInf,NInf,NInf,NInf,Points,LoH,LoV,HiH,HiV,H,V)).
 % vis2D(Points,vis2D(H,V)):- points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V).
 
 close_color(brown,orange).
@@ -611,24 +608,64 @@ grid_size(_,30,30).
 :- system:import(grid_size/3).
 :- ansi_term:import(grid_size/3).
 
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Obj,LoH,LoV,HiH,HiV,H,V):- \+ is_points_list(Obj), globalpoints(Obj,Points),!,
+%  calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Points,LoH,LoV,HiH,HiV,H,V).
+
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
   max_min(WV,IV,V,_),max_min(WH,IH,H,_).
-%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,vis2D(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+%calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,v_hv(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
 %  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
-  calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),
-  calc_range(MLoH,MLoV,MHiH,MHiV,MH,MV,L,LoH,LoV,HiH,HiV,H,V).
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,[],WLoH,WLoV,WHiH,WHiV,WH,WV).
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,offset_ranges(ILoH,ILoV,IHiH,IHiV,IH,IV),LoH,LoV,HiH,HiV,H,V):- 
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
+  calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),
+  calc_range_old(MLoH,MLoV,MHiH,MHiV,MH,MV,L,LoH,LoV,HiH,HiV,H,V).
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,[],WLoH,WLoV,WHiH,WHiV,WH,WV).
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,offset_ranges(ILoH,ILoV,IHiH,IHiV,IH,IV),LoH,LoV,HiH,HiV,H,V):- 
   max_min(WLoV,ILoV,_,LoV),max_min(WHiV,IHiV,HiV,_),max_min(WV,IV,V,_),
   max_min(WLoH,ILoH,_,LoH),max_min(WHiH,IHiH,HiH,_),max_min(WH,IH,H,_),!.
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Point,LoH,LoV,HiH,HiV,H,V):- 
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,Point,LoH,LoV,HiH,HiV,H,V):- 
   point_to_hvc(Point,IH,IV,C),nonvar_or_ci(C), !,
   max_min(WLoV,IV,_,LoV),max_min(WHiV,IV,HiV,_),max_min(HiV,WV,V,_),
   max_min(WLoH,IH,_,LoH),max_min(WHiH,IH,HiH,_),max_min(HiH,WH,H,_),!.
 
-calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,_,WLoH,WLoV,WHiH,WHiV,WH,WV):- !.
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,_,WLoH,WLoV,WHiH,WHiV,WH,WV):- !.
+
+
+
+
+calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,EL,LoH,LoV,HiH,HiV,H,V):- calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,EL,LoH,LoV,HiH,HiV,H,V),!.
+%calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,EL,LoH,LoV,HiH,HiV,H,V):- calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,EL,LoH,LoV,HiH,HiV,H,V),!.
+
+
+
+
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),LoH,LoV,HiH,HiV,H,V):- !,
+  max_min(WLoV,IV,_,LoV),max_min(WHiV,IV,HiV,_),max_min(HiV,WV,V,_),
+  max_min(WLoH,IH,_,LoH),max_min(WHiH,IH,HiH,_),max_min(HiH,WH,H,_),!.
+/*
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),LoH,LoV,WHiH,WHiV,H,V):- !,
+  max_min(WLoV,IV,_,LoV),max_min(WHiV,IV,HiV,_),max_min(HiV,WV,V,_),
+  max_min(WLoH,IH,_,LoH),max_min(WHiH,IH,HiH,_),max_min(HiH,WH,H,_),!.
+*/
+%calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,vis2D(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+%  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,[E|L],LoH,LoV,HiH,HiV,H,V):- !,
+  calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,E,MLoH,MLoV,MHiH,MHiV,MH,MV),
+  calc_range_new(MLoH,MLoV,MHiH,MHiV,MH,MV,L,LoH,LoV,HiH,HiV,H,V).
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,[],WLoH,WLoV,WHiH,WHiV,WH,WV).
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,offset_ranges(ILoH,ILoV,IHiH,IHiV,IH,IV),LoH,LoV,HiH,HiV,H,V):- 
+  max_min(WLoV,ILoV,_,LoV),max_min(WHiV,IHiV,HiV,_),max_min(WV,IV,V,_),
+  max_min(WLoH,ILoH,_,LoH),max_min(WHiH,IHiH,HiH,_),max_min(WH,IH,H,_),!.
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,Point,LoH,LoV,HiH,HiV,H,V):- 
+  point_to_hvc(Point,IH,IV,C),nonvar_or_ci(C), !,
+  max_min(WLoV,IV,_,LoV),max_min(WHiV,IV,HiV,_),max_min(HiV,WV,V,_),
+  max_min(WLoH,IH,_,LoH),max_min(WHiH,IH,HiH,_),max_min(HiH,WH,H,_),!.
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,C-Point,LoH,LoV,HiH,HiV,H,V):- nonvar(Point),plain_var(C),
+  hv_point(IH,IV,Point),!,
+  max_min(WLoV,IV,_,LoV),max_min(WHiV,IV,HiV,_),max_min(HiV,WV,V,_),
+  max_min(WLoH,IH,_,LoH),max_min(WHiH,IH,HiH,_),max_min(HiH,WH,H,_),!.
+calc_range_new(WLoH,WLoV,WHiH,WHiV,WH,WV,_,WLoH,WLoV,WHiH,WHiV,WH,WV):- !.
 
 
 grid_size_nd(L,_,_):- \+ var(L), \+ is_grid(L), !, fail.
@@ -657,11 +694,15 @@ points_to_grid0(H,V,Points,Grid):- rtrace((make_grid(H,V,Grid), calc_add_points(
 
 
 calc_add_points(OH,OV,Grid,SGrid):- odd_failure(calc_add_points0(OH,OV,Grid,SGrid)),!.
-calc_add_points(OH,OV,Grid,SGrid):- ftrace(calc_add_points0(OH,OV,Grid,SGrid)).
+calc_add_points(OH,OV,Grid,SGrid):- print_side_by_side([Grid,SGrid]),ftrace(calc_add_points0(OH,OV,Grid,SGrid)).
 
+calc_add_points0(OH,OV,Grid,C):- var(C),!,add_h_v_c(Grid,OH,OV,C).
+calc_add_points0(OH,OV,Grid,C):- is_color(C),!,add_h_v_c(Grid,OH,OV,C).
 calc_add_points0(_OH,_OV,_Grid,Nil):- Nil == [],!.
 calc_add_points0(OH,OV,Grid,SGrid):- is_grid(SGrid),!,globalpoints_maybe_bg(SGrid,Points),!,maplist(calc_add_points(OH,OV,Grid),Points).
 calc_add_points0(OH,OV,Grid,CPoint):- is_cpoint(CPoint),!,hv_c_value(CPoint,C,H,V),
+ !, HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,C).
+calc_add_points0(OH,OV,Grid,C-Point):- nonvar(Point), var(C),hv_point(H,V,Point),!,
  !, HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,C).
 
 calc_add_points0(OH,OV,Grid,Points):- is_list(Points),!,maplist(calc_add_points(OH,OV,Grid),Points).
@@ -691,5 +732,5 @@ copy_cells(_,_,[],[]):-!.
 copy_cells(B,A,[H|T],[HH|TT]):-!, copy_cells(B,A,H,HH), copy_cells(B,A,T,TT).
 
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 

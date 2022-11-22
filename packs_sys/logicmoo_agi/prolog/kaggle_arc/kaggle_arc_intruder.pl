@@ -219,7 +219,7 @@ stuff_options(whatWithType,change_stuff_not_matching).
 stuff_options(whatWithType,add_stuff_missing).
 
 
-:- fixup_exports.
+:- include(kaggle_arc_footer).
 
 end_of_file.
 
