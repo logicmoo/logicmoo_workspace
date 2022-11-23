@@ -82,7 +82,7 @@ pbox_vm(VM):- !,
   localpoints_include_bg(Grid,Points),!,
   begin_i_pbox_l(Grid,NSEW,XSG,Points,  Points1,VM,s_l(1),Sizes_S_L),
   begin_i_pbox_l(Grid,NSEW,XSG,Points1, Points2,VM,l_s(2),Sizes_L_S),
-  if_t(Points\==Points2,set(VM.points)=Points2),
+  if_t(Points\==Points2,gset(VM.points)=Points2),
   begin_i_pbox_l(Grid,NSEW,XSG,Points,  Points3,VM,l_s(1),Sizes_L_S),
   begin_i_pbox_l(Grid,NSEW,XSG,Points3, Points9,VM,s_l(2),Sizes_S_L),
   if_t(Points\==Points9,gset(VM.points)=Points9),
@@ -305,11 +305,11 @@ flatten_set_bf(F,S):- flatten([F],L),list_to_set_bf(L,BF),!,BF=S.
 
 i_pbox_l(_Grid,_NSEW,_XSG,Points,Points,_VM,L_S,_):- Points==[], !, wdmsg(pointless(L_S)).
 i_pbox_l(_Grid,_NSEW,_XSG,Points,Points,_VM,L_S,[]):- !, wdmsg(complete(L_S)).
-i_pbox_l(_Grid,_NSEW,_XSG,Points,Points,_VM,L_S,_):- L_S \= s_l(2),!.
+i_pbox_l(_Grid,_NSEW,_XSG,Points,Points,_VM,L_S,_):- L_S \= s_l(2), L_S \= l_s(1),!.
 i_pbox_l(Grid,NSEW,XSG,Points,Points9,VM,L_S,[size2D(H,V)|Sizes]):- 
  once((
   % \+ (L_S=l_s(1);L_S=s_l(1);L_S=l_s(2)),
-  L_S = s_l(2),
+  (L_S = l_s(1) -> Which = inside; Which = center),
   Area is (H-1)*(V-1),
   length(Points,Len), Len>=Area,
   make_search_box(H,V,Center,Inside,CACHE,Find,IBorder,OBorder))),
@@ -342,7 +342,6 @@ i_pbox_l(Grid,NSEW,XSG,Points,Points9,VM,L_S,[size2D(H,V)|Sizes]):-
   OHM1 is OH -1,OVM1 is OV -1,
   grid_size(OBJ,HH,VV), EHP1 is OH+HH, EVP1 is OV+VV,  clip(OHM1,OVM1,EHP1,EVP1,Grid,SGrid),
   (( fail,
-     L_S=s_l(_),
      OBJ==center,     
      iz_symmetry(SGrid,R), R \=symmetry(none),   
      obj_gpoints(SGrid,OHM1,OVM1,SOPoints),
@@ -396,8 +395,8 @@ edge_or_center(center,C,List):- length(List,Len), Center is 1 + floor(Len/2),nth
 not_all_same(C,List):- \+ maplist(==(C),List).
 is_all_same(C,List):- maplist(=(C),List).
 
-found_box(L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,FindS,IBorderS,OBorderS,   inside, _):- 
- once(L_S=l_s(1);L_S=s_l(1)),!,fail.
+%found_box(L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,FindS,IBorderS,OBorderS,   inside, _):- 
+% once(L_S=l_s(1);L_S=s_l(1)),!,fail.
 
  /*
 found_box(L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,FindS,IBorderS,OBorderS,   inside, solidSquares(C)):- 

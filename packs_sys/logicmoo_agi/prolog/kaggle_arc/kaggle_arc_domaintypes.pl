@@ -226,6 +226,9 @@ is_bg_or_var(_,X):- free_cell(X),!.
 is_bg_or_var(BG,X):- X==BG.
 
 free_cell(Var):- plain_var(Var),!.
+free_cell(wbg):-!.
+free_cell(bg):-!.
+%adjacent_point_allowe
 free_cell(C):- get_bgco(X),C==X.
 
 non_free_fg(C):- \+ free_cell(C), \+ is_bg_color(C).

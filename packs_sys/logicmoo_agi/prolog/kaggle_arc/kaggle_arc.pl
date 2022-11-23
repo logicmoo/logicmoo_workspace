@@ -504,8 +504,11 @@ with_luser(N,V,Goal):-
     Goal,
     luser_getval(N,OV)).
 
-luser_getval(N,V):- if_arc_webui(((current_predicate(get_param_req_or_session/2),get_param_req_or_session(N,V), V\=='',V\==""))).
-luser_getval(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
+luser_getval(N,V):- nb_current(N,VV),VV\==[],!,V=VV.
+luser_getval(N,V):-  luser_getval0(N,VV),b_setval(N,VV),!,VV=V.
+
+luser_getval0(N,V):- if_arc_webui(((current_predicate(get_param_req_or_session/2),get_param_req_or_session(N,V), V\=='',V\==""))).
+luser_getval0(N,V):- arc_user(ID),luser_getval(ID,N,V),!.
 %luser_getval(ID,N,V):- thread_self(ID),nb_current(N,V),!.
 %luser_getval(ID,N,V):- !, ((arc_user_prop(ID,N,V);nb_current(N,V))*->true;arc_user_prop(global,N,V)).
 luser_getval(ID,N,V):- !,
@@ -793,4 +796,5 @@ ansi_startup:-
 :- scan_uses_test_id.
 :- make_grid_cache.
 :- gen_gids.
-
+:- store_grid_size_predictions.
+:- fmt('% Type ?- demo. % or press up arrow').

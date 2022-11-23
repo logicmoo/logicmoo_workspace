@@ -11,6 +11,7 @@
 :- dynamic(learned_grid_size/2).
 
 test_grid_size_prediction:- forall_count(kaggle_arc(TestID,trn+0,_,_), test_grid_sizes(TestID)). 
+store_grid_size_predictions:- forall_count(kaggle_arc(TestID,trn+0,_,_), test_grid_sizes(TestID)). 
 
 test_grid_sizes(TestID):- 
    retractall(learned_grid_size(TestID,_)),

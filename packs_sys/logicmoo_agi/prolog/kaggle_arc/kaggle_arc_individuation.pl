@@ -174,7 +174,7 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC,OutC):-
   grid_size(GridIn,IH,IV),grid_size(GridOut,OH,OV),
   do_pair_filtering(ID1,GridIn,InC,InShown,ID2,GridOut,OutC,OutShown),
   IDIn1 = in(ID1),
-  print_list_of(really_show_touches(IDIn1,InShown),IDIn1,InShown),
+  nop(print_list_of(really_show_touches(IDIn1,InShown),IDIn1,InShown)),
   print_list_of(show_touches(OutShown),out(ID2),OutShown),
   setup_call_cleanup(
     luser_setval(no_rdot,true),
@@ -192,6 +192,7 @@ do_pair_filtering(ID1,GridIn,InC,InShownO,ID2,GridOut,OutC,OutShownO):-
   print_side_by_side(green,InHiddenLayer1,hiddens1(ID1),_,OutHiddenLayer1,hiddens1(ID2)),
   print_side_by_side(green,InShown,shown(ID1),_,OutShown,shown(ID2)),!,
   OutShownO = OutC,InShownO = InC.
+do_pair_filtering(_ID1,_GridIn,InC,InC,_ID2,_GridOut,OutC,OutC).
 
 really_show_touches(Title,InShown,Obj):- 
   debug_as_grid(really_show_touches(Title),Obj),
@@ -398,6 +399,8 @@ individuation_macros(do_ending, [
   % find_contained_points, % mark any "completely contained points"
  combine_same_globalpoints, % make sure any objects are perfectly the equal part of the image are combined
  keep_only_shown(1),
+ remove_if_prop(cc(fg,0)),
+ remove_if_prop(pen([cc(black,1)])),
  combine_same_globalpoints,
  find_touches,
  find_engulfs, % objects the toplevel subshapes detector found but neglacted containment on     
@@ -450,7 +453,7 @@ individuation_macros(i_complete_generic, SetO):-
    find_hybrid_shapes,
    %save_as_obj_group(diamonds),
    gather_cached,
-   keep_only_shown(1),
+   
    %[pointless([sub_indiv([save_as_obj_group(force_by_color),save_as_obj_group(i_colormass),save_as_obj_group(i_nsew)])])],
    %do_ending,
 
@@ -471,14 +474,14 @@ individuator(i_subtractions,[fg_subtractions([save_as_obj_group(i_mono_nsew),sav
 individuator(i_colormass,[colormass]).
 individuator(i_mono_colormass,[fg_shapes(i_colormass)]).
 individuator(i_alone_dots,[alone_dots(lte(6))]).
-individuator(i_nsew,[diamonds,nsew]).
-individuator(i_diag,[nsew,diamonds]).
+individuator(i_nsew,[pbox_vm,alone_dots(lte(9)),nsew,diamonds]).
+individuator(i_diag,[diamonds,nsew]).
+individuator(i_pbox,[i_nsew,leftover_as_one]).
 %individuator(i_diags,[do_diags]).
-individuator(i_mono_nsew,[fg_shapes(i_nsew)]).
+individuator(i_mono_nsew,[fg_shapes(i_pbox)]).
 individuator(i_by_color,[by_color(1), by_color(3,wbg), by_color(3,wfg), reset_points, by_color(1,black),by_color(1,bg), by_color(1,fg),/* ,*/[]]).
 %individuator(i_sub_pbox,[sub_individuate(pbox_vm)]).
 %individuator(i_pbox,[maybe_pbox_vm,i_colormass]).
-individuator(i_pbox,[pbox_vm,alone_dots(lte(5))]).
 individuator(i_repair_patterns,[maybe_repair_in_vm(find_symmetry_code)]).
 individuator(i_repair_patterns_f,[repair_in_vm(find_symmetry_code)]).
 individuation_macros(do_diags,[ /*dg_line(d), dg_line(u), */ diamonds]).
@@ -735,6 +738,11 @@ individuate_object(VM,GID,SubProgram,OnlyNew,WasInside):-
     individuate7(_NewVM,NewGID,SubProgram,Grid,WasInside)),!,
    set_vm(VM))),
    addObjects(VM,WasInside).
+
+% =====================================================================
+is_fti_step(remove_if_prop).
+% =====================================================================
+remove_if_prop(Prop,VM):- my_partition(has_prop(Prop),VM.objs,_With,gset(VM.objs)).
 
 % =====================================================================
 is_fti_step(objects_as_grid).
@@ -1092,7 +1100,7 @@ individuate1(VM,ROptions,GridIn,IndvS):-
 
 must_grid_to_gid(GridIn,OID):- must_det_ll(grid_to_gid(GridIn,OID)).
 
-allow_out_in :- fail.
+allow_out_in :- true.
 
 first_grid_same_areas(In,Out,IO):-
   unique_color_count(In,ISize), unique_color_count(Out,OSize), 
@@ -2274,11 +2282,11 @@ add_prior_placeholder(Len,Name,IndvS0,IndvS9):-
      override_object(o(sf(Len),nil,Name),IndvS1,IndvS9))),!.
 */
 
-object_priors(X,S):- is_object(X), !, must_det_ll((indv_props(X,Ps),
+object_get_priors(X,S):- is_object(X), !, must_det_ll((indv_props(X,Ps),
   findall(I,(member(P,Ps),props_object_prior(P,I)),L),L\==[],list_to_set(L,S))).
 
 group_priors(Objs,PriorsWithCounts):- must_det_ll((is_list(Objs),
-  findall(Name,(member(Obj,Objs),object_priors(Obj,Name)),AllPriorsL),
+  findall(Name,(member(Obj,Objs),object_get_priors(Obj,Name)),AllPriorsL),
   append(AllPriorsL,AllPriors),
   sort(AllPriors,PriorsSet),
   count_each(PriorsSet,AllPriors,PriorsWithCounts))).
@@ -2294,6 +2302,8 @@ has_prop(lbl(Lbl),Obj):- is_prior_prop(Lbl,Obj).
 has_prop(Prop,Obj):- indv_props(Obj,Props),!,member(Q,Props), (Q=@=Prop -> true ; ( Q = Prop)).
 
 props_object_prior(V,_):- var(V),!,fail.
+props_object_prior(link(_,_,_),_):- !,fail.
+props_object_prior(link(_,_),_):- !,fail.
 props_object_prior(giz(_),_):- !,fail.
 props_object_prior(o(sf(_),_,L),L):-!.
 props_object_prior(birth(S),L):- !,first_atom_value(S,L).
@@ -2314,7 +2324,7 @@ first_atom_value(S,O):- arg(2,S,E),first_atom_value(E,O).
 
 is_prior_prop(Lbl,Obj):- object_prior(Obj,L),L=Lbl,!.
 %is_prior_prop(Lbl,Obj):- has_prop(Lbl,Obj),!.
-object_prior(Obj,E):- object_priors(Obj,L),member(E,L).
+object_prior(Obj,E):- object_get_priors(Obj,L),member(E,L).
 
 add_priors([Lbl-Count|PriorsWithCounts],Objs,LF):- number(Count), !, add_prior(Count,Lbl,Objs,Mid),!, add_priors(PriorsWithCounts,Mid,LF).
 add_priors([Count-Lbl|PriorsWithCounts],Objs,LF):- number(Count), !, add_prior(Count,Lbl,Objs,Mid),!, add_priors(PriorsWithCounts,Mid,LF).
@@ -2331,7 +2341,7 @@ add_prior(N,Lbl,Objs,ObjsWithPrior):-
   length(Lbld,LL),  
   rank_priors(Lbl,Lbld,RLbldR),
   nop(print_grid(Lbl->N/LL,RLbldR)),
-  write('\t '), writeq(Lbl->N/LL),write(' \t'),
+  write('\t '), writeq(Lbl->N/LL),write(' <p/>\t'),
   append([Unlbl,RLbldR],ObjsWithPrior).  
 
 prior_name_by_size(_VM,[],_Name):-!.

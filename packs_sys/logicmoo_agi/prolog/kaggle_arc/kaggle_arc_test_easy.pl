@@ -13,8 +13,9 @@ key_pad_tests(TestID):-  kaggle_arc(TestID,tst+0,In,Out), once((make_keypad(In),
 
 
 forall_count(P,Q):-
-  forall_count(P,Q,EP,ET),
-  wdmsg(EP/ET=forall_count(P,Q)).
+  time(forall_count(P,Q,EP,ET)),
+  Percent is round(EP/ET*10_000)/100,
+  fmt('~N % Success ~p% (~q) for ~p ~n',[Percent,EP/ET,forall_count(P,Q)]).
 
 forall_count(P,Q,EP,ET):-
   setup_call_cleanup(flag('$fac_t',W,0),

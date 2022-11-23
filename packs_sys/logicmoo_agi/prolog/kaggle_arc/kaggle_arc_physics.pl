@@ -195,17 +195,17 @@ sameR(X,X).
 test_rot:- test_p2(rot270),test_p2(rot90).
 %srot90V,flipV
 %rot90(A,B):- A==[],!,B=[].
-rot90( Grid,NewAnyWUpdate):- !, rot180( Grid,M),rot270( M,NewAnyWUpdate).
-%rot90( Grid,NewAnyWUpdate):- any_xform(grid_rot90,Grid,NewAnyWUpdate).
-rot180( Grid,NewAnyWUpdate):- any_xform(grid_rot180,Grid,NewAnyWUpdate).
-rot270( Grid,NewAnyWUpdate):- any_xform(grid_rot270,Grid,NewAnyWUpdate).
-flipH( Grid,NewAnyWUpdate):- any_xform(grid_flipH,Grid,NewAnyWUpdate).
-flipV( Grid,NewAnyWUpdate):- any_xform(grid_flipV,Grid,NewAnyWUpdate).
-flipD( Grid,NewAnyWUpdate):- any_xform(grid_flipD,Grid,NewAnyWUpdate).
-flipDV( Grid,NewAnyWUpdate):- any_xform(grid_flipDV,Grid,NewAnyWUpdate).
-flipDH( Grid,NewAnyWUpdate):- any_xform(grid_flipDH,Grid,NewAnyWUpdate).
-flipDHV( Grid,NewAnyWUpdate):- any_xform(grid_flipDHV,Grid,NewAnyWUpdate).
-nsew_edges( Grid,NewAnyWUpdate):- any_xform(grid_edges_fresh,Grid,NewAnyWUpdate).
+%rot90(I,O):- grid_rot90(I,O).
+rot90(I,O):-any_xform(grid_rot90,I,O).
+rot180(I,O):- any_xform(grid_rot180,I,O).
+rot270(I,O):- any_xform(grid_rot270,I,O).
+flipH(I,O):- any_xform(grid_flipH,I,O).
+flipV(I,O):- any_xform(grid_flipV,I,O).
+flipD(I,O):- any_xform(grid_flipD,I,O).
+flipDV(I,O):- any_xform(grid_flipDV,I,O).
+flipDH(I,O):- any_xform(grid_flipDH,I,O).
+flipDHV(I,O):- any_xform(grid_flipDHV,I,O).
+nsew_edges(I,O):- any_xform(grid_edges_fresh,I,O).
 
 
 grid_edges_fresh(Find,Edges):- must_det_ll((
@@ -216,7 +216,20 @@ grid_edges_fresh(Find,Edges):- must_det_ll((
   Edges=[T,RB,RR,L])),!.
 
 
-grid_rot90(Grid,NewAnyWUpdate):-  rot270(GridM,NewAnyWUpdate),rot180(Grid,GridM).
+/*
+:- meta_predicate(begin_load_hook(:)).
+begin_load_hook(P1):- asserta((user:term_expansion(I,_):- call(P1,I),fail)).
+:- meta_predicate(end_load_hook(:)).
+end_load_hook(P1):- retract((user:term_expansion(I,_):- call(P1,I),fail)).
+
+
+learn_head((P:-_)):- compound(P), compound_name_arity(P,F,2),atom_concat('grid_',P2,F), \+ current_predicate(P2/2), 
+  P22 =..[P2,A,B], asserta_if_new(P22:-  any_xform(F,A,B)).
+
+:- begin_load_hook(learn_head).
+*/
+
+grid_rot90(Grid,Rot90):-  rot270(Grid,Rot270),rot180(Rot270,Rot90).
 grid_rot180(Grid,Rot180):- flipV(Grid,Rot90),flipH(Rot90,Rot180).
 grid_rot270(Grid,NewAnyWUpdate):- get_colums(Grid,NewAnyWUpdate),!.
 grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
@@ -232,14 +245,14 @@ grid_flipD(I,O):- grid_size(I,H,V),make_grid(V,H,O),
       (get_color_at(X,Y,I,C),
        nb_set_local_point(Y,X,C,O)))).
 
+%:- end_load_hook(learn_head).
 
 unrotate(UnRot,X,Y):- unrotate_p2(UnRot,Rot),!,must_grid_call(Rot,X,Y).
 
-unrotate_p2r(rot90,rot270).
-unrotate_p2r(double_size,half_size).
+unrotate_p2r(rot90,rot270). unrotate_p2r(double_size,half_size).
 unrotate_p2(X,Y):- unrotate_p2r(X,Y).
 unrotate_p2(X,Y):- unrotate_p2r(Y,X).
-unrotate_p2(X,X).
+unrotate_p2(X,X). %:- rot_p2(X). unrotate_p2(sameR,sameR).
 
 
 nav(s,0,1). nav(e, 1,0). nav(w,-1,0). nav(n,0,-1).
@@ -496,8 +509,9 @@ find_links_objects(How,Obj,[Seen|ScanNext],[BetterSee|WillSee]):-
  once(call(How,Dirs,Obj,Seen)),Dirs\==[],!,
  link_prop(How,Prop),
  better_sdir(Prop,Iv,Dirs,BetterSee),
- /*must_det_ll*/(obj_to_oid(Seen,Iv)),
- /*must_det_ll*/(find_links_objects(How,Obj,ScanNext,WillSee)),!.
+ /*must_det_ll*/obj_to_oid(Seen,Iv),
+ /*must_det_ll*/
+ find_links_objects(How,Obj,ScanNext,WillSee),!.
 find_links_objects(How,Obj,[_|ScanNext],WillSee):- /*must_det_ll*/(find_links_objects(How,Obj,ScanNext,WillSee)),!.
 
 :- dynamic(individuated_cache/3).

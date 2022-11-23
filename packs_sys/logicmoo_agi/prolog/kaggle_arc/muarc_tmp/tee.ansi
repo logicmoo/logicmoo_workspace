@@ -1,8 +1,66 @@
-xterm: no process found
+%~ current_prolog_flag(argv,[])
+%~ ?-webui_start_swish_and_clio.
+%~ mort_error(error(existence_error(procedure,/(nb_setarg,2)),context(/(luser_getval,2),_900932)))
+%~ asserta_if_new((system:term_expansion((_901444:-_901446), _901436, _901438, _901440):-current_prolog_flag(arc_term_expansion, true), nonvar(_901436), compound(_901444), term_expansion_setter((_901444:-_901446), _901438), (_901444:-_901446)=_901502, _901502\==_901438, _901436=_901440, !, nop((print(term_expansion_setter((_901502-->_901438))), nl))), user, (system:term_expansion((_901444:-_901446), _901436, _901438, _901440):-current_prolog_flag(arc_term_expansion, true), nonvar(_901436), compound(_901444), term_expansion_setter((_901444:-_901446), _901438), (_901444:-_901446)=_901502, _901502\==_901438, _901436=_901440, !, nop((print(term_expansion_setter((_901502-->_901438))), nl)))).
+%~ mort_error(error(existence_error(procedure,/(nb_setarg,2)),context(/(luser_getval,2),_918234)))
+%~ asserta_if_new((goal_expansion(_918730, _918732, _918734, _918736):-current_prolog_flag(arc_term_expansion, true), goal_expansion_setter(_918730, _918734), _918730\==_918734, _918732=_918736, !, nop((print(goal_expansion_setter((_918730-->_918734))), nl))), user, (goal_expansion(_918730, _918732, _918734, _918736):-current_prolog_flag(arc_term_expansion, true), goal_expansion_setter(_918730, _918734), _918730\==_918734, _918732=_918736, !, nop((print(goal_expansion_setter((_918730-->_918734))), nl)))).
+% ?- fixup_module_exports_into_from(baseKB,user). 
+% ?- fixup_module_exports_into_from(system,user). 
+[32m% 8,194 inferences, 0.002 CPU in 0.002 seconds (100% CPU, 3971308 Lips)
+[0m%~ mort_error(error(existence_error(procedure,/(nb_setarg,2)),context(/(luser_getval,2),_954240)))
+%~ start(gen_gids).
+%~ mort_error(error(existence_error(procedure,/(nb_setarg,2)),context(/(luser_getval,2),_964062)))
+%~ end(gen_gids).
+[32m% 8,022 inferences, 0.001 CPU in 0.001 seconds (100% CPU, 7305346 Lips)
+[0m[1;31mERROR: /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc.pl:799:
+ERROR:    luser_getval/2: Unknown procedure: nb_setarg/2
+ERROR:      However, there are definitions for:
+ERROR:            nb_setarg/3
+ERROR:            nb_setarg/3
+[0m[31mWarning: /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc.pl:799:
+Warning:    Goal (directive) failed: user:store_grid_size_predictions
+[0m[0m[1m[97m[40m% Type ?- demo. % or press up arrow[49m[0m[21m[0m
+% init_why(before_boot,after('/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/kaggle_arc.pl')).
+%~ asserta_if_new(
+%~    system : term_expansion( Compound:-Compound6,
+%~               Nonvar, Setter_Term_expansion,Expansion) :-
+%~      current_prolog_flag(arc_term_expansion,true) ,
+%~      nonvar(Nonvar) ,
+%~      compound(Compound) ,
+%~      term_expansion_setter((Compound:-_1825122),Setter_Term_expansion) ,
+%~      (Compound:-_1825122)=D1786938_d1786940 ,
+%~      D1786938_d1786940\==Setter_Term_expansion ,
+%~      Nonvar=Expansion ,
+%~      ! ,
+%~      nop((print(term_expansion_setter((D1786938_d1786940-->Setter_Term_expansion))),nl)),
+%~    user,
+%~    system : term_expansion((_1900166:-_1900168),_1900158,Term_expansion,Expansion) :-
+%~      current_prolog_flag(arc_term_expansion,true) ,
+%~      nonvar(_1768008) ,
+%~      compound(_1768016) ,
+%~      term_expansion_setter((_1768016:-_1768018),_1768010) ,
+%~      (_1768016:-_1768018)=_1768068 ,
+%~      _1768068\==_1768010 ,
+%~      _1768008=_1768012 ,
+%~      ! ,
+%~      nop((print(term_expansion_setter((_1768068-->_1768010))),nl)))
+%~ asserta_if_new( goal_expansion(Goal_expansion2,Goal_expansion1,Setter_Goal_expansion,Expansion) :-
+%~                   current_prolog_flag(arc_term_expansion,true) ,
+%~                   goal_expansion_setter(Goal_expansion2,Setter_Goal_expansion) ,
+%~                   Goal_expansion2\==Setter_Goal_expansion ,
+%~                   Goal_expansion1=Expansion ,
+%~                   ! ,
+%~                   nop((print(goal_expansion_setter((Goal_expansion2-->Setter_Goal_expansion))),nl)),
+%~   user,
+%~   goal_expansion(Goal_expansion2,Goal_expansion1,Goal_expansion,Expansion) :-
+%~     current_prolog_flag(arc_term_expansion,true) ,
+%~     goal_expansion_setter(_1917654,_1917658) ,
+%~     _1917654\==_1917658 ,
+%~     _1917656=_1917660 ,
+%~     ! ,
+%~     nop((print(goal_expansion_setter((_1917654-->_1917658))),nl)))
+^CAction (h for help) ? exit (status 4)
+[1;31mERROR: catch/3: Unknown procedure: exit_tee/0
+[0mxterm: no process found
 
-Script done on 2022-11-22 08:41:44-08:00 [COMMAND_EXIT_CODE="0"]
-Script started on 2022-11-22 08:41:45-08:00 [COMMAND="TYPESCRIPT=1 ./Kaggle_arc.sh " TERM="xterm" TTY="/dev/pts/0" COLUMNS="231" LINES="67"]
-ARC_DIR=/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc
-BCMD=cd /opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc ; pwd ; swipl -l kaggle_arc.pl
-^C
-Script done on 2022-11-22 08:41:46-08:00 [COMMAND_EXIT_CODE="130"]
+Script done on 2022-11-22 20:04:52-08:00 [COMMAND_EXIT_CODE="0"]
