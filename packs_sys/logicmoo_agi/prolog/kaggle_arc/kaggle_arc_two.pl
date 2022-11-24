@@ -99,7 +99,7 @@ train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
 train_for_objects_from_1pair1(Dict0,_TestID,Desc,_InA,_OutA,Dict0):- Desc = [_Trn,'o',_N1,'o',_N2], !.
 
 train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
- collapsible_section(debug,train_for_objects_from_1pair1,true,
+ collapsible_section(debug,train_for_objects_from_1pair1,false,
 (maplist(must_det_ll,[
  Desc = [Trn,IsIO1,N1,IsIO2,N2], 
  which_io(IsIO1,IO1),
@@ -253,11 +253,6 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     do_sols_for(Trial,"Taking Test",InVM,TestID,ExampleNum))).
 
     % find indiviuation one each side that creates the equal number of changes
-
-set_target_grid(ExpectedOut):-
-    luser_setval(other_grid,ExpectedOut),
-    grid_size(ExpectedOut,GOH,GOV),
-    luser_setval(other_grid_size,size2D(GOH,GOV)).
 
 
 do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-

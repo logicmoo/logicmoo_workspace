@@ -119,7 +119,7 @@ group_keys(amass).
 group_keys(birth).
 group_keys(color).
 %group_keys(shape).
-group_keys(rotation).
+group_keys(rot2L).
 group_keys(localpoints).
 group_keys(symmetry).
 

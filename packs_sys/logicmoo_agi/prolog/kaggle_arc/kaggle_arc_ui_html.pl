@@ -41,7 +41,7 @@ collapsible_section(Goal):- collapsible_section(object,Goal).
 :- meta_predicate(collapsible_section(+,0)).
 collapsible_section(Type,Goal):-
   invent_header(Goal,Title),
-  collapsible_section(Type,Title,true,Goal).
+  collapsible_section(Type,Title,toplevel,Goal).
 
 print_title(Var):- (var(Var);Var==[]),!.
 print_title([L|List]):- is_list(List), !, print_title(L),write(' '),print_title(List).
@@ -78,17 +78,24 @@ with_tagged(Tag,Goal):-
 title_to_html(Title,HtmlTitle):- with_pp(plain,into_attribute(Title,HtmlTitle)),!.
 
 
-old_write_expandable(Showing,Title,Goal):- (Showing==always; (flag('$old_write_expandable_depth',X,X), X>2)),ignore(ppt(Title)),!,call(Goal).
-old_write_expandable(Showing,Title,Goal):- title_to_html(Title,HtmlTitle),
+old_write_expandable(Showing,Title,Goal):- 
+   setup_call_cleanup(flag('$old_write_expandable_depth',Depth,Depth+1),
+   in_expandable(Showing,Title,Goal),
+   flag('$old_write_expandable_depth',_,Depth)).
+
+in_expandable(Showing,Title,Goal):- Showing==always,!,ignore(ppt(Title)),call(Goal).
+in_expandable(Showing,Title,Goal):- flag('$old_write_expandable_depth',X,X), X>2, in_expandable(always,Title,Goal).
+in_expandable(Showing,Title,Goal):- (Showing==toplevel;Showing==maybe), flag('$old_write_expandable_depth',X,X), X==1,!,in_expandable(true,Title,Goal).
+in_expandable(Showing,Title,Goal):- (Showing==maybe, flag('$old_write_expandable_depth',X,X), X=<2), !, ignore(ppt(Title)),!,in_expandable(true,Title,Goal).
+in_expandable(Showing,Title,Goal):- title_to_html(Title,HtmlTitle),!,
  (Showing == true -> Class=panel_shown; Class=panel_hidden),
- setup_call_cleanup(flag('$old_write_expandable_depth',Depth,Depth+1), setup_call_cleanup(format(
+ setup_call_cleanup(format(
   '<button class="accordion">~w (click to un/expand)</button><div class="~w">',[HtmlTitle,Class]),
   call(Goal),
   format('</div>',[])),
- flag('$old_write_expandable_depth',_,Depth)),
  flush_tee_maybe.
 
-old_write_expandable3(Showing,Title,Goal):- 
+old_in_expandable(Showing,Title,Goal):- 
  on_xf_ignore_flush(ensure_colapable_styles), 
  (Showing -> PX='128'; PX='600'),
  (Showing -> Exp=''; Exp='collapsed-c'),

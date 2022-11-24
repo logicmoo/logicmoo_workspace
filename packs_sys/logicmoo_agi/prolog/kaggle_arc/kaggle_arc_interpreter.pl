@@ -18,12 +18,23 @@ gref_call(P1,In,Out):-
 dref_grid(IIn,Grid):- is_grid(IIn),!,Grid=IIn.
 dref_grid(IIn,Grid):- arg(_,IIn,Grid),is_grid(Grid),!.
 
-grid_call(T,I,O):- plain_var(I),var(O),!,into_grid(_,G),I=G,grid_call(T,G,O).
+grid_call(T,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(T,G,O).
 grid_call(=,I,O):- !, I=O. 
 grid_call(P2,IO,IIOO):- is_plus_split(IO,I,O),!,unplus_split(IIOO,II,OO),grid_call(P2,I,II),grid_call(P2,O,OO).
 grid_call(Nil,I,I):- Nil==[],!. 
 grid_call([H|T],I,O):- nonvar(H), !, grid_call(H,I,M), grid_call(T,M,O).
+
+grid_call(P2,IG,IIOO):- is_grid_group(IG),!, grid_group_call(P2,IG,IIOO).
+%grid_call(T,I,O):- into_p2(T,I,O,P),check_args(P,PP),call(PP).
 grid_call(T,I,O):- call(T,I,O).
+
+
+
+into_p2(P2,I,O,PIO):- atom(P2),!,PIO=..[P2,I,O].
+into_p2(P2,I,O,PIO):- P2=..FArgs,append(FArgs,[I,O],FArgsIO),!,PIO=..FArgsIO.
+
+
+grid_group_call(P2,IG,IIOO):- findall(O,(member(I,IG), object_call(P2,I,O)),List),List\==[],list_to_set(List,IIOO).
 
 :- meta_predicate(object_call(+,+,-)).
 object_call(=,I,O):- !, I=O. 
@@ -303,7 +314,7 @@ back_to_map(Was,Dict,Prev,Grid,Closure,New, Ret):-
 %:- use_module(library(pfc_lib)).
 :- endif.
 
-:- decl_pt(into_grid(+(prefer_grid),-mv(grid))).
+:- decl_pt(into_grids(+(prefer_grid),-mv(grid))).
 into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(prefer_grid),-grid)).
@@ -325,10 +336,10 @@ cast_to_grid(gridOpFn(Grid,OP),GridO,reduce_grid):- !, unreduce_grid(Grid,OP,Gri
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), group_to_grid(Grp,Grid),!.
-cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj=@=Var, !,cast_to_grid(Var,Grid,Closure).
-cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),!,text_to_grid(Text,Grid).
+cast_to_grid(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj\=@=Var, !,cast_to_grid(Var,Grid,Closure).
+cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),text_to_grid(Text,Grid),!.
 cast_to_grid(OID, Grid, (=) ):- atom(OID),oid_to_gridoid(OID,Grid),!.
-cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),!,text_to_grid(Text,Grid).
+cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),text_to_grid(Text,Grid),!.
 % TODO Comment out next line to prefer the line after
 cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
 cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
@@ -679,8 +690,14 @@ one_change(resize(C1, C2), Grid1, Grid2):- plain_var(Grid2), grid_size(Grid1, C1
 */
 
 arc_expand_arg(objFn(X,_),Var,known_object(X,Var)).
+arc_expand_arg(objFn(X),Var,known_object(X,Var)).
 arc_expand_arg(gridFn(X),Var,known_grid(X,Var)).
 arc_expand_arg(groupFn(X),Var,into_group(X,Var)).
+arc_expand_arg(Atom,Var,true):- atom(Atom), arc_expand_atom(Atom,Var), Var\=@=Atom.
+
+arc_expand_atom(X,_):- \+ atom(X),!,fail.
+arc_expand_atom(X,Var):- \+ atom_concat('o_',_,X), known_grid(X,Var),!.
+arc_expand_atom(X,Var):- known_object(X,Var),!.
 
 goal_expansion_query(Goal,Out):- fail,
    compound(Goal), predicate_property(Goal,meta_predicate(_)),!,

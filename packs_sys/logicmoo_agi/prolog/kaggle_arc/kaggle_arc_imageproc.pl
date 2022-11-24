@@ -21,9 +21,6 @@ h_as_v(P2,Grid,Double):- a_as_g(h_as_v0(P2),Grid,Double).
 h_as_v0(P2,I,O):- rot90(I,G90), safe_grid(G90,S90), grid_call(P2,S90,GG90), rot270(GG90,O).
 
 
-into_p2(P2,I,O,PIO):- atom(P2),!,PIO=..[P2,I,O].
-into_p2(P2,I,O,PIO):- P2=..FArgs,append(FArgs,[I,O],FArgsIO),PIO=..FArgsIO.
-
 a_as_g(P2,Group,Double):- is_group(Group),!,into_p2(P2,Group,Double,PIO),override_group(PIO),!.
 a_as_g(P2,I,O):- cast_to_grid(I,II,UnCast),grid_call(P2,II,OO),uncast(I,UnCast,OO,O).
 
@@ -128,8 +125,51 @@ num_objects(G,NO):- compute_shared_indivs(G,GS),length(GS,NO).
 
 make_box(X,_,G):- make_grid(X,X,G).
 
+/*
+?- S=[[1,bg,1],[1,bg,1],[1,1,1]],p2_grow([[sameR,sameR],[sameR,sameR]],S, X),print_grid(X).
+   _____________
+  | T   T T   T |
+  | T   T T   T |
+  | T T T T T T |
+  | T   T T   T |
+  | T   T T   T |
+  | T T T T T T |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯
 
-% S=[[1,2,3],[4,x,6],[7,8,0]],grow([[sameR,sameR],[sameR,sameR]],S, X).
+ S=[[1,bg,1],[1,bg,1],[1,1,1]],
+       p2_grow([[blank(bg),sameR,blank(bg)],[rot270,blank(bg),rot90],[blank(bg),rot180,blank(bg)]],S, X),
+       print_grid(X).
+   ___________________
+  |       T   T       |
+  |       T   T       |
+  |       T T T       |
+  | T T T       T T T |
+  |     T       T     |
+  | T T T       T T T |
+  |       T T T       |
+  |       T   T       |
+  |       T   T       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+S=[[1,bg,1],[1,bg,1],[1,1,1]],
+       p2_grow([[blank(bg),sameR,blank(bg)],[rot270,blur(flipV),rot90],[blank(bg),rot180,blank(bg)]],S, X),
+       print_grid(X).
+   ___________________
+  |       T   T       |
+  |       T   T       |
+  |       T T T       |
+  | T T T T T T T T T |
+  |     T T   T T     |
+  | T T T T T T T T T |
+  |       T T T       |
+  |       T   T       |
+  |       T   T       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+*/
+
+blank(E,G,G1):- grid_size(G,H,V),make_grid(H,V,G1),mapgrid(=(E),G1).
+
 join_cols([],[]).
 join_cols([Grid1,Grid2],Grid):- is_grid(Grid1), !,append_left(Grid1,Grid2,Grid).
 join_cols([Grid|Grids],GridO):- !,join_cols(Grid,Grids,GridO).
@@ -146,12 +186,22 @@ append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),m
 
 append_down(Grid1,Grid2,Grid):- my_append(Grid1,Grid2,Grid).
 
+p2_grow_row([],_,[]).
+p2_grow_row([C1|Row],Grid,GM):- !, call(C1,Grid,G1),p2_grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+p2_grow([],       _  ,[]).
+p2_grow([Row|Rows],Grid,G1GridO):- p2_grow_row(Row,Grid,G1), p2_grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
+
+copy_grid_based_on_color(Cell,G,G1):- \+ is_fg_color(Cell),!,grid_size(G,H,V),make_grid(H,V,G1), mapgrid(=(Cell),G1).
+copy_grid_based_on_color(_,G,G1):- safe_grid(G,G1).
 grow_row([],_,[]).
-grow_row([C1    ],Grid,G1):- !, grid_call(C1,Grid,G1).
-grow_row([C1|Row],Grid,GM):- !, grid_call(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+grow_row([C1|Row],Grid,GM):- !, copy_grid_based_on_color(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
 grow([],       _  ,[]).
-grow([[Self]],Grid,GridO):- !, grid_call(Self,Grid,GridO).
 grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
+
+grow_from_shape(I,O):- grow_from_shape(I,I,O).
+grow_from_shape(Grid,I,O):- grow(Grid,I,O).
+
+
 
 no_run_dsl(GridO,_Self,GridO).
 
@@ -385,11 +435,15 @@ dont_duplicate_term(G,G).
 
 %do_set_all_fg_colors(Color,CPoint,NewCPoint):- is_cpoint(CPoint),CPoint=C-Point,hv_point(_,_,Point),is_fg_color(C),NewCPoint=Color-Point.
 
-blur(Op,G,GG):- blur_or_not(Op,G,GG), is_a_change(G,GG).
-blur_or_not(Op,G0,GG):- into_grid(G0,GD),dont_duplicate_term(GD,G),grid_call(Op,G,GGG),mapgrid(replace_non_fg,GGG,G,GG).
+blur_must_change(Op,G,GG):- blur_or_not(Op,G,GG), is_a_change(G,GG).
 
-replace_non_fg(C,Black,C):- \+ is_fg_color(Black),!.
-replace_non_fg(_,C,C).
+blur(Op,G0,GG):- blur_or_not(Op,G0,GG),!.
+blur_or_not(Op,G0,GG):- into_grid(G0,GD),dont_duplicate_term(GD,G),grid_call(Op,G,GGG),mapgrid(blur_non_bg,GGG,G,GG).
+
+%replace_non_fg(C,Black,C):- \+ is_fg_color(Black),!.
+%blur_non_bg(_,C,C):- \+ is_bg_color(C),!.
+blur_non_bg(C,_,C):- \+ is_bg_color(C),!.
+blur_non_bg(_,C,C).
 
 is_a_change(G,GG):- G=@=GG,!,fail.
 is_a_change(_,_):-!.
@@ -707,15 +761,17 @@ calc_add_points0(OH,OV,Grid,CPoint):- calc_add_point1(OH,OV,Grid,CPoint),!.
 
 calc_add_point1(OH,OV,Grid,C):- is_color(C),!,add_h_v_c(Grid,OH,OV,C).
 calc_add_point1(OH,OV,Grid,Color):- is_color(Color),!, show_call(add_h_v_c(Grid,OH,OV,Color)).
-calc_add_point1(OH,OV,Grid,(Symbol)-C-Point):- nonvar(Symbol), hv_point(H,V,Point),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
-calc_add_point1(OH,OV,Grid,C-Point):- atom(Point),var(C),hv_point(H,V,Point),!,add_offset_h_v_c(Grid,H,V,OH,OV,C).
-calc_add_point1(OH,OV,Grid,_-Point):- point_to_hvc(Point,H,V,C),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
-calc_add_point1(OH,OV,Grid,CPoint):- is_cpoint(CPoint),!,hv_c_value(CPoint,C,H,V),!,add_offset_h_v_c(Grid,H,V,OH,OV,C).
+calc_add_point1(OH,OV,Grid,ColorInt):- integer(ColorInt), color_name(ColorInt,Color),!, add_h_v_c(Grid,OH,OV,Color).
+calc_add_point1(OH,OV,Grid,Color):- var(Color),!, show_call(add_h_v_c(Grid,OH,OV,Color)).
+%calc_add_point1(OH,OV,Grid,(Symbol)-C-Point):- nonvar(C), hv_point(H,V,Point),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
+%calc_add_point1(OH,OV,Grid,Symbol-C-Point):- nonvar(C), hv_point(H,V,Point),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
+%calc_add_point1(OH,OV,Grid,C-Point):- atom(Point),var(C),hv_point(H,V,Point),!,add_offset_h_v_c(Grid,H,V,OH,OV,C).
+%calc_add_point1(OH,OV,Grid,_-Point):- point_to_hvc(Point,H,V,C),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
+%calc_add_point1(OH,OV,Grid,CPoint):- is_cpoint(CPoint),!,hv_c_value(CPoint,C,H,V),!,add_offset_h_v_c(Grid,H,V,OH,OV,C).
 calc_add_point1(OH,OV,Grid,Point):- point_to_hvc(Point,H,V,C),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
 
 
 %calc_add_points(OH,OV,_,Obj):- plain_var(Obj),arcST,trace_or_throw(var_calc_add_points(OH,OV,Obj)).
-calc_add_point1(OH,OV,Grid,ColorInt):- integer(ColorInt), color_name(ColorInt,Color),!, add_h_v_c(Grid,OH,OV,Color).
 %calc_add_points(OH,OV,Grid,Point):- is_nc_point(Point),!, HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,wfg).
 calc_add_point1(OH,OV,Grid,Obj):- trace,globalpoints(Obj,Points),!,maplist(calc_add_point1(OH,OV,Grid),Points).
 %calc_add_points(_OH,_OV,_,obj(_)):-

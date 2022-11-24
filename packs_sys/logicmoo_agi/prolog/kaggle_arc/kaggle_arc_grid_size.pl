@@ -97,6 +97,7 @@ apply_proportional(IH,ratio_of(IH,OH),OH).
 apply_proportional(IH,o_i_swap(ratio_of(OH,IH)),OH).
 %apply_proportional(IH,num(_,_,ratio(Rat)),OH):- nonvar(Rat), OH is IH * Rat, OH is floor(OH).
 
+
 % 2-D Proportionals
 
 proportional_width(W1,W2,How):- W2=@=W1,!, How = equal(W1).
@@ -125,6 +126,87 @@ proportional_size(N1,N2,P):- unused_proportion(N1,N2,P),!.
 proportional_size(N1,N2,num(vals(Vals),+N,ratio(R))):- number(N1),number(N2),!,
   into_vals(N1,N2,Vals), N is N2-N1,
  (calc_ratio(R,N1,N2)-> true ; catch(R is rationalize(N1/N2),_,true)).
+
+
+
+
+
+
+
+
+
+
+with_other_grid(OtherGrid,Goal):- locally(nb_setval(other_grid,OtherGrid),(set_target_grid(OtherGrid),Goal)).
+
+other_grid(_,OtherGrid):- luser_getval(other_grid,OtherGrid),is_grid(OtherGrid),!.
+other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.grid_target, is_grid(OtherGrid),!.
+other_grid(Grid,OtherGrid):- is_other_grid(Grid,OtherGrid),!.
+other_grid(Grid,OtherGrid):- \+ is_grid(Grid),!, into_grid(Grid,ThisGrid),  Grid\==ThisGrid,!,other_grid(ThisGrid,OtherGrid).
+other_grid(In,OtherGrid):- get_current_test(TestID), grid_size_prediction(TestID,In,PH,PV), make_grid(PH,PV,OtherGrid).
+
+:- dynamic(is_decl_other_grid/2).
+ensure_other_grid(ThisGrid,OtherGrid):- is_other_grid(ThisGrid,OtherGrid),!.
+ensure_other_grid(ThisGrid,OtherGrid):- asserta_if_new(is_decl_other_grid(ThisGrid,OtherGrid)).
+
+is_other_grid(ThisGrid,OtherGrid):- is_decl_other_grid(ThisGrid,OtherGrid),!.
+is_other_grid(ThisGrid,OtherGrid):- is_decl_other_grid(OtherGrid,ThisGrid),!.
+is_other_grid(ThisGrid,OtherGrid):-
+  once((kaggle_arc_io(TestID,ExampleNum,IO,ThisGrid), 
+  in_to_out(IO,OI), ignore(ExampleNum \= tst+_), 
+  kaggle_arc_io(TestID,ExampleNum,OI,OtherGrid))).
+
+other_grid_size(_Grid,PH,PV):- luser_getval(other_grid_size,size2D(PH,PV)),!.
+other_grid_size( Grid,PH,PV):- must_det_ll((other_grid(Grid,OtherGrid),grid_size(OtherGrid,PH,PV))).
+other_grid_size(   In,PH,PV):- get_current_test(TestID), grid_size_prediction(TestID,In,PH,PV).
+
+set_target_grid(ExpectedOut):-
+    luser_setval(other_grid,ExpectedOut),
+    grid_size(ExpectedOut,GOH,GOV),
+    luser_setval(other_grid_size,size2D(GOH,GOV)).
+
+with_current_pair(I,O,Goal):-
+  (luser_getval(input_grid,CI)->current_pair(CI,CO);true),
+  ((I=@=CI,O=@=CO) -> call(Goal) ;
+  setup_call_cleanup(set_current_pair(I,O),Goal,
+   set_current_pair(CI,CO))).
+
+  
+
+set_current_pair(I,O):- luser_setval(input_grid,I),luser_setval(output_grid,O),ensure_other_grid(I,O),set_target_grid(O).
+
+current_pair(I,O):- luser_getval(input_grid,I), must_det_ll((other_grid(I,O))).
+
+% test_hint(ratio_between(mass,mass)). %ac0a08a4
+increase_size_by_grid_mass(In,Out):- mass(In,Mass),increase_size(Mass,In,Out).
+% test_hint(ratio_between(unique_color_count,mass)). %ac0a08a4
+increase_size_by_color_count(In,Out):- fg_color_count(In,Size),increase_size(Size,In,Out).
+
+
+
+ratio_between(Unique_color_count,and(Mass,Area)):- !, current_pair(I,O),
+  call(Unique_color_count,I,UCC), ratio_about(Mass,UCC,I,O), ratio_about(Area,UCC,I,O).
+ratio_between(Mass1,Mass2):- current_pair(I,O), call(Mass1,I,UCC), ratio_about(Mass2,UCC,I,O).
+
+ratio_about(square(Area), UCC,I,O):- !, call(Area,I,IA), call(Area,O,OA), n_times(UCC^2,IA,OA).
+ratio_about(Mass, UCC,I,O):-  call(Mass,I,IM), call(Mass,O,OM), n_times(UCC,IM,OM).
+
+test_hint(How,P2):- must_det_ll((current_pair(I,O),call(P2,I,II),call(P2,O,OO))),call(How,II,OO).
+
+test_hint(G):- current_predicate(_,G),!,call(G).
+mass_and_area(P2Mass,P2Area):- test_hint(P2Mass,mass),test_hint(P2Area,area).
+mass_and_area_times(N):- mass_and_area(n_times(N),n_times(N)).
+
+:- use_module(library(clpfd)).
+% each blur effect.. 
+% 6 -> 7 - 12
+%   -> 8 - 24
+%   -> 9 - 48
+%   -> 10 - 96
+grow_less_than_times(N,A,B):- N #>= 1, N #=< 4, MaxB #= A*2^(N-1), MinB #= A+N,  MaxB #> B, B #> MinB.
+n_times(N,A,B):- \+ compound(N),!, B #= N * A.
+n_times(N^2,A,B):- !, B #= N * N * A.
+%n_times(N,A,B):- B #= N * A.
+
 
 :- include(kaggle_arc_footer).
 

@@ -137,7 +137,7 @@ gravity:- test_p2(gravity(4,w)).
 gravity(N,D,G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,gravity(N,D,Grid,GridNew).
 gravity(N,D,G,GR):- var(D),!,ensure_dir(D),gravity(N,D,G,GR).
 gravity(N,D,G,GR):- var(N),!,ensure_int(N),gravity(N,D,G,GR).
-gravity(1,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridNew).
+gravity(1,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridNew),!.
 gravity(N,n,Grid,GridNew):-!,gravity_1_n_0(Grid,GridM),(Grid\=@=GridM->(Nm1 is N-1,gravity(Nm1,n,GridM,GridNew));GridNew=GridM).
 gravity(N,s,Grid,GridNew):-!,flipV(Grid,FlipV),gravity(N,n,FlipV,GridM),flipV(GridM,GridNew).
 gravity(N,w,Grid,GridNew):-!,h_as_v(gravity(N,n),Grid,GridNew).

@@ -64,6 +64,7 @@ is_fg_color(C):- is_color(C),!.
 %is_bg_color(BG):- plain_var(BG),!,fail.
 is_bg_color(BG):- var(BG),!,get_attr(BG,ci,bg(_)),!.
 is_bg_color(C):- bg_sym(BG),C==BG,!.
+is_bg_color(wbg).
 is_bg_color(C):- get_bgc(BG),C==BG,!.
 
 is_real_bg_color(C):- is_bg_color(C),is_real_color(C).

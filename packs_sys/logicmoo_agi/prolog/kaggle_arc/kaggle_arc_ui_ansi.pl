@@ -183,9 +183,8 @@ tersify1(Nil,[]):- Nil == [],!.
 tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
 tersify1(I,groupFn(O,List)):- is_group(I), mapgroup(tersify1,I,List),mapgroup(obj_to_oid,I,OIDs),length(List,N), !,ignore((get_current_test(TestID),is_why_grouped(TestID,N,Why,OIDs),!,O=Why)).
-tersify1(I,Q):- is_object(I),object_glyph_one_color(I,FC), o2g(I,O),!,wots(A,color_print(FC,call(format('"~w"',[O])))),
-   amass(I,M),
-   wots(S,call(write(objFn(A,M)))),atom_string(Q,S).
+
+tersify1(I,Q):- is_object(I),object_dglyphH(I,Q),!.
 tersify1(I,O):- is_map(I), get_kov(objs,I,_),!, O='$VAR'('VM').
 tersify1(I,O):- is_map(I), get_kov(pairs,I,_),!, O='$VAR'('Training').
 
@@ -1343,12 +1342,17 @@ print_grid_ansi(SH,SV,EH,EV,GridII):- make_bg_visible(GridII,GridI),
 %print_rows(List):- maplist(print_g,List),nl.
 %block_colors([(black),(blue),(red),(green),(yellow),'#c0c0c0',(magenta),'#ff8c00',(cyan),'#8b4513']).
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,('#966cb8'),'#ff8c00',(cyan),'#8b4513']):- silver(Silver),!.
-block_colors([('#3a5a3a'),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a','#f47c7c',FG]):- fg_cut(FG), silver(Silver),!.
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a', 9379b4 '#3a5a3a']):- silver(Silver),!.
-named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),(orange),(cyan),(brown),wbg,fg,FG]):- fg_cut(FG).
-named_colors([ (lack),(blue),(red),(green),(yellow),(Silver),(purple),(orange),(cyan),(brown),bg,wfg]):- silver(Silver).
+block_colors([('#4a2a2a'),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),
+                                                                                       '#8b4513','#3a5a3a','#f47c7c','#00000','#ffffff',FG]):- fg_cut(FG), silver(Silver),!.
+named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),   (orange),(cyan), (brown),  wbg,      fg,      bg,      wfg,     FG]):- fg_cut(FG).
+named_colors([ (lack),(blue),(red),(green),(yellow),(Silver),(purple),(orange),(cyan),(brown)]):- silver(Silver).
 named_colors([(lack),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
 named_colors([(lack),(blue),(red),(green),(yellow),(grey),(pink),(orange),(teal),(maroon)]).
+
+test_show_colors:- maplist(show_color,[0,1,2,3,4,5,6,7,8,9,fg,wfg,bg,wbg,black,_],G),
+  print_grid([G]),nl.
+show_color(X,N):- color_name(X,N),write(X),write(=),color_print(X,N),write('  ').
 
 % '#1077f1'
 fg_cut('#b399d4').
@@ -1498,8 +1502,6 @@ nobject_glyph(G,Glyph):- compound_var(G,N),!,nobject_glyph(N,Glyph).
 nobject_glyph(A,Glyph):- atom(A),atom_chars(A,Chars),last(Chars,Glyph),!.
 nobject_glyph(G,Glyph):- term_to_atom(G,A),nobject_glyph(A,Glyph).
 
-
-object_cglyph(G,CGlyph):- color(G,C),object_glyph(G,Glyph),wots(CGlyph,color_print(C,Glyph)).
 
 int2glyph(GN2,Glyph):- quietly(int2glyph0(GN2,Glyph)),!.
 int2glyph(GN,Glyph):- GN > 255, GN2 is GN div 2, int2glyph(GN2,Glyph).

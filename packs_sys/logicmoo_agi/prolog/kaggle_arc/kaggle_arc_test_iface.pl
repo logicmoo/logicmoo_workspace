@@ -211,7 +211,7 @@ menu_goal(Goal):-
    read_pending_codes(user_input,_Ignored2,[]),!.
 
 do_menu_key(-1):- !, arc_assert(wants_exit_menu). 
-do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), arc_assert(wants_exit_menu).
+do_menu_key('Q'):-!,format('~N returning to prolog.. to restart type ?- demo. '), asserta_if_new(wants_exit_menu).
 do_menu_key('?'):- !, write_menu_opts('i').
 do_menu_key('M'):- !, clear_tee, update_changed_files, wdmsg('Recompiled').
 %do_menu_key('W'):- !, set_pair_mode(whole_test).
@@ -354,6 +354,10 @@ next_indivs_mode:- get_indivs_mode(M1),next_indivs_mode(M1,M2),set_indivs_mode(M
 set_indivs_mode(Mode):- luser_setval('$indivs_mode',Mode).
 get_indivs_mode(Mode):- nonvar(Mode),get_indivs_mode(TMode),!,TMode==Mode.
 get_indivs_mode(Mode):- once(luser_getval('$indivs_mode',Mode);next_indivs_mode(Mode,_)).
+with_indivs_mode(Mode,Goal):- 
+  get_indivs_mode(WasMode),
+  setup_call_cleanup(set_indivs_mode(Mode),
+          call(Goal),set_indivs_mode(WasMode)).
 
 :- first_indivs_modes([M1|_]),set_indivs_mode(M1).
 
@@ -415,9 +419,9 @@ test_pairs(TestID,ExampleNum,I,O):- ignore(get_current_test(TestID)), some_curre
 with_test_pairs(TestID,ExampleNum,I,O,P):- 
  forall(test_pairs(TestID,ExampleNum,I,O),
   my_menu_call((ensure_test(TestID),
-    set_example_num(ExampleNum), 
-     call_cleanup(P,flush_tee)))).
-
+    set_example_num(ExampleNum),     
+     set_current_pair(I,O),
+     call_cleanup(with_current_pair(I,O,P),flush_tee)))).
 
 bad:- ig([complete],v(aa4ec2a5)>(trn+0)*in).
 
@@ -1526,7 +1530,12 @@ with_current_test(P1):- get_pair_mode(enire_suite),!,forall(all_tests_current_fi
 with_current_test(P1):- ensure_test(TestID), call(P1,TestID).
 
 first_cmpd_goal(GG,_):- \+ compound(GG),!,fail.
-first_cmpd_goal((G,_),G).
+first_cmpd_goal(forall(G,_),GG):- !, first_cmpd_goal(G,GG).
+first_cmpd_goal(time(G),GG):- !, first_cmpd_goal(G,GG).
+first_cmpd_goal(my_time(G),GG):- !, first_cmpd_goal(G,GG).
+first_cmpd_goal(':'(G,_),GG):- !, first_cmpd_goal(G,GG).
+first_cmpd_goal(forall_count(G,_),GG):- !, first_cmpd_goal(G,GG).
+first_cmpd_goal((G,_),GG):- !, first_cmpd_goal(G,GG).
 first_cmpd_goal(G,G).
 uses_test_id(P1):- current_predicate(M:F/N),functor(P,F,N),
                   \+ \+ predicate_property(M:P,number_of_clauses(_)), 

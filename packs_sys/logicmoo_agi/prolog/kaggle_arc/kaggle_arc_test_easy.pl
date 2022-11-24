@@ -105,13 +105,13 @@ easy_solve_by(_TestID,do_two(C1,C2)):-
 %easy_p2(flip_Once(_)).
 
 %easy_p2(repair_and_select_property([unbind_color(_),now_fill_in_blanks_good],repaired)).
-easy_p2(blur(rot90_blur_flipD)).
-easy_p2(repair_and_select(_How,_M)).
-easy_p2(blur_or_not_least_rot90_x4).
-easy_p2(blur_or_not_least_2(_,_)).
-easy_p2(blur_rot90).
+easy_p2(blur_or_not(rot90_blur_flipD)):- test_hint(mass_and_area(grow_less_than_times(1),'=')).
+easy_p2(repair_and_select(_How,_M)):- test_hint('<',unique_color_count).
+easy_p2(blur_or_not_least_rot90_x4):- test_hint(mass_and_area(grow_less_than_times(4),'=')).
+easy_p2(blur_or_not_least_2(_,_)):- test_hint(mass_and_area(grow_less_than_times(2),'=')).
+easy_p2(blur_rot90):- test_hint(mass_and_area(grow_less_than_times(1),'=')).
 %easy_p2(unbind_and_fill_in_blanks(_Code)).
-easy_p2(simple_todolist([trim_blank_lines,grow_2])).
+easy_p2(simple_todolist([trim_blank_lines,grow_2])):- test_hint(mass_and_area('>',(\=))).
 %easy_p2(simple_todolist(_)).
 easy_p2(P2):- easy0(_,P2).
 /*
@@ -124,7 +124,7 @@ easy_p2(do_simple_todolist(List)):- List = [C0,C1,C2,C3,C4,C5],
 do_two(C1,C2,I,O):- do_simple_todolist([C1,C2],I,O). 
 %easy_p2(two_ops(repair_in_vm(repair_repeats(black)),get(repaired))).
 
-rot90_blur_flipD(I,O):- h_as_v(blur(flipD),I,O).
+rot90_blur_flipD(I,O):- h_as_v(blur_or_not(flipD),I,O).
 
 expect_p2:attr_unify_hook(_,_).
 
@@ -213,6 +213,7 @@ induce_from_training_pair(P2,Ex1,II1,OO1):-
       ignore(( warn_and_fail_on_bad_p2(cyan,orange,checking_training(P2,Ex1),P2,II1,OO1)))))).
 
 warn_and_fail_on_bad_p2(Cyan,Orange,Ex1,P2,I,Expect):- 
+ collapsible_section((
  \+ \+ with_io_training_context(I,Expect,   
  ((put_attr(M,expect_p2,Expect),
    (grid_call(P2,I,M)->OurOut=M;OurOut=I),
@@ -221,7 +222,7 @@ warn_and_fail_on_bad_p2(Cyan,Orange,Ex1,P2,I,Expect):-
      -> banner_grids(Cyan,I,pass_p2(P2,Ex1),OurOut,"MATCH") 
      ; (banner_grids(Orange,OurOut,fail(Errors,P2,Ex1),Expect,"MISMATCH"),
         banner_grids(red,I,fail(Errors,P2,Ex1),OurOut,"WRONG"),
-        nop(show_sameness_or_lameness(Cyan,Orange,warn_and_fail_on_bad_p2(P2,Ex1),OurOut,Expect,Errors)),!,fail))))).
+        nop(show_sameness_or_lameness(Cyan,Orange,warn_and_fail_on_bad_p2(P2,Ex1),OurOut,Expect,Errors)),!,fail))))))).
      
 
 
@@ -232,9 +233,10 @@ induce_from_training_pair(P2,Ex1,II1,OO1):-
       grid_call(P2,II1,OOO1),print_side_by_side_io(checking_training(P2,Ex1),II1,OOO1)))),!.
 */
 easy_solve_whole_test(TestID):- 
-  ensure_test(TestID),
-  arcdbg_info(green,"BEGIN_TEST"=TestID),!,
-  my_time(easy_solve_whole_test1(TestID)).
+  forall_count(ensure_test(TestID),
+  (arcdbg_info(green,"BEGIN_TEST"=TestID),!,
+   call_cleanup(my_time(easy_solve_whole_test1(TestID)),force_full_tee))).
+
 easy_solve_whole_test1(TestID):- 
   (easy_solve_training(TestID,P2)*-> 
     (easy_solve_testing(TestID,P2)*-> arcdbg_info(green,success(TestID,P2)) ; arcdbg_info(yellow,didnt_work(TestID,P2)))
@@ -249,10 +251,10 @@ easy_solve_training(TestID,P2):-
    kaggle_arc(TestID,trn+Some,TI1,TO1), 
    easy_solve_by(TestID,P2),
    pp(?-easy_solve_training(TestID,P2)),
-   try_p2_verbose(P2,TI1,TO1),
+   collapsible_section((try_p2_verbose(P2,TI1,TO1),
    dif(Other,Some), 
    kaggle_arc(TestID,trn+Other,TI2,TO2),
-   warn_and_fail_on_bad_p2(cyan,orange,generalness,P2,TI2,TO2))).
+   warn_and_fail_on_bad_p2(cyan,orange,generalness,P2,TI2,TO2))))).
 
 easy_solve_testing(TestID,P2):- 
    easy_solve_by(TestID,P2),
@@ -261,7 +263,7 @@ easy_solve_testing(TestID,P2):-
    warn_and_fail_on_bad_p2(green,red,final_test,P2,EI,EO),!.
 
 :- meta_predicate(with_io_training_context(+,+,0)).
-with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.grid_o  =@=I),!, set(PrevVM.grid_target)=O, call(G).
+with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.grid_o  =@=I),!, set(PrevVM.grid_target)=O, with_current_pair(I,O,G).
 with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.grid_o \=@=I),!,
  call_cleanup(with_io_training_context1(I,O,G),set_vm(PrevVM)),!.
 with_io_training_context(I,O,G):- with_io_training_context1(I,O,G).
@@ -269,39 +271,54 @@ with_io_training_context(I,O,G):- with_io_training_context1(I,O,G).
 with_io_training_context1(I,O,G):- 
   %get_current_test(TestID),
   %kaggle_arc(TestID,ExampleNum,I,O),
-  grid_to_tid(I,ID), into_fti(ID,in_out,I,VM),
-  set(VM.grid)=I,
-  set(VM.grid_target)=O,
-  set_vm(VM),
-  call(G).
+ with_current_pair(I,O,
+  (grid_to_tid(I,ID), into_fti(ID,in_out,I,VM),
+   set(VM.grid)=I,
+   set(VM.grid_target)=O,
+   set_vm(VM),
+   call(G))).
 
 
-
+gravity_s_1(I,O):- gravity(1,s,I,O),!.
 ground_enough(P2):- ground(P2),!.
 ground_enough(P2):- compound(P2),arg(1,P2,E),ground_enough(E),!.
 
-if_hint(_).
 %easy0(X):- easy_sol(X).
 easy0(_,=).
-easy0(0,trim_hv_repeats).
-easy0(0,trim_to_rect).
+easy0(0,trim_hv_repeats):- test_hint(mass_and_area('<','<')).
+easy0(0,trim_to_rect):- test_hint(mass_and_area(ignore_equal,'<')).
 
-easy0(1,trim_blank_lines).
-easy0(1,gravity(s,1)):- if_hint(mass(i)==mass(o)).
+easy0(1,trim_blank_lines):- test_hint(mass_and_area(ignore_equal,'<')).
+easy0(1,gravity_s_1):- test_hint(mass_and_area('=','=')).
 
-easy0(2,flip_Once(_)).
-%easy0(3,swap_two_colors(_,_)).
-easy0(2,remove_color(green)).
-easy0(4,blur_flipV).
-easy0(4,blur_or_not_least_2(flipV,flipH)).
-easy0(5,increase_size_by_grid_mass). %ac0a08a4
-easy0(5,increase_size_by_color_count). %ac0a08a4
-easy0(5,grow_4):- if_hint(mass(i)*4==mass(o)).% 3af2c5a8
-easy0(5,grow_2). % 963e52fc
-easy0(5,grow_flip_2). % 963e52fc
-easy0(5,double_size).
-easy0(5,increase_size(N)):- if_hint(mass(i)*N==mass(o)), ignore(N=4).
+easy0(2,flip_Once(_)):- test_hint(mass_and_area('=','=')).
+%easy0(3,maybe_subst_fg_color(_,_)).
+easy0(2,remove_color(green)):- test_hint('<',mass), test_hint('<',unique_color_count).
+easy0(2,maybe_subst_fg_color(_,_)):-  test_hint(mass_and_area('=','=')).
+
+%unique_colors( test_hint('=',unique_color_count),test_hint('\=',unique_colors).
+
+easy0(4,blur_flipV):- test_hint(mass_and_area(grow_less_than_times(1),'=')).
+easy0(4,blur_or_not_least_2(flipV,flipH)):- test_hint(mass_and_area(grow_less_than_times(2),'=')).
+
+easy0(5,increase_size_by_grid_mass):- test_hint(ratio_between(mass,square(area))). %ac0a08a4
+easy0(5,grow_from_shape):- test_hint(ratio_between(mass,square(mass))). %007bbfb7
+easy0(5,increase_size_by_color_count):- test_hint(ratio_between(unique_color_count,and(square(mass),square(area)))). %ac0a08a4
+easy0(5,grow_4):- test_hint(mass_and_area_times(4)).% 3af2c5a8
+easy0(5,grow_2):- test_hint(mass_and_area_times(2)). % 963e52fc
+easy0(5,grow_flip_2):- test_hint(mass_and_area_times(2)). % 963e52fc
+easy0(5,double_size):- test_hint(n_times(2),mass).
+easy0(5,increase_size(N)):- test_hint(mass_and_area_times(N)), ignore(N=4).
 %easy0(5,crop_by(_)).
+
+maybe_subst_fg_color(X,Y,I,O):- unique_fg_colors_pos(I,IC),unique_fg_colors_pos(O,OC), 
+   member(X,IC), once(var(O);\+ member(X,OC)),
+   member(Y,OC), \+ member(Y,IC),
+   swap_colors(X,Y,I,O).
+
+%unique_colors_of(In,Blue):- unique_colors(In,Colors),member(Blue,Colors),is_real_color(Blue).
+unique_fg_colors_pos(I,IC):- var(I),!,available_fg_colors(IC).
+unique_fg_colors_pos(I,IC):- unique_colors(I,ICB),delete(ICB,black,IC).
 
 simple_todolist(List,I,OO):- nonvar(List),!, do_simple_todolist(List,I,OO).
 simple_todolist(List,I,OO):- ignore(get_attr(OO,expect_p2,O)),nonvar(O),!,simple_todolist(List,I,O).
@@ -363,14 +380,8 @@ fits_grid(O,_):- var(O),!.
 fits_grid(O,I1):-O=@=I1.
 
 
-
-% ac0a08a4
-increase_size_by_grid_mass(In,Out):- mass(In,Mass),increase_size(Mass,In,Out).
-%b91ae062
-increase_size_by_color_count(In,Out):- fg_color_count(In,Size),increase_size(Size,In,Out).
-
-blur_rot90(I,O):- duplicate_term(I,II), unbind_color(red,II,M), blur(rot90,M,O).
-blur_flipV(I,O):- duplicate_term(I,II), blur(flipV,II,O).
+blur_rot90(I,O):- duplicate_term(I,II), unbind_color(red,II,M), blur_or_not(rot90,M,O).
+blur_flipV(I,O):- duplicate_term(I,II), blur_or_not(flipV,II,O).
 
 blur_or_not_least_2(FlipV,Rot180,I,O):- 
   %blur_or_not_least_pair(FlipV,Rot180),
@@ -410,13 +421,8 @@ crop_by(HH/H,In,Out):- grid_size(In,H,V),between(1,H,HH),HH<H,clip(1,1,HH,V,In,O
 grow_4(In,Out):- flipV(In,FlipV),append(In,FlipV,Left),flipH(Left,Right),append_left(Left,Right,Out).
 grow_2(In,Out):- append_left(In,In,Out).
 grow_flip_2(In,Out):- flipH(In,FlipH),append_left(In,FlipH,Out).
-swap_two_colors(Blue,CurrentColor,In,Out):- 
-  % enum_fg_colors(Blue),
-   unique_colors_of(In,Blue),
-   enum_fg_colors(CurrentColor),CurrentColor\==Blue, swap_colors(Blue,CurrentColor,In,Out).
 shrink_grid(I,O):- grid_to_norm(I,_,O),!.
 
-unique_colors_of(In,Blue):- unique_colors(In,Colors),member(Blue,Colors),is_real_color(Blue).
 
 
 :- retractall(muarc_tmp:test_info_cache/2).

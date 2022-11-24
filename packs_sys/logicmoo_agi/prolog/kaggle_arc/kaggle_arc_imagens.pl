@@ -116,7 +116,7 @@ the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 the_hammer(Color,ColorComplex):- 
   ColorComplex = obj([amass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
-  Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rotation(sameR), loc2D(2, 5), 
+  Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rot2L(sameR), loc2D(2, 5), 
   changes([]), iz(rectangle), iz(hammer), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).

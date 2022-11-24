@@ -710,23 +710,6 @@ grid_vm(G,VM):- into_grid(G,Grid),grid_to_gid(Grid,GID),
      set(VM.grid_target) = Grid2, 
      nb_setval(GID,VM))).
 
-with_other_grid(OtherGrid,Goal):- locally(nb_setval(other_grid,OtherGrid),(set_target_grid(OtherGrid),Goal)).
-other_grid(_,OtherGrid):- luser_getval(other_grid,OtherGrid),is_grid(OtherGrid),!.
-other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.grid_target, is_grid(OtherGrid),!.
-other_grid(Grid,OtherGrid):- is_other_grid(Grid,OtherGrid),!.
-other_grid(Grid,OtherGrid):- \+ is_grid(Grid),!, into_grid(Grid,ThisGrid),  Grid\==ThisGrid,!,other_grid(ThisGrid,OtherGrid).
-
-:- dynamic(is_decl_other_grid/2).
-ensure_other_grid(ThisGrid,OtherGrid):- is_other_grid(ThisGrid,OtherGrid),!.
-ensure_other_grid(ThisGrid,OtherGrid):- asserta_if_new(is_decl_other_grid(ThisGrid,OtherGrid)).
-
-is_other_grid(ThisGrid,OtherGrid):- is_decl_other_grid(ThisGrid,OtherGrid),!.
-is_other_grid(ThisGrid,OtherGrid):- is_decl_other_grid(OtherGrid,ThisGrid),!.
-is_other_grid(ThisGrid,OtherGrid):-
-  once((kaggle_arc_io(TestID,ExampleNum,IO,ThisGrid), 
-  in_to_out(IO,OI), ignore(ExampleNum \= tst+_), 
-  kaggle_arc_io(TestID,ExampleNum,OI,OtherGrid))).
-
 in_to_out(in,out).
 in_to_out(out,in).
 

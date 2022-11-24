@@ -47,6 +47,14 @@ get_fill_points2(Grid,FillPoints):-
 maybe_make_bg_visible(In,Grid):- make_bg_visible(In,Grid),!,In\=@=Grid.
 
 make_bg_visible(In,Grid):- duplicate_term(In,In0),subst001(In0,blue,'#6666FF',M),make_bg_visible_b(M,Grid).
+/*
+make_bg_visible(In,Grid):- duplicate_term(In,In0),
+  subst001(In0,blue,'#6666ff',M0),
+  %subst001(M0,black,'#5e5656',M1),
+    subst001(M0,wfg,'#888888',M2),subst001(M2,wbg,  '#2F049C',M3),
+     subst001(M3,fg,'#ffffff',M4),subst001(M4,bg,   '#101030',M5),
+  make_bg_visible_b(M5,Grid).
+*/
 make_bg_visible_b(In,Grid):- is_grid(In),!,mapgrid(make_bg_visible_c,In,Grid).
 make_bg_visible_b(In,Grid):- is_list(In),!,maplist(make_bg_visible_b,In,Grid).
 make_bg_visible_b(In,Grid):- var(In),!,Grid=In.
