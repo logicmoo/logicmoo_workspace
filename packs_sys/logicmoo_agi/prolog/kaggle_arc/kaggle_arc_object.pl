@@ -223,7 +223,7 @@ zero_one_more(_,[]).
 % [1,2,2,3]=12.
 % [1,2,3]=12.
 
-to_global_coord(H,LH,OH,GH):- max_min(LH,OH,Max,_Min), GH is  floor((H-1)*OH/Max)+1.
+to_global_coord(H,LH,OH,GH/Min):- max_min(LH,OH,Max,Min), GH is  floor((H-1)*OH/Max)+1.
 
 :- style_check(+singleton).
 make_indiv_object_s(GID,GH,GV,Overrides,GPoints,ObjO):- 
@@ -473,12 +473,12 @@ obk_key(A,92):- arg(_,A,L), is_list(L).
 obk_key(A,91):- arg(_,A,L), number(L).
 obk_key(_,80). 
 
-priority("bckgrnd",0).
-priority("point",0).
-priority(A,10):- atom_contains(A,")").
+priority(Var,20):- var(Var),!.
+priority("bckgrnd",0):-!.
+priority("point",0):-!.
+priority(T,10):- term_to_atom(T,A),atom_contains(A,")"),!.
 priority(_,20).
-longer_strings(R,A,B):- string(A),string(B),priority(A,PA),priority(B,PB),atom_length(A,AL),atom_length(B,BL),compare(R,PA+AL+A,PB+BL+B).
-longer_strings(R,A,B):- compare(R,A,B).
+longer_strings(R,A,B):- priority(A,PA),priority(B,PB),display_length(A,AL),display_length(B,BL),compare(R,PA+AL+A,PB+BL+B).
 
 
 add_shape_info(Info,I,M):- add_shape_info0(Info,I,M),!.
@@ -612,7 +612,7 @@ iv_for(L,Iv):- copy_term(L,CT,_),numbervars(CT,0,_,[attvar(bind),singletons(true
 
 obj_iv(Obj,Iv):- indv_u_props(Obj,L),iv_for(L,Iv).
 
-obj_to_oid(Obj,OID):-  atom(Obj),atom_length(Obj,L),L>5,Obj=OID,!.
+obj_to_oid(Obj,OID):-  atom(Obj),display_length(Obj,L),L>5,Obj=OID,!.
 obj_to_oid(Obj,OID):-  oid_glyph_object(OID,_,Obj),!.
 obj_to_oid(I,X):- var_check(I,obj_to_oid(I,X))*->!;indv_props(I,L),member(obj_to_oid(X),L).
 obj_to_oid(Obj,OID):- assert_object_oid(_,Obj,_Glyph,OID),!.
@@ -629,7 +629,7 @@ tid_to_gid(TID,GID):- is_grid(TID),!,grid_to_gid(TID,GID).
 tid_to_gid(TID,GID):- var(TID),!,current_gid(GID).
 tid_to_gid(TID,GID):- tid_to_gids(TID,GID),!.
 
-%o2g_f(Obj,Glyph):-  atom(Obj),atom_length(Obj,1),Obj=Glyph,!.
+%o2g_f(Obj,Glyph):-  atom(Obj),display_length(Obj,1),Obj=Glyph,!.
 o2g_f(Obj,Glyph):- oid_glyph_object(_,Glyph,Obj),!.
 o2g_f(Obj,Glyph):- assert_object_oid(_,Obj,Glyph,_OID).
 
@@ -1540,33 +1540,57 @@ iz_symmetry(GridIn,R):-
   (flipSym_checks(SN,GridIn)*->R=symmetry(SN);R=symmetry(none)).
 
 symmetric_types(Any,QQ):- into_grid(Any,Grid), 
-  findall(Q,(rot_p(Q),flipSym_checks(Q,Grid)),QQ).
+  findall(Q,(flipSym_checks(Q,Grid)),QQ).
+/*
+symmetric_types(Any,QQ):- into_grid(Any,Grid), 
+  findall(Q,iz_symmetry(Grid,Q),QQ), QQ\==[],!.
+*/
 
 :- meta_predicate(flipSym(-,+)).
-flipSym(Rot90,Grid):- \+ground(Rot90),!,rot_p_plus_full(Rot90),flipSym(Rot90,Grid).
-flipSym(  full,Grid):- flipSym(flipH,Grid),flipSym(flipV,Grid), flipSym(rot90,Grid),!.
-flipSym(sym_hv,Grid):- flipSym(flipH,Grid),flipSym(flipV,Grid).
-flipSym(Rot90,Grid):-  full \== Rot90,sym_hv \== Rot90, grid_call_unbound_p1(rot_p2,Rot90,Grid,LocalGridM),Grid=@=LocalGridM.
 
+  
+
+
+%then_sym(Dif,I,O):- flipSym(Dif,I),!,I=O.
+
+
+%flipSym(Rot90,Grid):- (flipSym(flipH,Grid),flipSym(flipV,Grid)),   (flipSym(rot90,Grid) -> (Rot90=full ; Rot90 = sym_hv) ; Rot90 = sym_hv).
+flipSym(Rot90,Obj):- into_grid(Obj,Grid),
+                     (var(Rot90)->rot_p_plus_trim(Rot90);true),
+                     once((grid_call(Rot90,Grid,LocalGridM),!,Grid=@=LocalGridM)).
+%flipSym3(sym_hv,Grid):- !, flipSym3(flipH,Grid),flipSym3(flipV,Grid).
+%flipSym3(  full,Grid):- !, flipSym3(rot90,Grid),flipSym3(sym_hv,Grid).
+%flipSym( Rot90,Grid):-  grid_call_unbound_p1(rot_p2,Rot90,Grid,LocalGridM),!,Grid=@=LocalGridM.
+%flipSym3( Rot90,Grid):-  grid_call(Rot90,Grid,LocalGridM),!,Grid=@=LocalGridM.
+
+/*
 grid_call_unbound_p1(P1,Rot90,GridIn,GridOut):- var(Rot90),!,call(P1,Rot90),grid_call_unbound_p1(P1,Rot90,GridIn,GridOut).
-grid_call_unbound_p1(P1,and(A,B),GridIn,GridOut):- !, grid_call_unbound_p1(P1,A,GridIn,GridM), grid_call_unbound_p1(P1,B,GridM,GridOut).
+grid_call_unbound_p1(P1,alter_and_p1(A,B),GridIn,GridOut):- !, grid_call(A,GridIn,GridM), grid_call_unbound_p1(P1,B,GridM,GridOut).
 grid_call_unbound_p1(P1,[A],GridIn,GridOut):- !, grid_call_unbound_p1(P1,A,GridIn,GridOut).
 grid_call_unbound_p1(P1,[A|B],GridIn,GridOut):- !, grid_call_unbound_p1(P1,A,GridIn,GridM), grid_call_unbound_p1(P1,B,GridM,GridOut).
+*/
 grid_call_unbound_p1(_P1,Call,GridIn,GridOut):- grid_call(Call,GridIn,GridOut).
 
 trim_topside_v(G,GG):- arg(_,v([],[_],[_,_]),L),arg(_,v([],[_],[_,_]),R),append([L,GG,R],G),flipSym_checks(flipV,GG),!.
 trim_topside_v(G,G).
 
-rot_p_plus_full(full).
-rot_p_plus_full(sym_hv).
-rot_p_plus_full(P):- rot_p(P).
+rot_p_plus_trim(alter_and_p1(trim_to_rect,P)):- rot_p_plus_full(P).
+rot_p_plus_trim(alter_and_p1(trim_outside,P)):-  rot_p_plus_full(P).
+rot_p_plus_trim(when_p1(P)):- rot_p_plus_full(P).
 
-rot_p(and(maybe_trim_outside,P)):- rot_p2(P).
-rot_p(and(maybe_trim_to_rect,P)):- rot_p2(P).
-rot_p(P):- rot_p2(P).
+%alter_and_p1(A,B,I,O):- grid_call_alters(A,I,M), grid_call(B,M,O).
+alter_and_p1(A,B,I,O):- grid_call(A,I,M),!,I\=@=M, when_p1(B,M,O).
+when_p1(full,I,O):- !, when_p1(rot90,I,O),!,when_p1(sym_hv,I,O).
+when_p1(sym_hv,I,O):- !, when_p1(flipH,I,O),!,when_p1(flipV,I,O).
+when_p1(R,I,O):- grid_call(R,I,O),I=@=O.
 
-rot_p2(flipDHV). rot_p2(flipDH). rot_p2(flipDV). rot_p2(flipD). 
-rot_p2(rot90). rot_p2(flipH). rot_p2(flipV). rot_p2(rot180). rot_p2(rot270).
+rot_p_plus_full(full). rot_p_plus_full(sym_hv). 
+rot_p_plus_full(P):- rot_p2(P).
+
+rot_p2(flipD). rot_p2(rot90). rot_p2(rot270). 
+rot_p2(flipH). rot_p2(flipV). rot_p2(rot180). 
+rot_p2(flipDH). rot_p2(flipDV). rot_p2(flipDHV). 
+
 
 maybe_trim_to_rect(G,GG):- trim_to_rect(G,GG),!,G\=@=GG.
 maybe_trim_outside(G,GG):- trim_outside(G,GG),!,G\=@=GG.

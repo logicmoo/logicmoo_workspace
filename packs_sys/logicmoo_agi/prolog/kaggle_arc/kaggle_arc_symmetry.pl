@@ -687,15 +687,16 @@ diff_repaired(RepairedResult,VM):-
   localpoints_include_bg(RepairedResult,RepairedPoints),
   intersection(OriginalPoints,RepairedPoints,Unchanged,NeededChanged,ChangedPoints),  
   H = VM.h, V = VM.v,
-  set_vm_obj(unchanged,[iz(image)],Unchanged),
-  set_vm_obj(original,[iz(image),iz(hidden)],OriginalPoints),
-  set_vm_obj(repaired,[iz(image),iz(always_keep)],RepairedPoints),
-  set_vm_obj(neededChanged,[iz(image),iz(hidden),iz(shaped),iz(always_keep)],NeededChanged),
-  set_vm_obj(changedUntrimmed,[iz(image),iz(always_keep)],ChangedPoints),
+  IDR = [iz(image),iz(dont_reduce)],
+  set_vm_obj(unchanged,IDR,Unchanged),
+  set_vm_obj(original,[iz(hidden)|IDR],OriginalPoints),
+  set_vm_obj(repaired,[iz(always_keep)|IDR],RepairedPoints),
+  set_vm_obj(neededChanged,[iz(hidden),iz(shaped),iz(always_keep)|IDR],NeededChanged),
+  set_vm_obj(changedUntrimmed,[iz(always_keep)|IDR],ChangedPoints),
   points_to_grid(H,V,ChangedPoints,Changed),
   trim_to_rect(Changed,TrimChangedG),
   localpoints_include_bg(TrimChangedG,TrimChangedPoints),
-  set_vm_obj(changed,[iz(image),iz(always_keep)],TrimChangedPoints))).
+  set_vm_obj(changed,[iz(always_keep)|IDR],TrimChangedPoints))).
 
 
 column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row),!. 

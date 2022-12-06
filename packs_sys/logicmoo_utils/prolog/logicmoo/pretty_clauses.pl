@@ -1322,7 +1322,10 @@ toplevel_pp(ansi).
 %toplevel_pp(html_pre):- 
 %in_pp(html_pre):- on_x_log_fail(httpd_wrapper:http_current_request(_)).
 
-display_length(X,L):- wots(S,display(X)),atom_length(S,L),!.
+%display_length(X,L):- wots(S,display(X)),atom_length(S,L),!.
+display_length(S,L):- atom(S),!, atom_length(S,L).
+display_length(S,L):- string(S),!, atom_length(S,L).
+display_length(I,L):- with_output_to(string(S),display(I)), atom_length(S,L).
 
 
 

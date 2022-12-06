@@ -1,5 +1,5 @@
 
-
+:- enable_arc_expansion.
 
 make_training(TestID,VMO):- 
  %make_fti(_GH,_GV,TestID,_Grid,_Sofar,_Reserved,_Options,_Points,ArgVM),
@@ -27,7 +27,8 @@ train_test(TestID):- with_pair_mode(whole_test,train_whole_test(TestID)).
 train_whole_test(TestID):- 
   clear_training(TestID),
   compile_and_save_test(TestID),
-  train_test(TestID,train_using_oo_ii_io).
+  %train_test(TestID,train_using_oo_ii_io).
+  train_test(TestID,train_using_io).
 train_test(TestID,P2):-   
   print_testinfo(TestID),
   flag(indiv,_,0),
@@ -64,13 +65,14 @@ train_only_from_pairs:- notrace(get_current_test(TestID)), train_only_from_pairs
 
 train_only_from_pairs(TestID):- clear_training(TestID), train_test(TestID,train_using_io).
 
-train_using_io(TestID,DictIn,DictOut):- train_using_io(TestID,trn,0,DictIn,DictOut).
-train_using_io(TestID,Trn,N1,DictIn,DictOut):- 
+train_using_io(TestID,DictIn,DictOut):- train_using_io(TestID,trn,0,DictIn,DictOut),!.
+train_using_io(TestID,Trn,N1,DictIn,DictOut):-  
   kaggle_arc(TestID,(Trn+N1),In,Out),!,
-  detect_pair_hints(TestID,(Trn+N1),In,Out),
-  with_other_grid(Out,train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictMid)),
+  must_det_ll((
+  %detect_pair_hints(TestID,(Trn+N1),In,Out),
+  train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictMid),
   N2 is N1 + 1,
-  train_using_io(TestID,Trn,N2,DictMid,DictOut).
+  train_using_io(TestID,Trn,N2,DictMid,DictOut))).
 train_using_io(_TestID,_Trn,_,DictInOut,DictInOut).
 
 %:- thread_local(keep_going/0).
@@ -92,53 +94,57 @@ train_for_objects_from_pair_with_mono(Dict0,TestID,Desc,In,Out,Dict9):-
   nop(train_for_objects_from_1pair(Dict1,TestID,MonoDesc,MonoIn,MonoOut,Dict9)),!,
    ignore(Dict1=Dict9))),!.
 
+cs(G):- call(G).
+%cs(G):- collapsible_section(debug,train_for_objects_from_1pair1,false,G).
+
 train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
   locally(set_prolog_flag(gc,true),
     train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1)).
 
 train_for_objects_from_1pair1(Dict0,_TestID,Desc,_InA,_OutA,Dict0):- Desc = [_Trn,'o',_N1,'o',_N2], !.
 
-train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
- collapsible_section(debug,train_for_objects_from_1pair1,false,
-(maplist(must_det_ll,[
- Desc = [Trn,IsIO1,N1,IsIO2,N2], 
- which_io(IsIO1,IO1),
- which_io(IsIO2,IO2),
- atomic_list_concat([IO1,IO2],'_',ModeIn),
- atomic_list_concat([IO2,IO1],'_',ModeOut),
- atom_concat(IO1,N1,ION1),
- atom_concat(IO2,N2,ION2),
- atomic_list_concat([ION1,ION2],'_',ExampleNum),
- pp([train_for_objects_from_1pair1=ExampleNum,left=ION1,right=ION2]),
- garbage_collect,
-  Dict0=Dict1,
-   format('~N dict= '), pp(Dict0),
 
-   %get_map_pairs(Dict0,_Type,Pairs),
-   %list_to_rbtree_safe(Pairs,InVM),
-   into_grid(InA,In), into_grid(OutA,Out),!,
-   name_the_pair(TestID,ExampleNum,In,Out,PairName),
- 	 grid_size(In,IH,IV), grid_size(Out,OH,OV),
-	 ignore((IH+IV \== OH+OV , writeln(io(size2D(IH,IV)->size2D(OH,OV))))),
-   
-   into_fti(TestID>(Trn+N1)*IO1,ModeIn,In,InVM),!,
-   into_fti(TestID>(Trn+N2)*IO2,ModeOut,Out,OutVM)]),!,
+train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
+ must_det_ll((
+   Desc = [Trn,IsIO1,N1,IsIO2,N2], 
+   which_io(IsIO1,IO1),
+   which_io(IsIO2,IO2),
+   atomic_list_concat([IO1,IO2],'_',ModeIn),
+   atomic_list_concat([IO2,IO1],'_',ModeOut),
+   atom_concat(IO1,N1,ION1),
+   atom_concat(IO2,N2,ION2),
+   atomic_list_concat([ION1,ION2],'_',ExampleNum),
+ pp([train_for_objects_from_1pair1=ExampleNum,left=ION1,right=ION2]),
+ 
+   %must_det_ll((%
+   %garbage_collect,
+    Dict0=Dict1,
+    format('~N dict= '), pp(Dict0),
+    
+    %get_map_pairs(Dict0,_Type,Pairs),
+    %list_to_rbtree_safe(Pairs,InVM),
+    into_grid(InA,In), into_grid(OutA,Out),!,
+    name_the_pair(TestID,ExampleNum,In,Out,PairName),
+    grid_size(In,IH,IV), grid_size(Out,OH,OV),
+    ignore((IH+IV \== OH+OV , writeln(io(size2D(IH,IV)->size2D(OH,OV))))),
+    
+    into_fti(TestID>(Trn+N1)*IO1,ModeIn,In,InVM),!,
+    into_fti(TestID>(Trn+N2)*IO2,ModeOut,Out,OutVM),!,
 
    %InVM.compare=OutVM, 
    set(InVM.grid_target)=Out,
    %OutVM.compare=InVM, 
    set(OutVM.grid_target)=In,
-  maplist(must_det_ll,[
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
-  individuate_c(InVM),!,
-  individuate_c(OutVM)]),!,
+   individuate_c(InVM),!,
+   individuate_c(OutVM),!,
 
-  InC = InVM.objs,
-  OutC = OutVM.objs,
+   InC = InVM.objs,
+   OutC = OutVM.objs,
   %print_info(InC),
   %print_info(OutC),
   %wdmsg(InC=OutC),
-  maplist(must_det_ll,[
+  
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   /*add_shape_lib(pair,RetainedIn),
   % add_shape_lib(pair,RetainedOut),
@@ -150,21 +156,17 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
   max_min(IH,OH,IOH,_), max_min(IV,OV,IOV,_),
   luser_setval(no_rdot,true),
   ((Removed==Added, Removed==[]) -> pp(yellow,nothing_removed_added(PairName)) ;
-    show_pair_diff_code(IOH,IOV,IOH,IOV,removed(PairName),added(PairName),PairName,Removed,Added)),
+  show_pair_diff_code(IOH,IOV,IOH,IOV,removed(PairName),added(PairName),PairName,Removed,Added)),
   ((RetainedIn==RetainedOut, RetainedIn==[]) -> pp(yellow,nothing_retained(PairName)) ;
-    show_pair_diff_code(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
+  show_pair_diff_code(IH,IV,   OH, OV,retained(ION1),retained(ION2),PairName,RetainedIn,RetainedOut)),
   ((InC==OutC, InC==[]) -> pp(yellow,nothing_individuated(PairName)) ;
-    show_pair_diff_code(IH,IV,   OH, OV,individuated1(ION1),individuated1(ION2),PairName,InC,OutC)),!, 
+  show_pair_diff_code(IH,IV,   OH, OV,individuated1(ION1),individuated1(ION2),PairName,InC,OutC)),!, 
   luser_setval(no_rdot,false),
-   % pp(OutC=InC),
-
-   ignore(( learn_rule_o(ModeIn,InVM,OutVM))),
-
-   ignore(( ModeIn == in_out, Trn == trn,  
-            train_io_from_hint(TestID,Trn+N1,InVM))),
-
+  % pp(OutC=InC),
+  ignore(( learn_rule_o(ModeIn,InVM,OutVM))),  
+  ignore(( ModeIn == in_out, Trn == trn, train_io_from_hint(TestID,Trn+N1,InVM))),
   dash_chars,dash_chars,dash_chars,dash_chars,
-  print_testinfo(TestID)]))).
+  print_testinfo(TestID))).
 
 show_pair_diff_code(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out):-
   show_pair_diff(IH,IV,OH,OV,NameIn,NameOut,PairName,In,Out),

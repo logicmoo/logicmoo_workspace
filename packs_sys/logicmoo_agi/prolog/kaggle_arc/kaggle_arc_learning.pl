@@ -41,7 +41,7 @@ print_rule(M,(X:-Body)):- !,
     orpt(M=[X]))).
 print_rule(M,O):- \+ \+ (( orpt(M=[O]))).
 
-orpt(G):- \+ \+ ((numbervars(G,0,_,[attvar(bind),singletons(true)]), format('~N'), pp(orange,(call(print(G)))))).
+orpt(G):- \+ \+ ((numbervars(G,0,_,[attvar(bind),singletons(true)]), format('~N'), pp_safe(orange,(call(print(G)))))).
 
 save_learnt_rule(TestID,In,InKey,RuleDir,Out):-
   if_learn_ok(save_learnt_rule(learnt_rule(TestID,In,InKey,RuleDir,Out))).
@@ -182,9 +182,6 @@ learn_rule_o(Mode,InVM,OutVM):- % is_map(InVM),is_map(OutVM),!,
   ptc(orange,format('~N~n% Rules so far for ~w: ~w~n~n',[TestID,Len])),!,
   if_learn_ok(confirm_reproduction(InObjs,InObjs0,InGrid)),!,
   if_learn_ok(confirm_reproduction(OutObjs,OutObjs0,OutGrid)),!,
-
-
-
   confirm_learned(InGrid,OutGrid),!,
   nop(show_proof(InGrid,OutGrid))]),!.
 
@@ -218,7 +215,10 @@ debug_reproduction(H,V,Obj,DObj):-
   print_grid(H,V,Info,Points),
   obj_to_oid(Obj,ID1),
   obj_to_oid(DObj,ID2),
-  pp(dobj(ID1,ID2)=DObj))),!.
+  pp_safe(dobj(ID1,ID2)=DObj))),!.
+
+pp_safe(W):- nl_if_needed,nl,writeq(W),nl.
+pp_safe(_,W):- nl_if_needed,nl,writeq(W),nl.
 
 show_result(What,Solution,ExpectedOut,Errors):-
   show_sameness_or_lameness(green,red,What,Solution,ExpectedOut,Errors).
@@ -236,8 +236,8 @@ banner_grids(Color,I,Message1,O,Message2):-
  ignore((
     banner_lines(Color),
     print_side_by_side(Color,I,Message1,_,O,Message2),
-    format('~N'),pp(Color,Message1),
-    format('~N'),pp(Color,Message2),
+    format('~N'),pp_safe(Color,Message1),
+    format('~N'),pp_safe(Color,Message2),
     format('~N'),
     banner_lines(Color))).
 
@@ -344,7 +344,7 @@ learn_rule_in_out_sames(In,Out):- fail,
   mass(O,Mass), Mass>MinMass,
   mass(I,Mass),
   once((compare_objs_how(How), nonvar(How), compare_objs1(How,I,O))),
-  pp(How),
+  pp_safe(How),
   learn_rule_in_out_objects(How,I,O).
 
 learn_rule_in_out_objects(How,I,O):-   
@@ -381,7 +381,7 @@ learn_rule_iin_oout(_,In,O,OL):- mass(O,Mass),
   sort(SLIDL,SSLIDL),
   reverse(SSLIDL,RSLIDL),
   member(SL-SAME-I-DL,RSLIDL),
-  pp([SL+DL, equal = SAME, in=I,out=OL]),  
+  pp_safe([SL+DL, equal = SAME, in=I,out=OL]),  
   compare_objs1(How,I,O),
   %shape(I,Shape),shape(O,Shape),
   %pen(I,Pen),pen(O,Pen),
@@ -483,8 +483,8 @@ assert_visually( H  ):- unnumbervars(H,HH),assert_visually1(HH,true).
 assert_visually1(H,B):- get_current_test(TestID), arg(1,H,W),W\==TestID,!, H=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
 assert_visually1(H,B):- assert_visually2(H,B).
 
-assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,(pp(cyan,known_exact(H:-B))).
-assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,pp(cyan,known(H:-B)).
+assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,(pp_safe(cyan,known_exact(H:-B))).
+assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,pp_safe(cyan,known(H:-B)).
 assert_visually2(H,B):- functor(H,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(H:-B)), my_asserta_if_new((H:-B)).
 
 if_learn_ok(G):- call(G).
@@ -539,10 +539,10 @@ ignore_equal(X,Y):- ignore(X=Y).
 
 rev_key0(C-P,P-C).
 
-%pp(O):- format('~N'),print(O),nl.
+%pp_safe(O):- format('~N'),print(O),nl.
 use_test_associatable(In,Solution):- 
   simplify_for_matching(lhs,In,IIn),
-  %pp(in=IIn),  
+  %pp_safe(in=IIn),  
   findall(Ref-OutS,use_test_associatable_io(IIn,OutS,Ref),OutL),
   keysort(OutL,OutLS),
   maplist(arg(2),OutLS,OutLS2),
@@ -563,7 +563,7 @@ use_test_associatable(In,OutR):-
    OutSet=[for_output2],     
    nb_set_add1(OutSet,OutL),
    ignore(OutR=OutSet),!,
-   pp(outSet2=OutSet).
+   pp_safe(outSet2=OutSet).
 
 test_associatable_proof(In,OutR):-
   findall(InS,simplify_for_matching_nondet(lhs,In,InS),InL),
@@ -584,7 +584,7 @@ use_test_associatable_io(I,O,Ref):- get_current_test(TestID), clause(test_solved
 use_test_associatable_io(I,O,Ref):- get_current_test(TestID),
   clause(test_associatable(TestID,Pre,O),_,Ref),
   \+ \+ same_props(I,Pre),
-  nop(pp(same_props(I,Pre))).
+  nop(pp_safe(same_props(I,Pre))).
 
 same_props(I,Pre):- (var(I);var(Pre)),!.
 same_props(I,Pre):- ([]==(I);[]==(Pre)),!.
@@ -599,7 +599,7 @@ use_learnt_rule(In,RuleDir,ROut):- %get_vm(VM), %Target=VM.grid_target,
  get_current_test(TestID),
   ignore(get_vm(last_key,Key)),
   ((has_learnt_rule(TestID,In,Key,RuleDir,Out);has_learnt_rule(TestID,_,Key,RuleDir,Out);has_learnt_rule(TestID,In,_,RuleDir,Out))),
-  pp(orange,using_learnt_rule(In,Key,RuleDir,Out)),
+  pp_safe(orange,using_learnt_rule(In,Key,RuleDir,Out)),
   ignore(Out = ROut).
 
 use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_target, 
@@ -608,7 +608,7 @@ use_learnt_rule(In,RuleDir,Out):- get_vm(VM), % Target=VM.grid_target,
    In = VM.grid_o,
    Head = learnt_rule(TestID0,In0,Key0,RuleDir0,Out0),
    Rule = rule(Len,In0,Key0,RuleDir0,TestID0,Out0,Ref),
-   pp(searching_for=[in(In),dir(RuleDir),key(Key)]),
+   pp_safe(searching_for=[in(In),dir(RuleDir),key(Key)]),
   findall(Rule,
    (clause(Head,_Vars,Ref),
     call(Head),
@@ -683,7 +683,7 @@ never_unbind_label(Int):- integer(Int), Int > 7 ; Int == 1 ; Int == 0.
 never_unbind_label(true).
 never_unbind_label(false).
 never_unbind_label(G):- \+ atom(G),!,fail.
-never_unbind_label(G):- atom_length(G,N),N<3,!.
+never_unbind_label(G):- display_length(G,N),N<3,!.
 never_unbind_label(G):- downcase_atom(G,D), upcase_atom(G,D).
 never_unbind_label(G):- atom_chars(G,Cs),member(C,Cs),char_type(C,digit),!.
 
@@ -751,7 +751,7 @@ find_by_shape(Grid,Find,Founds):-
    find_ogs(H,V,F1,Grid),% trace,
 
    grid_to_points(F1,GH,GV,Points),
-   pp(Points),
+   pp_safe(Points),
    make_indiv_object(VM,[iz(find_by_shape),F1,loc2D(H,V),alt_grid_size(GH,GV)],Points,F2)),
  findall(F2,Prog,Matches),
  align_founds(Matches,Founds).
@@ -783,7 +783,7 @@ test_arc(TestID):- with_arc(solve,TestID).
 with_arc(Action,TestID):- plain_var(TestID),!, findall(Name,fav(Name),L),
   list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
-with_arc(Action,arc):- !, findall(Name,kaggle_arc_io(Name,_+_,_,_),L),
+with_arc(Action,arc):- !, findall(Name,kaggle_arc_io(Name,(_+_),_,_),L),
   list_to_set(L,S), member(TestID,S), with_arc(Action,TestID).
 
 with_arc(Action,TestName):-

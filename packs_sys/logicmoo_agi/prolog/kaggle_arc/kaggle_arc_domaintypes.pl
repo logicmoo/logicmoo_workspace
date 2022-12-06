@@ -18,7 +18,7 @@ to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,G
 
 has_color(C,Cell):- only_color_data(Cell,CD), cmatch(C,CD).
 
-cmatch(C,CD):- plain_var(C),!,C=CD,!.
+cmatch(C,CD):- plain_var(C),!,var(CD),C=CD.
 cmatch(C,CD):- var(C),!,C=CD,!.
 cmatch(fg,CD):- !, CD\==wbg, is_fg_color(CD),!.
 cmatch(bg,CD):- !, is_bg_color(CD),!.
@@ -65,6 +65,7 @@ is_fg_color(C):- is_color(C),!.
 is_bg_color(BG):- var(BG),!,get_attr(BG,ci,bg(_)),!.
 is_bg_color(C):- bg_sym(BG),C==BG,!.
 is_bg_color(wbg).
+is_bg_color('#104010').
 is_bg_color(C):- get_bgc(BG),C==BG,!.
 
 is_real_bg_color(C):- is_bg_color(C),is_real_color(C).
@@ -468,7 +469,7 @@ is_not_tpoint(I):- \+ is_tpoint(I).
 is_tpoint(C):- \+ compound(C),!,fail.
 is_tpoint(T/**/-P):- is_t(T),!,is_point(P).
 
-is_t(T):- atom(T), atom_length(T,1).
+is_t(T):- atom(T), display_length(T,1).
 
 is_cpoint(C):- \+ compound(C),!,fail.
 %is_cpoint(C/**/-P):- (nonvar_or_ci(C);cant_be_color(C)),!,is_nc_point(P).

@@ -46,7 +46,10 @@ get_fill_points2(Grid,FillPoints):-
 
 maybe_make_bg_visible(In,Grid):- make_bg_visible(In,Grid),!,In\=@=Grid.
 
-make_bg_visible(In,Grid):- duplicate_term(In,In0),subst001(In0,blue,'#6666FF',M),make_bg_visible_b(M,Grid).
+%make_bg_visible(In,Grid):- var(In),!,Grid=In.
+%make_bg_visible(In,Grid):- !, duplicate_term(In,Grid),!.
+make_bg_visible(In,Grid):- duplicate_term(In,In0),subst001(In0,blue,'#6666FF',M),
+  make_bg_visible_b(M,Grid).
 /*
 make_bg_visible(In,Grid):- duplicate_term(In,In0),
   subst001(In0,blue,'#6666ff',M0),
@@ -55,12 +58,14 @@ make_bg_visible(In,Grid):- duplicate_term(In,In0),
      subst001(M3,fg,'#ffffff',M4),subst001(M4,bg,   '#101030',M5),
   make_bg_visible_b(M5,Grid).
 */
+%make_bg_visible_b(In,Grid):- var(In),!,Grid=In.
+%make_bg_visible_b(In,Grid):- !, duplicate_term(In,Grid),!.
 make_bg_visible_b(In,Grid):- is_grid(In),!,mapgrid(make_bg_visible_c,In,Grid).
 make_bg_visible_b(In,Grid):- is_list(In),!,maplist(make_bg_visible_b,In,Grid).
-make_bg_visible_b(In,Grid):- var(In),!,Grid=In.
 make_bg_visible_b(C-P,CC-P):- !, make_bg_visible_c(C,CC).
 make_bg_visible_b(In,Grid):- make_bg_visible_c(In,Grid).
-make_bg_visible_c(In,'#104010'):- plain_var(In),!.
+
+make_bg_visible_c(In,wbg):- plain_var(In),!.
 make_bg_visible_c(In,In):- var(In),!.
 make_bg_visible_c(In,Grid):- get_black(Black),subst001(In,Black,'#301030',Grid).
 
@@ -70,7 +75,7 @@ make_bg_visible_c(In,Grid):- get_black(Black),subst001(In,Black,'#301030',Grid).
 get_fill_points(In,UNFP,GridO):-
  must_det_ll((
  %grid_size(Grid,H,V),
- make_bg_visible(In,Grid),
+ make_bg_visible_b(In,Grid),
  %print(In=Grid),
  neighbor_map(Grid,GridO), 
  localpoints(GridO,NPS),  
@@ -120,11 +125,11 @@ uneib(X,X).
 
 show_call_tf(G):- functor(G,F,_),\+ \+ (call(G)->wdmsg(F=true);wdmsg(F=false)).
 
- %color,neigbours,glyph
-test_neighbor_map:- clsmake, forall(rp_test(G),show_neighbor_map(G)).
-show_neighbor_map(G):- 
+test_most_d_colors:- clsmake, forall(rp_test(G),show_most_d_colors(G)).
+show_most_d_colors(G):- 
  grid_to_tid(G,ID),
  most_d_colors(G,C,N),!,print_side_by_side(G,N),nl,writeln(ID=C).
+
 
 merge_nc(A,B,B):- var(A),!.
 merge_nc(A,B,A):- var(B),!.
@@ -176,18 +181,23 @@ edge_of_grid(H,_,H,_,e).
 edge_of_grid(_,V,_,V,s).
 edge_of_grid(_,_,_,_,c).
 
+ %color,neigbours,glyph
+test_neighbor_map:- clsmake, forall(rp_test(G),show_neighbor_map(G)).
+show_neighbor_map(G):-  grid_to_tid(G,ID), neighbor_map(G,N),!,print_side_by_side(ID,G,N).
+
 neighbor_map(Grid,GridO):-
  must_det_ll((
   globalpoints_maybe_bg(Grid,Points),
   grid_size(Grid,H,V),
   neighbor_map(H,V,Points,Points,CountedPoints),!,
-  points_to_grid(H,V,CountedPoints,GridO))).
+  points_to_grid(H,V,CountedPoints,GridO))),!.
 
 neighbor_map(_,_,[],_,[]):-!.
 neighbor_map(H,V,[NC-P1|Ps],Points,[(N-C)-P1|Ps2]):-
+  must_det_ll((
   only_color_data(NC,C),  
   nei_map(H,V,C,P1,Points,N),
-  neighbor_map(H,V,Ps,Points,Ps2).
+  neighbor_map(H,V,Ps,Points,Ps2))).
 
 only_color_data(C,_):- var(C),!,fail.
 only_color_data(C,C):- is_unreal_color(C),!.
@@ -195,7 +205,7 @@ only_color_data(C,C):- is_color(C),!.
 only_color_data(NC,NC):- \+ compound(NC),!,fail.
 only_color_data(OC,C):- sub_term(C,OC),is_colorish(C),!.
 only_color_data(C-P,C):- is_nc_point(P),!.
-%only_color_data(_-O,C):- only_color_data(O,C).
+only_color_data(_-O,C):- only_color_data(O,C).
 
 only_point_data(NC,NC):- \+ compound(NC),!.
 only_point_data(_-C,NC):- only_point_data(C,NC).
@@ -221,7 +231,6 @@ would_fill_color(_,_,_,[_,_,_,_]).
 would_fill_color(A,_,C,_):- append([A,C],Len),length(Len,L),L>3.
 %would_fill_color(A,B,C,D):- append([B,D],Len),length(Len,L),L>3.
 would_fill_color(A,B,C,D):- append([A,B,C,D],Len),length(Len,L),L>7.
-
 
 
 nei_map(H,V,C,P1,Points,N):- 

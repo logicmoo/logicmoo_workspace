@@ -186,7 +186,7 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
 object_colors_prop(PA,PenColors):- 
   pen(PA,Pen), colors(PA,Colors), 
   display_length(Pen,PenL), display_length(Colors,ColorsL), 
-    ((PenL=<ColorsL) -> PenColors=pen(Pen);PenColors=colors(Colors)).
+  ((PenL=<ColorsL) -> PenColors=pen(Pen);PenColors=colors(Colors)).
 
 object_dglyphH(PA, OUTS):- 
   obj_to_oid(PA,GA),% mass(PA,Mass),
@@ -200,6 +200,18 @@ object_dglyphH(PA, OUTS):-
 
 object_dglyphH(PA,objFn(GA)):- object_s_glyph_long(PA,GA),!.
 object_dglyphH(PA,objFn(GA)):- object_s_glyph(PA,GA),!.
+
+object_dglyphH_no_loop(PA, OUTS):- object_dglyphH(PA, OUTS),!.
+object_dglyphH_no_loop(PA, OUTS):-
+ must_det_ll((
+  object_s_glyph_long(PA, CGA),
+  mass(PA,Mass),
+  shape(PA,Shape),pen(PA,Pen),loc2D(PA,X,Y), rot2L(PA,ROT),
+  shape_id(Shape,ShapeID),  
+  OUT = oFn(CGA,Mass,loc2D(X,Y),ROT,pen(Pen),ShapeID),
+  wots(SS,wqs_l(OUT)),
+  OUTS = SS)).
+
 /*
 tersify1(I,Q):- is_object(I),object_s_glyph(I,FC), o2g(I,O),!,wots(A,color_print(FC,call(format('"~w"',[O])))),
    amass(I,M),
@@ -233,7 +245,7 @@ object_s_glyph(Obj,SGlyph):-
   print_colors_on_ss(Glyph,Colors,SGlyph))).
   
 print_colors_on_ss(Glyph,[],SSGlyph):- sformat(SSGlyph,'~q',[Glyph]),!.
-print_colors_on_ss(Glyph,Colors,SGlyph):- atom_length(Glyph,N), 
+print_colors_on_ss(Glyph,Colors,SGlyph):- display_length(Glyph,N), 
   wots(SGlyph,print_colors_on(Colors,N,Glyph)).
 print_colors_on([Color],_,Glyph):- color_print(Color,call(writeq(Glyph))),!.
 print_colors_on(Colors,L,Glyph):- length(Colors,CL), CL>L,write('\''), user:maplist(print_ncolors(Glyph),Colors), write('\''),!.
@@ -331,7 +343,7 @@ show_touches0(Only,Obj):- Obj = obj(List),
 show_touches2(_,[]):-!.
 show_touches2(SGlyph,TP):-   
   remove_too_verbose(SGlyph,TP,OO),
-  format("~N~n% ~w:\t",[SGlyph]),wqs_l(OO),format('~N').
+  format("~N~n% ~w:  ",[SGlyph]),wqs_l(OO),format('~N').
 
 dbg_show_touches(Only,Obj):- must_det_ll((into_obj(Obj,RealObj),dbg_show_touches0(Only,RealObj))).
 dbg_show_touches0(Only,Obj):- must_det_ll(( \+ is_not_in(Only,Obj))),!.
@@ -344,48 +356,35 @@ dbg_show_touches0(Only,Obj):- Obj = obj(List),
 dbg_show_touches2(_,[]):-!.
 dbg_show_touches2(SGlyph,TP):-   
   remove_too_verbose(SGlyph,TP,OO),
-  format("~N~n% ~w:\t",[SGlyph]),wqs_l(OO),format('~N').
+  format("~N~n% ~w:  ",[SGlyph]),wqs_l(OO),format('~N').
 
-
-object_dglyphH_no_loop(PA, OUTS):- 
- must_det_ll((
-  object_s_glyph_long(PA, CGA),
-  mass(PA,Mass),
-  shape(PA,Shape),pen(PA,Pen),loc2D(PA,X,Y), rot2L(PA,ROT),
-  shape_id(Shape,ShapeID),  
-  OUT = oFn(CGA,Mass,loc2D(X,Y),ROT,pen(Pen),ShapeID),
-  wots(SS,wqs_l(OUT)),
-  OUTS = SS)).
 
 
 debug_indiv_obj(Obj):- Obj = obj(A), nonvar(A),!,debug_indiv_obj(A).
 debug_indiv_obj(Props):- is_open_list(Props),!,must_det_ll((append(Props,[],CProps),!,debug_indiv_obj(CProps))).
-debug_indiv_obj(AS):- 
+debug_indiv_obj(AS0):- 
  must_det_ll((
-  Obj = obj(AS),
+  Obj = obj(AS0),
+  append(AS0,[],Props),
   %ignore((o2g(Obj,GGG), nonvar(GGG),set_glyph_to_object(GGG,Obj))),
  % will_show_grid(Obj,TF),
   TF = false,
-  obj_to_oid(Obj,MyOID),
+ % obj_to_oid(Obj,MyOID),
   %o2ansi(MyOID,MissGlyph),
   object_s_glyph(Obj,SGlyph),
-  append(AS,[],Props),  
 
-  remove_too_verbose(MyOID,Props,TV0), include(not_too_verbose,TV0,TV),
-
+  my_partition(is_functor(link),Props,ISLINK,AS1), r_props(ISLINK,ISLINKR),
+  my_partition(is_o3,AS1,TVSO0,AS),  r_props(TVSO0,TVSO), predsort(sort_on(arg(2)),TVSO,TVSOR),reverse(TVSOR,TVSOS),
+  short_indv_props(AS,TVSI1,TVSI2),append(TVSI1,TVSI2,TVSI),
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
-  =(TV,ASA),reverse(ASA,ASAR),
-  append(ASAR,Props,ASFROM),
-  choose_header(ASFROM,Caps),  
-  toPropercase(Caps,PC),
-  sort(TV,TVS),
-  my_partition(is_o3,TVS,TVSO,TVSI),
-  predsort(sort_on(arg(2)),TVSO,TVSOR),reverse(TVSOR,TVSOS),
+  append([TVSI,Props],ASFROM), choose_header(ASFROM,Caps), toPropercase(Caps,PC),
+  
   ignore((TF==true,dash_chars)),
-  sformat(SF,"% ~w:\t\t~w\t",[PC,SGlyph]),
-  ignore(( g_out_style(style('font-size2D','75%'),(write(SF), wqs(TVSI))))),
+  sformat(SF,"% ~w:\t~w  ",[PC,SGlyph]),
+  ignore(( g_out_style(style('font-size','75%'),(write(SF), wqs(TVSI))))),
   %maplist(write_indented_list('~N    '),wqs(TVSOS),
-  nop((format('~N    '),wqs(TVSOS))),
+  ignore(((ISLINKR \==[], format('~N  '),wqs(ISLINKR)))),
+  nop(ignore(((TVSOS \==[], format('~N  '),wqs(TVSOS))))),
   ignore(( TF==true, amass(Obj,Mass),!,Mass>4, vis2D(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, amass(Obj,Mass),!,Mass>4, vis2D(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pp(Props),
@@ -443,6 +442,7 @@ remove_too_verbose(MyOID,List,ListO):- is_list(List),!,maplist(remove_too_verbos
 %remove_too_verbose(MyOID,square,S):- sformat(S,'square',[]).
 % @TODO UNCOMMENT THIS remove_too_verbose(MyOID,background,S):- sformat(S,'bckgrnd',[]).
 remove_too_verbose(MyOID,iz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
+remove_too_verbose(MyOID,giz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
 
 %remove_too_verbose(_MyID,obj_to _oid(_ * _ * X,Y),NTH):- NTH=..[X,Y].
 %remove_too_verbose(_MyID,obj_to_oid(_ * _+_ * X,Y),NTH):- NTH=..[X,Y].

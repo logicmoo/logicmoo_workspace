@@ -118,12 +118,19 @@ dot_eval:- true.
 % dot_intercept(M,Self,Func,Value):- quietly((use_dot(_,M),nonvar(Value), \+ current_prolog_flag(gvar_lazy,false))),!,Value =.. ['.',Self,Func].
 
 
-dot_intercept(_M,Self,Func,Value):-  compound(Self),Self=t(_,_,_,_), trace,!,rb_lookup(Func,Value,Self).
+%dot_intercept(_M,Self,Func,Value):-  compound(Self),Self=t(_,_,_,_), trace,!,rb_lookup(Func,Value,Self).
 dot_intercept(M,Self,Func,Value):- 
    ((once((show_failure(gvs:is_dot_hook(M,Self,Func,Value))->show_failure(use_dot(_,M)))) 
       -> gvs:dot_overload_hook(M,Self,Func,Value)) *-> true ;
    ((quietly(is_gvar(M,Self,Name)) -> gvar_call(M,Name,Func,Value) ) *-> true ; 
      dot_intercept_lazy(M,Self,Func,Value))).
+
+
+:- multifile(gvs:dot_overload_hook/4).
+:- dynamic(gvs:dot_overload_hook/4).
+:- module_transparent(gvs:dot_overload_hook/4).
+gvs:dot_overload_hook(_M,_NewName, _Memb, _Value):- fail.
+
 
 :- module_transparent(dot_intercept_lazy/4).
 

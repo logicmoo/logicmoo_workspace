@@ -201,14 +201,16 @@ maybe_easy(I,I,==):- !.
 
 detect_all_training_hints:- clsbake, get_current_test(TestID),detect_all_training_hints(TestID).
 detect_all_training_hints(TestID):- ensure_test(TestID),
-  training_only_exmaples(ExampleNum), 
+  training_only_examples(ExampleNum), 
   dmsg(detect_all_training_hints(TestID>ExampleNum)),
   forall(kaggle_arc(TestID,ExampleNum,In,Out),must_det_ll(detect_pair_hints(TestID,ExampleNum,In,Out))),
   color_print(magenta,call(((must_det_ll(compute_and_show_test_hints(TestID)))))).
-training_only_exmaples(ExampleNum):- ignore(ExampleNum=(trn+_)).
+
+training_only_examples(ExampleNum):- ignore(ExampleNum=(trn+_)).
+
 detect_test_hints1:- clsbake, get_current_test(TestID),detect_test_hints1(TestID).
 detect_test_hints1(TestID):- 
- some_current_example_num(ExampleNum), training_only_exmaples(ExampleNum),
+ some_current_example_num(ExampleNum), training_only_examples(ExampleNum),
  forall(kaggle_arc(TestID,ExampleNum,In,Out),detect_pair_hints(TestID,ExampleNum,In,Out)).
   
 
@@ -219,6 +221,7 @@ color_subst(_OSC,_ISC,[]):-!.
 
 detect_pair_hints(TestID,ExampleNum,In,Out):- 
   ensure_test(TestID),
+  must_det_ll((
   dmsg(detect_pair_hints(TestID,ExampleNum)),
   assert_id_grid_cells(In), assert_id_grid_cells(Out),
   detect_supergrid_tt_pair(TestID,ExampleNum,In,Out,_TT),  
@@ -226,7 +229,7 @@ detect_pair_hints(TestID,ExampleNum,In,Out):-
   %print(TT),
   %ignore(show_reduced_io(In+Out)),
   grid_hint_swap(i-o,In,Out),
-  dash_chars,!.
+  dash_chars)),!.
 
 guess_board(TT):- arc_setval(TT,guess_board,t).
 
@@ -235,7 +238,8 @@ detect_supergrid_tt_pair(TestID,ExampleNum,In0,Out0,TT):-
  must_det_ll(((
   dash_chars, dash_chars,
   dmsg(detect_supergrid_tt_pair(TestID,ExampleNum)),
-  print_side_by_side(cyan,In0,task_in(ExampleNum),_,Out0,task_out(ExampleNum)),  
+  grid_to_gid(In0,InID),
+  print_side_by_side(cyan,In0,?-grid_props(InID,'$VAR'('InProps')),_,Out0,task_out(ExampleNum)),  
   %forall(show_reduced_io(In0+Out0),true),
   nop((show_recolor(TestID,ExampleNum,In0,Out0,TT)))))),!,
  TT = _{} .
@@ -467,6 +471,7 @@ maybe_compute_test_io_hints(IO,TestID,N,In,Out):-
     ignore(add_xform_maybe(In,Out)),
       forall(grid_hint_swap_io(IO,In,Out,Hint),add_hint(TestID,Hint,N)).
 
+compute_test_oo_hints(_):- !.
 compute_test_oo_hints(TestID):- 
   forall(
     kaggle_arc_io(TestID,(trn+N),out,Out1), 
@@ -578,10 +583,14 @@ min_grid_unifier(_,_,_).
 min_list_unifier(A,B,A):- A=@=B,!.
 min_list_unifier(A,B,_):- \+ compound(A);\+ compound(B),!.
 min_list_unifier(A,B,AA):- is_list(A),is_list(B), sort(A,AA),sort(B,BB),BB=@=AA,!.
-min_list_unifier(A,B,[EC|C]):- is_list(A),is_list(B),select_two(A,B,E1,E2,AA,BB), min_unifier(E1,E2,EC) ,!,min_list_unifier(AA,BB,C).
+
+min_list_unifier(A,B,[EC|C]):- is_list(A),is_list(B),  select_two(A,B,E1,E2,AA,BB), min_unifier(E1,E2,EC) ,!,min_list_unifier(AA,BB,C).
+
+
 min_list_unifier(A,_,_):- (\+ is_list(A), \+ is_cons(A)),!.
 min_list_unifier(_,A,_):- (\+ is_list(A), \+ is_cons(A)),!.
 min_list_unifier(A,B,_):- (\+ is_list(A) ; \+ is_list(B)),!.
+
 %min_list_unifier([E1|AA],[E2|BB],[EC|C]):- min_unifier(E1,E2,EC) ,!,min_unifier(AA,BB,C).
 min_list_unifier(A,B,[E1|C]):- nonvar(A),nonvar(B), select(E1,A,AA),nonvar(E1),select(E2,B,BB),nonvar(E2), E1=@=E2 ,!,min_list_unifier(AA,BB,C).
 %min_list_unifier([_|A],[_|B],[_|C]):- !,min_list_unifier(A,B,C).
@@ -604,7 +613,7 @@ grid_hint_swap_io(I-O,In,Out,rev(Hint)):- I\==O,
  Hint \= mono(comp(_,o-i,value(=@=))).
 
 grid_hint_recolor(IO,In,Out,Hint):- get_black(Black), grid_hint_io(cbg(Black),IO,In,Out,Hint).
-grid_hint_recolor(IO,In,Out,mono(Hint)):- % fail,
+grid_hint_recolor(IO,In,Out,mono(Hint)):- arc_option(scan_mono_hints), % fail,
  once((into_monogrid(In,InM),into_monogrid(Out,OutM))),
   (In\==InM;Out\==OutM),grid_hint_io(cbg(wbg),IO,InM,OutM,Hint).
 grid_hint_recolor(IO,In,Out,color_ord(Hint)):- fail,
@@ -683,9 +692,11 @@ grid_to_objs(Grid,How,Objs):- ensure_grid(Grid),ensure_how(How),individuate(How,
 % one way to match or find an outlier is compressing things in sets minus one object.. the set that is second to the largest tells you what single object os the most differnt 
 objs_shapes(Objs,In):- ensure_test(TestID),test_shapes(TestID,Objs,In).
 
-test_shapes(_TestID, Objs,In):- member(Obj,Objs),object_grid(Obj,In), once(learn_hybrid_shape(In)),fail.
+test_shapes(_TestID, Objs,In):- member(Obj,Objs),object_grid(Obj,In), once(learn_hybrid_shape_board(obj_shapes,In)),fail.
 test_shapes(TestID,_Objs,In):- ensure_test(TestID), get_hybrid_set(Set),!,member(In,Set).
- 
+
+
+learn_hybrid_shape_board(Why,Shape):- nop(dmsg(learn_hybrid_shape(Why,Shape))).
 
 grid_to_obj_other(VM,Grid,O):- other_grid(Grid,Grid2), grid_to_obj_other_grid(VM,Grid,Grid2,O).
 grid_to_obj_other_grid(VM,Grid,Grid2,O):- grid_to_objs(Grid2,Objs),grid_to_obj_other_objs(VM,Grid,Objs,O).
@@ -816,8 +827,8 @@ rot_ogs(P2):- rotP0(P2).
 rot_ogs([trim_to_rect,P2]):- rotP2(P2).
  
 
-maybe_ogs_color(R,X,Y,In,Out):- nonvar(R),!,(R==strict->find_ogs(X,Y,In,Out);ogs_11(X,Y,In,Out)),learn_hybrid_shape(In).
-maybe_ogs_color(R,X,Y,In,Out):- ogs_11(X,Y,In,Out),(find_ogs(X,Y,In,Out)->R=strict;R=loose),learn_hybrid_shape(In).
+maybe_ogs_color(R,X,Y,In,Out):- nonvar(R),!,(R==strict->find_ogs(X,Y,In,Out);ogs_11(X,Y,In,Out)),learn_hybrid_shape_board(ogs(R),In).
+maybe_ogs_color(R,X,Y,In,Out):- ogs_11(X,Y,In,Out),(find_ogs(X,Y,In,Out)->R=strict;R=loose),learn_hybrid_shape_board(ogs(R),In).
 
 
 %grid_hint_iso(MC,IO,In,_Out,_IH,_IV,OH,OV,is_xy_columns):- once(has_xy_columns(In,_Color,OH,OV,)).
@@ -828,11 +839,12 @@ into_color_ord(G,GO):- G=GO.
 %grid_hint_iso(cbg(_BGC),_-O,_In,Out,_IH,_IV,OH,OV,has_x_columns(O,Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(10.2,has_x_columns(Out,Y,Color,_)), Y>1.
 %grid_hint_iso(cbg(_BGC),_-O,_In,Out,_IH,_IV,OH,OV,has_y_rows(O,Y,Color)):- Area is OH*OV, Area>24, maybe_fail_over_time(10.2,has_y_rows(Out,Y,Color,_)), Y>1.
 
-grid_hint_iso(cbg(BGC),IO,Out,In,GH,GV,GH,GV,Hint):- mapgrid(remove_color_if_same(BGC),Out,In,NewIn),
+grid_hint_iso(cbg(BGC),IO,Out,In,GH,GV,GH,GV,Hint):-   
+   mapgrid(remove_color_if_same(BGC),Out,In,NewIn),
    mass(NewIn,Mass), unique_colors(In,Colors),unique_colors(NewIn,LeftOver), LeftOver\==Colors,
    (Mass==0 -> 
-     ( Hint=containsAll(IO),learn_hybrid_shape(pair,In)) ; 
-     ( Hint=containsAllExceptFor(IO,LeftOver),learn_hybrid_shape(pair,NewIn))),!.
+     ( Hint=containsAll(IO),learn_hybrid_shape_board(subtraction,In)) ; 
+     ( Hint=containsAllExceptFor(IO,LeftOver),learn_hybrid_shape_board(subtraction,NewIn))),!.
   
 
 % NewIn\=@=In,print_grid('leftover',NewIn).
@@ -997,7 +1009,6 @@ illegal_column_data(In,Color,BorderNums):-
   nth1(NthMore,In,Row2),
   (member(C1,Row2),member(C2,Row1)),
   C1 == C2, C1 == Color,!.
-
 
 
 :- include(kaggle_arc_footer).

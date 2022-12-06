@@ -100,7 +100,8 @@ term_to_oid(T,A):- (compound(T)->term_to_atom(T,A);(atom(T)->T=A;term_to_atom(T,
 
 point_to_hvc(Var,_,_,_):- var(Var),!,fail.
 point_to_hvc(Point,  H,V,wfg):- atomic(Point),!, hv_point(H,V,Point).
-point_to_hvc(CD-Point,H,V,C):- var_or_color_data(CD,C),must(hv_point(H,V,Point)),!.
+%point_to_hvc(CD-Point,H,V,C):- var_or_color_data(CD,C),must(hv_point(H,V,Point)),!.
+point_to_hvc(CD-Point,H,V,CD):- atomic(Point),!, hv_point(H,V,Point),!.
 %point_ to_hvc(H,V,_,H,V).
 %point_ to_hvc(Inf,Inf,offset_ranges(_,_,_,_)).
 var_or_color_data(CD,C):- only_color_data(CD,C),!.
@@ -216,6 +217,9 @@ hv_c_value(O,FGL   ,H,V):- is_nc_point(O),!,O=Point,hv_point(H,V,Point),!,get_fg
 hv_c_value(G,Color,H,V):- my_assertion(into_list(G,L)),!,member(E,L),hv_c_value(E,Color,H,V),!.
 %hv_c_value(O,Color,H,V):- is_object(O),localpoints(O,Ps),hv_c_value(Ps,Color,H,V).
 %hv_c_value(L,Color,H,V):- is_list(L), member(E,L),hv_c_value(E,Color,H,V),!.
+
+point_c_value(Point,C,Grid):- hv_point(Point,H,V),hv_c_value(Grid,C,H,V).
+
 
 hv_cg_value(O,_Color,_H,_V):-  var(O),!,fail.
 hv_cg_value(ID,C,H,V):- (var(H);var(V)),!, hv_point(H,V,_),hv_cg_value(ID,CC,H,V),CC=C.

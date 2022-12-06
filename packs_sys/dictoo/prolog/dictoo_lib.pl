@@ -502,9 +502,8 @@ gvs:dot_overload_hook(M,NewName, Memb, Value):- dot_cfg:using_dot_type(_,M)
 :- dynamic(gvs:is_dot_hook/4).
 :- module_transparent(gvs:is_dot_hook/4).
 
-gvs:is_dot_hook(_,_,_,_):-!.
-gvs:is_dot_hook(M,Self,Func,Value):- dot_cfg:using_dot_type(_,M) 
-  -> is_oo_hooked(M,Self,Func,Value),!.
+%gvs:is_dot_hook(_,_,_,_):-!.
+gvs:is_dot_hook(M,Self,Func,Value):- dot_cfg:using_dot_type(_,M) -> is_oo_hooked(M,Self,Func,Value),!.
 
 :- include(gvar_fixup_exports).
 

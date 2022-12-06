@@ -9,8 +9,16 @@
 
 :- set_prolog_flag(encoding,iso_latin_1).
 :- set_prolog_flag(stream_type_check,false).
-:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(load_arc_webui,true);true).
-:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(use_arc_webui,true);set_prolog_flag(use_arc_webui,false)).
+
+:- set_prolog_flag(use_arc_swish,false).
+:- set_prolog_flag(use_arc_bfly,false).
+% false = command line (no butterfly)
+% butterfly (arc_webui.sh)
+% true = no butterfly (SWISH only)
+%
+
+:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(use_arc_bfly,true);set_prolog_flag(use_arc_bfly,false)).
+%:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(load_arc_swish,true);true).
 :- set_prolog_flag(arc_term_expansion,false).
 
 :- dynamic('$messages':to_list/2).
@@ -173,12 +181,13 @@ pfcAddF(P):-
 :- set_prolog_flag(no_sandbox,true).
 
 
-with_webui(_Goal):- \+ current_prolog_flag(use_arc_webui,true),!.
-with_webui(Goal):- ignore(when_arc_webui(with_http(Goal))).
+with_webui(_Goal):- \+ current_prolog_flag(use_arc_swish,true),!.
+with_webui(Goal):- ignore(when_arc_webui(catch_log(with_http(Goal)))).
 %:- initialization arc_http_server.
 
 :- exists_source(library(xlisting/xlisting_web)) -> system:use_module(library(xlisting/xlisting_web)) ; true.
 
+ld_logicmoo_webui:- !.
 ld_logicmoo_webui:-
    exists_source(library(logicmoo_webui)), use_module(library(logicmoo_webui)), 
   system:use_module(library(xlisting/xlisting_web)),
@@ -189,7 +198,7 @@ ld_logicmoo_webui.
 logicmoo_webui:- ld_logicmoo_webui,catch_log(call(call,webui_start_swish_and_clio)).
 
 :- ld_logicmoo_webui.
-:- (current_prolog_flag(load_arc_webui,true)->catch_log(ld_logicmoo_webui) ; true).
+:- (current_prolog_flag(load_arc_swish,true)->catch_log(ld_logicmoo_webui) ; true).
 
     
 
@@ -220,7 +229,7 @@ check_len(_).
 must_det_ll(X):- \+ callable(X), !, throw(must_det_ll_not_callable(X)).
 must_det_ll((X,!)):- !, (must_det_ll(X),!).
 must_det_ll((X,!,Y)):- !, (must_det_ll(X),!,must_det_ll(Y)).
-must_det_ll((X,Y)):- !, (must_det_ll(X),must_det_ll(Y)).
+must_det_ll((X,Y)):- !, (must_det_ll(X),!,must_det_ll(Y)),!.
 %must_det_ll(X):- notrace(catch(X,_,fail)),!.
 must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,maplist(must_det_ll,List).
 must_det_ll(must_det_ll(X)):- !, must_det_ll(X).
@@ -243,8 +252,11 @@ must_det_ll(X):-
 must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> throw(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
   rrtrace(visible_rtrace([-all,+exception]),X)))).
 
+odd_failure(G):- nb_current(cant_rrtrace,t),!,call(G).
+odd_failure(G):- locally(nb_setval(cant_rrtrace,t),(call(G)*->true;fail_odd_failure(G))).
 
-odd_failure(G):- call(G)*->true;(wdmsg(odd_failure(G)),fail,rrtrace(G)).
+fail_odd_failure(G):- wdmsg(odd_failure(G)),rtrace(G), fail.
+%fail_odd_failure(G):- call(G)*->true;(wdmsg(odd_failure(G)),fail,rrtrace(G)).
 
 
 %must_det_ll_failed(X):- predicate_property(X,number_of_clauses(1)),clause(X,(A,B,C,Body)), (B\==!),!,must_det_ll(A),must_det_ll((B,C,Body)).
@@ -308,14 +320,22 @@ is_setter_syntax(hset(How,ObjMember),Obj,Member,_Var,How):- obj_member_syntax(Ob
 obj_member_syntax(ObjMember,Obj,Member):-compound(ObjMember), compound_name_arguments(ObjMember,'.',[Obj,Member]),!.
 
 expand_must_det(I,_):- \+ compound(I),!,fail.
-expand_must_det(must_det_ll(GoalL),GoalLO):- !, expand_must_det1(GoalL,GoalLO).
+expand_must_det(must_det_ll(GoalL),GoalLO):- !, expand_must_det0(GoalL,GoalLO).
 expand_must_det(maplist(P1,GoalL),GoalLO):- P1 ==must_det_ll,!,
-  expand_must_det1(GoalL,GoalLO).
+  expand_must_det0(GoalL,GoalLO).
 
-expand_must_det1(Nil,true):- Nil==[],!.
-expand_must_det1(Var,Var):- \+ compound(Var),!.
+expand_must_det0(Nil,true):- Nil==[],!.
+expand_must_det0(Var,Var):- \+ callable(Var),!.
+expand_must_det0([A|B],(AA,BB)):- assertion(callable(A)), assertion(is_list(B)), !, expand_must_det1(A,AA), expand_must_det0(B,BB).
+expand_must_det0(A,AA):- !, expand_must_det1(A,AA).
+
+
+expand_must_det1(Var,Var):- \+ callable(Var),!.
+expand_must_det1(Goal,O):- \+ compound(Goal), !,O = must_det_ll(Goal).
 expand_must_det1((A,B),(AA,BB)):- !, expand_must_det1(A,AA), expand_must_det1(B,BB).
-expand_must_det1([A|B],(AA,BB)):- !, expand_must_det1(A,AA), expand_must_det1(B,BB).
+expand_must_det1((C*->A;B),(C->AA;BB)):- !, expand_must_det1(A,AA), expand_must_det1(B,BB).
+expand_must_det1((C->A;B),(C->AA;BB)):- !, expand_must_det1(A,AA), expand_must_det1(B,BB).
+expand_must_det1((C;B),(C->true;BB)):- !, expand_must_det1(B,BB).
 expand_must_det1(must_det_ll(AB), AABB):-!, expand_must_det1(AB,AABB).
 expand_must_det1( A,must_det_ll(AA)):- expand_goal(A,AA).
 
@@ -459,7 +479,7 @@ suggest_arc_user(ID):- catch((http_session:session_data(_,username(ID))),_,fail)
 
 arc_webui:-  notrace(arc_webui0).
 
-arc_webui0:- current_prolog_flag(use_arc_webui,false),!,fail.
+arc_webui0:- current_prolog_flag(use_arc_swish,false),!,fail.
 arc_webui0:- toplevel_pp(http),!.
 arc_webui0:- in_pp(http),!.
 arc_webui0:- toplevel_pp(swish),!.
@@ -760,8 +780,8 @@ user:portray(Grid):- fail,
 
 :- catch_log(set_stream(current_output,encoding(utf8))).
 
-:- (current_prolog_flag(load_arc_webui,true)->catch_log(logicmoo_webui) ; true).
-:- current_prolog_flag(load_arc_webui,true) -> catch_log(start_arc_server) ; true.
+:- (current_prolog_flag(load_arc_swish,true)->catch_log(logicmoo_webui) ; true).
+:- current_prolog_flag(load_arc_swish,true) -> catch_log(start_arc_server) ; true.
 
 :- catch_log(set_long_message_server('https://logicmoo.org:17771')).
 
@@ -790,7 +810,7 @@ ansi_startup:-
 :- luser_default(no_individuator, f).
 :- luser_default(grid_size_only,true).
 :- luser_default(extreme_caching,true).
-:- luser_default(cmd,test_easy_solve_by).
+:- luser_default(cmd,test_easy).
 :- luser_default(cmd2,print_all_info_for_test).
 :- luser_default(individuated_cache,true).
 :- luser_default(extreme_caching,true).

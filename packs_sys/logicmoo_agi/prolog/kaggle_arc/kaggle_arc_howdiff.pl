@@ -378,7 +378,8 @@ showdiff_arg1(TITLE,Peers1,Obj1,Peers2,Obj2):-
   findall(Peer,(nop(has_prop(o(X,_,Y),Obj1)),member(Peer,Peers1),has_prop(o(X,_,Y),Peer),Peer\==Obj1),Peers11),
   findall(Peer,(nop(has_prop(o(X,_,Y),Obj2)),member(Peer,Peers2),has_prop(o(X,_,Y),Peer),Peer\==Obj2),Peers22),
   objs_to_io(Obj1,Obj2,I1,O1),
-  ((Obj1==I1) -> (PeersI = Peers11,PeersO = Peers22) ; (PeersI = Peers22,PeersO = Peers11)))),
+  ((Obj1==I1) 
+       -> (PeersI = Peers11,PeersO = Peers22) ; (PeersI = Peers22,PeersO = Peers11)))),
  must_det_ll((
  %link_prop_types(loc2D,I1,O1,_LOCS),
  show_pair_now(TITLE,I1,O1),
@@ -396,6 +397,7 @@ showdiff_arg1(TITLE,Peers1,Obj1,Peers2,Obj2):-
   subst_2L(Sames,NewSames, T1+ T2+IU +OU,
                           _U1+_U2+IU2+OU2),
   try_omember(PeersI,T1,TT1),
+  nop(PeersO=PeersO),
   flatten_sets([IU2,TT1],LHSSet),
   flatten_sets([OU2],RHSSet),
   %peerless_props(O1,PeersO,Props2),
@@ -418,6 +420,7 @@ show_pair_now(TITLE,OO1,OO2):-
   format('~N~n'),
   nop(ignore((into_ngrid(O1,NO1),into_ngrid(O2,NO2), print_side_by_side(silver,NO1,ngrid(T1),_,NO2,ngrid(T2))))),
   debug_indiv_obj(O1),
+  format('~N~n'),
   debug_indiv_obj(O2),  
   if_t(nb_current(menu_key,'o'),
    collapsible_section(info,compare_objs1(TITLE),false,
@@ -767,7 +770,8 @@ combine_same_globalpoints(IndvS,IndvSO):-
   must_det_ll(indv_props(I,IProps)),
   same_globalpoints_and_window(I,O),
   my_partition(props_not_for_merge,IProps,_Exclude,Include),
-  must_det_ll(override_object([iz(merged(cgp))|Include],O,IO)),
+  % iz(merged(cgp))
+  must_det_ll(override_object(Include,O,IO)),
   must_det_ll(combine_same_globalpoints([IO|IndvS2],NoMoreDupes)),
   must_det_ll(append(NoDupes,NoMoreDupes,IndvSO)),!.
 combine_same_globalpoints(IndvSO,IndvSO).
@@ -784,8 +788,11 @@ showdiff_objects_vis(N,O1,O2):- showdiff_objects_n(vis(N),O1,O2).
 %showdiff_objects_n(N,O1,O2,[]):- print_list_of(N,[O1,O2]),!.
 showdiff_objects_n(N,O1,O2):-  showdiff_objects(change_obj(N,O1,O2)).
 
+maybe_add_long_web_message(SS):- current_predicate(add_long_web_message/1),!,call(call,add_long_web_message,SS).
+maybe_add_long_web_message(SS):- write(SS).
+
 showdiff_objects(Info):- in_pp(bfly),!, wots(SS,showdiff_objects1(Info)),
-  format('~N'), wots(S,add_long_web_message(SS)),
+  format('~N'), wots(S,maybe_add_long_web_message(SS)),
   format('~N'),!,bfly_in_out(write_expandable3(false,S,bfly_in_out(write(SS)))),format('~N').
 showdiff_objects(Info):- showdiff_objects1(Info).
 
@@ -965,6 +972,8 @@ select_two_any(I,O,CI,CO,II,OO):- select(CI,I,II), select(CO,O,OO).
 
 is_kv_list([C|_]):- compound(C),functor(C,(-),2).
 
+select_two_simple(A,B,E1,E2,AA,BB):- select_two(A,B,E1,E2,AA,BB),!.
+
 select_two(I,O,CI,CO,II,OO):- var(CI), prop_type(_,CI),copy_term(CI,CO),select_two(I,O,CI,CO,II,OO).
 select_two(I,O,CI,CO,II,OO):- select_two0(I,O,CI,CO,II,OO), two_ok(CI,CO),!.
 select_two(I,O,CI,CO,II,OO):- select_two0(I,O,CI,CO,II,OO), refunctor(CI,CII),CO=CII,!.
@@ -978,32 +987,37 @@ select_two0(I,O,CI,CO,II,OO):- select_two_2(O,I,CO,CI,OO,II).
 select_two0(I,O,CI,CO,II,OO):- select_two_3(I,O,CI,CO,II,OO).
 select_two0(I,O,CI,CO,II,OO):- select_two_3(O,I,CO,CI,OO,II).
 
-be_comparable(CI,CO):- data_type(CI,TI),data_type(CO,TO),TI==TO,!.
-be_comparable(CI,CO):- compound(CI),compound(CO),!,functor(CI,F,A),functor(CO,F,A).
+be_comparable(CI,CO):- \+ compound(CI); \+ compound(CO),!, data_type(CI,TI),data_type(CO,TO),TI=@=TO,!.
+be_comparable(iz(CI),iz(CO)):-!, be_comparable(CI,CO).
+be_comparable(giz(CI),giz(CO)):-!, be_comparable(CI,CO).
+be_comparable(CI,CO):- compound(CI),compound(CO),functor(CI,F,A),functor(CO,F,A),!.
+
 
 diff2_terms(A,B,D):- two_ok(A,B),!,must_det_ll(diff_terms(A,B,DD)),!,D=DD.
 
 
-two_ok(I,O):- atom(I),atom(O),!.
-two_ok(I,O):- (var(I);var(O)),!.
-two_ok(I,O):- number(I),number(O),!.
-two_ok(obj(I),obj(O)):- two_ok(I,O).
+reduce_required(norm(IO),IO).
+reduce_required(iz(IO),IO).
+reduce_required(obj(IO),IO).
+reduce_required(giz(IO),IO).
+reduce_required(pen(IO),IO).
+reduce_required(birth(IO),IO).
+reduce_required(shape(IO),IO).
+reduce_required(g(IO),IO).
+reduce_required(i(IO),IO).
+
+
 two_ok(I,O):- I=@=O,!.
+two_ok(I,O):- ( is_list(I);is_list(O); \+ compound(I); \+ compound(O)),!, two_ok_dt(I,O).
+two_ok(o(A,_,B),o(A,_,B)):-!.
+two_ok(I,O):- reduce_required(I,II),!,functor(I,F,A),functor(O,F,A),arg(1,O,OO),!,two_ok(II,OO).
 two_ok(cc(_,N),cc(_,N)).
 two_ok(cc(N,_),cc(N,_)).
 two_ok(-(_,N),-(_,N)).
 two_ok(-(N,_),-(N,_)).
-two_ok(norm(_),norm(_)).
-two_ok(giz(_),CO):- !, CO=giz(_), !.
-%two_ok(giz(CI),CO):- !, CO=giz(COO), two_ok(CI,COO).
-two_ok(pen(CI),CO):- !, CO=pen(COO), two_ok(CI,COO).
-two_ok(shape(_),CO):- !, CO=shape(_).
-two_ok(g(CI),CO):-!, CO=g(COO), two_ok(CI,COO).
 two_ok(edge(CI1,CI2),edge(CO1,CO2)):-!,(CI1==CO1;CI2==CO2).
-two_ok(o(A,B,_),o(A,B,_)):-!.
-two_ok(I,O):- (\+ compound(I); \+ compound(O)),!, two_ok_dt(I,O).
+%two_ok(giz(CI),CO):- !, CO=giz(COO), two_ok(CI,COO).
 two_ok(A,B):- maybe_good_prop(A,B).
-two_ok(iz(CI),CO):-!, CO=iz(COO), two_ok(CI,COO).
 two_ok(CI,CO):- compound(CI),compound(CO),functor(CI,F,A),functor(CO,F,A),!,
   compound_name_arguments(CI,F,A1),compound_name_arguments(CO,F,A2),!,
   nop(args_ok(F,A,A1,A2)).  
@@ -1018,6 +1032,9 @@ args_ok(_F,_A,[A1],[A2]):- compound(A1),!,two_ok(A1,A2).
 args_ok(F,A,[A1|T],[A2|TT]):- compound(A1),!,two_ok(A1,A2),args_ok(F,A,T,TT).
 args_ok(F,A,[A1|T],[A1|TT]):- args_ok(F,A,T,TT).
 
+%two_ok_dt(I,O):- atom(I),!,atom(O),!.
+two_ok_dt(I,O):- (var(I);var(O)),!.
+two_ok_dt(I,O):- number(I),!,number(O),!.
 two_ok_dt(CI,CO):- data_type(CI,TI),data_type(CO,TO),TI==TO,!.
 
 
@@ -1188,7 +1205,13 @@ proportional(N1,N2,N):- compound(N1),compound_name_arguments(N1,F,A1),compound_n
   
 proportional(L1,L2,Diff):- locally(nb_setval(diff_porportional,t),diff2_terms(L1,L2,Diff)),!.
 
+:- multifile(gvs:dot_overload_hook/4).
+:- dynamic(gvs:dot_overload_hook/4).
+:- module_transparent(gvs:dot_overload_hook/4).
+gvs:dot_overload_hook(_M,_NewName, _Memb, _Value):- fail.
 
+
+grid_props(Obj1,OOO):- \+ is_grid(Obj1),!,into_grid(Obj1,G),print_grid(G),grid_props(G,OOO).
 grid_props(Obj1,OOO):- % \+ arc_option(grid_size_only), 
  %to_assertable_grid(Obj1,AG),data_type(Obj1,DT),
  % wots(S,print_grid(Obj1)),

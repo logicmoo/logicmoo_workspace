@@ -198,7 +198,12 @@ into_monochrome2(NoBlack,Mono):-  get_black(Black),
     CCBF=[cc(Black,0),cc(BGC,_)|_],!, 
   into_monochrome4(fg,BGC,NoBlack,Mono).
 into_monochrome2(Color,Mono):- get_black(Black),into_monochrome4(fg,Black,Color,Mono).
-
+/*
+4495416
+Post Office 2700 Capels Ave 98661
+9a-2m
+360-992-5002
+*/
 
 into_monochrome4(FG,BG,Color,Mono):- into_monochrome3(from_monochrome4(FG,BG),Color,Mono).
 

@@ -168,7 +168,8 @@ S=[[1,bg,1],[1,bg,1],[1,1,1]],
 
 */
 
-blank(E,G,G1):- grid_size(G,H,V),make_grid(H,V,G1),mapgrid(=(E),G1).
+blank(G,G1):- grid_size(G,H,V),make_grid(H,V,G1).
+blank(E,G,G1):- blank(G,G1),mapgrid(=(E),G1).
 
 join_cols([],[]).
 join_cols([Grid1,Grid2],Grid):- is_grid(Grid1), !,append_left(Grid1,Grid2,Grid).
@@ -191,6 +192,12 @@ p2_grow_row([C1|Row],Grid,GM):- !, call(C1,Grid,G1),p2_grow_row(Row,Grid,GR),app
 p2_grow([],       _  ,[]).
 p2_grow([Row|Rows],Grid,G1GridO):- p2_grow_row(Row,Grid,G1), p2_grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
 
+p1_grow_row([],_,[]).
+p1_grow_row([C1|Row],Grid,GM):- !, call(C1,G1),p1_grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+p1_grow([],       _  ,[]).
+p1_grow([Row|Rows],Grid,G1GridO):- p1_grow_row(Row,Grid,G1), p1_grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
+
+
 copy_grid_based_on_color(Cell,G,G1):- \+ is_fg_color(Cell),!,grid_size(G,H,V),make_grid(H,V,G1), mapgrid(=(Cell),G1).
 copy_grid_based_on_color(_,G,G1):- safe_grid(G,G1).
 grow_row([],_,[]).
@@ -198,10 +205,11 @@ grow_row([C1|Row],Grid,GM):- !, copy_grid_based_on_color(C1,Grid,G1),grow_row(Ro
 grow([],       _  ,[]).
 grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
 
-grow_from_shape(I,O):- grow_from_shape(I,I,O).
+grow_from_shape(I,O):- max_fg_color(I,Max),mapgrid(only_this_color_or_p1(Max,var),I,Pattern),grow_from_shape(Pattern,I,O).
 grow_from_shape(Grid,I,O):- grow(Grid,I,O).
 
-
+only_this_color_or_p1(Max,_Or,Cell,Cell):- cmatch(Max,Cell),!.
+only_this_color_or_p1(_Max,P1,_Cell,Or):- call(P1,Or).
 
 no_run_dsl(GridO,_Self,GridO).
 
@@ -503,6 +511,32 @@ add_borders(Color,Grid,GridO):-
   replace_col_e(1,Color,Grid1,Grid2),
   replace_col_e(H,Color,Grid2,GridO),!.
 
+
+%00d62c1b
+fill_odd_even(Color,FGColor,I,O):-
+   (var(FGColor) -> ((unique_fg_colors_pos(I,IC),member(FGColor,IC))) ; true),
+   (var(Color) -> (( unique_fg_colors_pos(O,OC), member(Color,OC), FGColor\==Color, \+ member(Color,IC))) ; true),
+    blank(I,II),
+    maplist(odd_even_fill_row(Color,FGColor,out,black),I,II),
+    rot90(I,I90),
+    blank(I90,II90),
+    maplist(odd_even_fill_row(Color,FGColor,out,black),I90,II90),
+    rot270(II90,II360),
+    mapgrid(combine_odd_even_fill(Color),I,II,II360,O).
+
+combine_odd_even_fill( Color,_I,II,II360,O):-II==out,II360==out,O=Color.
+combine_odd_even_fill(_Color, I, _, _,   I).
+
+   
+odd_even_fill_row(Color,FGColor,IO,Prev,[C|Row],[C|Place]):- C==Prev,!,odd_even_fill_row(Color,FGColor,IO,Prev,Row,Place).
+odd_even_fill_row(_,_,_,_,[],[]):-!.
+odd_even_fill_row(Color,FGColor,IO,_Prev,[C|Row],[C|Place]):- C==FGColor,!,
+  in_out(IO,OI), odd_even_fill_row(Color,FGColor,OI,FGColor,Row,Place).
+odd_even_fill_row(Color,FGColor,IO,Prev,[_|Row],[IO|Place]):-
+  odd_even_fill_row(Color,FGColor,IO,Prev,Row,Place).
+
+
+
 fillFromBorder(Color,In,Out):- grid_call(fillFromBorder_0(Color),In,Out).
 fillFromBorder_0(FillColor,In,Out):- gref_call(fillFromBorder_gref(FillColor),In,Out).
 fillFromBorder_gref(FillColor,IIn):-
@@ -759,11 +793,15 @@ calc_add_points0(OH,OV,Grid,Object):- is_object(Object),!,globalpoints_maybe_bg(
 calc_add_points0(OH,OV,Grid,Points):- is_list(Points),!,maplist(calc_add_point1(OH,OV,Grid),Points).
 calc_add_points0(OH,OV,Grid,CPoint):- calc_add_point1(OH,OV,Grid,CPoint),!.
 
-calc_add_point1(OH,OV,Grid,C):- is_color(C),!,add_h_v_c(Grid,OH,OV,C).
+%point_symbol_color(Color-Point,Point,Symbol,Color):- is_color(Color), is_nc_point(Point),!.
+%point_symbol_color(Symbol-Color-Point,Point,Symbol,Color):- is_color(Color), is_nc_point(Point),!.
+
+
+%calc_add_point1(OH,OV,Grid,PSC):- point_symbol_color(PSC,Point,Symbol,Color),hv_point(H,V,Point),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
+%calc_add_point1(OH,OV,Grid,C):- is_color(C),!,add_h_v_c(Grid,OH,OV,C).
 calc_add_point1(OH,OV,Grid,Color):- is_color(Color),!, show_call(add_h_v_c(Grid,OH,OV,Color)).
 calc_add_point1(OH,OV,Grid,ColorInt):- integer(ColorInt), color_name(ColorInt,Color),!, add_h_v_c(Grid,OH,OV,Color).
 calc_add_point1(OH,OV,Grid,Color):- var(Color),!, show_call(add_h_v_c(Grid,OH,OV,Color)).
-%calc_add_point1(OH,OV,Grid,(Symbol)-C-Point):- nonvar(C), hv_point(H,V,Point),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
 %calc_add_point1(OH,OV,Grid,Symbol-C-Point):- nonvar(C), hv_point(H,V,Point),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).
 %calc_add_point1(OH,OV,Grid,C-Point):- atom(Point),var(C),hv_point(H,V,Point),!,add_offset_h_v_c(Grid,H,V,OH,OV,C).
 %calc_add_point1(OH,OV,Grid,_-Point):- point_to_hvc(Point,H,V,C),!, add_offset_h_v_c(Grid,H,V,OH,OV,C).

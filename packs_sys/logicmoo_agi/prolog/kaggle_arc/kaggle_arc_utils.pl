@@ -176,7 +176,8 @@ map_pred(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, map_pred(Pred, P, X, Sk, P1), !
 map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
 map_pred(_Pred, P, _, _, P).
 */
-
+mapgrid(P4,Grid,GridM,GridN,GridO):- is_list(Grid),!,maplist(mapgrid(P4),Grid,GridM,GridN,GridO).
+mapgrid(P4,Grid,GridM,GridN,GridO):- call(P4,Grid,GridM,GridN,GridO),!.
 mapgrid(P3,Grid,GridN,GridO):- is_list(Grid),!,maplist(mapgrid(P3),Grid,GridN,GridO).
 mapgrid(P3,Grid,GridN,GridO):- call(P3,Grid,GridN,GridO),!.
 mapgrid(P2,Grid,GridN):- is_list(Grid),!,maplist(mapgrid(P2),Grid,GridN).

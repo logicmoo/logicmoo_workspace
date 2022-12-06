@@ -53,6 +53,21 @@ collapsible_section(Type,Title,Goal):-
 
 :- meta_predicate(collapsible_section(+,+,+,0)).
 /*
+
+memristive device arrays
+
+when NNs first came out , they were oftenj based on trying to emulate the design of physical memristive device arrays
+physical memristive device arrays (Neural Networks) were programmed (like in my highschool electronics class in the 1980s) like eeproms.. 
+by shining UV light to reinitialize them.  The training routine was that we submitted a latched vector of electrical voltages.. Pushed STORE.. 
+latched a new set of voltages pushed STORE etc (Idealy these vortages and resistences were computer from microphone or timed video output ) hoping 
+at the end of training the bottem set (the output) of latched voltages ... (that when inverted (inverting the mask patterns) could recreate the input signals 
+would be have the correct readings on the ohm meter (as submitted in training))
+
+
+
+
+like for exmaple when i built the speech encoder/recoder in my teens 
+
 collapsible_section(Type,Title,true,Goal):-
   (nb_current('$collapsible_section',Was);Was=[]),
   length(Was,Depth),
@@ -83,14 +98,16 @@ old_write_expandable(Showing,Title,Goal):-
    in_expandable(Showing,Title,Goal),
    flag('$old_write_expandable_depth',_,Depth)).
 
+in_expandable(_Showing,_Title,Goal):- !, call(Goal).
 in_expandable(Showing,Title,Goal):- Showing==always,!,ignore(ppt(Title)),call(Goal).
-in_expandable(Showing,Title,Goal):- flag('$old_write_expandable_depth',X,X), X>2, in_expandable(always,Title,Goal).
+in_expandable(_Show,  Title,Goal):- flag('$old_write_expandable_depth',X,X), X>2, in_expandable(always,Title,Goal).
 in_expandable(Showing,Title,Goal):- (Showing==toplevel;Showing==maybe), flag('$old_write_expandable_depth',X,X), X==1,!,in_expandable(true,Title,Goal).
 in_expandable(Showing,Title,Goal):- (Showing==maybe, flag('$old_write_expandable_depth',X,X), X=<2), !, ignore(ppt(Title)),!,in_expandable(true,Title,Goal).
 in_expandable(Showing,Title,Goal):- title_to_html(Title,HtmlTitle),!,
  (Showing == true -> Class=panel_shown; Class=panel_hidden),
+ (Showing == true -> Click='collapse/expand'; Click='expand/collapse'),
  setup_call_cleanup(format(
-  '<button class="accordion">~w (click to un/expand)</button><div class="~w">',[HtmlTitle,Class]),
+  '<button class="accordion">~w (click to ~w)</button><div class="~w">',[HtmlTitle,Click,Class]),
   call(Goal),
   format('</div>',[])),
  flush_tee_maybe.

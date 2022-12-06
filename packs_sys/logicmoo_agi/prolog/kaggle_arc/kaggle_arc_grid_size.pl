@@ -10,8 +10,8 @@
 
 :- dynamic(learned_grid_size/2).
 
-test_grid_size_prediction:- forall_count(kaggle_arc(TestID,trn+0,_,_), test_grid_sizes(TestID)). 
-store_grid_size_predictions:- forall_count(kaggle_arc(TestID,trn+0,_,_), test_grid_sizes(TestID)). 
+test_grid_size_prediction:- forall_count(all_arc_test_name(TestID), test_grid_sizes(TestID)). 
+store_grid_size_predictions:- forall_count(all_arc_test_name(TestID), test_grid_sizes(TestID)). 
 
 test_grid_sizes(TestID):- 
    retractall(learned_grid_size(TestID,_)),
@@ -37,7 +37,8 @@ predict_grid_size(TestID,In,Out):-
    color_print(C,predict_grid_size(TestID,in(size2D(IH,IV)),predicted(size2D(PH,PV)),actual(size2D(OH,OV))))))),!,
    (C==green 
      -> asserta(grid_size_prediction(TestID,In,PH,PV))
-     ;(nop(print_test(TestID)),write(SS),!,fail)).
+     ;(nop(print_test(TestID)),  write(SS),assert_test_suite(failed_predict_grid_size,TestID),!,fail)).
+
 
 add_akeys(A,A-A).
 alphabetize(List,ListA):- maplist(add_akeys,List,AKeys),keysort(AKeys,AKeysSorted),maplist(arg(2),AKeysSorted,ListA).
@@ -83,9 +84,9 @@ predict_grid_size1( ListA, _List, _, _,PH,PV):- findall(size2D(MH,MV),
 
 predict_grid_size1( ListA, _List, IH, IV,PH,PV):-  
  findall(size2D(PH,PV),
-  (member((
-     size_inv(num(_,+_,_),num(_,+_,ratio(Two)))
-  ),ListA),integer(Two),PH = IH, PV is IV / Two, PV is floor(PV)),L),
+  (member((size_inv(num(_,+_,_),num(_,+_,ratio(Two)))
+  ),ListA),
+  integer(Two),PH = IH, PV is IV / Two, PV is floor(PV)),L),
   L\=[],L\=[_],maplist(=(_),L),last(L,size2D(PH,PV)),!.
 
 apply_proportional(IH,MH,PH,IV,MV,PV):- 
@@ -172,7 +173,10 @@ with_current_pair(I,O,Goal):-
 
   
 
-set_current_pair(I,O):- luser_setval(input_grid,I),luser_setval(output_grid,O),ensure_other_grid(I,O),set_target_grid(O).
+set_current_pair(I,O):- 
+  luser_setval(input_grid,I),
+  luser_setval(output_grid,O),ensure_other_grid(I,O),set_target_grid(O),
+  must_det_ll((other_grid(I,OO),OO==O)).
 
 current_pair(I,O):- luser_getval(input_grid,I), must_det_ll((other_grid(I,O))).
 
@@ -191,8 +195,8 @@ ratio_about(square(Area), UCC,I,O):- !, call(Area,I,IA), call(Area,O,OA), n_time
 ratio_about(Mass, UCC,I,O):-  call(Mass,I,IM), call(Mass,O,OM), n_times(UCC,IM,OM).
 
 test_hint(How,P2):- must_det_ll((current_pair(I,O),call(P2,I,II),call(P2,O,OO))),call(How,II,OO).
-
 test_hint(G):- current_predicate(_,G),!,call(G).
+
 mass_and_area(P2Mass,P2Area):- test_hint(P2Mass,mass),test_hint(P2Area,area).
 mass_and_area_times(N):- mass_and_area(n_times(N),n_times(N)).
 
@@ -202,7 +206,10 @@ mass_and_area_times(N):- mass_and_area(n_times(N),n_times(N)).
 %   -> 8 - 24
 %   -> 9 - 48
 %   -> 10 - 96
+
+is_squared(X,Y):- Y #= X * X.
 grow_less_than_times(N,A,B):- N #>= 1, N #=< 4, MaxB #= A*2^(N-1), MinB #= A+N,  MaxB #> B, B #> MinB.
+grow_greater_than_times(N,A,B):- N #>= 1, N #=< 10, MaxB #= A*2^(N-1), MinB #= A+N,  MaxB #< B, B #< MinB.
 n_times(N,A,B):- \+ compound(N),!, B #= N * A.
 n_times(N^2,A,B):- !, B #= N * N * A.
 %n_times(N,A,B):- B #= N * A.
