@@ -1230,8 +1230,8 @@ color_print_webui(C,G):- mbfy(cpwui(C,G)).
 
 
 cpwui(_,G):- G==' ',!,write_nbsp.
-cpwui(C,G):- mv_peek_color(C,W),cpwui(W,G).
-cpwui(C,G):- is_bg_sym_or_var(C),!,cpwui(wbg,G).
+cpwui(C,G):- multivalued_peek_color(C,W),cpwui(W,G).
+cpwui(C,G):- is_bg_sym_or_var_ui(C),!,cpwui(wbg,G).
 
 cpwui([],G):- !, bformatc(G).
 cpwui([C|CC],G):- !,wots(S,cpwui(C,G)),cpwui(CC,S).
@@ -1318,7 +1318,7 @@ print_grid_html(Name,Grid):-print_grid(_OH,_OV,Name,Grid),!.
 
 print_grid_html(SH,SV,EH,EV,Grid):- print_grid_http(SH,SV,EH,EV,Grid),!.
 
-print_grid_http(SH,SV,EH,EV,Grid):- bg_sym(BGC),
+print_grid_http(SH,SV,EH,EV,Grid):- bg_sym_ui(BGC),
  arc_html_format(`<code>tbody td:nth-of-type(odd){ background:rgba(255,255,136,0.5); }</code>`),
 (plain_var(EH) ->grid_size(Grid,EH,_) ; true),ignore(SH=1),
   (plain_var(EV) ->grid_size(Grid,_,EV) ; true),ignore(SV=1),
@@ -1342,7 +1342,7 @@ print_grid_html_old(SH,SV,EH,EV,Grid):-
   Width is EH-SH, 
   (Width==0 -> DBW = 1 ; DBW is Width+1),
   once((with_style(CSS,dash_border_no_nl(DBW)))),
-  bg_sym(BGC),
+  bg_sym_ui(BGC),
   forall(between(SV,EV,V),
    with_style(CSS,((nl_if_needed,format('['),(format('<span style="~w">',[CSS])),
      forall(between(SH,EH,H),
@@ -1358,7 +1358,7 @@ grid_colors(GridI,WGrid):-
   GridI=Grid,
   grid_size(Grid,EH,EV),
   make_grid(EH,EV,WGrid),
-  bg_sym(BGC),
+  bg_sym_ui(BGC),
   forall(between(1,EV,V),
      forall(between(1,EH,H),
       ignore((((hv_cg_value(Grid,CG,H,V);CG=f(BGC))->
@@ -1374,7 +1374,7 @@ print_grid_ansi(SH,SV,EH,EV,GridII):- make_bg_visible(GridII,GridI),
   Width is EH-SH, 
   (Width==0 -> DBW = 1 ; DBW is Width+1),
   once((dash_border_no_nl(DBW))),
-  bg_sym(BGC),
+  bg_sym_ui(BGC),
   forall(between(SV,EV,V),
    ((nl_if_needed,format('|'),
      forall(between(SH,EH,H),
@@ -1416,17 +1416,33 @@ named_colors([ (lack),(blue),(red),(green),(yellow),(Silver),(purple),(orange),(
 named_colors([(lack),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
 named_colors([(lack),(blue),(red),(green),(yellow),(grey),(pink),(orange),(teal),(maroon)]).
 
-test_show_colors:- maplist(show_color,[0,1,2,3,4,5,6,7,8,9,fg,wfg,bg,wbg,black,_,'#100010'],G),
+test_show_colors:- maplist(show_color,[0,1,2,3,4,5,6,7,8,9,fg,wfg,bg,wbg,black,_,'#100010','#104010'],G),
   reverse(G,R),
   print_grid([G,R,G]),nl.
-show_color(X,N):- color_name(X,N),write(X),write(=),color_print(X,N),write('  ').
+show_color(X,N):- var(X),!,show_color('#101010',N).
+show_color(X,N):- color_name(X,N),write(X),write(=),color_gl_int_g(X,Int),color_print(X,N),write('['),no_color_print(Int),write('] ').
 
+no_color_print(X):- color_print([reset],X).
 % '#1077f1'
 fg_cut('#b399d4').
 % silver(rgb(123,123,123)).
 silver('#9a9a9a').
 silver('#7b7b7b').
 silver('#c0c0c0').
+
+/*
+
+0=black[t] 1=blue[u] 2=red[?] 3=green[?] 4=yellow[?] 5=silver[?] 6=purple[O] 7=orange[?] 8=cyan[?] 9=brown[?] fg=fg[O] wfg=wfg[g] bg= [U] wbg=wbg[?] black=black[t] #101010=#101010[#101010] #100010=#100010[#100010] #104010=#104010[#104010]
+   _____________________________________
+  | . l ? ? ? ? O ? ? ? O g     . #101010 #100010   |
+  |   #100010 #101010 .     g O ? ? ? O ? ? ? ? l . |
+  | . l ? ? ? ? O ? ? ? O g     . #101010 #100010   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+true.
+
+
+*/
 
 
 unnegate_color(C,Neg):- number(C),C<0,C is -Neg,!.
@@ -1472,19 +1488,55 @@ bold_print(W):- ansi_format_real(bold,'~@',[W]),!.
 compound_var(C,N):- \+ plain_var(C), \+ attvar(C), is_ftVar(C),arg(1,C,N).
 
 
+:- multifile(color_decls/0).
+:- dynamic(color_decls/0).
+multivalued_peek_color(C,V):- color_decls,mv_peek_color(C,V).
+is_bg_sym_or_var_ui(C):- color_decls,is_bg_sym_or_var(C).
+bg_sym_ui(Bg):- (color_decls -> bg_sym(Bg); Bg==bg).
+
+
+c_dot(CDot):- number(CDot),!,c_dot_num(CDot).
+c_dot(CDot):- \+ atomic(CDot),!,fail.
+c_dot(CDot):- \+ atom(CDot), \+ string(CDot),!,fail.
+c_dot(CDot):- name(CDot,[Num]),c_dot_num(Num),!.
+c_dot_num(64). %c_dot_num(169).
+
+color_gl_int(C,W):- \+ atomic(C),W=C.
+color_gl_int(C,W):- atom(C),named_colors(L),nth0(W,L,C),!.
+color_gl_int('#6666FF',C):- name(C,[169]).
+color_gl_int('#301030','.').
+color_gl_int(C,C):-!.
+
+:- dynamic(now_reserved_for_color/2).
+c2s(0,'.'). c2s(1,C):- name(C,[169]). 
+
+c2s(2,C):- name(C,[174]).
+c2s(2,'r'). 
+
+c2s(3,'G').  c2s(4,'Y'). c2s(5,'s'). c2s(6,'v'). c2s(7,'o').
+c2s(8,'C'). c2s(9,'B'). c2s(10,'f').  c2s(11,'q'). c2s(12,'.'). c2s(13,','). c2s(14,'*'). 
+c2g(N,W):- c2s(N,W),!.
+c2g(N,W):- C is 100+N,name(W,[C]), \+ c2s(_,W),!.
+c2g(2,W):- c2g(21,W).
+c2g(N,W):- NN is N *10, int2glyph(NN,W),!.
+%color_gl_int_g(C,W):- nonvar(C),now_reserved_for_color(W,C),!.
+color_gl_int_g(C,W):- color_gl_int(C,N),number(N), c2g(N,W),!,asserta(now_reserved_for_color(W,C)).
+color_gl_int_g(C,W):- color_gl_int(C,W),!.
 
 %color_print(_,W):- write(W),!.
 :- export(color_print/2).
 :- system:import(color_print/2).
 
+color_print(C,CDot):- c_dot(CDot),nonvar(C),!, color_gl_int_g(C,W),!,color_print(C,W).
+
 %color_print(C,W):- '$current_typein_module'(M), muarc_mod(MM), MM\==M, !,'$set_typein_module'(MM), module(MM),color_print(C,W).
 color_print(C,W):- arc_webui,!,color_print_webui(C,W).
-color_print(C,W):- mv_peek_color(C,V),!,color_print(V,W).
+color_print(C,W):- color_decls,multivalued_peek_color(C,V),!,color_print(V,W).
 %color_print(C,W):- C == black,!, color_print(white,W).
 color_print(C,W):- compound(W),compound_name_arity(W,call,_),!,(wots(S1,call(call,W))->color_print(C,S1);color_print(C,failed(W))).
 
-color_print(C,W):- is_bg_sym_or_var(C),W=='_',!,on_bg(write_nbsp),!.
-color_print(C,W):- is_bg_sym_or_var(C),W=='_',color_print(C,'+').
+color_print(C,W):- is_bg_sym_or_var_ui(C),W=='_',!,on_bg(write_nbsp),!.
+color_print(C,W):- is_bg_sym_or_var_ui(C),W=='_',color_print(C,'+').
 color_print(_,' '):- write_nbsp,!.
 
 color_print(C,W):- plain_var(C),integer(W),arc_acolor(W,CI),!,ansi_format_arc(CI,'~w',[W]),!.
@@ -1492,12 +1544,12 @@ color_print(C,W):- plain_var(C),W=='?',!,on_bg(magenta,color_print_webui(C,W)).
 color_print(C,W):- plain_var(C),!,on_bg(ansi_format_real(italic,'~w',[W])),!.
 
 color_print(C,W):- (cant_be_color(C,CbC);cant_be_color(W,CbC)),!,arc_acolor(-CbC,Ansi),ansi_format_arc(Ansi,'~w',['_']),!.
-color_print(C,W):- is_bg_sym_or_var(C),is_bg_sym_or_var(W), !, write_nbsp.
+color_print(C,W):- is_bg_sym_or_var_ui(C),is_bg_sym_or_var_ui(W), !, write_nbsp.
 
 color_print(C,W):- string(W),is_list(C),!,ansi_format_arc(C,'~w',W).
-color_print(C,W):- is_bg_sym_or_var(C),integer(W),W<10, arc_acolor(W,CI),!,ansi_format_arc(CI,'~w',[W]),!.
-%color_print(C,W):- (is_ftVar(C);(bg_sym(C))), !, on_bg(yellow,var_color_print(C,W)).
-color_print(C,W):- is_bg_sym_or_var(C),!,on_bg(cyan,ansi_format_arc([],'~w',[W])),!.
+color_print(C,W):- is_bg_sym_or_var_ui(C),integer(W),W<10, arc_acolor(W,CI),!,ansi_format_arc(CI,'~w',[W]),!.
+%color_print(C,W):- (is_ftVar(C);(bg_sym_ui(C))), !, on_bg(yellow,var_color_print(C,W)).
+color_print(C,W):- is_bg_sym_or_var_ui(C),!,on_bg(cyan,ansi_format_arc([],'~w',[W])),!.
 color_print(_-C,W):- is_color(C),!, color_print(C,W).
 color_print(C-_,W):- is_color(C),!, color_print(C,W).
 %color_print(C-_,W):- !, color_print(C,W).
@@ -1612,7 +1664,7 @@ mregression_test(P1):- call(P1,[[_17910,_17922-green,_17934-green,_17946-green,_
 
 print_g1(CG):- print_g1(color_print_ele,CG).
 print_g1(P2,C):- C == ((+) - wbg),!,call(P2,wbg,(+)).
-print_g1(P2,C):- mv_peek_color(C,V),C\==V,!,print_g1(P2,V).
+print_g1(P2,C):- multivalued_peek_color(C,V),C\==V,!,print_g1(P2,V).
 print_g1(P2,C):- plain_var(C), write_nbsp,!, nop(( nobject_glyph(C,G),underline_print(print_g1(P2,G-G)))),!.
 print_g1(_ ,C):- get_black(Black),C == Black,!, write_nbsp.
 print_g1(_ ,C-CC):- get_black(Black), C == Black,CC == Black,!,write_nbsp,!.
@@ -1626,6 +1678,7 @@ print_g1(P2,C):- compound_var(C,N),nobject_glyph(N,G),underline_print(print_g1(P
 print_g1(P2,N):- \+ compound(N), \+ is_colorish(N), print_g1(P2,N-N).
 print_g1(P2,N):- into_color_glyph(N,C,Code),as_name(Code,S), call(P2,C,S),!.
 
+                         
 
 color_print_ele(C,G):- atom(G),atom_concat('o_',S,G),atom_chars(S,[AC|_]),atom_chars(GS,[AC]),!,color_print_ele(C,GS).
 color_print_ele(C,G):- arc_webui,!,color_print_webui(C,G),!.
@@ -1667,7 +1720,7 @@ into_color_glyph(N,FGL,FGD):- get_fg_label(FGL),FGL==N, fg_dot(FGD),!.
 i_glyph(N,Glyph):- notrace((i_glyph0(N,Glyph),atom(Glyph))),!.
 i_glyph(N,Glyph):- trace,i_glyph0(N,Glyph),atom(Glyph),!.
 
-i_glyph0(N,Glyph):- bg_sym(BG), BG==N, bg_dot(Code), name(Glyph,[Code]).
+i_glyph0(N,Glyph):- bg_sym_ui(BG), BG==N, bg_dot(Code), name(Glyph,[Code]).
 i_glyph0(N,Glyph):- atom(N),name(N,[_111,95,Code|_])->name(Glyph,[Code]),!.
 i_glyph0(N,Glyph):- atom(N),name(N,[Code])->name(Glyph,[Code]),!.
 i_glyph0(Code,Glyph):- integer(Code), Code> 255, name(Glyph,[Code]).
@@ -1682,6 +1735,7 @@ i_sym(N,Code):- plain_var(N), Code = 63.
 %change_code(N,M):- M is N * 100,!.
 %change_code(N,M):- N>10, M is (N * 10 ),!.
 change_code(N,M):- M is N.
+
 
 
 print_g1(P2,_,_, E):- print_g1(P2,E),!. 
@@ -1738,6 +1792,9 @@ check_dot_spacing:- iss:i_syms(CCC),maplist(check_dot_spacing,CCC),!.
 
 :- retractall(iss:i_syms(_)).
 :- ignore(save_codes).
+
+:- current_prolog_flag(reloading,true)-> test_show_colors ; true.
+
 
 /*
 get_glyph(Point,Glyph):-  

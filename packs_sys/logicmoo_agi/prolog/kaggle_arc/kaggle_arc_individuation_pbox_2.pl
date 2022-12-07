@@ -41,6 +41,7 @@ p1_found_box(L_S,NSEW,OH,OV,C,Srch,XSG,H,V,Center,Inside,Find,IBorder,OBorder,  
 p1_found_box(L_S,NSEW,OH,OV,C,Srch,XSG,H,V,Center,Inside,Find,IBorder,OBorder,   inside, outerThing2n(L_S,BC,C,H,V)):- 
   pbox_phase_check(L_S,l_s(2)),
   maplist_ls(=(BC),OBorder), BC\==C,!.
+  
 
 p1_found_box(L_S,NSEW,OH,OV,C,Srch,XSG,H,V,Center,Inside,Find,IBorder,OBorder,   center, twang):- fail,
 

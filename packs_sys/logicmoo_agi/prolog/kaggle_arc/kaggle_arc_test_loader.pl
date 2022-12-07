@@ -33,31 +33,76 @@ no_uscore(UBaseName,BaseName):-
   atomic_list_concat(List,'_',UBaseName),
   atomic_list_concat(List,'-',BaseName).
 
-load_json_file(F, UBaseName, FullName):- no_uscore(UBaseName,BaseName), Testname=..[F,BaseName], 
+load_json_file(F, UBaseName, FullName):- 
+  must_det_ll((no_uscore(UBaseName,BaseName), Testname=..[F,BaseName], 
   % dmsg(load_json_file=FullName),
   setup_call_cleanup(open(FullName,read,In),
    json:json_read(In,Term,[]),
    close(In)),
+
   load_json_of_file(Testname,file,Term),!,
   ignore((
   add_test_info_prop(Testname,fullname,FullName),
   split_string(FullName, "\\/",'./',L),append(_,[Dir,_],L),
   atom_string(ADir,Dir),
   add_test_info_prop(Testname,test_suite,ADir),
-  asserta_if_new(dir_test_suite_name(ADir)))).
+  (ADir==solution -> true ; asserta_if_new(dir_test_suite_name(ADir))))))).
 
 
+add_test_info_props(Name,RestInfo):- is_list(RestInfo),!, maplist(add_test_info_props(Name),RestInfo).
+add_test_info_props(Name,N=V):- !, add_test_info_prop(Name,N,V).
+add_test_info_props(Name,TV):- assert_if_new(some_test_info_prop(Name,TV)).
+
+
+
+  load_json_predictions(Name,Rest,json(Term)):- !, load_json_predictions(Name,Rest,Term).
+  load_json_predictions(Name,Rest,Term):- %wdmsg(load_json_predictions(Name,Rest,Term)),
+    select(output_id=ID,Rest,RestInfo),
+    select(prediction_id=AnswerID0,Term,TermInfo0),    
+     AnswerID is AnswerID0 + 10,
+    select(output=G,TermInfo0,TermInfo1),
+    maplist(add_test_info_props(Name),TermInfo1),
+    maplist(add_test_info_props(Name),RestInfo),
+    json_to_colors(G,Grid), 
+    add_prediction(Name,ID,AnswerID,Grid).
+
+  load_json_predictions(Name,Rest,Term):- wdmsg(munused_load_json_predictions(Name,Rest,Term)),!.
+
+
+ add_prediction(Name,ID,AnswerID,Grid):- assert_if_new(kaggle_arc_answers(Name,ID,AnswerID,Grid)).
+
+
+  load_json_of_file(_, Atom+_, []):- atom(Atom),!.
   load_json_of_file(Name,Type,json(Term)):-! , load_json_of_file(Name,Type,Term).
+  
+  load_json_of_file(FName,Type,Term):- select(task_name=Name,Term,Rest),FName=..[F|Info], TestID=..[F,Name],!,         
+    maplist(add_test_info_props(Name),Info),
+         load_json_of_file(TestID,Type,Rest).
+
+  load_json_of_file(FName,Type,Term):- select(id=Name,Term,Rest), \+ number(Name), FName=..[F|Info], TestID=..[F,Name],!,
+    maplist(add_test_info_props(Name),Info),
+        load_json_of_file(TestID,Type,Rest).
+
+  %load_json_of_file(FName,Type,Term):- select(id=Name,Term,Rest),functor(FName,F,_), TestID=..[FName,Name],!, load_json_of_file(TestID,Type,Rest).
+
+  load_json_of_file(TestID,_Type,[Test=Out]):- Test==test, load_json_of_file(TestID,Test,Out).
+
+  load_json_of_file(Name, _Type,List):- select(predictions=Items,List,Rest),!,
+    maplist(add_test_info_props(Name),Rest),
+    maplist(load_json_predictions(Name,Rest),Items).
+
   load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
   load_json_of_file(Name,train,T):-!,load_json_of_file(Name,trn,T).
   load_json_of_file(Name,test,T):-!,load_json_of_file(Name,tst,T).
+
   load_json_of_file(Name,Type,[id=_|T]):- !, load_json_of_file(Name,Type,T).
 
   load_json_of_file(Name,Type,[input=In,output=Out]):- assert_kaggle_arc_json(Name,Type,In,Out),!.
   load_json_of_file(Name,Type,[input=In]):-assert_kaggle_arc_json(Name,Type,In,_Out),!.
-
   load_json_of_file(Name,A,V):- atom(A),atomic(V),!,add_test_info_prop(Name,A,V).
-  load_json_of_file(Name,Type,[H|T]):- atom(Type),is_list(T),!,forall(nth00(N,[H|T],E), load_json_of_file(Name,Type+N,E)).    
+  load_json_of_file(Name,Type,[H|T]):- atom(Type),is_list(T),!,forall(nth00(N,[H|T],E), 
+      load_json_of_file(Name,Type+N,E)).    
+
   load_json_of_file(Name,A,V):- wdmsg(load_json_of_file(Name,A,V)),!, add_test_info_prop(Name,A,V).
 
 assert_kaggle_arc_json(Name,Type,In0,Out0):- 
@@ -123,9 +168,17 @@ arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),absolute_di
 :- load_json_files(t,'./data/1D_testset/*.json').
 :- load_json_files(t,'./dbigham/Data/MyTrainingData/*.json').
 
+
+:- load_json_files(x,'../../secret_data/**/*.json').
+:- load_json_files(v,'../../secret_data/**/*.json').
+% :- load_json_files(v,'../../secret_data/solution/*.json').
+
 %:- load_json_files(v,'./data/test/*.json').
 :- export(kaggle_arc/4).
-kaggle_arc(TName,ExampleNum,In,Out):- kaggle_arc_json(TName,ExampleNum,In,O), disallow_test_out(ExampleNum,O,Out).
+kaggle_arc(TName,ExampleNum,In,Out):- kaggle_arc0(TName,ExampleNum,In,Out).
+kaggle_arc(Name,tst+AnswerID,In,Grid):- kaggle_arc_answers(Name,ID,AnswerID,Grid), kaggle_arc0(Name,tst+ID,In,_Out).
+kaggle_arc0(TName,ExampleNum,In,Out):- kaggle_arc_json(TName,ExampleNum,In,O), disallow_test_out(ExampleNum,O,Out).
+
 
 %adisallow_test_out(trn+_,OO,OO):-!.
 %disallow_test_out(tst+_, O,OO):- grid_size(O,H,V),make_grid(H,V,OO).

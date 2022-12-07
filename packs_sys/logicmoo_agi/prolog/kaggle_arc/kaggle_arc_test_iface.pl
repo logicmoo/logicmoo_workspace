@@ -218,7 +218,7 @@ do_menu_key('M'):- !, clear_tee, update_changed_files, wdmsg('Recompiled').
 do_menu_key('P'):- !, switch_grid_mode,print_test.
 do_menu_key( ''):- !, fail.
 
-do_menu_key('d'):- !, dump_suite.
+do_menu_key('d'):- !, dump_from_pairmode.
 
 
 do_menu_key(Num):- number(Num),!, update_changed_files, do_test_number(Num),!.
@@ -395,7 +395,9 @@ get_test_cmd2(Mode):- luser_getval('cmd2',Mode).
 %get_pair_cmd(Mode):- luser_getval('tc_cmd',Mode).
 
 % Hides solution grid from code
-kaggle_arc_io_safe(TestID,ExampleNum,IO,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), (((ExampleNum*IO) \= ((tst+_)*out))).
+kaggle_arc_io_safe(TestID,ExampleNum,IO,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), if_no_peeking((((ExampleNum*IO) \= ((tst+_)*out)))).
+
+if_no_peeking(_).
 
 test_grids(TestID,G):- get_pair_mode(entire_suite), !, kaggle_arc_io_safe(TestID,_ExampleNum,_IO,G).
 test_grids(TestID,G):- get_pair_mode(whole_test), !, ensure_test(TestID), kaggle_arc_io_safe(TestID,_ExampleNum,_IO,G).
@@ -404,7 +406,7 @@ with_test_grids(TestID,G,P):- forall(test_grids(TestID,G),my_menu_call((ensure_t
 
 
 % Hides solution grid from code
-kaggle_arc_safe(TestID,ExampleNum,I,O):- kaggle_arc(TestID,ExampleNum,I,OO), ((((ExampleNum+_) \= ((tst+_)))->O=OO ; true)).
+kaggle_arc_safe(TestID,ExampleNum,I,O):- kaggle_arc(TestID,ExampleNum,I,OO), if_no_peeking((((((ExampleNum+_) \= ((ptst+_)))->O=OO ; true)))).
 
 test_pairs(TestID,I,O):- test_pairs(TestID,_ExampleNum,I,O).
 
@@ -436,16 +438,37 @@ assert_test_suite(Suite,TestID):- append_term(Suite,TestID,Term),
   assert_if_new(test_suite_name(Suite)),
   assert_if_new(Term).
 
+:- system:export(ls/0).
+:- import(system:ls/0).
+%:- import(shell:ls/0).
+/*
+print_ctest(S):- 
+  with_luser(alt_grid_dot,169,
+    locally(nb_setval(number_grid_colors,t),print_qtest(S))),!.*/
+print_ctest(S):- print_qtest(S).
+
 dump_suite1:-   
    get_current_suite_testnames(Set),
-   set_pair_mode(single_pair),
-   forall(member(S,Set),print_qtest(S)).
+   with_pair_mode(single_pair, forall(member(S,Set),print_ctest(S))).
 
 dump_suite:-   
    get_current_suite_testnames(Set),
-   set_pair_mode(whole_test),
-   forall(member(S,Set),print_qtest(S)).
+   with_pair_mode(whole_test, forall(member(S,Set),print_ctest(S))).
 
+dump_not_suite:-   
+   get_current_suite_testnames(Set),
+   forall(((kaggle_arc_safe(TestID,_ExampleNum,_I,_O), \+ member(TestID,Set))),
+    print_ctest(TestID)).
+
+dump_from_pairmode:- get_pair_mode(entire_suite),!,dump_suite.
+dump_from_pairmode:- get_pair_mode(single_pair),!,dump_suite1.
+%dump_from_pairmode:- get_pair_mode(whole_test),!,dump_suite.
+dump_from_pairmode:- get_pair_mode(whole_test),!,
+  %get_current_suite_testnames(Set),
+  %forall(member(TestID,Set),
+     dump_suite,dump_not_suite.
+     %forall(kaggle_arc_safe(TestID,ExampleNum,I,O),
+      %  print_ss(blue,in(TestID,ExampleNum)=I,out=O)).
 
 sort_suite:-   
    luser_getval(test_suite_name,SuiteX), get_by_hard(SuiteX,ByHard),
@@ -495,6 +518,7 @@ next_suite:-
 :- dynamic(dir_test_suite_name/1).
 
 dont_sort_by_hard(test_names_by_fav). dont_sort_by_hard(all_arc_test_name). dont_sort_by_hard(all_arc_test_name_unordered).
+%dont_sort_by_hard(P):- atom(P), \+ atom_concat(_,'_hard',P).
 
 
 
@@ -548,7 +572,15 @@ get_by_hard(X,ByHard):- my_time((pp(creating(get_by_hard(X))),
 
 
 likely_sort(X,Set,Set):- dont_sort_by_hard(X),!,pp(dont_sort_by_hard(X)).
+likely_sort(_X,Set,Set):- \+ arc_option(always_sort),!.
 likely_sort(X,Set,ByHard):-  pp(sorting_suite(X)), !, sort_by_hard(Set,ByHard), !.
+
+sort_by_hard(List,NamesByHardUR):- 
+  sort(List,Sorted),
+  findall(Hard-Name,(member(Name,Sorted),hardness_of_name(Name,Hard)),All),
+  keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,
+  reverse(NamesByHardU,NamesByHardUR).
+
 
 some_test_suite_name(SuiteX):- test_suite_name(SuiteX),
   SuiteX\==test_names_ord_hard,
@@ -1094,11 +1126,6 @@ sol_t_set(NamesByHardUR):- % Name=t(_),
   asserta(muarc_tmp:cached_tests(sol_t,NamesByHardUR)).
 
 
-sort_by_hard(List,NamesByHardUR):- 
-  sort(List,Sorted),
-  findall(Hard-Name,(member(Name,Sorted),hardness_of_name(Name,Hard)),All),
-  keysort(All,AllK),  maplist(arg(2),AllK,NamesByHardU),!,
-  reverse(NamesByHardU,NamesByHardUR).
 
 
 
@@ -1168,9 +1195,20 @@ pair_cost(TestID,Cost):- kaggle_arc(TestID,(trn+_),I,O),
  maplist(length,[S,LO,RO],[SN,LON,RON]),
  Cost is (IH+OH)*(IV+OV)*(LON+1)*(RON+1).
 
+hardness_of_name(TestID,Sum+Dif+TArea):-
+ kaggle_arc(TestID,(trn+0),I,O),
+ area(I,IArea),area(O,OArea),TArea is IArea*OArea,
+ unique_colors(I,II),unique_colors(O,OO),length(II,IL), length(OO,OL), Sum is IL+OL,
+ intersection(II,OO,Same,IU,OU),length(IU,IUL), length(OU,OUL), Dif is IUL+OUL,
+ 
+ 
+ !.
+ %findall(Cost,pair_cost(TestID,Cost),List),sumlist(List,Sum),!.
+/*
 hardness_of_name(TestID,Sum):-
   kaggle_arc(TestID,(trn+0),_,_),
  findall(Cost,pair_cost(TestID,Cost),List),sumlist(List,Sum),!.
+*/
 /*
 hardness_of_name(TestID,Hard):-
  %ExampleNum=tst+_,
@@ -1470,6 +1508,7 @@ fix_id_1(X,_):- is_cpoints_list(X),!,fail.
 fix_id_1(X,TestID):- is_grid(X),kaggle_arc_io(TestID,_,_,G),G=@=X.
 fix_id_1(obj_to_oid(_,X),Fixed):-  !, fix_test_name(X,Fixed).
 fix_id_1(Tried,   Tried):- kaggle_arc(Tried,_,_,_),!.
+fix_id_1(x(Tried),   TriedV):- !, atom_id(Tried,TriedV),!.
 fix_id_1(v(Tried),   TriedV):- !, atom_id(Tried,TriedV),!.
 fix_id_1(t(Tried),   TriedV):- !, atom_id(Tried,TriedV),!.
 fix_id_1(Tried,   TriedV):- atom_id(Tried,TriedV),!.
@@ -1482,6 +1521,7 @@ atom_id(Atom,TriedV):- downcase_atom(Atom,Tried),Atom\==Tried,atom_id(Tried,Trie
 %fix_test_name(Tried,Fixed):- !, fail,compound(Tried),!,arg(_,Tried,E),nonvar_or_ci(E),fix_test_name(E,Fixed),!.
 atom_id_e(Tried,t(Tried)):- kaggle_arc(t(Tried),_,_,_),!.
 atom_id_e(Tried,v(Tried)):- kaggle_arc(v(Tried),_,_,_),!.
+atom_id_e(Tried,x(Tried)):- kaggle_arc(x(Tried),_,_,_),!.
 atom_id_e(Sel, TestID):- sformat(SSel,'~q',[Sel]),
    catch(read_term_from_atom(SSel,Name,[module(user),double_quotes(string),variable_names(Vs),singletons(Singles)]),_,
         (wqnl(['failed to read: ',Sel]),fail)),

@@ -67,6 +67,9 @@ my_assertz_if_new(HB):- my_assertz_if_new(HB:-true).
 %:- dynamic(decl_sf/1).
 :- dynamic(is_decl_sf/1).
 decl_sf(G):- must_det_ll((nonvar(G), !, my_assertz_if_new(is_decl_sf(G)))).
+
+:- dynamic(is_decl_gf/1).
+decl_gf(G):- must_det_ll((nonvar(G), !, my_assertz_if_new(is_decl_gf(G)))).
 %:- multifile(decl_pt/2).
 %:- discontiguous(decl_pt/2).
 %:- dynamic(decl_pt/2).
@@ -213,8 +216,11 @@ logicmoo_webui:- ld_logicmoo_webui,catch_log(call(call,webui_start_swish_and_cli
 
 
 % we alias these so we can catch out of control list growth
+
 my_append(A,B):- append(A,B).
 my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
+gappend(A,B):- append(A,B).
+gappend(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 check_len(_).
 
 :- meta_predicate(must_det_ll(0)).
@@ -518,11 +524,11 @@ when_arc_webui(G):- ignore(if_arc_webui(G)).
 arc_option(P):- luser_getval(P,t).
 
 with_luser(N,V,Goal):-
-  luser_getval(N,OV),
+  (luser_getval(N,OV);OV=[]),
   setup_call_cleanup(
     luser_setval(N,V),
     Goal,
-    luser_getval(N,OV)).
+    luser_setval(N,OV)).
 
 luser_getval(N,V):- nb_current(N,VV),VV\==[],!,V=VV.
 % caches the valuetemp on this thread

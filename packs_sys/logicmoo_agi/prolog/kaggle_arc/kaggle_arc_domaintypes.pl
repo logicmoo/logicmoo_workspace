@@ -140,6 +140,9 @@ is_color(CO):- attvar(CO),!,get_attr(CO,ci,_).
 is_color(CO):- is_unreal_color(CO).
 is_color(CO):- is_real_color(CO).
 
+:- multifile(color_decls/0).
+:- dynamic(color_decls/0).
+color_decls.
 
 is_unreal_color(C):- (C==fg; C==wfg; C==wbg ; C==bg ; C==is_colorish_var ; C==plain_var),!.
 is_real_color(C):- atom(C),atom_concat('#',_,C),!.

@@ -444,7 +444,7 @@ known_grid0(ID,G):- compound(ID),ID=(_>_),fix_test_name(ID,Name,ExampleNum),!,(k
 known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_grid0(Term,G).
 
 
-
+:- dynamic(kaggle_arc_answers/4).
 
 addProgramStep(_VM,Step):-
   pp(addProgramStep(vm,Step)).
@@ -452,6 +452,8 @@ addProgramStep(_VM,Step):-
 kaggle_arc_io(Name,ExampleNum,IO,G):- 
   arg(_,v(trn+_,tst+_),ExampleNum),
   kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
+%kaggle_arc_io(Name,tst+ID,out,Grid):- kaggle_arc_answers(Name,ID,ID,Grid).
+
 
 into_gridnameA(G,Name):- known_grid(Name,G).
 

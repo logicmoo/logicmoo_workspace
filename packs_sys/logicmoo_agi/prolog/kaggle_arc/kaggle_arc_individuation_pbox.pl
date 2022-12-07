@@ -62,7 +62,7 @@ is_fti_step(pbox_vm).
 pbox_vm(VM):- !,
    %GH is round(VM.h*2/3), GV is round(VM.v*2/3),
    GH is round(VM.h + 0), GV is round(VM.v + 0),
-   findall(size2D(H,V),(l_s_4sides(H,V),H=<GH),Sizes_L_S),
+   findall(size2D(H,V),(l_s_4sides(H,V),H=<GH),_Sizes_L_S),
    findall(size2D(H,V),(s_l_4sides(H,V),V=<GV),Sizes_S_L),
    GridI=VM.grid_o,
    get_black(Black),

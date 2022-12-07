@@ -319,9 +319,9 @@ in_shape_lib(X,D):- (make_shape(X,R), deterministic(TF), dupe_shape(R,D)), (TF==
 
 make_shape(P,I):- compound(P),ground(P),check_args(P,C), call(call,C,I).
 
-pad_sides(Fill,Row):- my_append([_|Fill],[_],Row).
-pad_sides(P1,Fill,Row):- call(P1,C1),call(P1,C2),my_append([C1|Fill],[C2],Row).
-pad_sides(C1,Fill,C2,Row):- my_append([C1|Fill],[C2],Row).
+pad_sides(Fill,Row):- gappend([_|Fill],[_],Row).
+pad_sides(P1,Fill,Row):- call(P1,C1),call(P1,C2),gappend([C1|Fill],[C2],Row).
+pad_sides(C1,Fill,C2,Row):- gappend([C1|Fill],[C2],Row).
 
 :- decl_pt(ensure_grid(prefer_grid)).
 ensure_grid(Grid):- var(Grid),!, arc_grid(_,Grid).
@@ -330,21 +330,22 @@ ensure_grid(Grid):- between(1,30,H),between(1,30,V),make_grid(H,V,Grid).
 
 
 is_decl_pt(P):- var(P), clause(is_decl_sf(Q),true), append_term(Q,+,P).
-is_decl_sf(Q):- var(Q), clause(is_decl_pt(P),true), P=..L, my_append(MI,[+],L), Q=..MI.
+is_decl_sf(Q):- var(Q), clause(is_decl_pt(P),true), P=..L, gappend(MI,[+],L), Q=..MI.
 
 enum_make_shape(P):- var(P),!,is_decl_sf(Q),functor(Q,F,A),functor(P,F,A), \+ \+ check_args(Q,P).
 enum_make_shape(P):- compound(P),!,functor(P,F,A),functor(Q,F,A),is_decl_sf(Q), \+ \+ check_args(Q,P).
 
 likely_fgc(Var):- var(Var),!,get_fgc(Var).
 likely_fgc(_).
-:- decl_sf(box_grid(fg_color,grid)).
+
+:- decl_gf(box_grid(fg_color)).
 box_grid(C,Grid,GridO):-
   likely_fgc(C), 
   ensure_grid(Grid),
   grid_size(Grid,H,_), H2 is H +2,
   length(TB,H2),maplist(=(C),TB),
   mapgroup(pad_sides(=(C)),Grid,FillRows),
-  my_append([TB|FillRows],[TB],D),
+  gappend([TB|FillRows],[TB],D),
   restructure(D,GridO),!.
 
 
@@ -424,7 +425,7 @@ make_row_n_times(H,V,C,L,R,[Row|Rest]):- plus(M,1,V),
   make_row_n_times(H,M,C,L,R,Rest).
 
 
-:- decl_sf(box_grid_n_times(size2D,fg_color,grid)).
+:- decl_gf(box_grid_n_times(size2D,fg_color)).
 box_grid_n_times(0,_C,Grid,D):- Grid=D,!.
 box_grid_n_times(N,C,Grid,D):- !,
   make_shape(box_grid(C,Grid),G), plus(M,1,N),
@@ -545,7 +546,7 @@ shapelib_opts(Name,Opts):- findall(Opt,is_shapelib_opt(Name,Opt),Opts).
 
 % ===========================================================
 % Stretches a grid to double its size2D
-:- decl_sf(double_size(grid)).
+:- decl_gf(double_size).
 % ===========================================================
 
 double_size(Grid,Double):- any_xform(grid_double_size,Grid,Double).
@@ -559,18 +560,18 @@ double_rows([],[]):-!.
 double_rows([D|DRows90],[D,D|DRows90D]):- double_rows(DRows90,DRows90D).
 
 % ===========================================================
-% Stretches a grid to increase its size2D
-:- decl_sf(increase_size(size_int,grid)).
+% Stretches a grid to increase its size2D property
+:- decl_gf(increase_size(size_int)).
 % ===========================================================
 increase_size(N,Grid,Double):-
   h_and_v(increase_rows(N),Grid,Double).
 
 increase_rows(_,[],[]):-!.
-increase_rows(N,[D|DRows90],O):- make_list_inited(N,D,DD),increase_rows(N,DRows90,DRows90D),my_append(DD,DRows90D,O).
+increase_rows(N,[D|DRows90],O):- make_list_inited(N,D,DD),increase_rows(N,DRows90,DRows90D),gappend(DD,DRows90D,O).
 
 % ===========================================================
 % Stretches a grid border to increase its size2D
-:- decl_sf(increase_border(size_int,grid)).
+:- decl_gf(increase_border(size_int)).
 % ===========================================================
 increase_border(N,Grid,Double):-
   h_and_v(increase_top_and_bottem_rows(N),Grid,Double).

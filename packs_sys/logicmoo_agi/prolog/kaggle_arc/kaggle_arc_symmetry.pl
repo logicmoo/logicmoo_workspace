@@ -589,7 +589,7 @@ count_changes(_GGG,_,_,S,E):- plus(S,1000,E).
   
 mass_ok(Grid,RepairedResult):- is_grid(Grid),
   grid_size(Grid,H,V),Area is H * V,
-  count_changes(GGGG,Grid,RepairedResult,0,Changes),
+  count_changes(_GGGG,Grid,RepairedResult,0,Changes),
   Change is Changes/Area,
   Change>75,!,fail,
  print_side_by_side(red,Grid,too_much_change(gridIn,Change),_,RepairedResult,too_much_change(repairedOut,Change)),fail.
@@ -606,7 +606,7 @@ mass_ok(Grid,RepairedResult):-
 
 mass_diffs(Grid,RepairedResult,Changes/Area,RMass/OMass):-
   grid_size(Grid,H,V),Area is H * V,
-  count_changes(GGGG,Grid,RepairedResult,0,Changes),
+  count_changes(_GGGG,Grid,RepairedResult,0,Changes),
   mass(Grid,OMass),!,
   mass(RepairedResult,RMass).
 
@@ -800,7 +800,7 @@ push_downward(0,G,G).
 blur_list(B,Mix,I,S):-
   findall(O-pp(blur_some(B,Mix)),blur_some(B,Mix,I,O),L),
   %print_side_by_side(L),
-  predsort(sort_on(/*pointy_mass*/ count_changes(GGGG,I)),L,S).
+  predsort(sort_on(/*pointy_mass*/ count_changes(_GGGG,I)),L,S).
 
 
 pointy_mass(P,Mass):- is_pointy(P),!,mass(P,Mass).
@@ -867,7 +867,7 @@ saliency_quality_of_change(Grid,RepairedResult,Quality):-
   grid_size(Grid,H,V),OArea is H * V,
   grid_size(RepairedResult,RH,RV),RArea is RH * RV,
 
-  count_changes(GGGG,Grid,RepairedResult,0,Changes),
+  count_changes(_GGGG,Grid,RepairedResult,0,Changes),
   mass(Grid,OMass),!,  
   mass(RepairedResult,RMass),
   nop(RArea == RMass -> OMass==OArea ; true),

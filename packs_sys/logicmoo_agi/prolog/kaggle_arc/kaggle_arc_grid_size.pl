@@ -207,6 +207,10 @@ mass_and_area_times(N):- mass_and_area(n_times(N),n_times(N)).
 %   -> 9 - 48
 %   -> 10 - 96
 
+input_plus(N,X,Y):- Y #= X + N.
+input_lt(X,Y):- Y #> X.
+input_gt(X,Y):- Y #< X.
+
 is_squared(X,Y):- Y #= X * X.
 grow_less_than_times(N,A,B):- N #>= 1, N #=< 4, MaxB #= A*2^(N-1), MinB #= A+N,  MaxB #> B, B #> MinB.
 grow_greater_than_times(N,A,B):- N #>= 1, N #=< 10, MaxB #= A*2^(N-1), MinB #= A+N,  MaxB #< B, B #< MinB.
@@ -216,4 +220,6 @@ n_times(N^2,A,B):- !, B #= N * N * A.
 
 
 :- include(kaggle_arc_footer).
+
+
 

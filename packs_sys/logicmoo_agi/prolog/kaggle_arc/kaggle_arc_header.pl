@@ -1,4 +1,4 @@
-
+﻿
  
 :- discontiguous(is_changeable_param/1).
 :- multifile(is_changeable_param/1).
@@ -19,6 +19,8 @@
 :- dynamic(make_shape/2).
 
 :- discontiguous(decl_sf/1).
+:- discontiguous(decl_gf/1).
+
 
 :- multifile(is_fti_step/1).
 :- discontiguous(is_fti_step/1).
@@ -79,6 +81,7 @@
 :- system:use_module(library(writef)).
 :- system:use_module(library(rbtrees)).
 :- system:use_module(library(dicts)).
+:- system:use_module(library(shell)).
 :- system:use_module(library(edinburgh)).
 %:- system:use_module(library(lists)).
 :- system:use_module(library(statistics)).
@@ -97,4 +100,5 @@
 :- if(current_module(trill)).
 :- set_prolog_flag_until_eof(trill_term_expansion,false).
 :- endif.
+
 
