@@ -81,6 +81,8 @@
 		"terminal.integrated.cursorBlinking": true,
 		"typescript.tsc.autoDetect": "off",
 		"editor.insertSpaces": false,
+		"editor.tabCompletion": "on",
+		"diffEditor.codeLens": true,
 	},
 	"launch": {
 		"inputs": [
