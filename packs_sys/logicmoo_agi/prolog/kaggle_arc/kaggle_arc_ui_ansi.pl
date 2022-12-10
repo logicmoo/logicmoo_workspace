@@ -193,7 +193,7 @@ tersify1(I,gridFn(S)):- is_grid(I), into_gridnameA(I,O),!,sformat(S,'~w',[O]).
 tersify1(I,gridFn(O)):- is_grid(I),tersifyG(I,O),!.
 tersify1(I,groupFn(O,List)):- is_group(I), mapgroup(tersify1,I,List),mapgroup(obj_to_oid,I,OIDs),length(List,N), !,ignore((get_current_test(TestID),is_why_grouped(TestID,N,Why,OIDs),!,O=Why)).
 
-tersify1(I,Q):- is_object(I),object_dglyphH(I,Q),!.
+tersify1(I,Q):- is_object(I),object_ref_desc(I,Q),!.
 tersify1(I,O):- is_map(I), get_kov(objs,I,_),!, O='$VAR'('VM').
 tersify1(I,O):- is_map(I), get_kov(pairs,I,_),!, O='$VAR'('Training').
 
@@ -224,8 +224,8 @@ tersify3(I,O):- compound(I), !, compound_name_arguments(I,F,IA), maplist(tersify
 tersify3(I,I).
 
 write_map(G,Where):- is_vm(G), !, write('...VM_'),write(Where),write('...').
-write_map(G,Where):- is_dict(G), !, write('...Dict_'),write(Where),write('...').
 write_map(G,Where):- is_map(G), !, write('...Map_'),write(Where),write('...').
+write_map(G,Where):- is_dict(G), !, write('...Dict_'),write(Where),write('...').
 write_map(_G,Where):- write('...'),write(Where),write('...').
 
 ppt(_):- is_print_collapsed,!.
@@ -463,8 +463,8 @@ wqs1(C):- \+ compound(C),!,wqs0(C).
 wqs1(format(C,N)):- catch((sformat(S,C,N),color_write(S)),_,fail),!.
 wqs1(writef(C,N)):- !, writef(C,N).
 wqs1(q(C)):-  \+ arg_string(C),wots(S,writeq(C)),color_write(S).
-wqs1(g(C)):-  \+ arg_string(C), wots_vs(S,bold_print(wqs(C))),print(g(S)).
-wqs1(b(C)):-  \+ arg_string(C), wots_vs(S,bold_print(wqs(C))),color_write(S).
+wqs1(g(C)):-  \+ arg_string(C), wots_vs(S,bold_print(wqs1(C))),print(g(S)).
+wqs1(b(C)):-  \+ arg_string(C), wots_vs(S,bold_print(wqs1(C))),color_write(S).
 wqs1(norm(C)):- writeq(norm(C)),!.
 
 wqs1(pp(C)):- \+ arg_string(C), wots_vs(S,pp_no_nl(C)),write((S)).
@@ -585,7 +585,9 @@ var_or_number(V):- integer(V),!.
 
 print_ss(VAR):- var(VAR),!,pp(ss_var(VAR)).
 print_ss(g(H,V,Grid)):- nonvar(Grid),!,print_grid(H,V,Grid).
+print_ss(Title):- is_list(Title), \+ is_grid(Title),!,print_side_by_side(Title).
 print_ss(Title):- print_side_by_side([Title]).
+%print_ss(Title):- is_gridoid(Title),print_side_by_side([Title]).
 
 print_ss(Title,NGrid):- print_side_by_side([Title,NGrid]).
 print_ss(IH,IV,NGrid):- var_or_number(IH),var_or_number(IV),!,print_grid(IH,IV,NGrid).
@@ -613,7 +615,7 @@ vertical_grid_size_with_key(Grid-N,V+H+N+F):- always_grid_footer(Grid,GG,F),grid
 
 sorted_by_vertical_size(List):- sort_by_vertical_size(List,Sorted),!,List=@=Sorted.
 sort_by_vertical_size(List,Sorted):- lists:number_list(List, 1, Numbered),
-  predsort(sort_on(vertical_grid_size_with_key),Numbered,SortedKeys),maplist(arg(1),SortedKeys,Sorted),!.
+  predsort_on(vertical_grid_size_with_key,Numbered,SortedKeys),maplist(arg(1),SortedKeys,Sorted),!.
 grid_with_footer_string(C,CGS):- always_grid_footer(C,CG,CF),wots_vs(CGS,print_grid(CF,CG)).
 
 print_side_by_side_three([]):-!.
@@ -709,7 +711,7 @@ unsized_grid(A):- \+ is_really_gridoid(A),!.
 
 grid_footer(G,_,_):- \+ compound(G),!,fail.
 grid_footer((GF=GG),GG,GF):-!.
-grid_footer(Obj,GG,GF):- is_object(Obj), vis2D(Obj,H,V),localpoints(Obj,Ps),points_to_grid(H,V,Ps,GG), object_dglyphH(Obj,GF),!.
+grid_footer(Obj,GG,GF):- is_object(Obj), vis2D(Obj,H,V),localpoints(Obj,Ps),points_to_grid(H,V,Ps,GG), object_ref_desc(Obj,GF),!.
 grid_footer(print_grid(GF,GG),GG,GF):-!.
 grid_footer(print_grid(_,_,GF,GG),GG,GF):-!.
 grid_footer((GG-GF),GG,GF):- is_grid(GG), !.
@@ -1385,7 +1387,7 @@ print_grid_ansi(SH,SV,EH,EV,GridII):- make_bg_visible(GridII,GridI),
   nl_if_needed,!,
   once((dash_uborder_no_nl(DBW),write(''))))), 
   nop((    
-     (( \+ ground(GridI));sub_var(wbg,GridI);sub_var(bg,GridI);sub_var(wfg,GridI);sub_var(fg,GridI)),
+     (( \+ ground(GridI));sub_var(wbg,GridI);sub_var(bg,GridI);sub_var(fg,GridI);sub_var(fg,GridI)),
       grid_colors(GridI,CGrid),
       (nb_current(print_sbs,left)-> (nl,nl, write(left), write(=)) ; true),
      ppa(CGrid))).
@@ -1410,13 +1412,13 @@ print_grid_ansi(SH,SV,EH,EV,GridII):- make_bg_visible(GridII,GridI),
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,('#966cb8'),'#ff8c00',(cyan),'#8b4513']):- silver(Silver),!.
 %block_colors([(black),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan),'#8b4513','#2a2a2a', 9379b4 '#3a5a3a']):- silver(Silver),!.
 block_colors([('#4a2a2a'),(blue),(red),(green),(yellow),Silver,(magenta),'#ff8c00',(cyan), % '#104010'
-                                                                                       '#8b4513','#3a5a3a','#f47c7c','#104010','#ffffff',FG]):- fg_cut(FG), silver(Silver),!.
-named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),   (orange),(cyan), (brown),  wbg,      fg,      bg,      wfg,     FG]):- fg_cut(FG).
+                                                                                       '#8b4513','#3a5a3a','#f47c7c','#4a2a2a','#ffffff',FG]):- fg_cut(FG), silver(Silver),!.
+named_colors([(black),(blue),(red),(green),(yellow),(silver),(purple),   (orange),(cyan), (brown),  wbg,      wfg,      bg,      fg,     FG]):- fg_cut(FG).
 named_colors([ (lack),(blue),(red),(green),(yellow),(Silver),(purple),(orange),(cyan),(brown)]):- silver(Silver).
 named_colors([(lack),(blue),(red),(green),(yellow),(silver),(magenta),(orange),(cyan),(brown)]).
 named_colors([(lack),(blue),(red),(green),(yellow),(grey),(pink),(orange),(teal),(maroon)]).
 
-test_show_colors:- maplist(show_color,[0,1,2,3,4,5,6,7,8,9,fg,wfg,bg,wbg,black,_,'#100010','#104010'],G),
+test_show_colors:- maplist(show_color,[0,1,2,3,4,5,6,7,8,9,fg,wfg,bg,wbg,black,_,'#100010','#104010','#4a2a2a'],G),
   reverse(G,R),
   print_grid([G,R,G]),nl.
 show_color(X,N):- var(X),!,show_color('#101010',N).
@@ -1432,7 +1434,7 @@ silver('#c0c0c0').
 
 /*
 
-0=black[t] 1=blue[u] 2=red[?] 3=green[?] 4=yellow[?] 5=silver[?] 6=purple[O] 7=orange[?] 8=cyan[?] 9=brown[?] fg=fg[O] wfg=wfg[g] bg= [U] wbg=wbg[?] black=black[t] #101010=#101010[#101010] #100010=#100010[#100010] #104010=#104010[#104010]
+0=black[t] 1=blue[u] 2=red[?] 3=green[?] 4=yellow[?] 5=silver[?] 6=purple[O] 7=orange[?] 8=cyan[?] 9=brown[?] fg=fg[O] fg=fg[g] bg= [U] wbg=wbg[?] black=black[t] #101010=#101010[#101010] #100010=#100010[#100010] #104010=#104010[#104010]
    _____________________________________
   | . l ? ? ? ? O ? ? ? O g     . #101010 #100010   |
   |   #100010 #101010 .     g O ? ? ? O ? ? ? ? l . |
@@ -1510,16 +1512,18 @@ color_gl_int(C,C):-!.
 :- dynamic(now_reserved_for_color/2).
 c2s(0,'.'). c2s(1,C):- name(C,[169]). 
 
-c2s(2,C):- name(C,[174]).
-c2s(2,'r'). 
+c2s(2,C):- name(C,[174]). c2s(2,'r'). 
 
 c2s(3,'G').  c2s(4,'Y'). c2s(5,'s'). c2s(6,'v'). c2s(7,'o').
-c2s(8,'C'). c2s(9,'B'). c2s(10,'f').  c2s(11,'q'). c2s(12,'.'). c2s(13,','). c2s(14,'*'). 
+
+c2s(8,C):- name(C,[189]). c2s(8,'C').
+
+c2s(9,'B'). c2s(10,'f').  c2s(11,'q'). c2s(12,'.'). c2s(13,','). c2s(14,'*'). 
 c2g(N,W):- c2s(N,W),!.
 c2g(N,W):- C is 100+N,name(W,[C]), \+ c2s(_,W),!.
 c2g(2,W):- c2g(21,W).
 c2g(N,W):- NN is N *10, int2glyph(NN,W),!.
-%color_gl_int_g(C,W):- nonvar(C),now_reserved_for_color(W,C),!.
+color_gl_int_g(C,W):- nonvar(C),now_reserved_for_color(W,C),!.
 color_gl_int_g(C,W):- color_gl_int(C,N),number(N), c2g(N,W),!,asserta(now_reserved_for_color(W,C)).
 color_gl_int_g(C,W):- color_gl_int(C,W),!.
 
@@ -1793,7 +1797,7 @@ check_dot_spacing:- iss:i_syms(CCC),maplist(check_dot_spacing,CCC),!.
 :- retractall(iss:i_syms(_)).
 :- ignore(save_codes).
 
-:- current_prolog_flag(reloading,true)-> test_show_colors ; true.
+:- prolog_load_context(reloading,true)-> test_show_colors ; true.
 
 
 /*

@@ -534,7 +534,9 @@ properties_that_changed(Grid1,Grid2,Props):-
   diff_terms(Props1,Props2,Props).
 
 has_learnt_rule(TestID,In,Key,RuleDir,Out):- clause(learnt_rule(TestID,In,Key,RuleDir,Out),was_once(InSet,InVars)),
-  maplist(ignore_equal,InSet,InVars).
+  ignore_equal_e(InSet,InVars).
+
+ignore_equal_e(InSet,InVars):- maplist(ignore_equal,InSet,InVars).
 ignore_equal(X,Y):- ignore(X=Y).  
 
 rev_key0(C-P,P-C).

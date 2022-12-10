@@ -11,6 +11,7 @@
 :- set_prolog_flag(stream_type_check,false).
 
 :- set_prolog_flag(use_arc_swish,false).
+:- set_prolog_flag(use_arc_plweb,false).
 :- set_prolog_flag(use_arc_bfly,false).
 % false = command line (no butterfly)
 % butterfly (arc_webui.sh)
@@ -18,7 +19,7 @@
 %
 
 :- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(use_arc_bfly,true);set_prolog_flag(use_arc_bfly,false)).
-%:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(load_arc_swish,true);true).
+%:- current_prolog_flag(argv,C),(member('--',C)->set_prolog_flag(use_arc_swish,true);true).
 :- set_prolog_flag(arc_term_expansion,false).
 
 :- dynamic('$messages':to_list/2).
@@ -184,7 +185,8 @@ pfcAddF(P):-
 :- set_prolog_flag(no_sandbox,true).
 
 
-with_webui(_Goal):- \+ current_prolog_flag(use_arc_swish,true),!.
+when_using_swish(G):- (current_prolog_flag(use_arc_swish,true)-> catch_log(G) ; true).
+with_webui(_Goal):- \+ current_prolog_flag(use_arc_plweb,true),!.
 with_webui(Goal):- ignore(when_arc_webui(catch_log(with_http(Goal)))).
 %:- initialization arc_http_server.
 
@@ -200,8 +202,7 @@ ld_logicmoo_webui.
 
 logicmoo_webui:- ld_logicmoo_webui,catch_log(call(call,webui_start_swish_and_clio)).
 
-:- ld_logicmoo_webui.
-:- (current_prolog_flag(load_arc_swish,true)->catch_log(ld_logicmoo_webui) ; true).
+:- when_using_swish(ld_logicmoo_webui).
 
     
 
@@ -410,8 +411,8 @@ get_map_pairs(Map,is_dict(T),Pairs):- is_dict(Map), dict_pairs(Map,T,Pairs).
 
 is_vm(Tree):- is_map(Tree), once(get_kov(program,Tree,_);get_kov(program_i,Tree,_)).
 
-is_map(Tree):- is_rbtree(Tree),!.
-is_map(Dict):- is_dict(Dict),!.
+is_map(Tree):- is_rbtree(Tree),!, \+ rb_lookup(Tree,izmap,false).
+is_map(Dict):- is_dict(Dict),!, \+ get_dict(izmap,Dict,false).
 
 
 
@@ -454,7 +455,9 @@ arc_term_expansions(H:- (current_prolog_flag(arc_term_expansion, true), B)):-
 :- export(enable_arc_expansion/0).
 enable_arc_expansion:-
  forall(arc_term_expansions(Rule),
-   (strip_module(Rule,M,Rule0), wdmsg(asserta_if_new(Rule,M,Rule0)),asserta_if_new(Rule))),
+   (strip_module(Rule,M,Rule0), 
+     nop(wdmsg(asserta_if_new(Rule,M,Rule0))),
+     asserta_if_new(Rule))),
  set_prolog_flag(arc_term_expansion, true).
 
 :- export(disable_arc_expansion/0).
@@ -485,7 +488,7 @@ suggest_arc_user(ID):- catch((http_session:session_data(_,username(ID))),_,fail)
 
 arc_webui:-  notrace(arc_webui0).
 
-arc_webui0:- current_prolog_flag(use_arc_swish,false),!,fail.
+arc_webui0:- current_prolog_flag(use_arc_plweb,false),!,fail.
 arc_webui0:- toplevel_pp(http),!.
 arc_webui0:- in_pp(http),!.
 arc_webui0:- toplevel_pp(swish),!.
@@ -521,7 +524,8 @@ when_arc_webui(G):- toplevel_pp(swish),call(G),!.
 when_arc_webui(G):- ignore(if_arc_webui(G)).
 
 %arc_option(grid_size_only):- !,fail.
-arc_option(P):- luser_getval(P,t).
+arc_option(O):- luser_getval(O,t).
+if_arc_option(O,G):- (arc_option(O)->must_det_ll(G); true).
 
 with_luser(N,V,Goal):-
   (luser_getval(N,OV);OV=[]),
@@ -616,7 +620,11 @@ is_detatched_thread:- \+ (thread_self(Main) -> Main == main ; main==0),!.
 
 cls_z:- is_detatched_thread,!,flush_tee.
 cls_z:- tracing,!.
-cls_z:- catch(cls,_,true), flush_tee, nop((clear_tee,clear_test_html)).
+cls_z:- catch(really_cls,_,true), flush_tee, nop((clear_tee,clear_test_html)).
+
+really_cls:- write('\ec\33c\033[2J\033[H\033[3J'),!.
+really_cls:- catch(cls,_,true).
+
 cls1:- nop(catch(cls_z,_,true)).
 
 list_to_rbtree_safe(I,O):- must_be_free(O), list_to_rbtree(I,M),!,M=O.
@@ -786,10 +794,10 @@ user:portray(Grid):- fail,
 
 :- catch_log(set_stream(current_output,encoding(utf8))).
 
-:- (current_prolog_flag(load_arc_swish,true)->catch_log(logicmoo_webui) ; true).
-:- current_prolog_flag(load_arc_swish,true) -> catch_log(start_arc_server) ; true.
 
-:- catch_log(set_long_message_server('https://logicmoo.org:17771')).
+:- when_using_swish(logicmoo_webui).
+:- when_using_swish(start_arc_server).
+:- when_using_swish(set_long_message_server('https://logicmoo.org:17771')).
 
 bfly_startup:-
    set_toplevel_pp(bfly),
@@ -799,7 +807,7 @@ bfly_startup:-
    catch_log(print_test),
    catch_log(menu),
    %with_pp(bfly,catch_log(menu)),
-   nop((next_test,previous_test)),!,
+   nop((next_test,prev_test)),!,
    ansi.
 
 
@@ -809,7 +817,7 @@ ansi_startup:-
    catch_log(print_test),
    catch_log(menu),
    %with_pp(bfly,catch_log(menu)),
-   nop((next_test,previous_test)),!.
+   nop((next_test,prev_test)),!.
 
 :- luser_default(example,trn+0).
 :- luser_default(no_diags,false).
@@ -820,9 +828,36 @@ ansi_startup:-
 :- luser_default(cmd2,print_all_info_for_test).
 :- luser_default(individuated_cache,true).
 :- luser_default(extreme_caching,true).
+
+
+load_task_states:- exists_directory('/data/evaluation/'),catch_log(load_json_files(evaluation,v,'/data/evaluation/*.json')),!.
+load_task_states:- exists_directory('./secret_data/evaluation/'),catch_log(load_json_files(evaluation,v,'./secret_data/evaluation/*.json')),!.
+load_task_states:- exists_directory('../../secret_data/evaluation/'),catch_log(load_json_files(evaluation,v,'../../secret_data/evaluation/*.json')),!.
+test_load_task_states:- load_task_states.
+
+
+run_arcathon:-
+  load_task_states,
+  catch_log(prolog),
+  catch_log(demo).
+test_run_arcathon:- run_arcathon.
+
+test_secret_data:- wdmsg(todo_test_secret_data).
+
+
+save_arcathon_runner:- qsave_program('logicmoo_arcathon_runner',[stand_alone(true),verbose(true),toplevel(run_arcathon),goal(run_arcathon),% class(runtime),
+                                             class(runtime),obfuscate(true)]).
+save_arcathon_runner_dbg:- qsave_program('logicmoo_arcathon_runner_dbg',[stand_alone(true),verbose(true),toplevel(run_arcathon),goal(run_arcathon),% class(runtime),
+                                             class(development),obfuscate(false)]).
+save_arcathon_runner_devel:- qsave_program('logicmoo_arcathon_runner_devel',[stand_alone(true),verbose(true),goal(demo),class(development),obfuscate(false)]),
+                             save_arcathon_runner_dbg, save_arcathon_runner.
+test_compile_arcathon:- save_arcathon_runner_devel.
+
+:- load_task_states.
 :- scan_uses_test_id.
 :- store_grid_size_predictions.
 :- make_grid_cache.
 :- gen_gids.
 :- test_show_colors.
 :- fmt('% Type ?- demo. % or press up arrow').
+

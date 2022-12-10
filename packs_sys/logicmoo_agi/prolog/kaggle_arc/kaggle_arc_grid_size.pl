@@ -29,7 +29,7 @@ learn_grid_size(In,Out,R):-
 predict_grid_size(TestID,In,Out):-    
    grid_size(In,IH,IV),grid_size(Out,OH,OV),
    learned_grid_size(TestID,List),
- %  predsort(sort_on(better_grid_size_prop),List,SList), 
+ %  predsort_on(better_grid_size_prop,List,SList), 
    wots(SS,((             
    dash_chars, dash_chars, write(test_grid_sizes(TestID)), write('\n'),   
    predict_grid_size(List,IH,IV,PH,PV),
@@ -46,7 +46,7 @@ alphabetize(List,ListA):- maplist(add_akeys,List,AKeys),keysort(AKeys,AKeysSorte
 
 predict_grid_size(List,IH,IV,PH,PV):-
   alphabetize(List,ListA),
-  predsort(sort_on(better_grid_size_prop),ListA,SList),
+  predsort_on(better_grid_size_prop,ListA,SList),
   add_info(SList,[],NewInfo),
    %maplist(wqnl,List),dash_chars,
    maplist(wqnl,ListA),dash_chars,

@@ -18,11 +18,13 @@ to_real_grid(G,GO):- notrace((unnumbervars(G,G1),get_bgc(BG),subst001(G1,bg,BG,G
 
 has_color(C,Cell):- only_color_data(Cell,CD), cmatch(C,CD).
 
-cmatch(C,CD):- plain_var(C),!,var(CD),C=CD.
-cmatch(C,CD):- var(C),!,C=CD,!.
+cmatch(C,CD):- plain_var(C),!,var(CD),C==CD.
+cmatch(C,CD):- var(C),!, once(C=@=CD; \+ C\=CD).
+cmatch(plain_var,CD):- !, plain_var(CD).
+cmatch(is_colorish_var,CD):- !,var(CD),is_colorish(CD).
 cmatch(fg,CD):- !, CD\==wbg, is_fg_color(CD),!.
+cmatch(wbg,CD):- !,(CD==wbg;is_bg_color(CD)),!.
 cmatch(bg,CD):- !, is_bg_color(CD),!.
-cmatch(wbg,CD):- !, (CD==wbc;is_bg_color(CD)),!.
 %cmatch(P,CD):- is_real_color(P),!, \+ P\==CD.
 cmatch(P,CD):- is_colorish(P),!, \+ P\=CD.
 cmatch(P,CD):- call(P,CD),!.
@@ -134,7 +136,7 @@ into_color_name_always(Grid,Grid).
 %into_color_name_always(C,C):- attvar(C),cant_be_color(C,_E),!.
 %into_color_name_always(_,fg).
 
-is_spec_color(V,C):- into_color_name_always(V,C),!,atom(C),!,C\==fg,C\==wfg,C\==wbg,C\==bg.
+is_spec_color(V,C):- into_color_name_always(V,C),!,atom(C),!,C\==fg,C\==fg,C\==wbg,C\==bg.
 
 is_color(CO):- attvar(CO),!,get_attr(CO,ci,_).
 is_color(CO):- is_unreal_color(CO).
@@ -144,7 +146,7 @@ is_color(CO):- is_real_color(CO).
 :- dynamic(color_decls/0).
 color_decls.
 
-is_unreal_color(C):- (C==fg; C==wfg; C==wbg ; C==bg ; C==is_colorish_var ; C==plain_var),!.
+is_unreal_color(C):- (C==fg; C==fg; C==wbg ; C==bg ; C==is_colorish_var ; C==plain_var),!.
 is_real_color(C):- atom(C),atom_concat('#',_,C),!.
 is_real_color(C):- atom(C),named_colors(L),member(C,L),!, \+ is_unreal_color(C).
 get_real_fg_color(C):- named_colors(L),member(C,L),is_fg_color(C).
@@ -446,10 +448,12 @@ is_point(P):- var(P),!,fail.
 is_point(P):- is_nc_point(P),!.
 is_point(P):- is_cpoint(P).
 
+%elems_are(L,P1):- L\==[],is_list(L),maplist(P1,L).
+elems_are([E|_],P1):- !, call(P1,E),!.
 
-is_points_list(P):- is_list(P),P\==[],maplist(is_point,P).
+is_points_list(L):- elems_are(L,is_point).
+is_cpoints_list(L):- elems_are(L,is_cpoint).
 
-is_cpoints_list(P):- is_list(P),P\==[],maplist(is_cpoint,P).
 %is_cpoints_list(P):- P==[],!.
 %is_cpoints_list(List):- is_list(List),!,is_cpoints_list(List).
 %is_cpoints_list([G|L]):- is_cpoint(G),!,(L==[];is_cpoints_list(L)),!.
@@ -472,7 +476,7 @@ is_not_tpoint(I):- \+ is_tpoint(I).
 is_tpoint(C):- \+ compound(C),!,fail.
 is_tpoint(T/**/-P):- is_t(T),!,is_point(P).
 
-is_t(T):- atom(T), display_length(T,1).
+is_t(T):- atom(T), atom_length(T,1).
 
 is_cpoint(C):- \+ compound(C),!,fail.
 %is_cpoint(C/**/-P):- (nonvar_or_ci(C);cant_be_color(C)),!,is_nc_point(P).
@@ -548,6 +552,7 @@ is_object(O):- compound(O), O = obj(_).
 is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),maplist(is_object_or_grid,V),!.
 
 is_functor(F,E):- compound(E),functor(E,F,_).
+is_functor(F,A,E):- compound(E),functor(E,F,A).
 is_object_group(V):- is_list(V),maplist(is_functor(obj),V),!.
 is_grid_group([G|V]):- is_grid(G),is_list(V),maplist(call(is_grid),V),!.
 

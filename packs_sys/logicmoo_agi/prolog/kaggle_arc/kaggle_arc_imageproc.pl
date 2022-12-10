@@ -810,7 +810,7 @@ calc_add_point1(OH,OV,Grid,Point):- point_to_hvc(Point,H,V,C),!, add_offset_h_v_
 
 
 %calc_add_points(OH,OV,_,Obj):- plain_var(Obj),arcST,trace_or_throw(var_calc_add_points(OH,OV,Obj)).
-%calc_add_points(OH,OV,Grid,Point):- is_nc_point(Point),!, HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,wfg).
+%calc_add_points(OH,OV,Grid,Point):- is_nc_point(Point),!, HH is H -OH +1, VV is V - OV +1,  add_h_v_c(Grid,HH,VV,fg).
 calc_add_point1(OH,OV,Grid,Obj):- trace,globalpoints(Obj,Points),!,maplist(calc_add_point1(OH,OV,Grid),Points).
 %calc_add_points(_OH,_OV,_,obj(_)):-
 

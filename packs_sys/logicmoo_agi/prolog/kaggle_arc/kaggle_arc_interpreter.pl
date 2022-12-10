@@ -336,9 +336,9 @@ cast_to_grid(gridOpFn(Grid,OP),GridO,reduce_grid):- !, unreduce_grid(Grid,OP,Gri
 cast_to_grid(Points,Grid,globalpoints):- is_points_list(Points), !, points_to_grid(Points,Grid),!.
 cast_to_grid(Obj,Grid, uncast_grid_to_object(Obj)):- is_object(Obj),!, object_grid(Obj,Grid),!.
 cast_to_grid(Grp,Grid, closure_grid_to_group(Grp)):- is_group(Grp), group_to_grid(Grp,Grid),!.
+
 cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),text_to_grid(Text,Grid),!.
-cast_to_grid(OID, Grid, (=) ):- atom(OID),oid_to_gridoid(OID,Grid),!.
-cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),text_to_grid(Text,Grid),!.
+cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),atom_length(Text,Len),Len>20,atom_contains(Text,'|'),text_to_grid(Text,Grid),!.
 
 % TODO Comment out next line to prefer the line after
 % cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
@@ -346,11 +346,14 @@ cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_map(Dict),
 
 cast_to_grid(Obj,Grid, Closure):- cast_to_grid1(Obj,Grid, Closure).
 
+%cast_to_grid1(OID, Grid, Uncast):- atom(OID),g2o(OID,Obj),Obj\==OID,!,cast_to_grid(Obj,Grid,Uncast).
 cast_to_grid1(TestID>(Tst+N)*IO,Grid,(=)):- !, kaggle_arc_io(TestID,(Tst+N),IO,Grid).
 cast_to_grid1(Obj,Grid, Closure):- resolve_reference(Obj,Var), Obj\=@=Var, !,cast_to_grid(Var,Grid,Closure).
+cast_to_grid1(OID, Grid, (=) ):-  atom(OID),oid_to_gridoid(OID,Grid),!.
 cast_to_grid1(Naming,Grid, Closure ):- 
   ((known_gridoid(Naming,NG),Naming\==NG,cast_to_grid(NG,Grid, Closure))*->true;
    (fail,recast_to_grid0(Naming,Grid, Closure))).
+
   
 recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points),
   grid_size(Points,GH,GV),
@@ -415,14 +418,19 @@ assert_grid_tid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID)
 assert_grid_gid(Grid,GID):- assertz_if_new(is_grid_tid(Grid,GID)),ignore((atom(GID),assertz_if_new(gid_to_grid(GID,Grid)))).
 
 oid_to_gridoid(GID,G):- current_predicate(gid_to_grid/2), call(call,gid_to_grid,GID,G),!.
+
+oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), append([o,_,_],GOID,Term),
+  testid_name_num_io(GOID,_Name,_Example,_Num,_IO),g2o(ID,G),!.
+/*
+oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), append([o,GGL,OID],GOID,Term),
+  testid_name_num_io(GOID,_Name,_Example,_Num,_IO),!,
+  ((atom(OID),atom_number(OID,ONum))-> int2glyph(ONum,GL);GL=GGL),
+  get_current_test(TestID),
+  g_2_o(TestID,GL,G).*/
 oid_to_gridoid(ID,G):- atom(ID),
   testid_name_num_io(ID,Name,Example,Num,IO),atom(IO),
   kaggle_arc_io(Name,Example+Num,IO,G),!.
-oid_to_gridoid(ID,G):-  atom(ID),atomic_list_concat(Term,'_',ID), Term\==[ID], !,append(GOID,[OID],Term),
-  testid_name_num_io(GOID,_Name,_Example,_Num,_IO),
-  ((atom(OID),atom_number(OID,ONum))-> int2glyph(ONum,GL);GL=OID),
-  get_current_test(TestID),
-  g_2_o(TestID,GL,G).
+
 
 
 known_grid0(ID,_):- var(ID),!,fail.
@@ -567,7 +575,7 @@ g_2_o(_,_,_):- fail.
 g2o(G,O):- var(G), !, oid_glyph_object(_,G,O).
 g2o(G,O):- integer(G),!,int2glyph(G,C),!,g2o(C,O),!.
 g2o(C,O):- compound(C), !, compound_name_arguments(C,objFn,[G|_]), !, g2o(G,O).
-g2o(G,O):- \+ atom(G), !, string(G),Chars=[_|_],atom_chars(G,Chars),!,chars2o(Chars,O).
+g2o(G,O):- \+ atom(G), !, string(G),!,atom_string(A,G),!,g2o(A,O).
 g2o(G,_):- is_fg_color(G),!,fail.
 g2o(G,O):- oid_to_object(G,O)-> true;(oid_glyph_object(_,G,O)*->true;(Chars=[_,_|_],atom_chars(G,Chars),chars2o(Chars,O))).
 
@@ -575,7 +583,7 @@ g2o(G,O):- oid_to_object(G,O)-> true;(oid_glyph_object(_,G,O)*->true;(Chars=[_,_
 
 %get_glyph_to_object(G,O):- ((luser_getval(G,O),is_object(O))*->true;(get_current_test(TestID),g_2_o(TestID,G,O))).
 
-chars2o(['o',C,'_'|_],O):- !, g2o(C,O).
+chars2o(['o','_',C|_],O):- g2o(C,O),!.
 chars2o(Chars,O):- \+ member('_',Chars), member(C,Chars),g2o(C,O),!.
 
 

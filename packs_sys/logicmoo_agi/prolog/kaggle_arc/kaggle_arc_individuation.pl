@@ -127,6 +127,7 @@ merge_texture1('A',_,'A').
 progress(P):- nop(pp(progress(P))).
 progress(C,P):- nop(pp(C,progress(P))).
 
+xfer_zeros(_,_):-!.
 xfer_zeros(In,Out):- 
   is_grid(In),is_grid(Out),grid_size(In,H,V),  grid_size(Out,H,V),!,
   forall(between(1,H,Hi),forall(between(1,V,Vi),
@@ -479,7 +480,7 @@ individuator(i_nsew,[pbox_vm,maybe_alone_dots_by_color(lte(20)),nsew,diamonds,co
 individuator(i_diag,[diamonds,maybe_alone_dots_by_color(lte(20)),colormass]).
 individuator(i_pbox,[i_nsew,leftover_as_one]).
 %individuator(i_diags,[do_diags]).
-individuator(i_by_color,[by_color(0), by_color(0,wbg), by_color(0,wfg), 
+individuator(i_by_color,[by_color(0), by_color(0,wbg), by_color(0,fg), 
   reset_points, by_color(1,black),by_color(1,bg), by_color(1,fg),/* ,*/[]]).
 %individuator(i_sub_pbox,[sub_individuate(pbox_vm)]).
 %individuator(i_pbox,[maybe_pbox_vm,i_colormass]).
@@ -536,9 +537,10 @@ individuator(i_mono_nsew,
   %do_ending,
   %complete_broken_lines,
   %complete_occluded,
-find_symmetry_code(VM,Grid,RepairedResult,Code):- % fail,
-  find_symmetry_code1(VM,Grid,RepairedResult,Code),!.
+find_symmetry_code(VM,Grid,RepairedResult,Code):- 
+  if_deepen_arc(find_symmetry_code1(VM,Grid,RepairedResult,Code)),!.
 
+if_deepen_arc(_):- !, fail.
 %never_repair_grid(Grid):- is_grid_symmetricD(Grid),!.
 never_repair_grid(Grid):- get_current_test(TestID),kaggle_arc_io(TestID,_,out,G),G==Grid.
 
@@ -847,7 +849,7 @@ find_hybrid_shapes(VM):-
   as_debug(9,(print_grid(hybrid_shape(HL,TestID,pair,VM.gid),VM.grid))),!,
   maplist(release_bg,List,FGList),
   % maplist(=,List,FGList),
-  predsort(sort_on(hybrid_order),FGList,Set),
+  predsort_on(hybrid_order,FGList,Set),
   as_debug(1,(print_ss(Set))),!,
   call(ignore((hybrid_shape_from(Set,VM)))))).
 
@@ -986,7 +988,7 @@ get_hybrid_set(Set):-
              hybrid_shape(TestID,ExampleNum,_Name,O)),List),
   sort(List,SList),
   h_all_rots(SList,SetR),
-  predsort(sort_on(hybrid_order),SetR,Set).
+  predsort_on(hybrid_order,SetR,Set).
 
 h_all_rots(Set,SetR):- findall(E,(member(G,Set),each_rot(G,E)),L),list_to_set(L,SetR).
 
@@ -1426,6 +1428,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
    neededChanged:_, repaired:_,
    full_grid:_,
    parent_vm:_,
+   izmap:true,
    % Original copies of Grid and point representations
    grid_o:Grid, 
    rule_dir: ROptions,
@@ -1820,7 +1823,7 @@ bg_shapes(Shape,VM):-
 
 into_monogrid(Orig,NewGrid):-mapgrid(bg_shaped,Orig,NewGrid).
 bg_shaped(Cell,NewCell):- is_bg_color(Cell),!,nop(decl_many_bg_colors(NewCell)),NewCell=wbg.
-bg_shaped(Cell,NewCell):- is_fg_color(Cell),!,nop(decl_many_fg_colors(_NewCell)),NewCell=wfg.
+bg_shaped(Cell,NewCell):- is_fg_color(Cell),!,nop(decl_many_fg_colors(_NewCell)),NewCell=fg.
 bg_shaped(Cell,bg):- plain_var(Cell),!.
 bg_shaped(Cell,Cell).
 
@@ -1837,7 +1840,7 @@ recolor_point(Recolors,_-Point,C-Point):-
 is_fti_step(fg_shapes).
 % =====================================================================
 fg_shaped( BGCs,Cell,wbg):- member(C,BGCs),Cell==C,!.
-fg_shaped(_BGCs,Cell,wfg):- is_fg_color(Cell),!.
+fg_shaped(_BGCs,Cell,fg):- is_fg_color(Cell),!.
 fg_shaped(_BGCs,Cell,Cell):- attvar(Cell),!.
 fg_shaped(_BGCs,Cell,bg):- plain_var(Cell),!.
 %fg_shaped(Cell,NewCell):- is_fg_color(Cell),!,decl_many_fg_colors(NewCell),NewCell=Cell.
@@ -2174,6 +2177,11 @@ is_fti_step(fg_intersections).
 fg_intersectiond(This,Target,Target):- This =@= Target,!.
 fg_intersectiond(_,_,Black):-  get_black(Black).
 
+non_intersectiond(Black,Target,Target):- get_black(Black),!.
+non_intersectiond(Target,Black,Target):- get_black(Black),!.
+non_intersectiond(This,Target,Black):- This =@= Target, get_black(Black), !.
+non_intersectiond(This,_,That):- copy_term(This,That),!.
+
 fg_intersections(Intersection,VM):-
  ignore((
  VMGID = VM.gid,
@@ -2292,6 +2300,10 @@ check_tid_gid4(OID,GID):- pp(check_tid_gid4(OID,GID)).
 is_fti_step(group_vm_priors).
 % =====================================================================
 group_vm_priors(VM):-
+ if_arc_option(group_vm_priors,
+  really_group_vm_priors(VM)).
+
+really_group_vm_priors(VM):-
  must_det_ll((
   ObjsG = VM.objs,
   %print_list_of(wqnl,ObjsG),
@@ -2569,8 +2581,9 @@ is_sa(Points,C-P2):-
     \+ (is_adjacent_point(P2,Dir,P3), Dir\==c, member(C-P3,Points), \+ is_diag(Dir)),!.
 
 contains_alone_dots(Grid):- nonvar(Grid), globalpoints_maybe_bg(Grid,Points),include(is_sa(Points),Points,SAs),SAs\==[].
+
 using_alone_dots(VM, _):- \+ contains_alone_dots(VM.grid_o), \+ contains_alone_dots(VM.grid_target),!.
-using_alone_dots(_,Goal):- once(Goal).
+using_alone_dots(_,Goal):- when_arc_expanding(once(Goal)).
 
 maybe_alone_dots_by_color(lte(LTE),VM):-  
    available_fg_colors(TodoByColors),
@@ -2718,13 +2731,13 @@ row_in_grid(C,L,LeftN,SecondRow,RightN,TexturedGrid):- nonvar(LeftN),
   (var(SecondRow)->member(SecondRow,TexturedGrid);true),
   append([LeftS,[La-Ca],_,[Lb-Cb],RightS],SecondRow),  
   (nonvar(L) -> (La==L, Lb==L) ; (La = Lb, Lb=L)),
-  (nonvar(C) -> (Ca==C, Cb==C) ; (Ca == Cb, Cb=C, C \== wbg, C \== wfg)).
+  (nonvar(C) -> (Ca==C, Cb==C) ; (Ca == Cb, Cb=C, C \== wbg, C \== fg)).
 
 row_in_grid(C,L,LeftN,SecondRow,RightN,TexturedGrid):-
   (var(SecondRow)->member(SecondRow,TexturedGrid);true),
   append([LeftS,[La-Ca],_,[Lb-Cb],RightS],SecondRow),  
   (nonvar(L) -> (La==L, Lb==L) ; (La = Lb, Lb=L)),
-  (nonvar(C) -> (Ca==C, Cb==C) ; (Ca == Cb, Cb=C, C \== wbg, C \== wfg)),  
+  (nonvar(C) -> (Ca==C, Cb==C) ; (Ca == Cb, Cb=C, C \== wbg, C \== fg)),  
   length(LeftS,LeftN), length(RightS,RightN).
 
 

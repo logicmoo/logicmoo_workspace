@@ -176,14 +176,26 @@ map_pred(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, map_pred(Pred, P, X, Sk, P1), !
 map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
 map_pred(_Pred, P, _, _, P).
 */
-mapgrid(P4,Grid,GridM,GridN,GridO):- is_list(Grid),!,maplist(mapgrid(P4),Grid,GridM,GridN,GridO).
-mapgrid(P4,Grid,GridM,GridN,GridO):- call(P4,Grid,GridM,GridN,GridO),!.
-mapgrid(P3,Grid,GridN,GridO):- is_list(Grid),!,maplist(mapgrid(P3),Grid,GridN,GridO).
-mapgrid(P3,Grid,GridN,GridO):- call(P3,Grid,GridN,GridO),!.
-mapgrid(P2,Grid,GridN):- is_list(Grid),!,maplist(mapgrid(P2),Grid,GridN).
-mapgrid(P2,Grid,GridN):- call(P2,Grid,GridN),!.
-mapgrid(P1,Grid):- is_list(Grid),!,maplist(mapgrid(P1),Grid).
-mapgrid(P1,Grid):- call(P1,Grid),!.
+
+into_grid_or_var(G,G):- is_cons(G),!.
+into_grid_or_var(G,G):- var(G),!.
+into_grid_or_var(O,G):- cast_to_grid(O,G,_Uncast),!.
+
+mapgrid(P4,Grid,GridM,GridN,GridO):- into_grid_or_var(Grid,G1),into_grid_or_var(GridM,G2),into_grid_or_var(GridN,G3),into_grid_or_var(GridO,G4),mapg_list(P4,G1,G2,G3,G4).
+mapg_list(P4,Grid,GridM,GridN,GridO):- is_list(Grid),!,maplist(mapg_list(P4),Grid,GridM,GridN,GridO).
+mapg_list(P4,Grid,GridM,GridN,GridO):- call(P4,Grid,GridM,GridN,GridO),!.
+
+mapgrid(P3,Grid,GridN,GridO):- into_grid_or_var(Grid,G1),into_grid_or_var(GridN,G2),into_grid_or_var(GridO,G3),mapg_list(P3,G1,G2,G3).
+mapg_list(P3,Grid,GridN,GridO):- is_list(Grid),!,maplist(mapg_list(P3),Grid,GridN,GridO).
+mapg_list(P3,Grid,GridN,GridO):- call(P3,Grid,GridN,GridO),!.
+
+mapgrid(P2,Grid,GridN):- into_grid_or_var(Grid,G1),into_grid_or_var(GridN,G2),mapg_list(P2,G1,G2).
+mapg_list(P2,Grid,GridN):- is_list(Grid),!,maplist(mapg_list(P2),Grid,GridN).
+mapg_list(P2,Grid,GridN):- call(P2,Grid,GridN),!.
+
+mapgrid(P1,Grid):- into_grid_or_var(Grid,G1),mapg_list(P1,G1).
+mapg_list(P1,Grid):- is_list(Grid),!,maplist(mapg_list(P1),Grid).
+mapg_list(P1,Grid):- call(P1,Grid),!.
 
 
 maplist_ignore(_3,H,I,J):- (H==[];I==[],J==[]),!,(ignore(H=[]),ignore(I=[]),ignore(J=[])).

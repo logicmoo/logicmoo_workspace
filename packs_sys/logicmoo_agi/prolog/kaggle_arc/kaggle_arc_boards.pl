@@ -108,8 +108,10 @@ individuate_pair_here(TestID,Trn+N1,In,Out):-
   ndividuator(TestID,Trn+N1,complete,In,Out),
   nop(train_for_objects_from_1pair(_{},TestID,[Trn,'i',N1,'o',N1],In,Out,_DictMid)).
 
+show_reduced_io_rarely(_):- \+ get_pair_mode(single_pair),!.
+show_reduced_io_rarely(In+Out):- % ignore((nonvar(In),nonvar(Out),grid_hint_swap(i-o,In,Out))),!,
+  ignore((fail,get_thingy(In,Out,Gets),print_ss(Gets))).
 
-show_reduced_io_rarely(_):-!.
 show_reduced_io_rarely(IO):- forall(show_reduced_io(IO),true).
 
 print_all_info_for_test:- 
@@ -600,7 +602,7 @@ min_list_unifier(_,_,_):-!.
 %min_unifier(A,B,C):- is_list(B), is_list(A), length(B,L), length(A,L), length(C,L).
 
 grid_hint_swap(IO,In,Out):-
- must_det_ll(kaggle_arc(TestID,trn+N,In,Out)),
+ ignore(kaggle_arc(TestID,trn+N,In,Out)),
  maybe_compute_test_io_hints(IO,TestID,N,In,Out),
  format('~N%% ~w: ',[IO]),!,
    forall((arc_test_property(TestID,gh(N),P,V)),ptv1(magenta+cyan,P=V)).
@@ -820,7 +822,15 @@ all_ogs(In,Out,Set):- %member(R,[strict,loose]),
 
 %maybe_ogs(R,X,Y,In,Out):-  find_ogs(X,Y,In,Out)*->R=strict;(ogs_11(X,Y,In,Out),R=loose).
 maybe_ogs(R,X,Y,In,Out):- maybe_ogs_color(R,X,Y,In,Out).
-maybe_ogs(call_ogs(P2,R),X,Y,In,Out):-  no_repeats(IIN,(rot_ogs(P2),once(grid_call_alters(P2,In,IIN)))), maybe_ogs_color(R,X,Y,IIN,Out).
+maybe_ogs(call_ogs(P2,R),X,Y,In,Out):-  no_repeats(IIN,(pre_ogs_alter(P2),once(grid_call_alters(P2,In,IIN)))), maybe_ogs_color(R,X,Y,IIN,Out).
+
+%pre_ogs_alter(maybe_unbind_bg).
+pre_ogs_alter([maybe_unbind_bg,maybe_fg_to_bg]).
+pre_ogs_alter(P2):- rot_ogs(P2).
+
+maybe_unbind_bg(In,NewIn):- get_black(BGC), unbind_color(BGC,In,NewIn),!,In\=@=NewIn.
+maybe_fg_to_bg(In,NewIn):- get_black(Black), \+ sub_var(Black,In), unique_colors(In,UCs),
+ include(is_real_fg_color,UCs,FGC),!,FGC=[FG],subst(In,FG,Black,NewIn),!, In\==NewIn.
 
 rot_ogs(trim_to_rect).
 rot_ogs(P2):- rotP0(P2).

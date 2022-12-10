@@ -547,6 +547,88 @@ g666(_,Y):- in_shape_lib(l_shape,X),
 
 make_row(Rows,FV):- functor(P,v,FV), P=..[v|Rows].
 
+% _______________
+h666(g1,"|     Y Y Y     |
+  | G G Y v Y G G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | . ® Y v Y ® . |
+  | . . Y v Y . . |
+  | . ® Y v Y ® . |
+  | G ® Y v Y ® G |
+  | G G Y v Y G G |
+  |     Y Y Y     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+").
+h666(g2,"
+   _______________
+  |     Y Y Y     |
+  | G G Y v Y G G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G ® Y v Y ® G |
+  | G G Y v Y G G |
+  |     Y Y Y     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯ ").
+
+h666(g3,"
+   _______________
+  |     . . .     |
+  | . . . . . . . |
+  | . . . . . . . |
+  | . . . . . . . |
+  | . . . . . . . |
+  | . . . . . . . |
+  | . . . . . . . |
+  | . . . . . . . |
+  | . . . . . . . |
+  | G . . . . . G |
+  | G ® . . . ® G |
+  | G . . . . . G |
+  | . . . . . . . |
+  | . . . . . . . |
+  |     . . .     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+").
+
+h666(g4,"
+   _______________
+  | ½           ½ |
+  | ½ ½       ½ ½ |
+  | ½           ½ |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+").
+
+test_make_predicate:-
+  test_make_predicate([g1,g2,g3]),
+  test_make_predicate([g3,g4]),
+  test_make_predicate([g1,g2,g4]).
+
+test_make_predicate(List):-
+  maplist(ss666,List,Grids),
+  gensym('newpred_',NewPred),
+  Pred =.. [NewPred|Grids],
+  print_ss(Grids),
+  assert_if_new(pred_impl(Pred)).
+
+
+f666(_Color,
+[[4,5,1],
+ [4,5,1],
+ [4,5,1]]).
 
 f666(_Ham,G):- the_hammer1(G).
 f666(_Ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G0),all_rotations(G0,G).
@@ -602,16 +684,17 @@ h666(_Ham,
  _________________________________________________"):- fail.
 
 trans_to_color('R','red').
-trans_to_color('B','blue').
+trans_to_color('B','brown').
 trans_to_color('G','green').
 trans_to_color('O','orange').
-trans_to_color('®','blue').
+trans_to_color('®','red').
+trans_to_color('Y','yellow').
+trans_to_color('f','fg').
+trans_to_color('v','purple').
+trans_to_color('½','cyan').
+trans_to_color(S,Name):- c2s(CN,S),color_name(CN,Name).
 trans_to_color(' ',Black):- get_black(Black).
 
-f666(_Color,
-[[4,5,1],
- [4,5,1],
- [4,5,1]]).
 
 into_grid_color(L,O):- is_list(L),!,mapgroup(into_grid_color,L,O).
 into_grid_color(L,O):- plain_var(L),!,L=O.
@@ -631,12 +714,15 @@ sp666(T,Y):- ss666(T,X), fpad_grid(s,X,Y).
 ff666(T,G0):- no_repeats(G0,((f666(T,F),into_g666(F,G),all_rotations(G,G0)))).
 fp666(T,Y):- ff666(T,X), fpad_grid(f,X,Y).
 
-
 maybe_fix_ascii(Text,Ascii0):-
+ replace_in_string([ 
+   '\r'='\n','\n\n'='\n'],Text,Ascii0),!,
+ Text\==Ascii0,!.
+
+maybe_fix_ascii(Text,Ascii0):- fail,
  replace_in_string([ 
    '\r'='\n','\n\n'='\n','$ '='$','$\n'='\n','$'='','\n '='\n','_\n'='_',' _'='_'],Text,Ascii0),!,
  Text\==Ascii0,!.
-
 
 ascii_to_growthchart(Text,G):- maybe_fix_ascii(Text,Ascii0), !, ascii_to_growthchart(Ascii0,G).
 ascii_to_growthchart(Text,GrowthChart):-  
@@ -644,20 +730,21 @@ ascii_to_growthchart(Text,GrowthChart):-
 
 
 ascii_to_grid(Text,G):- maybe_fix_ascii(Text,Ascii0), !, ascii_to_grid(Ascii0,G).
-ascii_to_grid(Text,G):- atom_contains(Text,'____'),!, atom_chars(Text,C), 
-  make_grid(30,30,G0), parse_text_to_grid(0,0,C,G0,G),!.
+ascii_to_grid(Text,G):- %atom_contains(Text,'____'),!, 
+  must_det_ll((atom_chars(Text,C), pttgS(C,[],G))).
 ascii_to_grid(Text,G):- 
  ascii_to_growthchart(Text,GrowthChart),
  growthchart_to_grid(GrowthChart,6,5,G).
 
 :- luser_default(find_rule,regular).
 % ?- h666(X),text_to_grid(X,G).
-text_to_grid(Text,GO):- text_to_grid(Text,_HH,_VV,_ObjPoints,GO).
+text_to_grid(Text,GO):- ascii_to_grid(Text,GO),!.
 
 text_to_points(Text,GPs):- 
   ascii_to_grid(Text,G),
+  print_grid(ag,G),
   % grid_to_tid(G,ID),
-  globalpoints(G,GPs).
+  globalpoints_include_bg(G,GPs),!.
 
 text_to_grid(Text,HH,VV,ObjPoints,GO):-  
  must_det_ll((
@@ -667,44 +754,62 @@ text_to_grid(Text,HH,VV,ObjPoints,GO):-
   deoffset_points(LoH,LoV,GPs,ObjPoints),  
   %print_grid(ObjPoints),
   HH is HiH - LoH + 1,
-  VV is HiV - LoV + 1,
-  points_to_grid(HH,VV,ObjPoints,GO))),!.
+  VV is HiV - LoV + 1,  
+  points_to_grid_safe(HH,VV,ObjPoints,GO))),!.
 
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,[' ','|'|Right],X), append(LEft,['|'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\r'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\n','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-% parse_text_to_grid(H,V,X,G,GO):- append(LEft,[' ','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,['|','\n'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,['\n','|'|Right],X), append(LEft,['\n'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,['¯'|Right],X), append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(H,V,X,G,GO):- append(LEft,[' ','_'|Right],X), append(LEft,['_'|Right],Y),!, parse_text_to_grid(H,V,Y,G,GO).
-parse_text_to_grid(0,0,X,G,GO):-
+points_to_grid_safe(HH,VV,ObjPoints,GO):- nl,
+  %writeq(points_to_grid_safe(HH,VV,ObjPoints,GO)),nl,
+  points_to_grid(HH,VV,ObjPoints,GO),!.
+
+trans_to_color1(' ',_):-!.
+trans_to_color1('.',black):-!.
+trans_to_color1(C1O,NewC):-trans_to_color(C1O,NewC).
+
+
+pttgS(CCs,G0,G):- append([_,['|',' '],Row,['|'],More],CCs),!,
+  read_row(Row,CRow),  !,
+  append(G0,[CRow],GG),
+  pttgS(More,GG,G).
+pttgS(_,G,G):-!.
+read_row([C,' '|Row],[CC|CRow]):- char_code(C,Code),Code>31,trans_to_color1(C,CC),read_row(Row,CRow).
+read_row(_,[]).
+
+
+pttgo(H,V,X,G,GO):- append(LEft,[' ','|'|Right],X), append(LEft,['|'|Right],Y),!, pttgo(H,V,Y,G,GO).
+pttgo(H,V,X,G,GO):- append(LEft,['\r'|Right],X), append(LEft,['\n'|Right],Y),!, pttgo(H,V,Y,G,GO).
+pttgo(H,V,X,G,GO):- append(LEft,['\n','\n'|Right],X), append(LEft,['\n'|Right],Y),!, pttgo(H,V,Y,G,GO).
+% pttgo(H,V,X,G,GO):- append(LEft,[' ','\n'|Right],X), append(LEft,['\n'|Right],Y),!, pttgo(H,V,Y,G,GO).
+pttgo(H,V,X,G,GO):- append(LEft,['|','\n'|Right],X), append(LEft,['\n'|Right],Y),!, pttgo(H,V,Y,G,GO).
+pttgo(H,V,X,G,GO):- append(LEft,['\n','|'|Right],X), append(LEft,['\n'|Right],Y),!, pttgo(H,V,Y,G,GO).
+pttgo(H,V,X,G,GO):- append(LEft,['¯'|Right],X), append(LEft,['_'|Right],Y),!, pttgo(H,V,Y,G,GO).
+pttgo(H,V,X,G,GO):- append(LEft,[' ','_'|Right],X), append(LEft,['_'|Right],Y),!, pttgo(H,V,Y,G,GO).
+pttgo(0,0,X,G,GO):-
   append(_,['_','\n'|Right],X),
-  parse_text_to_grid(1,1,Right,G,GO).
-parse_text_to_grid(0,0,X,G,GO):-
+  pttgo(1,1,Right,G,GO).
+pttgo(0,0,X,G,GO):-
   append(_,['\n'|Right],X),
-  parse_text_to_grid(1,1,Right,G,GO).
+  pttgo(1,1,Right,G,GO).
 
-parse_text_to_grid(_,V,['|'|X],G,GO):- 
-  parse_text_to_grid(1,V,X,G,GO).
-parse_text_to_grid(H,V,[' ',C1O|X],G,GO):- C1O \== '\n',
+pttgo(_,V,['|'|X],G,GO):- 
+  pttgo(1,V,X,G,GO).
+pttgo(H,V,[' ',C1O|X],G,GO):- C1O \== '\n',
   trans_to_color(C1O,NewC),
   replace_global_hvc_point(H,V,NewC,_,G,GM),
   H2 is H+1,
-  parse_text_to_grid(H2,V,X,GM,GO).
-parse_text_to_grid(H,V,[' '|X],G,GO):-
+  pttgo(H2,V,X,GM,GO).
+pttgo(H,V,[' '|X],G,GO):-
   H2 is H+1,
-  parse_text_to_grid(H2,V,X,G,GO).
-parse_text_to_grid(H,V,[C1O|X],G,GO):-
+  pttgo(H2,V,X,G,GO).
+pttgo(H,V,[C1O|X],G,GO):-
   trans_to_color(C1O,NewC),
   replace_global_hvc_point(H,V,NewC,_,G,GM),
   H2 is H+1,
-  parse_text_to_grid(H2,V,X,GM,GO).
-parse_text_to_grid(_,V,['\n'|X],G,GO):-
+  pttgo(H2,V,X,GM,GO).
+pttgo(_,V,['\n'|X],G,GO):-
   V2 is V+1,
-  parse_text_to_grid(1,V2,X,G,GO).
-parse_text_to_grid(_,_,[],G,G):-!.
-parse_text_to_grid(_,_,['_'|_],G,G):-!.
+  pttgo(1,V2,X,G,GO).
+pttgo(_,_,[],G,G):-!.
+pttgo(_,_,['_'|_],G,G):-!.
 
 insert_col_row_pad_open(H0,V0,G,GUU):- 
    insert_col_pad_open(H0,G,GU),

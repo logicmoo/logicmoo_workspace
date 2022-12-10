@@ -1522,7 +1522,7 @@ fixup_module_exports_into(Into):-
 :- module_transparent(fixup_module_exports_into_from/2).
 fixup_module_exports_into_from(_Into,From):- system == From, !.
 fixup_module_exports_into_from(Into,From):- 
-  format('~N% ?- ~q. ~n',[fixup_module_exports_into_from(Into,From)]),
+  nop(format('~N% ?- ~q. ~n',[fixup_module_exports_into_from(Into,From)])),
   forall((predicate_property(From:P,defined), \+ predicate_property(From:P,imported_from(_)),functor(P,F,A)),    
     From:define_into_module(From:Into,F/A)).
 

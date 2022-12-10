@@ -30,6 +30,7 @@
 :- include(kaggle_arc_header).
 
 
+when_arc_expanding(Goal):- nop(Goal).
 
 :- dynamic(pdtmp:arc_expands/3).
 :- thread_local(pdtmp:expand_enabled/3).

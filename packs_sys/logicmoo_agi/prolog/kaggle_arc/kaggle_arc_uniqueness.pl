@@ -190,7 +190,7 @@ explain_uniqueness(GroupWhole):-
   get_current_test(TestID),!,
   forall(member(Obj,Group),
    (dash_chars,
-    object_glyph(Obj,G), object_s_glyph(Obj,GC), object_grid(Obj,OG), 
+    object_glyph(Obj,G), object_color_glyph_short(Obj,GC), object_grid(Obj,OG), 
     locally(nb_setval(color_index,[Obj|GroupPP]),print_side_by_side(GC,GroupPP,'explain_uniqueness',_,OG,G)),
     dmsg(uobj=Obj),!,
     forall(what_unique_obj(TestID,Obj,Group),true))),
@@ -240,7 +240,7 @@ gather_props([F/A|SortedFunctors],FlatProps,[(F-Candidates)|ListOfLists]):-
 gather_props([],_,[]).
 
 
-compare_values(F-X,Notable):- predsort(using_compare(number_varz),X,S),length(X,N),length(S,NS),
+compare_values(F-X,Notable):- predsort_using_only(number_varz,X,S),length(X,N),length(S,NS),
   is_notable(F-NS/N,Notable).
 
 :- dynamic(repress_non_notables/0).

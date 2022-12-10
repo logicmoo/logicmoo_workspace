@@ -715,7 +715,7 @@ test_blur_least:-
 /*
 blur_least(B,Mix,I,O):-
   blur_list(B,Mix,I,L),
-  predsort(sort_on(minimal_changes(I),L,S),
+  predsort_on(minimal_changes(I),L,S),
   S=[O-pp(blur_some(B,Mix))|_].
 */
 
@@ -735,26 +735,32 @@ replace_non_fg_least(C,_,C):- is_fg_color(C),!.
 replace_non_fg_least(C,Black,C):- \+ is_fg_color(Black),!.
 replace_non_fg_least(_,C,C).
 
-blur_or_not_least(Op,G0,GG):- 
-  into_grid(G0,GD),duplicate_term(GD,G),
-  grid_call(Op,G,GGG),
-  duplicate_term(GGG,GGGO),
-  WHY = blur_or_not_least(Score,Op,GG,OH,OV),
+blur_or_not_least(Op,Grid,Overlayed):-  
+  into_grid(Grid,GD), duplicate_term(GD,OrigGrid),
+  grid_call(Op,OrigGrid,BlurWithG),
+  least_overlay(OrigGrid,BlurWithG,Overlayed,OH,OV),
+  Title=blur_or_not_least(Op,OH,OV),
+  print_grid(Title,Overlayed).
+
+% Maps BlurWithG onto the OriginalG while attempting to cause the least conflicts
+least_overlay(OriginalG,BlurWithG,OverlayedUncasted,OffsetH,OffsetV):-
+  into_grid(OriginalG,Original),cast_to_grid(BlurWithG,BlurWith,Uncast),
+  duplicate_term(BlurWith,GGGO),
+  WHY = overlay_info(Score,Overlayed,OffsetH,OffsetV),
   grid_size(GGGO,H2,V2),
   HT2 is floor(H2*2),
   VT2 is floor(V2*2),
   %H2H is 1+floor(H2/2), V2V is 1+floor(V2/2),
-  adjacent_points(G,APs),
-  catch((
+  adjacent_points(Original,APs),
   findall(WHY, 
-    ( ( (between(1,HT2,IH),OH is IH-H2, between(1,VT2,IV),OV is IV-V2); (OH= -5,OV= -5)),
+    ( ( (between(1,HT2,IH),OffsetH is IH-H2, between(1,VT2,IV),OffsetV is IV-V2); (OffsetH= -5,OffsetV= -5)),
       
-      offset_layover(GGGO,OH,OV,GGGG),
-      %count_changes(GGGG,G,GGGG,GBad,GKept1,GGood), GBad=0,
-      mapgrid(replace_non_fg_least,GGGG,G,GG),
-      adjacent_points(GG,APG),
-      % once((into_ngrid(G,NG),into_ngrid(GG,NGG),into_ngrid(GGGG,NGGGG))), count_changes(NGGGG,NG,NGG,Bad,Kept1,Good), % Bad=0,
-       count_changes(GGGG,G,GG,Bad,Kept1,Good), Bad=0,
+      offset_layover(GGGO,OffsetH,OffsetV,GGGG),
+      %count_changes(GGGG,Original,GGGG,GBad,GKept1,GGood), GBad=0,
+      mapgrid(replace_non_fg_least,GGGG,Original,Overlayed),
+      adjacent_points(Overlayed,APG),
+      % once((into_ngrid(Original,NG),into_ngrid(Overlayed,NGG),into_ngrid(GGGG,NGGGG))), count_changes(NGGGG,NG,NGG,Bad,Kept1,Good), % Bad=0,
+       count_changes(GGGG,Original,Overlayed,Bad,Kept1,Good), Bad=0,
 
       % Kept1>5,
      % ((Good=0,!,throw(bad_rot));Good>0),
@@ -762,14 +768,14 @@ blur_or_not_least(Op,G0,GG):-
       X is APG-(2*APs),
       X<1,
       Score = X + Bad + Good + NegKept,
-      nop((print_side_by_side(G,_,GG),wqs(s(Score,Op,OH,OV,good(Good),bad(Bad),kept(NegKept))))),
+      nop((print_side_by_side(Original,_,Overlayed),wqs(s(Score,OffsetH,OffsetV,good(Good),bad(Bad),kept(NegKept))))),
       true),L),
-  predsort(sort_on(/*pointy_mass*/ arg(1)),L,S),
-  S=[WHY|_]),bad_rot,fail),
-  (print_grid(blur_or_not_least(Score,Op,OH,OV),GG)).
+  predsort_on(/*pointy_mass*/ arg(1),L,S),S=[WHY|_],
+  call(Uncast,Overlayed,OverlayedUncasted).
 
-offset_layover(GGG,OH,OV,GGGG):-
-  push_downward(OV,GGG,GG), h_as_v(push_downward(OH),GG,GGGG).
+
+offset_layover(GGG,OffsetH,OffsetV,GGGG):-
+  push_downward(OffsetV,GGG,GG), h_as_v(push_downward(OffsetH),GG,GGGG).
 
 push_upward(OOV,G,NewBot):- OOV<0,!, OV is -OOV, push_downward(OV,G,NewBot).
 push_upward(OV,G,NewBot):- 
@@ -800,7 +806,7 @@ push_downward(0,G,G).
 blur_list(B,Mix,I,S):-
   findall(O-pp(blur_some(B,Mix)),blur_some(B,Mix,I,O),L),
   %print_side_by_side(L),
-  predsort(sort_on(/*pointy_mass*/ count_changes(_GGGG,I)),L,S).
+  predsort_on(/*pointy_mass*/ count_changes(_GGGG,I),L,S).
 
 
 pointy_mass(P,Mass):- is_pointy(P),!,mass(P,Mass).
@@ -1618,7 +1624,7 @@ consensus2(Steps,Vars,[C|BG],Blk,Color,Other,C).
 
 maybe_repair_image(VM,Ordered,Objects,CorrectObjects,KeepNewState,RepairedResult):- 
   maplist(object_grid,Objects,AllGrids),
-  AllGrids=Grids , %once(predsort(sort_on(colored_pixel_count),AllGrids,Grids);sort(AllGrids,Grids)),
+  AllGrids=Grids , %once(predsort_on(colored_pixel_count,AllGrids,Grids);sort(AllGrids,Grids)),
   (all_rows_can_align(Grids)
     -> (KeepNewState=[], format('~N'),dmsg('Must already be perfect...'),CorrectObjects = Objects);
     repair_patterned_images(VM,Ordered,Objects,Grids,CorrectObjects,KeepNewState,RepairedResult)).
@@ -1725,9 +1731,6 @@ point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
 
   
 
-sort_on(C,R,A,B):- (A==B-> R= (=) ; must_det_ll((call(C,A,AA),call(C,B,BB),!,compare(R,AA+A,BB+B)))).
-
-using_compare(C,R,A,B):- (A==B-> R=(=) ; must_det_ll((call(C,A,AA),call(C,B,BB),!,compare(R,AA,BB)))).
 
 colored_pixel_count(A,Count):- is_points_list(A),fg_pixel_count(A,Count),!.
 colored_pixel_count(G,Count):- is_grid(G), fg_pixel_count(G,Count),!.

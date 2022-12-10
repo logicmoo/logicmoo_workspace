@@ -89,11 +89,13 @@ global_or_object_grid(O1,global+points,Points):- globalpoints_include_bg(O1,Poin
 global_or_object_grid(O1,local+points,Points):- localpoints_include_bg(O1,Points).
 global_or_object_grid(O1,local+self,O1).
 
-object_grid_to_str(Obj,Str,Title):- 
+object_grid_to_str(Obj,Str,Title):- object_grid_to_str(Obj,_GridO,Str,Title).
+
+object_grid_to_str(Obj,GridO,Str,Title):- 
  must_det_ll((
   vis2D(Obj,H,V), 
   object_glyph(Obj,Glyph),
-  Title = t(LG+Type,loc2D(OH,OV),loc2G(OGH,OGV),center2G(CX,CY),size2D(H,V)),
+  (var(Title) -> (Title = t(LG+Type,loc2D(OH,OV),loc2G(OGH,OGV),center2G(CX,CY),size2D(H,V))) ; true),
   loc2D(Obj,OH,OV),
   ignore(loc2G(Obj,OGH,OGV)),
   ignore(center2G(Obj,CX,CY)),
@@ -110,8 +112,14 @@ object_grid_to_str(Obj,Str,Title):-
   (LG==local
    -> (HH is (OH - 1) * 2, wots(Str,(print_w_pad(HH,GSS))))
     ; (Str=GSS)))).
- 
 
+printable_grid(_,_,Grid,GridO,GridO):-localpoints_include_bg(Grid,GridO).
+printable_grid(H,V,Grid,GridO,NGrid):-
+     localpoints_include_bg(Grid,GridOM),
+     points_to_grid(H,V,GridOM,GridO),
+     make_bg_visible(GridO,PrintGrid),    
+     copy_term(PrintGrid,PrintGridC),
+     ( false -> into_ngrid(PrintGridC,NGrid); NGrid = PrintGridC),!.     
 
 debug_as_grid(Grid):- debug_as_grid('',Grid),!.
 
@@ -121,29 +129,25 @@ debug_as_grid(Why,R):- atom(R), atom_contains(R,'_'), pp_parent([LF|_]), \+ (LF=
   resolve_reference(R,Var), R\==Var, \+ plain_var(Var),!, 
   write(' '), writeq(R), write(' /* '), debug_as_grid(Why,Var), write(' */ ').
 
-
-
 %debug_as_grid(Why,R):- resolve_reference(R,Var)-> R\==Var, write(' ( '), writeq(R),write(' , '),debug_as_grid(Why,Var),write(' )'),!.
 debug_as_grid(Why,Grid):- (is_object(Grid)/*;is_grid(Grid)*/),!,
   must_det_ll((
   vis2D(Grid,H,V),
   object_glyph(Grid,Glyph),  
-  Title = debug_as_grid(Why,objFn(Glyph),loc2D(OH,OV),size2D(H,V)),
+  object_grid_to_str(Grid,GridO,Str,TitleG),
+  Title = debug_as_grid(Why,objFn(Glyph),TitleG),
   if_t((H\==1;V\==1;true),
     must_det_ll((
-     loc2D(Grid,OH,OV),     
-     nop((shape2D(Grid,SX,SY),max_min(H,SX,IH,_),max_min(V,SY,IV,_))),
+     loc2D(Grid,OH,_OV),     
+     nop((rotOffset(Grid,SX,SY),max_min(H,SX,IH,_),max_min(V,SY,IV,_))),
      ignore(IV=V),ignore(IH=H),
-     localpoints_include_bg(Grid,GridOM),
-     points_to_grid(H,V,GridOM,GridO),
-     make_bg_visible(GridOM,PrintGrid),    
-     copy_term(PrintGrid,PrintGridC),
-     into_ngrid(PrintGridC,NGrid),
+     %printable_grid(H,V,Grid,GridO,NGrid),
      %wots(GS,print_grid(IH,IV,Title,PrintGridC)),replace_in_string(['®'=Glyph,'@'=Glyph],GS,GSS),
      %wots(S,print_side_by_side(GSS,print_grid(IH,IV,ngrid,NGrid))),
 
-     wots(S,print_grid(IH,IV,Title,NGrid)), HH is (OH - 1) * 2, print_w_pad(HH,S),
-
+     wots(S, ((write(Str), nl, write(Title), nl /*, print_grid(NGrid)*/))), 
+     HH is (OH - 1) * 2, print_w_pad(HH,S),
+     
      ignore(( O = GridO, once(grid_to_norm(O,Ops,N)), O\=@=N, print_side_by_side(Ops,O,N),writeln(Ops))),
 
      true))),
@@ -183,28 +187,38 @@ debug_indiv(A):- is_point_obj(A,Color,Point),
   hv_point(H,V,Point), i_glyph(Id,Sym),
   wqnl([' % Point: ', color_print(Color,Sym), dot, color(Color), fav1(Tst), nth(Id), loc2D(H,V)]),!. 
 */
-object_colors_prop(PA,PenColors):- 
+object_color_desc(PA,PenColors):- 
   pen(PA,Pen), colors(PA,Colors), 
   display_length(Pen,PenL), display_length(Colors,ColorsL), 
   ((PenL=<ColorsL) -> PenColors=pen(Pen);PenColors=colors(Colors)).
 
-object_dglyphH(PA, OUTS):- 
+object_birth_desc(PA,Birth):-
+  indv_props(PA,Props),findall(B,member(birth(B),Props),BBs),
+  predsort_on(birth_info,BBs,ByDL),last(ByDL,Birth).
+
+birth_info(ifti(Birth),2+InfoLen):- !, display_length(Birth,InfoLen).
+birth_info(indiv(Birth),0+InfoLen):- !, display_length(Birth,InfoLen).
+birth_info(Birth,1+InfoLen):- display_length(Birth,InfoLen).
+
+object_ref_desc(Obj, OUTS):- 
+  into_obj(Obj,PA),
   obj_to_oid(PA,GA),% mass(PA,Mass),
-  shape(PA,Shape),loc2D(PA,X,Y), rot2L(PA,ROT),vis2D(PA,XX,YY),
+  shape(PA,Shape),loc2D(PA,X,Y), rot2L(PA,ROT), vis2D(PA,XX,YY),
   shape_id(Shape,ShapeID),
-  object_colors_prop(PA,PenColors),
-  OUT = objFn(GA,[loc2D(X,Y),rot2L(ROT),vis2D(XX,YY),sid(ShapeID),PenColors]),
+  object_birth_desc(PA,Birth),
+  object_color_desc(PA,PenColors),
+  OUT = objFn(GA,[b(Birth),loc2D(X,Y),rot2L(ROT),vis2D(XX,YY),sid(ShapeID),PenColors]),
   colorize_oterms(OUT,OT),
   wots(SS,write(OT)),!,
   OUTS = SS.
 
-object_dglyphH(PA,objFn(GA)):- object_s_glyph_long(PA,GA),!.
-object_dglyphH(PA,objFn(GA)):- object_s_glyph(PA,GA),!.
+object_ref_desc(PA,objFn(GA)):- object_color_glyph_long(PA,GA),!.
+object_ref_desc(PA,objFn(GA)):- object_color_glyph_short(PA,GA),!.
 
-object_dglyphH_no_loop(PA, OUTS):- object_dglyphH(PA, OUTS),!.
-object_dglyphH_no_loop(PA, OUTS):-
+object_ref_desc_no_loop(PA, OUTS):- object_ref_desc(PA, OUTS),!.
+object_ref_desc_no_loop(PA, OUTS):-
  must_det_ll((
-  object_s_glyph_long(PA, CGA),
+  object_color_glyph_long(PA, CGA),
   mass(PA,Mass),
   shape(PA,Shape),pen(PA,Pen),loc2D(PA,X,Y), rot2L(PA,ROT),
   shape_id(Shape,ShapeID),  
@@ -213,7 +227,7 @@ object_dglyphH_no_loop(PA, OUTS):-
   OUTS = SS)).
 
 /*
-tersify1(I,Q):- is_object(I),object_s_glyph(I,FC), o2g(I,O),!,wots(A,color_print(FC,call(format('"~w"',[O])))),
+tersify1(I,Q):- is_object(I),object_color_glyph_short(I,FC), o2g(I,O),!,wots(A,color_print(FC,call(format('"~w"',[O])))),
    amass(I,M),
    wots(S,call(write(objFn(A,M)))),atom_string(Q,S).
 */
@@ -229,16 +243,16 @@ object_glyph_colorz(Obj,Colors):-
   unique_colors(Obj,[UC|CL]),
   findall(RC,(member(FC,[UC|CL]),to_realer_color(FC,RC)),NColors),
   (nonvar(UC)-> flatten_set([NColors,UC],Colors);Colors=NColors),!.
-object_glyph_colorz(_,[wfg]).
+object_glyph_colorz(_,[fg]).
 
-object_s_glyph_long(PA, CGA):- 
+object_color_glyph_long(PA, CGA):- 
  must_det_ll((
   obj_to_oid(PA,OID),
   object_glyph_colorz(PA,Colors),
   print_colors_on_ss(OID,Colors,CGAO),
   CGA=CGAO)).
 
-object_s_glyph(Obj,SGlyph):-
+object_color_glyph_short(Obj,SGlyph):-
  must_det_ll((
   o2g(Obj,Glyph),
   object_glyph_colorz(Obj,Colors),
@@ -257,7 +271,7 @@ print_colors_on_s([C|Color],Glyph):- length([C|Color],CL),length(Glyph,GL),CLL i
   sformat(G,'~s',[GLL]),!,color_print(C,G),print_colors_on_s(Color,More).
 print_colors_on_s([C|Color],[G|Glyph]):- color_print(C,G),print_colors_on_s(Color,Glyph).
 
-object_s_glyph_old(Obj,S):- o2g(Obj,G),colors(Obj,Colors),maplist(arg(1),Colors,NColors),
+object_color_glyph_old(Obj,S):- o2g(Obj,G),colors(Obj,Colors),maplist(arg(1),Colors,NColors),
   wots(S,maplist(user:print_ncolors1(G),NColors)),!.
 
 print_ncolors(G,C):- color_print(C,G).
@@ -268,8 +282,8 @@ o2c(Obj,Glyph):- color(Obj,Glyph),!.
 o2ansi(I,S):- integer(I),int2glyph(I,G),!,o2ansi(G,S). 
 o2ansi(G,S):- atom(G),!,g2o(G,O),o2ansi(O,S),!.
 o2ansi(G,S):- \+ is_object(G),!,colorize_oterms(G,S).
-o2ansi(Obj,S):- object_s_glyph(Obj,S),!.
-o2ansi(Obj,S):- object_s_glyph_old(Obj,S),!.
+o2ansi(Obj,S):- object_color_glyph_short(Obj,S),!.
+o2ansi(Obj,S):- object_color_glyph_old(Obj,S),!.
 
 
 colorize_oterms(O,A):- var(O),!,A=O.
@@ -278,7 +292,7 @@ colorize_oterms(O,A):- number(O),!,wots(A,bold_print(write(O))).
 colorize_oterms(-O,-A):- !, colorize_oterms(O,A).
 colorize_oterms(+O,+A):- !, colorize_oterms(O,A).
 colorize_oterms(O,A):- is_list(O),!,maplist(colorize_oterms,O,A).
-colorize_oterms(O,A):- is_object(O),O=obj(_),object_s_glyph(O,A),!.
+colorize_oterms(O,A):- is_object(O),O=obj(_),object_color_glyph_short(O,A),!.
 colorize_oterms(O,A):- compound(O),compound_name_arguments(O,F,Args),!,maplist(colorize_oterms,Args,AArgs),compound_name_arguments(A,F,AArgs).
 colorize_oterms(O,A):- \+ atom(O),!,A=O.
 colorize_oterms(O,A):- is_color(O),!,wots(A,color_print(O,O)).
@@ -336,7 +350,7 @@ show_touches(Only,Obj):- must_det_ll((into_obj(Obj,RealObj),show_touches0(Only,R
 show_touches0(Only,Obj):- is_not_in(Only,Obj),!.
 show_touches0(Only,Obj):- Obj = obj(List), 
  must_det_ll((
-  object_dglyphH_no_loop(Obj,SGlyph),
+  object_ref_desc_no_loop(Obj,SGlyph),
   include(is_functor(link),List,TP),
   include(is_arg_in(Only),TP,TPO),!,
   show_touches2(SGlyph,TPO))).
@@ -349,7 +363,7 @@ dbg_show_touches(Only,Obj):- must_det_ll((into_obj(Obj,RealObj),dbg_show_touches
 dbg_show_touches0(Only,Obj):- must_det_ll(( \+ is_not_in(Only,Obj))),!.
 dbg_show_touches0(Only,Obj):- Obj = obj(List), 
  must_det_ll((
-  object_dglyphH_no_loop(Obj,SGlyph),
+  object_ref_desc_no_loop(Obj,SGlyph),
   include(is_functor(link),List,TP),
   include(is_arg_in(Only),TP,TPO),!,
   dbg_show_touches2(SGlyph,TPO))).
@@ -371,10 +385,10 @@ debug_indiv_obj(AS0):-
   TF = false,
  % obj_to_oid(Obj,MyOID),
   %o2ansi(MyOID,MissGlyph),
-  object_s_glyph(Obj,SGlyph),
+  object_color_glyph_short(Obj,SGlyph),
 
   my_partition(is_functor(link),Props,ISLINK,AS1), r_props(ISLINK,ISLINKR),
-  my_partition(is_o3,AS1,TVSO0,AS),  r_props(TVSO0,TVSO), predsort(sort_on(arg(2)),TVSO,TVSOR),reverse(TVSOR,TVSOS),
+  my_partition(is_o3,AS1,TVSO0,AS),  r_props(TVSO0,TVSO), predsort_on(arg(2),TVSO,TVSOR),reverse(TVSOR,TVSOS),
   short_indv_props(AS,TVSI1,TVSI2),append(TVSI1,TVSI2,TVSI),
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
   append([TVSI,Props],ASFROM), choose_header(ASFROM,Caps), toPropercase(Caps,PC),

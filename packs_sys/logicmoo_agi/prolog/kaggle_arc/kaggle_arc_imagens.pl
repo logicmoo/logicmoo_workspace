@@ -169,7 +169,7 @@ into_lib_object2(ShapeProps,ScaledGrid,LibObj):-
 
 % todo temp
 sortshapes(List,Set):- my_list_to_set_cmp(List, using_compare(shape_key), Set).
-% sortshapes(List,ListS):- predsort(using_compare(shape_key),List,ListS),!.
+% sortshapes(List,ListS):- predsort_using_only(shape_key,List,ListS),!.
 %sortshapes(List,ListS):- sort(List,ListS),!.
 
 

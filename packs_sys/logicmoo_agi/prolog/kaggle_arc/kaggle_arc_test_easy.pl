@@ -119,16 +119,55 @@ test_example_grid(G):- set_current_test(G),!,get_current_test(TestID),test_easy(
 easy_solve_by( TestID,P2):- nonvar(P2),!, copy_term(P2,P2T), findall(P2T,(easy_solve_by(TestID,P2T),P2\=@=P2T),List), member(P2,[P2|List]).
 easy_solve_by( TestID,flip_Once(_)):- get_black(Black),user:arc_test_property(TestID,common,comp(cbg(Black),i-o,grav_rot),_).
 */
-easy_solve_by(_TestID,P2):- easy_p2(P2). % easy_p2(P2).
+easy_solve_by(_TestID,use_simplified_recall(_)).
+%easy_solve_by(_TestID,P2):- easy_p2(P2). % easy_p2(P2).
+
+
 
 
 easy_p2_0(blur_or_not_least_rot90_x4):- test_hint(mass_and_area(grow_less_than_times(4),'=')).
 easy_p2_0(blur_rot90):- test_hint(mass_and_area(grow_less_than_times(1),'=')).
 easy_p2_0(unbind_and_fill_in_blanks(_Code)).
-easy_p2(repair_and_select(_How,_M)):- test_hint(input_gt,unique_color_count),
+easy_p2_0(repair_and_select(_How,_M)):- test_hint(input_gt,unique_color_count),
                                       test_hint(input_plus(1),unique_color_count).
+
+easy_p2(use_simplified_recall(_)).
 easy_p2(do_easy1(_)). %:- easy0(_,GFS).
 easy_p2(do_easy2(_,_)).
+
+color_getter_p2(unique_colors).
+color_getter_p2(colors).
+
+io_colors(I,O,IOColors):- 
+  color_getter_p2(P2),
+  once((call(P2,I,IColors),
+  call(P2,O,OColors), 
+  ignore(IColors=OColors),
+  append(IColors,OColors,IIOOColors))),
+  findall(C,(sub_term(C,IIOOColors),is_color(C)),OIColors),
+  list_to_set(OIColors,IOColors).
+
+subst_colors_with_vars(Colors,Vars,I,O):-
+ % io_colors(I,O,Colors),
+  length(Colors,CL),length(Vars,CL),
+  subst_2L(Colors,Vars,I,O).
+
+%apply_equiv_xforms(subst_colors_with_vars(Colors,Vars),II,III):- subst_colors_with_vars(Colors,Vars,II,III).
+
+use_simplified_recall(Where,II,OO):-  nop(get_current_test(Where)),get_simplified_recall(Where,II,OO).
+
+get_simplified_recall(W,I,O):- get_simplified_recall_exact(W,I,O)*->true;get_simplified_recall_close(W,I,O).
+
+get_simplified_recall_exact(d(Where),I,O):- fail,kaggle_arc(Where,_,I,O).
+
+get_simplified_recall_close(Where,II,OO):- 
+   kaggle_arc(Where,_,I,O),  
+   once((io_colors(I,O,Colors), length(Colors,CL),length(Vars,CL))),
+   PairIn = I+O,   subst_2L(Colors,Vars,PairIn,PairOut), 
+   PairOut = II+OO,
+   print_ss([simplified_recall(Colors)=I,orig=O,match=II,for=OO]).
+
+   
 
 do_easy1(C1,I,O):- easy0(_N,C1),once(grid_call(C1,I,O)),I\=@=O.
 do_easy2(C1,C2,I,O):- 
@@ -442,7 +481,7 @@ guess_simple_todolist(N,SolSoFar,DoneSoFar,Plan,I,O,OO):- !,
  ((fits_grid(O,I),N>0) 
 -> (Plan=DoneSoFar,OO=I) 
 ;(findall(h_g(H1,I1),(easy0(N,H1),grid_call(H1, I,I1), (H1=='=' -> true ; (is_a_change(I,I1), \+ member(I1,SolSoFar)))), H1G),
-  predsort(using_compare(arg(2)),H1G,H1GSS),sort(H1GSS,H1GS),
+  predsort_using_only(arg(2),H1G,H1GSS),sort(H1GSS,H1GS),
   maplist(arg(2),H1GS,SOFAR),append(SolSoFar,SOFAR,NewSOFAR),
   member(h_g(H1,I1),H1GS),
   Next is N+1,
@@ -453,7 +492,7 @@ guess_simple_todolist(N,_Failed,IPlan,Plan,I,O,OO):- N\==0, fits_grid(O,I),!,OO=
 /*
 guess_simple_todolist(N,Failed,Planned,Plan,I,O,OO):- Next is N+1,
   findall(h_g(H1,I1),(easy0(N,H1),grid_call(H1, I,I1), (H1=='='-> true ; nop((is_a_change(I,I1), \+ member(h_g(_,I1),Failed))))), H1G),
-  predsort(using_compare(arg(2)),H1G,H1GS),
+  predsort_using_only(arg(2),H1G,H1GS),
   select(h_g(H1,I1),H1GS,Rest),
   %append(Rest,Failed,NewFailed), 
   Rest=NewFailed, 
@@ -468,11 +507,11 @@ guess_simple_todolist(N,Failed,Planned,Plan,I,O,OO):- Next is N+1,
 /*
 simple_todolist(SolSoFar,List,I,O,OO):-
   findall(h_g(H1,I1),(easy0(H1),grid_call(H1, I,I1),\+ member(I1,SolSoFar)), H1G),
-  predsort(using_compare(arg(2)),H1G,H1GSS),sort(H1GSS,H1GS),
+  predsort_using_only(arg(2),H1G,H1GSS),sort(H1GSS,H1GS),
   maplist(arg(2),H1GS,SOFAR),
   member(h_g(H1,I1),H1GS),
   ((findall(h_g(H2,I2),(easy2(H2),H1\==H2,grid_call(H2,I1,I2),\+ member(I2,SOFAR)),H2G),
-    predsort(using_compare(arg(2)),H2G,H2GSS),sort(H2GSS,H2GS),
+    predsort_using_only(arg(2),H2G,H2GSS),sort(H2GSS,H2GS),
     member(h_g(H2,I2),H2GS),
   ((fits_grid(O,I2),[H1,H2]=List,I2=OO))) 
   ;((fits_grid(O,I1),[H1]=List,I1=OO)))
@@ -534,7 +573,7 @@ shrink_grid(I,O):- grid_to_norm(I,_,O),!.
 
 is_fti_step(last_indiv).
 last_indiv(VM):- show_vm_changes(VM,last_indiv, last_indiv(VM.objs,set(VM.objs))).
-last_indiv(I,R):- into_group(I,M),I\=@=M,!,predsort(sort_on(loc_term),M,O),reverse(O,R).
+last_indiv(I,R):- into_group(I,M),I\=@=M,!,predsort_on(loc_term,M,O),reverse(O,R).
 
 
 
