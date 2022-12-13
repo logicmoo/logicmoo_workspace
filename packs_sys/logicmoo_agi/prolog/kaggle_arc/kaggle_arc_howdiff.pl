@@ -418,17 +418,18 @@ show_pair_now(TITLE,OO1,OO2):-
   object_grid_to_str(O2,Str2,T2),
   print_side_by_side(yellow,Str1,T1,_,Str2,T2),  
   format('~N~n'),
+  if_t((true),
+    learn_rule_in_out_objects(TITLE,O1,O2)),
   nop(ignore((into_ngrid(O1,NO1),into_ngrid(O2,NO2), print_side_by_side(silver,NO1,ngrid(T1),_,NO2,ngrid(T2))))),
-  debug_indiv_obj(O1),
-  format('~N~n'),
-  debug_indiv_obj(O2),  
+  if_t(\+ nb_current(menu_key,'u'),
+    (debug_indiv_obj(O1), format('~N~n'), debug_indiv_obj(O2))),  
   if_t(nb_current(menu_key,'o'),
-   collapsible_section(info,compare_objs1(TITLE),false,
-   (findall(E,compare_objs1(E,O1,O2),L), pp(compare_objs1(showdiff_objects)=L),
-    indv_props(O1,S1),indv_props(O2,S2),
-    intersection(S1,S2,Sames,SS1,SS2),
-    proportional(SS1,SS2,lst(vals(_),len(_),PDiffs)),
-    show_sames_diffs_now(Sames,PDiffs)))))),
+  (collapsible_section(info,compare_objs1(TITLE),false,
+     (findall(E,compare_objs1(E,O1,O2),L), pp(compare_objs1(showdiff_objects)=L),
+      indv_props(O1,S1),indv_props(O2,S2),
+      intersection(S1,S2,Sames,SS1,SS2),
+      proportional(SS1,SS2,lst(vals(_),len(_),PDiffs)),
+      show_sames_diffs_now(Sames,PDiffs))))))),
   dash_chars, dash_chars.
 
 
@@ -495,7 +496,7 @@ maybe_good_prop(o(How,_,_),o(How,_,_)).
 maybe_good_prop1(vis2D(_,_)).
 maybe_good_prop1(loc2D(_,_)).
 maybe_good_prop1(iz(poly(_))).
-maybe_good_prop1(birth(_)).
+maybe_good_prop1(/*b*/iz(_)).
 maybe_good_prop1(iz(locY(_))).
 maybe_good_prop1(iz(locX(_))).
 maybe_good_prop1(symmetry(X)):- !, nonvar(X).
@@ -510,7 +511,7 @@ remove_giz(L,O):- include(not_giz,L,M),list_to_set(M,O).
 not_giz(giz(_)):-!,fail.
 not_giz(o(_,_,_)):-!,fail.
 not_giz(merged(_)):-!,fail.
-not_giz(birth(_)):-!,fail.
+not_giz(/*b*/iz(_)):-!,fail.
 not_giz(changes(_)):-!,fail.
 not_giz(P):- prop_type(_,P),!.
 not_giz(iz(_)):-!.
@@ -648,7 +649,7 @@ never_show_diff(link).
 never_show_diff(iz(g(_))).
 never_show_diff(obj_to_oid).
 never_show_diff(change).
-%never_show_diff(birth).
+%never_show_diff(/*b*/iz).
 never_show_diff(V):- compound(V),functor(V,F,_),!,never_show_diff(F).
 
 never_do_diff(V):- never_show_diff(V).
@@ -686,7 +687,7 @@ obj_make_comparable_e(I,I).
 
 % f_uncomparable_e(F).
 f_uncomparable_e(grid).
-%f_uncomparable_e(birth):- writeq(b).
+%f_uncomparable_e(/*b*/iz):- writeq(b).
 %f_uncomparable_e(grid_size).
 %f_uncomparable_e(iz).
 %diff_objects(I,O,OUT):- !, fail, locally(set_prolog_lfag(gc,false),compute_diff_objs1(I,O,OUT)).
@@ -1001,7 +1002,7 @@ reduce_required(iz(IO),IO).
 reduce_required(obj(IO),IO).
 reduce_required(giz(IO),IO).
 reduce_required(pen(IO),IO).
-reduce_required(birth(IO),IO).
+reduce_required(/*b*/iz(IO),IO).
 reduce_required(shape(IO),IO).
 reduce_required(g(IO),IO).
 reduce_required(i(IO),IO).

@@ -16,11 +16,14 @@ learned_test(TName):-
   fix_test_name(TName,TestID),
    format('% ?- ~q. ~n',[learned_test(TName)]),
    %forall(clause(learnt_rule(TestID,A,B,C,D),Body),
-    %print_rule(learned_test,learnt_rule(TestID,A,B,C,D):-Body)),
-    training_info(TestID,Info),
-    maplist(print_rule(TestID),Info),
-    length(Info,Len),
-    ptc(orange,format('~N~n% Rules Learned: ~w~n~n',[Len])),!.
+    %print_rule(learned_test,learnt_rule(TestID,A,B,C,D):-Body)),    
+    saveable_test_info(TestID,TestInfo),  length(TestInfo,TILen),
+    if_t(TILen < 100, maplist(print_rule(TestID),TestInfo)),
+    training_info(TestID,Learned), maplist(print_rule(TestID),Learned), length(Learned,LLen),
+    ptc(orange,format('~N~n% Observed: ~w  Learned: ~w~n~n',[TILen,LLen])),!,
+    if_t((TILen==0,LLen==0),xlisting([TestID-(cached_tests)])).
+
+
 
 
 is_clause_ref(Ref):-  atomic(Ref), blob(Ref,_), \+ atom(Ref), clause_name(Ref,_),!.
@@ -63,6 +66,10 @@ learn_about_group(In):-
     maplist(learn_group(What),Groups))).
 
 not_for_matching(_Why,_,Var):- var(Var),!,fail.
+not_for_matching(_Why,_,C):- for_matching(C),!,fail.
+not_for_matching(_Why,_,_):-!.
+
+
 not_for_matching(_Why,_,C):- notrace((sub_term(E,C), compound(E))), E= '$VAR'(_),!,fail.
 not_for_matching(_Why,_,iz(combined)).
 not_for_matching(_Why,_,giz(_)).
@@ -75,7 +82,7 @@ not_for_matching(_Why,_,iz(C)):- atom(C),!,fail.
 not_for_matching(_Why,_,iz(_)):- !, fail.
 %not_for_matching(_Why,localpoints(_)).
 %not_for_matching(_Why,_,link(_,_,_)).
-not_for_matching(_Why,_,birth(_)).
+not_for_matching(_Why,_,/*b*/iz(_)).
 not_for_matching(_Why,_,obj_to_oid(_,_)).
 %not_for_matching(_Why,L,form(_)):- !, member(localpoints(_),L).
 not_for_matching(_Why,L,localpoints(XX)):- !, started_is_list(XX), member(shape(_),L).
@@ -88,8 +95,63 @@ not_for_matching(_Why,L,globalpoints(XX)):- !, started_is_list(XX), (member(shap
 
 started_is_list(X):- nonvar(X), X = [_,_].
 
+not_used(Var):- var(Var),!,fail.
+not_used(/*b*/iz(indiv(_))).
+not_used(X):- sub_term(E,X),atom(E),is_nc_point(E),!.
+not_used(iz(X)):- not_used(X).
+
+must_use(Var):- var(Var),!,fail.
+must_use(/*b*/iz(indiv(i_diag))).
+must_use(/*b*/iz(Atom)):- !, atom(Atom).
+must_use(shape(Atom)):- !, atom(Atom).
+must_use(iz(X)):- must_use(X).
+
+for_creating(I):- ( \+ callable(I); I='$VAR'(_)), !.
+for_creating(iz(X)):- !, for_creating1(X).
+for_creating(P):- for_creating1(P).
+
+for_creating1(NoUse):- must_use(NoUse),!.
+for_creating1(NoUse):- not_used(NoUse),!,fail.
+%for_creating1(shape). for_creating1(mass). 
+for_creating1(info). for_creating1(grid_props). 
+for_creating1(rot2L). for_creating1(rotOffset).
+for_creating1(vis2D). for_creating1(loc2D). 
+for_creating1(vis2G). for_creating1(loc2G). 
+for_creating1(pen). for_creating1(sid).
+for_creating1(norm_grid). for_creating1(norm_ops).
+for_creating1(P):- compound(P),functor(P,What,_),for_creating1(What).
+
+
+for_matching(I):- ( \+ callable(I); I='$VAR'(_)), !.
+for_matching(X):- for_creating(X),!.
+for_matching(o(_,_,_)). 
+for_matching(iz(X)):- !, (atom(X);for_matching1(X)),!.
+for_matching(o(_,_,F)):-!,for_matching(F).
+for_matching(P):- for_matching1(P).
+
+for_matching1(NoUse):- not_used(NoUse),!,fail.
+for_matching1(cc). for_matching1(symmetry). 
+%for_matching1(/*b*/iz). 
+for_matching1(P):- compound(P),functor(P,What,_),for_matching1(What).
+
+
+% when you have I you wont need II for creating
+not_for_creating(_I,II):-for_creating(II),!,fail.
+%not_for_creating(I,II):-not_for_matching(create,I,II),!.
+not_for_creating( _,_).
+
+simplify_for_creating(I,I):- ( \+ compound(I); I='$VAR'(_)), !.
+simplify_for_creating(I,O):- is_grid(I),!,O=I.
+simplify_for_creating(obj(I),obj(O)):- !, my_exclude(not_for_creating(I),I,M),!,maplist(simplify_for_creating,M,O).
+simplify_for_creating([H|T],[HH|TT]):- !, simplify_for_creating(H,HH),simplify_for_creating(T,TT).
+simplify_for_creating(I,O):- 
+       compound_name_arguments(I, F, Args),
+       maplist(simplify_for_creating, Args, ArgsNew),
+       compound_name_arguments( O, F, ArgsNew ),!.
+  
 
 my_exclude(P1,I,O):- my_partition(P1,I,_,O).
+simplify_for_matching(rhs,I,O):-!,simplify_for_creating(I,O).
 simplify_for_matching(_Why,I,O):- is_grid(I),O=I.
 simplify_for_matching(_Why,I,O):- var(I),O=I.
 simplify_for_matching(Why,obj(I),obj(OL)):- is_list(I),!, my_exclude(not_for_matching(Why,I),I,M), append(M,_,OL).
@@ -115,8 +177,8 @@ group_group(What,[Obj|In],[G1|Groups]):- indv_props(Obj,Props), member_skip_open
 group_group(_,_,[]).
 
 group_keys(iz).
-group_keys(amass).
-group_keys(birth).
+group_keys(mass).
+group_keys(/*b*/iz).
 group_keys(color).
 %group_keys(shape).
 group_keys(rot2L).
@@ -125,6 +187,8 @@ group_keys(symmetry).
 
 matches_key(P,What):- atom(What), nonvar(P), !,functor(P,What,_).
 matches_key(P,What):- nonvar(P), What = P.
+
+
 
 simplify_for_matching_nondet(Why,I,O):- is_list(I), is_group(I), \+ is_grid(I), !, 
    group_keys(Key),
@@ -217,8 +281,9 @@ debug_reproduction(H,V,Obj,DObj):-
   obj_to_oid(DObj,ID2),
   pp_safe(dobj(ID1,ID2)=DObj))),!.
 
+pp_safe(call(W)):- nl_if_needed,nl,call(W),nl.
 pp_safe(W):- nl_if_needed,nl,writeq(W),nl.
-pp_safe(_,W):- nl_if_needed,nl,writeq(W),nl.
+pp_safe(C,W):- color_print(C,call(pp_safe(W))).
 
 show_result(What,Solution,ExpectedOut,Errors):-
   show_sameness_or_lameness(green,red,What,Solution,ExpectedOut,Errors).
@@ -349,7 +414,7 @@ learn_rule_in_out_sames(In,Out):- fail,
 
 learn_rule_in_out_objects(How,I,O):-   
   simplify_for_matching(lhs,I,II),
-  simplify_for_matching(rhs,O,OO),
+  simplify_for_creating(O,OO),
   save_learnt_rule(test_solved(How,II,OO),I+O,I+O),!.
 
 average_or_mid(_P2,_Out,2):-!.
@@ -387,7 +452,7 @@ learn_rule_iin_oout(_,In,O,OL):- mass(O,Mass),
   %pen(I,Pen),pen(O,Pen),
   mass(I,Mass),
   simplify_for_matching(lhs,I,II),
-  simplify_for_matching(rhs,O,OO),
+  simplify_for_creating(O,OO),
   save_learnt_rule(test_solved(unk(How),II,OO),I,O),!.
 
 learn_rule_in_out(Depth,Mode,In,Out):- 
@@ -483,7 +548,7 @@ assert_visually( H  ):- unnumbervars(H,HH),assert_visually1(HH,true).
 assert_visually1(H,B):- get_current_test(TestID), arg(1,H,W),W\==TestID,!, H=..[F|Args],GG=..[F,TestID|Args],assert_visually2(GG,B).
 assert_visually1(H,B):- assert_visually2(H,B).
 
-assert_visually2(H,B):- copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,(pp_safe(cyan,known_exact(H:-B))).
+assert_visually2(H,B):- fail, copy_term((H:-B),(HH:-BB)),clause(HH,BB,Ref), clause(RH,RB,Ref),(H:-B)=@=(RH:-RB) ,!,(pp_safe(cyan,known_exact(H:-B))).
 assert_visually2(H,B):- copy_term((H),(HH)),clause(HH,_,Ref), clause(RH,_,Ref),(H)=@=(RH) ,!,pp_safe(cyan,known(H:-B)).
 assert_visually2(H,B):- functor(H,F,_), my_asserta_if_new(test_local_dyn(F)), print_rule(F,(H:-B)), my_asserta_if_new((H:-B)).
 

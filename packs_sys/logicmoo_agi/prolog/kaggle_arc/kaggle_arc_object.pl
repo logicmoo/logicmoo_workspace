@@ -244,7 +244,7 @@ make_indiv_object_s(GID,GH,GV,Overrides,GPoints,ObjO):-
   deoffset_points(LoH,LoV,GPoints,LPoints),
   % sort(LPoints,LPointsS), maplist(arg(1),LPointsS,BPenColors), clumped(BPenColors,CPenColors), reclumped(CPenColors,PenColors),
   %remove_color(LPoints,UColorlessPoints),
-  maplist(on_edge(GH,GV),GPoints,EdgeL),count_sets([n,s,e,w,c|EdgeL],_,EdgeC),maplist(zero_one_more,EdgeC,EdgeS),
+  %maplist(on_edge(GH,GV),GPoints,EdgeL),count_sets([n,s,e,w,c|EdgeL],_,EdgeC),maplist(zero_one_more,EdgeC,EdgeS),
   
   length(LPoints,Len),
   Empty is Area - Len,
@@ -328,7 +328,7 @@ make_indiv_object_s(GID,GH,GV,Overrides,GPoints,ObjO):-
     %obj_to_oid(ID,Iv),
     giz(g(IO)),
     giz(gid(GID)),
-    EdgeS,
+    %EdgeS,
     % iz(oid(OID)),
     giz(glyph(Glyph)),
     globalpoints(GPoints),
@@ -536,7 +536,7 @@ aggregates(iz(_)).
 aggregates(cc(_,_)).
 aggregates(giz(_)).
 aggregates(o(_,_,_)).
-aggregates(birth(_)).
+aggregates(/*b*/iz(_)).
 aggregates(link(_,_,_)).
 aggregates(link(_,_)).
 aggregates(insideOf(_)).
@@ -1200,7 +1200,7 @@ rebuild_from_globalpoints(Obj,GPoints,NewObj):-
 
 
 
-is_point_or_colored(birth(_)):-!,fail.
+is_point_or_colored(/*b*/iz(_)):-!,fail.
 is_point_or_colored(Prop):- sub_term(CP,Prop),(is_color(CP);is_nc_point(CP)),!.
 is_point_or_colored(Prop):-
  member(Prop,[cc(_),amass(_),mass(_),shape(_),rot2L(_),roll_shape(_),pen(_),norm_grid(_),norm_ops(_),
@@ -1278,7 +1278,7 @@ find_outline_pred(P3,Grid):- is_grid(Grid),!,
       write('from '),write(P3),print_grid(H,V,Grid))
     ;((grid_of(OL,O,Hits),once((amass(O,M))),
      nl,write(solution(Hits,M)), print_grid(H,V,O))))).
-find_outline_pred(ID):- into_grid(ID,Grid),find_outlines(Grid).
+find_outline_pred(ID):- io_side_effects, into_grid(ID,Grid),find_outlines(Grid).
 
 %arc_grid(Nth,X):- (var(Nth)->Nth=1;true), offset(Nth,arc_grid(X)).
 %find_outline(Grid,Result,Grid4):- is_grid(Grid),!,grid_to_points(Grid,Points),!,find_outline(Points,Result,Grid4).
@@ -1574,8 +1574,6 @@ grid_call_unbound_p1(P1,[A|B],GridIn,GridOut):- !, grid_call_unbound_p1(P1,A,Gri
 */
 grid_call_unbound_p1(_P1,Call,GridIn,GridOut):- grid_call(Call,GridIn,GridOut).
 
-trim_topside_v(G,GG):- arg(_,v([],[_],[_,_]),L),arg(_,v([],[_],[_,_]),R),append([L,GG,R],G),flipSym_checks(flipV,GG),!.
-trim_topside_v(G,G).
 
 rot_p_plus_trim(alter_and_p1(trim_to_rect,P)):- rot_p_plus_full(P).
 rot_p_plus_trim(alter_and_p1(trim_outside,P)):-  rot_p_plus_full(P).
@@ -1595,9 +1593,6 @@ rot_p2(flipH). rot_p2(flipV). rot_p2(rot180).
 rot_p2(flipDH). rot_p2(flipDV). rot_p2(flipDHV). 
 
 
-maybe_trim_to_rect(G,GG):- trim_to_rect(G,GG),!,G\=@=GG.
-maybe_trim_outside(G,GG):- trim_outside(G,GG),!,G\=@=GG.
-trim_outside(G,GG):- grid_call([trim_topside_v,rot90,trim_topside_v,rot270],G,GG).
 
 %rot_p(P):- rot_p1(P).
 %rot_p(and(trim_to_rect,P)):- rot_p1(P).

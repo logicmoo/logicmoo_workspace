@@ -72,7 +72,7 @@ maybe_cache_glyphs(O):- ignore((is_group(O),mapgroup(o2g,O,_))).
 
 print_info(R):- is_object_props(R),!,print_info(obj(R)).
 print_info(A):- is_grid(A),print_grid(A),!.
-print_info(A):- is_object(A), ignore(debug_indiv(A)),!.
+print_info(A):- is_object(A), ignore(debug_as_grid(A)),!.
 print_info(A):- is_group(A),maybe_cache_glyphs(A),debug_indiv(A),!.
 %print_info(A):- into_obj(A,Obj),print_info(Obj).
 print_info([]):-!.
@@ -170,7 +170,7 @@ debug_indiv(Var):- plain_var(Var),pp(debug_indiv(Var)),!.
 debug_indiv(Grid):- is_grid(Grid),!,debug_as_grid(is_grid,Grid),!.
 debug_indiv(Grid):- is_cpoints_list(Grid),!,debug_as_grid(is_cpoint,Grid).
 debug_indiv(Grid):- maplist(is_point,Grid),!,debug_as_grid(is_point,Grid).
-
+debug_indiv(Atom):- atom(Atom),into_gridoid(Atom,Gridoid),pp(into_gridoid(Atom)),!,debug_as_grid(Gridoid).
 
 debug_indiv(List):- is_list(List),length(List,Len),!,
   dash_chars,
@@ -193,7 +193,7 @@ object_color_desc(PA,PenColors):-
   ((PenL=<ColorsL) -> PenColors=pen(Pen);PenColors=colors(Colors)).
 
 object_birth_desc(PA,Birth):-
-  indv_props(PA,Props),findall(B,member(birth(B),Props),BBs),
+  indv_props(PA,Props),findall(B,member(/*b*/iz(B),Props),BBs),
   predsort_on(birth_info,BBs,ByDL),last(ByDL,Birth).
 
 birth_info(ifti(Birth),2+InfoLen):- !, display_length(Birth,InfoLen).
@@ -315,10 +315,10 @@ prefered_header(cc(Caps,_),Caps):- get_black(Black),freeze(Caps,Black == Caps).
 prefered_header(o(_,_,Caps),Caps):- freeze(Caps,i_bg_shapes == Caps).
 prefered_header(o(sf(_),1,Caps),Caps):- freeze(Caps,atom(Caps)).
 prefered_header(o(sf(_),last(_),Caps),Caps):- freeze(Caps,atom(Caps)).
-prefered_header(birth(Caps),PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
+prefered_header(/*b*/iz(Caps),PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
 %prefered_header(iz(Caps),PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
 prefered_header(Caps,PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
-prefered_header(birth(Caps),Caps).
+prefered_header(/*b*/iz(Caps),Caps).
 prefered_header(iz(Caps),Caps).
 
 debug_indiv(OBJ):- compound(OBJ), OBJ=obj(_), debug_indiv_obj_1(OBJ),!.
@@ -398,7 +398,7 @@ debug_indiv_obj(AS0):-
   ignore(( g_out_style(style('font-size','75%'),(write(SF), wqs(TVSI))))),
   %maplist(write_indented_list('~N    '),wqs(TVSOS),
   ignore(((ISLINKR \==[], format('~N  '),wqs(ISLINKR)))),
-  nop(ignore(((TVSOS \==[], format('~N  '),wqs(TVSOS))))),
+  if_t((nb_current(menu_key,'i');nb_current(menu_key,'t')),ignore(((TVSOS \==[], format('~N  '),wqs(TVSOS))))),
   ignore(( TF==true, amass(Obj,Mass),!,Mass>4, vis2D(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, amass(Obj,Mass),!,Mass>4, vis2D(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pp(Props),

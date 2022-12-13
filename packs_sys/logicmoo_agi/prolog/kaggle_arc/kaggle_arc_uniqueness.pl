@@ -292,7 +292,7 @@ too_unique(globalpoints).
 %too_unique(o).
 too_unique(link).
 too_unique(obj_to_oid).
-too_unique(birth).
+too_unique(/*b*/iz).
 %good_overlap(shape).
 
 good_overlap(P):- compound(P),!,compound_name_arity(P,F,_),!,good_overlap(F).
@@ -302,7 +302,7 @@ good_overlap(rot2L).
 too_non_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_non_unique(F).
 too_non_unique(grid_size).
 too_non_unique(grid_sz).
-%too_non_unique(birth).
+%too_non_unique(/*b*/iz).
 too_non_unique(grid).
 too_non_unique(changes).
 

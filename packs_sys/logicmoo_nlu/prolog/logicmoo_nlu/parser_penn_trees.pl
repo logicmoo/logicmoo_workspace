@@ -644,7 +644,7 @@ incr_ht(HT,Name,V,V1):-
   SV is V1, 
   nb_rb_set_node_value(Node,SV),!.
 incr_ht(HT,Name,V,V1):- 
-  rb_in('$start',HT,V),
+  rb_in('$start',V,HT),
   SV is V1,
   nb_rb_insert(HT,Name,SV),!.
 

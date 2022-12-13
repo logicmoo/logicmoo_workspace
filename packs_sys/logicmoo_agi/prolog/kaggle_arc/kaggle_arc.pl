@@ -411,7 +411,7 @@ get_map_pairs(Map,is_dict(T),Pairs):- is_dict(Map), dict_pairs(Map,T,Pairs).
 
 is_vm(Tree):- is_map(Tree), once(get_kov(program,Tree,_);get_kov(program_i,Tree,_)).
 
-is_map(Tree):- is_rbtree(Tree),!, \+ rb_lookup(Tree,izmap,false).
+is_map(Tree):- is_rbtree(Tree),!, \+ rb_in(izmap,false,Tree).
 is_map(Dict):- is_dict(Dict),!, \+ get_dict(izmap,Dict,false).
 
 
@@ -671,7 +671,7 @@ set_vm_obj1(Prop,Or,Value):- is_grid(Value),!,
   grid_size(Value,H,V),
   if_t(IndvPoints\==[],
     (get_vm(VM),
-          make_indiv_object(VM,[iz(Prop),vis2D(H,V),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
+          make_indiv_object(VM,[iz(Prop),vis2D(H,V),/*b*/iz(set_vm(Prop))|Or],IndvPoints,_Obj),
           %addObjects(VM,Obj),
           make_bg_visible(Value,VValue),
           print_grid(H,V,Prop,VValue))),!.
@@ -679,7 +679,7 @@ set_vm_obj1(Prop,Or,Value):- is_grid(Value),!,
 set_vm_obj1(Prop,Or,IndvPoints):- is_points_list(IndvPoints),!,
   if_t(IndvPoints\==[],
     (get_vm(VM),          
-      make_indiv_object(VM,[iz(Prop),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
+      make_indiv_object(VM,[iz(Prop),/*b*/iz(set_vm(Prop))|Or],IndvPoints,_Obj),
       %addObjects(VM,Obj),
       print_grid(VM.h,VM.v,Prop,IndvPoints))),!.
 
@@ -687,7 +687,7 @@ set_vm_obj1(Prop,Or,IndvPoints):- is_points_list(IndvPoints),!,
 set_vm_obj1(Prop,Or,Value):- is_object(Value),!,
   get_vm(VM),
   remObjects(VM,Value),
-  override_object([iz(Prop),birth(set_vm(Prop))|Or],Value,NewObj),
+  override_object([iz(Prop),/*b*/iz(set_vm(Prop))|Or],Value,NewObj),
   addObjects(VM,NewObj),
   object_grid(NewObj,Grid),
   print_grid(Prop,Grid),!.
@@ -699,7 +699,7 @@ set_vm_obj_nil(Prop,Or):- wdmsg(set_vm_obj_nil(Prop,Or)).
   %points_to_grid(H,V,Points,Grid),
   %Grid=[[wbg]],
 
-  make_indiv_object(VM,[iz(Prop),vis2D(1,1),birth(set_vm(Prop))|Or],IndvPoints,_Obj),
+  make_indiv_object(VM,[iz(Prop),vis2D(1,1),/*b*/iz(set_vm(Prop))|Or],IndvPoints,_Obj),
           %addObjects(VM,Obj),
           make_bg_visible(Value,VValue),
           print_grid(H,V,Prop,VValue))),

@@ -1,3 +1,7 @@
+
+end_of_file.
+
+
 testcase(t('007bbfb7')>tst+0,"
 
    ___________________       _______
@@ -5409,7 +5413,7 @@ testcase(t(a3df8b1e)>tst+0,"
    -----------                             ----------- 
                          
 ").
-%= fav(t(a3df8b1e),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,pattern_expansion,grid_size_same,draw_line_from_point,diagonals,bounce,'(3, 1)']).
+%= fav(t(a3df8b1e),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,pattern_expansion,grid_size_same,draw_line_from_point,diagonals,bouncing,'(3, 1)']).
 
 
 testcase(t(a416b8f3)>tst+0,"
@@ -5937,7 +5941,7 @@ testcase(t(b190f7f5)>tst+0,"
    ---------------------------------                                                
                                                
 ").
-%= fav(t(b190f7f5),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),out_grid([9,9]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,separate_images,replace_pattern,image_resizing,image_expasion,color_palette,'(3, 1)']).
+%= fav(t(b190f7f5),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),out_grid([9,9]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,separate_images,replace_pattern,image_resizing,image_expansion,color_palette,'(3, 1)']).
 
 
 testcase(t(b1948b0a)>tst+0,"
@@ -6335,7 +6339,7 @@ testcase(t(ba97ae07)>tst+0,"
    -------------                               ------------- 
                            
 ").
-%= fav(t(ba97ae07),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],+[shape_match],+[mask_match],+[color_match],tt,training,rettangle_guessing,recoloring,pattern_modification,pairwise_analogy,grid_size_same,'(4, 1)']).
+%= fav(t(ba97ae07),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],+[shape_match],+[mask_match],+[color_match],tt,training,rectangle_guessing,recoloring,pattern_modification,pairwise_analogy,grid_size_same,'(4, 1)']).
 
 
 testcase(t(bb43febb)>tst+0,"
@@ -6354,7 +6358,7 @@ testcase(t(bb43febb)>tst+0,"
    ---------------------                                       --------------------- 
                                    
 ").
-%= fav(t(bb43febb),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[color_match],+[shape_match],+[mask_match],tt,training,rettangle_guessing,loop_filling,grid_size_same,'(2, 1)']).
+%= fav(t(bb43febb),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[color_match],+[shape_match],+[mask_match],tt,training,rectangle_guessing,loop_filling,grid_size_same,'(2, 1)']).
 
 
 testcase(t(bbc9ae5d)>tst+0,"
@@ -6885,7 +6889,7 @@ testcase(t(ce602527)>tst+0,"
    -------------------------------------                                                    
                                                    
 ").
-%= fav(t(ce602527),[no_sol(i(complete),resize_grid(5,5,Color),incomplete),out_grid([5,5]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,size_guessing,shape_guessing,remove_intruder,find_the_intruder,crop,'(4, 1)']).
+%= fav(t(ce602527),[no_sol(i(complete),resize_grid(5,5,Color),incomplete),out_grid([5,5]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,size_guessing,shape_guessing,remove_intruders,find_the_intruder,crop,'(4, 1)']).
 
 
 testcase(t(ce9e57f2)>tst+0,"

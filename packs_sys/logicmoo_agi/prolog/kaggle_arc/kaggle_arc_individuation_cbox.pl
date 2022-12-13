@@ -170,7 +170,7 @@ i_cbox_l(Grid,NSEW,XSG,Points,Points9,VM,L_S,[size2D(H,V)|Sizes]):-
       Find,USING,_,
       OBJ,cpmt(o=loc2D(OH,OV),size2D(H,V)))))),
 
-  make_indiv_object(VM,[birth(cbox(Y,F))],GOPoints,_Obj),
+  make_indiv_object(VM,[/*b*/iz(cbox(Y,F))],GOPoints,_Obj),
   OHM1 is OH -1,OVM1 is OV -1,
   grid_size(OBJ,HH,VV), EHP1 is OH+HH, EVP1 is OV+VV,  clip(OHM1,OVM1,EHP1,EVP1,Grid,SGrid),
   (( L_S=s_l(_),
@@ -180,7 +180,7 @@ i_cbox_l(Grid,NSEW,XSG,Points,Points9,VM,L_S,[size2D(H,V)|Sizes]):-
      obj_gpoints(SGrid,OHM1,OVM1,SOPoints),
      intersection(LeftOver,SOPoints,SIntersect,LeftOver2,_),
      SIntersect\==[],
-     make_indiv_object(VM,[birth(cbox2(Y,F))],SIntersect,Obj2),
+     make_indiv_object(VM,[/*b*/iz(cbox2(Y,F))],SIntersect,Obj2),
      print_side_by_side(cyan,SGrid,Y,_,[Obj2],F))-> true
    ; (LeftOver2=LeftOver)),
   i_cbox_l(Grid,NSEW,XSG,LeftOver2,Points9,VM,L_S,[size2D(H,V)|Sizes]))). 

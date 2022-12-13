@@ -635,7 +635,7 @@ f666(_Ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G0),all_rotations(G0,G).
 
 h666(_Ham,
 "_________________________________________________
-      B B B                           B B B      
+      B B B                           B B B       
         B B                             B B      
         B       B                       B       B
         B B B B B                 R R   B B B B B
@@ -645,8 +645,9 @@ h666(_Ham,
         B B B                           B B B     
 __________________________________________________"):- fail.
 
+f666(_Ham,G):-clause(hamstring(G),Body),notrace(Body).
 
-f666(_Ham,G):-
+hamstring(G):-
 S="
  _________
  B B B B B 
@@ -654,10 +655,9 @@ S="
      B    
      B    
  _________",
- into_g666(S,G1),Color=blue,once(subst001(G1,blue,Color,G)).
+ must_det_ll((trace,text_to_grid(S,SG),print_ss(SG),into_g666(SG,G1),Color=blue,once(subst001(G1,blue,Color,G)))).
 
-
-f666(_Ham,G):- 
+hamstring(G):- 
 S="
  _________
  B B B B B 
@@ -665,7 +665,7 @@ S="
      B    
      B    
  _________",
- into_g666(S,G1),Same=_,once(subst001(G1,blue,Same,G)).
+ must_det_ll((text_to_grid(S,SG),into_g666(SG,G1),Same=_,once(subst001(G1,blue,Same,G)))).
 
 h666(_Ham,G):- into_grid(v(aa4ec2a5)>(tst+0)*in,G).
 
@@ -701,11 +701,15 @@ into_grid_color(L,O):- plain_var(L),!,L=O.
 into_grid_color(L,O):- color_code(L,O),!.
 into_grid_color(O,O).
 
-into_g666(Text,G):- atomic(Text),maybe_fix_ascii(Text,Ascii0),!,into_g666(Ascii0,G).
-into_g666(Text,G):- atomic(Text),must_det_ll(text_to_grid(Text,TG)),!,into_g666(TG,G),!.
+into_g666(Nil,_):- Nil==[],!,fail.
+into_g666(Text,G):- string(Text),maybe_fix_ascii(Text,Ascii0),!,into_g666(Ascii0,G).
+into_g666(String,G):- string(String),!,text_to_grid(String,TG),!,into_g666(TG,G),!.
 into_g666(Grid,G):- is_grid_of(integer,Grid),!,mapgrid(into_grid_color,Grid,G),!.
 into_g666(Grid,G):- is_grid(Grid),!,mapgrid(into_grid_color,Grid,G),!.
 into_g666(Obj,G):- is_object(Obj),!,must_det_ll(object_grid(Obj,OG)),!,into_g666(OG,G).
+
+%into_g666(Text,G):- atomic(Text),maybe_fix_ascii(Text,Ascii0),!,into_g666(Ascii0,G).
+into_g666(Text,G):-  notrace(catch(text_to_string(Text,String),_,fail)),!,into_g666(String,G).
 into_g666(Other,G):- wdmsg(failed(into_g666(Other,G))),!,fail.
 
 ss666(T,G):- h666(T,S),must_det_ll(into_g666(S,G)).
@@ -714,9 +718,17 @@ sp666(T,Y):- ss666(T,X), fpad_grid(s,X,Y).
 ff666(T,G0):- no_repeats(G0,((f666(T,F),into_g666(F,G),all_rotations(G,G0)))).
 fp666(T,Y):- ff666(T,X), fpad_grid(f,X,Y).
 
-maybe_fix_ascii(Text,Ascii0):-
- replace_in_string([ 
-   '\r'='\n','\n\n'='\n'],Text,Ascii0),!,
+%maybe_fix_ascii(Text,Ascii0):- trim_leading_trailing_whitespace(Text,Ascii0),Text\==Ascii0,!.
+
+maybe_fix_ascii(Text,Chars):- is_charlist(Text),!,notrace(catch(text_to_string(Text,String),_,fail)),!,
+   maybe_fix_ascii(String,Ascii0),
+   format(chars(Chars),'~w',[Ascii0]).
+
+maybe_fix_ascii(Text,Ascii0):- Text\==[],
+ replace_in_string([
+  % windows /     mac
+   '\r\n'='\n','\r'='\n',
+   '$ '='$','$\n'='\n','$'=''],Text,Ascii0),!,
  Text\==Ascii0,!.
 
 maybe_fix_ascii(Text,Ascii0):- fail,
@@ -728,17 +740,19 @@ ascii_to_growthchart(Text,G):- maybe_fix_ascii(Text,Ascii0), !, ascii_to_growthc
 ascii_to_growthchart(Text,GrowthChart):-  
   atomics_to_string(Rows1,'\n',Text),Rows1=[_|Rows],mapgroup(atom_chars,Rows,GrowthChart),!.
 
+:- luser_default(find_rule,regular).
+% ?- h666(X),text_to_grid(X,G).
+
+
+text_to_grid(Text,GO):- ascii_to_grid(Text,GO),!.
+text_to_grid(Text,G):- ensure_charlist(Text,Chars),!,text_to_grid(Chars,G).
 
 ascii_to_grid(Text,G):- maybe_fix_ascii(Text,Ascii0), !, ascii_to_grid(Ascii0,G).
 ascii_to_grid(Text,G):- %atom_contains(Text,'____'),!, 
-  must_det_ll((atom_chars(Text,C), pttgS(C,[],G))).
+   ascii_append_grid(Text,[],G),!.
 ascii_to_grid(Text,G):- 
  ascii_to_growthchart(Text,GrowthChart),
  growthchart_to_grid(GrowthChart,6,5,G).
-
-:- luser_default(find_rule,regular).
-% ?- h666(X),text_to_grid(X,G).
-text_to_grid(Text,GO):- ascii_to_grid(Text,GO),!.
 
 text_to_points(Text,GPs):- 
   ascii_to_grid(Text,G),
@@ -761,19 +775,122 @@ points_to_grid_safe(HH,VV,ObjPoints,GO):- nl,
   %writeq(points_to_grid_safe(HH,VV,ObjPoints,GO)),nl,
   points_to_grid(HH,VV,ObjPoints,GO),!.
 
+suggest_row_cells_seps(['\n','|',' '],[' ']).
+suggest_row_cells_seps(['|',' '],[' ']).
+suggest_row_cells_seps(['|'],[]).
+suggest_row_cells_seps(['\n'],[]).
+
+
+detect_ascii_grid_style(Text,Style):- ensure_charlist(Text,Chars),!,detect_ascii_grid_style(Chars,Style).
+detect_ascii_grid_style(Text,Style):- append([_,['¯'],Len,['¯'],NoTopper],Text),\+ member('¯',NoTopper),maplist(==('¯'),Len),
+  length([_,Len],LL),Width is floor(LL/2), Style=pttgS(Width).
+detect_ascii_grid_style(AllText,Style):-
+  suggest_row_cells_seps(RowSep,CellSep),
+  Style = g_style(RowSep,CellSep,BlackStyle,VarStyle),
+  next_row(strict,Style,AllText,RowText,MoreText), RowText \==[], MoreText \==[],
+  notrace(read_cell(Style,RowText,Cell,_)),
+  Cell \= unreadable(_),
+  ignore((member(BlackStyle,AllText),member(BlackStyle,['0','.',' ']),
+  ignore((member(VarStyle,AllText),VarStyle\==BlackStyle,member(VarStyle,['?',' ']))))),!.
+detect_ascii_grid_style(Text,Style):- \+ member('|',Text),!, Style=pttgS(_).
+detect_ascii_grid_style(Text,g_style(['|'],[' '],' ','?')):- member('?',Text),!.
+%detect_ascii_grid_style(Text,g_style(['|'],[' '],' ','.')):- member('.',Text),!.
+detect_ascii_grid_style(_Text,g_style(['|'],[' '],'.',' ')).
+detect_ascii_grid_style(_Text,g_style(['|'],[],'0',' ')).
+
+/*ensure_charlist(Text,Chars):- member('\n',Text),member('|',Text), 
+  split_string(Text, ", ", "|\s\t\n",List), 
+  atomics_to_string(List,'|',Out).
+*/
+ensure_charlist(Text,Chars):- notrace((Text\==[], \+ is_charlist(Text),format(chars(Chars),'~w',[Text]))).
+
+ascii_append_grid(Text,Start,Grid):- detect_ascii_grid_style(Text,Style), ascii_append_grid(Style,Text,Start,Grid),!.
+ascii_append_grid(Text,Start,Grid):-  must_det_ll((detect_ascii_grid_style(Text,Style), ascii_append_grid(Style,Text,Start,Grid))).
+
+pttgS(Width,CCs,[Row|G0],G):- var(Width),length(Row,Width),!,pttgS(Width,CCs,[Row|G0],G).
+pttgS(Width,['\n'|CCs],G0,G):- append([Row,['\n'],More],CCs), \+ member('|',More),!,
+  pttgSR(Width,Row,CRow),  !, append(G0,[CRow],GG), pttgS(Width,['\n'|More],GG,G).
+pttgS(Width,CCs,G0,G):- append([_,['|',' '],Row,['|'],More],CCs), \+ member('\n',Row),!,
+  pttgSR(Width,Row,CRow),  !,
+  append(G0,[CRow],GG),
+  pttgS(Width,More,GG,G).
+pttgS(Width,CCs,G0,G):- append([_,['\n',' '],Row,['\n'],More],CCs), \+ member('|',Row),!,
+  pttgSR(Width,Row,CRow),  !,
+  append(G0,[CRow],GG),
+  pttgS(Width,More,GG,G).
+pttgS(_,_,G,G):-!.
+pttgSR(Width,[' ',C|Row],Out):- C\==' ',!,pttgSR(Width,[C|Row],Out).
+pttgSR(Width,[C,' '|Row],[CC|CRow]):- trans_to_color1(C,CC),pttgSR(Width,Row,CRow).
+pttgSR(_,_,[]).
+
+ascii_append_grid(Style,Text,Start,Grid):- ensure_charlist(Text,Chars),!,ascii_append_grid(Style,Chars,Start,Grid).
+ascii_append_grid(pttgS(Width),Text,Start,Grid):- !,pttgS(Width,Text,Start,Grid),!.
+ascii_append_grid(Style,Text,Start,Grid):- 
+  next_row(_,Style,Text,Chars,MoreText),read_row_cells(Style,Chars,Row), !, 
+  append(Start,[Row],MidG),
+  ascii_append_grid(Style,MoreText,MidG,Grid).
+ascii_append_grid(_,_,PassThruG,PassThruG).
+
+read_row_cells(_,[],Row):-!, Row = [].
+read_row_cells(g_style(RowSep,_,_,_),Chars,[]):- append(RowSep,_,Chars),!.
+read_row_cells(Style,Chars,[Cell|MoreCells]):- read_cell(Style,Chars,Cell,MoreChars),read_row_cells(Style,MoreChars,MoreCells).
+read_row_cells(_,_,[]).
+
+
+list_contains(AllText,RowSep):- \+ \+ append([_|RowSep],_,AllText).
+
+% ""
+next_row(strict,_,AllText,RowText,MoreText):- AllText==[],!,fail,RowText = AllText, MoreText = [].
+
+% a
+next_row(strict,g_style(RowSep,CellSep,_,_),AllText,RowText,MoreText):- fail,
+ RowSep\==[], \+ list_contains(AllText,RowSep), 
+ list_contains(RowText,CellSep), RowText = AllText, MoreText = [].
+
+% everything below
+next_row(Strict,Style,AllText,RowText,MoreText):- !,
+   next_row1(Strict,Style,AllText,RowText,MoreText),!,
+   ((Strict = strict) -> ( RowText\==[], Style = g_style(_,CellSep,_,_), list_contains(RowText,CellSep)); true).
+
+% |a|b..
+next_row1(strict,g_style(RowSep,CellSep,_,_),AllText,RowText,MoreText):- 
+ append(RowSep,CellSep,RowsApart),
+ append([RowsApart,RowText,RowsApart,More],AllText),  
+ RowText\==[],!, append(RowsApart,More,MoreText),!.
+
+% a|b..
+next_row1(strict,g_style(RowSep,CellSep,_,_),AllText,RowText,MoreText):- 
+ append(RowSep,CellSep,RowsApart),
+ append([RowText,RowsApart,More],AllText),  
+ RowText\==[],!, append(RowsApart,More,MoreText),!.
+
+% |a
+next_row1(strict,g_style(RowSep,CellSep,_,_),AllText,RowText,[]):- 
+ append(RowSep,CellSep,RowsApart),
+ append([RowsApart,RowText],AllText).
+
+% a|
+next_row1(strict,g_style(RowSep,CellSep,_,_),AllText,RowText,[]):- 
+ append(RowSep,CellSep,RowsApart),
+ append([RowText,RowsApart],AllText).
+
+
+
+read_cell(g_style(_RowSep,CellSep,BlackStyle,VarStyle),[C|Rest],Cell,More):- 
+  read_one_color(BlackStyle,VarStyle,C,Cell), append(CellSep,Rest,More).
+
+read_one_color(BlackStyle,VarStyle,C,Cell):- is_black_color(BlackStyle,VarStyle,C),!,get_black(Cell).
+read_one_color(BlackStyle,VarStyle,C,Cell):- C\==BlackStyle,(C==VarStyle;(var(VarStyle), var(C))),!,Cell=_.
+read_one_color(_BlackStyle,_VarStyle,C,Cell):- trans_to_color1(C,Cell),!.
+read_one_color(_BlackStyle,_VarStyle,C,unreadable(C)):- trace, !.
+
+trans_to_color1(Num,Color):- atom_number(Num,CC),color_name(CC,Color),!.
 trans_to_color1(' ',_):-!.
+trans_to_color1(C,NewC):- char_code(C,Code),Code>31,trans_to_color(C,NewC).
 trans_to_color1('.',black):-!.
 trans_to_color1(C1O,NewC):-trans_to_color(C1O,NewC).
 
-
-pttgS(CCs,G0,G):- append([_,['|',' '],Row,['|'],More],CCs),!,
-  read_row(Row,CRow),  !,
-  append(G0,[CRow],GG),
-  pttgS(More,GG,G).
-pttgS(_,G,G):-!.
-read_row([C,' '|Row],[CC|CRow]):- char_code(C,Code),Code>31,trans_to_color1(C,CC),read_row(Row,CRow).
-read_row(_,[]).
-
+is_black_color(BlackStyle,VarStyle,C):- BlackStyle==C,VarStyle\==C.
 
 pttgo(H,V,X,G,GO):- append(LEft,[' ','|'|Right],X), append(LEft,['|'|Right],Y),!, pttgo(H,V,Y,G,GO).
 pttgo(H,V,X,G,GO):- append(LEft,['\r'|Right],X), append(LEft,['\n'|Right],Y),!, pttgo(H,V,Y,G,GO).

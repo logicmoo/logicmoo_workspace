@@ -119,8 +119,8 @@ test_example_grid(G):- set_current_test(G),!,get_current_test(TestID),test_easy(
 easy_solve_by( TestID,P2):- nonvar(P2),!, copy_term(P2,P2T), findall(P2T,(easy_solve_by(TestID,P2T),P2\=@=P2T),List), member(P2,[P2|List]).
 easy_solve_by( TestID,flip_Once(_)):- get_black(Black),user:arc_test_property(TestID,common,comp(cbg(Black),i-o,grav_rot),_).
 */
-easy_solve_by(_TestID,use_simplified_recall(_)).
-%easy_solve_by(_TestID,P2):- easy_p2(P2). % easy_p2(P2).
+%easy_solve_by(_TestID,use_simplified_recall(_)).
+easy_solve_by(_TestID,P2):- easy_p2(P2). % easy_p2(P2).
 
 
 
@@ -131,7 +131,7 @@ easy_p2_0(unbind_and_fill_in_blanks(_Code)).
 easy_p2_0(repair_and_select(_How,_M)):- test_hint(input_gt,unique_color_count),
                                       test_hint(input_plus(1),unique_color_count).
 
-easy_p2(use_simplified_recall(_)).
+%easy_p2(use_simplified_recall(_)).
 easy_p2(do_easy1(_)). %:- easy0(_,GFS).
 easy_p2(do_easy2(_,_)).
 
@@ -154,20 +154,52 @@ subst_colors_with_vars(Colors,Vars,I,O):-
 
 %apply_equiv_xforms(subst_colors_with_vars(Colors,Vars),II,III):- subst_colors_with_vars(Colors,Vars,II,III).
 
-use_simplified_recall(Where,II,OO):-  nop(get_current_test(Where)),get_simplified_recall(Where,II,OO).
+use_simplified_recall(Where,II,OO):-  get_simplified_recall(Where,II,OO).
 
 get_simplified_recall(W,I,O):- get_simplified_recall_exact(W,I,O)*->true;get_simplified_recall_close(W,I,O).
 
-get_simplified_recall_exact(d(Where),I,O):- fail,kaggle_arc(Where,_,I,O).
+get_simplified_recall_exact(d(Where+ExampleNum),I,O):- kaggle_arc(Where,ExampleNum,I,O),get_current_test(Current),Where\==Current.
 
-get_simplified_recall_close(Where,II,OO):- 
-   kaggle_arc(Where,_,I,O),  
+t_v2(t,v). t_v2(v,t).
+get_simplified_recall_close(Where+ExampleNum,II,OO):-    
+   get_current_test(Current),
+   t_v2(T,V), functor(Current,T,1), !, 
+   (functor(Where,V,1);functor(Where,T,1)),
+   abstracted_recall(Where,ExampleNum,I,O),
+   kaggle_arc(Where,ExampleNum,OI,OO),
+   Where\==Current,
+   I+O = II+OO,!,
+   print_ss([simplified_recall(Current->Where)=OI,orig=OO,match=I,for=O]).
+
+:- dynamic(in_abstracted_recall_cache/4).
+test_abstracted_recall(TestID):- 
+  ensure_test(TestID), 
+  forall(abstracted_recall(TestID,ExampleNum,I,O),
+  (number_gridvars(I+O),%writeq(I),writeq(O),
+  print_single_pair(TestID,ExampleNum,I,O))).
+
+number_gridvars(Grid):-
+  grid_variables(Grid,Vars),
+  numbervars(Vars).
+
+grid_variables(Grid,Vars):- term_variables(Grid,Vars).
+
+:- abolish(in_abstracted_recall_cache/4).
+:- dynamic(in_abstracted_recall_cache/4).
+
+grid_copy_size(G0,G9):- grid_size(G0,H,V),make_grid(H,V,G9).
+abstracted_recall(TestID,ExampleNum,I,O):- \+ ground(ExampleNum+TestID),!,kaggle_arc(TestID,ExampleNum,_,_),abstracted_recall(TestID,ExampleNum,I,O).
+abstracted_recall(TestID,ExampleNum,I,O):- in_abstracted_recall_cache(TestID,ExampleNum,I,O),!.
+abstracted_recall(TestID,ExampleNum,II,OO):-
+   grid_copy_size(II,I),
+   ignore((nonvar(OO),grid_copy_size(OO,O))),
+   kaggle_arc(TestID,ExampleNum,I,O),
+   PairIn = I+O, 
+   get_black(Black),
    once((io_colors(I,O,Colors), length(Colors,CL),length(Vars,CL))),
-   PairIn = I+O,   subst_2L(Colors,Vars,PairIn,PairOut), 
-   PairOut = II+OO,
-   print_ss([simplified_recall(Colors)=I,orig=O,match=II,for=OO]).
+   subst_2L([Black|Colors],[bg|Vars],PairIn,PairOut), PairOut = II+OO,
+   asserta(in_abstracted_recall_cache(TestID,ExampleNum,II,OO)).
 
-   
 
 do_easy1(C1,I,O):- easy0(_N,C1),once(grid_call(C1,I,O)),I\=@=O.
 do_easy2(C1,C2,I,O):- 
@@ -309,6 +341,7 @@ induce_from_training_pair(P2,Ex1,II1,OO1):-
    with_io_training_context(II1,OO1,((grid_call(P2,II1,OO1),
       grid_call(P2,II1,OOO1),print_side_by_side_io(checking_training(P2,Ex1),II1,OOO1)))),!.
 */
+:- dynamic(test_results/4).
 
 
 try_p2_verbose(P2,TI1,TO1):-grid_call(P2,TI1,EM),print_side_by_side(grid_call(P2),TI1,EM),try_p2(=,EM,TO1).
@@ -318,14 +351,20 @@ p2_in_to_p2s(P2In,P2S):-  P2S = [P2In].
 
 test_easy(TestID):- var(TestID),!,
   forall_count(ensure_test(TestID),test_easy(TestID)).
-test_easy(TestID):-
+test_easy(TestID):- 
+  get_time(Now), luser_setval(test_start_time,Now),
   % once(print_all_info_for_test),
   arcdbg_info(blue,"BEGIN_TEST"=TestID),
   print_test(TestID),   
   (easy_solve_training(TestID,P2)*-> 
-    (easy_solve_testing(TestID,P2)*-> (nl,nl,arcdbg_info(green,success(TestID,P2)),nl,nl) ; arcdbg_info(yellow,didnt_work(TestID,P2)))
+    (easy_solve_testing(TestID,P2)*-> (nl,nl,arcdbg_info(green,success(TestID,P2)),assert_test_result(pass,test_easy,P2),nl,nl) ; arcdbg_info(yellow,didnt_work(TestID,P2)))
      ; (nop(arcdbg_info(red,failed_finding_plan_to_solve_training(TestID))),fail)),!.
-test_easy(TestID):- arcdbg_info(red,failed_test(TestID)),!,fail.
+test_easy(TestID):- arcdbg_info(red,failed_test(TestID)),assert_test_result(fail,test_easy,dunno),!,fail.
+
+assert_test_result(PassFail,Prover,How):- get_current_test(TestID),luser_getval(test_suite_name,SuiteX),
+  get_time(Now),luser_getval(test_start_time,Was), Elapsed is Now - Was,
+  W=test_results(PassFail,SuiteX,TestID,pew(Prover,Elapsed,How)), pp(yellow,W), assert_if_new(W).
+
 
 easy_solve_training(TestID,P2In):- 
   p2_in_to_p2s(P2In,P2S),  
@@ -665,7 +704,7 @@ test_tag:- forall(test_tag(X),test_tag_info(X)).
  test_tag(associate_patterns_to_patterns).
 
  test_tag(background_filling).
- test_tag(bounce).
+ test_tag(bouncing).
  test_tag(bouncing).
  test_tag(bridges).
  test_tag(bring_patterns_close).
@@ -698,7 +737,7 @@ test_tag:- forall(test_tag(X),test_tag_info(X)).
  test_tag(detect_wall).
  test_tag(diagonal_symmetry).
  test_tag(diagonals).
- test_tag(direction_guesing).
+ test_tag(direction_guessing).
  test_tag(direction_guessing).
  test_tag(divide_by_n).
  test_tag(dominant_color).
@@ -718,7 +757,7 @@ test_tag:- forall(test_tag(X),test_tag_info(X)).
  test_tag(holes).
  test_tag(homeomorphism).
  test_tag(image_expansion).
- test_tag(image_expasion).
+ test_tag(image_expansion).
  test_tag(image_filling).
  test_tag(image_juxtaposition).
  test_tag(image_reflection).
@@ -757,14 +796,14 @@ test_tag:- forall(test_tag(X),test_tag_info(X)).
  test_tag(portals).
  test_tag(projection_unto_rectangle).
  test_tag(proximity_guessing).
- test_tag(recolor).
+ %test_tag(recolor).
  test_tag(recoloring).
  test_tag(rectangle_guessing).
- test_tag(remove_intruder).
+ %test_tag(remove_intruders).
  test_tag(remove_intruders).
  test_tag(remove_noise).
  test_tag(replace_pattern).
- test_tag(rettangle_guessing).
+ test_tag(rectangle_guessing).
  test_tag(separate_image).
  test_tag(separate_images).
  test_tag(separate_shapes).

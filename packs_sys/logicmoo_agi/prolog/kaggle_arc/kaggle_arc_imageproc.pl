@@ -84,6 +84,8 @@ is_real_color_or_var(C):- (var(C)->true;is_real_color(C)).
 unique_colors(G,SUCOR):- colors(G,GF),quietly((maplist(arg(1),GF,UC),include(is_real_color_or_var,UC,SUCO))),reverse(SUCO,SUCOR).
 unique_color_count(G,Len):- unique_colors(G,UC),length(UC,Len).
 
+unique_fg_colors(G,SUCOR):- colors(G,GF),quietly((maplist(arg(1),GF,UC),include(is_real_fg_color,UC,SUCO))),reverse(SUCO,SUCOR).
+
 
 into_cc(SK,BFO):- maplist(into_cc1,SK,BFO).
 into_cc1(N-C,cc(Nm,CN)):- CN is N,!,color_name(C,Nm).
@@ -284,6 +286,13 @@ trim_to_rect2(G,G8):- get_bgc(BG), h_and_v(trim_unused_vert(BG),G,G8).
   trim_unused_vert(BG,[Row|Grid],GridO):- maplist(is_bg_or_var(BG),Row),!,trim_unused_vert(BG,Grid,GridO).
   trim_unused_vert(BG,GridR,GridO):- append(Grid,[Row],GridR),maplist(is_bg_or_var(BG),Row),!,trim_unused_vert(BG,Grid,GridO).
   trim_unused_vert(_,G,G).
+
+
+maybe_trim_to_rect(G,GG):- trim_to_rect(G,GG),!,G\=@=GG.
+maybe_trim_outside(G,GG):- trim_outside(G,GG),!,G\=@=GG.
+trim_outside(G,GG):- grid_call([trim_topside_v,rot90,trim_topside_v,rot270],G,GG).
+trim_topside_v(G,GG):- arg(_,v([],[_],[_,_]),L),arg(_,v([],[_],[_,_]),R),append([L,GG,R],G),flipSym_checks(flipV,GG),!.
+trim_topside_v(G,G).
 
 %:- luser_setval(grid_bgc,8).
 

@@ -95,7 +95,7 @@ print_hybrid_set(TestID):-
   print_side_by_side(Set),
   nop(forall(member(O,Set),print_hybrid_grid(O))).
 
-print_hybrid_grid(G):- into_grid(G,O),grid_to_norm(O,Ops,N),
+print_hybrid_grid(G):- io_side_effects,into_grid(G,O),grid_to_norm(O,Ops,N),
   (O\==N->print_side_by_side([ops(Ops)],G,N); print_grid(O)).
 
 individuate_pairs_from_hints(TestID):- 
@@ -446,9 +446,9 @@ has_spec_value(T):- sub_term(E,T),number(E),!.
 has_spec_value(T):- sub_term(E1,T),atomic(E1),sub_term(E2,T),atomic(E2),E1\==E2.
 
 
-in_smaller_than_out(TestID):- forall(kaggle_arc(TestID,trn+_,I,O), op_op(v_area,I,O,(<))).
+in_smaller_than_out(TestID):- forall(kaggle_arc(TestID,trn+_,I,O), op_op(v_area,(<),I,O)).
 
-op_op(P2a,I,O,P2b):- call(P2a,I,II),call(P2a,O,OO),call(P2b,II,OO),!.
+op_op(P2a,P2b,I,O):- call(P2a,I,II),call(P2a,O,OO),call(P2b,II,OO),!.
 
 v_area(I,Size):- vis2D(I,IH,IV), Size is IH * IV.
 

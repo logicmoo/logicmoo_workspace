@@ -319,7 +319,7 @@ pp_hook_g(G):- \+ plain_var(G), lock_doing(in_pp_hook_g,G,pp_hook_g0(G)).
 pp_hook_g0(S):- term_is_ansi(S), !, write_nbsp, write_keeping_ansi_mb(S).
 pp_hook_g0(_):- \+ let_arc_portray,!,fail.
 pp_hook_g0(_):- in_pp(bfly),!,fail.
-pp_hook_g0(G):- wots(S,in_bfly(f,pp_hook_g1(G))),write(S).
+pp_hook_g0(G):- fail, wots(S,in_bfly(f,pp_hook_g1(G))),write(S).
 
 mass_gt1(O1):- into_obj(O1,O2),mass(O2,M),!,M>1.
 
@@ -467,8 +467,12 @@ wqs1(g(C)):-  \+ arg_string(C), wots_vs(S,bold_print(wqs1(C))),print(g(S)).
 wqs1(b(C)):-  \+ arg_string(C), wots_vs(S,bold_print(wqs1(C))),color_write(S).
 wqs1(norm(C)):- writeq(norm(C)),!.
 
-wqs1(pp(C)):- \+ arg_string(C), wots_vs(S,pp_no_nl(C)),write((S)).
-wqs1(ppt(C)):- \+ arg_string(C), wots_vs(S,ppt_no_nl(C)),write((S)).
+wqs1(pp(P)):-  wots_vs(S,pp_no_nl(P)),write((S)).
+wqs1(ppt(P)):- wots_vs(S,ppt_no_nl(P)),write((S)).
+
+wqs1(wqs(P)):- wots_vs(S,wqs0(P)),write((S)).
+wqs1(wqs(C,P)):- wots_vs(S,wqs0(P)),color_print(C,S).
+
 wqs1(vals(C)):- writeq(vals(C)),!.
 %wqs1(colors(C)):- \+ arg_string(C), as_arg_str(C,S),wqs(colorsz(S)).
 wqs1(io(C)):-  \+ arg_string(C),wots_vs(S,bold_print(wqs(C))),write(io(S)).
@@ -1531,7 +1535,7 @@ color_gl_int_g(C,W):- color_gl_int(C,W),!.
 :- export(color_print/2).
 :- system:import(color_print/2).
 
-color_print(C,CDot):- c_dot(CDot),nonvar(C),!, color_gl_int_g(C,W),!,color_print(C,W).
+% color_print(C,CDot):- c_dot(CDot),nonvar(C),!, color_gl_int_g(C,W),!,color_print(C,W).
 
 %color_print(C,W):- '$current_typein_module'(M), muarc_mod(MM), MM\==M, !,'$set_typein_module'(MM), module(MM),color_print(C,W).
 color_print(C,W):- arc_webui,!,color_print_webui(C,W).
@@ -1726,6 +1730,7 @@ i_glyph(N,Glyph):- trace,i_glyph0(N,Glyph),atom(Glyph),!.
 
 i_glyph0(N,Glyph):- bg_sym_ui(BG), BG==N, bg_dot(Code), name(Glyph,[Code]).
 i_glyph0(N,Glyph):- atom(N),name(N,[_111,95,Code|_])->name(Glyph,[Code]),!.
+i_glyph0(N,Glyph):- atom(N),atom_number(N,Num),!,i_glyph(Num,Glyph).
 i_glyph0(N,Glyph):- atom(N),name(N,[Code])->name(Glyph,[Code]),!.
 i_glyph0(Code,Glyph):- integer(Code), Code> 255, name(Glyph,[Code]).
 i_glyph0(N,Glyph):- integer(N),quietly((i_sym(N,Code),name(Glyph,[Code]))).

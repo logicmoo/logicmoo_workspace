@@ -20,6 +20,7 @@ density(Obj,Density):- area(Obj,Area),amass(Obj,Mass), Density is Mass/Area.
 into_gridoid0(obj(N),O):- enum_object(O),o2g(O,G),sformat(N," ~w ",[G]).
 into_gridoid0(shape_lib(N:Lib),O):- shape_lib_expanded(Lib,Grids),nth1(N,Grids,O).
 into_gridoid0(N,G):- get_current_test(TestID),is_why_grouped(TestID,_,N,UG), UG\==[],UG\=[_],smallest_first(UG,G).
+into_gridoid0(N,G):- into_obj(N,G).
 into_gridoid0(N,G):- into_grids(N,G).
 
 into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort(P,S))).
@@ -402,7 +403,7 @@ touching_object(How,Dirs,O2,O1):- O1\==O2,
 
   %has_prop(o(Y,LC,_),O1), has_prop(o(Y,LC,_),O2),
   is_physical_object(O1), is_physical_object(O2),
-  %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
+  %\+ has_prop(/*b*/iz(glyphic),O2), %\+ has_prop(/*b*/iz(glyphic),O1),
   globalpoints(O1,Ps1), globalpoints(O2,Ps2),
   call(How,Ps2,Ps1,Dirs),!.
 
@@ -422,7 +423,7 @@ find_sees(VM):-
 
 seeing_object(How,Dirs,O2,O1):- O1\==O2,
   is_physical_object(O1), is_physical_object(O2),
-  %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
+  %\+ has_prop(/*b*/iz(glyphic),O2), %\+ has_prop(/*b*/iz(glyphic),O1),
   globalpoints(O1,Ps1), globalpoints(O2,Ps2),
   call(How,Ps2,Ps1,Dirs),!.
 
@@ -447,7 +448,7 @@ find_overlaps(VM):-
 
 overlap(overlaping,O2,O1):- O1\==O2,
   is_physical_object(O1), is_physical_object(O2),
-  %\+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
+  %\+ has_prop(/*b*/iz(glyphic),O2), %\+ has_prop(/*b*/iz(glyphic),O1),
   globalpoints(O1,Ps1), globalpoints(O2,Ps2),
   \+ \+ (member(P,Ps1), member(P,Ps2)),!.
 
@@ -560,7 +561,7 @@ find_engulfs_objects(Obj,[_|ScanNext],Engulfed):- /*must_det_ll*/(find_engulfs_o
 
 contained_object(O2,O1):-
   O1 \== O2,
-  % \+ has_prop(birth(glyphic),O2), %\+ has_prop(birth(glyphic),O1),
+  % \+ has_prop(/*b*/iz(glyphic),O2), %\+ has_prop(/*b*/iz(glyphic),O1),
   loc2D(O1,LowH1,LowV1),loc2D(O2,LowH2,LowV2), 
   LowH2 > LowH1, LowV2 > LowV1,
   vis2D(O1,H1,V1),vis2D(O2,H2,V2), 

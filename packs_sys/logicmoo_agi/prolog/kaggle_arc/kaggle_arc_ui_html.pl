@@ -132,7 +132,7 @@ tabbed_print_im(Tab,Goal):- Tab2 is Tab, tabbed_print(Tab2,Goal).
 :- meta_predicate(trim_newlines(0)).
 trim_newlines(Goal):- wots(S,Goal),trim_leading_trailing_whitespace(S,SS),write(SS).
 trim_leading_trailing_whitespace(In,Out):-
-  split_string(In, ", ", "\s\t\n",List), 
+  split_string(In, " ", "\s\t\n\r",List), 
   atomics_to_string(List,' ',Out).
 
 :- meta_predicate(invent_header(+,-)).

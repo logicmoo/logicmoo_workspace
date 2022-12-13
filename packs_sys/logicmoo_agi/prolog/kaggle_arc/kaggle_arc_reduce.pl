@@ -40,8 +40,6 @@ same_reduction(OPA,OPB):- functor(OPA,F,N),functor(OPB,F,N),arg(1,OPA,A),arg(1,O
 
 combin_pair_op(OPA,OPB,OP):- (OPA=OPB->OP=OPA;OP=op(OPA,OPB)).
 
-too_small_reduce(Grid,N):- grid_size(Grid,X,Y),X=<N,Y=<N,!.
-
 /*
 reduce_op2(PassNo,A+B,OPA+OPB,AA+BB):- reduce_op1(PassNo,B,OPB,BB), same_reduction(OPB,OPA),reduce_op1(PassNo,A,OPA,AA),!.
 reduce_op1(PassNo,A+B,OPA+OPB,AA+BB):- reduce_op1(PassNo,A,OPA,AA), reduce_op1(PassNo,B,OPB,BB),same_reduction(OPA,OPB).
@@ -73,13 +71,20 @@ first_second_half(Grid,GL,GR):- length(Grid,L),H is floor(L/2), length(GL,H), ap
 %reduce_op1_1(_,Grid,copy_first(N),GridR):- copy_first(N,GridR,Grid).
 %reduce_op1_1(_,Grid,copy_last(N),GridR):- copy_last(N,GridR,Grid).
 
-reduce_op1_1(_,Grid,_,_):- too_small_reduce(Grid,3),!,fail.
+
+
+too_small_reduce(H,_L,Two):- H=<Two. %X=<N,Y=<N,!.
+
+
+reduce_op1_1(_,Grid,_,_):- grid_size(Grid,X,Y), max_min(X,Y,H,L),too_small_reduce(H,L,2),!,fail.
 % educe_op1_1(_,Grid,_,_):- length(Grid,L3),L3=<2,!,fail.
 
 reduce_op1_1(_,I,reapply_cutaway(LBR),O):- reduce_cutaway(LBR,I,O).
 reduce_op1_1(_,I,reapply_cutaway_row(LBR),O):- reduce_cutaway_row(LBR,I,O).
 reduce_op1_1(_,Grid,remove_row(Row),GridR):- get_black(Black), nth1(Row,Grid,Same,GridR),maplist(==(Black),Same),once(Row==1;length(Grid,Row)).
 reduce_op1_1(_,I,double_size,O):- half_size(I,O),!.
+%reduce_op1_1(_,Outside,make_frame(Pen),Inside):- grid_size(Outside,X,Y),X>2,Y>2,make_frame(Pen,Inside,Outside).
+%reduce_op1_1(_,Grid,copy_n_times(Times),ARow):- copy_n_rows_n_times(_Rows,Times,ARow,Grid).
 reduce_op1_1(_,Grid,copy_row_ntimes(N1,2),GridR):- append(L,[A,B,C,D,E|R],Grid),A=@=B,B=@=C,C=@=D,D=@=E, append(L,[A,B,C|R],GridR),length([_|L],N1).
 reduce_op1_1(_,Grid,copy_row_ntimes(N1,2),GridR):- append(L,[A,B,C,D|R],Grid),A=@=B,B=@=C,C=@=D, append(L,[A,B|R],GridR),length([_|L],N1).
 %reduce_op1_1(_,Grid,copy_row_ntimes(N1,2),GridR):- append(L,[A,B,C|R],Grid),A=@=B,B=@=C, append(L,[A|R],GridR),length([_|L],N1).
@@ -87,6 +92,37 @@ reduce_op1_1(_,Grid,copy_row_ntimes(N1,2),GridR):- append(L,[A,B,C,D|R],Grid),A=
 % % %  
 %reduce_op1_1(_,Grid,_,_):- too_small_reduce(Grid,2),!,fail.
 % % % reduce_op1_1(_,Grid,copy_row(N1,N2),GridR):- nth1(N2,Grid,A),N2>1, between(1,N2,N1),N1<N2,nth1(N1,Grid,B,GridR), A=@=B, 1 is abs(N1-N2).
+
+copy_n_rows_n_times(Rows,Times,ARow,Grid):- between(3,10,Rows),length(ARow,Rows),append([ARow,ARow,Rest],Grid),
+  ((Rest=[],Times=1) ;
+   (TimesTop is floor(30/Rows),between(2,TimesTop,Times),
+    make_list(ARow,Times,GridL),append([ARow|GridL],Grid))).
+
+make_frame(BorderFind,Inside,Outside):- 
+  var(Inside),var(Outside),!,s_l_4sides(IX,IY),
+  make_grid(IX,IY,Inside),length(Bot,IX),length(Top,IX),
+  OY is IY+2,length(Left,OY),length(Rt,OY),
+  OX is IX+2,make_grid(OX,OY,Outside),
+  append([Top|Inside],[Bot],OutsideSkiny),
+  rot90(OutsideSkiny,OutsideSkiny90),
+  append([Left|OutsideSkiny90],[Rt],Outside90),
+  rot270(Outside90,Outside),
+  nsew_edges_trimed(Outside,BorderFind).
+
+make_frame(BorderFind,Inside,Outside):-
+  (nonvar(Inside)->grid_size(Inside,IX,IY);(grid_size(Outside,OX,OY),IX is OX-2,IY is OY-2, make_grid(IX,IY,Inside))),
+  (nonvar(Outside)->grid_size(Outside,OX,OY);(OX is IX+2,OY is IY+2, make_grid(OX,OY,Outside))), 
+  conform_frames(BorderFind,Inside,Outside).
+
+
+conform_frames(BorderFind,Inside,Outside):-
+  append([_Top|OutsideMid],[_Bot],Outside),
+  append([_Left|Inside90],[_Rigth],OutsideMid),
+  rot90(Inside,Inside90),
+  nsew_edges_trimed(Outside,BorderFind).
+  
+
+
 /*
 reduce_op1_1(_,Grid,left_right(Left,Reduced),GridR):- fail, 
    length(Grid,L), nth1(N1,Grid,A), nth1(N2,Grid,B), A=@=B,
@@ -161,7 +197,7 @@ reduce_grid(Grid,gridOpFn(GridR,OP)):- reduce_grid(Grid,OP,GridR),OP\==[],!.
 reduce_grid(Grid,Grid).
 
 %ungrav_rot(G,sameR,G):-!.
-ungrav_rot(G,sameR,G):- too_small_reduce(G,3),!.
+%ungrav_rot(G,sameR,G):- grid_size(Grid,X,Y), too_small_reduce(X,Y,2),!.
 ungrav_rot(G,UnRotG,GG):- grav_rot(G,RotG,GG),(G==GG->UnRotG=sameR;unrotate_p2(RotG,UnRotG)).
 
 :- decl_pt(reduce_grid(grid,list,grid)).

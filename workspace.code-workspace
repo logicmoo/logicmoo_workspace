@@ -54,7 +54,12 @@
 			"*.pl": "prolog"
 		},
 		"workbench.editorAssociations": {
-			"*.ipynb": "jupyter-notebook"
+			"*.ipynb": "jupyter-notebook",
+			"*.rtf": "default",
+			"*.png": "cweijan.officeViewer",
+			"*.md": "cweijan.markdownViewer",
+			"*.ansi": "default",
+			"*.vsix": "default"
 		},
 		// "workbench.colorTheme": "Visual Studio Light Theme (2017)",
 		"cmake.configureOnOpen": true,
