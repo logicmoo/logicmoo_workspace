@@ -289,8 +289,8 @@ all_one_color(Black,[H|R]):- \+ (H\=Black), all_one_color(Black,R).
 all_eq_color(_Black,R):- \+ \+ R =[],!.
 all_eq_color(Black,[H|R]):- Black==H, all_one_color(Black,R).
 
-rows_align([],_):-!. % shorter image fragment
-rows_align(_,[]):-!. % taller image fragment
+rows_align([],_):-!. % shorter media(image) fragment
+rows_align(_,[]):-!. % taller media(image) fragment
 rows_align([Row1|Rest1],[Row2|Rest2]):- 
  aligned_rows0(Row1,Row2),!,
  rows_align(Rest1,Rest2).
@@ -687,16 +687,16 @@ diff_repaired(RepairedResult,VM):-
   localpoints_include_bg(RepairedResult,RepairedPoints),
   intersection(OriginalPoints,RepairedPoints,Unchanged,NeededChanged,ChangedPoints),  
   H = VM.h, V = VM.v,
-  IDR = [iz(image),iz(dont_reduce)],
+  IDR = [iz(media(image)),iz(info(dont_reduce))],
   set_vm_obj(unchanged,IDR,Unchanged),
-  set_vm_obj(original,[iz(hidden)|IDR],OriginalPoints),
-  set_vm_obj(repaired,[iz(always_keep)|IDR],RepairedPoints),
-  set_vm_obj(neededChanged,[iz(hidden),iz(shaped),iz(always_keep)|IDR],NeededChanged),
-  set_vm_obj(changedUntrimmed,[iz(always_keep)|IDR],ChangedPoints),
+  set_vm_obj(original,[iz(info(hidden))|IDR],OriginalPoints),
+  set_vm_obj(repaired,[iz(info(always_keep))|IDR],RepairedPoints),
+  set_vm_obj(neededChanged,[iz(info(hidden)),iz(media(shaped)),iz(info(always_keep))|IDR],NeededChanged),
+  set_vm_obj(changedUntrimmed,[iz(info(always_keep))|IDR],ChangedPoints),
   points_to_grid(H,V,ChangedPoints,Changed),
   trim_to_rect(Changed,TrimChangedG),
   localpoints_include_bg(TrimChangedG,TrimChangedPoints),
-  set_vm_obj(changed,[iz(always_keep)|IDR],TrimChangedPoints))).
+  set_vm_obj(changed,[iz(info(always_keep))|IDR],TrimChangedPoints))).
 
 
 column_or_row(Grid,Color):- member(Row,Grid), maplist(==(Color),Row),!. 
@@ -1311,7 +1311,7 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   print_grid(trial_removal_used(RemovalTrialUsed),GridO),
   %nop(retain_vars(VM,Ordered,Grid,NewIndiv4s,KeepNewState,RepairedResult,NewSYQ2,NewEYQ2,NewSYQ4,NewEYQ4,NewSXQ2,NewEXQ2,NewSXQ4,NewEXQ4)),
 
-  set_vm_obj(full_grid,[iz(image),iz(always_keep)],GridO),
+  set_vm_obj(full_grid,[iz(media(image)),iz(info(always_keep))],GridO),
   clip(NewSX,NewSY,NewEX,NewEY,GridO,RepairedResultM),
   
 
@@ -1320,8 +1320,8 @@ repair_2x2(Ordered,Steps,Grid,RepairedResult):-
   gset(VM.points) = [],
   OriginalPoints = VM.points_o,
   include(was_color(Cs),OriginalPoints,NeededChanged),  
-  %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,[iz(neededChanged),iz(hidden)],NeededChanged,ColorObj),!, addObjects(VM,ColorObj),
-  set_vm_obj(neededChanged,[iz(image)],NeededChanged),  
+  %gset(VM.neededChanged)=NeededChanged,make_indiv_object(VM,[iz(neededChanged),iz(info(hidden))],NeededChanged,ColorObj),!, addObjects(VM,ColorObj),
+  set_vm_obj(neededChanged,[iz(media(image))],NeededChanged),  
 
   print_grid(clip_to_previous_area((NewSX,NewSY)-(NewEX,NewEY)),RepairedResultM),
   must_not_error((RepairedResultM = RepairedResult,
@@ -1631,15 +1631,15 @@ maybe_repair_image(VM,Ordered,Objects,CorrectObjects,KeepNewState,RepairedResult
 
 all_rows_can_align([Big|Rest]):- maplist(rows_can_align(Big),Rest).
 rows_can_align(A,B):- \+ A\=B.
-rows_can_align([],_):-!. % shorter image fragment
-rows_can_align(_,[]):-!. % taller image fragment
+rows_can_align([],_):-!. % shorter media(image) fragment
+rows_can_align(_,[]):-!. % taller media(image) fragment
 rows_can_align([Row1|Rest1],[Row2|Rest2]):- 
  rows_can_align(Row1,Row2),!,
  rows_can_align(Rest1,Rest2).
 
 all_rows_will_align([Big|Rest]):- maplist(rows_will_align(Big),Rest).
-rows_will_align(A,_):- A == [], !. % shorter image fragment
-rows_will_align(_,B):- B == [], !. % taller image fragment
+rows_will_align(A,_):- A == [], !. % shorter media(image) fragment
+rows_will_align(_,B):- B == [], !. % taller media(image) fragment
 rows_will_align([Row1|Rest1],B):- is_list(B),!, B=[Row2|Rest2],
  rows_will_align(Row1,Row2),!,
  rows_will_align(Rest1,Rest2).
@@ -2108,7 +2108,7 @@ show_make_symmetrical(G):-
 
 /*
 */
-% by rotating the image 90 degrees.. filling in .. and again 2 more times
+% by rotating the media(image) 90 degrees.. filling in .. and again 2 more times
 is_able_v(Flip,Top):- var(Flip),!,verify_symmetry(Flip,Top).
 is_able_v(Flip,Top):- call(Flip,Top,TopR), TopR=Top.
 verify_symmetry(rot90,GridO):- is_able_v(rot90,GridO).

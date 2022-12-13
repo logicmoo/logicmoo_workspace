@@ -162,7 +162,7 @@ maybe_glyph(_G,N,Code):- i_glyph(N,Code),!.
 maybe_glyph(G,_,Glyph):- is_grid(G),grid_dot(Glyph),!.
 maybe_glyph(_,N,N).
 
-is_visible(Obj):- \+ has_prop(iz(hidden),Obj).
+is_visible(Obj):- \+ has_prop(iz(info(hidden)),Obj).
 
 is_pred_sorted_object_grid(O):- last(O,I), \+ is_visible(I).
 
@@ -198,7 +198,7 @@ from_gridoid(Points,C,N,H,V,G):- nth1(N,Points,G), \+ cant_use(G),hv_c_value(G,C
 
 cant_use(G):- is_object(G), has_prop(G,iz(bfc(bg))),!.
 
-%hv_c_value(O,_Color,_H,_V):- is_object(O), iz(O,combined), !, fail.
+%hv_c_value(O,_Color,_H,_V):- is_object(O), iz(O,iz(info(combined))), !, fail.
 hv_c_value(O,_Color,_H,_V):-  plain_var(O),!,fail.
 hv_c_value(O,_Color,_H,_V):-  is_ftVar(O),!,fail.
 hv_c_value(O,Color,H,V):- is_cpoint(O),!,O=(Color-Point),hv_point(H,V,Point),!.
@@ -258,25 +258,25 @@ pgt([Obj1]-[Obj2]):- pgt1(Obj1),pgt2(Obj2).
 pgt([Obj1,Obj2]):- pgt1(Obj1),pgt2(Obj2).
 pgt1(Obj):-
   Obj = obj( [ amass(536),
-         shape( [ point_01_01, point_02_01]),
+         colorless_points( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
          localpoints( [ red-point_01_01, silver-point_02_01]), vis2D(3, 1), rot2L(sameR), loc2D(3, 1),
-         changes([]), iz(combined),
-         iz(rectangle), iz(multicolored),
-         iz(polygon), %obj _to_oid(v('0ad4ef5')>(trn+0)*in, 21),
+         changes([]), iz(info(combined)),
+         iz(shape(rectangle)), iz(multicolored),
+         iz(shape(polygon)), %obj _to_oid(v('0ad4ef5')>(trn+0)*in, 21),
        %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
 
 pgt2(Obj):- Obj = 
       obj( [ amass(536),
-         shape( [ point_01_01, point_02_01]),
+         colorless_points( [ point_01_01, point_02_01]),
          colors( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
          localpoints( [ red-point_01_01, silver-point_02_01]), vis2D(3, 1), rot2L(sameR), loc2D(2, 1),
-         changes([]), iz(combined),
-         iz(rectangle), iz(multicolored),
-         iz(polygon), %obj _to_oid(v('a1d4ef5')>(trn+0)*in, 66),
+         changes([]), iz(info(combined)),
+         iz(shape(rectangle)), iz(multicolored),
+         iz(shape(polygon)), %obj _to_oid(v('a1d4ef5')>(trn+0)*in, 66),
         %  globalpoints( [ red-point_01_01, silver-point_02_01]),
          grid_size(8, 8)]).
 
@@ -346,7 +346,7 @@ replace_local_point_color(Point,NewC,OldC,G,GO):- is_list(G),!, maplist(replace_
 replace_local_point_color(Point,NewC,OldC,G,GO):- is_object(G), !,
     localpoints(G,Points),     
     replace_in_points(Point,NewC,OldC,Points,RPoints),
-    %loc2D(G,OH,OV),offset_point(OH,OV,Point,LPoint),shape(G,NCPoints), maplist(replace_in_points(Point,NewC,OldC),NCPoints,RNCPoints),,shape(RNCPoints)
+    %loc2D(G,OH,OV),offset_point(OH,OV,Point,LPoint),colorless_points(G,NCPoints), maplist(replace_in_points(Point,NewC,OldC),NCPoints,RNCPoints),,colorless_points(RNCPoints)
     setq(G,localpoints(RPoints),GO).
 replace_local_point_color(Point,NewC,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_local_point_color(Point,NewC,OldC,G,GO))).
 

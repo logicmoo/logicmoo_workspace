@@ -324,7 +324,7 @@ test_arcui2:-
   </script>
 
 <div id="sample">
-  <div id="`,ID,`" style="border: 1px solid black; width: 700px; height: 350px; position: relative; cursor: auto;"><canvas tabindex="0" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 700px; height: 350px; cursor: auto;" width="700" height="350">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 700px; height: 350px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+  <div id="`,ID,`" style="border: 1px filltype(solid) black; width: 700px; height: 350px; position: relative; cursor: auto;"><canvas tabindex="0" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 700px; height: 350px; cursor: auto;" width="700" height="350">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 700px; height: 350px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
   <p>
     This sample is like the <a href="records.html">Mapping Fields of Records</a> sample,
     but it has a collapsible tree of nodes on each side, rather than a simple list of items.

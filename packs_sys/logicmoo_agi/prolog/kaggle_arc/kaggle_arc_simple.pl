@@ -132,8 +132,8 @@ simplify_props(IndvS,Props,[R1|SPropsF]):-
   simplify_props(IndvS,Keep,SPropsF).
 simplify_props(_,A,A).
 
-pregroup1(iz(shaped)).
-pregroup1(iz(image)).
+pregroup1(iz(media(shaped))).
+pregroup1(iz(media(image))).
 pregroup1(iz(chromatic(N,BGN))):- between(1,10,N),between(0,2,BGN).
 pregroup1(o(sf(_),_,How)):- dif(How,i_repair_patterns).
 
@@ -179,7 +179,7 @@ number_obj(N,obj(List),obj([ord(N)|List])).
  % atomic_list_concat([obj,X,Y],'_',Key),
   localpoints_include_bg(Obj,LocalPoints),
   points_to_grid(X,Y,LocalPoints,Grid),mapgrid(sometimes_assume(=,bg),Grid),
-  select(shape(Shape),List,Rest2),mapgrid(sometimes_assume(=,bg),Shape),
+  select(colorless_points(Shape),List,Rest2),mapgrid(sometimes_assume(=,bg),Shape),
   Rest3 = Rest2,
   must_det_ll((remove_too_verbose(MyID,Rest3,TV00))),flatten([TV00],TV0),
   must_det_ll((include(not_too_verbose,TV0,TV1),maplist(fix_iz,TV1,TV))),!,

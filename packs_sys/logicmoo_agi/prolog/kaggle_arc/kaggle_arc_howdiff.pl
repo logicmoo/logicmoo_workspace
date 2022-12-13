@@ -285,7 +285,7 @@ obj_plist(obj(PA),PAP):- is_list(PA),!,PAP=PA.
 %obj_plist(obj(PA,PAP):- indv_props(PA,PAP),!.
 
 never_matom(localpoints(_)).
-never_matom(shape(_)).
+never_matom(colorless_points(_)).
 never_matom(o(_,_,_)).
 never_matom(giz(_)).
 never_matom(globalpoints(_)).
@@ -338,7 +338,7 @@ select_obj_pair_1_2(AAR,BBR,PA,PB,Why):-
 
 same_pairs(AB,pair(A,B,Y2)):- AB = pair(A,B,Y1), nb_setarg(3,AB,Y1+Y2),!.
 
-uniqueness_prop(symmetry(_)).
+uniqueness_prop(symmetry_type(_)).
 uniqueness_prop(mass(_)).
 
 
@@ -495,11 +495,11 @@ maybe_good_prop(o(How,_,_),o(How,_,_)).
 
 maybe_good_prop1(vis2D(_,_)).
 maybe_good_prop1(loc2D(_,_)).
-maybe_good_prop1(iz(poly(_))).
+maybe_good_prop1(iz(type(_))).
 maybe_good_prop1(/*b*/iz(_)).
 maybe_good_prop1(iz(locY(_))).
 maybe_good_prop1(iz(locX(_))).
-maybe_good_prop1(symmetry(X)):- !, nonvar(X).
+maybe_good_prop1(symmetry_type(X)):- !, nonvar(X).
 prop_color(A,B):- var(B),!,freeze(B,prop_color(A,B)).
 prop_color(C,C).
 
@@ -528,13 +528,13 @@ prop_type(scale,vis2D(_,_)).
 prop_type(scale,iz(sizeX(_))).
 prop_type(scale,iz(sizeY(_))).
 prop_type(order,o(_Peers,_Ord,_Type)).
-prop_type(shape,shape(_)).
+prop_type(colorless_points,colorless_points(_)).
 prop_type(rotate,rot2L(_)).
 prop_type(repaint,pen(_)).
 prop_type(repaint,colors(_)).
 prop_type(loc2D,edge(_,_)).
 
-changed_by(shape,reshape).
+changed_by(colorless_points,reshape).
 changed_by(loc2D,move).
 changed_by(amass,grow).
 changed_by(localpoints,reshape_and_recolor).
@@ -620,8 +620,8 @@ fav_points(I):- \+ dislike_points(I).
 dislike_points(obj(I)):-!,dislike_points(I).
 dislike_points(I):- is_list(I),dislike_points1(L),forall(member(E,L),member(E,I)).
 
-%dislike_points1([iz(dot),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
-dislike_points1([colors([cc(BG, _)]),iz(polygon)]):- freeze(BG,is_black_or_bg(BG)).
+%dislike_points1([iz(type(dot)),grid_size(H,V)]):- freeze(H, freeze(V, (HV is H * V, HV > 49))).
+dislike_points1([colors([cc(BG, _)]),iz(shape(polygon))]):- freeze(BG,is_black_or_bg(BG)).
 
 
 uncomparable(_,Var):- var(Var),!.
@@ -639,7 +639,7 @@ uncomparable2(group,o).
 uncomparable2(group,obj_to_oid).
 %uncomparable2(group,link).
 uncomparable2(object,iz).
-uncomparable2(shape,localpoints).
+uncomparable2(colorless_points,localpoints).
 
 never_show_diff(V):- var(V),!,fail.
 never_show_diff(_):- nb_current(diff_porportional,t),!,fail.
@@ -709,7 +709,7 @@ same_colorless_points(I,O,OUT):-
   obj_make_comparable(I,II), obj_make_comparable(O,OO),!,
   intersection(II,OO,SL,IIR,OOR),!,
   %member(amass(_),SL),
-  member(shape(_),SL),
+  member(colorless_points(_),SL),
   diff_objects(I,O,OUT).
 
 
@@ -821,7 +821,7 @@ excl_diff(C):- var(C),!,fail.
 excl_diff(diff(A->_)):- !, excl_diff(A).
 excl_diff(C):- compound(C),!, compound_name_arity(C,F,_),!,excl_diff(F).
 excl_diff(localpoints).
-excl_diff(shape).
+excl_diff(colorless_points).
 leftover_diffs(P):- \+ excl_diff(P).
 
 compare_objs1(_,I,O):- I==O,!,fail.
@@ -851,7 +851,7 @@ sprop(perfect).
 
 sprop_of(sameO,visually).
 sprop_of(sameO,size2D).
-sprop_of(sameO,shape).
+sprop_of(sameO,colorless_points).
 sprop_of(sameO,colors).
 
 sprop_of(moved,sameO).
@@ -911,8 +911,8 @@ diff_termz(I,O,I):- O==[],!.
 diff_termz([IH,IV],[OH,OV],D):- maplist(number,[IH,IV,OH,OV]),!,maplist(diff_numbers,[IH,IV],[OH,OV],D).
 
 %diff_termz(I,O, [] ):- (never_do_diff(I);never_do_diff(O)),!.
-diff_termz(shape(I),shape(O),[]):- !,sort(I,II),sort(O,OO),II=@=OO,!.
-diff_termz(shape(I),shape(O),shape(diff(I->O))):-!.
+diff_termz(colorless_points(I),colorless_points(O),[]):- !,sort(I,II),sort(O,OO),II=@=OO,!.
+diff_termz(colorless_points(I),colorless_points(O),colorless_points(diff(I->O))):-!.
 %diff_termz(I,O, (O \== I)):- O=@=I,!.
 diff_termz(group_o(I),group_o(O),group_o(DD)):- !, must_det_ll(diff_groups(I,O,DD)).
 diff_termz(I,O,DD):-  is_group(I), is_group(O), !, must_det_ll(diff_groups(I,O,DD)).
@@ -954,7 +954,7 @@ compute_diff_or_same(I,O,IO):-
 maybe_no_diff(I,_,[],I):-!.
 maybe_no_diff(_,_,D,D).
 
-is_object_props(O):- is_list(O),member(E,O),compound(E),shape(_)=E,!.
+is_object_props(O):- is_list(O),member(E,O),compound(E),colorless_points(_)=E,!.
 diff_lists(AA,BB,D):- AA=@=BB,!,D=[].
 diff_lists(AA,BB,diff(AA=@=BB)):- sort(AA,A),sort(BB,B), A=@=B,!.
 diff_lists(I,O,D1D):- is_kv_list(I),is_kv_list(O),!,kv_list_diff(_Sytle,I,O,D1D).
@@ -997,13 +997,13 @@ be_comparable(CI,CO):- compound(CI),compound(CO),functor(CI,F,A),functor(CO,F,A)
 diff2_terms(A,B,D):- two_ok(A,B),!,must_det_ll(diff_terms(A,B,DD)),!,D=DD.
 
 
-reduce_required(norm(IO),IO).
+%reduce_required(norm(IO),IO).
 reduce_required(iz(IO),IO).
 reduce_required(obj(IO),IO).
 reduce_required(giz(IO),IO).
-reduce_required(pen(IO),IO).
-reduce_required(/*b*/iz(IO),IO).
-reduce_required(shape(IO),IO).
+%reduce_required(pen(IO),IO).
+%reduce_required(/*b*/iz(IO),IO).
+reduce_required(colorless_points(IO),IO).
 reduce_required(g(IO),IO).
 reduce_required(i(IO),IO).
 

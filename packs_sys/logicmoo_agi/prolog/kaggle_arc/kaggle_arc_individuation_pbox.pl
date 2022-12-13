@@ -315,11 +315,11 @@ flatten_set_bf(F,S):- list_to_set_bf(F,BF),!,BF=S.
 
 which_partof_square(Which, OBJ,Find,Inside,Center, IsRim, OH, FH, OV, FV):-
   (var(Which)->member(Which,[inside, find, iborder]);true),  /*oborder center, ,*/
-  once((Which=@=find -> (IsRim=solid,OBJ=Find,OH is FH-1, OV is FV-1) ;
-   (Which=@=center -> (IsRim=solid,OBJ=Center,OH is FH, OV is FV) ;  
+  once((Which=@=find -> (IsRim=filltype(solid),OBJ=Find,OH is FH-1, OV is FV-1) ;
+   (Which=@=center -> (IsRim=filltype(solid),OBJ=Center,OH is FH, OV is FV) ;  
     (Which=@=iborder -> (IsRim=rim_of,rim_of(Inside,OBJ),OH is FH, OV is FV) ;  
      (Which=@=oborder -> (IsRim=rim_of,rim_of(Find,OBJ),OH is FH-1, OV is FV-1) ;  
-      (Which=@=inside -> (IsRim=solid,OBJ=Inside,OH is FH, OV is FV))))))).
+      (Which=@=inside -> (IsRim=filltype(solid),OBJ=Inside,OH is FH, OV is FV))))))).
 
 i_pbox_l(SoFar,SoFar,_Grid,_NSEW,_XSG,Points,Points,_VM,L_S,_):- Points==[], !, wdmsg(pointless(L_S)).
 i_pbox_l(SoFar,SoFar,_Grid,_NSEW,_XSG,Points,Points,_VM,L_S,[]):- !, wdmsg(complete(L_S)).
@@ -357,11 +357,11 @@ i_pbox_l(SoFarI,SoFarOut,Grid,NSEW,XSG,Points,Points9,VM,L_S,[Size2D|Sizes]):-
 
   once((which_partof_square(Which, OBJ,Find,Inside,Center, IsRim, OH, FH, OV, FV), grid_size(OBJ,HH,VV), \+ member(Rec,SoFarI))),
 
-/*  (Which=@=find -> (IsRim=solid,OBJ=Find,OH is FH-1, OV is FV-1) ;
-   (Which=@=center -> (IsRim=solid,OBJ=Center,OH is FH, OV is FV) ;  
+/*  (Which=@=find -> (IsRim=filltype(solid),OBJ=Find,OH is FH-1, OV is FV-1) ;
+   (Which=@=center -> (IsRim=filltype(solid),OBJ=Center,OH is FH, OV is FV) ;  
     (Which=@=iborder -> (IsRim=rim_of,rim_of(Inside,OBJ),OH is FH, OV is FV) ;  
      (Which=@=oborder -> (IsRim=rim_of,rim_of(Find,OBJ),OH is FH-1, OV is FV-1) ;  
-      (Which=@=inside -> (IsRim=solid,OBJ=Inside,OH is FH, OV is FV) 
+      (Which=@=inside -> (IsRim=filltype(solid),OBJ=Inside,OH is FH, OV is FV) 
       ; (writeq(Which),break, OH is FH-0, OV is FV-0)))))),*/
   once(( OBJ \=@=Grid, OBJ \==[],  %CACHE.objFound = OBJ, %CACHE.which = Which, %CACHE.objMade = Obj, %append(SoFarI,[Rec],SoFarMid),
   obj_gpoints(OBJ,OH,OV,GOPoints),
@@ -369,7 +369,7 @@ i_pbox_l(SoFarI,SoFarOut,Grid,NSEW,XSG,Points,Points9,VM,L_S,[Size2D|Sizes]):-
   nop(Intersection\==[]),!, nop(Unknown==[]),
   %format('~N~q.~n',[USING]),  
  must_det_ll((
-  make_indiv_object(VM,[/*b*/iz(pbox(WHY,L_S)),iz(i(pbox)),iz(always_keep),iz(shape),iz(image),iz(dont_reduce),loc2D(OH,OV),vis2D(HH,VV)],GOPoints,Obj),
+  make_indiv_object(VM,[/*b*/iz(type(pbox(WHY,L_S))),iz(type(pbox)),iz(info(always_keep)),iz(media(shaped)),iz(media(image)),iz(info(dont_reduce)),loc2D(OH,OV),vis2D(HH,VV)],GOPoints,Obj),
   ((\+ \+ ((
      ignore_equal_e(NSEW,['N','S','E','W']),
     %grid_size(OBJ,HH,VV), EH is OH+HH-1,EV is OV+VV-1, clip(OH,OV,EH,EV,Grid,OGrid), print_side_by_side(cyan,OGrid,Y,_,OBJ,F),
@@ -457,14 +457,14 @@ found_box(Grid,L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,F
   InsideS=[C], is_real_color_or_wfg(C), maplist(not_all_same(C),CACHE.oBorderTrimmed),!.
 */
 found_box(Grid,L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,FindS,IBorderS,OBorderS,   inside, 
-                                                                                 solidIBorder(C,was_center,always_keep)):- 
+                                                                                 solidIBorder(C,was_center,info(always_keep))):- 
   (H>1,V>1), NSEW=[A,B,L,D], A=B,L=D,A=L,
   IBorderS=[C],is_real_color_or_wfg(C), % \+ maplist_ls(==(C),OBorderS), 
   maplist(not_all_same(C),CACHE.oBorderTrimmed),!.
 
 
 found_box(Grid,L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,FindS,IBorderS,OBorderS,   inside, 
-                                                                                solidOBorder(C,always_keep)):- 
+                                                                                solidOBorder(C,info(always_keep))):- 
   %once(L_S=l_s(p2);L_S=l_s(p2)),
   (H>2,V>2), NSEW=[A,B,L,D], A=B,L=D,A=L, flatten_set_bf(CACHE.oBorder,OBorderAll),OBorderAll=[C], 
   %maplist_ls(=(C),OBorderS),
@@ -524,7 +524,7 @@ found_box(Grid,L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,F
    \+ whole_row_or_col(C,Inside),!.
 
 
-found_box(Grid,L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,FindS,IBorderS,OBorderS,   inside, solidSquares(C,always_keep)):- 
+found_box(Grid,L_S,NSEW,FH,FV,Find,Center,Inside,CACHE,XSG,H,V,CenterS,InsideS,FindS,IBorderS,OBorderS,   inside, solidSquares(C,info(always_keep))):- 
   (H>1,V>1), InsideS=[C],  NSEW=[n,s,e,w], fail,
   is_real_color_or_wfg(C),
   maplist(not_all_same(C),CACHE.oBorderTrimmed),!.

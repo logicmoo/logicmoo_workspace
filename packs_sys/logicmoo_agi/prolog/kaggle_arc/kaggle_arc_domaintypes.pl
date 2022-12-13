@@ -393,7 +393,7 @@ subClassOf(square,hv_symmetric).
 subClassOf(diamond,hv_symmetric).
 subClassOf(circle,hv_symmetric).
 subClassOf(round,hv_symmetric).
-subClassOf(symmetry(sym_hv),hv_symmetric).
+subClassOf(symmetry_type(sym_hv),hv_symmetric).
 subClassOf(hv_symmetric,h_symmetric).
 subClassOf(hv_symmetric,v_symmetric).
 
@@ -518,8 +518,8 @@ vm_grid(VM,VM.grid).
 vm_obj(VM,O):- member(O,VM.objs).
 
 :- export(is_grid/1).
-% is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
-is_grid(G):- nonvar(G), \+ \+  quietly(is_grid_of(is_grid_cell,G)).
+is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
+%is_grid(G):- nonvar(G), \+ \+  quietly(is_grid_of(is_grid_cell,G)).
 
 fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C), !, is_grid_cell(C).
 
@@ -622,7 +622,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(shape(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(vis2D(h,w)). apv(loc2D(h,w)). 
+apv(colorless_points(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(vis2D(h,w)). apv(loc2D(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).

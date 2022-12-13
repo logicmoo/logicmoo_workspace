@@ -433,7 +433,7 @@ dir_seeing(Ps1,Ps2,Dir):- member(_-P1,Ps1), is_adjacent_point(P1,Dir,P2), \+ mem
 seeing_dir_soon(P1,_Dir,Ps2):- member(_-P1,Ps2),!.
 seeing_dir_soon(P1,Dir,Ps2):- is_adjacent_point(P1,Dir,P2), seeing_dir_soon(P2,Dir,Ps2).
 
-is_physical_object(O):- my_assertion(is_object(O)),has_prop(iz(shape),O),!.
+is_physical_object(O):- my_assertion(is_object(O)),has_prop(iz(media(shaped)),O),!.
 is_physical_object(O):- has_prop(mass(Mass),O),Mass>0.
 
 % ==============================================
@@ -505,7 +505,7 @@ mention_links(Obj,Dir-Seen,NewObj):-
 */
 
 find_links_objects(_How,_,[],[]).
-%find_links_objects(How,Obj,_,[]):- has_prop(iz(dots),Obj),!.
+%find_links_objects(How,Obj,_,[]):- has_prop(iz(type(dots)),Obj),!.
 find_links_objects(How,Obj,[Seen|ScanNext],[BetterSee|WillSee]):-    
  once(call(How,Dirs,Obj,Seen)),Dirs\==[],!,
  link_prop(How,Prop),

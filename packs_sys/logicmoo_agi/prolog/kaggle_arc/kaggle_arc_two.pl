@@ -182,8 +182,9 @@ show_pair_code(In,Out):-
   dash_chars,dash_chars.
 
 % trials(learn). trials(clue).   
-trials(human). trials(sol).
-trials(dsl). trials(runDSL).
+%trials(human). 
+trials(sol).
+% trials(dsl). trials(runDSL).
 trial_non_human(sol).
 
 sols_for(TestID,Trial,TrialSol):- trials(Trial),once((compound_name_arguments(Entry,Trial,[Sol]), test_info(TestID,Sols),member(Entry,Sols))),

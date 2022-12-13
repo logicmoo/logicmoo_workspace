@@ -2266,7 +2266,7 @@ testcase(t('44f52bb0')>tst+0,"
    -------                      
                      
 ").
-%= fav(t('44f52bb0'),[no_sol(i(complete),resize_grid(1,1,Color),incomplete),human([i(whole),first_object_bool(h_symmetric),learn_rule]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,keypad,detect_symmetry,associate_images_to_bools,'(6, 2)']).
+%= fav(t('44f52bb0'),[no_sol(i(complete),resize_grid(1,1,Color),incomplete),human([i(whole),first_object_bool(symmetric_type(flipH)),learn_rule]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,keypad,detect_symmetry,associate_images_to_bools,'(6, 2)']).
 
 
 testcase(t('44f52bb0')>tst+1,"
@@ -2278,7 +2278,7 @@ testcase(t('44f52bb0')>tst+1,"
    -------                      
                      
 ").
-%= fav(t('44f52bb0'),[no_sol(i(complete),resize_grid(1,1,Color),incomplete),human([i(whole),first_object_bool(h_symmetric),learn_rule]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,keypad,detect_symmetry,associate_images_to_bools,'(6, 2)']).
+%= fav(t('44f52bb0'),[no_sol(i(complete),resize_grid(1,1,Color),incomplete),human([i(whole),first_object_bool(symmetric_type(flipH)),learn_rule]),-[shape_match],-[rotation_match],-[mask_match],-[color_match],tt,training,keypad,detect_symmetry,associate_images_to_bools,'(6, 2)']).
 
 
 testcase(t('4522001f')>tst+0,"
@@ -13156,7 +13156,7 @@ testcase(v('73ccf9c2')>tst+0,"
    ---------------------------------------------                                                            
                                                            
 ").
-%= fav(v('73ccf9c2'),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),human([colormass,most_unique(symmetry),get(solution),trim_to_rect]),-[shape_match],-[rotation_match],-[mask_match],+[color_match],evaluation,'(3, 1) ']).
+%= fav(v('73ccf9c2'),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),human([colormass,most_unique(symmetry_type),get(solution),trim_to_rect]),-[shape_match],-[rotation_match],-[mask_match],+[color_match],evaluation,'(3, 1) ']).
 
 
 testcase(v('759f3fd3')>tst+0,"

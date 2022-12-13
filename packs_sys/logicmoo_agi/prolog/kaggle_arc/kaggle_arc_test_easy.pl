@@ -457,7 +457,7 @@ easy0(5,grow_flip_2):- test_hint(mass_and_area_times(2)). % 963e52fc
 easy0(5,double_size):- test_hint(n_times(2),mass).
 %easy0(5,crop_by(_)).
 
-easy_solve_suite(TestID):- nonvar(TestID),test_easy(TestID).
+%easy_solve_suite(TestID):- nonvar(TestID),test_easy(TestID).
 easy_solve_suite(TestID):- var(TestID),easy_solve_suite(TestID,_Uses).
 
 easy_solve_suite(t('963e52fc')).

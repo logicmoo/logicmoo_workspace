@@ -188,7 +188,7 @@ maybe_in_out_xform(NeuralVM,PairName,StartInOut,NextStartInOut,DONE):-
 
 stuff_options1(stuffType,is_cpoints,globalpoints). %:- globalpoints(Grid,Stuff).
 stuff_options1(stuffType,is_colors,unique_colors). %:- unique_colors(Grid,Stuff).
-stuff_options(stuffType,is_nc_points,shape). %:-  globalpoints(Grid,Stuff),decolorize(StuffM,Stuff).
+stuff_options(stuffType,is_nc_points,colorless_points). %:-  globalpoints(Grid,Stuff),decolorize(StuffM,Stuff).
 stuff_options(stuffType,is_group,default_individuals). %:- individuals_default(Grid,Stuff).
 
 

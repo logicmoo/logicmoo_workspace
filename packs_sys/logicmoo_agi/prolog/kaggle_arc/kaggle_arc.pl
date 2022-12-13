@@ -860,4 +860,4 @@ test_compile_arcathon:- save_arcathon_runner_devel.
 :- gen_gids.
 :- test_show_colors.
 :- fmt('% Type ?- demo. % or press up arrow').
-
+:- set_current_test(t('0d3d703e')).

@@ -399,7 +399,7 @@ individuation_macros(some_leftovers, [
 individuation_macros(do_ending, [
   %find_edges,
   % find_contained_points, % mark any "completely contained points"
- combine_same_globalpoints, % make sure any objects are perfectly the equal part of the image are combined
+ combine_same_globalpoints, % make sure any objects are perfectly the equal part of the media(image) are iz(info(combined))
  keep_only_shown(1),
  remove_if_prop(cc(fg,0)),
  remove_if_prop(pen([cc(black,1)])),
@@ -610,18 +610,18 @@ individuation_macros(standard, [
    +max_learn_objects(hv_line(_),ThreeO),
    +max_learn_objects(dg_line(_),ThreeO),
     %nsew,
-    %+recalc_sizes, % blobs of any shape that are the equal color  
+    %+recalc_sizes, % blobs of any colorless_points that are the equal color  
     % @TODO DISABLED FOR TESTS   colormass_subshapes, % subdivide the color masses .. for example a square with a dot on it
     subshape_main, % macro for sharing code with "subshape_in_object"
     connects(jumps(X),jumps(X)), % connected jumps    
-    % merge_shapes(Z,Z), % merge objects of identical types (horizontal lines become solid squares)   
+    % merge_shapes(Z,Z), % merge objects of identical types (horizontal lines become filltype(solid) squares)   
     %do_ending,    
     end_of_macro]):- the_big_three_oh(ThreeO).
 
 individuation_macros(defaults, [ complete ]).
 
 individuation_macros(unused, [
-  detect(_VM_), % makes an image detectable
+  detect(_VM_), % makes an media(image) detectable
   detect(_Group_), % makes several objects and images availble 
   done, %terminates object detection
   ls, % shows current director contents
@@ -631,13 +631,13 @@ individuation_macros(unused, [
   use_reserved, % objects that were already found dont find again
   - progress, % turn off a detector option
   + progress, % turn on a detector option
-  solid(nsew), % chat that looks for solid rectanglez
+  type(solid(nsew)), % chat that looks for solid rectanglez
   
   %polygons,%shape_lib(nsew), %shape_lib(all), %shape_lib(hammer),
   
   % colormass, %hv_line(v), hv_line(h), %dg_line(u),dg_line(d), %CS,
   all
-  % line(_),dg_line(_), % release_points, all, %into_single_hidden,oldway %retain(solid(nsew)), % shapes, %into_single_hidden,
+  % line(_),dg_line(_), % release_points, all, %into_single_hidden,oldway %retain(filltype(solid)(nsew)), % shapes, %into_single_hidden,
   ]). 
 
 % ?- print_grid(gridFn(X)).
@@ -679,7 +679,7 @@ gather_texture(VM):-
 
 make_textured_point_object(VM,Overrides,Cell,Indv):-
    color_texture_point_data(Cell,C,Texture,Point),
-   make_point_object(VM,[iz(dot),iz(shaped),texture(Texture)|Overrides],(C-Point),Indv).
+   make_point_object(VM,[iz(type(dot)),iz(media(shaped)),texture(Texture)|Overrides],(C-Point),Indv).
 
 
 /*
@@ -823,7 +823,7 @@ only_proportional_mass(VM):-
 kept_ideal_obj(VM,GMass,Objs,OMass,O):- OMass=:=GMass,!,fail.
 kept_ideal_obj(VM,GMass,Objs,0,O):- !,fail.
 kept_ideal_obj(VM,GMass,Objs,OMass,O):- 0 is GMass rem OMass,!.
-kept_ideal_obj(VM,GMass,Objs,OMass,O):- has_prop(iz(image),O), \+ has_prop(iz(shape),O),!,fail.
+kept_ideal_obj(VM,GMass,Objs,OMass,O):- has_prop(iz(media(image)),O), \+ has_prop(iz(media(shaped)),O),!,fail.
 kept_ideal_obj(VM,GMass,Objs,OMass,O).
 :- style_check(+singleton).
 
@@ -880,7 +880,7 @@ hybrid_shape_from(Set,VM):-
   !,
   must_det_ll((
   %indv_props(Obj,Props),my_partition(is_point_or_colored,Props,_,PropsRetained),
-  make_indiv_object(VM,[/*b*/iz(hybrid_shape(R))],GOPoints,Obj),
+  make_indiv_object(VM,[iz(type(R))],GOPoints,Obj),
   
   %offset_grid(OH,OV,In,OffsetGrid),!, is_grid(OffsetGrid),
   %OffsetGrid = In,
@@ -966,7 +966,7 @@ is_long_prop(o(_,_,_)). is_long_prop(giz(_)).
 is_long_prop(edge(_,_)). is_long_prop(on_edge(_,_)). is_long_prop(on_edge(_)). 
 is_long_prop(pen(_)).
 is_long_prop(merged(_)). is_long_prop(rot2L(sameR)).
-is_long_prop(gid(_)). is_long_prop(cc(_,0)). is_long_prop(symmetry(_)).
+is_long_prop(gid(_)). is_long_prop(cc(_,0)). is_long_prop(symmetry_type(_)).
 is_long_prop(chromatic(_,_)). is_long_prop(sizeY(_)). is_long_prop(sizeX(_)). 
 is_long_prop(overlap(_,_)).  is_long_prop(dir_touching(_,_)). is_long_prop(dir_seeing(_,_)). is_long_prop(contains(_)).
 is_long_prop(iz(P)):- compound(P),arg(1,P,A),number(A),!.
@@ -1031,23 +1031,23 @@ keep_only_shown(Layers,VM):-
 
 filter_shown(OH,OV,OutC,N,OutShown,OutHidden):-  N=<1,!, filter_shown(OH,OV,OutC,OutShown,OutHidden),!.
 filter_shown(OH,OV,OutC,N,OutShown,OutHiddenO):-  NN is N-1,
-   always_keep(OutC,Kept),
+   include_always_keep(OutC,Kept),
    filter_shown(OH,OV,OutC,NN,OutShown0,OutHidden0),
    filter_shown(OH,OV,OutHidden0,_Hidden,OutHiddenKeep),
    append_sets([OutShown0,OutHiddenKeep,Kept],OutShown),
    my_partition(is_not_in(OutShown),OutC,OutHiddenO,_).
    
 
-is_always_kept(Obj):- sub_term(E,Obj),(E==diamonds;E==always_keep),!.
+is_always_kept(Obj):- sub_term(E,Obj),(E==diamonds;E==info(always_keep)),!.
 %is_always_kept(Obj):- has_prop(/*b*/iz(indiv(i_colormass)),Obj),!.
-always_keep(OutC,Kept):- include(is_always_kept,OutC,Kept).
+include_always_keep(OutC,Kept):- include(is_always_kept,OutC,Kept).
 
 filter_shown(OH,OV,OutC,OutShown,OutHidden):-
  must_det_ll((
   object_printables(OutC,GroupVis,GroupPP),
   append_sets([GroupVis,GroupPP],OutObjs),
   findall(Obj,(between(1,OH,H),between(1,OV,V),object_at(H,V,OutObjs,Obj)),Shown),
-  always_keep(OutC,Kept),
+  include_always_keep(OutC,Kept),
   append_sets([Shown,Kept],OutShown0),
   combine_same_globalpoints(OutShown0,OutShown),
   my_partition(is_not_in(OutShown),OutC,OutHidden,_Show))).
@@ -1094,7 +1094,7 @@ maybe_1_3rd_mass(VM):-
    length(ThisGroup,Len),  Len >= Min,
    set(VM.points)=LeftOver,
    meets_indiv_criteria(VM,/*b*/iz(maybe_1_3rd_mass),ThisGroup),
-   make_indiv_object(VM,[/*b*/iz(maybe_1_3rd_mass),iz(image)],ThisGroup,ColorObj),
+   make_indiv_object(VM,[/*b*/iz(maybe_1_3rd_mass),iz(media(image))],ThisGroup,ColorObj),
    raddObjects(VM,ColorObj)))).
 
 
@@ -1414,11 +1414,11 @@ into_fti(ID,ROptions,GridIn0,VM):-
    %  option_ExampleIndex:  Missing[option_NotSpecifiedoption_], /* Given a list of example inputs/outputs, what example number is this scene? */
      option_FindOcclusions:  _, % Automatic,                     /* Whether we should consider possible occlusions when interpreting the scene. */
      option_FollowDiagonals:  _, % Automatic,                    /* Should diagonally adjacent pixels form a single object? */
-     option_FormMultiColorCompositeObjects:  _, % Automatic,     /* Whether connected single-color objects should be combined to form multi-color composite objects. If set to Automatic, the OtherScene option will be used to help make more informed decisions. */
+     option_FormMultiColorCompositeObjects:  _, % Automatic,     /* Whether connected single-color objects should be iz(info(combined)) to form multi-color composite objects. If set to Automatic, the OtherScene option will be used to help make more informed decisions. */
      option_InferPropertiesThatRequireFullObjectList:  true,     /* Rank and RankInverse properties require that we have the full object list. If False, we won't infer those properties. */
      %option_InputOrOutput:                                      /* Is this an input scene or an output scene? */
      option_NoMappings:  false,                                  /* If True, we will treat the inputObject as not mapping to any of the components of the output object. */
-     option_NotableSubImages: _, % Automatic,                    /* The list of images which are considered notable sub-images. If we find objects that contain these as sub-images, we should consider splitting that object up so that the sub-image is its own object. */
+     option_NotableSubImages: _, % Automatic,                    /* The list of images which are considered notable sub-images. If we find objects that contain these as sub-images, we should consider splitting that object up so that the sub-media(image) is its own object. */
      option_OtherScene:  _,                                      /* A parse of the scene this scene corresponds to. For example, if `scene` is an input scene, then OtherScene would be the output scene, and vice versa. If provided, we can use OtherScene to resolve some ambiguities about whether to chunk objects into composite objects. An association of the form <|option_WithoutMultiColorCompositeObjects:  ..., option_WithMultiColorCompositeObjects:  ...|> should be passed. */
      option_SingleColorObjects: _, % Automatic,                  /* If the single color objects have already been determined, they can be passed in to save time. */
      option_SingleObject: _, % Automatic,                        /* Should all non-background pixels be treated as part of a single object, even if they are non-contiguous? */
@@ -1437,7 +1437,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
    objs:[],  robjs:Reserved, % objs_prev:[],
    % Notes and debug info
    type:grid, % notes:_, debug:_,
-   % height width and lookup key for image
+   % height width and lookup key for media(image)
    h:H, v:V, id:ID},
    %ignore(VM>:<ArgVM),
    (var(VM) -> ArgVM=VM ; transfer_missing(ArgVM,VM)),
@@ -1772,7 +1772,7 @@ row_to_indiv(VM,Birth,N,Row):-
   offset_points(1,N,LPoints,GPoints),
   %grid_to_individual([Row],Obj0),  
   % a column is a row that was prematurely rotated 270 degrees
-  make_indiv_object(VM,[iz(image), /*b*/iz(Birth), iz(grouped(Birth)),
+  make_indiv_object(VM,[iz(media(image)), iz(type(Birth)), iz(grouped(Birth)),
      loc2D(1,N),
      vis2D(VM.h,1),
      giz(grid_sz(VM.h,VM.v))],GPoints,Obj),
@@ -1783,6 +1783,9 @@ one_fti(VM,'all_columns'):-
  (\+ ground(Grid) -> true ;
   rot90(Grid,Grid90),
   maplist_n(1,column_to_indiv(VM,'all_columns'), Grid90)).
+
+%Emani 501 N grahm %200  Feb 3rd 3pm
+
 
 one_fti(VM,'some_columns'):-
  Grid = VM.grid_o,
@@ -1797,7 +1800,7 @@ column_to_indiv(VM,Birth,N,Row):-
   %grid_to_individual([Row],Obj0),  
   % a column is a row that was prematurely rotated 270 degrees
   make_indiv_object(VM,[/*iz(hv_line(v)),rotated(sameR),*/
-    /*b*/iz(Birth),iz(image),iz(grouped(Birth)),loc2D(N,1),rotation(sameR),vis2D(1,VM.v),giz(grid_sz(VM.h,VM.v))],GPoints,Obj),
+    iz(type(Birth)),iz(media(image)),iz(grouped(Birth)),loc2D(N,1),rotation(sameR),vis2D(1,VM.v),giz(grid_sz(VM.h,VM.v))],GPoints,Obj),
   raddObjects(VM,Obj).
   
 % =====================================================================
@@ -2379,7 +2382,7 @@ save_as_obj_group(Name,VM):-
   addObjectOverlap(VM,IndvSL))),!.
 
 %add_birth_if_missing(_,O,O):- has_prop(/*b*/iz(_),O),!.
-add_birth_if_missing(Birth,I,O):- override_object(/*b*/iz(Birth),I,O).
+add_birth_if_missing(Birth,I,O):- override_object(iz(info(Birth)),I,O).
 
 /*
 prior_name_by_size(VM,IndvS0,Name):- 
@@ -2612,7 +2615,7 @@ maybe_sa_dots(Points,lte(LTE),VM):-
     length(SAPs,Len),
     if_t((LTE>=Len),
     ( remCPoints(VM,SAPs),
-     using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(alone_dots(lte(LTE))),iz(shaped)]),SAPs,IndvList),
+     using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(alone_dots(lte(LTE))),iz(media(shaped))]),SAPs,IndvList),
      nop(raddObjects(VM,IndvList)))))))),!.
 
 % =====================================================================
@@ -2634,13 +2637,13 @@ mostly_fgp(Points,FG_POINTS):- my_partition(is_fgp,Points,FG_POINTS,_),!.
 lo_dots(VM):-  
   mostly_fgp(VM.points,LO_POINTS),
   ( VM.h=<5 ; VM.v=<5 ; (LO_POINTS \=[], length(LO_POINTS,Len), Len<12, (Len =< VM.h ; Len =< VM.v  ))),!,  
-  using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(lo_dots),iz(dot),iz(shaped)]),LO_POINTS,IndvList),
+  using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(lo_dots),iz(type(dot)),iz(media(shaped))]),LO_POINTS,IndvList),
   raddObjects(VM,IndvList))),
   set(VM.points) =[],!.
 lo_dots(VM):-  
   mostly_fgp(VM.points,LO_POINTS),
    length(LO_POINTS,Len), Len<12,
-  using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(lo_dots),iz(dot)]),LO_POINTS,IndvList),
+  using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(lo_dots),iz(type(dot))]),LO_POINTS,IndvList),
   raddObjects(VM,IndvList))),
   set(VM.points) =[],!.
 
@@ -2666,7 +2669,7 @@ colormass_merger(VM,Smaller,Bigger):-
    find_mergeable(VM,Bigger,Smaller,Touches),
    ignore((Touches\==[],
    print_grid(VM.h,VM.v,"Removing...",Touches),
-   merge_objs(VM,Bigger,Touches,[iz(combined)],Combined),
+   merge_objs(VM,Bigger,Touches,[iz(info(combined))],Combined),
    intersection(VM.objs,[Bigger|Touches],_Remove,Kept,_),   
    print_grid(VM.h,VM.v,"Adding...",Combined),
    set(VM.objs) = [Combined|Kept])) .
@@ -2790,7 +2793,7 @@ rectangles_from_grid(Grid,VM):-
   print_ss(C,NewGrid,'grid',_,RowsInvolvedClipped,clipped(Width,N)),
   mapgrid(only_color_data,RowsInvolvedClipped,Textureless),
   localpoints(Textureless,NewObjPoints),!,
-  ignore((NewObjPoints\==[],make_indiv_object(VM,[/*b*/iz(rectangles),iz(poly(rectangle))],NewObjPoints,_Obj))),
+  ignore((NewObjPoints\==[],make_indiv_object(VM,[/*b*/iz(rectangles),iz(type(rectangle))],NewObjPoints,_Obj))),
   ignore((NewGrid\==[], print_grid(newGrid, NewGrid),!, rectangles_from_grid(NewGrid,VM))),
   !.
 rectangles_from_grid(_,_).
@@ -2838,7 +2841,7 @@ one_fti(VM,glyphic):-
   VM.program_i=Code,
   run_fti(VM,[i_by_color]),
   set(VM.program_i)=Code,
-  using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(glyphic),iz(shaped)]),UPoints,IndvList), raddObjects(VM,IndvList),
+  using_alone_dots(VM,(maplist(make_point_object(VM,[/*b*/iz(glyphic),iz(media(shaped))]),UPoints,IndvList), raddObjects(VM,IndvList),
   save_grouped(individuate(glyphic,VM.gid),IndvList))))))).
 
 %make_point_object(VM,_Opts,Point,Indv):-
@@ -2854,7 +2857,7 @@ one_fti(VM,grid_props):-
   hv_point_value(H,1,Grid,PointNE),
   hv_point_value(H,V,Grid,PointSE),
   grid_props(Grid,Props),
-  append(Props,[amass(0),amass(0),vis2D(H,V),/*b*/iz(grid_props),loc2D(1,1),iz(always_keep),iz(image),iz(hidden)],AllProps),
+  append(Props,[amass(0),amass(0),vis2D(H,V),/*b*/iz(grid_props),loc2D(1,1),iz(info(always_keep)),iz(media(image)),iz(info(hidden))],AllProps),
   make_indiv_object(VM,AllProps,[PointNW,PointSW,PointNE,PointSE],_),!.
 
 hv_point_value(H,V,Grid,C-Point):- hv_point(H,V,Point),point_c_value(Point,C,Grid).
@@ -2874,11 +2877,11 @@ whole_into_obj(VM,Grid,Whole):-
   grid_props(Grid,Props0),
   delete(Props0,sometimes_grid_edges(_),Props),
   if_t(Len>0,
-    (make_indiv_object(VM,[amass(Len),vis2D(H,V),/*b*/iz(whole),iz(always_keep),loc2D(1,1),iz(always_keep),iz(image)|Props],Points,Whole),raddObjects(VM,Whole),
+    (make_indiv_object(VM,[amass(Len),vis2D(H,V),iz(type(whole)),iz(info(always_keep)),loc2D(1,1),iz(info(always_keep)),iz(media(image))|Props],Points,Whole),raddObjects(VM,Whole),
        save_grouped(individuate(whole,VM.gid),[Whole]),learn_hybrid_shape(pair,Whole))),
   localpoints(Grid,LPoints),
   length(LPoints,CLen),if_t((CLen=<144,CLen>0),    
-    (make_indiv_object(VM,[/*b*/iz(whole),iz(shaped),loc2D(1,1)],LPoints,Whole2),raddObjects(VM,Whole2))).
+    (make_indiv_object(VM,[iz(type(whole)),iz(media(shaped)),loc2D(1,1)],LPoints,Whole2),raddObjects(VM,Whole2))).
 
 
 % =====================================================================
@@ -2910,7 +2913,7 @@ one_fti(VM,by_color(Min,C)):-
    length(ThisGroup,Len),  Len >= Min,
    set(VM.points)=LeftOver,
    meets_indiv_criteria(VM,/*b*/iz(by_color),ThisGroup),
-   make_indiv_object(VM,[/*b*/iz(by_color),iz(image),iz(shaped)],ThisGroup,ColorObj),
+   make_indiv_object(VM,[/*b*/iz(by_color),iz(media(image)),iz(media(shaped))],ThisGroup,ColorObj),
    raddObjects(VM,ColorObj)))).
 
 one_fti(VM,by_color(Min)):- 
@@ -3025,8 +3028,8 @@ release_points(VM):-
     globalpoints(VM.objs,NextScanPoints2),
     addCPoints(VM,NextScanPoints2).
 
-objs_into_single_hidden(VM):- objs_into_single_now(VM,[iz(combined),iz(hidden),iz(into_single)]).
-objs_into_single(VM):- objs_into_single_now(VM,[iz(combined),iz(into_single)]).
+objs_into_single_hidden(VM):- objs_into_single_now(VM,[iz(info(combined)),iz(info(hidden)),iz(into_single)]).
+objs_into_single(VM):- objs_into_single_now(VM,[iz(info(combined)),iz(into_single)]).
 
 objs_into_single_now(Opts,VM):-
     maplist(globalpoints,VM.objs,IndvPoints),
@@ -3062,7 +3065,7 @@ leftover_as_one(VM):-
    Points = VM.points,
    ignore((Points\==[],
    wdmsg(leftover_as_one=Points),
-   make_indiv_object(VM,[iz(combined),/*b*/iz(leftover_as_one)],Points,LeftOverObj), verify_object(LeftOverObj),
+   make_indiv_object(VM,[iz(info(combined)),iz(info(leftover_as_one))],Points,LeftOverObj), verify_object(LeftOverObj),
    raddObjects(VM,LeftOverObj))),
    VM.points=[].
 
@@ -3075,7 +3078,7 @@ current_as_one(VM):-
    Points\==[],
    %set_html_stream_encoding, 
    wdmsg(current_as_one=Points),
-   make_indiv_object(VM,[iz(combined),/*b*/iz(current_as_one)],Points,LeftOverObj), verify_object(LeftOverObj),
+   make_indiv_object(VM,[iz(info(combined)),/*b*/iz(current_as_one)],Points,LeftOverObj), verify_object(LeftOverObj),
    raddObjects(VM,LeftOverObj),
    set(VM.points) = Points)).
    
@@ -3213,8 +3216,8 @@ one_fti(VM,merge_shapes(ShapeType1,ShapeType2)):-
   Option = merge_shapes(ShapeType1,ShapeType2), copy_term(Option,OptionC),!, 
       Sofar = VM.objs,
       selected_from(Sofar,ShapeType1,ShapeType2,HV1,HV2,SofarLess), % trace,
-      \+ has_prop(iz(image),HV1),
-      \+ has_prop(iz(image),HV2),
+      \+ has_prop(iz(media(image)),HV1),
+      \+ has_prop(iz(media(image)),HV2),
       any_gpoint(HV1,C-P1), is_adjacent_point(P1,Dir,P2), any_gpoint(HV2,C-P2), 
       connection_direction(Option,Dir),
   %rot_left_45(Dir1,DirL),rot_left_45(DirL,Dir90),
@@ -3360,7 +3363,7 @@ find_one_ifti3(Option,Obj,VM):-
     points_allowed(VM,Option,PointsFrom),
     all_individuals_near(_SkipVM,Dir,Option,C1,PointsFrom,ScanPoints,NextScanPoints,IndvPoints),!,
     length(IndvPoints,Len),Len>=2,!,
-    make_indiv_object(VM,[iz(ShapeType),iz(shaped),/*b*/iz((ShapeType))],IndvPoints,Obj),
+    make_indiv_object(VM,[iz(ShapeType),iz(media(shaped)),/*b*/iz((ShapeType))],IndvPoints,Obj),
     meets_indiv_criteria(VM,Option,IndvPoints),
   set(VM.points) = NextScanPoints,
   raddObjects(VM,Obj),
@@ -3385,7 +3388,7 @@ find_one_ifti3(Option,Obj,VM):-
     point_allowed(VM,Option,C3-HV3),!,
     all_individuals_near(VM,Dir,Option,C1,[C1-HV1,C2-HV2,C3-HV3],ScanPoints,NextScanPoints,IndvPoints),
     !, length(IndvPoints,Len),Len>=2,
-    make_indiv_object(VM,[iz(ShapeType),iz(shaped),/*b*/iz(i(ShapeType))],IndvPoints,Obj),
+    make_indiv_object(VM,[iz(ShapeType),iz(media(shaped)),/*b*/iz(i(ShapeType))],IndvPoints,Obj),
     meets_indiv_criteria(VM,Option,IndvPoints),
   set(VM.points) = NextScanPoints,
   raddObjects(VM,Obj),
@@ -3430,7 +3433,7 @@ find_one_ifti3(Option,Obj,VM):-
     i3(Option,Dir,Rest1,FirstTwo,ScanPoints,PointsFrom),
     points_allowed(VM,Option,PointsFrom),
     all_individuals_near(VM,Dir,Option,C1,PointsFrom,ScanPoints,NextScanPoints,IndvPoints),
-    make_indiv_object(VM,[iz(ShapeType),iz(shaped),/*b*/iz((ShapeType))],IndvPoints,Obj),
+    make_indiv_object(VM,[iz(ShapeType),iz(media(shaped)),/*b*/iz((ShapeType))],IndvPoints,Obj),
     meets_indiv_criteria(VM,Option,IndvPoints),
   set(VM.points) = NextScanPoints,
   raddObjects(VM,Obj),
@@ -3452,7 +3455,7 @@ find_one_ifti2(Option,Obj,VM):-
   select(C-HV,Points,Rest0), \+ free_cell(C), % non_free_fg(C), % \+ is_black(C),
   allowed_dir(Option,Dir),adjacent_point_allowed(C,HV,Dir,HV2),select(C-HV2,Rest0,ScanPoints),
   all_individuals_near(VM,Dir,Option,C,[C-HV,C-HV2],ScanPoints,NextScanPoints,IndvPoints),!,
-  make_indiv_object(VM,[iz(ShapeType),iz(shaped),/*b*/iz(i(ShapeType)),/*b*/iz(i2(ShapeType))],IndvPoints,Obj),
+  make_indiv_object(VM,[iz(ShapeType),iz(media(shaped)),/*b*/iz(i(ShapeType)),/*b*/iz(i2(ShapeType))],IndvPoints,Obj),
     meets_indiv_criteria(VM,Option,IndvPoints),
   set(VM.points) = NextScanPoints,
   raddObjects(VM,Obj),
@@ -3589,12 +3592,12 @@ remove_bgs(IndvS,IndvL,BGIndvS):- partition(is_bg_indiv,IndvS,BGIndvS,IndvL).
 %sprop_piority(o(_,_,0),0).
 %sprop_piority(/*b*/iz(i3(_)),0).
 %sprop_piority(/*b*/iz(i2(_)),0).
-sprop_piority(iz(hidden),9).
-sprop_piority(iz(shaped),0).
-sprop_piority(iz(combined),1).
-sprop_piority(iz(image),2).
-sprop_piority(/*b*/iz(by_color),3).
-sprop_piority(/*b*/iz(glyphic),2).
+sprop_piority(iz(info(hidden)),9).
+sprop_piority(iz(media(shaped)),0).
+sprop_piority(iz(info(combined)),1).
+sprop_piority(iz(media(image)),2).
+sprop_piority(iz(info(by_color)),3).
+sprop_piority(iz(info(glyphic)),2).
 
 
 resize_inf(X,N):- is_list(X),!,length(X,N).

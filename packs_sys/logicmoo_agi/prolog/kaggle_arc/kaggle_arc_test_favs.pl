@@ -51,13 +51,13 @@ fav(t('47c1f68c'),[hedra,
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),recoloring,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
 fav(v('cad67732'),[human(i(whole),first_object_term(rotated),learn_rule),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
 fav(t('27a28665'),[human(i(whole),learn_rule)]).
-%fav(t('27a28665'),[human(i([glyphic]),one_obj,into_monochrome,db(largest:shape,out:grid:p(1,1):color),resize_grid(1,1))]).
-%fav(t('27a28665'),[human(i(whole),one_obj,into_monochrome,db(largest:shape,out:grid:p(1,1):color),resize_grid(1,1))]).
+%fav(t('27a28665'),[human(i([glyphic]),one_obj,into_monochrome,db(largest:colorless_points,out:grid:p(1,1):color),resize_grid(1,1))]).
+%fav(t('27a28665'),[human(i(whole),one_obj,into_monochrome,db(largest:colorless_points,out:grid:p(1,1):color),resize_grid(1,1))]).
 fav(t('27a28665'),[learn([shape_to_color]),no_sol([make_box(1),shape_to_color(C),cls_with(C)])]).
 fav(t('27a28665'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),take_negative,associate_images_to_patterns,associate_colors_to_patterns,'(7, 3)']).
-%fav(t('44f52bb0'),[human(i(whole),print_grid,get_vm(objs,[Obj|_]),print_grid,(call(iz(Obj,h_symmetric))->(print_grid,set_out([[blue]]));(print_grid,set_out([[orange]]))))]).
+%fav(t('44f52bb0'),[human(i(whole),print_grid,get_vm(objs,[Obj|_]),print_grid,(call(iz(Obj,symmetric_type(flipH)))->(print_grid,set_out([[blue]]));(print_grid,set_out([[orange]]))))]).
 fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_repetition,pattern_expansion,pattern_completion,'(3, 1)']).
-fav(t('44f52bb0'),[human(i(whole),first_object_bool(h_symmetric),learn_rule)]).
+fav(t('44f52bb0'),[human(i(whole),first_object_bool(symmetric_type(flipH)),learn_rule)]).
 
 fav(t('40853293'),[indiv(by_color(2))]).
 %fav(t(d631b094),human(globalpoints,grid_target=[get(points)],maplist(arg(1)))).
@@ -66,7 +66,7 @@ fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,test_su
 
 %fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),associate_colors_to_colors,'(4, 1)']).
 fav(t('0d3d703e'),[indiv(i_columns),human(i([columns,done]),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),associate_colors_to_colors,'(4, 1)']).
-%fav(t('a85d4709'),[human(i([rows,done]),o([rows,done]),   db(objs:shape,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),summarize,separate_images,associate_colors_to_images,'(4, 1)']).
+%fav(t('a85d4709'),[human(i([rows,done]),o([rows,done]),   db(objs:colorless_points,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),summarize,separate_images,associate_colors_to_images,'(4, 1)']).
 fav(t('a85d4709'),[indiv(i_rows),learn(i([rows,done]),o([rows,done]),learn_rule),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),summarize,separate_images,associate_colors_to_images,'(4, 1)']).
 
 fav(t('60b61512'),[indiv(i_pbox)]).
@@ -92,8 +92,8 @@ fav(t('d0f5fe59'),[%indiv(colormass),
 */
 /*
 fav(t('44f52bb0'),[human(i(whole),grid_call((
-  get_vm(objs,[Obj|_]),(iz(Obj,h_symmetric)->set_vm(grid,[[blue]]);set_vm(grid,[[orange]])),set_vm(grid,[[orange]]))))]).
-fav(t('44f52bb0'),[lmDSL(into_monochrome,grid_to_individual(whole),one_obj,resize_grid(1,1,Color),db(largest:h_symmetric,Color)), -shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),detect_symmetry,associate_images_to_bools,'(6, 2)']).
+  get_vm(objs,[Obj|_]),(iz(Obj,symmetric_type(flipH))->set_vm(grid,[[blue]]);set_vm(grid,[[orange]])),set_vm(grid,[[orange]]))))]).
+fav(t('44f52bb0'),[lmDSL(into_monochrome,grid_to_individual(whole),one_obj,resize_grid(1,1,Color),db(largest:symmetric_type(flipH),Color)), -shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),detect_symmetry,associate_images_to_bools,'(6, 2)']).
 */
 
 fav(t('f76d97a5'),[indiv([include_black,force_by_color]),was__lmDSL([compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1)])]).
@@ -178,7 +178,7 @@ fav(v(be03b35f),[-shape_match,-rotation_match,-mask_match,-color_match,test_suit
 
 fav(t('4347f46a'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),loop_filling,color_guessing,'(3, 1)']).
 
-fav(v('73ccf9c2'),[human(colormass,most_unique(symmetry),get(solution),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
+fav(v('73ccf9c2'),[human(colormass,most_unique(symmetry_type),get(solution),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
 
 fav(v('a8610ef7'),[grid_size_same,find_symmetry,-rotation_match,-color_match,+shape_match,+mask_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',test_suite([eval400]),'(4, 1)']).
 
@@ -200,8 +200,8 @@ fav(t('ed36ccf7'),[clue(amass(in)=:=amass(out)),human(rot270),-rotation_match,-m
 
 fav(t('83302e8f'),
  [human(i(complete),
-   with_objects(iz(poly(square)),subst_color(black,green)),
-   with_objects(iz(shaped),subst_color(black,yellow)),   
+   with_objects(iz(type(square)),subst_color(black,green)),
+   with_objects(iz(media(shaped)),subst_color(black,yellow)),   
    objects_into_grid)]).
 
 fav(t(ff28f65a),[human(count_shapes,associate_images_to_numbers),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),count_shapes,associate_images_to_numbers,'(8, 3)']).
@@ -1058,7 +1058,7 @@ if not i look to see if the input grid can be recognised on the output
 
 f35d900a
 
-the input has a small number of localcolorlesspointlist .. the equal number on each image
+the input has a small number of localcolorlesspointlist .. the equal number on each media(image)
 two localcolorlesspointlist are the equal color, oh there are two pairs of localcolorlesspointlist
 there is a silver dashed box made up from the localcolorlesspointlist
 no two silver dots can touch though

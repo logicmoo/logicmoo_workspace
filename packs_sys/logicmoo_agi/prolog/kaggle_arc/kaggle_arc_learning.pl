@@ -55,6 +55,7 @@ save_learnt_rule(RuleIn,InGoal,OutGoal):-
   length(InSet,InLen),length(InVars,InLen),
   subst_rvars(InSet,InVars,RuleIn,NewRuleIn),!,
   Assert = (NewRuleIn:-was_once(InSet,InVars)), 
+  writeq(was_once(InSet,InVars)),
   assert_visually(Assert),!.    
 
 
@@ -69,13 +70,13 @@ not_for_matching(_Why,_,Var):- var(Var),!,fail.
 not_for_matching(_Why,_,C):- for_matching(C),!,fail.
 not_for_matching(_Why,_,_):-!.
 
-
+/*
 not_for_matching(_Why,_,C):- notrace((sub_term(E,C), compound(E))), E= '$VAR'(_),!,fail.
-not_for_matching(_Why,_,iz(combined)).
+not_for_matching(_Why,_,iz(info(combined))).
 not_for_matching(_Why,_,giz(_)).
 not_for_matching(_Why,_,iz(colormass)).
 not_for_matching(_Why,_,iz(nsew)).
-not_for_matching(_Why,_,iz(image)).
+not_for_matching(_Why,_,iz(media(image))).
 not_for_matching(_Why,_,iz(monochrome)).
 not_for_matching(_Why,_,iz(C)):- atom(C),!,fail.
 %not_for_matching(_Why,_,iz(C)):- sub_term(E,C), number(E),E\==1.
@@ -85,13 +86,34 @@ not_for_matching(_Why,_,iz(_)):- !, fail.
 not_for_matching(_Why,_,/*b*/iz(_)).
 not_for_matching(_Why,_,obj_to_oid(_,_)).
 %not_for_matching(_Why,L,form(_)):- !, member(localpoints(_),L).
-not_for_matching(_Why,L,localpoints(XX)):- !, started_is_list(XX), member(shape(_),L).
-not_for_matching(_Why,L,globalpoints(XX)):- !, started_is_list(XX), (member(shape(_),L);member(localpoints(_),L)).
+not_for_matching(_Why,L,localpoints(XX)):- !, started_is_list(XX), member(colorless_points(_),L).
+not_for_matching(_Why,L,globalpoints(XX)):- !, started_is_list(XX), (member(colorless_points(_),L);member(localpoints(_),L)).
 
 %not_for_matching(_Why,_,center2G(H,V)):- (H\==1,V\==1,H\==2,V\==2,H\==3,V\==3).
 %not_for_matching(_Why,_,loc2D(H,V)):- (H\==1;V\==1).
 %not_for_matching(_Why,_,M):- too_unique(M),!.
 %not_for_matching(_Why,_,M):- too_non_unique(M),!.
+*/
+
+propagate(rot2L(_Rot90)).
+propagate(vis2D(_H1,_V3)).
+propagate(loc2D(_X2D,_Y1D)).
+%propagate(pen([cc(_SILVER,_N3)|_More])).
+propagate(pen(_)).
+propagate(norm_grid(_NormalGrid)).
+propagate(norm_ops(_UnrotateList)).
+propagate(rotOffset(_O3,_O1)).
+propagate(iz(sid(_Sid_13))).
+propagate(loc2G(_X2G,_Y1G)).
+
+secondary_verification(A):- var(A),!,fail.
+secondary_verification(cc(_,0)).
+secondary_verification(o(_,_,_)).
+secondary_verification(iz(A)):- \+ not_secondary_verification(A).
+
+not_secondary_verification(A):- var(A).
+not_secondary_verification(media(image)).
+not_secondary_verification(symmetry_type(_)).
 
 started_is_list(X):- nonvar(X), X = [_,_].
 
@@ -102,8 +124,8 @@ not_used(iz(X)):- not_used(X).
 
 must_use(Var):- var(Var),!,fail.
 must_use(/*b*/iz(indiv(i_diag))).
-must_use(/*b*/iz(Atom)):- !, atom(Atom).
-must_use(shape(Atom)):- !, atom(Atom).
+%must_use(/*b*/iz(Atom)):- !, atom(Atom).
+must_use(colorless_points(Atom)):- !, atom(Atom).
 must_use(iz(X)):- must_use(X).
 
 for_creating(I):- ( \+ callable(I); I='$VAR'(_)), !.
@@ -112,7 +134,7 @@ for_creating(P):- for_creating1(P).
 
 for_creating1(NoUse):- must_use(NoUse),!.
 for_creating1(NoUse):- not_used(NoUse),!,fail.
-%for_creating1(shape). for_creating1(mass). 
+%for_creating1(colorless_points). for_creating1(mass). 
 for_creating1(info). for_creating1(grid_props). 
 for_creating1(rot2L). for_creating1(rotOffset).
 for_creating1(vis2D). for_creating1(loc2D). 
@@ -124,13 +146,14 @@ for_creating1(P):- compound(P),functor(P,What,_),for_creating1(What).
 
 for_matching(I):- ( \+ callable(I); I='$VAR'(_)), !.
 for_matching(X):- for_creating(X),!.
-for_matching(o(_,_,_)). 
 for_matching(iz(X)):- !, (atom(X);for_matching1(X)),!.
+for_matching(o(_,nthOf(_),rank1(_))):-!,fail.
+for_matching(o(_,nthOf(_),rank2(_))):-!,fail. 
 for_matching(o(_,_,F)):-!,for_matching(F).
 for_matching(P):- for_matching1(P).
 
 for_matching1(NoUse):- not_used(NoUse),!,fail.
-for_matching1(cc). for_matching1(symmetry). 
+for_matching1(cc). for_matching1(symmetry_type). 
 %for_matching1(/*b*/iz). 
 for_matching1(P):- compound(P),functor(P,What,_),for_matching1(What).
 
@@ -142,8 +165,7 @@ not_for_creating( _,_).
 
 simplify_for_creating(I,I):- ( \+ compound(I); I='$VAR'(_)), !.
 simplify_for_creating(I,O):- is_grid(I),!,O=I.
-simplify_for_creating(obj(I),obj(O)):- !, my_exclude(not_for_creating(I),I,M),!,maplist(simplify_for_creating,M,O).
-simplify_for_creating([H|T],[HH|TT]):- !, simplify_for_creating(H,HH),simplify_for_creating(T,TT).
+simplify_for_creating(I,O):- is_list(I),my_exclude(not_for_creating(I),I,M),!,maplist(simplify_for_creating,M,O).
 simplify_for_creating(I,O):- 
        compound_name_arguments(I, F, Args),
        maplist(simplify_for_creating, Args, ArgsNew),
@@ -151,11 +173,10 @@ simplify_for_creating(I,O):-
   
 
 my_exclude(P1,I,O):- my_partition(P1,I,_,O).
-simplify_for_matching(rhs,I,O):-!,simplify_for_creating(I,O).
-simplify_for_matching(_Why,I,O):- is_grid(I),O=I.
 simplify_for_matching(_Why,I,O):- var(I),O=I.
-simplify_for_matching(Why,obj(I),obj(OL)):- is_list(I),!, my_exclude(not_for_matching(Why,I),I,M), append(M,_,OL).
+simplify_for_matching(rhs,I,O):-!,simplify_for_creating(I,O).
 simplify_for_matching(_Why,I,I):- ( \+ compound(I); I='$VAR'(_)), !.
+simplify_for_matching(_Why,I,O):- is_grid(I),!,O=I.
 simplify_for_matching(Why,I,O):- is_list(I), my_exclude(not_for_matching(Why,I),I,M),I\=@=M,!,simplify_for_matching(Why,M,O).
 simplify_for_matching(Why,I,O):- 
        compound_name_arguments(I, F, Args),
@@ -180,10 +201,10 @@ group_keys(iz).
 group_keys(mass).
 group_keys(/*b*/iz).
 group_keys(color).
-%group_keys(shape).
+%group_keys(colorless_points).
 group_keys(rot2L).
 group_keys(localpoints).
-group_keys(symmetry).
+group_keys(symmetry_type).
 
 matches_key(P,What):- atom(What), nonvar(P), !,functor(P,What,_).
 matches_key(P,What):- nonvar(P), What = P.
@@ -254,7 +275,7 @@ learn_rule_i_o(Mode,In,Out):-
   forall(learn_rule_in_out(1,Mode,In,Out),true).
 
 is_reproduction_obj(O):- \+ is_object(O),!.
-is_reproduction_obj(O):-  \+ iz(O,hidden).
+is_reproduction_obj(O):-  \+ iz(O,info(hidden)).
 
 reproduction_objs(O,Os):- include(is_reproduction_obj,O,Os).
 
@@ -370,7 +391,7 @@ diff_2props(I,O):- comparable_2props(I,O), I \=@= O.
 % square object
 % rectangular object
 % hollow object
-% solid object
+% filltype(solid) object
 % object count
 /*
  test_tag(count_different_colors).
@@ -412,10 +433,85 @@ learn_rule_in_out_sames(In,Out):- fail,
   pp_safe(How),
   learn_rule_in_out_objects(How,I,O).
 
-learn_rule_in_out_objects(How,I,O):-   
+learn_rule_in_out_objects(How,I,O):-
+  indv_props(I,IP), indv_props(O,OP),
+  %assert_visually(learn_rule_in_out_full_objects(How,I,O)),
+  make_rule_l2r(IP,OP,II,OO,NewShared),
+  save_learnt_rule(test_solved(How,II,NewShared,OO),I+O,I+O),!.
+
+is_orignal_val(Var):- nonvar(Var),  Var \= '$VAR'(_).
+
+% single color changed
+make_rule_l2r(I,O,IIII,OOOO,[lookup(C1,C2,VC1,VC2)|NewShared]):- 
+  member(pen([cc(C1,_)]),I),member(pen([cc(C2,_)]),O),C1\==C2,is_orignal_val(C1),is_orignal_val(C2),!,
+  subst(I,C1,VC1,II),upcase_atom_var(C1,VC1),
+  subst(O,C2,VC2,OO),upcase_atom_var(C2,VC2),
+  make_rule_l2r(II,OO,IIII,OOOO,NewShared).
+
+% Fallback 1
+make_rule_l2r(I,O,IIII,OOOO,NewShared):- intersection(I,O,IO,IIII,OOOO),!,simplify_for_creating(IO,NewShared).
+% Fallback 2
+make_rule_l2r(I,O,I,O,[]):-!.
+
+% major update
+make_rule_l2r(I,O,IIII,OOOO,NewShared):-
   simplify_for_matching(lhs,I,II),
-  simplify_for_creating(O,OO),
-  save_learnt_rule(test_solved(How,II,OO),I+O,I+O),!.
+  simplify_for_creating(O,OO),!,
+  propagate_lr1([],II,OO,III,OOO,Mid),
+  propagate_lr2(Mid,III,OOO,IIII,OOOO,NewShared).
+
+propagate_lr1(Shared,II,OO,III,OOO,[when_missing(EVar,E)|SharedMid]):- fail,
+  sub_term(E,OO),compound(E),ground(E),propagate(E), 
+  subst001(II,E,Var,MII),
+  MII\=@=II,!,
+  must_det_ll((
+  subst001(OO,E,Var,MOO),
+  propagate_lr1(Shared,MII,MOO,III,OOO,SharedMid),
+  make_replacement(E,EVar),
+  Var = EVar)),!.
+propagate_lr1(Shared,II,OO,II,OO,Shared).
+
+propagate_lr2(Shared,II,OO,III,OOO,[thru(O)|SharedMid]):- 
+  select(I,II,MI),select(O,OO,MO),O=@=I,!,propagate_lr2(Shared,MI,MO,III,OOO,SharedMid).
+propagate_lr2(Shared,II,OO,II,OO,Shared).
+
+/*
+test_solved=[ test_solved( t('0d3d703e'),
+                "IN -> OUT",
+                obj( [ pen([cc(RED,MASS)]),
+                       norm_grid([[RED,RED,RED]]),
+                       | SHARED_CONSTRAINED_OPEN ]),
+                obj( [ pen([cc(PURPLE,MASS)]),
+                       norm_grid([[PURPLE,PURPLE,PURPLE]])
+                       | SHARED ])),
+
+                 SHARED= [rot2L(A), vis2D(B,MASS),loc2D(D,E),norm_ops(F), rotOffset(G,H),iz(sid(I)),
+                          loc2G(J/K,L/M)],
+                 CONSTRAINED =
+                         [cc(fg,MASS), cc(bg,0),cc(is_colorish_var,0),cc(plain_var,0), cc(RED,MASS),
+                         iz(symmetry_type((rot180))),iz(symmetry_type((flipV))),
+                         iz(symmetry_type((flipH))), iz(symmetry_type((sym_hv))),
+                         iz(column), iz(all_columns), iz(media(image))]
+                 ]):- append(SHARED,CONSTRAINED,SHARED_CONSTRAINED),
+                      append(SHARED_CONSTRAINED,_,SHARED_CONSTRAINED_OPEN).
+*/
+
+compound_not_ftvar(C):- compound(C), C\=='$VAR'(_).
+
+make_replacement(I,I):- ( var(I); I='$VAR'(_)), !.
+make_replacement([],[]).
+make_replacement(E,A):- \+ compound(E), p_n_atom(E,Name),gensym(Name,Name1), A='$VAR'(Name1).
+make_replacement(norm_ops(I),norm_ops(_)):- I==[],!.
+make_replacement(obj(I),obj(O)):- !, maplist(make_replacement,I,O).
+make_replacement(E,A):- is_list(E), p_n_atom(E,Name),gensym(Name,Name1), A='$VAR'(Name1).
+make_replacement([H|T],[HH|TT]):- compound_not_ftvar(H), !, make_replacement(H,HH),make_replacement(T,TT).
+make_replacement([H|T],[H|TT]):- !, make_replacement(T,TT).
+make_replacement(I,O):- 
+ compound_name_arguments(I, F, Args),
+ maplist(make_replacement, Args, ArgsNew),
+ compound_name_arguments( O, F, ArgsNew ),!.
+
+
 
 average_or_mid(_P2,_Out,2):-!.
 average_or_mid(P2,Out,MinMass):- is_list(Out),!,
@@ -448,7 +544,7 @@ learn_rule_iin_oout(_,In,O,OL):- mass(O,Mass),
   member(SL-SAME-I-DL,RSLIDL),
   pp_safe([SL+DL, equal = SAME, in=I,out=OL]),  
   compare_objs1(How,I,O),
-  %shape(I,Shape),shape(O,Shape),
+  %colorless_points(I,Shape),colorless_points(O,Shape),
   %pen(I,Pen),pen(O,Pen),
   mass(I,Mass),
   simplify_for_matching(lhs,I,II),
@@ -739,7 +835,7 @@ sub_label(X, Term, OutGoal) :-
     sub_label(X, Arg, OutGoal).
 
 never_labels_in(iz(_)).
-never_labels_in(shape(_)).
+never_labels_in(colorless_points(_)).
 never_labels_in(amass(1)).
 never_labels_in(mass(1)).
 never_labels_in(loc2D(_,_)).
@@ -758,10 +854,12 @@ maybe_unbind_label(G):- var(G),!,fail.
 maybe_unbind_label(iz(_)):- !,fail.
 %maybe_unbind_label(G):- too_non_unique(G).
 maybe_unbind_label(G):- never_unbind_label(G),!,fail.
-maybe_unbind_label(G):- integer(G),G<1.
+maybe_unbind_label(G):- skip_for_now, integer(G),G<1.
 maybe_unbind_label(G):- \+ atom(G),!,fail.
-maybe_unbind_label(G):- is_color(G).
+maybe_unbind_label(G):- skip_for_now, is_real_fg_color(G),!.
 %maybe_unbind_label(G):- downcase_atom(G,D),\+ upcase_atom(G,D).
+
+skip_for_now:- fail.
 
 subst_rvars([],[],A,A):-!. 
 subst_rvars([F|FF],[R|RR],S,D):- ignore(debug_var(F,R)),subst_rvars_1(F,R,S,M), subst_rvars(FF,RR,M,D).
@@ -904,7 +1002,7 @@ with_named_pair(learn,TestID,PairName,In,Out):- !,
   show_pair_diff(IH,IV,OH,OV,in(unshared),out(unshared),PairName,UnsharedIn,UnsharedOut),
   %merge_indivs(UnsharedIn,UnsharedOut,BetterA,BetterB,BetterC), 
   %show_pair_i(IH,IV,OH,OV,better,PairName,BetterA,BetterB),
-  %show_pair_i(IH,IV,OH,OV,combined,PairName,BetterC,Out),
+  %show_pair_i(IH,IV,OH,OV,iz(info(combined)),PairName,BetterC,Out),
   compute_shared_indivs(In,SharedIn),
   compute_shared_indivs(Out,SharedOut),
   show_pair_diff(IH,IV,OH,OV,shared_in,shared_out,PairName,SharedIn,SharedOut),!,

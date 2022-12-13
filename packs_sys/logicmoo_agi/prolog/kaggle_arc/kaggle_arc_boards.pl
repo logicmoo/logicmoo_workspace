@@ -896,7 +896,7 @@ rinfo(obj(List0),RInfo):-
   %loc2D(Obj,X,Y),
   get_bg_label(BGL),
   points_to_grid(LocalPoints,Grid),mapgrid(sometimes_assume(=,BGL),Grid),
-  select(shape(Shape),List,Rest2),mapgrid(sometimes_assume(=,BGL),Shape),
+  select(colorless_points(Shape),List,Rest2),mapgrid(sometimes_assume(=,BGL),Shape),
   Rest3 = Rest2,
   obj_to_oid(Obj,MyID),
   must_det_ll((remove_too_verbose(MyID,Rest3,TV00))),flatten([TV00],TV0),

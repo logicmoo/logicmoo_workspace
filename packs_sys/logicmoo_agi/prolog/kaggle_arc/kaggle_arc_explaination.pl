@@ -193,7 +193,7 @@ object_color_desc(PA,PenColors):-
   ((PenL=<ColorsL) -> PenColors=pen(Pen);PenColors=colors(Colors)).
 
 object_birth_desc(PA,Birth):-
-  indv_props(PA,Props),findall(B,member(/*b*/iz(B),Props),BBs),
+  indv_props(PA,Props),findall(B,member(iz(B),Props),BBs),
   predsort_on(birth_info,BBs,ByDL),last(ByDL,Birth).
 
 birth_info(ifti(Birth),2+InfoLen):- !, display_length(Birth,InfoLen).
@@ -203,7 +203,7 @@ birth_info(Birth,1+InfoLen):- display_length(Birth,InfoLen).
 object_ref_desc(Obj, OUTS):- 
   into_obj(Obj,PA),
   obj_to_oid(PA,GA),% mass(PA,Mass),
-  shape(PA,Shape),loc2D(PA,X,Y), rot2L(PA,ROT), vis2D(PA,XX,YY),
+  colorless_points(PA,Shape),loc2D(PA,X,Y), rot2L(PA,ROT), vis2D(PA,XX,YY),
   shape_id(Shape,ShapeID),
   object_birth_desc(PA,Birth),
   object_color_desc(PA,PenColors),
@@ -220,7 +220,7 @@ object_ref_desc_no_loop(PA, OUTS):-
  must_det_ll((
   object_color_glyph_long(PA, CGA),
   mass(PA,Mass),
-  shape(PA,Shape),pen(PA,Pen),loc2D(PA,X,Y), rot2L(PA,ROT),
+  colorless_points(PA,Shape),pen(PA,Pen),loc2D(PA,X,Y), rot2L(PA,ROT),
   shape_id(Shape,ShapeID),  
   OUT = oFn(CGA,Mass,loc2D(X,Y),ROT,pen(Pen),ShapeID),
   wots(SS,wqs_l(OUT)),
@@ -302,7 +302,7 @@ colorize_oterms(O,O).
 
 prefered(repaired).
 prefered(full_grid).
-prefered(hidden).
+prefered(info(hidden)).
 prefered(neededChanged).
 prefered(changed).
 prefered(nsew).
@@ -315,10 +315,9 @@ prefered_header(cc(Caps,_),Caps):- get_black(Black),freeze(Caps,Black == Caps).
 prefered_header(o(_,_,Caps),Caps):- freeze(Caps,i_bg_shapes == Caps).
 prefered_header(o(sf(_),1,Caps),Caps):- freeze(Caps,atom(Caps)).
 prefered_header(o(sf(_),last(_),Caps),Caps):- freeze(Caps,atom(Caps)).
-prefered_header(/*b*/iz(Caps),PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
+%prefered_header(/*b*/iz(Caps),PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
 %prefered_header(iz(Caps),PCaps):-prefered(PCaps),freeze(Caps,Caps == PCaps).
 prefered_header(Caps,PCaps):-prefered(PCaps),freeze(Caps,(nonvar(Caps),Caps = PCaps)).
-prefered_header(/*b*/iz(Caps),Caps).
 prefered_header(iz(Caps),Caps).
 
 debug_indiv(OBJ):- compound(OBJ), OBJ=obj(_), debug_indiv_obj_1(OBJ),!.
@@ -455,7 +454,7 @@ remove_too_verbose(MyOID,List,ListO):- is_list(List),!,maplist(remove_too_verbos
 %remove_too_verbose(MyOID,line(HV),S):- sformat(S,'~w-Line',[HV]).
 %remove_too_verbose(MyOID,square,S):- sformat(S,'square',[]).
 % @TODO UNCOMMENT THIS remove_too_verbose(MyOID,background,S):- sformat(S,'bckgrnd',[]).
-remove_too_verbose(MyOID,iz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
+%remove_too_verbose(MyOID,iz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
 remove_too_verbose(MyOID,giz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
 
 %remove_too_verbose(_MyID,obj_to _oid(_ * _ * X,Y),NTH):- NTH=..[X,Y].
@@ -487,7 +486,7 @@ remove_too_verbose(_MyID,H,H).
 too_verbose(P):- compound(P),compound_name_arity(P,F,_),!,too_verbose(F).
 too_verbose(globalpoints).
 too_verbose(monochrome).
-too_verbose(shape).
+too_verbose(colorless_points).
 % too_verbose(gid). too_verbose(giz). 
 too_verbose(grid_sz). too_verbose(grid_size). 
 too_verbose(localpoints).

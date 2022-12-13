@@ -51,14 +51,14 @@ o.,.o$
   o  $").
 
 
-l_shape([heart,h_symmetric],"
+l_shape([heart,symmetric_type(flipH)],"
  o o $
 o.o.o$
 o.,.o$
  \\./ $
   o  $").
 
-l_shape([balloon,h_symmetric],"
+l_shape([balloon,symmetric_type(flipH)],"
  o-o $
 o.,.o$
 o...o$
@@ -80,13 +80,13 @@ o-,=o$
 o-o=o$").
 
 
-l_shape([triangle,h_symmetric],"
+l_shape([triangle,symmetric_type(flipH)],"
    o   $
   o.o  $
  /.,.\\ $
 o-ooo-o$").
 
-%l_shape([h_symmetric,hammer],H):- hammer2(H).
+%l_shape([symmetric_type(flipH),hammer],H):- hammer2(H).
 
 hammer2("
 ___________
@@ -114,10 +114,10 @@ the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
 the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
 the_hammer(Color,ColorComplex):- 
-  ColorComplex = obj([amass(6), shape([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+  ColorComplex = obj([amass(6), colorless_points([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rot2L(sameR), loc2D(2, 5), 
-  changes([]), iz(rectangle), iz(hammer), 
+  changes([]), iz(shape(rectangle)), iz(hammer), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
 
@@ -361,7 +361,7 @@ in_shape_lib(rect_squares,LibObj):- rect_squares(Props,Grid),
    into_lib_object([shape_lib(rect_squares)|Props],Grid,LibObj).
 
 
-rect_squares([iz(solid_rect(CEdgeV,H,V)),solid,rectangle],Grid):- 
+rect_squares([iz(solid_rect(CEdgeV,H,V)),filltype(solid),rectangle],Grid):- 
   thirty_down_2(H),thirty_down_2(V),solid_rect(CEdgeV,H,V,Grid).
 rect_squares([iz(hollow_rect(CEdgeV,H,V)),rectangle,outline(1),hollow],Grid):- 
   thirty_down_2(H),thirty_down_2(V),hollow_rect(CEdgeV,H,V,Grid).
@@ -621,7 +621,7 @@ in_shape_lib(l_shape,LibObj):- l_shape(LibObj).
 thirty_down_2(HW):- between(2,30,WH),HW is 32-WH.
 thirty_down_1(HW):- between(2,30,WH),HW is 32-WH.
 
-in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_one_fg_color(C),solid_square(C,HW,Grid),into_lib_object([solid,square,shape_lib(common)],Grid,LibObj).
+in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_one_fg_color(C),solid_square(C,HW,Grid),into_lib_object([filltype(solid),square,shape_lib(common)],Grid,LibObj).
 in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_one_fg_color(C),hollow_square(C,HW,Grid),into_lib_object([hollow,outline(1),square,shape_lib(common)],Grid,LibObj).
 in_shape_lib(n_shape,LibObj):- n_shape(LibObj).
 

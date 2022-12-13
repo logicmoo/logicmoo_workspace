@@ -176,7 +176,7 @@ i_cbox_l(Grid,NSEW,XSG,Points,Points9,VM,L_S,[size2D(H,V)|Sizes]):-
   (( L_S=s_l(_),
      OBJ==center,
      fail,
-     iz_symmetry(SGrid,R), R \=symmetry(none),   
+     iz_symmetry(SGrid,R), R \=symmetry_type(none),   
      obj_gpoints(SGrid,OHM1,OVM1,SOPoints),
      intersection(LeftOver,SOPoints,SIntersect,LeftOver2,_),
      SIntersect\==[],

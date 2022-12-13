@@ -335,7 +335,7 @@ pp_hook_g1(O):-  is_grid(O),
 % \+ (sub_term(E,O),compound(E),E='$VAR'(_)), 
   catch((wots(S,print_grid(O)),strip_vspace(S,SS),ptc(orange,(format('"  ~w  "',[SS])))),_,(never_let_arc_portray_again,fail)).
 
-pp_hook_g1(shape(O)):- !, is_points_list(O), as_grid_string(O,S), print(shape(S)),!.
+pp_hook_g1(colorless_points(O)):- !, is_points_list(O), as_grid_string(O,S), print(colorless_points(S)),!.
 pp_hook_g1(vals(O)):- !, writeq(vals(O)),!.
 pp_hook_g1(localpoints(O)):- !, is_points_list(O), as_grid_string(O,S), print(localpoints(S)),!.
 pp_hook_g1(C):- compound(C), compound_name_arguments(C,F,[O]),is_points_list(O), length(O,N),N>2, as_grid_string(O,S), compound_name_arguments(CO,F,[S]), print(CO),!.
