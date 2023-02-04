@@ -853,13 +853,13 @@ out_o_s_l_1(F,L):- ec_reader:last_output_lc(Was,F,L),
   output_line_count(OLC),
   Diff is abs(Was-OLC), Diff<6,!.
 out_o_s_l_1(F,L):- out_o_s_l_2(F,L),!.
-out_o_s_l_2(F,L):- 
+out_o_s_l_2(F,L):- User_error = current_output,
       retractall(ec_reader:last_output_lc(_,_,_)),
       output_line_count(OLC),
       asserta(ec_reader:last_output_lc(OLC,F,L)),
       (is_outputing_to_file -> 
         (format('~N~q.~n', [:- was_s_l(F,L)]), 
-           with_output_to(user_error,(public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FRom ~w~n', [FL]),ttyflush)))
+           with_output_to(User_error,(public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FRom ~w~n', [FL]),ttyflush)))
          ; nop((public_file_link(F:L,FL),color_format_maybe([fg(green)], '~N% FroM ~w~n', [FL]),ttyflush))),!.
 
 :- export(was_s_l/2).
@@ -996,11 +996,22 @@ system:simple_write_term(A):-
    without_ec_portray_hook(\+ \+ write_term(A,Options)),!.
 system:simple_write_term(A):- write_q(A),!.
 
-system:simple_write_term(A,Options):- 
-  with_write_options(Options,simple_write_term(A)).
+system:simple_write_term(A,Options):- maplist(fix_svar_names,Options,Options2),
+  with_write_options(Options2,simple_write_term(A)).
+
+fix_1svar_name(N=V,NN=V):- atom_to_varname(N,NN),!.
+atom_to_varname(N,NN):- \+ notrace(catch(with_output_to(string(_),write_term(A,[variable_names([N=A])])),_,fail)),
+  term_hash(N,HC), with_output_to(atom(NN),format('UHC_~w',[HC])),!.
+atom_to_varname(N,N):-!.
+atom_to_varname(N,NN):- atom_codes(N,[C1|Codes]),fix_varcodes_u(C1,C2),maplist(fix_varcodes,Codes,NCodes),atom_codes(NN,[C2|NCodes]).
+fix_varcodes_u(C,N):- C<65,C>90, N is (C rem 25)+65.
+fix_varcodes(C,N):- C<65,!, N is (C rem 25)+65.
+fix_varcodes(C,C).
+fix_svar_names(variable_names(Vs),variable_names(VsO)):- maplist(fix_1svar_name,Vs,VsO),!.
+fix_svar_names(X,X).
 
 :- fixup_exports.
-%simple_write_term(A,Options):-  write_term(A,[portray_goal(pretty_clauses:pprint_tree)|Options]).
+%simple_write_term(A,Options):- write_term(A,[portray_goal(pretty_clauses:pprint_tree)|Options]).
 
 get_portrayal_vars(Vs):- nb_current('$variable_names',Vs)-> true ; Vs=[].
 
@@ -1103,6 +1114,12 @@ print_tree_unit(Term):-
   tabbed_print(Pos, print_tree_with_final(Term, '', 
   [ partial(true), numbervars(true), character_escapes(true),fullstop(false)])))).
 
+print_tree_unit(Term, Options):-
+ current_output_line_position(Pos),
+ ensure_pp((
+  tabbed_print(Pos, print_tree_with_final(Term, '', 
+  [ partial(true), numbervars(true), character_escapes(true),fullstop(false)|Options])))).
+
 print_tree_nl(Term):- print_tree_with_final(Term,'.\n').
 
 /*
@@ -1141,7 +1158,7 @@ print_tree_with_final(Term, Final, Options):-
   nb_current('$variable_names',Was),
   setup_call_cleanup(
     b_setval('$variable_names',Vs),
-    print_tree_with_final(Term, Final, NewOptions),
+    once(print_tree_with_final(Term, Final, NewOptions)),
     nb_setval('$variable_names',Was)).
 
 print_tree_with_final(Term, Final, Options):- select(max_depth(N),Options,OptionsNew), in_pp(bfly), !,
@@ -1242,18 +1259,18 @@ set_pp(Where,Goal):-
 with_real_pp(ansi,ansi,Goal):- in_bfly(f,Goal).
 with_real_pp(ansi,bfly,Goal):- in_bfly(t,Goal).
 with_real_pp(ansi,http,Goal):- in_bfly(f,Goal).
-with_real_pp(ansi,swish,Goal):- wots(S,Goal), sformat(SO,'<pre class="swish">~w</pre>',[S]),our_pengine_output(SO).
+with_real_pp(ansi,swish,Goal):- wots(S,Goal), sformat(SO,'<pre class="ansi_swish">~w</pre>',[S]),our_pengine_output(SO).
 %wots(S,in_bfly(t,bfly_html_goal(Goal))), ttyflush, format('~s',[S]).
 
 with_real_pp(bfly,ansi,Goal):- bfly_out_in(in_bfly(f,Goal)).
 
-with_real_pp(bfly,http,Goal):- in_pp(http),!,call(Goal).
+with_real_pp(bfly,http,Goal):- wants_html,!,call(Goal).
 
 with_real_pp(bfly,http,Goal):- ttyflush,format('<http>'),ttyflush, actually_bfly(Goal), ttyflush, format('</http>',[]).
 with_real_pp(bfly,bfly,Goal):- bfly_html_goal(in_bfly(t,Goal)).
 with_real_pp(bfly,swish,Goal):- ttyflush,format('<swish>'),ttyflush, actually_bfly(Goal), ttyflush, format('</swish>',[]).
 
-with_real_pp(http,ansi,Goal):- wots(SO,in_bfly(f,Goal)),format('<pre>~s</pre>',[SO]).
+with_real_pp(http,ansi,Goal):- wots(SO,in_bfly(f,Goal)),format('<pre class="http_ansi">~s</pre>',[SO]).
 with_real_pp(http,bfly,Goal):- in_bfly(t,Goal).
 with_real_pp(http,http,Goal):- in_bfly(t,Goal).
 with_real_pp(http,swish,Goal):- wots(SO,in_bfly(t,Goal)),our_pengine_output(SO).
@@ -1294,7 +1311,7 @@ output_html(HTML):- html_write:phrase(html(HTML), Tokens,[]),!,send_tokens(Token
 %:- nb_setval(isHtmlMode,nil).
 
 
-is_webui:- notrace(once(toplevel_pp(http);toplevel_pp(swish);in_pp(http);in_pp(swish);get_print_mode(html))).
+is_webui:- notrace(once(toplevel_pp(http);toplevel_pp(swish);wants_html;in_pp(swish);get_print_mode(html))).
 
 %in_bfly_esc:- !, current_predicate(in_bfly_style/2), in_bfly_style(style,'html_esc'), !.
 in_pp(X):- notrace(in_pp0(X)).
@@ -1307,13 +1324,14 @@ pp_set(X):- bfly_set(pp_output,X).
 
 is_pp_set(X):- bfly_tl:bfly_setting(pp_output,X),!.
 
-set_toplevel_pp(PP):- set_prolog_flag('$fake_toplevel_pp',PP).
+set_toplevel_pp(PP):- nb_setval('$fake_toplevel_pp',PP), retractall(bfly_tl:bfly_setting(pp_output,_)).
+with_toplevel_pp(PP,Goal):- locally(nb_setval('$fake_toplevel_pp',PP),Goal).
 
 toplevel_pp(X):- nonvar(X), toplevel_pp(Y), !, X==Y.
+toplevel_pp(PP):- nb_current('$fake_toplevel_pp',PP),PP\==[],!.
 toplevel_pp(swish):- on_x_log_fail(nb_current('$pp_swish',t);pengines:pengine_self(_Self)),!.
 toplevel_pp(http):- on_x_log_fail(httpd_wrapper:http_current_request(_)),!.
 % Fake only for testing between bfly/ansi
-toplevel_pp(PP):- current_prolog_flag('$fake_toplevel_pp',PP),PP\==[],!.
 toplevel_pp(bfly):- getenv('TERM','xterm-256color'),!.
 toplevel_pp(ansi):- getenv('TERM','xterm'),!.
 toplevel_pp(bfly):- current_predicate(bfly_get/2), bfly_get(butterfly,t),!.
@@ -1339,13 +1357,16 @@ display_length(I,L):- with_output_to(string(S),display(I)), atom_length(S,L).
 
 pformat(pre(Fmt)):- nonvar(Fmt), !, pformat_string(Fmt,S), pformat_write(S).
 pformat(Fmt):- pformat_std(pformat,Fmt), !.
-pformat(Fmt):- in_pp(http), !,pformat_html(pre(Fmt)).
+pformat(Fmt):- wants_html, !,pformat_html(pre(Fmt)).
 pformat(Fmt):- pformat_write(Fmt).
 
 pformat_html(_):- ansi_ansi,!.
 pformat_html(Fmt):- var(Fmt),!,format('~w',[Fmt]).
 pformat_html(PREC):- PREC == pre(:), !, write(':').
+%pformat_html(pre(Fmt)):- pformat_string(Fmt,S), !, into_attribute(S,Attr),write(Attr). % print_html(['<pre>',S,'</pre>']).
 pformat_html(pre(Fmt)):- pformat_string(Fmt,S), !, into_attribute(S,Attr),write(Attr). % print_html(['<pre>',S,'</pre>']).
+%pformat_html(pre(Fmt)):- pformat_string(Fmt,S), !, atom_length(S,Len), ignore((Len>0, print_html(['<pre class="pre_html">',S,'</pre>']))),!.
+% WANT this? 
 %pformat_html(pre(Fmt)):- pformat_string(Fmt,S), phrase(pretty_clauses:html(S), Tokens), print_html(Tokens).
 pformat_html(Fmt):- pformat_std(pformat_html,Fmt), !.
 pformat_html(Fmt):- atomic(Fmt),!,bfly_html_goal(pformat_write(Fmt)).
@@ -1382,7 +1403,23 @@ print_spaces(N):- var(N),!.
 print_spaces(N):- N<1, !.
 print_spaces(Need):- pformat_space,M1 is Need -1,print_spaces(M1).
 
-%pformat_space:- in_pp(http),!,write('&nbsp').
+wants_html:-  notrace(wants_html0).
+%wants_html0:- never_webui, !, fail.
+wants_html0:- in_pp(bfly),!.
+wants_html0:- in_pp(http),!.
+wants_html0:- toplevel_pp(http),!.
+wants_html0:- toplevel_pp(swish),!.
+wants_html0:- in_pp(swish),!,fail.
+%wants_html0:- is_http,!.
+
+never_webui:- 
+  \+ current_prolog_flag(use_arc_www,true),
+  \+ current_prolog_flag(use_arc_swish,true),
+  \+ current_prolog_flag(use_arc_bfly,true),
+  \+ current_prolog_flag(no_pretty,true).
+
+
+%pformat_space:- wants_html,!,write('&nbsp;').
 pformat_space:- write(' ').
 
 %pformat_newline:- !,nl.
@@ -1390,7 +1427,7 @@ pformat_newline:- ansi_ansi,!,nl.
 %pformat_newline:- in_pp(bfly),!,write(' <br/>'),nl.
 pformat_newline:- in_pp(bfly),!,nl.
 pformat_newline:- in_pp(html_pre),!,write('\n'),nl.
-pformat_newline:- in_pp(http),!,write(' <p/>\n').
+pformat_newline:- wants_html,!,write(' <p/>\n').
 pformat_newline:- in_pp(swish),!,our_pengine_output(' <p/>\n').
 pformat_newline:-!.
 pformat_newline:- ignore((on_x_log_fail(httpd_wrapper:http_current_request(_)),nl)),nop((write(' <br/>'))).
@@ -1522,7 +1559,9 @@ write_ellipsis(T):- findall(E,
 write_ellipsis(T):- write_ellipsis_0(T).
 
 write_ellipsis_0([T]):- nonvar(T),!,write_ellipsis_0(T).
-write_ellipsis_0(T):- wots(S, (write('.'),write_term(T,[max_depth(4)]),write('...'))),trim_to_len(S,30,SO),write('/*'),write(SO),write('*/').
+write_ellipsis_0(_):-!.
+write_ellipsis_0(T):- wots(S, (write('.'),write_term(T,[max_depth(4)]),write('...'))),
+ trim_to_len(S,30,SO),write('<span class="pl-ellipsis-hidden"> /*'),write(SO),write('*/ </span>').
 
 trim_to_len(A,L,S):- sub_atom(A, 1, L , _, S).
 trim_to_len(S,_,S).

@@ -3,7 +3,8 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2014-2018, VU University Amsterdam
+    Copyright (c)  2014-2022, VU University Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -42,6 +43,7 @@
 	    gitty_create/5,		% +Store, +Name, +Data, +Meta, -Commit
 	    gitty_update/5,		% +Store, +Name, +Data, +Meta, -Commit
 	    gitty_commit/3,		% +Store, +Name, -Meta
+            gitty_plain_commit/3,       % +Store, +Name, -Meta
 	    gitty_data/4,		% +Store, +Name, -Data, -Meta
 	    gitty_history/4,		% +Store, +Name, -History, +Options
 	    gitty_hash/2,		% +Store, ?Hash
@@ -99,16 +101,19 @@ the newly created (gitty_create/5) or updated object (gitty_update/5).
 :- dynamic
 	gitty_store_type/2.		% +Store, -Module
 
-%%	gitty_open(+Store, +Options) is det.
+%!  gitty_open(+Store, +Options) is det.
 %
 %	Open a gitty store according to Options.  Defined
 %	options are:
 %
 %	  - driver(+Driver)
-%	  Backend driver to use.  One of =files= or =bdb=.  When
+%     Backend driver to use.  One of `files` or `bdb`.  When
 %	  omitted and the store exists, the current store is
 %	  examined.  If the store does not exist, the default
-%	  is =files=.
+%     is `files`.
+%
+%   Other options are passed to the driver method gitty_open(Store,
+%   Options).
 
 gitty_open(Store, Options) :-
 	(   exists_directory(Store)
@@ -119,15 +124,18 @@ gitty_open(Store, Options) :-
 	->  true
 	;   default_driver(Store, Driver)
 	),
-	set_driver(Store, Driver).
+    set_driver(Store, Driver),
+    gitty_driver_open(Store, Options).
 
 default_driver(Store, Driver) :-
 	directory_file_path(Store, ref, RefDir),
-	exists_directory(RefDir), !,
+    exists_directory(RefDir),
+    !,
 	Driver = files.
 default_driver(Store, Driver) :-
 	directory_file_path(Store, heads, RefDir),
-	exists_file(RefDir), !,
+    exists_file(RefDir),
+    !,
 	Driver = bdb.
 default_driver(_, files).
 
@@ -143,7 +151,8 @@ driver_module(files, gitty_driver_files).
 driver_module(bdb,   gitty_driver_bdb).
 
 store_driver_module(Store, Module) :-
-	atom(Store), !,
+    atom(Store),
+    !,
 	gitty_store_type(Store, Module).
 
 %!	gitty_driver(+Store, -Driver)
@@ -152,9 +161,18 @@ store_driver_module(Store, Module) :-
 
 gitty_driver(Store, Driver) :-
 	store_driver_module(Store, Module),
-	driver_module(Driver, Module), !.
+    driver_module(Driver, Module),
+    !.
 
-%%	gitty_close(+Store) is det.
+%!  gitty_driver_open(+Store, +Options) is det.
+%
+%   Initialise the driver
+
+gitty_driver_open(Store, Options) :-
+    store_driver_module(Store, M),
+    M:gitty_open(Store, Options).
+
+%!  gitty_close(+Store) is det.
 %
 %	Close access to the Store.
 
@@ -162,8 +180,8 @@ gitty_close(Store) :-
 	store_driver_module(Store, M),
 	M:gitty_close(Store).
 
-%%	gitty_file(+Store, ?Head, ?Hash) is nondet.
-%%	gitty_file(+Store, ?Head, ?Ext, ?Hash) is nondet.
+%!  gitty_file(+Store, ?Head, ?Hash) is nondet.
+%!  gitty_file(+Store, ?Head, ?Ext, ?Hash) is nondet.
 %
 %	True when Hash is an entry in the gitty Store and Head is the
 %	HEAD revision.
@@ -174,14 +192,15 @@ gitty_file(Store, Head, Ext, Hash) :-
 	store_driver_module(Store, M),
 	M:gitty_file(Store, Head, Ext, Hash).
 
-%%	gitty_create(+Store, +Name, +Data, +Meta, -Commit) is det.
+%!  gitty_create(+Store, +Name, +Data, +Meta, -Commit) is det.
 %
 %	Create a new object Name from Data and meta information.
 %
 %	@arg Commit is a dit describing the new Commit
 
 gitty_create(Store, Name, _Data, _Meta, _) :-
-	gitty_file(Store, Name, _Hash), !,
+    gitty_file(Store, Name, _Hash),
+    !,
 	throw(error(gitty(file_exists(Name)),_)).
 gitty_create(Store, Name, Data, Meta, CommitRet) :-
 	save_object(Store, Data, blob, Hash),
@@ -193,12 +212,12 @@ gitty_create(Store, Name, Data, Meta, CommitRet) :-
 	format(string(CommitString), '~q.~n', [Commit]),
 	save_object(Store, CommitString, commit, CommitHash),
 	CommitRet = Commit.put(commit, CommitHash),
-	catch(gitty_update_head(Store, Name, -, CommitHash),
+    catch(gitty_update_head(Store, Name, -, CommitHash, Hash),
 	      E,
 	      ( delete_object(Store, CommitHash),
 		throw(E))).
 
-%%	gitty_update(+Store, +Name, +Data, +Meta, -Commit) is det.
+%!  gitty_update(+Store, +Name, +Data, +Meta, -Commit) is det.
 %
 %	Update document Name using Data and the given meta information
 
@@ -208,7 +227,7 @@ gitty_update(Store, Name, Data, Meta, CommitRet) :-
 	->  true
 	;   throw(error(gitty(commit_version(Name, OldHead, Meta.previous)), _))
 	),
-	load_plain_commit(Store, OldHead, OldMeta0),
+    gitty_plain_commit(Store, OldHead, OldMeta0),
 	filter_identity(OldMeta0, OldMeta),
 	get_time(Now),
 	save_object(Store, Data, blob, Hash),
@@ -222,7 +241,7 @@ gitty_update(Store, Name, Data, Meta, CommitRet) :-
 	format(string(CommitString), '~q.~n', [Commit]),
 	save_object(Store, CommitString, commit, CommitHash),
 	CommitRet = Commit.put(commit, CommitHash),
-	catch(gitty_update_head(Store, Name, OldHead, CommitHash),
+    catch(gitty_update_head(Store, Name, OldHead, CommitHash, Hash),
 	      E,
 	      ( delete_object(Store, CommitHash),
 		throw(E))).
@@ -241,13 +260,15 @@ filter_identity(Meta0, Meta) :-
 
 delete_keys([], Dict, Dict).
 delete_keys([H|T], Dict0, Dict) :-
-	del_dict(H, Dict0, _, Dict1), !,
+    del_dict(H, Dict0, _, Dict1),
+    !,
 	delete_keys(T, Dict1, Dict).
 delete_keys([_|T], Dict0, Dict) :-
 	delete_keys(T, Dict0, Dict).
 
 
-%%	gitty_update_head(+Store, +Name, +OldCommit, +NewCommit) is det.
+%!  gitty_update_head(+Store, +Name, +OldCommit,
+%!                    +NewCommit, +DataHash) is det.
 %
 %	Update the head of a gitty  store   for  Name.  OldCommit is the
 %	current head and NewCommit is the new  head. If Name is created,
@@ -260,11 +281,11 @@ delete_keys([_|T], Dict0, Dict) :-
 %	@error gitty(not_at_head(Name, OldCommit) if the head was moved
 %	       by someone else.
 
-gitty_update_head(Store, Name, OldCommit, NewCommit) :-
+gitty_update_head(Store, Name, OldCommit, NewCommit, DataHash) :-
 	store_driver_module(Store, Module),
-	Module:gitty_update_head(Store, Name, OldCommit, NewCommit).
+    Module:gitty_update_head(Store, Name, OldCommit, NewCommit, DataHash).
 
-%%	gitty_data(+Store, +NameOrHash, -Data, -Meta) is semidet.
+%!  gitty_data(+Store, +NameOrHash, -Data, -Meta) is semidet.
 %
 %	Get the data in object Name and its meta-data
 
@@ -272,31 +293,37 @@ gitty_data(Store, Name, Data, Meta) :-
 	gitty_commit(Store, Name, Meta),
 	load_object(Store, Meta.data, Data).
 
-%%	gitty_commit(+Store, +NameOrHash, -Meta) is semidet.
+%!  gitty_commit(+Store, +NameOrHash, -Meta) is semidet.
 %
-%	True if Meta holds the commit data of NameOrHash. A key =commit=
-%	is added to the meta-data to specify the commit hash.
+%   True if Meta holds the commit data  of NameOrHash. A key `commit` is
+%   added to the meta-data to specify the commit hash.
 
+gitty_commit(Store, Hash, Meta) :-
+    is_gitty_hash(Hash),
+    !,
+    load_commit(Store, Hash, Meta).
 gitty_commit(Store, Name, Meta) :-
 	must_be(atom, Name),
-	gitty_file(Store, Name, Head), !,
+    gitty_file(Store, Name, Head),
 	load_commit(Store, Head, Meta).
-gitty_commit(Store, Hash, Meta) :-
-	load_commit(Store, Hash, Meta).
 
 load_commit(Store, Hash, Meta) :-
-	load_plain_commit(Store, Hash, Meta0),
-	Meta1 = Meta0.put(commit, Hash),
+    gitty_plain_commit(Store, Hash, Meta0),
 	(   gitty_file(Store, Meta0.name, Hash)
-	->  Meta = Meta1.put(symbolic, "HEAD")
-	;   Meta = Meta1
+    ->  Meta = Meta0.put(symbolic, "HEAD")
+    ;   Meta = Meta0
 	).
 
-load_plain_commit(Store, Hash, Meta) :-
-	store_driver_module(Store, Module),
-	Module:load_plain_commit(Store, Hash, Meta).
+%!  gitty_plain_commit(+Store, +Hash, -Meta) is semidet.
+%
+%   Load the commit object with Hash.
 
-%%	gitty_history(+Store, +NameOrHash, -History, +Options) is det.
+gitty_plain_commit(Store, Hash, Meta) :-
+	store_driver_module(Store, Module),
+    Module:load_plain_commit(Store, Hash, Meta0),
+    Meta = Meta0.put(commit, Hash).
+
+%!  gitty_history(+Store, +NameOrHash, -History, +Options) is det.
 %
 %	History is a dict holding a key   `history` with a list of dicts
 %	representating the history of Name in   Store. The toplevel dict
@@ -331,14 +358,16 @@ gitty_history(Store, Name, json{history:History,skipped:Skipped}, Options) :-
 	).
 
 history_hash_start(Store, Name, Hash) :-
-	gitty_file(Store, Name, Head), !,
+    gitty_file(Store, Name, Head),
+    !,
 	Hash = Head.
 history_hash_start(_, Hash, Hash).
 
 
 read_history_depth(_, _, 0, []) :- !.
 read_history_depth(Store, Hash, Left, [H|T]) :-
-	load_commit(Store, Hash, H), !,
+    load_commit(Store, Hash, H),
+    !,
 	Left1 is Left-1,
 	(   read_history_depth(Store, H.get(previous), Left1, T)
 	->  true
@@ -346,7 +375,7 @@ read_history_depth(Store, Hash, Left, [H|T]) :-
 	).
 read_history_depth(_, _, _, []).
 
-%%	read_history_to_hash(+Store, +Start, +Upto, -History)
+%!  read_history_to_hash(+Store, +Start, +Upto, -History)
 %
 %	Read the history upto, but NOT including Upto.
 
@@ -366,7 +395,7 @@ list_prefix(N, [H|T0], [H|T]) :-
 	list_prefix(N2, T0, T).
 
 
-%%	save_object(+Store, +Data:string, +Type, -Hash) is det.
+%!  save_object(+Store, +Data:string, +Type, -Hash) is det.
 %
 %	Save an object in a git compatible   way. Data provides the data
 %	as a string.
@@ -409,11 +438,12 @@ gitty_fsck(Store) :-
 	M:gitty_fsck(Store).
 
 fsck_object_msg(Store, Hash) :-
-	fsck_object(Store, Hash), !.
+    fsck_object(Store, Hash),
+    !.
 fsck_object_msg(Store, Hash) :-
 	print_message(error, gitty(Store, fsck(bad_object(Hash)))).
 
-%%	fsck_object(+Store, +Hash) is semidet.
+%!  fsck_object(+Store, +Hash) is semidet.
 %
 %	Test the integrity of object Hash in Store.
 
@@ -435,8 +465,8 @@ check_object(Hash, Data, Type, Size) :-
 
 
 
-%%	load_object(+Store, +Hash, -Data) is det.
-%%	load_object(+Store, +Hash, -Data, -Type, -Size) is det.
+%!  load_object(+Store, +Hash, -Data) is det.
+%!  load_object(+Store, +Hash, -Data, -Type, -Size) is det.
 %
 %	Load the given object.
 
@@ -460,7 +490,7 @@ gitty_save(Store, Data, Type, Hash) :-
 gitty_load(Store, Hash, Data, Type) :-
 	load_object(Store, Hash, Data, Type, _Size).
 
-%%	gitty_hash(+Store, ?Hash) is nondet.
+%!  gitty_hash(+Store, ?Hash) is nondet.
 %
 %	True when Hash is an object in the store.
 
@@ -468,7 +498,7 @@ gitty_hash(Store, Hash) :-
 	store_driver_module(Store, Module),
 	Module:gitty_hash(Store, Hash).
 
-%%	delete_object(+Store, +Hash)
+%!  delete_object(+Store, +Hash)
 %
 %	Delete an existing object
 
@@ -476,7 +506,7 @@ delete_object(Store, Hash) :-
 	store_driver_module(Store, Module),
 	Module:delete_object(Store, Hash).
 
-%%	gitty_reserved_meta(?Key) is nondet.
+%!  gitty_reserved_meta(?Key) is nondet.
 %
 %	True when Key is a gitty reserved key for the commit meta-data
 
@@ -486,7 +516,7 @@ gitty_reserved_meta(data).
 gitty_reserved_meta(previous).
 
 
-%%	is_gitty_hash(@Term) is semidet.
+%!  is_gitty_hash(@Term) is semidet.
 %
 %	True if Term is a possible gitty (SHA1) hash
 
@@ -509,7 +539,7 @@ hex_digit(C) :- between(0'a, 0'f, C).
 	delete_head/2,
 	set_head/3.
 
-%%	delete_head(+Store, +Head) is det.
+%!  delete_head(+Store, +Head) is det.
 %
 %	Delete Head from the administration.  Used if the head is
 %	inconsistent.
@@ -518,7 +548,7 @@ delete_head(Store, Head) :-
 	store_driver_module(Store, Module),
 	Module:delete_head(Store, Head).
 
-%%	set_head(+Store, +File, +Head) is det.
+%!  set_head(+Store, +File, +Head) is det.
 %
 %	Register Head as the Head hash for File, removing possible
 %	old head.
@@ -532,7 +562,7 @@ set_head(Store, File, Head) :-
 		 *	       DIFF		*
 		 *******************************/
 
-%%	gitty_diff(+Store, ?Hash1, +FileOrHash2OrData, -Dict) is det.
+%!  gitty_diff(+Store, ?Hash1, +FileOrHash2OrData, -Dict) is det.
 %
 %	True if Dict representeds the changes   in Hash1 to FileOrHash2.
 %	If Hash1 is unbound,  it  is   unified  with  the  `previous` of
@@ -552,7 +582,8 @@ set_head(Store, File, Head) :-
 %		data(String) to compare a given string with a
 %		gitty version.
 
-gitty_diff(Store, C1, data(Data2), Dict) :- !,
+gitty_diff(Store, C1, data(Data2), Dict) :-
+    !,
 	must_be(atom, C1),
 	gitty_data(Store, C1, Data1, _Meta1),
 	(   Data1 \== Data2
@@ -565,7 +596,8 @@ gitty_diff(Store, C1, C2, Dict) :-
 	(   var(C1)
 	->  C1 = Meta2.get(previous)
 	;   true
-	), !,
+    ),
+    !,
 	gitty_data(Store, C1, Data1, Meta1),
 	Pairs = [ from-Meta1, to-Meta2|_],
 	(   Data1 \== Data2
@@ -588,10 +620,11 @@ gitty_diff(_Store, '0000000000000000000000000000000000000000', _C2,
 
 
 meta_tag_set(Meta, Tags) :-
-	sort(Meta.get(tags), Tags), !.
+    sort(Meta.get(tags), Tags),
+    !.
 meta_tag_set(_, []).
 
-%%	udiff_string(+Data1, +Data2, -UDIFF) is det.
+%!  udiff_string(+Data1, +Data2, -UDIFF) is det.
 %
 %	Produce a unified difference between two   strings. Note that we
 %	can avoid one temporary file using diff's `-` arg and the second
@@ -672,7 +705,7 @@ different solution for the real thing.  Options are:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 
-%%	data_diff(+Data1, +Data2, -UDiff) is det.
+%!  data_diff(+Data1, +Data2, -UDiff) is det.
 %
 %	Diff two data strings line-by-line. UDiff is  a list of terms of
 %	the form below, where `L1` and `L2` provide the starting line in
@@ -694,7 +727,8 @@ different solution for the real thing.  Options are:
 %	  - =(Line)
 %	  Line is identical (context line).
 
-data_diff(Data, Data, UDiff) :- !,
+data_diff(Data, Data, UDiff) :-
+    !,
 	UDiff = [].
 data_diff(Data1, Data2, Diff) :-
 	split_string(Data1, "\n", "", List1),
@@ -706,14 +740,16 @@ list_diff(List1, List2, UDiff) :-
 	make_diff(List1, List2, Lcs, c(), 1, 1, Diff),
 	join_diff(Diff, UDiff).
 
-%%	make_diff(+List1, +List2, +Lcs, +Context0, +Line1, +Line2, -Diff)
+%!  make_diff(+List1, +List2, +Lcs, +Context0, +Line1, +Line2, -Diff)
 
 make_diff([], [], [], _, _, _, []) :- !.
-make_diff([H|T1], [H|T2], [H|C], c(_,C0,C1), L1, L2, Diff) :- !,
+make_diff([H|T1], [H|T2], [H|C], c(_,C0,C1), L1, L2, Diff) :-
+    !,
 	L11 is L1+1,
 	L21 is L2+1,
 	make_diff(T1, T2, C, c(C0,C1,H), L11, L21, Diff).
-make_diff([H|T1], [H|T2], [H|C], C0, L1, L2, Diff) :- !,
+make_diff([H|T1], [H|T2], [H|C], C0, L1, L2, Diff) :-
+    !,
 	L11 is L1+1,
 	L21 is L2+1,
 	add_context(C0, H, C1),
@@ -722,19 +758,24 @@ make_diff([H|T1], [H|T2], [H|C], C0, L1, L2, Diff) :- !,
 	;   Diff = [=(H)|Diff1]
 	),
 	make_diff(T1, T2, C, C1, L11, L21, Diff1).
-make_diff([H|T1], [H2|T2], [H|C], C0, L1, L2, [d(L1,L2,C0,+H2)|Diff]) :- !,
+make_diff([H|T1], [H2|T2], [H|C], C0, L1, L2, [d(L1,L2,C0,+H2)|Diff]) :-
+    !,
 	L21 is L2+1,
 	make_diff([H|T1], T2, [H|C], c(), L1, L21, Diff).
-make_diff([], [H2|T2], [], C0, L1, L2, [d(L1,L2,C0,+H2)|Diff]) :- !,
+make_diff([], [H2|T2], [], C0, L1, L2, [d(L1,L2,C0,+H2)|Diff]) :-
+    !,
 	L21 is L2+1,
 	make_diff([], T2, [], c(), L1, L21, Diff).
-make_diff([H1|T1], [H|T2], [H|C], C0, L1, L2, [d(L1,L2,C0,-H1)|Diff]) :- !,
+make_diff([H1|T1], [H|T2], [H|C], C0, L1, L2, [d(L1,L2,C0,-H1)|Diff]) :-
+    !,
 	L11 is L1+1,
 	make_diff(T1, [H|T2], [H|C], c(), L11, L2, Diff).
-make_diff([H1|T1], [], [], C0, L1, L2, [d(L1,L2,C0,-H1)|Diff]) :- !,
+make_diff([H1|T1], [], [], C0, L1, L2, [d(L1,L2,C0,-H1)|Diff]) :-
+    !,
 	L11 is L1+1,
 	make_diff(T1, [], [], c(), L11, L2, Diff).
-make_diff([H1|T1], [H2|T2], C, C0, L1, L2, [d(L1,L2,C0,H1-H2)|Diff]) :- !,
+make_diff([H1|T1], [H2|T2], C, C0, L1, L2, [d(L1,L2,C0,H1-H2)|Diff]) :-
+    !,
 	L11 is L1+1,
 	L21 is L2+1,
 	make_diff(T1, T2, C, c(), L11, L21, Diff).
@@ -744,7 +785,7 @@ add_context(c(A,B),  N,c(A,B,N)).
 add_context(c(A),    N,c(A,N)).
 add_context(c(),     N,c(N)).
 
-%%	join_diff(+Diff, -UDiff) is det.
+%!  join_diff(+Diff, -UDiff) is det.
 
 join_diff([], []).
 join_diff([d(L10,L20,C,L)|T0], [udiff(L1,S1,L2,S2,Diff)|T]) :-
@@ -763,12 +804,14 @@ pre_context(c(A,B),   2, [=(A),=(B)|L], L).
 pre_context(c(A,B,C), 3, [=(A),=(B),=(C)|L], L).
 
 collect_diff([d(_,_,_,L)|T0], S10,S20,S1,S2,C,[L|Diff],T) :-
-	C < 3, !,
+    C < 3,
+    !,
 	diff_affected(L,S1x,S2x),
 	S11 is S10+S1x,
 	S21 is S20+S2x,
 	collect_diff(T0,S11,S21,S1,S2,0,Diff,T).
-collect_diff([=(L)|T0], S10,S20,S1,S2,C0,[=(L)|Diff],T) :- !,
+collect_diff([=(L)|T0], S10,S20,S1,S2,C0,[=(L)|Diff],T) :-
+    !,
 	S11 is S10+1,
 	S21 is S20+1,
 	C1 is C0+1,
@@ -779,7 +822,7 @@ diff_affected(+(_),   0, 1).
 diff_affected(-(_),   0, 1).
 diff_affected(-(_,_), 1, 1).
 
-%%	udiff_string(+UDiff, -String) is det.
+%!  udiff_string(+UDiff, -String) is det.
 %
 %	True when String is the string representation of UDiff.
 
@@ -795,7 +838,8 @@ block_lines(+(U), Lines) :- maplist(string_concat('+'), U, Lines).
 block_lines(-(U), Lines) :- maplist(string_concat('-'), U, Lines).
 
 udiff_blocks([], []) :- !.
-udiff_blocks([=(H)|T0], [=([H|E])|T]) :- !,
+udiff_blocks([=(H)|T0], [=([H|E])|T]) :-
+    !,
 	udiff_cp(T0, E, T1),
 	udiff_blocks(T1, T).
 udiff_blocks(U, List) :-
@@ -807,26 +851,31 @@ udiff_add([],A,[+A|T],T) :- !.
 udiff_add(D,[],[-D|T],T) :- !.
 udiff_add(D,A,[-D,+A|T],T).
 
-udiff_cp([=(H)|T0], [H|E], T) :- !,
+udiff_cp([=(H)|T0], [H|E], T) :-
+    !,
 	udiff_cp(T0, E, T).
 udiff_cp(L, [], L).
 
-udiff_block([-L|T], [L|D], A, Rest) :- !,
+udiff_block([-L|T], [L|D], A, Rest) :-
+    !,
 	udiff_block(T, D, A, Rest).
-udiff_block([+L|T], D, [L|A], Rest) :- !,
+udiff_block([+L|T], D, [L|A], Rest) :-
+    !,
 	udiff_block(T, D, A, Rest).
-udiff_block([L1-L2|T], [L1|D], [L2|A], Rest) :- !,
+udiff_block([L1-L2|T], [L1|D], [L2|A], Rest) :-
+    !,
 	udiff_block(T, D, A, Rest).
 udiff_block(T, [], [], T).
 
-%%	list_lcs(+List1, +List2, -Lcs) is det.
+%!  list_lcs(+List1, +List2, -Lcs) is det.
 %
 %	@tbd	Too slow.  See http://wordaligned.org/articles/longest-common-subsequence
 
 :- thread_local lcs_db/2.
 
 list_lcs([], [], []) :- !.
-list_lcs([H|L1], [H|L2], [H|Lcs]) :- !,
+list_lcs([H|L1], [H|L2], [H|Lcs]) :-
+    !,
 	list_lcs(L1, L2, Lcs).
 list_lcs(List1, List2, Lcs) :-
 	reverse(List1, Rev1),
@@ -841,14 +890,17 @@ list_lcs2(List1, List2, Lcs) :-
 	    lcs(List1, List2, Hash, Lcs),
 	    retractall(lcs_db(_,_))).
 
-copy_prefix([H|T1], [H|T2], L1, L2, [H|L], LT) :- !,
+copy_prefix([H|T1], [H|T2], L1, L2, [H|L], LT) :-
+    !,
 	copy_prefix(T1, T2, L1, L2, L, LT).
 copy_prefix(R1, R2, R1, R2, L, L).
 
 
 lcs(_,_,Hash,Lcs) :-
-	lcs_db(Hash,Lcs), !.
-lcs([H|L1], [H|L2], _, [H|Lcs]) :- !,
+    lcs_db(Hash,Lcs),
+    !.
+lcs([H|L1], [H|L2], _, [H|Lcs]) :-
+    !,
 	variant_sha1(L1+L2,Hash),
 	lcs(L1, L2, Hash, Lcs).
 lcs(List1, List2, Hash, Lcs) :-
@@ -858,7 +910,8 @@ lcs(List1, List2, Hash, Lcs) :-
 	variant_sha1([H1|L1]+L2,Hash2),
 	lcs(    L1 , [H2|L2], Hash1, Lcs1),
 	lcs([H1|L1],     L2 , Hash2, Lcs2),
-	longest(Lcs1, Lcs2, Lcs),!,
+    longest(Lcs1, Lcs2, Lcs),
+    !,
 	asserta(lcs_db(Hash, Lcs)).
 lcs(_,_,_,[]).
 

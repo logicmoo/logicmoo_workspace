@@ -43,10 +43,10 @@
  */
 
 define([ "jquery", "form", "cm/lib/codemirror", "utils", "config",
-	 "modal", "links", "chat",
+	 "modal", "links", "chat", "backend",
 	 "laconic"
        ],
-       function($, form, CodeMirror, utils, config, modal, links, chat) {
+       function($, form, CodeMirror, utils, config, modal, links, chat, backend) {
 
 (function($) {
   var pluginName = 'chatroom';
@@ -401,7 +401,8 @@ define([ "jquery", "form", "cm/lib/codemirror", "utils", "config",
       var elem = $(this);
 
       $.get(config.http.locations.chat_messages,
-	    { docid: data.docid
+	    { docid: data.docid,
+	      max: 100
 	    },
 	    function(messages) {
 	      if ( messages.length == 0 ) {
@@ -443,11 +444,11 @@ define([ "jquery", "form", "cm/lib/codemirror", "utils", "config",
 	modal.ajaxError(jqXHR);
       }
 
-      $.ajax({
+      backend.ajax({
         url: config.http.locations.web_storage + options.from,
 	data: {format: "raw"},
 	success: function(from) {
-	  $.ajax({
+	  backend.ajax({
 	    url: config.http.locations.web_storage + options.to,
 	    data: {format: "raw"},
 	    success: function(to) {

@@ -22,3 +22,6 @@
 [submodule "pack/libssh"]
 	path = pack/libssh
 	url = https://github.com/JanWielemaker/libssh.git
+[submodule "pack/sCASP"]
+	path = pack/sCASP
+	url = https://github.com/SWI-Prolog/sCASP.git	

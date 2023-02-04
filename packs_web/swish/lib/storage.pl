@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2014-2018, VU University Amsterdam
+    Copyright (c)  2014-2022, VU University Amsterdam
 			      CWI, Amsterdam
+			      SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -36,9 +37,11 @@
 :- module(web_storage,
 	  [ storage_file/1,			% ?File
 	    storage_file_extension/2,		% ?File, ?Extension
+            storage_file_extension_head/3,      % ?File, ?Extension, -Head
 	    storage_file/3,			% +File, -Data, -Meta
 	    storage_meta_data/2,		% +File, -Meta
 	    storage_meta_property/2,	        % +Meta, ?Property
+            storage_commit/2,                   % +Hash, -Meta
 
 	    storage_fsck/0,
 	    storage_repack/0,
@@ -108,22 +111,26 @@ their own version.
 :- volatile storage_dir/1.
 
 open_gittystore(Dir0) :-
-	storage_dir(Dir), !,
+    storage_dir(Dir),
+    !,
 	Dir = Dir0.
 open_gittystore(Dir) :-
 	with_mutex(web_storage, open_gittystore_guarded(Dir0)),
 	Dir = Dir0.
 
 open_gittystore_guarded(Dir) :-
-	storage_dir(Dir), !.
+    storage_dir(Dir),
+    !.
 open_gittystore_guarded(Dir) :-
 	setting(directory, Spec),
 	absolute_file_name(Spec, Dir,
 			   [ file_type(directory),
 			     access(write),
 			     file_errors(fail)
-			   ]), !,
-	gitty_open(Dir, []),
+                       ]),
+    !,
+    gitty_open_options(Options),
+    gitty_open(Dir, Options),
 	asserta(storage_dir(Dir)).
 open_gittystore_guarded(Dir) :-
 	setting(directory, Spec),
@@ -131,21 +138,37 @@ open_gittystore_guarded(Dir) :-
 			   [ solutions(all)
 			   ]),
 	\+ exists_directory(Dir),
-	create_store(Dir), !,
-	gitty_open(Dir, []),
+    create_store(Dir),
+    !,
+    gitty_open_options(Options),
+    gitty_open(Dir, Options),
 	asserta(storage_dir(Dir)).
 
 create_store(Dir) :-
-	exists_directory('storage/ref'), !,
+    exists_directory('storage/ref'),
+    !,
 	print_message(informational, moved_old_store(storage, Dir)),
 	rename_file(storage, Dir).
 create_store(Dir) :-
 	catch(make_directory(Dir),
 	      error(permission_error(create, directory, Dir), _),
-	      fail), !.
+          fail),
+    !.
+
+gitty_open_options(Options) :-
+    swish_config(redis, DB),
+    !,
+    (   swish_config(redis_prefix, Prefix)
+    ->  Options = [ redis(DB),
+                    redis_prefix(Prefix)
+                  ]
+    ;   Options = [ redis(DB)
+                  ]
+    ).
+gitty_open_options([]).
 
 
-%%	web_storage(+Request) is det.
+%!  web_storage(+Request) is det.
 %
 %	Restfull HTTP handler to store data on behalf of the client in a
 %	hard-to-guess location. Returns a JSON  object that provides the
@@ -269,13 +292,14 @@ storage(delete, Request, Options) :-
 writeable(File) :-
 	\+ file_name_extension(_, lnk, File).
 
-%%	update_error(+Error, +Storage, +Data, +File, +URL)
+%!  update_error(+Error, +Storage, +Data, +File, +URL)
 %
 %	If error signals an edit conflict, prepare an HTTP =|409
 %	Conflict|= page
 
 update_error(error(gitty(commit_version(_, Head, Previous)), _),
-	     Dir, Data, File, URL) :- !,
+             Dir, Data, File, URL) :-
+    !,
 	gitty_diff(Dir, Previous, Head, OtherEdit),
 	gitty_diff(Dir, Previous, data(Data), MyEdits),
 	Status0 = json{url:URL,
@@ -308,7 +332,8 @@ patch_status(stderr(Errors), Dict, Dict.put(patch_errors, Errors)) :- !.
 
 follow(Commit, Dict) :-
 	Dict.get(meta).get(follow) == true,
-	_{name:File, profile_id:ProfileID} :< Commit, !,
+    _{name:File, profile_id:ProfileID} :< Commit,
+    !,
 	atom_concat('gitty:', File, DocID),
 	broadcast(swish(follow(DocID, ProfileID, [update,chat]))).
 follow(_, _).
@@ -329,8 +354,8 @@ request_file(Request, Dir, File) :-
 storage_url(File, HREF) :-
 	http_link_to_id(web_storage, path_postfix(File), HREF).
 
-%%	meta_data(+Dict, -Meta, +Options) is det.
-%%	meta_data(+Store, +Dict, -PrevMeta, -Meta, +Options) is det.
+%!  meta_data(+Dict, -Meta, +Options) is det.
+%!  meta_data(+Store, +Dict, -PrevMeta, -Meta, +Options) is det.
 %
 %	Gather meta-data from the  Request   (user,  peer, identity) and
 %	provided meta-data. Illegal and unknown values are ignored.
@@ -369,7 +394,8 @@ filter_meta(Dict0, HasID, Dict) :-
 filter_pairs([], _, []).
 filter_pairs([K-V0|T0], HasID, [K-V|T]) :-
 	meta_allowed(K, HasID, Type),
-	filter_type(Type, V0, V), !,
+    filter_type(Type, V0, V),
+    !,
 	filter_pairs(T0, HasID, T).
 filter_pairs([_|T0], HasID, T) :-
 	filter_pairs(T0, HasID, T).
@@ -386,7 +412,8 @@ meta_allowed(commit_message, _,	    string).
 meta_allowed(modify,	     _,	    list(atom)).
 
 filter_type(Type, V, V) :-
-	is_of_type(Type, V), !.
+    is_of_type(Type, V),
+    !.
 filter_type(list(Type), V0, V) :-
 	is_list(V0),
 	maplist(filter_type(Type), V0, V).
@@ -396,7 +423,8 @@ filter_type(atom, V0, V) :-
 
 filter_auth(Auth0, Auth) :-
 	auth_template(Auth),
-	Auth :< Auth0, !.
+    Auth :< Auth0,
+    !.
 filter_auth(Auth, Auth).
 
 auth_template(_{identity:_, profile_id:_}).
@@ -404,7 +432,7 @@ auth_template(_{profile_id:_}).
 auth_template(_{identity:_}).
 
 
-%%	storage_get(+Request, +Format, +Options) is det.
+%!  storage_get(+Request, +Format, +Options) is det.
 %
 %	HTTP handler that returns information a given gitty file.
 %
@@ -423,7 +451,8 @@ auth_template(_{identity:_}).
 %	     previous commit.
 
 storage_get(Request, swish, Options) :-
-	swish_reply_config(Request, Options), !.
+    swish_reply_config(Request, Options),
+    !.
 storage_get(Request, Format, Options) :-
 	storage_dir(Dir),
 	request_file_or_hash(Request, Dir, FileOrHash, Type),
@@ -487,11 +516,13 @@ gitty_data_or_default(_, default, File, Code,
 			   modify:[login,owner],
 			   default:true,
 			   chat:"large"
-			  }) :- !,
+                          }) :-
+    !,
 	gitty_default_file(File, Path),
 	read_file_to_string(Path, Code, []).
 gitty_data_or_default(Dir, _, FileOrHash, Code, Meta) :-
-	gitty_data(Dir, FileOrHash, Code, Meta), !.
+    gitty_data(Dir, FileOrHash, Code, Meta),
+    !.
 
 gitty_default_file(File, Path) :-
 	file_name_extension(Base, Ext, File),
@@ -511,11 +542,12 @@ gitty_default_file(File, Path) :-
 
 chat_count(Meta, Chats) :-
 	atom_concat('gitty:', Meta.get(name), DocID),
-	swish_config:chat_count_about(DocID, Chats), !.
+    swish_config:chat_count_about(DocID, Chats),
+    !.
 chat_count(_, 0).
 
 
-%%	random_filename(-Name) is det.
+%!  random_filename(-Name) is det.
 %
 %	Return a random file name from plain nice ASCII characters.
 
@@ -542,7 +574,8 @@ random_char(Char) :-
 :- multifile open_hook/3.
 
 swish_show(Options0, Request) :-
-	open_hook(swish, Options0, Options), !,
+    open_hook(swish, Options0, Options),
+    !,
 	swish_reply(Options, Request).
 swish_show(Options, Request) :-
 	swish_reply(Options, Request).
@@ -552,10 +585,11 @@ swish_show(Options, Request) :-
 		 *	    INTERFACE		*
 		 *******************************/
 
-%%	storage_file(?File) is nondet.
+%!  storage_file(?File) is nondet.
 %!	storage_file_extension(?File, ?Extension) is nondet.
-%%	storage_file(+File, -Data, -Meta) is semidet.
-%%	storage_meta_data(+File, -Meta) is semidet.
+%!  storage_file_extension_head(?File, ?Extension, -Head) is nondet.
+%!  storage_file(+File, -Data, -Meta) is semidet.
+%!  storage_meta_data(+File, -Meta) is semidet.
 %
 %	True if File is known in the store.
 %
@@ -566,8 +600,11 @@ storage_file(File) :-
 	storage_file_extension(File, _).
 
 storage_file_extension(File, Ext) :-
+    storage_file_extension_head(File, Ext, _).
+
+storage_file_extension_head(File, Ext, Head) :-
 	open_gittystore(Dir),
-	gitty_file(Dir, File, Ext, _Head).
+    gitty_file(Dir, File, Ext, Head).
 
 storage_file(File, Data, Meta) :-
 	open_gittystore(Dir),
@@ -584,6 +621,15 @@ storage_meta_data(File, Meta) :-
 	;   true
 	),
 	gitty_commit(Dir, File, Meta).
+
+%!  storage_commit(+Hash, -Meta) is semidet.
+%
+%   Load the commit data for Hash.  This   version  does __not__ tell us
+%   whether Hash is the ``HEAD`` or not.
+
+storage_commit(Hash, Meta) :-
+    open_gittystore(Dir),
+    gitty_plain_commit(Dir, Hash, Meta).
 
 %!	storage_meta_property(+Meta, -Property)
 %
@@ -814,7 +860,7 @@ storage_unpack :-
 :- multifile
 	swish_search:typeahead/4.	% +Set, +Query, -Match, +Options
 
-%%	swish_search:typeahead(+Set, +Query, -Match, +Options) is nondet.
+%!  swish_search:typeahead(+Set, +Query, -Match, +Options) is nondet.
 %
 %	Find files using typeahead  from  the   SWISH  search  box. This
 %	version defines the following sets:
@@ -877,7 +923,7 @@ search_file(File, Meta, Data, Query, FileInfo, Options) :-
 		 *	   SOURCE LIST		*
 		 *******************************/
 
-%%	source_list(+Request)
+%!  source_list(+Request)
 %
 %	List source files.  Request parameters:
 %
@@ -943,12 +989,14 @@ list_offset_limit(List0, Offset, Limit, List) :-
 	list_limit(List1, Limit, List).
 
 list_offset([_|T0], Offset, T) :-
-	succ(O1, Offset), !,
+    succ(O1, Offset),
+    !,
 	list_offset(T0, O1, T).
 list_offset(List, _, List).
 
 list_limit([H|T0], Limit, [H|T]) :-
-	succ(L1, Limit), !,
+    succ(L1, Limit),
+    !,
 	list_limit(T0, L1, T).
 list_limit(_, _, []).
 
@@ -962,14 +1010,15 @@ source(Q, Auth, Source) :-
 
 source_q([user("me")], Auth, _Source) :-
 	\+ _ = Auth.get(avatar),
-	\+ user_property(Auth, identity(_Id)), !,
+    \+ user_property(Auth, identity(_Id)),
+    !,
 	fail.
 source_q(Query, Auth, Source) :-
 	type_constraint(Query, Query1, Type),
 	partition(content_query, Query1,
 		  ContentConstraints, MetaConstraints),
-	storage_file_extension(File, Type),
-	source_data(File, Meta, Source),
+    storage_file_extension_head(File, Type, Head),
+    source_data(File, Head, Meta, Source),
 	visible(Meta, Auth, MetaConstraints),
 	maplist(matches_meta(Source, Auth), MetaConstraints),
 	matches_content(ContentConstraints, File).
@@ -977,8 +1026,8 @@ source_q(Query, Auth, Source) :-
 content_query(string(_)).
 content_query(regex(_)).
 
-source_data(File, Meta, Source) :-
-	storage_meta_data(File, Meta),
+source_data(File, Head, Meta, Source) :-
+    storage_commit(Head, Meta),
 	file_name_extension(_, Type, File),
 	Info = _{time:_, tags:_, author:_, avatar:_, name:_},
 	Info >:< Meta,
@@ -999,7 +1048,8 @@ visible(Meta, Auth, Constraints) :-
 	!,
 	owns(Auth, Meta, user(_)).
 visible(Meta, _Auth, _Constraints) :-
-	Meta.get(public) == true, !.
+    Meta.get(public) == true,
+    !.
 visible(Meta, Auth, _Constraints) :-
 	owns(Auth, Meta, _).
 
@@ -1013,16 +1063,20 @@ visible(Meta, Auth, _Constraints) :-
 %	properties and/or IP properties.
 
 owns(Auth, Meta, user(me)) :-
-	storage_meta_property(Meta, identity(Id)), !,
+    storage_meta_property(Meta, identity(Id)),
+    !,
 	user_property(Auth, identity(Id)).
 owns(_Auth, Meta, _) :-				% demand strong ownership for
-	\+ Meta.get(public) == true, !,		% non-public files.
+    \+ Meta.get(public) == true,           % non-public files.
+    !,
 	fail.
 owns(Auth, Meta, user(avatar)) :-
 	storage_meta_property(Meta, avatar(Id)),
-	user_property(Auth, avatar(Id)), !.
+    user_property(Auth, avatar(Id)),
+    !.
 owns(Auth, Meta, user(nickname)) :-
-	Auth.get(display_name) == Meta.get(author), !.
+    Auth.get(display_name) == Meta.get(author),
+    !.
 owns(Auth, Meta, host(How)) :-		% trust same host and local host
 	Peer = Auth.get(peer),
 	(   Peer == Meta.get(peer)
@@ -1035,14 +1089,16 @@ owns(Auth, Meta, host(How)) :-		% trust same host and local host
 %
 %	True when Source matches the meta-data requirements
 
-matches_meta(Dict, _, tag(Tag)) :- !,
+matches_meta(Dict, _, tag(Tag)) :-
+    !,
 	(   Tag == ""
 	->  Dict.get(tags) \== []
 	;   member(Tagged, Dict.get(tags)),
 	    match_meta(Tag, Tagged)
 	->  true
 	).
-matches_meta(Dict, _, name(Name)) :- !,
+matches_meta(Dict, _, name(Name)) :-
+    !,
 	match_meta(Name, Dict.get(name)).
 matches_meta(Dict, _, user(Name)) :-
 	(   Name \== "me"
@@ -1050,7 +1106,8 @@ matches_meta(Dict, _, user(Name)) :-
 	;   true		% handled in visible/3
 	).
 
-match_meta(regex(RE), Value) :- !,
+match_meta(regex(RE), Value) :-
+    !,
 	re_match(RE, Value).
 match_meta(String, Value) :-
 	sub_atom_icasechk(Value, _, String).
@@ -1061,7 +1118,8 @@ matches_content(Constraints, File) :-
 	maplist(match_content(Data), Constraints).
 
 match_content(Data, string(S)) :-
-	sub_atom_icasechk(Data, _, S), !.
+    sub_atom_icasechk(Data, _, S),
+    !.
 match_content(Data, regex(RE)) :-
 	re_match(RE, Data).
 
@@ -1090,7 +1148,8 @@ is_type(type(_)).
 %	@tbd: Should we allow for logical combinations?
 
 parse_query(Q, Query) :-
-	var(Q), !,
+    var(Q),
+    !,
 	Query = [].
 parse_query(Q, Query) :-
 	string_codes(Q, Codes),
@@ -1098,21 +1157,25 @@ parse_query(Q, Query) :-
 
 query([H|T]) -->
 	blanks,
-	query1(H), !,
+    query1(H),
+    !,
 	query(T).
 query([]) -->
 	blanks.
 
 query1(Q) -->
-	tag(Tag, Value), !,
+    tag(Tag, Value),
+    !,
 	{Q =.. [Tag,Value]}.
 query1(Q) -->
-	"\"", string(Codes), "\"", !,
+    "\"", string(Codes), "\"",
+    !,
 	{ string_codes(String, Codes),
 	  Q = string(String)
 	}.
 query1(Q) -->
-	"/", string(Codes), "/", re_flags(Flags), !,
+    "/", string(Codes), "/", re_flags(Flags),
+    !,
 	{ string_codes(String, Codes),
 	  re_compile(String, RE, Flags),
 	  Q = regex(RE)
@@ -1128,7 +1191,8 @@ query1(Q) -->
 	}.
 
 re_flags([H|T]) -->
-	re_flag(H), !,
+    re_flag(H),
+    !,
 	re_flags(T).
 re_flags([]) -->
 	blank.
@@ -1141,7 +1205,8 @@ re_flag(multiline(true)) --> "m".
 re_flag(dotall(true))    --> "s".
 
 next_word(String) -->
-	blanks, nonblank(H), string(Codes), ( blank ; eos ), !,
+    blanks, nonblank(H), string(Codes), ( blank ; eos ),
+    !,
 	{ string_codes(String, [H|Codes]) }.
 
 tag(name, Value) --> "name:", tag_value(Value, _).
@@ -1150,10 +1215,12 @@ tag(user, Value) --> "user:", tag_value(Value, _).
 tag(type, Value) --> "type:", tag_value(String, string(_)), { atom_string(Value, String) }.
 
 tag_value(String, string(quoted)) -->
-	blanks, "\"", !, string(Codes), "\"", !,
+    blanks, "\"", !, string(Codes), "\"",
+    !,
 	{ string_codes(String, Codes) }.
 tag_value(Q, regex) -->
-	blanks, "/", string(Codes), "/", re_flags(Flags), !,
+    blanks, "/", string(Codes), "/", re_flags(Flags),
+    !,
 	{   Codes == []
 	->  Q = ""
 	;   string_codes(String, Codes),
@@ -1161,9 +1228,11 @@ tag_value(Q, regex) -->
 	    Q = regex(RE)
 	}.
 tag_value(String, string(nonquoted)) -->
-	nonblank(H), !,
+    nonblank(H),
+    !,
 	string(Codes),
-	( blank ; eos ), !,
+    ( blank ; eos ),
+    !,
 	{ string_codes(String, [H|Codes]) }.
 tag_value("", empty) -->
 	"".
@@ -1198,7 +1267,8 @@ update_last_modified_sync :-
 	asserta(gitty_last_modified(Now)).
 
 last_modified(Time) :-
-	debugging(swish(sourcelist)), !,	% disable caching
+    debugging(swish(sourcelist)),          % disable caching
+    !,
 	get_time(Now),
 	Time is Now + 60.
 last_modified(Time) :-

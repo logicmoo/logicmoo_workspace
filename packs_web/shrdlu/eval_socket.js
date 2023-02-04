@@ -11,7 +11,7 @@ var MAX_RECONNECT_DELAY = 30000;
 
 	window.JSCtrl = function(url) {
 		var defaultURL = window.location.protocol.replace("http", "ws") + // gets 'ws' or 'wss:'
-			"//" + window.location.host + ":14302/swish/jseval_ws";
+			"//" + window.location.host + ":1766/swish/jseval_ws";
 		this.url = url || defaultURL;
 		DEBUGGING = true;
 		reconnectsAvail = 10;

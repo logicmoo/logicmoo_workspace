@@ -49,6 +49,18 @@ original are the learned parameters. Note that the target parameters are those g
   - Fixing the values of some parameters in learning ([bongard_fixed.pl](example/learning/bongard_fixed.pl)), see the help http://friguzzi.github.io/cplint/_build/html/index.html#background-and-initial-lpad-cpl-program
   - Setting the initial values of parameters in learning ([bongard_initial.pl](example/learning/bongard_initial.pl)), see the help http://friguzzi.github.io/cplint/_build/html/index.html#background-and-initial-lpad-cpl-program
   - Learning different parameters for different instantiations of rules ([bongard_ind.pl](example/learning/bongard_ind.pl)), see the help http://friguzzi.github.io/cplint/_build/html/index.html#background-and-initial-lpad-cpl-program
+  - Machines (parameter and structure 
+  learning) 
+  The task is to decide whether a machine should be fixed, sent back or is ok. 
+  From The ACE Data Mining System User's Manual http://dtai.cs.kuleuven.be/ACE/doc/ACEuser-1.2.16.pdf 
+  Downloaded from http://dtai.cs.kuleuven.be/static/ACE/doc/
+  Parameter learning [mach_par.pl](example/learning/mach_par.pl).
+  [mach_par_R.pl](example/learning/mach_par_R.pl) draws the ROC and PR curves with R.
+  In this problem there are three classes, we learn the structure for two of them separately 
+  [mach_sendback.pl](example/learning/mach_sendback.pl),   [mach_fix.pl](example/learning/mach_fix.pl) 
+  and then we combine the two definitions in a third file for testing
+  [mach_all.pl](example/learning/mach_all.pl) 
+
 
 More examples are included in the standalone version of =cplint= at https://github.com/friguzzi/cplint
 The standalone version of =cplint= can be installed as a SWI-Prolog pack http://www.swi-prolog.org/pack/list

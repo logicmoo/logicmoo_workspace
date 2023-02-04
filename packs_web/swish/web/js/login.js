@@ -42,8 +42,8 @@
  * @requires jquery
  */
 
-define([ "jquery", "modal", "config", "form", "laconic" ],
-       function($, modal, config, form) {
+define([ "jquery", "modal", "config", "form", "backend", "laconic" ],
+       function($, modal, config, form, backend) {
 
 var DEFAULT_USER_FIELDS = ["display_name", "email", "avatar"];
 
@@ -244,7 +244,8 @@ var DEFAULT_USER_FIELDS = ["display_name", "email", "avatar"];
 
       if ( user ) {
 	if ( user.logout_url ) {
-	  $.ajax({ url: user.logout_url,
+	  backend.ajax(
+	    { url: user.logout_url,
 	           success: function() {
 		     elem.login('update', "logout_by_url");
 		   },

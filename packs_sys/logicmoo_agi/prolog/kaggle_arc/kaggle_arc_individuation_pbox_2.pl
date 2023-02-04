@@ -268,7 +268,7 @@ found_box(L_S,NSEW,OH,OV,Srch,XSG,H,V,Center,Inside,Find,IBorder,OBorder,   insi
 different_enough(L_S,Inside,Find,Inside,OBorder):-
   a_portion_colors(Inside,InsideC,InsideV,InsideBG,InsideFG),
   a_portion_colors(OBorder, BorderC,BorderV,BorderBG,BorderFG),
-  maplist(sort,[BorderC,BorderV,BorderBG,BorderFG,InsideC,InsideV,InsideBG,InsideFG],
+  maplist(sort_safe,[BorderC,BorderV,BorderBG,BorderFG,InsideC,InsideV,InsideBG,InsideFG],
                [SBorderC,SBorderV,SBorderBG,SBorderFG,SInsideC,SInsideV,SInsideBG,SInsideFG]),
   different_enough_c(Inside,Find,L_S,SBorderC,SBorderV,SBorderBG,SBorderFG,
                                                SInsideC,SInsideV,SInsideBG,SInsideFG),!.

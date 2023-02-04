@@ -3,11 +3,11 @@
 once_per_request(G):- must_run_html(G),!.
 
 ensure_readable_html:-
-  once_per_request(format('~s',[`
+  once_per_request(format('~s',['
 <style>
 body {
-  background: #000000; 
-  mix-blend-mode: difference;
+  //background: #000; 
+  //mix-blend-mode: difference;
 }
 
 p {
@@ -21,7 +21,7 @@ p {
 	border: 1px solid #3E8096;
 	display: block; 
 }
-</style>`])).
+</style>'])).
 
 ensure_swish_app_html:- in_pp(http),!.
 ensure_swish_app_html:- in_pp(swish),!.
@@ -588,8 +588,8 @@ $(document).ready(function() {
 
 
 
-ensure_colapsable_styles:- 
-once_per_request(pformat_write(`<style>
+ensure_collapsable_styles:- 
+once_per_request(pformat_write('<style>
 .collapsible {
   background-color: #777;
   color: white;
@@ -607,7 +607,7 @@ once_per_request(pformat_write(`<style>
 }
 
 .collapsible:after {
-  content: '\\002B';
+  content: "\\002B";
   color: white;
   font-weight: bold;
   float: right;
@@ -628,9 +628,9 @@ once_per_request(pformat_write(`<style>
 
 </style>
 
-`)).
+')).
 
-ensure_colapsable_script:- 
+ensure_collapsable_script:- 
 once_per_request(pformat_write('
 <script>
 var coll = document.getElementsByClassName("collapsible");

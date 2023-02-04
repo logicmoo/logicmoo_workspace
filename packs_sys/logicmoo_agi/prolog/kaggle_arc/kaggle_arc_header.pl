@@ -34,9 +34,16 @@
 
 :- dynamic((ap/1,apv/2)).
 :- dynamic(cmem/3).
+:- dynamic(omem/3).
 :- dynamic(cmemo/3).
 :- dynamic(grid_nums/1).
 :- dynamic(grid_nums/2).
+
+:- multifile(prolog:make_hook/2).
+:- dynamic(prolog:make_hook/2).
+:- discontiguous(prolog:make_hook/2).
+
+:- discontiguous(muarc:clear_all_caches/0).
 
 :- multifile(fav/2).
 :- discontiguous(fav/2).
@@ -88,8 +95,42 @@
 :- system:use_module(library(nb_set)).
 :- system:use_module(library(assoc)).
 :- system:use_module(library(pairs)).
+
+/*
+:- use_module(library(prolog_colour)).
+:- use_module(library(prolog_xref)).
+:- consult('/usr/lib/swi-prolog/library/prolog_xref'). % into prolog_xref 0.00 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/library/pldoc/doc_html'). % into pldoc_html 0.00 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/library/prolog_colour'). % into prolog_colour 0.00 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/lib/pce'). % into pce 0.11 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_expand'). %  into pce_expand 0.00 sec, 2 clauses
+%  ../lib/swi_compatibility'). %  into pce_compatibility_layer 0.00 sec, 15 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_pl'). %  into pce_host 0.00 sec, 2 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/lib/swi_compatibility'). %  into pce_compatibility_layer 0.00 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_principal'). %  into pce_principal 0.03 sec, 20 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_error'). %  into pce_error 0.00 sec, 4 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_global'). %  into pce_global 0.02 sec, 4 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_expansion'). %  into pce_expansion 0.02 sec, 30 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_realise'). %  into pce_realise 0.01 sec, 22 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_goal_expansion'). %  into pce_goal_expansion 0.00 sec, 6 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_autoload'). %  into pce_autoload 0.02 sec, 6 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_editor'). %  into editor_buttons 0.02 sec, 2 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_keybinding'). %  into pce_keybinding 0.02 sec, 10 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/boot/pce_portray'). %  into pce_portray 0.00 sec, 6 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/lib/english/pce_messages'). %  into pce_messages 0.00 sec, 2 clauses
+:- consult('/usr/lib/swi-prolog/library/prolog_xref'). % into prolog_xref 0.00 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/library/pldoc/doc_html'). % into pldoc_html 0.00 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/library/prolog_colour'). % into prolog_colour 0.00 sec, 0 clauses
+:- consult('/usr/lib/swi-prolog/xpce/prolog/lib/pce'). % into pce 0.13 sec, 0 clauses
+:- autoload_all.
+%:- use_module(library(use_pce_compatibility_layer)).
+:- set_prolog_flag(xpce,false).
+:- set_prolog_flag(gui,false).
+*/
+
 :- system:use_module(library(logicmoo_common)).
 :- system:use_module(library(prolog_trace)).
+%:- redefine_system_predicate(prolog_trace:trace/2),abolish(prolog_trace:trace/2),asserta(prolog_trace:trace(_,_)).
 :- system:use_module(library(prolog_clause)).
 :- system:use_module(library(prolog_source)).
  %library(trace/clause) 

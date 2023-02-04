@@ -3,8 +3,9 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2015-2020, VU University Amsterdam
+    Copyright (c)  2015-2022, VU University Amsterdam
 			      CWI, Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -41,14 +42,15 @@
 	    start_swish_stat_collector/0,
 	    swish_stats/2,		% ?Period, ?Dicts
 	    swish_save_stats/1,		% ?File
-	    swish_died_thread/2		% ?Thread, ?State
+            swish_died_thread/2,        % ?Thread, ?State
+            redis_consumer_status/2,    % +Consumer, -Status
+            swish_cluster_member/2
 	  ]).
 :- use_module(library(pengines)).
 :- use_module(library(broadcast)).
 :- use_module(library(lists)).
 :- use_module(library(apply)).
 :- use_module(library(debug)).
-:- use_module(library(dicts)).
 :- use_module(library(aggregate)).
 :- use_module(library(settings)).
 :- use_module(procps).
@@ -57,13 +59,60 @@
 :- use_module(library(mallocinfo)).
 :- export(malloc_info/1).
 :- endif.
-
-:- dynamic(swish_stats_ever_started/0).
+:- use_module(swish_redis).
+:- use_module(config).
 
 :- setting(stats_file, callable, data('stats.db'),
 	   "Save statistics to achieve a long term view").
 :- setting(stats_interval, integer, 300,	% 5 minutes
 	   "Save stats every N seconds").
+
+redis_key(What, Server, Key) :-
+    redis_consumer(Consumer),
+    redis_key(Consumer, What, Server, Key).
+
+redis_key(Consumer, What, Server, Key) :-
+    swish_config(redis, Server),
+    swish_config(redis_prefix, Prefix),
+    atomic_list_concat([Prefix,What,Consumer], :, Key).
+
+wait_redis_key(Server, Key) :-
+    between(1, 10, X),
+    (   redis_key(stat, Server, Key)
+    ->  !
+    ;   Wait is (1<<X)*0.1,
+        sleep(Wait),
+        fail
+    ).
+
+use_redis :-
+    swish_config(redis, _).
+
+redis_publish_stats(Time, Stat) :-
+    Time mod 10 =:= 0,
+    use_redis,
+    redis_key(status, Server, Key),
+    !,
+    redis(Server, set(Key, Stat.put(time,Time) as prolog)).
+redis_publish_stats(_, _).
+
+%!  redis_consumer_status(+Consumer, -Status) is semidet.
+%
+%   True when Status  is  a  dict   describing  the  current  status for
+%   Consumer.
+
+redis_consumer_status(Consumer, Stat) :-
+    redis_key(Consumer, status, Server, Key),
+    redis(Server, get(Key), Stat).
+
+%!  swish_cluster_member(?Consumer, -Status) is nondet.
+
+swish_cluster_member(Consumer, Status) :-
+    swish_cluster(Pairs),
+    member(Consumer-URL, Pairs),
+    redis_consumer_status(Consumer, Status0),
+    Status = Status0.put(url, URL).
+
 
 %!	stale_pengine(-Pengine) is nondet.
 %
@@ -74,8 +123,8 @@ stale_pengine(Pengine) :-
 	\+ catch(thread_property(Thread, status(running)), _, fail).
 
 
-%%	pengine_stale_module(-M) is nondet.
-%%	pengine_stale_module(-M, -State) is nondet.
+%!  pengine_stale_module(-M) is nondet.
+%!  pengine_stale_module(-M, -State) is nondet.
 %
 %	True if M seems to  be  a   pengine  module  with  no associated
 %	pengine. State is a dict that describes   what we know about the
@@ -134,7 +183,7 @@ pi_in_module(M, Name/Arity) :-
 	'$c_current_predicate'(_, M:Head),
 	functor(Head, Name, Arity).
 
-%%	swish_statistics(?State)
+%!  swish_statistics(?State)
 %
 %	True if State is a statistics about SWISH
 
@@ -157,7 +206,7 @@ swish_update_stats(create(_Pengine, _Application, _Options0)) :-
 swish_update_stats(send(_Pengine, _Event)).
 
 
-%%	is_uuid(@UUID)
+%!  is_uuid(@UUID)
 %
 %	True if UUID looks like a UUID
 
@@ -187,13 +236,14 @@ uuid_code(_, X) :- char_type(X, xdigit(_)).
 	start_swish_stat_collector.
 :- endif.
 
-%%	start_swish_stat_collector
+%!  start_swish_stat_collector
 %
 %	Start collecting statistical  performance   information  for the
 %	running SWISH server.
 
 start_swish_stat_collector :-
-	thread_property(_, alias(swish_stats)), !.
+    thread_property(_, alias(swish_stats)),
+    !.
 start_swish_stat_collector :-
 	persistent_stats(Persists),
 	swish_stat_collector(
@@ -210,17 +260,19 @@ start_swish_stat_collector :-
 	at_halt(swish_save_stats(_)).
 
 swish_stat_collector(Name, Dims, Interval, Persists) :-
-	atom(Name), !,
-	thread_create(stat_collect(Dims, Interval, Persists), _, [alias(Name)]),
-  assert(swish_stats_ever_started).
+    atom(Name),
+    !,
+    thread_create(stat_collect(Dims, Interval, Persists), _, [alias(Name)]).
 swish_stat_collector(Thread, Dims, Interval, Persists) :-
-	thread_create(stat_collect(Dims, Interval, Persists), Thread, []),
-  assert(swish_stats_ever_started).
+    thread_create(stat_collect(Dims, Interval, Persists), Thread, []).
 
 persistent_stats(save(Path, Interval)) :-
 	setting(stats_interval, Interval),
 	Interval > 0,
-	setting(stats_file, File),
+    (   use_redis
+    ->  redis_key(stat, Server, Key),
+        Path = redis(Server, Key)
+    ;   setting(stats_file, File),
 	(   absolute_file_name(File, Path,
 			       [ access(write),
 				 file_errors(fail)
@@ -239,12 +291,14 @@ persistent_stats(save(Path, Interval)) :-
 			       [ access(write),
 				 file_errors(fail)
 			       ])
-	), !.
+        )
+    ),
+    !.
 persistent_stats(save(-, 0)).
 
 
 
-%%	swish_stats(?Period, ?Stats:list(dict)) is nondet.
+%!  swish_stats(?Period, ?Stats:list(dict)) is nondet.
 %
 %	Get the collected statistics for the given Period. Period is one
 %	of =minute=, =hour=, =day=, =week= or =year=. Stats is a list of
@@ -310,6 +364,7 @@ stat_loop(SlidingStat, Stat0, StatTime, Interval, Persists, Wrap) :-
 	    stat_loop(SlidingStat, Stat0, StatTime, Interval, Persists, Wrap)
 	;   get_stats(Wrap, Stat1),
 	    dif_stat(Stat1, Stat0, Stat),
+        redis_publish_stats(StatTime, Stat),
 	    push_sliding_stats(SlidingStat, Stat, Wrap1),
 	    NextTime is StatTime+Interval,
 	    save_stats(Persists, SlidingStat),
@@ -321,7 +376,8 @@ dif_stat(Stat1, Stat0, Stat) :-
 		[ cpu - d_cpu,
 		  pengines_created - d_pengines_created
 		],
-		Fields), !,
+            Fields),
+    !,
 	dict_pairs(Extra, _, Fields),
 	put_dict(Extra, Stat1, Stat).
 dif_stat(Stat, _, Stat).
@@ -329,11 +385,13 @@ dif_stat(Stat, _, Stat).
 dif_field(Stat1, Stat0, Key-DKey, DKey-DValue) :-
 	DValue is Stat1.get(Key) - Stat0.get(Key).
 
-reply_stats_request(Client-get_stats(Period), SlidingStat) :- !,
+reply_stats_request(Client-get_stats(Period), SlidingStat) :-
+    !,
 	arg(Period, SlidingStat, Ring),
 	ring_values(Ring, Values),
 	thread_send_message(Client, get_stats(Period, Values)).
-reply_stats_request(Client-save_stats(File), SlidingStat) :- !,
+reply_stats_request(Client-save_stats(File), SlidingStat) :-
+    !,
 	(   var(File)
 	->  persistent_stats(save(File, _Interval))
 	;   true
@@ -345,7 +403,7 @@ reply_stats_request(Client-save_stats(File), SlidingStat) :- !,
 	).
 
 
-%%	get_stats(+Wrap, -Stats:dict) is det.
+%!  get_stats(+Wrap, -Stats:dict) is det.
 %
 %	Request elementary statistics.
 
@@ -377,7 +435,7 @@ get_stats(Wrap, Stats) :-
 :- if(current_predicate(malloc_property/1)).
 add_heap(Stats0, Stats) :-
 	malloc_property('generic.current_allocated_bytes'(Heap)),
-	Stats = Stats0.put(heep, Heap).
+    Stats = Stats0.put(heap, Heap).
 :- else.
 add_heap(Stats, Stats).
 :- endif.
@@ -428,13 +486,20 @@ add_fordblks(Wrap, Stats0, Stats) :-
 	    fix_fordblks_wrap(FordBlks0, FordBlks),
 	    b_setval(fordblks, FordBlks)
 	;   nb_current(fordblks, FordBlks)
-	), !,
+    ),
+    !,
 	Stats = Stats0.put(fordblks, FordBlks).
 :- endif.
 add_fordblks(_, Stats, Stats).
 
 add_visitors(Stats0, Stats) :-
-	broadcast_request(swish(visitor_count(C))), !,
+    use_redis,
+    broadcast_request(swish(visitor_count(Cluster, Local))),
+    !,
+    Stats = Stats0.put(_{visitors:Cluster, local_visitors:Local}).
+add_visitors(Stats0, Stats) :-
+    broadcast_request(swish(visitor_count(C))),
+    !,
 	Stats = Stats0.put(visitors, C).
 add_visitors(Stats, Stats).
 
@@ -464,7 +529,8 @@ push_sliding_stats(I, Stats, Values, [Wrap|WrapT]) :-
 	;   WrapT = []
 	).
 
-new_ring(Dim0/Avg, ring(0, Avg, Ring)) :- !,
+new_ring(Dim0/Avg, ring(0, Avg, Ring)) :-
+    !,
 	Dim is Dim0,
 	compound_name_arity(Ring, [], Dim).
 new_ring(Dim0, ring(0, Dim, Ring)) :-
@@ -508,7 +574,8 @@ average_ring(ring(Here0,AvgI,Data), Avg) :-
 	avg_window(Start, Here, Dim, Data, Dicts),
 	average_dicts(Dicts, Avg).
 
-avg_window(End, End, _, Data, [Dict]) :- !,
+avg_window(End, End, _, Data, [Dict]) :-
+    !,
 	arg(End, Data, Dict).
 avg_window(Here, End, DIM, Data, [H|T]) :-
 	arg(Here, Data, H),
@@ -531,7 +598,7 @@ average_dicts(Dicts, Avg) :-
 avg_key(Dicts, Len, Key, Key-Avg) :-
 	maplist(get_dict(Key), Dicts, Values),
 	sum_list(Values, Sum),
-	Avg is Sum/Len.
+    Avg is float(Sum)/Len.
 
 %!	save_stats(+StaveSpec, +Stats) is det.
 %
@@ -546,7 +613,9 @@ save_stats(save(File, Interval), Stats) :-
 	!.
 save_stats(_, _).
 
-save_stats_file(File, Stats) :-
+save_stats_file(redis(Server, Key), Stats) =>
+    redis(Server, set(Key, Stats as prolog)).
+save_stats_file(File, Stats) =>
 	setup_call_cleanup(
 	    open(File, write, Out),
 	    save_stats_stream(Stats, Out),
@@ -558,6 +627,22 @@ save_stats_stream(Stats, Out) :-
 		format(Out, 'stats(~1f, ~q).~n', [Now, Stats])
 	      ).
 
+%!  restart_sliding_stats(+Options, +Dim, -Stats) is det.
+%
+%   Try to reload the stats from the saved   version. On any error or if
+%   the format is incompatible, drop the saved   version and start a new
+%   series.
+
+restart_sliding_stats(save(_, _), Dims, Stats) :-
+    use_redis,
+    !,
+    (   wait_redis_key(Server, Key),
+        redis(Server, get(Key), Stats),
+        new_sliding_stats(Dims, New),
+        compatible_sliding_stats(Stats, New)
+    ->  true
+    ;   new_sliding_stats(Dims, Stats)
+    ).
 restart_sliding_stats(save(File, _), Dims, Stats) :-
 	exists_file(File),
 	E = error(_,_),
@@ -585,11 +670,12 @@ compatible_window(ring(_,Avg,Data1), ring(_,Avg,Data2)) :-
 %
 %	Save statistcs to File or the default file.
 
+:- listen(http(shutdown), swish_save_stats(_)).
 swish_save_stats(File) :-
 	thread_self(Me),
 	catch(thread_send_message(swish_stats, Me-save_stats(File)), E,
 	      stats_died(swish_stats, E)),
-	thread_get_message(save_stats(Result)),
+    thread_get_message(Me, save_stats(Result), [timeout(1)]),
 	(   Result = error(E)
 	->  throw(E)
 	;   File = Result
@@ -608,7 +694,8 @@ swish_died_thread(TID, Status) :-
 	member(TID-Stat, Pairs),
 	status_message(Stat, Status).
 
-status_message(exception(Ex), Message) :- !,
+status_message(exception(Ex), Message) :-
+    !,
 	message_to_string(Ex, Message0),
 	string_concat('ERROR: ', Message0, Message).
 status_message(Status, Status).
@@ -627,6 +714,7 @@ sandbox:safe_primitive(swish_debug:stale_pengine(_)).
 sandbox:safe_primitive(swish_debug:swish_statistics(_)).
 sandbox:safe_primitive(swish_debug:swish_stats(_, _)).
 sandbox:safe_primitive(swish_debug:swish_died_thread(_, _)).
+sandbox:safe_primitive(swish_debug:swish_cluster_member(_,_)).
 :- if(current_predicate(malloc_info:malloc_info/1)).
 sandbox:safe_primitive(malloc_info:malloc_info(_)).
 :- endif.

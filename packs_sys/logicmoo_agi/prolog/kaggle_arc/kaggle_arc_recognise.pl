@@ -4,6 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- encoding(iso_latin_1).
 :- include(kaggle_arc_header).
 
 :- discontiguous h666/2. 
@@ -38,7 +39,7 @@ save_tr:- cls_z,
   format('~N~@.',[write_term(perfect_result(X,Y,Z),
     [quoted(true),quote_non_ascii(true),numbervars(false)])])).
 
-got_result(SG,FG,Match):-  
+got_result(SG,FG,Match):-
   copy_term(FG,CFG),copy_term(SG,CSG),
   numbervars(CSG+CFG,999,_,[attvar(bind)]),
   ignore((perfect_result(CSG,CFG,WMatch), 
@@ -52,10 +53,9 @@ was_result(SG,FG,WMatch):-
   ignore((perfect_result(CSG,CFG,WMatch))).
 
 
-
 % hacking on this one
 test_ogs2(H,V,Match):-
-  wqln("searching..."),
+  ppnl("searching..."),
   ss666(T,SG),
   ff666(T,FG),
   copy_term(SG,CSG),copy_term(FG,CFG),
@@ -72,7 +72,7 @@ test_ogs2(H,V,Match):-
 % should still be the sameR
 test_ogs1(H,V,Match):-
   Run = once(( print_side_by_side(FG,SG),nop(ppt(tf=T)))),
-  wqln("searching..."),
+  ppnl("searching..."),
     ff666(T,UFG),      ss666(T,USG),
   copy_term(UFG,FG), copy_term(USG,SG),
 
@@ -95,7 +95,7 @@ never_fg(Var):- freeze(Var, \+ is_fg_color(Var)).
 % should still be the sameR
 test_ogs0(H,V,Match):-
   Run = once(( print_side_by_side(FG,SG),print(test_ogs0(H,V,TMatch)),nop(ppt(tf=T)))),
-  wqln("searching..."),
+  ppnl("searching..."),
     ff666(T,UFG),      ss666(T,USG),
   copy_term(UFG,FG), copy_term(USG,SG),
 
@@ -118,7 +118,7 @@ test_ogs0(H,V,Match):-
 
 test_ogs(H,V,Match):- 
   Run = once(( print_side_by_side(FG,XSG),ppa(FG),ppa(XSG),nop(ppt(tf=T)))),
-  wqln("searching..."),
+  ppnl("searching..."),
     ff666(_,FG),
     ss666(T,SG),
     
@@ -203,7 +203,7 @@ print_sgrid(F):- ((\+ \+ ((constrain_grid(s,_Trig,F,_FG),print_grid(F),nl)))),!.
 
 
 %constrain_type(Var,Cond):- nonvar(Var),!,call(Cond).
-%constrain_type(Var,Cond):- frozen(Var,Goals),sub_term(E,Goals),E=@=Cond,!. % wdmsg(skipping(Cond)),trace.
+%constrain_type(Var,Cond):- frozen(Var,Goals),sub_term(E,Goals),E=@=Cond,!. % u_dmsg(skipping(Cond)),atrace.
 constrain_type(Var,Cond):- freeze(Var,Cond).
 
 find_ogs(H,V,FG,SG):- luser_getval(find_rule,Rul),find_ogs_c(Rul,H,V,FG,SG).
@@ -230,7 +230,7 @@ ogs_0(CheckType,H,V,FG,SG):-
   ogs_1(H,V,XFG,XSG).
   %CheckType=run,
   %print_grid(XFG),nl,
-  %wqnl(found_at(H,V)),
+  %ppnl(found_at(H,V)),
   %print_grid(XSG),nl,
   %true.
 
@@ -320,7 +320,7 @@ grid_label_fg(CT,GridIn,Foreground1):-
   maplist(to_grid_fg(CT,GridIn),Foreground1,ForegroundCopy),!.
 
 %maybe_grid_numbervars(GridIn,GridIn):-!.
-%maybe_grid_numbervars(O,I):- is_map(O),append(O.objs,[O.grid],I),!.
+%maybe_grid_numbervars(O,I):- is_vm_map(O),append(O.objs,[O.grid],I),!.
 maybe_grid_numbervars(GridIn,GridIn):- \+ is_grid(GridIn),!.
 maybe_grid_numbervars(GridI,GridIn):- grid_numbervars(GridI,GridIn),!.
 maybe_grid_numbervars(GridIn,GridIn):-!.
@@ -341,7 +341,7 @@ grid_numbervars(GridIn,GridO):-
 
 offset_grid(H2,V2,FF,OF):-
   offset_v_grid(V2,FF,FF0),
-  h_as_v(offset_v_grid(H2),FF0,OF).
+  c_r(offset_v_grid(H2),FF0,OF).
 
 offset_v_grid(V2,FF,OF):-  
   vis2D(FF,GW,_), 
@@ -529,7 +529,7 @@ constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
      \+ is_spec_fg_color(C2I,_),
      count_o_neighbors(C1I,H2,V2,DCN,GridIn),
      count_c_neighbors(C1I,H2,V2,SCN,GridIn),
-     sort(SCN,SCNS),
+     sort_safe(SCN,SCNS),
      o_c_n(CT,Dir,DCN,SCNS),     
      dif(C2O,C1O))),!,
   constrain_dir_ele(CT, Trig,SEW,GridIn,H,V,C1I,C1O,GridO).
@@ -655,7 +655,7 @@ S="
      B    
      B    
  _________",
- must_det_ll((trace,text_to_grid(S,SG),print_ss(SG),into_g666(SG,G1),Color=blue,once(subst001(G1,blue,Color,G)))).
+ must_det_ll((atrace,text_to_grid(S,SG),print_ss(SG),into_g666(SG,G1),Color=blue,once(subst001(G1,blue,Color,G)))).
 
 hamstring(G):- 
 S="
@@ -710,7 +710,7 @@ into_g666(Obj,G):- is_object(Obj),!,must_det_ll(object_grid(Obj,OG)),!,into_g666
 
 %into_g666(Text,G):- atomic(Text),maybe_fix_ascii(Text,Ascii0),!,into_g666(Ascii0,G).
 into_g666(Text,G):-  notrace(catch(text_to_string(Text,String),_,fail)),!,into_g666(String,G).
-into_g666(Other,G):- wdmsg(failed(into_g666(Other,G))),!,fail.
+into_g666(Other,G):- u_dmsg(failed(into_g666(Other,G))),!,fail.
 
 ss666(T,G):- h666(T,S),must_det_ll(into_g666(S,G)).
 sp666(T,Y):- ss666(T,X), fpad_grid(s,X,Y).
@@ -882,7 +882,7 @@ read_cell(g_style(_RowSep,CellSep,BlackStyle,VarStyle),[C|Rest],Cell,More):-
 read_one_color(BlackStyle,VarStyle,C,Cell):- is_black_color(BlackStyle,VarStyle,C),!,get_black(Cell).
 read_one_color(BlackStyle,VarStyle,C,Cell):- C\==BlackStyle,(C==VarStyle;(var(VarStyle), var(C))),!,Cell=_.
 read_one_color(_BlackStyle,_VarStyle,C,Cell):- trans_to_color1(C,Cell),!.
-read_one_color(_BlackStyle,_VarStyle,C,unreadable(C)):- trace, !.
+read_one_color(_BlackStyle,_VarStyle,C,unreadable(C)):- atrace, !.
 
 trans_to_color1(Num,Color):- atom_number(Num,CC),color_name(CC,Color),!.
 trans_to_color1(' ',_):-!.
@@ -932,11 +932,11 @@ insert_col_row_pad_open(H0,V0,G,GUU):-
    insert_col_pad_open(H0,G,GU),
    insert_row_pad_open(V0,GU,GUU).
 
-insert_col_pad_open(V0,GU,GUU):-  h_as_v(insert_row_pad_open(V0),GU,GUU).
+insert_col_pad_open(V0,GU,GUU):-  c_r(insert_row_pad_open(V0),GU,GUU).
 insert_row_pad_open(V0,GU,GridU):- functor(P,v,V0),P=..[v|L],append(L,GU,LGU), append(LGU,_,GridU).
 
 
-h666(colors,
+h666(colors_cc,
 [[4,5,1,7,8,9,4,5,2,7,8,9],
  [4,5,1,7,8,9,4,5,1,7,8,9],
  [4,5,1,7,8,9,4,5,1,7,8,9],
@@ -948,12 +948,12 @@ h666(colors,
  [1,1,1,7,8,9,4,5,1,7,8,9],
  [4,5,1,7,8,9,4,5,1,7,8,9]]).
 
-h666(colors,
+h666(colors_cc,
 [[1,2,3,4,5,1,7,8,9],
  [1,2,3,4,5,1,7,8,9],
  [1,2,3,4,5,1,7,8,9]]).
 
-h666(colors,
+h666(colors_cc,
 [[4,5,1,7,8,9],
  [4,5,1,7,8,9],
  [4,5,1,7,8,9],
@@ -965,7 +965,7 @@ h666(colors,
 
 
 
-h666(colors,
+h666(colors_cc,
 [[1,2,3,4,5,2,7,8,9],
  [1,2,3,4,5,1,7,8,9],
  [1,2,3,4,5,1,7,8,9],
@@ -1112,7 +1112,7 @@ f666(1,[[3]]).
 
 create_padding(GridIn,LowH,LowV,HiH,HiV,H,V,HH,VV,GridO):- 
    fix_v_range(LowV,HiV,H,V,VV,GridIn,Grid1),
-   h_as_v(fix_v_range(LowH,HiH,VV,H,HH),Grid1,GridO).
+   c_r(fix_v_range(LowH,HiH,VV,H,HH),Grid1,GridO).
    
 
 

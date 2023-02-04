@@ -957,6 +957,23 @@ define(["jquery", "config", "modal", "form", "gitty",
         /**
          * Provide information about the current source in a modal
          * dialog.
+     * for being modified.
+     */
+
+     kill: function(force) {
+       return this.each(function() {
+	 var elem = $(this);
+	 var tab = elem.closest(".tab-pane");
+	 if ( tab.length == 1 ) {
+	   var tabbed = tab.closest(".tabbed");
+	   tabbed.tabbed('removeTab', tab.attr('id'), force);
+	 }
+       });
+     },
+
+    /**
+     * Provide information about the current source in a modal
+     * dialog.
          */
         info: function() {
           var data = this.data(pluginName);

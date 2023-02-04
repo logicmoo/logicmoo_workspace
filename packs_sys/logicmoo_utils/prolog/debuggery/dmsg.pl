@@ -178,6 +178,7 @@
 
 :- thread_local(bfly_tl:bfly_setting/2).
 
+use_html_styles:-!,fail.
 use_html_styles:- notrace(use_html_styles0).
 use_html_styles0 :- on_x_fail(httpd_wrapper:http_current_request(_)),!.
 use_html_styles0 :- on_x_fail(pengines:pengine_self(_)),!.
@@ -205,7 +206,7 @@ using_style_emitter(sgr,_Out,Ctrl,Goal,How):- fail,
 
 using_style_emitter(Emitter,Out,Ctrl,Goal,How):- 
   cnvt_in_out(Emitter,Out,Ctrl,OnCode,OffCode),!,
-  How = setup_call_cleanup((OnCode,!),Goal,(OffCode,!)).
+  How = setup_call_cleanup((OnCode,!),once(Goal),(OffCode,!)).
 
 style_emitter(Out,NV):- nonvar(NV),style_emitter(Out,Var),!,NV==Var.
 style_emitter(Out,none):- dis_pp(ansi), \+ is_tty(Out), !.
@@ -421,32 +422,107 @@ if_defined_local(G,Else):- current_predicate(_,G)->G;Else.
 %:- user:ensure_loaded(logicmoo_util_loop_check).
 
 
+:- meta_predicate(wets(?,0)).
+:- export(wets/2).
+wets(S,Goal):- var(S),!,with_error_to_string(S,Goal).
+wets(S,Goal):- is_stream(S),!,with_error_to_stream(S,Goal).
+wets(S,Goal):- compound(S), with_error_to(S,Goal).
+
+
+:- meta_predicate with_error_to(+,0).
+with_error_to(Dest,Goal):-
+  with_error_to_each(Dest,once(Goal)).
+
+:- meta_predicate with_error_to_string(+,0).
+with_error_to_stream(S,Goal):-
+  with_ioe((
+     (set_stream(S,alias(user_error)),
+         set_stream(S,alias(current_error))),
+     locally_tl(thread_local_error_stream(S),Goal))).
+
+:- meta_predicate wete(+,0).
+wete(Dst,Goal):- with_error_to_each(Dst,Goal).
+:- meta_predicate with_error_to_each(+,0).
+with_error_to_each(Dest,Goal):- compound(Dest), \+ compound_name_arity(Dest,_,0), 
+  Dest=..[F,A],stream_u_type(F),!,
+  Unset = (set_stream(Was,alias(current_error)),set_stream(Was,alias(user_error))),
+  once((member(Alias,[user_error,current_error]),stream_property(Was,alias(Alias)))),
+  Done = mfs_end(MFS,A),
+  MFS = mfs(_,F,_,set_error_stream,Unset),
+  call_cleanup(trusted_redo_call_cleanup(mfs_start(MFS),(Goal,Done),Done),Done).
+
+with_error_to_each(Dest,Goal):- with_error_to_stream(Dest,Goal).
+
+new_mfs(MFS):- MFS = mfs(Handle,_,Stream,_,_),
+  new_memory_file(Handle), open_memory_file(Handle,write,Stream,[free_on_close(true)]).
+
+mfs_start(MFS):-
+  arg(2,MFS,F), arg(3,MFS,OS), arg(4,MFS,Set), NMFS= mfs(Handle,F,Stream,Set,_Unset), 
+  (is_stream(OS)
+    -> Stream =OS 
+    ; (new_mfs(NMFS), nb_setarg(1,MFS,Handle),nb_setarg(3,MFS,Stream))),
+ call(Set,Stream).
+
+set_error_stream(Stream):- set_stream(Stream,alias(current_error)),set_stream(Stream,alias(user_error)).
+
+mfs_end(MFS,A):- 
+  MFS = mfs(Handle,F,Stream,_Set,Unset),
+  ignore((is_stream(Stream),close(Stream), mem_handle_to_substring(Handle,Str),substring_to_type(Str,F,A))),
+  call(Unset).
+  
+
+
+
+stream_u_type(atom). stream_u_type(string). stream_u_type(codes). stream_u_type(chars).
+
+mem_handle_to_substring(Handle,String):- memory_file_to_string(Handle,String),!.
+mem_handle_to_substring(Handle,SubString):- 
+  memory_file_line_position(Handle, _Line, _LinePos, Offset),
+  %seek(Stream, 0, current, Offset)
+  memory_file_substring(Handle, 0, Offset, _After, -SubString).
+
+substring_to_type(Str,atom,Atom):- atom_string(Atom,Str).
+substring_to_type(Str,string,Str).
+substring_to_type(Str,codes,Codes):- string_codes(Str,Codes).
+substring_to_type(Str,chars,Chars):- string_chars(Str,Chars).
+  
+mem_handle_to_type(Handle,atom,Atom):- !, memory_file_to_atom(Handle,Atom).
+mem_handle_to_type(Handle,string,String):- !, memory_file_to_string(Handle,String).
+mem_handle_to_type(Handle,codes,Codes):- !, memory_file_to_codes(Handle,Codes).
+mem_handle_to_type(Handle,chars,Chars):- !, memory_file_to_string(Handle,Atom),string_chars(Atom,Chars).
+
+:- meta_predicate with_error_to_string(-,0).
+with_error_to_string(S,Goal):- 
+   new_memory_file(Handle),
+   open_memory_file(Handle,write,Stream,[free_on_close(true)]),
+   call_cleanup(with_error_to_each(Stream,Goal),
+           (close(Stream),memory_file_to_string(Handle,S))).
+
 :- meta_predicate with_output_to_each(+,0).
 
-with_output_to_each(Output,Goal):- Output= atom(A),!,
+with_output_to_each(Dest,Goal):- compound(Dest), \+ compound_name_arity(Dest,_,0), 
+  Dest=..[F,A],stream_u_type(F),!,
+  current_output(Was), 
+  Unset = set_output(Was),
+  MFS = mfs(_,F,_,set_output,Unset),
+  Done = mfs_end(MFS,A),
+  call_cleanup(trusted_redo_call_cleanup(mfs_start(MFS),(Goal,Done),Done),Done).
+/*
+with_output_to_each(Dest,Goal):- Dest=..[F,A],!,
    current_output(Was),
-   nb_setarg(1,Output,""),
+   nb_setarg(1,Dest,""),
    new_memory_file(Handle),
    open_memory_file(Handle,write,Stream,[free_on_close(true)]),
      scce_orig(set_output(Stream),
       setup_call_cleanup(true,Goal,
-        (close(Stream),memory_file_to_atom(Handle,Atom),nb_setarg(1,Output,Atom),ignore(A=Atom))),
+        (close(Stream),mem_handle_to_type(Handle,F,Atom),nb_setarg(1,Dest,Atom),ignore(A=Atom))),
       (set_output(Was))).
-
-with_output_to_each(Output,Goal):- Output= string(A),!,
+*/
+with_output_to_each(Dest,Goal):- 
    current_output(Was),
-   nb_setarg(1,Output,""),
-   new_memory_file(Handle),
-   open_memory_file(Handle,write,Stream,[free_on_close(true)]),
-     scce_orig(set_output(Stream),
-      setup_call_cleanup(true,Goal,
-        (close(Stream),memory_file_to_string(Handle,Atom),nb_setarg(1,Output,Atom),ignore(A=Atom))),
-      (set_output(Was))).
+    scce_orig(set_output(Dest),Goal,set_output(Was)).
 
-with_output_to_each(Output,Goal):- 
-   current_output(Was), 
-    scce_orig(set_output(Output),Goal,set_output(Was)).
-    
+
 
 % ==========================================================
 % Sending Notes
@@ -1155,15 +1231,19 @@ mesg_color(T,C):-cfunctor(T,F,_),!,functor_color(F,C),!.
 % Prepend Each Line.
 %
 
-maybe_print_prepended(Pre,S):-
-  atomics_to_string(L,'\n',S),print_prepended_lines(Pre,L),!.
+maybe_print_prepended(Out,Pre,S):- atomics_to_string(L,'\n',S), maybe_print_pre_pended_L(Out,Pre,L).
+maybe_print_prepended(Out,_,[L]):- write(Out,L),!,flush_output(Out).
+maybe_print_prepended(Out,Pre,[H|L]):- write(Out,H),nl(Out),!,write(Out,Pre),maybe_print_pre_pended_L(Out,Pre,L).
 
-prepend_each_line(Pre,Goal):- fail,
+prepend_each_line(Pre,Goal):-
   current_predicate(predicate_streams:new_predicate_output_stream/2),!,
-  call(call,predicate_streams:new_predicate_output_stream([Data]>>maybe_print_prepended(Pre,Data),Stream)),
-  undo(ignore(catch(close(Stream),_,true))),!,
+  current_output(Out),
+  call(call,predicate_streams:new_predicate_output_stream([Data]>>maybe_print_prepended(Out,Pre,Data),Stream)),
+  set_stream(Stream,tty(true)),
+  %set_stream(Stream,buffer(false)),
+  %undo(ignore(catch(close(Stream),_,true))),!,
   setup_call_cleanup(true,
-   (with_output_to_each(Stream,Goal),flush_output(Stream)),
+   (with_output_to_each(Stream,once(Goal)),flush_output(Stream)),
     ignore(catch(close(Stream),_,true))),!.
 
 prepend_each_line(Pre,Goal):-
@@ -1691,6 +1771,10 @@ wots(S,Goal):-
 wotso(Goal):- !, call(Goal).
 wotso(Goal):- wots(S,Goal), ignore((S\=="",write(S))).
 
+:- meta_predicate(wote(0)).
+:- export(wote/1).
+wote(G):-stream_property(X,file_no(2)), with_output_to(X,G).
+
 :- meta_predicate(weto(0)).
 %weto(G):- !, call(G).
 :- export(weto/1).
@@ -1698,6 +1782,8 @@ weto(G):-
   stream_property(UE,alias(user_error)),
   stream_property(CO,alias(current_output)),
   UE==CO,!,call(G).
+
+weto(G):- !, with_error_to_each(current_output,G).
 weto(G):-
   stream_property(UE,alias(user_error)),
   stream_property(UO,alias(user_output)),
@@ -1706,20 +1792,14 @@ weto(G):-
   setup_call_cleanup(
      (set_stream_nop(CO,alias(user_error)),set_stream_nop(CO,alias(user_output)),
          set_stream_nop(CO,alias(current_error)),set_stream_nop(CO,alias(current_output))),
-     locally_tl(thread_local_error_stream(CO),G), 
+     locally_tl(thread_local_error_stream(CO),once(G)), 
      (set_stream_nop(UE,alias(user_error)),set_stream_nop(CE,alias(current_error)),
          set_stream_nop(UO,alias(user_output)),set_stream_nop(CO,alias(current_output)))).
 weto(G):- call(G).
 
 set_stream_nop(S,P):- nop(set_stream(S,P)).
 
-:- meta_predicate(wets(+,0)).
-:- export(wets/2).
-wets(S,G):-
-  with_ioe((
-     (set_stream(S,alias(user_error)),
-         set_stream(S,alias(current_error))),
-     locally_tl(thread_local_error_stream(S),G))).
+
 
 :- meta_predicate(with_ioe(0)).
 :- export(with_ioe/1).
@@ -1761,7 +1841,7 @@ mUST_det_ll(mUST_det_ll(X)):- !, mUST_det_ll(X).
 mUST_det_ll(X):- tracing,!,mUST_not_error(X).
 mUST_det_ll((X,Y,Z)):- !, (mUST_det_ll(X),mUST_det_ll(Y),mUST_det_ll(Z)).
 mUST_det_ll((X,Y)):- !, (mUST_det_ll(X)->mUST_det_ll(Y)).
-mUST_det_ll(fif(X,Y)):- !, fif(mUST_not_error(X),mUST_det_ll(Y)).
+%mUST_det_ll(if_t(X,Y)):- !, if_t(mUST_not_error(X),mUST_det_ll(Y)).
 mUST_det_ll((A->X;Y)):- !,(mUST_not_error(A)->mUST_det_ll(X);mUST_det_ll(Y)).
 mUST_det_ll((A*->X;Y)):- !,(mUST_not_error(A)*->mUST_det_ll(X);mUST_det_ll(Y)).
 mUST_det_ll((X;Y)):- !, ((mUST_not_error(X);mUST_not_error(Y))->true;mUST_det_ll_failed(X;Y)).
@@ -1774,11 +1854,11 @@ mUST_det_ll(X):-
 
 mUST_not_error(X):- catch(X,E,(E=='$aborted'-> throw(E);(/*arcST,*/wdmsg(E=X),wdmsg(rRTrace(E)=X),rRTrace(X)))).
 
-mUST_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,noRTrace,trace,rRTrace(X),!.
+mUST_det_ll_failed(X):- notrace,wdmsg(failed(X))/*,arcST*/,nortrace,trace,rRTrace(X),!.
 % mUST_det_ll(X):- mUST_det_ll(X),!.
 
 rRTrace(X):- !, rtrace(X).
-rRTrace(X):- notrace,noRTrace, arcST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> rtrace(X); (trace,call(X))).
+rRTrace(X):- notrace,nortrace, arcST, sleep(0.5), trace, (notrace(\+ current_prolog_flag(gui_tracer,true)) -> rtrace(X); (trace,call(X))).
 
 %= 	 	 
 
@@ -1835,7 +1915,7 @@ terminal_ansi_goal(Stream, Class, Goal):-
         Stream,
         setup_call_cleanup(   
             keep_line_pos(current_output, format('\e[~wm', [Code])),
-            Goal,
+            once(Goal),
             keep_line_pos(current_output, format('\e[0m'))
         )
     ),
@@ -2125,8 +2205,9 @@ style_tag(italic,em).
 style_tag(underline,u).
 style_style(blink,"animation: blinker 0.6s linear infinite;").
 style_style(blink(_),"animation: blinker 0.6s linear infinite;").
-style_style(reset,"all: initial;").
-%style_style(reset,"all: unset;").
+%style_style(reset,"all: initial;").
+%style_style(reset,"display: block").
+style_style(reset,"all: unset;").
 style_style(font(2),"filter: brightness(60%);").
 style_style(font(3),"font-style: italic;").
 style_style(font(7),"filter: invert(100%);").

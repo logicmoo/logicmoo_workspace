@@ -4,6 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- encoding(iso_latin_1).
 :- include(kaggle_arc_header).
 
 
@@ -114,8 +115,8 @@ the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
 the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
 the_hammer(Color,ColorComplex):- 
-  ColorComplex = obj([amass(6), colorless_points([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
-  colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
+  ColorComplex = obj([mass(6), colorlesspoints([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+  colors_cc([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rot2L(sameR), loc2D(2, 5), 
   changes([]), iz(shape(rectangle)), iz(hammer), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
@@ -165,19 +166,19 @@ into_lib_object2(ShapeProps,ScaledGrid,LibObj):-
   %ppa(grid_colors(ScaledGrid,SPoints)),
   globalpoints_maybe_bg(ScaledGrid,SPoints)))),
   G = make_indiv_object_no_vm(into_lib_object2,H,V,[iz(into_lib_object),grid(ScaledGrid),vis2D(H,V)|ShapeProps],SPoints,LibObj),
-  catch(G,E,(arcST,wdmsg(E=G),trace,G)).
+  catch(G,E,(arcST,u_dmsg(E=G),atrace,G)).
 
 % todo temp
 sortshapes(List,Set):- my_list_to_set_cmp(List, using_compare(shape_key), Set).
 % sortshapes(List,ListS):- predsort_using_only(shape_key,List,ListS),!.
-%sortshapes(List,ListS):- sort(List,ListS),!.
+%sortshapes(List,ListS):- sort_safe(List,ListS),!.
 
 
 frozen_key(Key1,Key):- copy_term(Key1,Key),numbervars(Key,0,_,[attvar(skip),singletons(true)]).
 
 shape_key(Shape,Key):- into_grid(Shape,Key1),frozen_key(Key1,Key).
 
-shape_key_unrotated(Shape,Key):- shape_key(Shape,KeyR), grav_rot(Key,_,KeyR).
+shape_key_undo_effectd(Shape,Key):- shape_key(Shape,KeyR), grav_rot(Key,_,KeyR).
 
 
 searchable(Group,List):- override_group(searchable(Group,List)),!.
@@ -194,7 +195,7 @@ into_monochrome(VM):- Grid = VM.grid,
 into_monochrome(Color,Mono):- called_gid('_mono', into_monochrome2, Color,Mono),!.
 
 into_monochrome2(NoBlack,Mono):-  get_black(Black),
-  colors_count_black_first(NoBlack,CCBF), 
+  color_cc_black_first(NoBlack,CCBF), 
     CCBF=[cc(Black,0),cc(BGC,_)|_],!, 
   into_monochrome4(fg,BGC,NoBlack,Mono).
 into_monochrome2(Color,Mono):- get_black(Black),into_monochrome4(fg,Black,Color,Mono).
@@ -214,7 +215,7 @@ from_monochrome4(_FG,BG,Color,Mono):- is_bg_color(Color), apply_recolor(BG,Color
 from_monochrome4(FG,_BG,Color,Mono):- is_fg_color(Color), apply_recolor(FG,Color,Mono),!.
 
 apply_recolor(Izer,Color,Mono):- 
-  (is_color(Izer)->copy_term(Izer,Mono);( \+ missing_arity(Izer,2) -> call(Izer,Color,Mono); ( \+ missing_arity(Izer,1) -> call(Izer,Mono)))).
+  (is_color(Izer)->copy_term(Izer,Mono);( callable_arity(Izer,2) -> call(Izer,Color,Mono); ( callable_arity(Izer,1) -> call(Izer,Mono)))).
 
 
 into_monochrome3(MonoP2,Color,Mono):- into_mono3(MonoP2,Color,Mono).
@@ -307,7 +308,7 @@ add_shape_lib(Type,Obj):-  is_list(Obj), \+ is_grid(Obj), !, mapgroup(add_shape_
 
 add_shape_lib(Type,Obj):- add_shape_lib0(Type,Obj).
 
-add_shape_lib0(Type,Obj):- amass(Obj,Mass),!,
+add_shape_lib0(Type,Obj):- mass(Obj,Mass),!,
   %dash_chars, print_grid(Obj),
   ( Mass<3 
    -> nop(pp(too_small_for_shapelib(Type,Mass))) ; (nop(pp(add_shape_lib(Type))),learn_hybrid_shape(Type,Obj))), 
@@ -447,6 +448,15 @@ solid_square(C,HW,Grid):-
 
 :- decl_sf(hollow_square(fg_color,bg_color,size2D)).
 
+/*
+A = [<,-,>] 
+    [-,-,>]
+    [-,>,>]
+
+B = [-,-,>]  = [-,>,>] 
+*/
+  
+
 hollow_square(C,HW,D):- get_bgc(BG),!,hollow_square(C,BG,HW,D).
 hollow_square(C,BG,HW,D):-
   between(1,30,HW),
@@ -518,7 +528,7 @@ show_shape_lib(Name):- make,
 
 clear_shape_lib(Name):- 
   findall(_,(clause(in_shape_lib(Name,_),true,Ref),erase(Ref)),L),
-  length(L,Len),pp(clear_shape_lib(Name)=Len),
+  length(L,Len),(Len > 0 -> pp(clear_shape_lib(Name)=Len) ; true),
   nop(show_shape_lib(Name)).
  
 shape_lib_expanded(Name,GallerySOS):- 
@@ -600,7 +610,7 @@ expand_shape_directives(Shapes,None,SmallLib):- None==[],!,
 
       % Need one the the three bellow
        %decolorize, %"Add blue indivs", 
-       %add(change_color), % "Add new colors indivs",		 
+       %add(change_color), % "Add new colors_cc indivs",		 
        %into_any_color,
 
        smallest_first, "smallest first",

@@ -9,8 +9,9 @@
 
 :- meta_predicate(grid_call(+,+,-)).
 
-must_grid_call(T,I,O):- (grid_call(T,I,O)*->true; (print_side_by_side_msg(failed_grid_call(T),I,O),trace,fail)).
- 
+must_grid_call(T,I,O):- (grid_call(T,I,O)*->true; (print_side_by_side_msg(failed_grid_call(T),I,O),atrace,grid_call(T,I,O),fail)).
+
+
 gref_call(P1,In,Out):- 
   duplicate_term(in(In),IIn),
   call(P1,IIn), 
@@ -18,21 +19,41 @@ gref_call(P1,In,Out):-
 dref_grid(IIn,Grid):- is_grid(IIn),!,Grid=IIn.
 dref_grid(IIn,Grid):- arg(_,IIn,Grid),is_grid(Grid),!.
 
-grid_call(T,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(T,G,O).
-grid_call(=,I,O):- !, I=O. 
-grid_call(P2,IO,IIOO):- is_plus_split(IO,I,O),!,unplus_split(IIOO,II,OO),grid_call(P2,I,II),grid_call(P2,O,OO).
-grid_call(Nil,I,I):- Nil==[],!. 
-grid_call([H|T],I,O):- nonvar(H), !, grid_call(H,I,M), grid_call(T,M,O).
+grid_call(T,I,O):- grid_call(call,T,I,O).
 
-grid_call(P2,IG,IIOO):- is_grid_group(IG),!, grid_group_call(P2,IG,IIOO).
-%grid_call(T,I,O):- into_p2(T,I,O,P),check_args(P,PP),call(PP).
-grid_call(T,I,O):- call(T,I,O).
+grid_call(PC,Nil,I,O):- Nil==[],!,call(PC,I=O).
+grid_call(PC,T,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(PC,T,G,O).
+grid_call(PC,=,I,O):- !, call(PC,I=O). 
+grid_call(PC,P2,IO,IIOO):- is_plus_split(IO,I,O),!,unplus_split(IIOO,II,OO),grid_call(PC,P2,I,II),grid_call(PC,P2,O,OO).
+grid_call(PC,[H|T],I,O):- nonvar(H), !, grid_call(PC,H,I,M), grid_call(PC,T,M,O).
 
+grid_call(PC,P2,IG,IIOO):- is_grid_group(IG),!, call(PC,grid_group_call(P2,IG,IIOO)).
+%grid_call(PC,T,I,O):- into_p2(T,I,O,P),check_args(P,PP),call(PP).
+grid_call(PC,T,I,O):- call(PC,call(T,I,O)).
 
+c_r(P2,Grid,Double):- a_as_g(h_as_v0(P2),Grid,Double).
+r_c(P2,Grid,Double):- h_as_rv(P2,Grid,Double).
+
+a_as_g(P2,I,O):- is_grid(I),!,grid_call(P2,I,O).
+a_as_g(P2,Group,Double):- is_group(Group),!,into_p2(P2,Group,Double,PIO),override_group(PIO),!.
+a_as_g(P2,I,O):- cast_to_grid(I,II,UnCast),grid_call(P2,II,OO),uncast(I,UnCast,OO,O).
 
 into_p2(P2,I,O,PIO):- atom(P2),!,PIO=..[P2,I,O].
 into_p2(P2,I,O,PIO):- P2=..FArgs,append(FArgs,[I,O],FArgsIO),!,PIO=..FArgsIO.
 
+h_as_v0(P2,I,O):- rot90(I,G90), safe_grid(G90,S90), grid_call(P2,S90,GG90), rot270(GG90,O).
+
+
+safe_grid(I,T):- mapgrid(=,I,T).
+
+h_and_v(P2,Grid,Double):- a_as_g(h_and_v0(P2),Grid,Double).
+h_and_v0(P2,I,O):- safe_grid(I,T), grid_call(P2,T,M),c_r(P2,M,O),!.
+
+h_as_rv(P2,Grid,Double):- a_as_g(h_as_rv0(P2),Grid,Double).
+h_as_rv0(P2,I,O):- rot270(I,G90), safe_grid(G90,S90), grid_call(P2,S90,GG90), rot90(GG90,O).
+
+
+and(P2a,P2b,I,O):- grid_call(P2a,I,M),grid_call(P2b,M,O).
 
 grid_group_call(P2,IG,IIOO):- findall(O,(member(I,IG), object_call(P2,I,O)),List),List\==[],list_to_set(List,IIOO).
 
@@ -53,7 +74,7 @@ grid_call_alters(T,I,O):- grid_call(T,I,O),I\=@=O.
 try_p2(P2,In,Out):- grid_call(P2,In,Mid),Mid=@=Out.
 
 is_plus_split(IO,I,O):- compound(IO),unplus_split(IO,I,O).
-unplus_split(II+OO,II,OO).
+unplus_split(II^OO,II,OO).
 
 show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,I,O),!,unplus_split(IIIOOO,III,OOO),
  must_det_ll((grid_to_gid(I,GIDI),grid_to_gid(O,GIDO),
@@ -83,7 +104,7 @@ member_or_it(G,G).
 
 
 show_workflow(InO,_,InO):-pass_thru_workflow(InO),!. 
-show_workflow(In,String,Out):- nonvar(Out),!,arcST,trace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
+show_workflow(In,String,Out):- nonvar(Out),!,arcST,atrace,must_det_ll((show_workflow(In,String,OutM),Out=OutM)).
 show_workflow(InO,String,InO):- string(String),!, 
  ignore((InO\==[], nl, writeln(String), forall(member_or_it(G,InO),ignore(print_grid(_,_,String,G))))).
 show_workflow(InO,[],InO):-!.
@@ -127,7 +148,7 @@ call_expanded(_VM,G):- catch(call(G),E,(arcST,pp(E),rrtrace(G))).
 
 quinish(Var):- var(Var),!.
 quinish(Var):- is_grid(Var),!.
-quinish(Var):- is_map(Var),!.
+quinish(Var):- is_vm_map(Var),!.
 quinish(Var):- is_object(Var),!.
 quinish(Var):- is_group(Var),!.
 quinish(Var):- is_list(Var),!.
@@ -168,8 +189,8 @@ set_vm_grid(VM,In):- In == VM,!.
 set_vm_grid(VM,In):- var(In),!, In = VM.grid . 
 set_vm_grid(VM,In):- is_grid(In), !, set_vm_grid_now(VM,In).
 set_vm_grid(VM,In):- into_grid(In,Grid), set_vm_grid_now(VM,Grid),!.
-set_vm_grid(VM,In):- is_map(In), map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
-set_vm_grid(VM,In):- collapsible_section(debug,set_vm_grid_now(VM,In)).
+set_vm_grid(VM,In):- is_vm_map(In), map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
+set_vm_grid(VM,In):- w_section(debug,set_vm_grid_now(VM,In)).
 
 set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
 set_vm_grid_now(VM,Grp):- 
@@ -177,7 +198,7 @@ set_vm_grid_now(VM,Grp):-
   gset(VM.type) = data_type(Type),
   pp(yellow,set_vm_grid_now(Type)),pp(cyan,Type),fail.
 set_vm_grid_now(VM,In):- VM==In,!.
-set_vm_grid_now(VM,In):- is_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
+set_vm_grid_now(VM,In):- is_vm_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
 set_vm_grid_now(VM,Grp):- is_group(Grp), !,
   gset(VM.points_o) = VM.points,
   gset(VM.objs)=Grp,
@@ -260,10 +281,10 @@ run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut)
 run_dsl(_VM,_Mode,sameR,In,Out):-!, duplicate_term(In,Out).
 
 % prevents unneeded updates such as color/position settings
-run_dsl(VM,_Mode,Prog,In,Out):- \+ missing_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
-run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, vm_grid(VM, call(Step,VM),In,Out).
-run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), Step=..[F|ARGS], !, vm_grid(VM, apply(F,[VM|ARGS]),In,Out).
-run_dsl(VM,_Mode,Step,In,Out):- \+ missing_arity(Step, 1), functor(Step,F,_), ping_indiv_grid(F), !, vm_grid(VM, call(Step,VM.grid),In,Out).
+run_dsl(VM,_Mode,Prog,In,Out):- callable_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, vm_grid(VM, call(Step,VM),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), Step=..[F|ARGS], !, vm_grid(VM, apply(F,[VM|ARGS]),In,Out).
+run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), ping_indiv_grid(F), !, vm_grid(VM, call(Step,VM.grid),In,Out).
 
 run_dsl(VM,_Mode,Step,In,Out):-  i_step(Step), !, vm_grid(VM,fti(VM,Step),In,Out).
 
@@ -274,7 +295,7 @@ run_dsl(VM,enforce,color(Obj,Color),In,Out):-!,
 
 run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc2D(Obj,X,_Old), override_object_io(VM,loc2D(X,New),Obj,In,Out).
 
-run_dsl(VM,Mode,Prog,In,Out):- \+ missing_arity(Prog,2), !, 
+run_dsl(VM,Mode,Prog,In,Out):- callable_arity(Prog,2), !, 
   vm_grid(VM, run_dsl_call_io(VM,Mode,Prog,In,Out), In, Out).
 
 run_dsl(_VM,Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
@@ -290,15 +311,15 @@ override_object_io(_VM,Update,Obj,In,Out):-
   add_global_points(ObjCopy,Mid, Out).
 
 
-sync_colors(Orig,Colors):- is_object(Orig),!,colors(Orig,Colors),
-  globalpoints(Orig,OrigGPoints),colors(OrigGPoints,Colors),
-  localpoints(Orig,OrigLPoints),colors(OrigLPoints,Colors),!.
-sync_colors(Orig,Colors):- colors(Orig,Colors).
+sync_colors(Orig,Colors):- is_object(Orig),!,colors_cc(Orig,Colors),
+  globalpoints(Orig,OrigGPoints),colors_cc(OrigGPoints,Colors),
+  localpoints(Orig,OrigLPoints),colors_cc(OrigLPoints,Colors),!.
+sync_colors(Orig,Colors):- colors_cc(Orig,Colors).
 
 uncast_grid_to_object(Orig,Grid,NewObj):- 
  must_det_ll((
   localpoints(Grid,LocalPoints),
-  (( LocalPoints==[]) -> (arcST,writeq(LocalPoints),trace ); true),
+  (( LocalPoints==[]) -> (arcST,writeq(LocalPoints),atrace ); true),
   rebuild_from_localpoints(Orig,LocalPoints,NewObj))).
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
@@ -319,7 +340,7 @@ into_grids(P,G):- no_repeats(G,quietly(cast_to_grid(P,G, _))).
 
 :- decl_pt(into_grid(+(prefer_grid),-grid)).
 into_grid(P,G):- var(P),!,ignore(get_current_test(TestID)),test_grids(TestID,G),grid_to_tid(G,P).
-into_grid(A+B,AA+BB):- nonvar(A), !, cast_to_grid(A,AA, _),cast_to_grid(B,BB, _).
+into_grid(A^B,AA^BB):- atrace, nonvar(A), !, cast_to_grid(A,AA, _),cast_to_grid(B,BB, _).
 into_grid(P,G):- cast_to_grid(P,G, _).
 
 map_to_grid(objs,Dict,Obj,Grid,Closure):- get_kov(objs,Dict,Obj), Obj\=[], cast_to_grid(Obj,Grid,Closure),!.
@@ -341,8 +362,8 @@ cast_to_grid(Text,Grid, print_grid_to_string ):- string(Text),text_to_grid(Text,
 cast_to_grid(Text,Grid, print_grid_to_atom ):- atom(Text),atom_length(Text,Len),Len>20,atom_contains(Text,'|'),text_to_grid(Text,Grid),!.
 
 % TODO Comment out next line to prefer the line after
-% cast_to_grid(Dict,Grid, (=) ):- is_map(Dict), get_kov(grid,Dict,Grid),!.
-cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
+% cast_to_grid(Dict,Grid, (=) ):- is_vm_map(Dict), get_kov(grid,Dict,Grid),!.
+cast_to_grid(Dict,Grid, back_to_map(Was,Dict,Prev,Grid,Closure)):- is_vm_map(Dict), map_to_grid(Was,Dict,Prev,Grid,Closure),!.
 
 cast_to_grid(Obj,Grid, Closure):- cast_to_grid1(Obj,Grid, Closure).
 
@@ -406,16 +427,22 @@ called_gid(_Suffix,P2,Color,MGrid):- call(P2,Color,MGrid),!.
 called_gid3(_P2,MOID,_Color,MGrid):- was_grid_gid(MGrid,MOID),!.
 called_gid3(P2,MOID,Color,MGrid):- call(P2,Color,MGrid),assert_grid_gid(MGrid,MOID).
 
-grid_to_gid(Grid,OID):- was_grid_gid(Grid,OID),!.
-grid_to_gid(Grid,OID):- grid_to_etid(Grid,ID),!,(clause(tid_to_gids(ID,OID),true)*-> true ; term_to_oid(ID,OID)).
-grid_to_gid(Grid,OID):- grid_to_tid(Grid,ID),!,(clause(tid_to_gids(ID,OID),true)*-> true ; term_to_oid(ID,OID)).
+grid_to_gid(Grid,GID):- was_grid_gid(Grid,GID),!.
+grid_to_gid(Grid,GID):- grid_to_etid(Grid,ID),!,ensure_now_tid_gids(Grid,ID,GID).
+grid_to_gid(Grid,GID):- grid_to_tid(Grid,ID),!,ensure_now_tid_gids(Grid,ID,GID).
+
+ensure_now_tid_gids(Grid,ID,GID):- 
+  (clause(tid_to_gids(ID,GID),true)*-> true ; term_to_oid(ID,GID)),
+  assert_grid_tid(Grid,ID),
+  assert_grid_gid(Grid,GID),!.
+
 % be03b35f
 
 was_grid_gid(G,GID):- current_predicate(gid_to_grid/2), call(call,gid_to_grid,GID,G),assertion(atom(GID)).
 was_grid_gid(Grid,GID):- atom(GID),oid_to_gridoid(GID,G),into_grid(G,GG),Grid=GG,assertz_if_new(gid_to_grid(GID,Grid)).
 was_grid_gid(Grid,GID):- is_grid_tid(Grid,GID),atom(GID),assertz_if_new(gid_to_grid(GID,Grid)).
 assert_grid_tid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
-assert_grid_gid(Grid,GID):- assertz_if_new(is_grid_tid(Grid,GID)),ignore((atom(GID),assertz_if_new(gid_to_grid(GID,Grid)))).
+assert_grid_gid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
 
 oid_to_gridoid(GID,G):- current_predicate(gid_to_grid/2), call(call,gid_to_grid,GID,G),!.
 
@@ -449,7 +476,7 @@ known_grid0(ID,G):- compound(ID),ID=(_>(Trn+Num)*IO),!,fix_test_name(ID,Name,Trn
 known_grid0(ID,G):- compound(ID),ID=(_>_),fix_test_name(ID,Name,ExampleNum),!,(kaggle_arc_io(Name,ExampleNum,_IO,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_shared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
 %known_grid0(ID,G):- (is_unshared_saved(ID,G),deterministic(YN),true), (YN==true-> ! ; true).
-known_grid0(ID,G):- (atom(ID);string(ID)),notrace(catch(atom_to_term(ID,Term,_),_,fail)), Term\==ID,!,known_grid0(Term,G).
+known_grid0(ID,G):- (atom(ID);string(ID)),arc_atom_to_term(ID,Term,_), Term\==ID,!,known_grid0(Term,G).
 
 
 :- dynamic(kaggle_arc_answers/4).
@@ -518,16 +545,23 @@ makeup_gridname(Grid,TID):- get_current_test(TestID), kaggle_arc_io(TestID,Trn+N
 makeup_gridname(Grid,TID):- is_grid_tid(Grid,TID),!.
 %makeup_gridname(Grid,TID):- was_grid_gid(Grid,TID),!.
 makeup_gridname(Grid,TID):- get_current_test(TestID),
-  flag(made_up_grid,F,F+1),
-   get_example_num(Example+Num),
-   (ground(Example+Num)->atomic_list_concat([Example,Num,ex],'_',HH);HH= 'Example'),
-   name_num_io_id(TestID,HH,F,io,TID),
+ must_det_ll((
+   flag('$makeup_gridname',F,F+1),
+   current_example_num_io(Example,Num,IO),
+   format(atom(HH),'~w_~w_~w_~w',[Example,Num,subgrid,IO]),
+   name_num_io_id(TestID,HH,F,IO,TID),
    assert_grid_tid(Grid,TID), nop(dumpST), 
-    %nop
-    (print_grid(no_name(TestID,TID),Grid)).
+    (print_grid(no_name(TestID,TID),Grid)))),!.
 
 incomplete(X,X).
 
+current_example_num_io(Example,Num,IO):- 
+   get_example_num(Example+Num),
+   (peek_vm(VM)-> VM.id = (_>(_+_)*IO) ; IO=io_unk).
+
+into_obj(G,O):- var(G),var(O),!,enum_object(O),G=O.
+into_obj(G,O):- atom(G),oid_to_obj(G,O),!.
+into_obj(G,O):- atom(G),g2o(G,O),!.
 into_obj(G,O):- is_object(G),!,G=O.
 into_obj(G,O):- is_grid(G),!,individuate(whole,G,Objs),last(Objs,O),!.
 into_obj(G,O):- no_repeats(O,known_obj0(G,O))*->true; (into_grid(G,GG),!,into_obj(GG,O)),!.
@@ -536,20 +570,23 @@ into_obj(G,O):- no_repeats(O,known_obj0(G,O))*->true; (into_grid(G,GG),!,into_ob
 
 
 :- module_transparent register_obj/1.
-%register_obj(O):- quietly((wots(S,weto(arcST)), asserta(obj_cache(TestID,O,S)))),!.
+%register_obj(O):- quietly((wots(S,arc_weto(arcST)), asserta(obj_cache(TestID,O,S)))),!.
 register_obj(O):-  must_det_ll(o2g(O,_)),!.
 /*register_obj(L):- asserta(obj_cache(TestID,L,'')),
-  ignore(( false, O=obj(L),amass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
+  ignore(( false, O=obj(L),mass(O,Mass),Mass>7,format('~N'),arc_portray(O,false),nl)).
 */
 :- dynamic(obj_cache/3).
 :- module_transparent obj_cache/2.
 
 :- dynamic(oid_glyph_object/3).
 
-o2g(Obj,Glyph):- var(Obj),!,gid_glyph_oid(_,Glyph,OID),oid_glyph_object(OID,Glyph,Obj).
+o2g(Obj,Glyph):- var(Obj),!,oid_glyph_object(_,Glyph,Obj).
+o2g(Obj,Glyph):- oid_glyph_object(_,Glyph,Obj),!.
+o2g(Obj,Glyph):- obj_to_oid(Obj,OID),!,oid_glyph_object(OID,Glyph,_).
+o2g(Obj,Glyph):- object_glyph(Obj,Glyph),!.%oid_glyph_object(_,Glyph,Obj).
 %o2g(Obj,Glyph):-  g2o(Glyph,Obj),!.
-o2g(Obj,NewGlyph):- var(NewGlyph),must_det_ll((o2g_f(Obj,NewGlyph))),!. 
-o2g(Obj,NewGlyph):- trace,o2g_f(Obj,NewGlyph).
+%o2g(Obj,NewGlyph):- var(NewGlyph),must_det_ll((o2g_f(Obj,NewGlyph))),!. 
+%o2g(Obj,NewGlyph):- atrace,o2g_f(Obj,NewGlyph).
 
 /*
  obj_to _oid(Obj,Old), int2glyph(Old,Glyph), 
@@ -559,9 +596,9 @@ o2g(Obj,NewGlyph):- trace,o2g_f(Obj,NewGlyph).
            flag(indiv,Iv,Iv+1),
            int2glyph(Iv,NewGlyph),!,           
            subst001(Obj,obj_to_oid(ID,Old),obj_to_oid(ID,Iv),NewObj),
-           (number(NewGlyph)->trace;true),
+           (number(NewGlyph)->atrace;true),
            set_glyph_to_object(NewGlyph,NewObj))))
-  ; ((number(NewGlyph)->trace;true),NewGlyph=Glyph,(number(NewGlyph)->trace;true),set_glyph_to_object(NewGlyph,Obj))),
+  ; ((number(NewGlyph)->atrace;true),NewGlyph=Glyph,(number(NewGlyph)->atrace;true),set_glyph_to_object(NewGlyph,Obj))),
  set_glyph_to_object(NewGlyph,Obj).
 */
 
@@ -573,11 +610,21 @@ g_2_o(_,_,_):- fail.
 %set_glyph_to_object(G,O):- ignore(luser_linkval(G,O)),(get_current_test(TestID),my_asserta_if_new(g_2_o(TestID,G,O))).
 
 g2o(G,O):- var(G), !, oid_glyph_object(_,G,O).
-g2o(G,O):- integer(G),!,int2glyph(G,C),!,g2o(C,O),!.
-g2o(C,O):- compound(C), !, compound_name_arguments(C,objFn,[G|_]), !, g2o(G,O).
-g2o(G,O):- \+ atom(G), !, string(G),!,atom_string(A,G),!,g2o(A,O).
-g2o(G,_):- is_fg_color(G),!,fail.
-g2o(G,O):- oid_to_object(G,O)-> true;(oid_glyph_object(_,G,O)*->true;(Chars=[_,_|_],atom_chars(G,Chars),chars2o(Chars,O))).
+g2o(G,O):- g2o0(G,O),
+  once(if_t(get_current_test(TestID),
+    (O=obj(T),member(giz(testid(TestID)),T)))),
+  nop(once(if_t((get_example_num(ExampleNum),ground(ExampleNum)),
+    (O=obj(T),member(giz(example_num(ExampleNum)),T))))),!.
+g2o(G,O):- g2o0(G,O).
+
+g2o0(G,O):- var(G), !, oid_glyph_object(_,G,O).
+g2o0(G,O):- integer(G),!,int2glyph(G,C),!,g2o(C,O),!.
+g2o0(C,O):- compound(C), !, compound_name_arguments(C,objFn,[G|_]), !, g2o(G,O).
+g2o0(G,O):- \+ atom(G), !, string(G),!,atom_string(A,G),!,g2o(A,O).
+g2o0(G,_):- is_fg_color(G),!,fail.
+g2o0(G,O):- oid_glyph_object(_,G,O),!.
+g2o0(G,O):- oid_glyph_object(G,_,O),!.
+g2o0(G,O):- oid_to_obj(G,O)-> true;(oid_glyph_object(_,G,O)*->true;(Chars=[_,_|_],atom_chars(G,Chars),chars2o(Chars,O))).
 
 
 
@@ -599,15 +646,18 @@ known_obj0(G,O):- is_group(G),into_group(G,OL),OL=[_],must([O|_]=OL).
 
 % this is bad  ?- into_grid('E',ID),grid_to_tid(G,ID).  ?- into_grid('Z',ID),grid_to_tid(G,ID).
 
+current_group(G):- why_grouped(_Why, G)*->true;current_group1(G).
+current_group1(G):-   
+     arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs),
+ % tries again
+      (why_grouped(_Why, G)*->true; G=Objs).
+
 into_group(GI,G):- into_group(GI,G, _ ).
 
 into_group(G,G,(=)) :- G==[],!.
 into_group(P,G,(=)):- is_group(P),!,G=P.
 into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
-   (why_grouped(_Why, G)*->true; 
-     (arc_grid_pair(In,Out),individuate_pair(complete,In,Out,InC,OutC),append(InC,OutC,Objs),
-       % tries again
-      (why_grouped(_Why, G)*->true; G=Objs))).
+          current_group(G).
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),G=VM.objs,is_group(G),!.
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),run_fti(VM),G=VM.objs,is_group(G),!.
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
@@ -643,8 +693,11 @@ calc(_).
 create_bag(Obj1):- gensym(bag_,Obj1),ain(iz(Obj1,group)).
 
 
-missing_arity(P2,N):- compound(P2),!,compound_name_arity(P2,F,Am2),A is Am2 + N, \+ current_predicate(F/A).
-missing_arity(F,N):- \+ current_predicate(F/N).
+missing_arity(P2,N):- \+ callable_arity(P2,N).
+
+callable_arity(P2,N):- compound(P2),!, \+ is_list(P2), compound_name_arity(P2,F,Am2),A is Am2 + N, current_predicate(F/A).
+callable_arity(F,N):-  atom(F),current_predicate(F/N).
+
 % turtle(H,V,Dir,N,H2,V2):- 
 prim_ops([
   call_object_grid_size(obj),
@@ -660,9 +713,9 @@ prim_ops([
   rotate_grid(nsew)]).
 
 
-throw_missed(G):-  Info = missed(G),wdmsg(Info),break, arcST,throw_missed_pt2(G,Info).
+throw_missed(G):-  Info = missed(G),u_dmsg(Info),break, arcST,throw_missed_pt2(G,Info).
 throw_missed_pt2(_,Info):- tracing,!,throw(Info).
-throw_missed_pt2(G,Info):- notrace,nortrace,trace,wdmsg(Info),break,rrtrace(G),throw(Info).
+throw_missed_pt2(G,Info):- notrace,nortrace,atrace,u_dmsg(Info),break,rrtrace(G),throw(Info).
 
 
 

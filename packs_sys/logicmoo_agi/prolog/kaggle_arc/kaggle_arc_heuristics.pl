@@ -16,13 +16,13 @@ recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
    nop((set(VM.program_i) = [After,recalc_sizes|TODO])).
 /*
-   � amass(3) cc(blue,3.0) vis2D(1,3) loc2D(2,1) pen([]) /*b*/iz((nsew)) iz(symmetry_type(sym_hv)) center2G(2,2) layer(in) nth(21)
-%amass(3) cc(cyan,3.0) vis2D(1,3) loc2D(1,1) pen([]) /*b*/iz((nsew)) iz(symmetry_type(sym_hv)) center2G(1,2) layer(in) nth(22)
-%  Iz(Non Diag):         � amass(3) cc(green,3.0) vis2D(1,3) loc2D(3,1) pen([]) /*b*/iz((nsew)) iz(nsew) iz(rectangulator) iz(symmetry_type(sym_hv)) center2G(3,2) layer(in) nth(20)
+   � mass(3) cc(blue,3.0) vis2D(1,3) loc2D(2,1) pen([]) /*b*/iz((nsew)) iz(symmetry_type(sym_hv)) center2G(2,2) layer(in) nth(21)
+%mass(3) cc(cyan,3.0) vis2D(1,3) loc2D(1,1) pen([]) /*b*/iz((nsew)) iz(symmetry_type(sym_hv)) center2G(1,2) layer(in) nth(22)
+%  Iz(Non Diag):         � mass(3) cc(green,3.0) vis2D(1,3) loc2D(3,1) pen([]) /*b*/iz((nsew)) iz(nsew) iz(rectangulator) iz(symmetry_type(sym_hv)) center2G(3,2) layer(in) nth(20)
 
 */
 
-recalc_sizes(VM):- is_map(VM),
+recalc_sizes(VM):- is_vm_map(VM),
    length(VM.objs,Count), Count>3,
    computeMassIndex(VM,Sizes),
    computeMinMass(VM,Sizes,Count,Min),
@@ -35,8 +35,8 @@ recalc_sizes(VM):- is_map(VM),
    set(VM.objs_max_mass) = Max,
    show_vm_changes(VM,cullObjectsOutsideOf(Min,Max),cullObjectsOutsideOf(VM,Min,Max)).
 
-cullObjectsOutsideOfRanges(VM):- is_map(VM), length(VM.objs,N),N< floor(VM.objs_max_len/2),!.
-cullObjectsOutsideOfRanges(VM):- is_map(VM), cullObjectsOutsideOf(VM,VM.objs_min_mass,VM.objs_max_mass). 
+cullObjectsOutsideOfRanges(VM):- is_vm_map(VM), length(VM.objs,N),N< floor(VM.objs_max_len/2),!.
+cullObjectsOutsideOfRanges(VM):- is_vm_map(VM), cullObjectsOutsideOf(VM,VM.objs_min_mass,VM.objs_max_mass). 
 cullObjectsOutsideOf(VM,Min,Max):- 
   (var(Min)->computeMinMass(VM,Min);true),
   (var(Max)->computeMaxMass(VM,Max);true),
@@ -47,10 +47,10 @@ cullObjectsOutsideOf(VM,Min,Max):-
      my_partition(within_mass(1,1),Cull,_Ones,NonOnes),
      remObjects(VM,NonOnes))).
 
-within_mass(Min,Max,Obj):- amass(Obj,Mass),between(Min,Max,Mass).
+within_mass(Min,Max,Obj):- mass(Obj,Mass),between(Min,Max,Mass).
 
 size_to_keys(N,N-N).
-computeMassIndex(VM,Sizes):-  maplist(amass,VM.objs,UKeySizes), maplist(size_to_keys,UKeySizes,KSizes),keysort(KSizes,SKSizes),
+computeMassIndex(VM,Sizes):-  maplist(mass,VM.objs,UKeySizes), maplist(size_to_keys,UKeySizes,KSizes),keysort(KSizes,SKSizes),
   maplist(arg(2),SKSizes,SKSizesR),reverse(SKSizesR,Sizes).
 
 computeMinMass(VM,Min):- computeMassIndex(VM,List),length(List,Count),computeMinMass(VM,List,Count,Min).
@@ -73,8 +73,8 @@ computeMaxMass(VM,_List,_Count,Max):- max_min(VM.objs_max_mass,700,_,Max).
 proportional_objs(Obj1,Obj2,vis_hv_term(N)):- once((vis_hv_term(Obj1,N1),vis_hv_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,loc_term(N)):- once((loc_term(Obj1,N1),loc_term(Obj2,N2))),proportional(N1,N2,N).
 proportional_objs(Obj1,Obj2,center_term(N)):- center_term(Obj1,N1),center_term(Obj2,N2),proportional(N1,N2,N).
-proportional_objs(Obj1,Obj2,color_diff(N)):- colors(Obj1,N1),colors(Obj2,N2),proportional(N1,N2,N).
-proportional_objs(Obj1,Obj2,amass(N)):- once((amass(Obj1,N1),amass(Obj2,N2))),proportional_size(N1,N2,N).
+proportional_objs(Obj1,Obj2,color_diff(N)):- colors_cc(Obj1,N1),colors_cc(Obj2,N2),proportional(N1,N2,N).
+proportional_objs(Obj1,Obj2,mass(N)):- once((mass(Obj1,N1),mass(Obj2,N2))),proportional_size(N1,N2,N).
 */
 
 
@@ -122,7 +122,7 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
     % input has its own noise
     CommonCsL>0,IPCsL>0,OPCsL==0,  
     %ignore((
-    amass(ImO,IMass),amass(OmI,OMass),IMass>0, OMass==0,
+    mass(ImO,IMass),mass(OmI,OMass),IMass>0, OMass==0,
     % individu ate([],[options([full])],ImO,NoiseObject), 
     grid_to_individual(ImO,NoiseObject),!,
     add_shape_lib(noise,NoiseObject),
@@ -148,8 +148,8 @@ individuals_from_pair_colors(PairName,In,Out,IH,IV,OH,OV,
   add_cond(hasPrivateColor(in,IPCs)),
   do_action(remove_colors(OPCs,Out,OmI)),
   remove_colors(IPCs,In,ImO),
-  % amass(In,InMass),amass(Out,OutMass),
-  amass(ImO,IMass),amass(OmI,OMass),
+  % mass(In,InMass),mass(Out,OutMass),
+  mass(ImO,IMass),mass(OmI,OMass),
   IMass>0, OMass>0, OPCsL == 0,
   individu ate([],options([filltype(solid)(rectangle),defaults]),ImO,NewImO), 
   add_shape_lib(pair,NewImO),
@@ -201,7 +201,7 @@ learn_color_individuals_lib_one_way(PairName,In,Out,IH,IV,OH,OV,
   do_action(remove_colors(CommonCs,Out,OmI)),
   do_action(remove_colors(CommonCs,In,ImO)),
   show_pair_no_i(IH,IV,OH,OV,learn_color_individuals_lib_one_way,PairName,ImO,OmI),
-  amass(ImO,IMass),amass(OmI,OMass),
+  mass(ImO,IMass),mass(OmI,OMass),
   %one_is_zero(IMass,OMass),
   ((
   ignore((IMass>0, OMass==0, 

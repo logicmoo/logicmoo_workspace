@@ -25,7 +25,7 @@ test( " Fill the smallest square hole?",
 |       N         N       |   |       ?         ?       |
 |       N         N       |   |       ?         ?       |
 |       N N N N N N       |   |       ? ? ? ? ? ?       |
- ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯").
+ -------------------------     -------------------------").
 :- multifile learn_shapelib/7.
 :- discontiguous learn_shapelib/7.
 learn_shapelib(PairName,In,Out,IH,IV,OH,OV):-
@@ -43,8 +43,8 @@ rtrace_on_error(Goal):- catch(quietly(Goal),E,(notrace,dmsg(E=Goal),break,1==1,r
 % Grid subtraction
 individuals_from_pair(PairName,In,Out,H,V,H,V,RestOfInObjs,RestOfOutObjs):- 
   add_note("trying grid minus grid"),
-  grid_minus_grid(In,Out,ImO),amass(ImO,IMass),
-  grid_minus_grid(Out,In,OmI),amass(OmI,OMass),
+  grid_minus_grid(In,Out,ImO),mass(ImO,IMass),
+  grid_minus_grid(Out,In,OmI),mass(OmI,OMass),
    show_pair_no_i(H,V,H,V,grid_subtraction,PairName,ImO,OmI),
   ((IMass==0, OMass>0) -> USE = OmI;
    ((OMass==0, IMass>0) -> USE = ImO)),
@@ -82,19 +82,19 @@ current_neurons(NeuralVM):- luser_getval(system_props,NeuralVM).
 :- ht_new(NeuralVM), luser_linkval(system_props,NeuralVM).
 
 % Grid subtraction
-learn_intruders(PairName,In,Out,IH,IV,OH,OV):- %trace, 
+learn_intruders(PairName,In,Out,IH,IV,OH,OV):- %atrace, 
   current_neurons(NeuralVM),
   set_prop_of(NeuralVM,NeuralVM,in,In),
   set_prop_of(NeuralVM,NeuralVM,out,Out),
   in_out_xform(NeuralVM,PairName,[In,Out],[ImO,OmI],[PLAN]),
-  wdmsg(learn_intruders=PLAN),
+  u_dmsg(learn_intruders=PLAN),
   individualizer_heuristics(PairName,ImO,OmI,IH,IV,OH,OV).
 
 individuals_from_pair(PairName,In,Out,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs):-
   current_neurons(NeuralVM),
   in_out_xform(NeuralVM,PairName,[In,Out],[ImO,OmI],[PLAN]),
   (In\=@=ImO;Out\=@=OmI),
-  wdmsg(individuals_from_pair=PLAN),
+  u_dmsg(individuals_from_pair=PLAN),
   individuals_from_pair(PairName,ImO,OmI,IH,IV,OH,OV,RestOfInObjs,RestOfOutObjs).
   
 
@@ -175,7 +175,7 @@ in_out_xform(NeuralVM,PairName,StartInOut,ResultInOut,[DONE|MORETODO]):-
 
 
 maybe_in_out_xform(NeuralVM,PairName,StartInOut,NextStartInOut,DONE):-
- arcST,trace,
+ arcST,atrace,
  DONE=withStuff(SourceType,StuffType,TargetType,OverlapType,WhatWithType),
   must_det_ll((
     maplist(call(SourceType,NeuralVM,PairName),StartInOut,FromInOut),
@@ -188,7 +188,7 @@ maybe_in_out_xform(NeuralVM,PairName,StartInOut,NextStartInOut,DONE):-
 
 stuff_options1(stuffType,is_cpoints,globalpoints). %:- globalpoints(Grid,Stuff).
 stuff_options1(stuffType,is_colors,unique_colors). %:- unique_colors(Grid,Stuff).
-stuff_options(stuffType,is_nc_points,colorless_points). %:-  globalpoints(Grid,Stuff),decolorize(StuffM,Stuff).
+stuff_options(stuffType,is_nc_points,colorlesspoints). %:-  globalpoints(Grid,Stuff),decolorize(StuffM,Stuff).
 stuff_options(stuffType,is_group,default_individuals). %:- individuals_default(Grid,Stuff).
 
 

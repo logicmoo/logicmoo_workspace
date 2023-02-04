@@ -489,6 +489,9 @@ classification of tokens.
 	    if ( type == "fullstop" ) {
 	      state.curTerm++;
 	      state.curToken = 0;
+	    } else if ( type == "rational" && token.type == "int" )
+	    { token.type = "rational";
+	      state.curToken++;
 	    } else if ( !isQuoted(state.nesting) ) {
 	      state.curToken++;
 	    }

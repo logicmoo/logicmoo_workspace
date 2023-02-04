@@ -8,16 +8,18 @@
 
 :- include(kaggle_arc_header).
 
-:- dynamic(learned_grid_size/2).
+:- dynamic(muarc_tmp:learned_grid_size/2).
+:- dynamic(muarc_tmp:grid_size_prediction/4).
+
 
 test_grid_size_prediction:- forall_count(all_arc_test_name(TestID), test_grid_sizes(TestID)). 
 store_grid_size_predictions:- forall_count(all_arc_test_name(TestID), test_grid_sizes(TestID)). 
 
 test_grid_sizes(TestID):- 
-   retractall(learned_grid_size(TestID,_)),
-   retractall(grid_size_prediction(TestID,_,_,_)),
+   retractall(muarc_tmp:learned_grid_size(TestID,_)),
+   retractall(muarc_tmp:grid_size_prediction(TestID,_,_,_)),
    findall(R,(kaggle_arc(TestID,trn+_,In,Out),learn_grid_size(In,Out,R),nop((writeq(R),write('.\n')))),L), 
-   asserta_if_new(learned_grid_size(TestID,L)),
+   asserta_if_new(muarc_tmp:learned_grid_size(TestID,L)),
    forall(kaggle_arc(TestID,tst+_,In,Out),predict_grid_size(TestID,In,Out)).
 
 learn_grid_size(In,Out,R):- 
@@ -28,7 +30,7 @@ learn_grid_size(In,Out,R):-
    
 predict_grid_size(TestID,In,Out):-    
    grid_size(In,IH,IV),grid_size(Out,OH,OV),
-   learned_grid_size(TestID,List),
+   muarc_tmp:learned_grid_size(TestID,List),
  %  predsort_on(better_grid_size_prop,List,SList), 
    wots(SS,((             
    dash_chars, dash_chars, write(test_grid_sizes(TestID)), write('\n'),   
@@ -36,7 +38,7 @@ predict_grid_size(TestID,In,Out):-
    ((PH=OH,PV=OV) -> C = green ; C = red),
    color_print(C,predict_grid_size(TestID,in(size2D(IH,IV)),predicted(size2D(PH,PV)),actual(size2D(OH,OV))))))),!,
    (C==green 
-     -> asserta(grid_size_prediction(TestID,In,PH,PV))
+     -> asserta(muarc_tmp:grid_size_prediction(TestID,In,PH,PV))
      ;(nop(print_test(TestID)),  write(SS),assert_test_suite(failed_predict_grid_size,TestID),!,fail)).
 
 
@@ -48,9 +50,9 @@ predict_grid_size(List,IH,IV,PH,PV):-
   alphabetize(List,ListA),
   predsort_on(better_grid_size_prop,ListA,SList),
   add_info(SList,[],NewInfo),
-   %maplist(wqnl,List),dash_chars,
-   maplist(wqnl,ListA),dash_chars,
-   maplist(wqnl,NewInfo),dash_chars,
+   %maplist(ppnl,List),dash_chars,
+   maplist(ppnl,ListA),dash_chars,
+   maplist(ppnl,NewInfo),dash_chars,
   predict_grid_size1(ListA,NewInfo,IH,IV,PH,PV).
 predict_grid_size(_List,IH,IV,IH,IV).
 
@@ -136,14 +138,14 @@ proportional_size(N1,N2,num(vals(Vals),+N,ratio(R))):- number(N1),number(N2),!,
 
 
 
-
+:- meta_predicate(with_other_grid(+,0)).
 with_other_grid(OtherGrid,Goal):- locally(nb_setval(other_grid,OtherGrid),(set_target_grid(OtherGrid),Goal)).
 
 other_grid(_,OtherGrid):- luser_getval(other_grid,OtherGrid),is_grid(OtherGrid),!.
 other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.grid_target, is_grid(OtherGrid),!.
 other_grid(Grid,OtherGrid):- is_other_grid(Grid,OtherGrid),!.
 other_grid(Grid,OtherGrid):- \+ is_grid(Grid),!, into_grid(Grid,ThisGrid),  Grid\==ThisGrid,!,other_grid(ThisGrid,OtherGrid).
-other_grid(In,OtherGrid):- get_current_test(TestID), grid_size_prediction(TestID,In,PH,PV), make_grid(PH,PV,OtherGrid).
+other_grid(In,OtherGrid):- get_current_test(TestID), muarc_tmp:grid_size_prediction(TestID,In,PH,PV), make_grid(PH,PV,OtherGrid).
 
 :- dynamic(is_decl_other_grid/2).
 ensure_other_grid(ThisGrid,OtherGrid):- is_other_grid(ThisGrid,OtherGrid),!.
@@ -158,7 +160,8 @@ is_other_grid(ThisGrid,OtherGrid):-
 
 other_grid_size(_Grid,PH,PV):- luser_getval(other_grid_size,size2D(PH,PV)),!.
 other_grid_size( Grid,PH,PV):- must_det_ll((other_grid(Grid,OtherGrid),grid_size(OtherGrid,PH,PV))).
-other_grid_size(   In,PH,PV):- get_current_test(TestID), grid_size_prediction(TestID,In,PH,PV).
+other_grid_size(   In,PH,PV):- get_current_test(TestID), muarc_tmp:grid_size_prediction(TestID,In,PH,PV).
+
 
 set_target_grid(ExpectedOut):-
     luser_setval(other_grid,ExpectedOut),

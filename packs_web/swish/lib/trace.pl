@@ -223,7 +223,7 @@ strip_stack(Error, Error).
 %	allows passing more information than just the query answers.
 %
 %	The binding `_residuals = '$residuals'(Residuals)`   is added to
-%	the   residual   goals   by     pengines:event_to_json/4    from
+%	the   residual   goals   by     pengines:event_to_json/3    from
 %	pengines_io.pl.
 
 :- meta_predicate swish_call(0).
@@ -260,6 +260,8 @@ delays_residual_program(_, _:[]).
 	    )
 	;   notrace
 	),
+	call_post_context(_{goal:Goal, bindings:Bindings,
+			    delays:Delays, context:Extra}),
 	maplist(call_post_context(Goal, Bindings, Delays), Extra).
 
 throw_backtrace(error(Formal, context(prolog_stack(Stack0), Msg))) :-
@@ -299,6 +301,7 @@ no_lco.
 
 :- multifile
 	pre_context/3,
+	post_context/1,
 	post_context/3,
 	post_context/4.
 
@@ -307,6 +310,17 @@ call_pre_context(Goal, Bindings, Var) :-
 	pre_context(Name, Goal, Var), !.
 call_pre_context(_, _, _).
 
+%!	call_post_context(+Dict)
+
+call_post_context(Dict) :-
+	post_context(Dict), !.
+call_post_context(_).
+
+%!	call_post_context(+Goal, +Bindings, +Delays, +Var)
+%
+%	Hook to allow filling Var from  the   context.  I.e., there is a
+%	binding `Name=Var` in Bindings that gives us the name of what is
+%	expected in Var.
 
 call_post_context(Goal, Bindings, Delays, Var) :-
 	binding(Bindings, Var, Name),
@@ -318,10 +332,16 @@ post_context(Name, Goal, _Delays, Extra) :-
 post_context(Name, M:_Goal, _, '$residuals'(Residuals)) :-
 	swish_config(residuals_var, Name), !,
 	residuals(M, Residuals).
-post_context(Name, M:_Goal, Delays, '$wfs_residual_program'(Delays, Program)) :-
+post_context(Name, M:_Goal, Delays,
+	     '$wfs_residual_program'(TheDelays, Program)) :-
+	Delays \== true,
 	swish_config(wfs_residual_program_var, Name), !,
-	delays_residual_program(Delays, M:Program).
-
+	(   current_prolog_flag(toplevel_list_wfs_residual_program, true)
+	->  delays_residual_program(Delays, M:Program),
+	    TheDelays = Delays
+	;   TheDelays = undefined,
+	    Program = []
+	).
 
 binding([Name=Var|_], V, Name) :-
 	Var == V, !.
@@ -772,8 +792,6 @@ install_exception_hook :-
 :- multifile
 	sandbox:safe_primitive/1,
 	sandbox:safe_meta_predicate/1.
-
-sandbox:safe_primitive(system:b_setval(_,_)).
 
 sandbox:safe_primitive(system:trace).
 sandbox:safe_primitive(system:notrace).

@@ -52,8 +52,8 @@
  * @requires jquery
  */
 
-define([ "jquery" ],
-       function($) {
+define([ "jquery", "backend" ],
+       function($, backend) {
 var KEY = "SWISHCONFIG";
 
 /* Configuration of various server components.  We provide
@@ -64,7 +64,7 @@ var KEY = "SWISHCONFIG";
 var config;
 
 function getCachedConfig() {
-            if (typeof(Storage) !== "undefined" && typeof(window.swish) !== "undefined" && window.swish.config_hash) {
+  if ( typeof(Storage) !== "undefined" && window.swish.config_hash ) {
     var str;
 
     if ( (str = localStorage.getItem(KEY)) ) {
@@ -76,7 +76,7 @@ function getCachedConfig() {
 }
 
 function setCachedConfig(config) {
-  if ( typeof(window.swish) !== "undefined" && typeof(Storage) !== "undefined" && window.swish.config_hash ) {
+  if ( typeof(Storage) !== "undefined" && window.swish.config_hash ) {
     localStorage.setItem(KEY, JSON.stringify(
       { hash: window.swish.config_hash,
         config: config
@@ -86,8 +86,9 @@ function setCachedConfig(config) {
 
 if ( !config ) {
   if ( !(config = getCachedConfig()) ) {
-    $.ajax("swish_config.json",
-	   { dataType: "json",
+    backend.ajax(
+      { url: "swish_config.json",
+	dataType: "json",
 	     async: false,
 	     success: function(data) {
 	       config = data;

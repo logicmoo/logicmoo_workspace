@@ -29,14 +29,14 @@ list_undefined:-real_list_undefined([]).
 :- export(real_list_undefined/1).
 real_list_undefined(A):-
  merge_options(A, [module_class([user])], B),
-        prolog_walk_code([undefined(trace), on_trace(found_undef)|B]),
+        prolog_walk_code([undefined(trace), on_trace(check:found_undef)|B]),
         findall(C-D, retract(undef(C, D)), E),
         (   E==[]
         ->  true
         ;   print_message(warning, check(undefined_predicates)),
             keysort(E, F),
             group_pairs_by_key(F, G),
-            maplist(check:report_undefined, G)
+            maplist(prolog_autoload:report_undefined, G)
         ).
 
 

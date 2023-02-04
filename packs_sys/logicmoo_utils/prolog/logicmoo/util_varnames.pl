@@ -1219,7 +1219,7 @@ maybe_scan_for_varnames:- current_prolog_flag(source_variables, true)->scan_for_
 % Scan For Varnames.
 %
 scan_for_varnames:- thglobal:scanning_for_varnames_already,!.
-scan_for_varnames:- swc, 
+scan_for_varnames:- %swc, 
  setup_call_cleanup(
    asserta(thglobal:scanning_for_varnames_already),
    scan_for_varnames0,

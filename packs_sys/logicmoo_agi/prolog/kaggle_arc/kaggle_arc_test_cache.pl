@@ -3093,7 +3093,7 @@ testcase(t('6150a2bd')>tst+0,"
    -------                         ------- 
                      
 ").
-%= fav(t('6150a2bd'),[no_sol(i(complete),copy_grid(in),incomplete),human([rot180]),clue([amass(in)=:=amass(out)]),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,keypad,image_rotation,'(2, 1)']).
+%= fav(t('6150a2bd'),[no_sol(i(complete),copy_grid(in),incomplete),human([rot180]),clue([mass(in)=:=mass(out)]),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,keypad,image_rotation,'(2, 1)']).
 
 
 testcase(t('623ea044')>tst+0,"
@@ -3618,7 +3618,7 @@ testcase(t('6d58a25d')>tst+0,"
    -----------------------------------------                                                           ----------------------------------------- 
                                                        
 ").
-%= fav(t('6d58a25d'),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,print_grid,grid_size_same,draw_line_from_point,debug_indiv,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors "]).
+%= fav(t('6d58a25d'),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,print_grid,grid_size_same,draw_line_from_point,debug_indiv,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
 
 
 testcase(t('6d75e8bb')>tst+0,"
@@ -5195,7 +5195,7 @@ testcase(t('9aec4887')>tst+0,"
    ---------------------------------                                                
                                                
 ").
-%= fav(t('9aec4887'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),todo_sol([find_individuals([hollow,inside([rectangle])],_27706),rest_indivdual(_27738),put_inside(_27738,_27706),if_edge_strong([color=_27772]),touch(_27738,_27784),set_color(_27772,_27784)]),out_grid([6,6]),indiv([color_blind]),-[shape_match],-[rotation_match],-[mask_match],+[color_match],x_marks_the_spot,tt,training,recoloring,pattern_moving,crop,color_guessing,'(3, 1)']).
+%= fav(t('9aec4887'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),todo_sol([find_individuals([hollow,inside([rectangle])],_27706),rest_indivdual(_27738),put_inside(_27738,_27706),if_edge_strong([color=_27772]),touch(_27738,_27784),set_color(_27772,_27784)]),out_grid([6,6]),indiv_option([color_blind]),-[shape_match],-[rotation_match],-[mask_match],+[color_match],x_marks_the_spot,tt,training,recoloring,pattern_moving,crop,color_guessing,'(3, 1)']).
 
 
 testcase(t('9af7a82c')>tst+0,"
@@ -8215,7 +8215,7 @@ testcase(t(ed36ccf7)>tst+0,"
    -------                         ------- 
                      
 ").
-%= fav(t(ed36ccf7),[no_sol(i(complete),copy_grid(in),incomplete),human([rot270]),clue([amass(in)=:=amass(out)]),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,keypad,image_rotation,'(4, 1)']).
+%= fav(t(ed36ccf7),[no_sol(i(complete),copy_grid(in),incomplete),human([rot270]),clue([mass(in)=:=mass(out)]),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,keypad,image_rotation,'(4, 1)']).
 
 
 testcase(t(ef135b50)>tst+0,"
@@ -11632,7 +11632,7 @@ testcase(v('4b6b68e5')>tst+0,"
    -------------------------------------------------                                                                   ------------------------------------------------- 
                                                                
 ").
-%= fav(v('4b6b68e5'),[no_sol(i(complete),copy_grid(in),incomplete),nthDSL([2,[gather_object(_12956,_12958,(iz(_12958,dot),inside(_12958,_12984),iz(_12984,polygon),wall_thickness(_12984,1),noexit(_12984))),colors(_12956,_13024),first(_13034,_13024),part_of(_12956,_13048),color(_13048,_13034),fillAt(_13048,_13034),forall(_12958,(iz(_12958,dot),\+ (inside(_12958,_12984),iz(_12984,polygon))),delete(_12958))]]),human([doall((iz(_12870,outline),internal_region(_12870,_12884),individuate_by_color(_12884),largestIn(_12884,_12906),color(_12906,_12918),fill(_12918,_12884)))]),-[rotation_match],-[mask_match],-[color_match],+[shape_match],grid_size_same,evaluation,'(3, 1) ']).
+%= fav(v('4b6b68e5'),[no_sol(i(complete),copy_grid(in),incomplete),nthDSL([2,[gather_object(_12956,_12958,(iz(_12958,dot),inside(_12958,_12984),iz(_12984,polygon),wall_thickness(_12984,1),noexit(_12984))),colors_cc(_12956,_13024),first(_13034,_13024),part_of(_12956,_13048),color(_13048,_13034),fillAt(_13048,_13034),forall(_12958,(iz(_12958,dot),\+ (inside(_12958,_12984),iz(_12984,polygon))),delete(_12958))]]),human([doall((iz(_12870,outline),internal_region(_12870,_12884),individuate_by_color(_12884),largestIn(_12884,_12906),color(_12906,_12918),fill(_12918,_12884)))]),-[rotation_match],-[mask_match],-[color_match],+[shape_match],grid_size_same,evaluation,'(3, 1) ']).
 
 
 testcase(v('4c177718')>tst+0,"
@@ -12953,7 +12953,7 @@ testcase(v('6ea4a07e')>tst+0,"
    -------                         ------- 
                      
 ").
-%= fav(v('6ea4a07e'),[no_sol(i(complete),copy_grid(in),incomplete),human([use_clues]),human([corispond_colors,invert_existence]),clue([amass(in)+amass(out)=:=9]),clue([amass(in)+amass(out)=9]),clue([corispond_colors,invert_existence]),-[rotation_match],-[mask_match],-[color_match],+[shape_match],keypad,evaluation,'(6, 2) ']).
+%= fav(v('6ea4a07e'),[no_sol(i(complete),copy_grid(in),incomplete),human([use_clues]),human([corispond_colors,invert_existence]),clue([mass(in)+mass(out)=:=9]),clue([mass(in)+mass(out)=9]),clue([corispond_colors,invert_existence]),-[rotation_match],-[mask_match],-[color_match],+[shape_match],keypad,evaluation,'(6, 2) ']).
 
 
 testcase(v('6ea4a07e')>tst+1,"
@@ -12965,7 +12965,7 @@ testcase(v('6ea4a07e')>tst+1,"
    -------                         ------- 
                      
 ").
-%= fav(v('6ea4a07e'),[no_sol(i(complete),copy_grid(in),incomplete),human([use_clues]),human([corispond_colors,invert_existence]),clue([amass(in)+amass(out)=:=9]),clue([amass(in)+amass(out)=9]),clue([corispond_colors,invert_existence]),-[rotation_match],-[mask_match],-[color_match],+[shape_match],keypad,evaluation,'(6, 2) ']).
+%= fav(v('6ea4a07e'),[no_sol(i(complete),copy_grid(in),incomplete),human([use_clues]),human([corispond_colors,invert_existence]),clue([mass(in)+mass(out)=:=9]),clue([mass(in)+mass(out)=9]),clue([corispond_colors,invert_existence]),-[rotation_match],-[mask_match],-[color_match],+[shape_match],keypad,evaluation,'(6, 2) ']).
 
 
 testcase(v('6f473927')>tst+0,"

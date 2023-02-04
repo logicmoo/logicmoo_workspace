@@ -84,7 +84,11 @@ set_swish_path :-
 %   Attach pack submodules from swish(pack)
 
 attach_local_packs :-
-    attach_packs(swish_pack(.), [duplicate(replace), search(first)]).
+    (   current_prolog_flag(swish_ide, true)
+    ->  Duplicate = keep
+    ;   Duplicate = replace
+    ),
+    attach_packs(swish_pack(.), [duplicate(Duplicate), search(first)]).
 
 %!  set_data_path
 %
@@ -112,12 +116,12 @@ set_data_path :-
     print_message(informational, swish(created_data_dir(Dir))).
 set_data_path :-
     print_message(error, swish(no_data_dir)),
-    halt(1).
+    writeln(halt(1)),fail.
 
 initialize_paths :-
     set_swish_path,
     attach_local_packs,
-    set_data_path.
+    (set_data_path->true;ignore(rtrace(set_data_path))).
 
 % HTTP paths
 

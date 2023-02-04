@@ -115,9 +115,8 @@ non_user_console0:- \+ stream_property(current_input,close_on_abort(false)).
 %! get_trace_reset(-Reset) is det.
 %
 % Get Tracer `Reset`.
-get_trace_reset(Reset):- 
-		 tracing, notrace, !,
-                 '$leash'(OldL, OldL),'$visible'(OldV, OldV),
+get_trace_reset(Reset):- tracing, notrace, !,
+                '$leash'(OldL, OldL),'$visible'(OldV, OldV),
 		 (current_prolog_flag(gui_tracer, GuiWas)->true;GuiWas=false),
                  reset_macro(tAt(GuiWas,OldV,OldL,tracing),Reset),
 		 trace,!.

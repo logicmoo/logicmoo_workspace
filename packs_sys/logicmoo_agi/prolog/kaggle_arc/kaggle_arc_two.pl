@@ -26,9 +26,11 @@ train_test:- notrace(get_current_test(TestID)), once(train_test(TestID)).
 train_test(TestID):- with_pair_mode(whole_test,train_whole_test(TestID)).
 train_whole_test(TestID):- 
   clear_training(TestID),
-  compile_and_save_test(TestID),
+  compile_and_save_test(TestID),!,
+  locally(nb_setval(menu_key,o),ndividuator),
+  locally(nb_setval(menu_key,s),ndividuator),!.
   %train_test(TestID,train_using_oo_ii_io).
-  train_test(TestID,train_using_io).
+  %train_test(TestID,train_using_io).
 train_test(TestID,P2):-   
   print_testinfo(TestID),
   flag(indiv,_,0),
@@ -68,12 +70,16 @@ train_only_from_pairs(TestID):- clear_training(TestID), train_test(TestID,train_
 train_using_io(TestID,DictIn,DictOut):- train_using_io(TestID,trn,0,DictIn,DictOut),!.
 train_using_io(TestID,Trn,N1,DictIn,DictOut):-  
   kaggle_arc(TestID,(Trn+N1),In,Out),!,
+
+  with_test_pairs(TestID,(Trn+N1),In,Out,
   must_det_ll((
   %detect_pair_hints(TestID,(Trn+N1),In,Out),
-  train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictMid),
+  pp(train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictMid)),
+  DictMid=DictIn,
+  i_pair(complete,In,Out),
   N2 is N1 + 1,
-  train_using_io(TestID,Trn,N2,DictMid,DictOut))).
-train_using_io(_TestID,_Trn,_,DictInOut,DictInOut).
+  train_using_io(TestID,Trn,N2,DictMid,DictOut)))).
+train_using_io(_TestID,_Trn,_,DictInOut,DictInOut):-!.
 
 %:- thread_local(keep_going/0).
 
@@ -95,7 +101,7 @@ train_for_objects_from_pair_with_mono(Dict0,TestID,Desc,In,Out,Dict9):-
    ignore(Dict1=Dict9))),!.
 
 cs(G):- call(G).
-%cs(G):- collapsible_section(debug,train_for_objects_from_1pair1,false,G).
+%cs(G):- w_section(train_for_objects_from_1pair1,G,debug).
 
 train_for_objects_from_1pair(Dict0,TestID,Desc,InA,OutA,Dict1):-
   locally(set_prolog_flag(gc,true),
@@ -143,7 +149,7 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
    OutC = OutVM.objs,
   %print_info(InC),
   %print_info(OutC),
-  %wdmsg(InC=OutC),
+  %u_dmsg(InC=OutC),
   
   pred_intersection(overlap_same_obj,InC,OutC,RetainedIn,RetainedOut,Removed,Added),
   /*add_shape_lib(pair,RetainedIn),
@@ -204,11 +210,11 @@ solve_test_trial(Trial):- mmake, with_test_pairs(TestID,ExampleNum,I,O,solve_tes
 
 solve_test_trial_pair(Trial,TestID,ExampleNum,_I,_O):- 
  my_time((my_menu_call((catch(solve_test_trial(Trial,TestID,ExampleNum),E,
-   wdmsg(E=solve_test_trial(Trial,TestID,(ExampleNum)))))))),!.
+   u_dmsg(E=solve_test_trial(Trial,TestID,(ExampleNum)))))))),!.
 
 solve_test_training_too:- 
  solve_test,
- my_menu_call((get_current_test(TestID), catch(solve_test_trial(Trial,TestID,(trn+A)),E,wdmsg(E=solve_test_trial(Trial,TestID,(trn+A)))))),!.
+ my_menu_call((get_current_test(TestID), catch(solve_test_trial(Trial,TestID,(trn+A)),E,u_dmsg(E=solve_test_trial(Trial,TestID,(trn+A)))))),!.
 
 
 solve_test(Name):- forall(trial_non_human(Trial),solve_test_trial(Trial,Name)).
@@ -226,7 +232,6 @@ solve_test_trial(Trial,TestID,ExampleNum):-
 
 solve_test(TestID,ExampleNum,TestIn,ExpectedOut):-
   forall(trial_non_human(Trial),solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut)).
-
   
 solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
    must_det_ll((    
@@ -257,6 +262,7 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
 
     % find indiviuation one each side that creates the equal number of changes
 
+do_solve(InVM,SolutionProgram,GridOut):- run_dsl(InVM,SolutionProgram,InVM,GridOut).  
 
 do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
  must_det_ll(( ppt("BEGIN!!!"+Why+TestID>ExampleNum), 
@@ -271,7 +277,7 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
               kaggle_arc_io(TestID,ExampleNum,in,TestIn),
               gset(InVM.grid) = TestIn,
               maybe_set_vm(InVM),
-              run_dsl(InVM,SolutionProgram,InVM,GridOut)))*->!;GridOut=InVM.grid),
+              do_solve(InVM,SolutionProgram,GridOut)))*->!;GridOut=InVM.grid),
        into_pipe(GridOut,Solution)))
        *->    
       ignore((count_difs(ExpectedOut,Solution,Errors),
@@ -279,7 +285,7 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
           (Errors==0 -> 
              arcdbg_info(green,pass(Why,TestID,ExampleNum,SolutionProgram))
              ; (banner_lines(red), arcdbg(fail(Why,Errors,TestID,ExampleNum,SolutionProgram)),
-                test_info(TestID,InfoF),wqnl(fav(TestID>ExampleNum,InfoF)),
+                test_info(TestID,InfoF),ppnl(fav(TestID>ExampleNum,InfoF)),
                 banner_lines(red)))))
 
      
@@ -303,7 +309,7 @@ reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
 
 reuse_indivs_cleanup(IndvA,IndvB,IndvC,_,_,_):-
   maplist(length,[IndvA,IndvB,IndvC],Rest),
-  wdmsg(len=Rest),fail.
+  u_dmsg(len=Rest),fail.
 reuse_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   select(A,IndvC,IndvCRest), member(B,IndvCRest),
   select(A,IndvA,IndvARest),

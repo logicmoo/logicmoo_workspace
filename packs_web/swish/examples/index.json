@@ -18,7 +18,7 @@
 	{ "group": "admin",    "rank": 100000 }
   ],
   "files":
-  [
+    [{ "file":"inference/inference_examples.swinb", 
   "# Prolog Tutorials",
      
     { "file":"examples.swinb",
@@ -64,6 +64,8 @@
    { "file":"learning/learning_examples.swinb", "title":"SLIPCOVER learning example programs",
      "group":"cplint"},
    { "file":"phil/phil_examples.swinb", "title":"PHIL learning example programs",
+     "group":"cplint"},
+   { "file":"pascal/pascal_examples.swinb", "title":"PASCAL learning example programs",
      "group":"cplint"},
    { "file":"lemur/lemur_examples.swinb", "title":"LEMUR learning example programs",
      "group":"cplint"},

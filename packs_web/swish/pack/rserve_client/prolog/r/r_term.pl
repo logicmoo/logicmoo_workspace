@@ -152,6 +152,22 @@ r_expr(Compound, Ctx) -->
 	    ")"
 	).
 
+% Support for signs + and -
+r_expr(Compound, Ctx) -->
+	{ compound(Compound),
+	  compound_name_arguments(Compound, Name, [Right]),
+	  r_prefix_op(Name, RName, Pri, Ass), !,
+	  r_pri(Pri, Ass, RPri)
+	},
+	(   {  Ctx.priority >= Pri }
+	->  atom(RName), " ",
+	    r_expr(Right, Ctx.put(priority,RPri))
+	;   "(",
+	    atom(RName), " ",
+	    r_expr(Right, Ctx.put(priority,RPri)),
+	    ")"
+	).
+
 r_arguments([], _) --> "".
 r_arguments([H|T], Ctx) -->
 	r_expr(H, Ctx),
@@ -235,3 +251,11 @@ r_infix_op(=,	 =,    900, xfx).
 lr_pri(Pri, xfx, APri, APri) :- !, APri is Pri - 1.
 lr_pri(Pri, xfy, APri,  Pri) :- !, APri is Pri - 1.
 lr_pri(Pri, yfx,  Pri, APri) :- !, APri is Pri - 1.
+
+%%	r_prefix_op(Op, Rop, Priority, Associativity)
+%
+%	True if Op is the Prolog representation for the R operator Rop.
+r_prefix_op(-,	 -,    200, fy).
+
+r_pri(Pri, fx,  APri) :- !, APri is Pri - 1.
+r_pri(Pri, fy,  Pri).

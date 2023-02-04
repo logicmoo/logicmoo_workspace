@@ -109,6 +109,15 @@ head([H:P|Rest],B,I)-->
   [A],
   head(Rest,B,I).
 
+head([H],[],_I)-->
+  {format(atom(A),"~q.~n~n",[H])},!,
+  [A].
+
+head([H],B,I)-->
+  {format(atom(A),"~q",[H])},
+  [A,I],
+  body(B).
+
 body([])-->
   {format(atom(A),"  true.~n~n",[])},
   [A].

@@ -42,9 +42,9 @@
  * @requires jquery
  */
 
-define([ "jquery", "config", "preferences", "links", "form", "version",
-	 "laconic", "bootstrap" ],
-       function($, config, preferences, links, form) {
+define([ "jquery", "config", "preferences", "links", "form", "backend",
+	 "version", "laconic", "bootstrap" ],
+       function($, config, preferences, links, form, backend) {
 
 /* NOTE: form dependency is circular.  Form is initialized later. */
 

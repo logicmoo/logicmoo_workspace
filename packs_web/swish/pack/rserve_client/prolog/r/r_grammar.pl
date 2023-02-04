@@ -349,6 +349,9 @@ r_comment(String) -->
 	"#", string(Codes), eol, !,
 	{ string_codes(String, Codes) }.
 
+:- if(\+ current_predicate(eol//0)).
+% part of library(dcg/basics) from 8.3.26.
 eol --> "\r".
 eol --> "\n".
 eol --> eos.
+:- endif.

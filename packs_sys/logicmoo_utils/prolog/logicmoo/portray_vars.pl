@@ -240,6 +240,7 @@ add_var_to_env_maybe(_New,Var):- var(Var),get_attr(Var,vnl,_),!.
 add_var_to_env_maybe(New,_Var):- atom_contains(New,'_VAR'),!.
 add_var_to_env_maybe(New,Var):- ignore(add_var_to_env(New,Var)).
 
+check_varname(_):-!.
 check_varname(UP):- name(UP,[C|Rest]),
   (
    (  ( \+ char_type(C,prolog_var_start) )
@@ -410,8 +411,12 @@ guess_pretty1(H):- pretty_enough(H), !.
 guess_pretty1(O):- mortvar(( ignore(pretty1(O)),ignore(pretty_two(O)),ignore(pretty_three(O)),ignore(pretty_final(O)))),!.
 
 make_pretty(I,O):- pretty_numbervars(I,O),!.
-make_pretty(I,O):- is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
+%make_pretty(I,O):- pv_is_user_output,!,shrink_naut_vars(I,O), pretty1(O),pretty_three(O),pretty_final(O),!.
 make_pretty(I,O):- plvn(Vs),duplicate_term(I+Vs,O+Vs), pretty1(O),pretty_three(O),pretty_final(O),!.
+
+pv_is_user_output:- current_output(O),!,
+  (is_predicate_stream(O)-> true ; (stream_property(O,alias(user_output))-> true ; stream_property(O,alias(user_error)))).
+
 
 plvn(Vs):- nb_current('$variable_names',Vs),!.
 plvn(Vs):- prolog_load_context(variable_names,Vs).

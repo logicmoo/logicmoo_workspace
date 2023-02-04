@@ -42,8 +42,9 @@
  * @requires jquery
  */
 
-define([ "jquery", "config", "form", "modal", "laconic" ],
-       function($, config, form, modal) {
+define([ "jquery", "config", "form", "modal", "backend",
+	 "laconic" ],
+       function($, config, form, modal, backend) {
 
 (function($) {
   var pluginName = 'gitty';
@@ -234,7 +235,8 @@ define([ "jquery", "config", "form", "modal", "laconic" ],
 	var url  = config.http.locations.web_storage
 		 + encodeURI(meta.name);
 
-	$.ajax({ url: url,
+	backend.ajax(
+	  { url: url,
 		 contentType: "application/json",
 		 type: "GET",
 		 data: { format: "history",
@@ -376,7 +378,8 @@ define([ "jquery", "config", "form", "modal", "laconic" ],
 	var url  = config.http.locations.web_storage
 		 + encodeURI(data.commit);
 
-	$.ajax({ url: url,
+	backend.ajax(
+	  { url: url,
 		 contentType: "application/json",
 		 type: "GET",
 		 data: { format: "diff"

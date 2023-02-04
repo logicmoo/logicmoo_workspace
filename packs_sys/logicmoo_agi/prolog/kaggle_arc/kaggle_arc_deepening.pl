@@ -51,12 +51,12 @@ call_until_arc_failed([]).
 
 :-meta_predicate(deepen_local_0(+,0)).
 deepen_local_0(Local, Call):-
-  ( \+ retract(Local) -> setup_call_cleanup(true, one_must(Call,locally(Local,Call)), ignore(retract(Local)))  ; 
-     (setup_call_cleanup(true, 
-       one_must(Call,locally(Local,Call)), 
+  ( \+ retract(Local) -> setup_call_cleanup(true, one_must(Call,locally(Local,Call)), ignore(retract(Local)))  ;
+     (setup_call_cleanup(true,
+       one_must(Call,locally(Local,Call)),
         asserta(Local)))).
 
-%t_l:old_text.
+%t_l:old_tex
 
 :- thread_local(t_l:useAltPOS/0).
 %t_l:useAltPOS:- fail.

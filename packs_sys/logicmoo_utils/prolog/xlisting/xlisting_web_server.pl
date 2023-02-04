@@ -1,4 +1,12 @@
-/* <module> xlisting_web
+% :-module(xlisting_web,[ensure_sigma/0,search4term/0]).
+%:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )). 
+:- module(xlisting_web_server,
+          [ register_logicmoo_browser/0,
+            swish_reply_config_root/1
+          ]).
+
+:- set_module(class(library)).
+/** <module> xlisting_web_server
 % Provides /logicmoo runtime preds browsing
 %
 %
@@ -7,25 +15,19 @@
 % Dec 13, 2035
 %
 */
-% :-module(xlisting_web,[ensure_sigma/0,search4term/0]).
-%:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )). 
-:- module(xlisting_web_server,
-          [ register_logicmoo_browser/0
-          ]).
 
-:- set_module(class(library)).
-
-
+:- public(swish_reply_config_root/1).
+:- export(swish_reply_config_root/1).
 swish_reply_config_root(Request):-
   (current_predicate(swish_config:swish_reply_config/1)
-   -> swish_config:swish_reply_config(Request); 
+   -> call(call,swish_config:swish_reply_config(Request)); 
       swish_reply_config_root).
 
 swish_reply_config_root:-
   current_predicate(swish_config:json_config/2),!,
-  swish_config:
+  call(call,swish_config:
   (json_config(JSON, []),
-	 reply_json(JSON)).
+	 reply_json(JSON))).
 swish_reply_config_root:- 
   user:file_search_path(xlisting_web,Here),
   atom_concat(Here,'/swish_config.json',ConfigFile),
@@ -56,14 +58,18 @@ hide_xpce_library_directory.
 
 %:- hide_xpce_library_directory.
 */
-:- set_prolog_flag(hide_xpce_library_directory,true).
+%:- set_prolog_flag(hide_xpce_library_directory,true).
 
-%:- ensure_loaded(library(logicmoo_swilib)).
+
+/*
 :- system:use_module(library(http/thread_httpd)).
 :- system:use_module(thread_httpd:library(http/http_dispatch)).
-%:- use_module(library(http/http_dispatch))
-:- system:use_module(swi(library/http/html_head)).
 :- system:use_module(library(http/http_dispatch)).
+
+*/
+%:- ensure_loaded(library(logicmoo_swilib)).
+:- system:use_module(swi(library/http/html_head)).
+
 :- system:use_module(library(http/http_path)).
 :- system:use_module(library(http/http_log)).
 :- system:use_module(library(http/http_client)).
@@ -78,7 +84,7 @@ hide_xpce_library_directory.
 
 
 :- system:use_module(library(predicate_streams)).
-:- system:use_module(library(logicmoo/with_no_x)).
+%:- system:use_module(library(logicmoo/with_no_x)).
 :- system:use_module(library(logicmoo/each_call)).
 %:- use_module(library(logicmoo/butterfly_console)).
 
@@ -143,7 +149,7 @@ register_logicmoo_browser:-
   %http_handler('/lm_xref/', handler_logicmoo_cyclone0, [prefix]), % chunked
   %http_handler('/lm_xref_nc/', handler_logicmoo_cyclone1, [prefix,chunked]),
   http_handler(('/swish/lm_xref'), handler_logicmoo_cyclone2a, [prefix,priority(50)]), % chunked
-  http_handler(('/swish/lm_xref/swish_config.json'), swish_reply_config_root,[priority(200)]),
+  call(call,http_handler(('/swish/lm_xref/swish_config.json'), swish_reply_config_root,[priority(200)])),
   http_handler(('/swish/lm_xref/slowcode'), handler_logicmoo_slowcode, [prefix,chunked,priority(100)]), % chunked
   http_handler(('/swish/lm_xref/pixmapx'), http_server_files:serve_files_in_directory(pixmapx), [prefix,priority(100)]),
   http_handler(('/swish/lm_xref_nc'), handler_logicmoo_cyclone3a, [prefix,chunked]),

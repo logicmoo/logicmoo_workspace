@@ -27,6 +27,7 @@ create_predicate_inheritance/4,
 now_inherit_above/4,
 decl_as/2,
 decl_kb_global/3,
+never_move/2,
 
 decl_kb_shared/3,
 decl_kb_local/3,
@@ -415,6 +416,8 @@ system:inherit_above(Mt,Query):-
    Query\=do_inherit_above(_,_),
    do_inherit_above(Mt,Query).
 
+:- export(never_move/2).
+:- public(never_move/2).
 never_move('$spft',_).
 never_move(mpred_prop,_).
 never_move(meta_argtypes,_).
@@ -435,7 +438,7 @@ system:do_inherit_above(Mt,_):- t_l:exact_kb(Mt),!,fail.
 system:do_inherit_above(_Mt,_QueryIn):- !, fail.
 
 system:do_inherit_above(Mt,QueryIn):- 
-   functor(QueryIn,F,A),\+ never_move(F,A),
+   functor(QueryIn,F,A), ( \+ predicate_inheritance:never_move(F,A) ),
    predicate_property(QueryIn,number_of_clauses(N)),
    Mt:nth_clause(QueryIn,N,Ref),clause(_,Body,Ref),
    predicate_inheritance:get_inherit_above_clause(Mt,QueryIn,IAHead,IABody),

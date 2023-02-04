@@ -427,9 +427,8 @@ m_clause_no_missing(M,H,B,R):- catch(m_clause0(M,H,B,R),_,fail).
 %
 % Module Clause Primary Helper.
 %
-m_clause0(M,H,B,R):- atom(M),!, M:clause(H,B,R).
+m_clause0(M,H,B,R):- atom(M),!, clause(M:H,B,R)*->true;M:clause(H,B,R).
 m_clause0(_,H,B,R):- clause(H,B,R).
-m_clause0(M,H,B,R):- atom(M),!, clause(H,M:B,R).
                               
 :- thread_local(t_l:tl_hide_data/1).
 
@@ -1382,7 +1381,7 @@ real_list_undefined(Options) :-
     merge_options(Options, [module_class([user])], WalkOptions),
     call_cleanup(prolog_walk_code(
                                   [ undefined(trace),
-                                    on_trace(found_undef)
+                                    on_trace(check:found_undef)
                                   | WalkOptions
                                   ]),
                  real_collect_undef(Grouped)),
@@ -1391,7 +1390,74 @@ real_list_undefined(Options) :-
     ;   print_message(warning, check(undefined_procedures, Grouped))
     ).
 
-
+real_list_undefined :-
+    real_list_undefined([]).
+full_list_undefined:- real_list_undefined([module_class([user,library,system])]).
+/*
+836 ?- real_list_undefined([module_class([user,library,system])]).
+Warning: The predicates below are not defined. If these are defined
+Warning: at runtime using assert/1, use :- dynamic Name/Arity.
+Warning:
+Warning: win_get_user_preferred_ui_languages/2, which is referenced by
+Warning:        /usr/lib/swi-prolog/boot/messages.pl:1842:4: 1-st clause of os_user_lang/1
+Warning: '$urgent_exception'/3, which is referenced by
+Warning:        /usr/lib/swi-prolog/boot/syspred.pl:1580:12: 2-nd clause of run_undo/3
+Warning: win_registry_get_value/3, which is referenced by
+Warning:        /usr/lib/swi-prolog/boot/toplevel.pl:479:10: 1-st clause of '$set_prolog_file_extension'/0
+Warning: bugger:fif/2, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/dmsg.pl:1764:27: 6-th clause of bugger:mUST_det_ll/1
+Warning: bugger:noRTrace/0, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/dmsg.pl:1777:59: 1-st clause of bugger:mUST_det_ll_failed/1
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/dmsg.pl:1781:21: 2-nd clause of bugger:rRTrace/1
+Warning: bugger:parent_goal/1, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/ucatch.pl:1025:38: 1-st clause of bugger:uexecute_goal_vs0/1
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/debuggery/ucatch.pl:1026:38: 2-nd clause of bugger:uexecute_goal_vs0/1
+Warning: cp_menu:sort_menu_popups/2, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web.pl:300:36: 2-nd clause of xlisting_web:do_sort_menu_popups/2
+Warning: dictoo_lib:nb_rb_insert/4, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/dictoo/prolog/dictoo_lib.pl:225:49: 5-th clause of dictoo_lib:oo_put_dict/4
+Warning:        /home/norights/.local/share/swi-prolog/pack/dictoo/prolog/dictoo_lib.pl:162:41: 5-th clause of dictoo_lib:oo_set/3
+Warning: in_pce_thread_sync/1, which is referenced by
+Warning:        /usr/lib/swi-prolog/xpce/prolog/lib/gui_tracer.pl:80:4: 3-th clause of guitracer/0
+Warning:        /usr/lib/swi-prolog/xpce/prolog/lib/gui_tracer.pl:139:8: 1-st clause of trace_goal_2/1
+Warning: gvs:is_oo_hooked/4, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/dictoo/prolog/dictoo_lib.pl:506:68: 2-nd clause of gvs:is_dot_hook/4
+Warning: start_emacs/0, which is referenced by
+Warning:        /usr/lib/swi-prolog/library/doc_http.pl:242:4: 1-st clause of prepare_editor/0
+Warning: pretty_clauses:bfly_write_s/1, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/butterfly_console.pl:323:69: 2-nd clause of pretty_clauses:bfly_write_h/1
+Warning: pretty_clauses:is_user_output/0, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/portray_vars.pl:414:19: 2-nd clause of pretty_clauses:make_pretty/2
+Warning: pretty_clauses:print_tree_unit/2, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/pretty_clauses.pl:561:4: 1-st clause of pretty_clauses:print_tree_loop/2
+Warning: pretty_clauses:shrink_naut_vars/2, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/portray_vars.pl:414:36: 2-nd clause of pretty_clauses:make_pretty/2
+Warning: in_pce_thread/1, which is referenced by
+Warning:        /usr/lib/swi-prolog/library/edit.pl:302:4: 2-nd clause of do_edit_source/1
+Warning: swish_config:json_config/2, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web_server.pl:24: 1-st clause of xlisting_web_server:swish_reply_config_root/0
+Warning: swish_config:reply_json/1, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web_server.pl:24: 1-st clause of xlisting_web_server:swish_reply_config_root/0
+Warning: swish_config:swish_reply_config/1, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web_server.pl:21:19: 1-st clause of xlisting_web_server:swish_reply_config_root/1
+Warning: never_move/2, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/predicate_inheritance.pl:437: 3-th clause of do_inherit_above/2
+Warning: window_title/2, which is referenced by
+Warning:        /usr/lib/swi-prolog/boot/toplevel.pl:441:11: 1-st clause of set_window_title/1
+Warning: make_clpfd_var/1, which is referenced by
+Warning:        /usr/lib/swi-prolog/library/clp/clpfd.pl:7855:8: 1-st clause of exception/3
+Warning: util_varnames:parent_goal/1, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_varnames.pl:266:37: 1-st clause of util_varnames:execute_goal_vs0/1
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_varnames.pl:267:37: 2-nd clause of util_varnames:execute_goal_vs0/1
+Warning: util_varnames:swc/0, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/logicmoo/util_varnames.pl:1222:20: 2-nd clause of util_varnames:scan_for_varnames/0
+Warning: xlisting_web:b/1, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web.pl:3010:7: 1-st clause of xlisting_web:a_ok/1
+Warning: xlisting_web:dsmg/1, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web.pl:1218:56: 5-th clause of xlisting_web:write_atom_link/3
+Warning: xlisting_web:guitracer/0, which is referenced by
+Warning:        /home/norights/.local/share/swi-prolog/pack/logicmoo_utils/prolog/xlisting/xlisting_web.pl:2130:31: 1-st clause of xlisting_web:do_guitracer/0
+*/
 
 :- export(mmake/0).
 :- system:import(mmake).
@@ -1417,6 +1483,7 @@ mmake:- thread_signal(main,catch(((ignore(update_changed_files), ignore(if_defin
 % Update Changed Files.
 %
 update_changed_files:- thread_self(main),!,update_changed_files1.
+update_changed_files:- !.
 update_changed_files:- !,thread_signal(main,update_changed_files0).
 
 %= 	 	 
@@ -1434,7 +1501,8 @@ update_changed_files0 :- get_main_error_stream(Err),!,with_output_to(Err,update_
 % Update Changed Files Secondary Helper.
 %
 update_changed_files1 :- 
- locally(set_prolog_flag(verbose_load,true),
+ current_prolog_flag(verbose_load,VL),
+ locally(set_prolog_flag(verbose_load,VL),
    with_no_dmsg(make:((        
         '$update_library_index',
     findall(File, make:modified_file(File), Reload0),
@@ -1473,9 +1541,11 @@ remove_undef_search:-
  %assert((check:list_undefined(A):- dmsg(check:list_undefined(A)),!)),
  assertz((check:list_undefined(A):- check:reload_library_index,  update_changed_files, call(thread_self_main),!, ignore(A=[]))),
  assertz((check:list_undefined(A):- ignore(A=[]),scansrc_list_undefined(A),!)),
+ assertz((check:list_undefined(_))),
  redefine_system_predicate(check:list_void_declarations),
  abolish(check:list_void_declarations/0),
- asserta(check:list_void_declarations))).
+ asserta(check:list_void_declarations))),
+ wdmsg('removed check:list_undefined and list_void_declarations use:  ?- real_list_undefined([]),real_list_void_declarations. ').
 
 % :- remove_undef_search.
 /*

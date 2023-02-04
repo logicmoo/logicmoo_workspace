@@ -10,12 +10,15 @@
 
 %:- learn_shapes.
 :- ensure_loaded(kaggle_arc_utils).
+:- ensure_loaded(kaggle_arc_ui_html).
 :- ensure_loaded(kaggle_arc_ui_ansi).
 :- ensure_loaded(kaggle_arc_deepening).
 :- ensure_loaded(kaggle_arc_typecheck).
 :- ensure_loaded(kaggle_arc_interpreter).
 :- ensure_loaded(kaggle_arc_test_favs).
+
 :- ensure_loaded(kaggle_arc_test_loader).
+
 :- ensure_loaded(kaggle_arc_domaintypes).
 :- ensure_loaded(kaggle_arc_test_iface).
 :- ensure_loaded(kaggle_arc_explaination).
@@ -28,14 +31,12 @@
 :- ensure_loaded(kaggle_arc_test_cache).
 :- ensure_loaded(kaggle_arc_individuation).
 
-
 :- ensure_loaded(kaggle_arc_object).
 :- ensure_loaded(kaggle_arc_boards).
 :- ensure_loaded(kaggle_arc_learning).
 :- ensure_loaded(kaggle_arc_imagens).
 :- ensure_loaded(kaggle_arc_recognise).
 :- ensure_loaded(kaggle_arc_uniqueness).
-:- ensure_loaded(kaggle_arc_ui_html).
 :- ensure_loaded(kaggle_arc_test_easy).
 :- ensure_loaded(kaggle_arc_test_old).
 :- set_prolog_flag(verbose_load,false).

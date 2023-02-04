@@ -4,13 +4,2778 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- encoding(iso_latin_1).
 :- include(kaggle_arc_header).
 
 %:- op(100,xfx,' * ').
 :- dynamic(fav/2).
 :- discontiguous fav/2.
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
+%~ warn_skip(save_supertest(v('00576224'),'muarc_cache/00576224.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('00576224')))
+%~ warn_skip(clear_saveable_test_info(v('423a55dc')))
 
+:- discontiguous((fav_testcase/2,fav_testcase/3)).
+
+fav_testcase(v('423a55dc')>trn+1,"
+
+   _______________________       _______________________
+  |                       |     |                       |
+  |                       |     |                       |
+  |                       |     |                       |
+  |         6 6 6         |     | 6 6 6                 |
+  |         6   6         |     |   6   6               |
+  |         6   6         |     |     6   6             |
+  |         6   6         |     |       6   6           |
+  |         6 6 6         |     |         6 6 6         |
+  |                       |     |                       |
+  |                       |     |                       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(11,10))          'Output' v('423a55dc') (grid(11,10))
+",test_easy(findrot(_))).
+
+
+%= fav(v('423a55dc'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/423a55dc.json']),filename(['/data/evaluation/423a55dc.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(5, 1) ']).
+%~ warn_skip(save_supertest(v('423a55dc'),'muarc_cache/423a55dc.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('423a55dc')))
+%~ warn_skip(clear_saveable_test_info(v('414297c0')))
+fav_testcase(v('414297c0')>trn+1,"
+
+   _________________________________________       _____________
+  |                                         |     | 8 8 8 8 8 8 |
+  |                                         |     | 8 2 8 8 8 8 |
+  |                       2                 |     | 2 1 2 8 8 8 |
+  |                     2 1 2               |     | 2 8 8 8 8 8 |
+  |                     2           2   2   |     | 8 8 8 8 8 8 |
+  |                                   3 2   |     | 8 8 8 8 8 8 |
+  |   8 8 8 8 8 8                   2   2   |     | 8 8 2 8 2 8 |
+  |   8 8 8 8 8 8                           |     | 8 8 8 4 2 8 |
+  |   8 1 8 8 8 8                           |     | 8 8 2 2 2 8 |
+  |   8 8 8 8 8 8         2   2             |       ¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |   8 8 8 8 8 8           4 2             |
+  |   8 8 8 8 8 8         2 2 2             |
+  |   8 8 8 8 8 8                           |
+  |   8 8 8 4 8 8                           |
+  |   8 8 8 8 8 8                           |
+  |                                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(20,16))          'Output' v('414297c0') (grid(6,9))
+",[indiv(colormass)]).
+
+
+%= fav(v('414297c0'),[no_sol(i(complete),resize_grid(11,12,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([11,12]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/414297c0.json']),filename(['/data/evaluation/414297c0.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('414297c0'),'muarc_cache/414297c0.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('414297c0')))
+%~ warn_skip(clear_saveable_test_info(v('40f6cd08')))
+fav_testcase(v('40f6cd08')>trn+1,"
+
+   _____________________________________________________________       _____________________________________________________________
+  |                                                             |     |                                                             |
+  |                                                             |     |                                                             |
+  |       2 2 2 2 2 2 2 2 2 2 2                                 |     |       2 2 2 2 2 2 2 2 2 2 2                                 |
+  |       2 2 2 2 2 2 2 2 2 2 2                                 |     |       2 2 2 2 2 2 2 2 2 2 2                                 |
+  |       2 2 2 2 2 2 2 2 2 2 2                                 |     |       2 2 2 2 2 2 2 2 2 2 2                                 |
+  |       6 6 6 6 6 6 6 6 2 2 2                                 |     |       6 6 6 6 6 6 6 6 2 2 2                                 |
+  |       8 8 8 8 8 8 8 6 2 2 2                                 |     |       8 8 8 8 8 8 8 6 2 2 2                                 |
+  |       8 8 8 8 8 8 8 6 2 2 2                                 |     |       8 8 8 8 8 8 8 6 2 2 2                                 |
+  |       6 6 6 6 6 6 6 6 2 2 2           2 2 2 2 2 2 2 2 2     |     |       6 6 6 6 6 6 6 6 2 2 2           2 2 2 2 2 2 2 2 2     |
+  |       2 2 2 2 2 2 2 2 2 2 2           2 2 2 2 2 2 2 2 2     |     |       2 2 2 2 2 2 2 2 2 2 2           2 2 2 2 2 2 2 2 2     |
+  |       2 2 2 2 2 2 2 2 2 2 2           2 2 2 2 2 2 2 2 2     |     |       2 2 2 2 2 2 2 2 2 2 2           2 2 2 2 2 2 2 2 2     |
+  |       2 2 2 2 2 2 2 2 2 2 2           2 2 2 2 2 2 2 2 2     |     |       2 2 2 2 2 2 2 2 2 2 2           6 6 6 6 6 6 2 2 2     |
+  |                                       2 2 2 2 2 2 2 2 2     |     |                                       8 8 8 8 8 6 2 2 2     |
+  |                                       2 2 2 2 2 2 2 2 2     |     |                                       6 6 6 6 6 6 2 2 2     |
+  |                                       2 2 2 2 2 2 2 2 2     |     |                                       2 2 2 2 2 2 2 2 2     |
+  |                                       2 2 2 2 2 2 2 2 2     |     |                                       2 2 2 2 2 2 2 2 2     |
+  |                                       2 2 2 2 2 2 2 2 2     |     |                                       2 2 2 2 2 2 2 2 2     |
+  |                                                             |     |                                                             |
+  |                                                             |     |                                                             |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           6 6 6 6 6 6 6 6 6 6 6 6 6 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           8 8 8 8 8 8 8 8 8 8 8 8 6 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           8 8 8 8 8 8 8 8 8 8 8 8 6 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           6 6 6 6 6 6 6 6 6 6 6 6 6 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |
+  |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |     |           2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2                   |
+  |                                                             |     |                                                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(30,30))          'Output' v('40f6cd08') (grid(30,30))
+",[indiv(colormass),human(paste_subobjs)]).
+
+
+%= fav(v('40f6cd08'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/40f6cd08.json']),filename(['/data/evaluation/40f6cd08.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('40f6cd08'),'muarc_cache/40f6cd08.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('40f6cd08')))
+%~ warn_skip(clear_saveable_test_info(v('3f23242b')))
+fav_testcase(v('3f23242b')>trn+1,"
+
+   _____________________       _____________________
+  |                     |     |                     |
+  |                     |     |                     |
+  |                     |     |     5 5 5 5 5       |
+  |                     |     |     2   5   2       |
+  |         3           |     |     2   3   2       |
+  |                     |     |     2       2       |
+  |                     |     | 2 2 8 8 8 8 8 2 2 2 |
+  |                     |     |                     |
+  |                     |     |                     |
+  |                     |     |                     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,10))          'Output' v('3f23242b') (grid(10,10))
+").
+
+
+%= fav(v('3f23242b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3f23242b.json']),filename(['/data/evaluation/3f23242b.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('3f23242b'),'muarc_cache/3f23242b.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3f23242b')))
+%~ warn_skip(clear_saveable_test_info(v('3ee1011a')))
+fav_testcase(v('3ee1011a')>trn+1,"
+
+   _____________________________________________       _____________
+  |                                             |     | 1 1 1 1 1 1 |
+  |                                             |     | 1 3 3 3 3 1 |
+  |                           1                 |     | 1 3 6 6 3 1 |
+  |         3                 1                 |     | 1 3 6 6 3 1 |
+  |         3                 1                 |     | 1 3 3 3 3 1 |
+  |         3                 1                 |     | 1 1 1 1 1 1 |
+  |         3                 1                 |       ¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |                           1                 |
+  |                 6                           |
+  |                 6                           |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+  |                                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(22,21))          'Output' v('3ee1011a') (grid(6,6))
+").
+
+
+%= fav(v('3ee1011a'),[no_sol(i(complete),resize_grid(5,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([5,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3ee1011a.json']),filename(['/data/evaluation/3ee1011a.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('3ee1011a'),'muarc_cache/3ee1011a.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3ee1011a')))
+%~ warn_skip(clear_saveable_test_info(v('3ed85e70')))
+fav_testcase(v('3ed85e70')>trn+1,"
+
+   _____________________________________________________________       _____________________________________________________________
+  | 3 3 3 3 3 3                                                 |     | 3 3 3 3 3 3                                                 |
+  | 3 3 3 3 3 3                           2 2 2                 |     | 3 3 3 3 3 3           8 8 8 8 8       2 2 2                 |
+  | 3 2 2 2 3 3             4 4 4         2 2 2                 |     | 3 2 2 2 3 3           8 4 4 4 8       2 1 2                 |
+  | 3 2 1 2 3 3             4 4 4         2 2 2                 |     | 3 2 1 2 3 3           8 4 4 4 8       2 2 2         1 1 1   |
+  | 3 2 2 2 3 3             4 4 4                         2     |     | 3 2 2 2 3 3           8 4 4 4 8                     1 2 1   |
+  | 3 3 3 3 3 3                                                 |     | 3 3 3 3 3 3           8 8 8 8 8                     1 1 1   |
+  | 3 3 3 3 3 3                                                 |     | 3 3 3 3 3 3                                                 |
+  | 8 8 8 8 8 3                                                 |     | 8 8 8 8 8 3                                                 |
+  | 8 4 4 4 8 3                                       1 1 1     |     | 8 4 4 4 8 3                         1 1 1         1 1 1     |
+  | 8 4 4 4 8 3     8 8                   2           1 1 1     |     | 8 4 4 4 8 3     8 8     1 1 1       1 2 1         1 2 1     |
+  | 8 4 4 4 8 3     8 8       2                       1 1 1     |     | 8 4 4 4 8 3     8 8     1 2 1       1 1 1         1 1 1     |
+  | 8 8 8 8 8 3                                                 |     | 8 8 8 8 8 3             1 1 1                               |
+  | 3 3 3 3 3 3               3 3 3                             |     | 3 3 3 3 3 3               3 3 3                             |
+  | 3 3 3 3 3 3               3 3 3                             |     | 3 3 3 3 3 3               3 3 3                             |
+  | 3 3 3 3 3 3               3 3 3                       8 8   |     | 3 3 3 3 3 3               3 3 3                       8 8   |
+  | 3 3 3 3 3 3                                           8 8   |     | 3 3 3 3 3 3                         8 8 8 8 8         8 8   |
+  | 3 3 3 3 3 3                           4 4 4                 |     | 3 3 3 3 3 3                         8 4 4 4 8               |
+  | 3 3 3 3 3 3         1 1 1             4 4 4                 |     | 3 3 3 3 3 3         1 1 1           8 4 4 4 8               |
+  | 3 3 3 3 3 3         1 1 1             4 4 4                 |     | 3 3 3 3 3 3         1 2 1           8 4 4 4 8               |
+  | 3 1 1 1 3 3         1 1 1                                   |     | 3 1 1 1 3 3         1 1 1           8 8 8 8 8 1 1 1         |
+  | 3 1 2 1 3 3                                     2           |     | 3 1 2 1 3 3                                   1 2 1         |
+  | 3 1 1 1 3 3                                                 |     | 3 1 1 1 3 3                                   1 1 1         |
+  | 3 3 3 3 3 3                                                 |     | 3 3 3 3 3 3                                                 |
+  | 3 3 3 3 3 3                                                 |     | 3 3 3 3 3 3                                                 |
+  | 3 3 3 3 3 3                             3 3 3               |     | 3 3 3 3 3 3                             3 3 3               |
+  | 3 3 3 3 3 3           2 2 2             3 3 3       2 2 2   |     | 3 3 3 3 3 3           2 2 2             3 3 3       2 2 2   |
+  | 3 3 3 3 3 3           2 2 2             3 3 3       2 2 2   |     | 3 3 3 3 3 3           2 1 2     1 1 1   3 3 3       2 1 2   |
+  | 3 3 3 3 3 3           2 2 2       2                 2 2 2   |     | 3 3 3 3 3 3           2 2 2     1 2 1               2 2 2   |
+  | 3 3 3 3 3 3                                                 |     | 3 3 3 3 3 3                     1 1 1                       |
+  | 3 3 3 3 3 3                                                 |     | 3 3 3 3 3 3                                                 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(30,30))          'Output' v('3ed85e70') (grid(30,30))
+").
+
+
+%= fav(v('3ed85e70'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3ed85e70.json']),filename(['/data/evaluation/3ed85e70.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('3ed85e70'),'muarc_cache/3ed85e70.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3ed85e70')))
+%~ warn_skip(clear_saveable_test_info(v('3d31c5b3')))
+fav_testcase(v('3d31c5b3')>trn+1,"
+
+   _____________       _____________
+  | 5 5   5 5 5 |     | 5 5 4 5 5 5 |
+  |   5   5   5 |     |   5 8 5 8 5 |
+  |       5 5   |     | 2 4 2 5 5 4 |
+  |   4 4   4   |       ¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |           4 |
+  |   4   4   4 |
+  | 2 2 2       |
+  |   2 2   2   |
+  | 2 2 2   2   |
+  | 8   8 8 8 8 |
+  |     8 8 8 8 |
+  |       8     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(6,12))           'Output' v('3d31c5b3') (grid(6,3))
+").
+
+
+%= fav(v('3d31c5b3'),[no_sol(i(complete),resize_grid(6,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3d31c5b3.json']),filename(['/data/evaluation/3d31c5b3.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(6, 1) ']).
+%~ warn_skip(save_supertest(v('3d31c5b3'),'muarc_cache/3d31c5b3.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3d31c5b3')))
+%~ warn_skip(clear_saveable_test_info(v('3b4c2228')))
+fav_testcase(v('3b4c2228')>trn+1,"
+
+   ___________       _______
+  |   3 3     |     | 1     |
+  |   3 3     |     |       |
+  |           |     |       |
+  | 2 2     2 |       ¯¯¯¯¯¯¯
+  | 2 2       |
+  |       2 2 |
+  |       2 2 |
+   ¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(5,7))            'Output' v('3b4c2228') (grid(3,3))
+").
+
+
+%= fav(v('3b4c2228'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3b4c2228.json']),filename(['/data/evaluation/3b4c2228.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(5, 2) ']).
+%~ warn_skip(save_supertest(v('3b4c2228'),'muarc_cache/3b4c2228.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3b4c2228')))
+%~ warn_skip(clear_saveable_test_info(v('3a301edc')))
+fav_testcase(v('3a301edc')>trn+1,"
+
+   _____________________________       _____________________________
+  |                             |     |                             |
+  |                             |     |                             |
+  |                             |     |     1 1 1 1 1 1 1           |
+  |       3 3 3 3 3             |     |     1 3 3 3 3 3 1           |
+  |       3 3 3 3 3             |     |     1 3 3 3 3 3 1           |
+  |       3 3 1 3 3             |     |     1 3 3 1 3 3 1           |
+  |       3 3 3 3 3             |     |     1 3 3 3 3 3 1           |
+  |       3 3 3 3 3             |     |     1 3 3 3 3 3 1           |
+  |                             |     |     1 1 1 1 1 1 1           |
+  |                             |     |                             |
+  |                             |     |                             |
+  |                             |     |                             |
+  |                             |     |                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(14,13))          'Output' v('3a301edc') (grid(14,13))
+").
+
+
+%= fav(v('3a301edc'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3a301edc.json']),filename(['/data/evaluation/3a301edc.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(5, 1) ']).
+%~ warn_skip(save_supertest(v('3a301edc'),'muarc_cache/3a301edc.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3a301edc')))
+%~ warn_skip(clear_saveable_test_info(v('3979b1a8')))
+fav_testcase(v('3979b1a8')>trn+1,"
+
+   ___________       _____________________
+  | 2 3 3 3 2 |     | 2 3 3 3 2 2 5 3 2 5 |
+  | 3 3 5 3 3 |     | 3 3 5 3 3 2 5 3 2 5 |
+  | 3 5 5 5 3 |     | 3 5 5 5 3 2 5 3 2 5 |
+  | 3 3 5 3 3 |     | 3 3 5 3 3 2 5 3 2 5 |
+  | 2 3 3 3 2 |     | 2 3 3 3 2 2 5 3 2 5 |
+   ¯¯¯¯¯¯¯¯¯¯¯      | 2 2 2 2 2 5 5 3 2 5 |
+                    | 5 5 5 5 5 5 3 3 2 5 |
+                    | 3 3 3 3 3 3 3 2 2 5 |
+                    | 2 2 2 2 2 2 2 2 5 5 |
+                    | 5 5 5 5 5 5 5 5 5 3 |
+                     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(5,5))            'Output' v('3979b1a8') (grid(10,10))
+").
+
+
+%= fav(v('3979b1a8'),[no_sol(i(complete),resize_grid(10,10,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([10,10]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3979b1a8.json']),filename(['/data/evaluation/3979b1a8.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('3979b1a8'),'muarc_cache/3979b1a8.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3979b1a8')))
+%~ warn_skip(clear_saveable_test_info(v('37d3e8b2')))
+fav_testcase(v('37d3e8b2')>trn+1,"
+
+   ___________________________________       ___________________________________
+  |                                   |     |                                   |
+  |     8 8 8 8 8 8       8 8 8 8 8   |     |     2 2 2 2 2 2       3 3 3 3 3   |
+  |     8     8   8       8   8 8 8   |     |     2     2   2       3   3 3 3   |
+  |     8     8 8 8       8 8 8   8   |     |     2     2 2 2       3 3 3   3   |
+  |     8 8 8 8 8 8       8   8 8 8   |     |     2 2 2 2 2 2       3   3 3 3   |
+  |                       8 8 8 8 8   |     |                       3 3 3 3 3   |
+  |           8 8 8 8                 |     |           2 2 2 2                 |
+  |           8     8     8 8 8 8     |     |           2     2     1 1 1 1     |
+  |           8 8 8 8     8     8     |     |           2 2 2 2     1     1     |
+  |           8 8   8     8 8 8 8     |     |           2 2   2     1 1 1 1     |
+  |           8 8 8 8     8 8 8 8     |     |           2 2 2 2     1 1 1 1     |
+  |                                   |     |                                   |
+  |   8 8 8 8 8       8 8 8 8 8 8 8   |     |   2 2 2 2 2       7 7 7 7 7 7 7   |
+  |   8 8 8   8       8   8 8 8   8   |     |   2 2 2   2       7   7 7 7   7   |
+  |   8   8 8 8       8 8 8   8   8   |     |   2   2 2 2       7 7 7   7   7   |
+  |   8 8 8 8 8       8   8 8 8 8 8   |     |   2 2 2 2 2       7   7 7 7 7 7   |
+  |                   8 8 8 8 8 8 8   |     |                   7 7 7 7 7 7 7   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(17,17))          'Output' v('37d3e8b2') (grid(17,17))
+").
+
+
+%= fav(v('37d3e8b2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/37d3e8b2.json']),filename(['/data/evaluation/37d3e8b2.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('37d3e8b2'),'muarc_cache/37d3e8b2.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('37d3e8b2')))
+%~ warn_skip(clear_saveable_test_info(v('358ba94e')))
+fav_testcase(v('358ba94e')>trn+1,"
+
+   _______________________________________       ___________
+  |                             8 8 8 8 8 |     | 8 8 8 8 8 |
+  |   8 8 8 8 8                 8   8 8 8 |     | 8   8   8 |
+  |   8   8   8     8 8 8 8 8   8 8 8   8 |     | 8 8 8 8 8 |
+  |   8 8 8 8 8     8   8   8   8   8 8 8 |     | 8   8   8 |
+  |   8   8 8 8     8 8 8 8 8   8 8 8 8 8 |     | 8 8 8 8 8 |
+  |   8 8 8 8 8     8 8 8   8             |       ¯¯¯¯¯¯¯¯¯¯¯
+  |                 8 8 8 8 8             |
+  |                                       |
+  |                         8 8 8 8 8     |
+  |       8 8 8 8 8         8 8 8   8     |
+  |       8   8   8         8   8 8 8     |
+  |       8 8 8 8 8         8 8 8   8     |
+  |       8   8   8         8 8 8 8 8     |
+  |       8 8 8 8 8                       |
+  |                                       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(19,15))          'Output' v('358ba94e') (grid(5,5))
+").
+
+
+%= fav(v('358ba94e'),[no_sol(i(complete),resize_grid(5,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([5,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/358ba94e.json']),filename(['/data/evaluation/358ba94e.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('358ba94e'),'muarc_cache/358ba94e.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('358ba94e')))
+%~ warn_skip(clear_saveable_test_info(v('351d6448')))
+fav_testcase(v('351d6448')>trn+1,"
+
+   ___________________________       ___________________________
+  |                           |     |                           |
+  | 1 1                       |     | 1 1 1 1 1 1 1 1 1 1       |
+  |                           |     |                           |
+  | 5 5 5 5 5 5 5 5 5 5 5 5 5 |       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |                           |
+  | 1 1 1 1                   |
+  |                           |
+  | 5 5 5 5 5 5 5 5 5 5 5 5 5 |
+  |                           |
+  | 1 1 1 1 1 1               |
+  |                           |
+  | 5 5 5 5 5 5 5 5 5 5 5 5 5 |
+  |                           |
+  | 1 1 1 1 1 1 1 1           |
+  |                           |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(13,15))          'Output' v('351d6448') (grid(13,3))
+").
+
+
+%= fav(v('351d6448'),[no_sol(i(complete),resize_grid(13,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([13,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/351d6448.json']),filename(['/data/evaluation/351d6448.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('351d6448'),'muarc_cache/351d6448.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('351d6448')))
+%~ warn_skip(clear_saveable_test_info(v('34b99a2b')))
+fav_testcase(v('34b99a2b')>trn+1,"
+
+   ___________________       _________
+  |   8     4 5   5   |     | 2 2 2   |
+  |   8   8 4 5   5 5 |     | 2 2 2   |
+  |   8   8 4       5 |     |   2     |
+  |   8   8 4   5   5 |     |         |
+  |       8 4     5   |     |     2 2 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(9,5))            'Output' v('34b99a2b') (grid(4,5))
+").
+
+
+%= fav(v('34b99a2b'),[no_sol(i(complete),resize_grid(4,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/34b99a2b.json']),filename(['/data/evaluation/34b99a2b.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('34b99a2b'),'muarc_cache/34b99a2b.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('34b99a2b')))
+%~ warn_skip(clear_saveable_test_info(v('3490cc26')))
+fav_testcase(v('3490cc26')>trn+1,"
+
+   _________________________________________________________       _________________________________________________________
+  |                                                         |     |                                                         |
+  |   8 8                                                   |     |   8 8                                                   |
+  |   8 8                                                   |     |   8 8                                                   |
+  |                                                         |     |                                                         |
+  |                                                         |     |                                                         |
+  |                                                         |     |                                                         |
+  |       8 8                   8 8                         |     |       8 8 7 7 7 7 7 7 7 7 7 8 8                         |
+  |       8 8                   8 8                         |     |       8 8 7 7 7 7 7 7 7 7 7 8 8                         |
+  |                                                         |     |       7 7                   7 7                         |
+  |                                                         |     |       7 7                   7 7                         |
+  |                                                         |     |       7 7                   7 7                         |
+  |       8 8     8 8           8 8                         |     |       8 8 7 7 8 8           8 8                         |
+  |       8 8     8 8           8 8                         |     |       8 8 7 7 8 8           8 8                         |
+  |                                                         |     |               7 7           7 7                         |
+  |                                                         |     |               7 7           7 7                         |
+  |                                                 8 8     |     |               7 7           7 7                 8 8     |
+  |               8 8                               8 8     |     |               8 8           7 7                 8 8     |
+  |               8 8                                       |     |               8 8           7 7                         |
+  |                                                         |     |               7 7           7 7                         |
+  |                                                         |     |               7 7           7 7                         |
+  |                                                         |     |               7 7           7 7                         |
+  |     2 2       8 8           8 8           8 8           |     |     2 2 7 7 7 8 8           8 8 7 7 7 7 7 8 8           |
+  |     2 2       8 8           8 8           8 8           |     |     2 2 7 7 7 8 8           8 8 7 7 7 7 7 8 8           |
+  |                                                         |     |                                                         |
+  |                                                         |     |                                                         |
+  |                                                         |     |                                                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(28,26))          'Output' v('3490cc26') (grid(28,26))
+").
+
+
+%= fav(v('3490cc26'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3490cc26.json']),filename(['/data/evaluation/3490cc26.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('3490cc26'),'muarc_cache/3490cc26.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3490cc26')))
+%~ warn_skip(clear_saveable_test_info(v('33b52de3')))
+fav_testcase(v('33b52de3')>trn+1,"
+
+   _______________________________________________       _______________________________________________
+  |                                               |     |                                               |
+  |             5 5 5   5 5 5   5 5 5   5 5 5     |     |             1 1 1   8 8 8   1 1 1   8 8 8     |
+  |               5       5       5       5       |     |               1       8       1       8       |
+  |   1 8 1 8   5 5 5   5 5 5   5 5 5   5 5 5     |     |   1 8 1 8   1 1 1   8 8 8   1 1 1   8 8 8     |
+  |   8 8 1 1                                     |     |   8 8 1 1                                     |
+  |   1 1 4 1   5 5 5   5 5 5   5 5 5   5 5 5     |     |   1 1 4 1   8 8 8   8 8 8   1 1 1   1 1 1     |
+  |   1 1 4 4     5       5       5       5       |     |   1 1 4 4     8       8       1       1       |
+  |             5 5 5   5 5 5   5 5 5   5 5 5     |     |             8 8 8   8 8 8   1 1 1   1 1 1     |
+  |                                               |     |                                               |
+  |             5 5 5   5 5 5   5 5 5   5 5 5     |     |             1 1 1   1 1 1   4 4 4   1 1 1     |
+  |               5       5       5       5       |     |               1       1       4       1       |
+  |             5 5 5   5 5 5   5 5 5   5 5 5     |     |             1 1 1   1 1 1   4 4 4   1 1 1     |
+  |                                               |     |                                               |
+  |             5 5 5   5 5 5   5 5 5   5 5 5     |     |             1 1 1   1 1 1   4 4 4   4 4 4     |
+  |               5       5       5       5       |     |               1       1       4       4       |
+  |             5 5 5   5 5 5   5 5 5   5 5 5     |     |             1 1 1   1 1 1   4 4 4   4 4 4     |
+  |                                               |     |                                               |
+  |                                               |     |                                               |
+  |                                               |     |                                               |
+  |                                               |     |                                               |
+  |                                               |     |                                               |
+  |                                               |     |                                               |
+  |                                               |     |                                               |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(23,23))          'Output' v('33b52de3') (grid(23,23))
+").
+
+
+%= fav(v('33b52de3'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/33b52de3.json']),filename(['/data/evaluation/33b52de3.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('33b52de3'),'muarc_cache/33b52de3.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('33b52de3')))
+%~ warn_skip(clear_saveable_test_info(v('3391f8c0')))
+fav_testcase(v('3391f8c0')>trn+1,"
+
+   _________________________       _________________________
+  |                         |     |                         |
+  |   2 2   2 2   2 2       |     |     3     3     3       |
+  |   2     2     2         |     |   3 3   3 3   3 3       |
+  |                         |     |                         |
+  |         2 2     3       |     |           3   2 2       |
+  |         2     3 3       |     |         3 3   2         |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(12,9))           'Output' v('3391f8c0') (grid(12,9))
+").
+
+
+%= fav(v('3391f8c0'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3391f8c0.json']),filename(['/data/evaluation/3391f8c0.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('3391f8c0'),'muarc_cache/3391f8c0.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3391f8c0')))
+%~ warn_skip(clear_saveable_test_info(v('332efdb3')))
+fav_testcase(v('332efdb3')>trn+1,"
+
+   ___________       ___________
+  |           |     | 1 1 1 1 1 |
+  |           |     | 1   1   1 |
+  |           |     | 1 1 1 1 1 |
+  |           |     | 1   1   1 |
+  |           |     | 1 1 1 1 1 |
+   ¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(5,5))            'Output' v('332efdb3') (grid(5,5))
+").
+
+
+%= fav(v('332efdb3'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/332efdb3.json']),filename(['/data/evaluation/332efdb3.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('332efdb3'),'muarc_cache/332efdb3.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('332efdb3')))
+%~ warn_skip(clear_saveable_test_info(v('32e9702f')))
+fav_testcase(v('32e9702f')>trn+1,"
+
+   _________________       _________________
+  |                 |     | 5 5 5 5 5 5 5 5 |
+  |     3 3 3 3     |     | 5 3 3 3 3 5 5 5 |
+  |                 |     | 5 5 5 5 5 5 5 5 |
+  |                 |     | 5 5 5 5 5 5 5 5 |
+  |   3 3           |     | 3 3 5 5 5 5 5 5 |
+  |                 |     | 5 5 5 5 5 5 5 5 |
+  |                 |     | 5 5 5 5 5 5 5 5 |
+  |                 |     | 5 5 5 5 5 5 5 5 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(8,8))            'Output' v('32e9702f') (grid(8,8))
+").
+
+
+%= fav(v('32e9702f'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/32e9702f.json']),filename(['/data/evaluation/32e9702f.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('32e9702f'),'muarc_cache/32e9702f.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('32e9702f')))
+%~ warn_skip(clear_saveable_test_info(v('31d5ba1a')))
+fav_testcase(v('31d5ba1a')>trn+1,"
+
+   ___________       ___________
+  | 9     9 9 |     | 6   6   6 |
+  |           |     | 6 6 6     |
+  |     9   9 |     | 6         |
+  |     4 4   |       ¯¯¯¯¯¯¯¯¯¯¯
+  | 4 4 4     |
+  | 4   4   4 |
+   ¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(5,6))            'Output' v('31d5ba1a') (grid(5,3))
+").
+
+
+%= fav(v('31d5ba1a'),[no_sol(i(complete),resize_grid(5,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([5,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/31d5ba1a.json']),filename(['/data/evaluation/31d5ba1a.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(5, 2) ']).
+%~ warn_skip(save_supertest(v('31d5ba1a'),'muarc_cache/31d5ba1a.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('31d5ba1a')))
+%~ warn_skip(clear_saveable_test_info(v('31adaf00')))
+fav_testcase(v('31adaf00')>trn+1,"
+
+   _____________________       _____________________
+  |   5     5           |     |   5 1 1 5           |
+  | 5 5       5 5   5   |     | 5 5 1 1   5 5   5   |
+  |       5 5     5 5 5 |     | 1 1   5 5     5 5 5 |
+  |     5   5 5     5   |     | 1 1 5   5 5 1 1 5   |
+  |   5             5   |     |   5   1 1   1 1 5   |
+  | 5   5     5 5 5   5 |     | 5   5 1 1 5 5 5   5 |
+  |       5   5 5   5   |     | 1 1   5   5 5   5   |
+  |     5   5 5 5       |     | 1 1 5   5 5 5       |
+  | 5   5 5   5 5   5   |     | 5   5 5   5 5   5   |
+  |               5     |     |               5     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,10))          'Output' v('31adaf00') (grid(10,10))
+").
+
+
+%= fav(v('31adaf00'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/31adaf00.json']),filename(['/data/evaluation/31adaf00.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('31adaf00'),'muarc_cache/31adaf00.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('31adaf00')))
+%~ warn_skip(clear_saveable_test_info(v('319f2597')))
+fav_testcase(v('319f2597')>trn+1,"
+
+   _________________________________________       _________________________________________
+  | 5 2 5 2 5 4 3 8 2 7 3 7 5 6 2 1 9 3 2 1 |     | 5 2 5 2 5 4     2 7 3 7 5 6 2 1 9 3 2 1 |
+  | 1 2 3 6 5 2 2 5 8 9 8 5 8 7 9 2 6 5 5 5 |     | 1 2 3 6 5 2 2   8 9 8 5 8 7 9 2 6 5 5 5 |
+  | 3 1 9 7 9 8 8 7 1 9 7 3 9 7 5 9 8 4 9 8 |     | 3 1 9 7 9 8     1 9 7 3 9 7 5 9 8 4 9 8 |
+  | 5 7 7 8 3 4 4 4 4 6 2 9 4 3 6 8 4 6 7 1 |     | 5 7 7 8 3 4     4 6 2 9 4 3 6 8 4 6 7 1 |
+  | 6 3 8 3 5 9 7 5 4 6 1 9 3 9 7 7 6 7 8 1 |     | 6 3 8 3 5 9     4 6 1 9 3 9 7 7 6 7 8 1 |
+  | 6 2 4 9 8 3 9 1 4 8 9 9 6 5 9 1 9 7 5 7 |     | 6 2 4 9 8 3     4 8 9 9 6 5 9 1 9 7 5 7 |
+  | 6 2 8 3 4 6 4 8 9 3 9 3 6 9 2 2 9 1 9 3 |     | 6 2 8 3 4 6     9 3 9 3 6 9 2 2 9 1 9 3 |
+  | 2 4 7 7 8 1 4 7 6 2 8 9 8 8 7 4 8 4 9 1 |     | 2 4 7 7 8 1     6 2 8 9 8 8 7 4 8 4 9 1 |
+  | 2 1 5 9 2 6 8 3 6 4 5 8 6 3 1 4 5 1 5 1 |     | 2 1 5 9 2 6     6 4 5 8 6 3 1 4 5 1 5 1 |
+  | 9 4 9 5 1 2 8 2 1 4 2 9 9 6 1 9 9 7 2 1 |     | 9 4 9 5 1 2   2 1 4 2 9 9 6 1 9 9 7 2 1 |
+  | 6 6 2 3 7 3 7 5 4 3 2 4 4 7 7 7 6 7 6 7 |     | 6 6 2 3 7 3     4 3 2 4 4 7 7 7 6 7 6 7 |
+  | 2 4 3 1 4 8     9 6 3 2 4 4 8 7 2 9 4 2 |     | 2                     2         2     2 |
+  | 3 5 7 8 2 4     1 6 4 7 4 7 2 3 9 4 5 2 |     |         2                   2         2 |
+  | 8 1 4 3 9 6 9 9 8 5 4 3 5 2 6 8 9 9 4 8 |     | 8 1 4 3 9 6     8 5 4 3 5 2 6 8 9 9 4 8 |
+  | 1 2 6 9 8 9 1 4 3 3 6 2 3 7 3 1 8 1 4 5 |     | 1 2 6 9 8 9     3 3 6 2 3 7 3 1 8 1 4 5 |
+  | 3 8 4 4 4 9 6 1 6 7 9 4 2 6 2 9 3 1 5 1 |     | 3 8 4 4 4 9     6 7 9 4 2 6 2 9 3 1 5 1 |
+  | 2 7 5 8 8 8 6 3 4 6 3 7 9 2 1 1 7 2 5 9 |     | 2 7 5 8 8 8     4 6 3 7 9 2 1 1 7 2 5 9 |
+  | 2 1 7 2 1 3 5 5 3 6 2 8 3 6 9 5 5 9 8 4 |     | 2 1 7 2 1 3     3 6 2 8 3 6 9 5 5 9 8 4 |
+  | 3 3 3 6 6 3 6 5 9 4 7 2 4 4 7 7 6 1 2 9 |     | 3 3 3 6 6 3     9 4 7 2 4 4 7 7 6 1 2 9 |
+  | 2 5 8 9 7 9 7 2 3 2 2 6 6 7 9 8 9 1 1 6 |     | 2 5 8 9 7 9   2 3 2 2 6 6 7 9 8 9 1 1 6 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(20,20))          'Output' v('319f2597') (grid(20,20))
+").
+
+
+%= fav(v('319f2597'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/319f2597.json']),filename(['/data/evaluation/319f2597.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('319f2597'),'muarc_cache/319f2597.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('319f2597')))
+%~ warn_skip(clear_saveable_test_info(v('3194b014')))
+fav_testcase(v('3194b014')>trn+1,"
+
+   _________________________________________       _______
+  | 8 8 8 8 8   1   1 1 8 1 1 1           1 |     | 3 3 3 |
+  | 1         8 1 1       8   5 5 5 5 5 8 1 |     | 3 3 3 |
+  |           8 1     8 1 1 1 5 5 5 5 5 8   |     | 3 3 3 |
+  | 1 8   1 8     8 8 8 8 1 8 5 5 5 5 5 1   |       ¯¯¯¯¯¯¯
+  |   8   9 9 9 9 8           5 5 5 5 5 8   |
+  | 8 1 8 9 9 9 9 8 1 1   1 1   8   8 8   8 |
+  |       9 9 9 9   1 1 8 8 3 3 8 1 1     1 |
+  | 8 1 1 8 1 8   1       3 3 3 1   8 1 8 8 |
+  |   1 8 8 1 1   8 8 3 3 3 3 3 8     8 1   |
+  |   1 1   1       8 3 3 3 3 3 1 1 8 8 1   |
+  | 8   8   8         3 3 3 3 3 1 1 1   8 8 |
+  |         8 1 1 1 1 3 3 3 3 3 1 1   1 8 1 |
+  |   8 8   8 8 1 8   3 3 3 8 1 1           |
+  |     8 8     8   1     1       8 1 1 1   |
+  |     1   1   1 8 8 1     8   1   1 1     |
+  |   4 4 4 4 4 8 4       1   8   8   1 8   |
+  | 1 4 4 4 4 4 4 4   1 1   8         8 1 8 |
+  | 1 4 4 4 4 4 1 1   1   1 1         1   8 |
+  |   1       1 8 1   8   1     8     8 1   |
+  | 8   1     1   8   1 1   1 8   8     1   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(20,20))          'Output' v('3194b014') (grid(3,3))
+").
+
+
+%= fav(v('3194b014'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3194b014.json']),filename(['/data/evaluation/3194b014.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('3194b014'),'muarc_cache/3194b014.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('3194b014')))
+%~ warn_skip(clear_saveable_test_info(v('310f3251')))
+fav_testcase(v('310f3251')>trn+1,"
+
+   _______       ___________________
+  |       |     |   2     2     2   |
+  |     6 |     |     6     6     6 |
+  | 6     |     | 6     6     6     |
+   ¯¯¯¯¯¯¯      |   2     2     2   |
+                |     6     6     6 |
+                | 6     6     6     |
+                |   2     2     2   |
+                |     6     6     6 |
+                | 6     6     6     |
+                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(3,3))            'Output' v('310f3251') (grid(9,9))
+").
+
+
+%= fav(v('310f3251'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/310f3251.json']),filename(['/data/evaluation/310f3251.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('310f3251'),'muarc_cache/310f3251.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('310f3251')))
+%~ warn_skip(clear_saveable_test_info(v('2f0c5170')))
+fav_testcase(v('2f0c5170')>trn+1,"
+
+   _____________________________________________       ___________
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |     |     4 4   |
+  | 8 8 8 8 8 8 8 8 8 8 8           8 8 8 8 8 8 |     |   4 4 2 4 |
+  | 8 8 8 8 8 8 8 8 8 8 8       2   8 8 8 8 8 8 |     |     4 4   |
+  | 8 8 8 8 8 8 8 8 8 8 8           8 8 8 8 8 8 |     |           |
+  | 8 8 8 8 8 8 8 8 8 8 8           8 8 8 8 8 8 |     |           |
+  | 8 8 8 8 8 8 8 8 8 8 8           8 8 8 8 8 8 |       ¯¯¯¯¯¯¯¯¯¯¯
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8             8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8     4 4     8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8   4 4 2 4   8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8     4 4     8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(22,21))          'Output' v('2f0c5170') (grid(5,5))
+").
+
+
+%= fav(v('2f0c5170'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2f0c5170.json']),filename(['/data/evaluation/2f0c5170.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('2f0c5170'),'muarc_cache/2f0c5170.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2f0c5170')))
+%~ warn_skip(clear_saveable_test_info(v('2c737e39')))
+fav_testcase(v('2c737e39')>trn+1,"
+
+   _________________________       _________________________
+  |                         |     |                         |
+  |                         |     |                         |
+  |     3 3                 |     |     3 3                 |
+  |     2 2                 |     |     2 2                 |
+  |     2 5                 |     |     2 5                 |
+  |                         |     |                         |
+  |                         |     |             3 3         |
+  |                         |     |             2 2         |
+  |               5         |     |             2           |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(12,12))          'Output' v('2c737e39') (grid(12,12))
+").
+
+
+%= fav(v('2c737e39'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2c737e39.json']),filename(['/data/evaluation/2c737e39.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('2c737e39'),'muarc_cache/2c737e39.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2c737e39')))
+%~ warn_skip(clear_saveable_test_info(v('2c0b0aff')))
+fav_testcase(v('2c0b0aff')>trn+1,"
+
+   _________________________________________________       ___________________
+  |                                                 |     | 8 8 3 8 8 8 8 3 8 |
+  |   3 8 8 3 8 8 8 3 8     3 8 8 8 3 8 8 8 3 8     |     | 8 3 3 3 8 8 3 3 3 |
+  |   8 8 3 3 3 8 8 8 3     8 8 3 8 8 8 8 3 3 3     |     | 8 8 3 8 8 8 8 3 8 |
+  |   8 8 8 3 8 8 8 8 8     8 3 3 3 8 8 8 8 3 8     |     | 3 8 8 8 3 8 8 8 8 |
+  |   8 3 8 8 8 8 3 8 8     8 8 3 8 3 8 3 8 8 8     |     | 8 3 8 8 8 8 3 8 3 |
+  |   8 8 8 3 8 3 3 3 8     8 8 8 8 8 8 8 8 3 3     |     | 3 3 3 8 8 3 3 3 8 |
+  |   3 8 8 8 8 8 3 8 8     8 3 8 3 8 8 3 8 8 8     |     | 8 3 8 8 8 8 3 8 8 |
+  |   8 8 3 8 8 8 8 3 8     8 8 8 8 8 3 3 3 8 8     |     | 8 8 8 8 3 8 8 8 8 |
+  |                         8 8 3 8 8 8 3 8 8 8     |       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |                         8 8 8 8 8 8 8 8 3 8     |
+  |                                                 |
+  |                                                 |
+  |   8 8 3 8 8 8 8 3 8                             |
+  |   8 3 3 3 8 8 3 3 3   8 8 3 8 8 8 8 8 8 8 8     |
+  |   8 8 3 8 8 8 8 3 8   8 8 8 3 8 8 8 8 3 3 8     |
+  |   3 8 8 8 3 8 8 8 8   8 8 3 3 3 8 8 8 8 8 8     |
+  |   8 3 8 8 8 8 3 8 3   8 8 8 3 8 8 8 3 8 8 3     |
+  |   3 3 3 8 8 3 3 3 8   3 8 8 8 8 8 3 3 3 8 8     |
+  |   8 3 8 8 8 8 3 8 8   8 8 3 8 3 8 8 3 8 8 8     |
+  |   8 8 8 8 3 8 8 8 8   8 3 3 3 8 8 8 8 8 3 8     |
+  |                       8 8 3 8 8 8 3 3 8 8 8     |
+  |                                                 |
+  |                                                 |
+  |                                                 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(24,24))          'Output' v('2c0b0aff') (grid(9,8))
+").
+
+
+%= fav(v('2c0b0aff'),[no_sol(i(complete),resize_grid(8,7,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([8,7]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2c0b0aff.json']),filename(['/data/evaluation/2c0b0aff.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('2c0b0aff'),'muarc_cache/2c0b0aff.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2c0b0aff')))
+%~ warn_skip(clear_saveable_test_info(v('2b01abd0')))
+fav_testcase(v('2b01abd0')>trn+1,"
+
+   _________________________       _________________________
+  |             1           |     |             1           |
+  |             1           |     |             1           |
+  |             1   8   8   |     |     8   8   1   4   4   |
+  |             1     8 4   |     |     4 8     1     4 8   |
+  |             1   8 8 8   |     |     8 8 8   1   4 4 4   |
+  |             1           |     |             1           |
+  |             1           |     |             1           |
+  |             1           |     |             1           |
+  |             1           |     |             1           |
+  |             1           |     |             1           |
+  |             1           |     |             1           |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(12,11))          'Output' v('2b01abd0') (grid(12,11))
+").
+
+
+%= fav(v('2b01abd0'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2b01abd0.json']),filename(['/data/evaluation/2b01abd0.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('2b01abd0'),'muarc_cache/2b01abd0.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2b01abd0')))
+%~ warn_skip(clear_saveable_test_info(v('2a5f8217')))
+fav_testcase(v('2a5f8217')>trn+1,"
+
+   ___________________       ___________________
+  |                   |     |                   |
+  |   1 1 1     1     |     |   6 6 6     7     |
+  |   1   1     1 1   |     |   6   6     7 7   |
+  |                   |     |                   |
+  |               9 9 |     |               9 9 |
+  |     1 1         9 |     |     9 9         9 |
+  |       1   7       |     |       9   7       |
+  | 6 6 6     7 7     |     | 6 6 6     7 7     |
+  | 6   6             |     | 6   6             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(9,9))            'Output' v('2a5f8217') (grid(9,9))
+").
+
+
+%= fav(v('2a5f8217'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2a5f8217.json']),filename(['/data/evaluation/2a5f8217.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('2a5f8217'),'muarc_cache/2a5f8217.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2a5f8217')))
+%~ warn_skip(clear_saveable_test_info(v('29700607')))
+fav_testcase(v('29700607')>trn+1,"
+
+   _________________________       _________________________
+  |         5 3 8           |     |         5 3 8           |
+  |                         |     |         5 3 8           |
+  |                         |     |         5 3 8           |
+  |                         |     |         5 3 8           |
+  | 5                       |     | 5 5 5 5 5 3 8           |
+  |                       8 |     |           3 8 8 8 8 8 8 |
+  |                         |     |           3             |
+  |                         |     |           3             |
+  | 3                       |     | 3 3 3 3 3 3             |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(12,12))          'Output' v('29700607') (grid(12,12))
+").
+
+
+%= fav(v('29700607'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/29700607.json']),filename(['/data/evaluation/29700607.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('29700607'),'muarc_cache/29700607.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('29700607')))
+%~ warn_skip(clear_saveable_test_info(v('292dd178')))
+fav_testcase(v('292dd178')>trn+1,"
+
+   ___________________       ___________________
+  | 5 5 5 5 5 5 5 5 5 |     | 5 5 5 5 5 5 5 5 5 |
+  | 5 5 5 5 5 5 5 5 5 |     | 5 5 5 5 5 5 5 5 5 |
+  | 5 5 1 1 1 1 5 5 5 |     | 5 5 1 1 1 1 5 5 5 |
+  | 5 5 1 5 5 1 5 5 5 |     | 5 5 1 2 2 1 5 5 5 |
+  | 5 5 5 5 5 1 5 5 5 |     | 2 2 2 2 2 1 5 5 5 |
+  | 5 5 1 1 1 1 5 5 5 |     | 5 5 1 1 1 1 5 5 5 |
+  | 5 5 5 5 5 5 5 5 5 |     | 5 5 5 5 5 5 5 5 5 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(9,7))            'Output' v('292dd178') (grid(9,7))
+").
+
+
+%= fav(v('292dd178'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/292dd178.json']),filename(['/data/evaluation/292dd178.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('292dd178'),'muarc_cache/292dd178.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('292dd178')))
+%~ warn_skip(clear_saveable_test_info(v('281123b4')))
+fav_testcase(v('281123b4')>trn+1,"
+
+   _______________________________________       _________
+  |     8 8 3 5 5     3   9 9 9 3 4   4   |     | 4 9 9 9 |
+  | 8 8 8 8 3   5   5 3   9   9 3 4   4   |     | 4 9 4 9 |
+  | 8 8   8 3 5   5 5 3       9 3   4   4 |     | 8 4 5 9 |
+  |   8 8   3       5 3 9     9 3         |     | 9 8 8 9 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(19,4))           'Output' v('281123b4') (grid(4,4))
+").
+
+
+%= fav(v('281123b4'),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,4]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/281123b4.json']),filename(['/data/evaluation/281123b4.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(6, 1) ']).
+%~ warn_skip(save_supertest(v('281123b4'),'muarc_cache/281123b4.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('281123b4')))
+%~ warn_skip(clear_saveable_test_info(v('27f8ce4f')))
+fav_testcase(v('27f8ce4f')>trn+1,"
+
+   _______       ___________________
+  | 7 7 1 |     | 7 7 1 7 7 1       |
+  | 4 7 1 |     | 4 7 1 4 7 1       |
+  | 3 3 7 |     | 3 3 7 3 3 7       |
+   ¯¯¯¯¯¯¯      |       7 7 1       |
+                |       4 7 1       |
+                |       3 3 7       |
+                |             7 7 1 |
+                |             4 7 1 |
+                |             3 3 7 |
+                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(3,3))            'Output' v('27f8ce4f') (grid(9,9))
+").
+
+
+%= fav(v('27f8ce4f'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/27f8ce4f.json']),filename(['/data/evaluation/27f8ce4f.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('27f8ce4f'),'muarc_cache/27f8ce4f.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('27f8ce4f')))
+%~ warn_skip(clear_saveable_test_info(v('27a77e38')))
+fav_testcase(v('27a77e38')>trn+1,"
+
+   ___________       ___________
+  | 3 6 4 2 4 |     | 3 6 4 2 4 |
+  | 8 4 3 3 4 |     | 8 4 3 3 4 |
+  | 5 5 5 5 5 |     | 5 5 5 5 5 |
+  |           |     |           |
+  |           |     |     4     |
+   ¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(5,5))            'Output' v('27a77e38') (grid(5,5))
+").
+
+
+%= fav(v('27a77e38'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/27a77e38.json']),filename(['/data/evaluation/27a77e38.json']),-rotation_match,-mask_match,+shape_match,+color_match,second_most_used_color,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('27a77e38'),'muarc_cache/27a77e38.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('27a77e38')))
+%~ warn_skip(clear_saveable_test_info(v('2753e76c')))
+fav_testcase(v('2753e76c')>trn+1,"
+
+   _________________________________       _________
+  |                 4 4       2 2   |     | 2 2 2 2 |
+  |       2 2 2     4 4       2 2   |     |   3 3 3 |
+  |       2 2 2                     |     |     8 8 |
+  |       2 2 2         2 2 2       |     |       4 |
+  |                     2 2 2       |       ¯¯¯¯¯¯¯¯¯
+  |             3 3     2 2 2       |
+  | 8 8 8 8     3 3                 |
+  | 8 8 8 8                 2 2 2 2 |
+  | 8 8 8 8       3 3 3     2 2 2 2 |
+  | 8 8 8 8       3 3 3     2 2 2 2 |
+  |               3 3 3     2 2 2 2 |
+  |       8 8                       |
+  |       8 8                       |
+  |                         3 3     |
+  |                         3 3     |
+  |                                 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(16,16))          'Output' v('2753e76c') (grid(4,4))
+").
+
+
+%= fav(v('2753e76c'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2753e76c.json']),filename(['/data/evaluation/2753e76c.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('2753e76c'),'muarc_cache/2753e76c.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2753e76c')))
+%~ warn_skip(clear_saveable_test_info(v('2697da3f')))
+fav_testcase(v('2697da3f')>trn+1,"
+
+   _______________       _______________________
+  |               |     |           4           |
+  |               |     |         4   4         |
+  |     4 4       |     |         4 4 4         |
+  |   4   4 4     |     |           4           |
+  |     4 4       |     |   4 4           4 4   |
+  |               |     | 4   4 4       4 4   4 |
+  |               |     |   4 4           4 4   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯      |           4           |
+                        |         4 4 4         |
+                        |         4   4         |
+                        |           4           |
+                         ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(7,7))            'Output' v('2697da3f') (grid(11,11))
+").
+
+
+%= fav(v('2697da3f'),[no_sol(i(complete),resize_grid(15,15,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([15,15]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2697da3f.json']),filename(['/data/evaluation/2697da3f.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('2697da3f'),'muarc_cache/2697da3f.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2697da3f')))
+%~ warn_skip(clear_saveable_test_info(v('2685904e')))
+fav_testcase(v('2685904e')>trn+1,"
+
+   _____________________       _____________________
+  | 8                   |     | 8                   |
+  |                     |     |                     |
+  |                     |     |                     |
+  |                     |     |                     |
+  |                     |     |                     |
+  |                     |     |           1         |
+  | 5 5 5 5 5 5 5 5 5 5 |     | 5 5 5 5 5 5 5 5 5 5 |
+  |                     |     |                     |
+  | 6 6 4 6 2 1 9 2 9 4 |     | 6 6 4 6 2 1 9 2 9 4 |
+  |                     |     |                     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,10))          'Output' v('2685904e') (grid(10,10))
+").
+
+
+%= fav(v('2685904e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2685904e.json']),filename(['/data/evaluation/2685904e.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(6, 1) ']).
+%~ warn_skip(save_supertest(v('2685904e'),'muarc_cache/2685904e.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2685904e')))
+%~ warn_skip(clear_saveable_test_info(v('256b0a75')))
+fav_testcase(v('256b0a75')>trn+1,"
+
+   _________________________________________________       _________________________________________________
+  |   4           4         6             1     5   |     |   4           4     4 1 6 1 1 1 1     1     5   |
+  |                     4                           |     |                     4 1 1 1 1 1 1               |
+  |             7                                   |     |             7       1 1 1 1 1 1 1               |
+  |   2     9                                       |     |   2     9           1 1 1 1 1 1 1               |
+  |                     1 1       8 8               |     | 1 1 1 1 1 1 1 1 1 1 8 8 8 8 8 8 8 1 1 1 1 1 1 1 |
+  |                     1           8               |     | 1 1 1 1 1 1 1 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 1 1 |
+  |                                                 |     | 1 1 1 1 1 1 1 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 1 1 |
+  |                                               2 |     | 1 1 1 1 1 1 1 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 1 2 |
+  |                                       1         |     | 1 1 1 1 1 1 1 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 1 1 |
+  |                                                 |     | 1 1 1 1 1 1 1 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 1 1 |
+  |             2       8           8               |     | 2 2 2 2 2 2 2 1 1 1 8 1 1 1 1 1 8 1 1 1 1 1 1 1 |
+  |                     8 8       8 8       7       |     | 1 1 1 1 1 1 1 1 1 1 8 8 8 8 8 8 8 1 1 1 7 7 7 7 |
+  |       9                                         |     |       9             1 1 1 1 1 1 1               |
+  |                                 7               |     |                     1 1 1 1 1 1 7               |
+  |                                       5         |     |                     1 1 1 1 1 1 7     5         |
+  |                           1                     |     |                     1 1 1 1 1 1 7               |
+  |                                                 |     |                     1 1 1 1 1 1 7               |
+  |           5         3                           |     |           5         3 1 1 1 1 1 7               |
+  |                                               1 |     |                     3 1 1 1 1 1 7             1 |
+  |                                                 |     |                     3 1 1 1 1 1 7               |
+  |                           3                     |     |                     3 1 1 3 1 1 7               |
+  |                               1               4 |     |                     3 1 1 3 1 1 7             4 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(24,22))          'Output' v('256b0a75') (grid(24,22))
+").
+
+
+%= fav(v('256b0a75'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/256b0a75.json']),filename(['/data/evaluation/256b0a75.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('256b0a75'),'muarc_cache/256b0a75.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('256b0a75')))
+%~ warn_skip(clear_saveable_test_info(v('2546ccf6')))
+fav_testcase(v('2546ccf6')>trn+1,"
+
+   _____________________________________       _____________________________________
+  |         2         2         2       |     |         2         2         2       |
+  | 3   3 3 2         2         2       |     | 3   3 3 2 3 3   3 2         2       |
+  |   3 3   2         2         2       |     |   3 3   2   3 3   2         2       |
+  |     3   2         2         2       |     |     3   2   3     2         2       |
+  | 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 |     | 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 |
+  |     3   2   3     2         2       |     |     3   2   3     2         2       |
+  |   3 3   2   3 3   2         2       |     |   3 3   2   3 3   2         2       |
+  | 3   3 3 2 3 3   3 2         2       |     | 3   3 3 2 3 3   3 2         2       |
+  |         2         2         2       |     |         2         2         2       |
+  | 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 |     | 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 |
+  |         2         2         2       |     |         2         2         2       |
+  |         2   1     2     1   2       |     |         2   1     2     1   2       |
+  |         2     1 1 2 1 1     2       |     |         2     1 1 2 1 1     2       |
+  |         2     1   2   1     2       |     |         2     1   2   1     2       |
+  | 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 |     | 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 |
+  |         2         2   1     2       |     |         2     1   2   1     2       |
+  |         2         2 1 1     2       |     |         2     1 1 2 1 1     2       |
+  |         2         2     1   2       |     |         2   1     2     1   2       |
+  |         2         2         2       |     |         2         2         2       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(18,19))          'Output' v('2546ccf6') (grid(18,19))
+").
+
+
+%= fav(v('2546ccf6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2546ccf6.json']),filename(['/data/evaluation/2546ccf6.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('2546ccf6'),'muarc_cache/2546ccf6.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2546ccf6')))
+%~ warn_skip(clear_saveable_test_info(v('25094a63')))
+fav_testcase(v('25094a63')>trn+1,"
+
+   _____________________________________________________________       _____________________________________________________________
+  | 6 8 6 8 8 8 8 6 6 3 8 6 2 3 8 1 2 8 1 3 8 3 3 6 6 1 2 6 2 2 |     | 6 8 6 8 8 8 8 6 6 3 8 6 2 3 8 1 2 8 1 3 8 3 3 6 6 1 2 6 2 2 |
+  | 2 3 3 2 2 3 6 2 6 2 8 1 3 8 1 8 1 8 8 8 8 2 2 3 2 1 2 8 6 3 |     | 2 3 3 2 2 3 6 2 6 2 8 1 3 8 1 8 1 8 8 8 8 2 2 3 2 1 2 8 6 3 |
+  | 2 3 8 2 3 6 6 6 6 6 6 6 6 6 3 8 2 6 6 2 8 3 8 8 3 2 3 3 3 2 |     | 2 3 8 2 3 4 4 4 4 4 4 4 4 4 3 8 2 6 6 2 8 3 8 8 3 2 3 3 3 2 |
+  | 8 6 8 2 3 6 6 6 6 6 6 6 6 6 3 1 1 2 1 2 6 8 2 6 2 1 8 3 3 8 |     | 8 6 8 2 3 4 4 4 4 4 4 4 4 4 3 1 1 2 1 2 6 8 2 6 2 1 8 3 3 8 |
+  | 6 8 6 2 3 6 6 6 6 6 6 6 6 6 3 3 3 8 1 1 2 1 8 3 8 2 3 6 8 2 |     | 6 8 6 2 3 4 4 4 4 4 4 4 4 4 3 3 3 8 1 1 2 1 8 3 8 2 3 6 8 2 |
+  | 3 8 3 3 6 6 6 6 6 6 6 6 6 6 2 8 6 3 2 6 1 6 6 2 8 8 3 2 6 6 |     | 3 8 3 3 6 4 4 4 4 4 4 4 4 4 2 8 6 3 2 6 1 6 6 2 8 8 3 2 6 6 |
+  | 2 6 3 2 8 6 6 6 6 6 6 6 6 6 8 3 8 3 3 6 3 1 8 8 1 2 3 1 8 8 |     | 2 6 3 2 8 4 4 4 4 4 4 4 4 4 8 3 8 3 3 6 3 1 8 8 1 2 3 1 8 8 |
+  | 3 8 1 6 1 8 1 3 8 3 2 3 2 8 1 3 1 2 2 8 1 6 3 3 3 6 2 2 8 6 |     | 3 8 1 6 1 8 1 3 8 3 2 3 2 8 1 3 1 2 2 8 1 6 3 3 3 6 2 2 8 6 |
+  | 8 3 3 8 3 8 2 2 8 8 8 8 8 1 1 6 3 3 6 2 2 6 1 3 3 6 3 1 3 3 |     | 8 3 3 8 3 8 2 2 8 8 8 8 8 1 1 6 3 3 6 2 2 6 1 3 3 6 3 1 3 3 |
+  | 2 3 3 2 3 2 6 2 3 6 8 3 3 8 3 6 1 3 3 8 8 1 6 6 8 8 1 6 2 6 |     | 2 3 3 2 3 2 6 2 3 6 8 3 3 8 3 6 1 3 3 8 8 1 6 6 8 8 1 6 2 6 |
+  | 3 6 3 3 3 2 3 6 1 6 3 8 2 8 2 3 2 6 3 6 6 8 3 6 6 1 6 8 8 6 |     | 3 6 3 3 3 2 3 6 1 6 3 8 2 8 2 3 2 6 3 6 6 8 3 6 6 1 6 8 8 6 |
+  | 8 3 3 1 2 2 6 8 2 3 6 8 3 2 2 6 3 2 1 2 6 3 6 8 8 8 1 8 1 6 |     | 8 3 3 1 2 2 6 8 2 3 6 8 3 2 2 6 3 2 1 2 6 3 6 8 8 8 1 8 1 6 |
+  | 1 8 8 1 6 6 8 2 8 2 1 2 8 8 1 8 2 8 3 8 3 3 8 8 2 3 3 3 3 3 |     | 1 8 8 1 6 6 8 2 8 2 1 2 8 8 1 8 2 8 3 8 3 3 8 8 2 3 3 3 3 3 |
+  | 8 8 3 8 3 2 8 6 3 3 1 3 2 1 6 6 8 3 6 6 3 6 3 1 8 1 2 6 3 8 |     | 8 8 3 8 3 2 8 6 3 3 1 3 2 1 6 6 8 3 6 6 3 6 3 1 8 1 2 6 3 8 |
+  | 8 6 6 3 2 6 6 8 6 1 3 2 8 3 1 2 8 3 6 2 8 8 3 2 2 6 1 8 6 3 |     | 8 6 6 3 2 6 6 8 6 1 3 2 8 3 1 2 8 3 6 2 8 8 3 2 2 6 1 8 6 3 |
+  | 1 8 1 6 2 3 2 2 1 8 2 2 8 3 6 8 8 8 2 8 8 3 3 1 3 2 2 1 3 2 |     | 1 8 1 6 2 3 2 2 1 8 2 2 8 3 6 8 8 8 2 8 8 3 3 1 3 2 2 1 3 2 |
+  | 8 1 3 6 8 8 6 6 3 3 2 2 3 8 8 8 8 8 8 8 1 3 3 8 2 3 6 2 8 2 |     | 8 1 3 6 8 8 6 6 3 3 2 2 3 4 4 4 4 4 4 4 1 3 3 8 2 3 6 2 8 2 |
+  | 3 3 3 6 3 2 2 2 6 3 2 3 3 8 8 8 8 8 8 8 8 3 3 2 3 2 2 2 2 3 |     | 3 3 3 6 3 2 2 2 6 3 2 3 3 4 4 4 4 4 4 4 8 3 3 2 3 2 2 2 2 3 |
+  | 3 2 1 2 2 8 6 3 8 8 8 3 1 8 8 8 8 8 8 8 6 1 8 3 8 3 6 8 1 8 |     | 3 2 1 2 2 8 6 3 8 8 8 3 1 4 4 4 4 4 4 4 6 1 8 3 8 3 6 8 1 8 |
+  | 3 6 1 3 2 3 6 6 6 3 2 1 3 8 8 8 8 8 8 8 3 3 2 1 8 3 6 3 2 3 |     | 3 6 1 3 2 3 6 6 6 3 2 1 3 4 4 4 4 4 4 4 3 3 2 1 8 3 6 3 2 3 |
+  | 8 1 3 8 6 2 3 3 3 3 2 8 6 8 8 8 8 8 8 8 2 8 8 3 8 2 3 1 3 2 |     | 8 1 3 8 6 2 3 3 3 3 2 8 6 4 4 4 4 4 4 4 2 8 8 3 8 2 3 1 3 2 |
+  | 3 6 3 2 8 6 6 3 8 3 1 2 3 8 8 8 8 8 8 8 3 6 8 6 1 2 1 3 3 6 |     | 3 6 3 2 8 6 6 3 8 3 1 2 3 4 4 4 4 4 4 4 3 6 8 6 1 2 1 3 3 6 |
+  | 3 8 8 2 3 8 3 6 8 8 3 1 3 3 8 8 2 2 2 2 3 8 1 1 3 3 2 3 1 3 |     | 3 8 8 2 3 8 3 6 8 8 3 1 3 3 8 8 2 2 2 2 3 8 1 1 3 3 2 3 1 3 |
+  | 3 3 6 8 1 6 6 2 8 6 6 1 8 1 2 2 1 6 8 3 2 6 8 6 8 8 6 2 8 3 |     | 3 3 6 8 1 6 6 2 8 6 6 1 8 1 2 2 1 6 8 3 2 6 8 6 8 8 6 2 8 3 |
+  | 8 3 3 1 8 3 2 3 3 3 8 3 3 3 3 2 3 8 3 1 3 6 6 6 6 6 3 6 2 3 |     | 8 3 3 1 8 3 2 3 3 3 8 3 3 3 3 2 3 8 3 1 3 6 6 6 6 6 3 6 2 3 |
+  | 3 6 8 3 2 1 8 6 6 8 6 6 1 6 6 1 3 3 6 2 6 1 3 3 8 1 2 2 3 3 |     | 3 6 8 3 2 1 8 6 6 8 6 6 1 6 6 1 3 3 6 2 6 1 3 3 8 1 2 2 3 3 |
+  | 1 8 3 6 3 2 6 8 8 1 6 6 8 6 6 6 2 6 8 3 8 1 3 8 2 6 3 2 6 6 |     | 1 8 3 6 3 2 6 8 8 1 6 6 8 6 6 6 2 6 8 3 8 1 3 8 2 6 3 2 6 6 |
+  | 8 8 6 8 1 1 8 2 2 3 6 2 8 3 8 2 1 1 8 6 8 6 8 6 3 3 3 3 2 3 |     | 8 8 6 8 1 1 8 2 2 3 6 2 8 3 8 2 1 1 8 6 8 6 8 6 3 3 3 3 2 3 |
+  | 1 3 8 1 3 1 6 3 6 8 2 3 3 8 2 2 2 1 3 2 8 8 3 8 6 6 3 8 3 8 |     | 1 3 8 1 3 1 6 3 6 8 2 3 3 8 2 2 2 1 3 2 8 8 3 8 6 6 3 8 3 8 |
+  | 6 2 6 2 8 2 3 3 3 3 1 3 3 3 2 6 3 8 2 3 6 3 3 2 2 3 8 8 1 3 |     | 6 2 6 2 8 2 3 3 3 3 1 3 3 3 2 6 3 8 2 3 6 3 3 2 2 3 8 8 1 3 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(30,30))          'Output' v('25094a63') (grid(30,30))
+").
+
+
+%= fav(v('25094a63'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/25094a63.json']),filename(['/data/evaluation/25094a63.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('25094a63'),'muarc_cache/25094a63.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('25094a63')))
+%~ warn_skip(clear_saveable_test_info(v('22a4bbc2')))
+fav_testcase(v('22a4bbc2')>trn+1,"
+
+   ___________       ___________
+  |   8 8 8   |     |   2 2 2   |
+  |   8 8 8   |     |   2 2 2   |
+  | 1 1 1     |     | 1 1 1     |
+  |   8 8 8   |     |   8 8 8   |
+  |   8 8 8   |     |   8 8 8   |
+  | 1 1 1 1 1 |     | 2 2 2 2 2 |
+  |   8 8 8 8 |     |   8 8 8 8 |
+  |   8 8 8 8 |     |   8 8 8 8 |
+  | 1 1 1 1   |     | 1 1 1 1   |
+  | 1 1 1 1   |     | 1 1 1 1   |
+  |   8 8 8   |     |   2 2 2   |
+  |   1 1 1 1 |     |   1 1 1 1 |
+  |   1 1 1 1 |     |   1 1 1 1 |
+  | 8 8 8     |     | 8 8 8     |
+  |       1 1 |     |       2 2 |
+  | 8 8 8     |     | 8 8 8     |
+  | 8 8 8     |     | 8 8 8     |
+  |     1 1   |     |     1 1   |
+  |     1 1   |     |     1 1   |
+   ¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(5,19))           'Output' v('22a4bbc2') (grid(5,19))
+").
+
+
+%= fav(v('22a4bbc2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/22a4bbc2.json']),filename(['/data/evaluation/22a4bbc2.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('22a4bbc2'),'muarc_cache/22a4bbc2.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('22a4bbc2')))
+%~ warn_skip(clear_saveable_test_info(v('21f83797')))
+fav_testcase(v('21f83797')>trn+1,"
+
+   ___________________________       ___________________________
+  |                           |     |     2               2     |
+  |                           |     |     2               2     |
+  |                           |     |     2               2     |
+  |                           |     |     2               2     |
+  |     2                     |     | 2 2 2 2 2 2 2 2 2 2 2 2 2 |
+  |                           |     |     2 1 1 1 1 1 1 1 2     |
+  |                           |     |     2 1 1 1 1 1 1 1 2     |
+  |                           |     |     2 1 1 1 1 1 1 1 2     |
+  |                     2     |     | 2 2 2 2 2 2 2 2 2 2 2 2 2 |
+  |                           |     |     2               2     |
+  |                           |     |     2               2     |
+  |                           |     |     2               2     |
+  |                           |     |     2               2     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(13,13))          'Output' v('21f83797') (grid(13,13))
+").
+
+
+%= fav(v('21f83797'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/21f83797.json']),filename(['/data/evaluation/21f83797.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('21f83797'),'muarc_cache/21f83797.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('21f83797')))
+%~ warn_skip(clear_saveable_test_info(v('212895b5')))
+fav_testcase(v('212895b5')>trn+1,"
+
+   ___________________________________       ___________________________________
+  |                               5   |     |                             4 5 2 |
+  |           5     5 5               |     |           5     5 5     4 4 4 2   |
+  |         5                         |     |         5   2           4   2     |
+  |                                   |     |               2     4 4 4 2       |
+  |                                   |     |                 2   4   2         |
+  |       5           8 8 8     5     |     |       5           8 8 8     5     |
+  |               5   8 8 8   5       |     |               5 4 8 8 8 4 5       |
+  |     5             8 8 8           |     |     5             8 8 8           |
+  |         5                 5       |     |         5       2   4   2 5       |
+  |                   5   5     5     |     |               2   5 4 5   2 5     |
+  |       5                           |     |       5     2               2     |
+  |                         5         |     |           2             5     2   |
+  |                                   |     |         2                       2 |
+  |     5               5             |     |     5 2             5             |
+  |                             5     |     |     2                       5     |
+  |     5                       5     |     |   2 5                       5     |
+  |                   5         5     |     | 2                 5         5     |
+  |   5                               |     |   5                               |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(17,18))          'Output' v('212895b5') (grid(17,18))
+").
+
+
+%= fav(v('212895b5'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/212895b5.json']),filename(['/data/evaluation/212895b5.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('212895b5'),'muarc_cache/212895b5.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('212895b5')))
+%~ warn_skip(clear_saveable_test_info(v('20981f0e')))
+fav_testcase(v('20981f0e')>trn+1,"
+
+   _________________________________       _________________________________
+  |                                 |     |                                 |
+  |   2         2         2         |     |   2         2         2         |
+  |     1 1                   1 1   |     |                                 |
+  |     1 1                   1     |     |       1 1       1         1 1   |
+  |               1                 |     |       1 1       1 1       1     |
+  |               1 1               |     |                                 |
+  |   2         2         2         |     |   2         2         2         |
+  |                                 |     |                                 |
+  |                 1 1       1     |     |         1       1 1       1     |
+  |         1       1         1 1   |     |       1 1       1         1 1   |
+  |       1 1                       |     |                                 |
+  |   2         2         2         |     |   2         2         2         |
+  |                                 |     |                                 |
+  |                                 |     |                                 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(16,14))          'Output' v('20981f0e') (grid(16,14))
+").
+
+
+%= fav(v('20981f0e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/20981f0e.json']),filename(['/data/evaluation/20981f0e.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('20981f0e'),'muarc_cache/20981f0e.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('20981f0e')))
+%~ warn_skip(clear_saveable_test_info(v('20818e16')))
+fav_testcase(v('20818e16')>trn+1,"
+
+   _______________________________       ___________________
+  | 8 8 8 8 8 2 2 2 2 2 2 2 2 2 8 |     | 5 5 3 3 3 3 2 2 2 |
+  | 8 8 8 8 8 2 2 2 2 2 2 2 2 2 8 |     | 5 5 3 3 3 3 2 2 2 |
+  | 8 8 8 8 8 2 2 2 2 2 2 2 2 2 8 |     | 3 3 3 3 3 3 2 2 2 |
+  | 8 8 8 8 8 2 2 2 2 2 2 2 2 2 8 |     | 3 3 3 3 3 3 2 2 2 |
+  | 8 8 8 8 8 2 2 2 2 2 2 2 2 2 8 |     | 3 3 3 3 3 3 2 2 2 |
+  | 8 8 3 3 3 2 2 2 2 2 2 2 2 2 8 |     | 3 3 3 3 3 3 2 2 2 |
+  | 8 8 3 3 3 3 3 3 8 8 8 8 8 8 8 |       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+  | 8 8 3 3 3 3 3 3 8 8 8 8 8 8 8 |
+  | 8 8 3 3 3 3 3 3 8 8 8 8 8 8 8 |
+  | 8 8 3 3 3 3 3 3 8 8 8 8 8 8 8 |
+  | 8 8 3 3 3 3 3 3 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 5 5 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 5 5 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,16))          'Output' v('20818e16') (grid(9,6))
+").
+
+
+%= fav(v('20818e16'),[no_sol(i(complete),resize_grid(8,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([8,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/20818e16.json']),filename(['/data/evaluation/20818e16.json'])]).
+%~ warn_skip(save_supertest(v('20818e16'),'muarc_cache/20818e16.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('20818e16')))
+%~ warn_skip(clear_saveable_test_info(v('2072aba6')))
+fav_testcase(v('2072aba6')>trn+1,"
+
+   _______       _____________
+  | 5     |     | 1 2         |
+  |   5   |     | 2 1         |
+  |     5 |     |     1 2     |
+   ¯¯¯¯¯¯¯      |     2 1     |
+                |         1 2 |
+                |         2 1 |
+                 ¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(3,3))            'Output' v('2072aba6') (grid(6,6))
+").
+
+
+%= fav(v('2072aba6'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2072aba6.json']),filename(['/data/evaluation/2072aba6.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('2072aba6'),'muarc_cache/2072aba6.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2072aba6')))
+%~ warn_skip(clear_saveable_test_info(v('2037f2c7')))
+fav_testcase(v('2037f2c7')>trn+1,"
+
+   ___________________________________________________       _________________
+  |                                                   |     |   8         8 8 |
+  |                                                   |     | 8 8 8 8   8 8 8 |
+  |           4 4 4 4                                 |     |     8         8 |
+  |       1 1 4 6 6 4 1 1                             |     |               8 |
+  |       3 3 3 3 3 3 3 3                             |       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |       1 3 4 6 6 4 3 1                             |
+  |       1   4 6 6 4                                 |
+  |               6                                   |
+  |       1 3   6 6 4 3                               |
+  |       1 1 4 6 6 4 1               4 4 4 4         |
+  |       2 4 4 7 7 4 4 2         1 1 4 6 6 4 1 1     |
+  |       2 4 4 7 7 4 4 2         3 3 3 3 3 3 3 3     |
+  |       2     7 7     2         1 3 4 6 6 4 3 1     |
+  |                               1 3 4 6 6 4 3 1     |
+  |                               1 3 4 6 6 4 3 1     |
+  |                               1 3 4 6 6 4 3 1     |
+  |                               1 1 4 6 6 4 1 1     |
+  |                               2 4 4 7 7 4 4 2     |
+  |                               2 4 4 7 7 4 4 2     |
+  |                               2     7 7     2     |
+  |                                                   |
+  |                                                   |
+  |                                                   |
+  |                                                   |
+  |                                                   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(25,25))          'Output' v('2037f2c7') (grid(8,4))
+").
+
+
+%= fav(v('2037f2c7'),[no_sol(i(complete),resize_grid(7,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2037f2c7.json']),filename(['/data/evaluation/2037f2c7.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('2037f2c7'),'muarc_cache/2037f2c7.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('2037f2c7')))
+%~ warn_skip(clear_saveable_test_info(v('1e97544e')))
+fav_testcase(v('1e97544e')>trn+1,"
+
+   _______________________________________________       _______________________________________________
+  | 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |     | 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |     | 4 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |     | 4 5 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 6 7 1 2 3 4 5 6 7 1 2       6 7 1 2 3 4 |     | 4 5 6 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 7 1 2 3 4 5 6 7 1 2       6 7 1 2 3 4 |     | 4 5 6 7 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 1 2 3 4 5 6 7 1 2       6 7 1 2 3 4 |     | 4 5 6 7 1 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 2 3 4 5 6 7 1 2       6 7 1 2 3 4 |     | 4 5 6 7 1 2 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2           7 1 2 3 4 5 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2           7 1 2       6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 5 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 6 7 1 2       6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 6 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 7 1 2       6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 7 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7           6 7 1 1 2     5 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 1 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7           6 7 1 2 2     5 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 2 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7           6 7 1 2 3 3 4 5 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 3 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 4 5 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 4 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 5 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 5 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 6 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 6 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 7 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 7 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 1 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 1 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 2 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 2 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 3 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 3 4 |
+  | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 4 |     | 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 5 6 7 1 2 3 4 4 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(23,23))          'Output' v('1e97544e') (grid(23,23))
+").
+
+
+%= fav(v('1e97544e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),indiv([i_repair_patterns_f]),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1e97544e.json']),filename(['/data/evaluation/1e97544e.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('1e97544e'),'muarc_cache/1e97544e.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1e97544e')))
+%~ warn_skip(clear_saveable_test_info(v('1e81d6f9')))
+fav_testcase(v('1e81d6f9')>trn+1,"
+
+   _______________________________       _______________________________
+  |       5                 1     |     |       5                 1     |
+  |   4   5                       |     |   4   5                       |
+  |       5         9 2 4         |     |       5         9 2           |
+  | 5 5 5 5                       |     | 5 5 5 5                       |
+  |         8                     |     |         8                     |
+  |             1           4     |     |             1                 |
+  |                   1           |     |                   1           |
+  |     3     6                   |     |     3     6                   |
+  |                             2 |     |                             2 |
+  |       4         4   4         |     |                               |
+  |   9                         2 |     |   9                         2 |
+  |             2                 |     |             2                 |
+  |       3 2         2     1     |     |       3 2         2     1     |
+  |     3     2               2   |     |     3     2               2   |
+  |           3   7 8             |     |           3   7 8             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,15))          'Output' v('1e81d6f9') (grid(15,15))
+").
+
+
+%= fav(v('1e81d6f9'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1e81d6f9.json']),filename(['/data/evaluation/1e81d6f9.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('1e81d6f9'),'muarc_cache/1e81d6f9.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1e81d6f9')))
+%~ warn_skip(clear_saveable_test_info(v('1da012fc')))
+fav_testcase(v('1da012fc')>trn+1,"
+
+   _________________________________________       _________________________________________
+  |                                         |     |                                         |
+  |                   1 1 1 1               |     |                   2 2 2 2               |
+  |                     1 1                 |     |                     2 2                 |
+  |                                         |     |                                         |
+  |                             1   1       |     |                             4   4       |
+  |                           1 1 1 1 1     |     |                           4 4 4 4 4     |
+  |   5 2 5 5 5 5               1   1       |     |   5 2 5 5 5 5               4   4       |
+  |   5 5 5 5 5 5                           |     |   5 5 5 5 5 5                           |
+  |   5 5 5 4 5 5                           |     |   5 5 5 4 5 5                           |
+  |   5 5 5 5 5 5     1 1             1     |     |   5 5 5 5 5 5     6 6             3     |
+  |   5 6 5 5 3 5   1 1 1 1         1 1 1   |     |   5 6 5 5 3 5   6 6 6 6         3 3 3   |
+  |   5 5 5 5 5 5     1 1             1     |     |   5 5 5 5 5 5     6 6             3     |
+  |                                         |     |                                         |
+  |                                         |     |                                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(20,14))          'Output' v('1da012fc') (grid(20,14))
+").
+
+
+%= fav(v('1da012fc'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1da012fc.json']),filename(['/data/evaluation/1da012fc.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('1da012fc'),'muarc_cache/1da012fc.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1da012fc')))
+%~ warn_skip(clear_saveable_test_info(v('1d398264')))
+fav_testcase(v('1d398264')>trn+1,"
+
+   _____________________       _____________________
+  |                     |     |   3     1     2     |
+  |                     |     |     3   1   2       |
+  |       3 1 2         |     |       3 1 2         |
+  |       2 6 2         |     | 2 2 2 2 6 2 2 2 2 2 |
+  |       2 7 7         |     |       2 7 7         |
+  |                     |     |     2   7   7       |
+  |                     |     |   2     7     7     |
+  |                     |     | 2       7       7   |
+  |                     |     |         7         7 |
+  |                     |     |         7           |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,10))          'Output' v('1d398264') (grid(10,10))
+").
+
+
+%= fav(v('1d398264'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),ohuman([(iz(_35124,keypad),iz(_35124,multicolor),centerof(_35124,_35144)-->sunburst(_35144))]),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1d398264.json']),filename(['/data/evaluation/1d398264.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 2) ']).
+%~ warn_skip(save_supertest(v('1d398264'),'muarc_cache/1d398264.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1d398264')))
+%~ warn_skip(clear_saveable_test_info(v('1d0a4b61')))
+fav_testcase(v('1d0a4b61')>trn+1,"
+
+   ___________________________________________________       ___________________________________________________
+  | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |     | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+  | 1 2 3 5 5 3 2 1 2 3 5         2 3 5 5 3 2 1 2 3 5 |     | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |
+  | 1 5 2 3 3 2 5 1 5 2 3         5 2 3 3 2 5 1 5 2 3 |     | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |
+  | 1 3 5 2 2 5 3 1 3 5 2         3 5 2 2 5 3 1 3 5 2 |     | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |
+  | 1 3 5 2 2 5 3 1 3 5 2         3 5 2 2 5 3 1 3 5 2 |     | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |
+  | 1 5 2 3 3 2 5 1 5 2 3         5 2 3 3 2 5 1 5 2 3 |     | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |
+  | 1 2 3 5 5 3 2 1 2 3 5         2 3 5 5 3 2 1 2 3 5 |     | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |
+  | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |     | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+  | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |     | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |
+  | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |     | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |
+  | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |     | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |
+  | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |     | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |
+  | 1 5 2 3       1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |     | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |
+  | 1 2 3 5       1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |     | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |
+  | 1 1 1 1       1 1 1 1 1 1 1     1 1 1 1 1 1 1 1 1 |     | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+  | 1 2 3 5       1 2 3 5 5 3 2     3 5 5 3 2 1 2 3 5 |     | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |
+  | 1 5 2         1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |     | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |
+  | 1 3 5         1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |     | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |
+  | 1 3 5         1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |     | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |
+  | 1 5 2         1 5         5 1 5 2 3 3 2 5 1 5 2 3 |     | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |
+  | 1 2 3         1 2         2 1 2 3 5 5 3 2 1 2 3 5 |     | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |
+  | 1 1 1 1 1 1 1 1 1         1 1 1 1 1 1 1 1 1 1 1 1 |     | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+  | 1 2 3 5 5 3 2 1 2         2 1 2 3 5 5 3 2 1 2 3 5 |     | 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 5 3 2 1 2 3 5 |
+  | 1 5 2 3 3 2 5 1 5         5 1 5 2 3 3 2 5 1 5 2 3 |     | 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 3 2 5 1 5 2 3 |
+  | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |     | 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 2 5 3 1 3 5 2 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(25,25))          'Output' v('1d0a4b61') (grid(25,25))
+").
+
+
+%= fav(v('1d0a4b61'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1d0a4b61.json']),filename(['/data/evaluation/1d0a4b61.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('1d0a4b61'),'muarc_cache/1d0a4b61.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1d0a4b61')))
+%~ warn_skip(clear_saveable_test_info(v('1c56ad9f')))
+fav_testcase(v('1c56ad9f')>trn+1,"
+
+   _____________________________       _____________________________
+  |                             |     |                             |
+  |                             |     |                             |
+  |                             |     |                             |
+  |       2 2 2 2 2 2           |     |       2 2 2 2 2 2           |
+  |       2         2           |     |     2         2             |
+  |       2         2           |     |       2         2           |
+  |       2         2           |     |         2         2         |
+  |       2         2           |     |       2         2           |
+  |       2         2           |     |     2         2             |
+  |       2         2           |     |       2         2           |
+  |       2         2           |     |         2         2         |
+  |       2         2           |     |       2         2           |
+  |       2         2           |     |     2         2             |
+  |       2 2 2 2 2 2           |     |       2 2 2 2 2 2           |
+  |                             |     |                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(14,15))          'Output' v('1c56ad9f') (grid(14,15))
+").
+
+
+%= fav(v('1c56ad9f'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1c56ad9f.json']),filename(['/data/evaluation/1c56ad9f.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('1c56ad9f'),'muarc_cache/1c56ad9f.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1c56ad9f')))
+%~ warn_skip(clear_saveable_test_info(v('1c0d0a4b')))
+fav_testcase(v('1c0d0a4b')>trn+1,"
+
+   ___________________________       ___________________________
+  |                           |     |                           |
+  |   8   8   8   8   8       |     |     2       2       2 2   |
+  |     8     8 8 8   8 8     |     |   2   2               2   |
+  |   8   8   8   8     8 8   |     |     2       2     2       |
+  |                           |     |                           |
+  |   8 8 8   8 8 8   8 8     |     |                       2   |
+  |   8   8               8   |     |     2     2 2 2   2 2     |
+  |     8     8 8 8   8 8     |     |   2   2               2   |
+  |                           |     |                           |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(13,9))           'Output' v('1c0d0a4b') (grid(13,9))
+").
+
+
+%= fav(v('1c0d0a4b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1c0d0a4b.json']),filename(['/data/evaluation/1c0d0a4b.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('1c0d0a4b'),'muarc_cache/1c0d0a4b.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1c0d0a4b')))
+%~ warn_skip(clear_saveable_test_info(v('1c02dbbe')))
+fav_testcase(v('1c02dbbe')>trn+1,"
+
+   _______________________________       _______________________________
+  |                               |     |                               |
+  |                 3             |     |                               |
+  |     3 5 5 5 5 5 5 5 5 5 5     |     |     3 3 3 3 3 3 3 5 5 5 5     |
+  |     5 5 5 5 5 5 5 5 5 5 5     |     |     3 3 3 3 3 3 3 5 5 5 5     |
+  |     5 5 5 5 5 5 5 5 5 5 5     |     |     3 3 3 3 3 3 3 5 5 5 5     |
+  |     5 5 5 5 5 5 5 5 5 5 5     |     |     3 3 3 3 3 3 3 5 5 5 5     |
+  |   3 5 5 5 5 5 5 5 5 5 5 5     |     |     3 3 3 3 3 3 3 5 5 5 5     |
+  |     5 5 5 5 5 5 5 5 5 5 5 4   |     |     5 5 5 5 5 5 4 4 4 4 4     |
+  |     5 5 5 5 5 5 5 5 5 5 5     |     |     5 5 5 5 5 5 4 4 4 4 4     |
+  |     5 5 5 5 5 5 5 5 5 5 5     |     |     5 5 5 5 5 5 4 4 4 4 4     |
+  |     5 5 5 5 5 5 5 5 5 5 5     |     |     5 5 5 5 5 5 4 4 4 4 4     |
+  |     5 5 5 5 5 5 5 5 5 5 5     |     |     5 5 5 5 5 5 4 4 4 4 4     |
+  |     5 5 5 5 5 5 5 5 5 5 4     |     |     5 5 5 5 5 5 4 4 4 4 4     |
+  |                 4             |     |                               |
+  |                               |     |                               |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,15))          'Output' v('1c02dbbe') (grid(15,15))
+").
+
+
+%= fav(v('1c02dbbe'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1c02dbbe.json']),filename(['/data/evaluation/1c02dbbe.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('1c02dbbe'),'muarc_cache/1c02dbbe.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1c02dbbe')))
+%~ warn_skip(clear_saveable_test_info(v('1acc24af')))
+fav_testcase(v('1acc24af')>trn+1,"
+
+   _________________________       _________________________
+  |                         |     |                         |
+  |       1 1 1 1           |     |       1 1 1 1           |
+  |       1     1           |     |       1     1           |
+  | 1 1 1 1     1 1 1 1 1 1 |     | 1 1 1 1     1 1 1 1 1 1 |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                 5       |     |                 5       |
+  |   5 5 5   5 5   5 5     |     |   2 2 2   2 2   5 5     |
+  |   5 5     5 5     5     |     |   2 2     2 2     5     |
+  |                         |     |                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(12,12))          'Output' v('1acc24af') (grid(12,12))
+").
+
+
+%= fav(v('1acc24af'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1acc24af.json']),filename(['/data/evaluation/1acc24af.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('1acc24af'),'muarc_cache/1acc24af.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1acc24af')))
+%~ warn_skip(clear_saveable_test_info(v('1a6449f1')))
+fav_testcase(v('1a6449f1')>trn+1,"
+
+   _______________________________________________       _____________________
+  |   3   9       9 5   4         5       4   8   |     | 6       1 1     6   |
+  |   3           9     9   3   1 1             2 |     |     6   6   4       |
+  |     8   2 2 2 2 2 2 2 2 2           4         |     |     3     8   7   5 |
+  |         2 8     7       2     1     4   7 9 8 |     | 4   3 4   3     8   |
+  |     7   2   1 5 3   6 5 2 5     1 1 5         |     |     3 7 7 5     1   |
+  | 9     8 2               2               8   7 |     | 3         9         |
+  | 8   4   2   9 5   1     2                   9 |     |       5             |
+  | 1       2 3       2     2     6 4 4 8         |     | 3             9     |
+  | 8       2     1 4     8 2       4 2 7   9 1 6 |       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |   4 4 8 2 2 2 2 2 2 2 2 2     2   8   3   6   |
+  |   7       8   3 7   9     3     3         1   |
+  |           2 5         4 4 4 4 4 4 4 4 4 4 4 4 |
+  |     3 3 3 3 3     4   4 6       1 1     6   4 |
+  | 6   3       3         4     6   6   4       4 |
+  |     3 7 9   3       6 4     3     8   7   5 4 |
+  |   7 3       3   2 8   4 4   3 4   3     8   4 |
+  |   8 3   9   3   3 3   4     3 7 7 5     1   4 |
+  |     3 3 3 3 3 6 5     4 3         9         4 |
+  |   9 2     2 3       9 4       5             4 |
+  |   5 8       1   6   9 4 3             9     4 |
+  | 9               3     4 4 4 4 4 4 4 4 4 4 4 4 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(23,21))          'Output' v('1a6449f1') (grid(10,8))
+").
+
+
+%= fav(v('1a6449f1'),[no_sol(i(complete),resize_grid(7,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1a6449f1.json']),filename(['/data/evaluation/1a6449f1.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('1a6449f1'),'muarc_cache/1a6449f1.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1a6449f1')))
+%~ warn_skip(clear_saveable_test_info(v('1a2e2828')))
+fav_testcase(v('1a2e2828')>trn+1,"
+
+   _______________________       _
+  |       4 4       8     |     | 8 |
+  |       4 4       8     |      ¯¯¯
+  | 3 3 3 4 4 3 3 3 8 3 3 |
+  |       4 4       8     |
+  |       4 4       8     |
+  | 6 6 6 6 6 6 6 6 8 6 6 |
+  | 6 6 6 6 6 6 6 6 8 6 6 |
+  |       4 4       8     |
+  |       4 4       8     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(11,9))           'Output' v('1a2e2828') (grid(1,1))
+").
+
+
+%= fav(v('1a2e2828'),[no_sol(i(complete),resize_grid(1,1,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([1,1]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1a2e2828.json']),filename(['/data/evaluation/1a2e2828.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(5, 1) ']).
+%~ warn_skip(save_supertest(v('1a2e2828'),'muarc_cache/1a2e2828.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1a2e2828')))
+%~ warn_skip(clear_saveable_test_info(v('19bb5feb')))
+fav_testcase(v('19bb5feb')>trn+1,"
+
+   _______________________________       _____
+  |                               |     | 1 3 |
+  |                               |     |   2 |
+  |   8 8 8 8 8 8 8 8 8 8 8 8 8   |       ¯¯¯¯¯
+  |   8 8 8 8 8 8 8 8 8 8 8 8 8   |
+  |   8 8 1 1 8 8 8 3 3 8 8 8 8   |
+  |   8 8 1 1 8 8 8 3 3 8 8 8 8   |
+  |   8 8 8 8 8 8 8 8 8 8 8 8 8   |
+  |   8 8 8 8 8 8 8 2 2 8 8 8 8   |
+  |   8 8 8 8 8 8 8 2 2 8 8 8 8   |
+  |   8 8 8 8 8 8 8 8 8 8 8 8 8   |
+  |   8 8 8 8 8 8 8 8 8 8 8 8 8   |
+  |   8 8 8 8 8 8 8 8 8 8 8 8 8   |
+  |                               |
+  |                               |
+  |                               |
+  |                               |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,16))          'Output' v('19bb5feb') (grid(2,2))
+").
+
+
+%= fav(v('19bb5feb'),[no_sol(i(complete),resize_grid(2,2,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([2,2]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/19bb5feb.json']),filename(['/data/evaluation/19bb5feb.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('19bb5feb'),'muarc_cache/19bb5feb.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('19bb5feb')))
+%~ warn_skip(clear_saveable_test_info(v('1990f7a8')))
+fav_testcase(v('1990f7a8')>trn+1,"
+
+   _______________________________________       _______________
+  |                                       |     | 2   2   2 2   |
+  |                                       |     |   2 2   2   2 |
+  |       2   2           2 2             |     |     2   2 2   |
+  |         2 2           2   2           |     |               |
+  |           2           2 2             |     | 2 2 2   2 2   |
+  |                                       |     | 2   2     2   |
+  |                                       |     | 2 2 2   2   2 |
+  |                                       |       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |                           2 2         |
+  |             2 2 2           2         |
+  |             2   2         2   2       |
+  |             2 2 2                     |
+  |                                       |
+  |                                       |
+  |                                       |
+  |                                       |
+  |                                       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(19,17))          'Output' v('1990f7a8') (grid(7,7))
+").
+
+
+%= fav(v('1990f7a8'),[no_sol(i(complete),resize_grid(7,7,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,7]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1990f7a8.json']),filename(['/data/evaluation/1990f7a8.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('1990f7a8'),'muarc_cache/1990f7a8.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('1990f7a8')))
+%~ warn_skip(clear_saveable_test_info(v('195ba7dc')))
+fav_testcase(v('195ba7dc')>trn+1,"
+
+   ___________________________       _____________
+  |   7 7 7   7 2 7 7   7   7 |     | 1 1 1 1   1 |
+  |       7   7 2   7 7 7   7 |     |   1 1 1   1 |
+  | 7   7       2 7 7         |     | 1 1 1       |
+  | 7 7 7       2 7 7     7 7 |     | 1 1 1   1 1 |
+  |   7 7   7 7 2 7 7 7     7 |     | 1 1 1   1 1 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(13,5))           'Output' v('195ba7dc') (grid(6,5))
+").
+
+
+%= fav(v('195ba7dc'),[no_sol(i(complete),resize_grid(6,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/195ba7dc.json']),filename(['/data/evaluation/195ba7dc.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('195ba7dc'),'muarc_cache/195ba7dc.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('195ba7dc')))
+%~ warn_skip(clear_saveable_test_info(v('184a9768')))
+fav_testcase(v('184a9768')>trn+1,"
+
+   _____________________________________________       _____________________________________________
+  |                                       5     |     |                                             |
+  |     1 1 1 1 1 1 1 1                         |     |     1 1 1 1 1 1 1 1                         |
+  | 5   1       1 1 1 1     2 2 2 2 2           |     |     1 4 4 4 1 1 1 1                         |
+  |     1 1 1 1 1 1 1 1                   3     |     |     1 1 1 1 1 1 1 1                         |
+  |     1 1           1                   3     |     |     1 1 2 2 2 2 2 1                         |
+  |     1 1           1     4 4 4   5     3     |     |     1 1 2 2 2 2 2 1                         |
+  |     1 1 1 1 1 1 1 1                         |     |     1 1 1 1 1 1 1 1                         |
+  |     1 1 1 1 1 1 1 1                         |     |     1 1 1 1 1 1 1 1                         |
+  |                                             |     |                                             |
+  |   5           4 4 4 4 4 4 4 4 4 4 4       5 |     |               4 4 4 4 4 4 4 4 4 4 4         |
+  |         5     4     4 4 4 4 4 4 4 4         |     |               4 8 8 4 4 4 4 4 4 4 4         |
+  |               4     4 4     4 4 4 4         |     |               4 8 8 4 4 3 3 4 4 4 4         |
+  |   8 8         4 4 4 4 4     4 4 4 4         |     |               4 4 4 4 4 3 3 4 4 4 4         |
+  |   8 8         4 4 4 4 4     4 4 4 4   5     |     |               4 4 4 4 4 3 3 4 4 4 4         |
+  |               4 4 4 4 4 4 4 4 4 4 4         |     |               4 4 4 4 4 4 4 4 4 4 4         |
+  |         5                                   |     |                                             |
+  |                                   3         |     |                                             |
+  |                                   3         |     |                                             |
+  |       2 2 2 2 2         5         3         |     |                                             |
+  |                                             |     |                                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(22,20))          'Output' v('184a9768') (grid(22,20))
+",[indiv(colormass),human([delete_color(silver)])]).
+
+
+%= fav(v('184a9768'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/184a9768.json']),filename(['/data/evaluation/184a9768.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('184a9768'),'muarc_cache/184a9768.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('184a9768')))
+%~ warn_skip(clear_saveable_test_info(v('18419cfa')))
+fav_testcase(v('18419cfa')>trn+1,"
+
+   ___________________________________       ___________________________________
+  |                                   |     |                                   |
+  |                                   |     |                                   |
+  |                                   |     |                                   |
+  |     8 8 8 8 8 8 8 8               |     |     8 8 8 8 8 8 8 8               |
+  |     8             8               |     |     8             8               |
+  |     8             8               |     |     8             8               |
+  |   8 8   2 2       8 8             |     |   8 8   2 2 2 2   8 8             |
+  |   8     2           8             |     |   8     2     2     8             |
+  |   8 8   2 2       8 8             |     |   8 8   2 2 2 2   8 8             |
+  |     8             8               |     |     8             8               |
+  |     8             8               |     |     8             8               |
+  |     8 8 8 8 8 8 8 8               |     |     8 8 8 8 8 8 8 8               |
+  |                                   |     |                                   |
+  |                                   |     |                                   |
+  |                                   |     |                                   |
+  |                                   |     |                                   |
+  |                                   |     |                                   |
+  |                                   |     |                                   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(17,18))          'Output' v('18419cfa') (grid(17,18))
+").
+
+
+%= fav(v('18419cfa'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/18419cfa.json']),filename(['/data/evaluation/18419cfa.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('18419cfa'),'muarc_cache/18419cfa.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('18419cfa')))
+%~ warn_skip(clear_saveable_test_info(v('17cae0c1')))
+fav_testcase(v('17cae0c1')>trn+1,"
+
+   ___________________       ___________________
+  |     5             |     | 9 9 9 1 1 1 4 4 4 |
+  |   5           5   |     | 9 9 9 1 1 1 4 4 4 |
+  | 5     5 5 5       |     | 9 9 9 1 1 1 4 4 4 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(9,3))            'Output' v('17cae0c1') (grid(9,3))
+").
+
+
+%= fav(v('17cae0c1'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/17cae0c1.json']),filename(['/data/evaluation/17cae0c1.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('17cae0c1'),'muarc_cache/17cae0c1.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('17cae0c1')))
+%~ warn_skip(clear_saveable_test_info(v('17b80ad2')))
+fav_testcase(v('17b80ad2')>trn+1,"
+
+   ___________________________       ___________________________
+  | 8                         |     | 8       4       1         |
+  |                 1       6 |     |         4       1       6 |
+  |       8     8         2   |     |       8 4   8   6     2   |
+  |     7                     |     |     7   4       6         |
+  |                 6   4     |     |         4       6   4     |
+  |                           |     |         4       6         |
+  |         4     6           |     |         4     6 6         |
+  |                   1       |     |         8       6 1       |
+  |             3             |     |         8   3   6         |
+  |   3                       |     |   3     8       6         |
+  |         8       6       2 |     |         8       6       2 |
+  |                           |     |         5       5         |
+  |         5       5         |     |         5       5         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(13,13))          'Output' v('17b80ad2') (grid(13,13))
+").
+
+
+%= fav(v('17b80ad2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/17b80ad2.json']),filename(['/data/evaluation/17b80ad2.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('17b80ad2'),'muarc_cache/17b80ad2.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('17b80ad2')))
+%~ warn_skip(clear_saveable_test_info(v('16b78196')))
+fav_testcase(v('16b78196')>trn+1,"
+
+   _____________________________________________________________       _____________________________________________________________
+  |                                                             |     |                                                             |
+  |                                                             |     |                                                             |
+  |               4     4                                       |     |                                                             |
+  |               4 4 4 4                                       |     |                                                             |
+  |               4 4 4                   3 3                   |     |                                                             |
+  |               4 4                   3 3 3 3                 |     |                                                             |
+  |               4                       3 3                   |     |                                                             |
+  |                                                             |     |                                                             |
+  |                                               6 6 6 6 6     |     |                                                             |
+  |                                                 6 6 6       |     |         6 6 6 6 6                                           |
+  |                                                             |     |         1 6 6 6 1                                           |
+  |                                                             |     |         1 1 1 1 1                                           |
+  |                                                             |     |         2 1 2 1 2                                           |
+  |                                                             |     |         2 2 2 2 2                                           |
+  | 8 8 8 8 8       8 8 8 8 8 8 8   8 8 8 8 8 8 8 8 8 8   8 8 8 |     | 8 8 8 8 8 2 2 2 8 8 8 8 8 8 8   8 8 8 8 8 8 8 8 8 8   8 8 8 |
+  | 8 8 8 8 8 8   8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |     | 8 8 8 8 8 8 2 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |     | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8   8 8 8 8 8 |     | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8   8 8 8 8 8 |
+  | 8 8 8 8 8 8 8 8   8 8 8 8 8 8 8 8     8 8 8 8 8     8 8 8 8 |     | 8 8 8 8 8 8 8 8   8 8 8 8 8 8 8 8 3 3 8 8 8 8 8     8 8 8 8 |
+  |                                                             |     |                                 3 3 3 3                     |
+  |                                                             |     |                                 4 3 3 4                     |
+  |                                                             |     |                                 4 4 4 4                     |
+  |                                                     3       |     |                                 4 4 4 3                     |
+  |       2   2   2                 1       1         3 3       |     |                                 4 4 3 3                     |
+  |       2 2 2 2 2                 1 1 1 1 1       3 3 3       |     |                                 4 3 3 3                     |
+  |         2 2 2                     1   1       3 3 3 3       |     |                                 3 3 3 3                     |
+  |           2                                                 |     |                                                             |
+  |                                                             |     |                                                             |
+  |                                                             |     |                                                             |
+  |                                                             |     |                                                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(30,30))          'Output' v('16b78196') (grid(30,30))
+").
+
+
+%= fav(v('16b78196'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/16b78196.json']),filename(['/data/evaluation/16b78196.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('16b78196'),'muarc_cache/16b78196.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('16b78196')))
+%~ warn_skip(clear_saveable_test_info(v('15696249')))
+fav_testcase(v('15696249')>trn+1,"
+
+   _______       ___________________
+  | 2 4 3 |     | 2 4 3             |
+  | 2 3 4 |     | 2 3 4             |
+  | 2 3 4 |     | 2 3 4             |
+   ¯¯¯¯¯¯¯      | 2 4 3             |
+                | 2 3 4             |
+                | 2 3 4             |
+                | 2 4 3             |
+                | 2 3 4             |
+                | 2 3 4             |
+                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(3,3))            'Output' v('15696249') (grid(9,9))
+").
+
+
+%= fav(v('15696249'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/15696249.json']),filename(['/data/evaluation/15696249.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('15696249'),'muarc_cache/15696249.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('15696249')))
+%~ warn_skip(clear_saveable_test_info(v('15663ba9')))
+fav_testcase(v('15663ba9')>trn+1,"
+
+   _______________________________       _______________________________
+  |                               |     |                               |
+  |   8 8 8 8 8 8 8               |     |   4 8 8 8 8 8 4               |
+  |   8           8               |     |   8           8               |
+  |   8 8         8               |     |   4 2         8               |
+  |     8         8     8 8 8 8 8 |     |     8         8     4 8 8 8 4 |
+  |     8   8 8 8 8     8       8 |     |     8   2 8 8 4     8       8 |
+  |     8 8 8           8 8     8 |     |     4 8 4           4 2     8 |
+  |                       8     8 |     |                       8     8 |
+  |                   8 8 8   8 8 |     |                   4 8 2   2 4 |
+  |     8 8 8         8       8   |     |     4 8 4         8       8   |
+  |     8   8         8 8 8 8 8   |     |     8   8         4 8 8 8 4   |
+  |     8 8 8                     |     |     4 8 4                     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,12))          'Output' v('15663ba9') (grid(15,12))
+").
+
+
+%= fav(v('15663ba9'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/15663ba9.json']),filename(['/data/evaluation/15663ba9.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('15663ba9'),'muarc_cache/15663ba9.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('15663ba9')))
+%~ warn_skip(clear_saveable_test_info(v('15113be4')))
+fav_testcase(v('15113be4')>trn+1,"
+
+   _______________________________________________       _______________________________________________
+  |     1 4 1     4       4     1 4     1 4   1   |     |     6 4 1     4       4     1 4     1 4   1   |
+  | 1 1   4   1   4 1   1 4 1 1 1 4 1 1   4     1 |     | 6 6   4   1   4 1   1 4 1 1 1 4 1 1   4     1 |
+  | 1 1 1 4     1 4 1   1 4     1 4     1 4 1     |     | 1 6 1 4     1 4 1   1 4     1 4     1 4 1     |
+  | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |     | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |
+  |   1   4 1     4 1     4 1 1   4     1 4 1     |     |   1   4 1     4 1     4 1 1   4     1 4 1     |
+  |       4     1 4   1   4 1     4       4     1 |     |       4     1 4   1   4 1     4       4     1 |
+  |   1   4     1 4 1   1 4   1   4 1     4   1   |     |   1   4     1 4 1   1 4   1   4 1     4   1   |
+  | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |     | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |
+  | 1 1   4   1   4 1 1 1 4       4   1   4   1 1 |     | 1 1   4   1   4 1 1 1 4       4   1   4   1 1 |
+  |       4   1   4       4 1   1 4     1 4     1 |     |       4   1   4       4 1   1 4     1 4     1 |
+  |   1 1 4   1   4 1     4       4       4       |     |   1 1 4   1   4 1     4       4       4       |
+  | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |     | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |
+  | 1 1 1 4 1 1   4 1     4     1 4     1 4     1 |     | 1 1 6 4 1 1   4 1     4     1 4     6 4     1 |
+  | 1 1 1 4 1   1 4     1 4       4 1 1   4 1     |     | 6 6 1 4 1   1 4     1 4       4 6 6   4 1     |
+  | 1 1   4 1 1   4 1 1   4     1 4   1 1 4 1     |     | 1 6   4 1 1   4 1 1   4     1 4   6 1 4 1     |
+  | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |     | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 |
+  |       4   1   4 1   1 4 1   1 4         6 6 4 |     |       4   1   4 1   1 4 1   1 4         6 6 4 |
+  | 1 1   4   1 1 4       4 1     4         6 6 4 |     | 1 1   4   1 1 4       4 1     4         6 6 4 |
+  |       4     1 4       4   1 1 4 6 6 6 6     4 |     |       4     1 4       4   1 1 4 6 6 6 6     4 |
+  | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 6 6 6 6     4 |     | 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 4 6 6 6 6     4 |
+  |     1 4 1     4   1   4 1 1   4     6 6     4 |     |     1 4 1     4   1   4 1 1   4     6 6     4 |
+  | 1 1 1 4       4 1 1 1 4     1 4     6 6     4 |     | 1 1 1 4       4 1 1 1 4     1 4     6 6     4 |
+  |       4 1   1 4 1 1 1 4       4 4 4 4 4 4 4 4 |     |       4 1   1 4 1 1 1 4       4 4 4 4 4 4 4 4 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(23,23))          'Output' v('15113be4') (grid(23,23))
+").
+
+
+%= fav(v('15113be4'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/15113be4.json']),filename(['/data/evaluation/15113be4.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('15113be4'),'muarc_cache/15113be4.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('15113be4')))
+%~ warn_skip(clear_saveable_test_info(v('14754a24')))
+fav_testcase(v('14754a24')>trn+1,"
+
+   _________________________________       _________________________________
+  |   5     5 5       5 5   5     5 |     |   5     5 5       5 5   5     5 |
+  | 5 5         5   5     5 5 5     |     | 5 5         5   5     5 2 5     |
+  |     4 5   5   5 5     4 5 5 5   |     |     4 5   5   5 5     4 2 2 5   |
+  |   5 5 4     5     5     4     5 |     |   2 2 4     5     5     4     5 |
+  |     4 5     5   5           5   |     |     4 5     5   5           5   |
+  |       5   5 5 5 5   5   5 5   5 |     |       5   5 2 5 5   5   5 5   5 |
+  | 5   5     4 5 4 5 5 5 5   5     |     | 5   5     4 2 4 5 5 5 5   5     |
+  |         5 5 4 5 5             5 |     |         5 5 4 5 5             5 |
+  |     5 5     5   5 5   5 5 4 5   |     |     5 5     5   5 5   5 5 4 5   |
+  |     5     5       5 5   5 5 4 5 |     |     5     5       5 5   2 2 4 5 |
+  | 5     4         5         5 5 5 |     | 5     4         5         2 5 5 |
+  | 5 5 4 5 4 5   5 5 5         5 5 |     | 5 5 4 2 4 5   5 5 2         5 5 |
+  | 5     5 5 5   5 4 5 4   5       |     | 5     2 5 5   5 4 2 4   5       |
+  | 5     5 5     5   4       5 5   |     | 5     5 5     5   4       5 5   |
+  | 5 5 5 5 5       5 5 5   5 5     |     | 5 5 5 5 5       5 5 5   5 5     |
+  | 5 5 5 5         5   5 5 5 5   5 |     | 5 5 5 5         5   5 5 5 5   5 |
+  | 5   5           5   5   5 5     |     | 5   5           5   5   5 5     |
+  | 5         5     5 5 5 5       5 |     | 5         5     5 5 5 5       5 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(16,18))          'Output' v('14754a24') (grid(16,18))
+").
+
+
+%= fav(v('14754a24'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/14754a24.json']),filename(['/data/evaluation/14754a24.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('14754a24'),'muarc_cache/14754a24.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('14754a24')))
+%~ warn_skip(clear_saveable_test_info(v('140c817e')))
+fav_testcase(v('140c817e')>trn+1,"
+
+   ___________________       ___________________
+  | 9 9 9 9 9 9 9 9 9 |     | 9 9 9 1 9 9 1 9 9 |
+  | 9 9 9 9 9 9 9 9 9 |     | 9 9 9 1 9 9 1 9 9 |
+  | 9 9 9 9 9 9 9 9 9 |     | 9 9 3 1 3 9 1 9 9 |
+  | 9 9 9 1 9 9 9 9 9 |     | 1 1 1 2 1 1 1 1 1 |
+  | 9 9 9 9 9 9 9 9 9 |     | 9 9 3 1 3 9 1 9 9 |
+  | 9 9 9 9 9 9 9 9 9 |     | 9 9 9 1 9 3 1 3 9 |
+  | 9 9 9 9 9 9 1 9 9 |     | 1 1 1 1 1 1 2 1 1 |
+  | 9 9 9 9 9 9 9 9 9 |     | 9 9 9 1 9 3 1 3 9 |
+  | 9 9 9 9 9 9 9 9 9 |     | 9 9 9 1 9 9 1 9 9 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(9,9))            'Output' v('140c817e') (grid(9,9))
+").
+
+
+%= fav(v('140c817e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/140c817e.json']),filename(['/data/evaluation/140c817e.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('140c817e'),'muarc_cache/140c817e.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('140c817e')))
+%~ warn_skip(clear_saveable_test_info(v('137f0df0')))
+fav_testcase(v('137f0df0')>trn+1,"
+
+   _____________________       _____________________
+  |     5 5     5 5     |     |     5 5 2 2 5 5     |
+  |     5 5     5 5     |     |     5 5 2 2 5 5     |
+  |                     |     | 1 1 2 2 2 2 2 2 1 1 |
+  |     5 5     5 5     |     |     5 5 2 2 5 5     |
+  |     5 5     5 5     |     |     5 5 2 2 5 5     |
+  |                     |     | 1 1 2 2 2 2 2 2 1 1 |
+  |     5 5     5 5     |     |     5 5 2 2 5 5     |
+  |     5 5     5 5     |     |     5 5 2 2 5 5     |
+  |                     |     |         1 1         |
+  |                     |     |         1 1         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,10))          'Output' v('137f0df0') (grid(10,10))
+").
+
+
+%= fav(v('137f0df0'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/137f0df0.json']),filename(['/data/evaluation/137f0df0.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('137f0df0'),'muarc_cache/137f0df0.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('137f0df0')))
+%~ warn_skip(clear_saveable_test_info(v('13713586')))
+fav_testcase(v('13713586')>trn+1,"
+
+   ___________________________________       ___________________________________
+  |                                 5 |     |                                 5 |
+  |                       2         5 |     |                       2 2 2 2 2 5 |
+  |                       2         5 |     |                       2 2 2 2 2 5 |
+  |                                 5 |     |                                 5 |
+  |             3                   5 |     |             3 3 3 3 3 3 3 3 3 3 5 |
+  |             3                   5 |     |             3 3 3 3 3 3 3 3 3 3 5 |
+  |             3                   5 |     |             3 3 3 3 3 3 3 3 3 3 5 |
+  |     7       3                   5 |     |     7 7 7 7 3 3 3 3 3 3 3 3 3 3 5 |
+  |     7                           5 |     |     7 7 7 7 7 7 7 7 7 7 7 7 7 7 5 |
+  |     7                           5 |     |     7 7 7 7 7 7 7 7 7 7 7 7 7 7 5 |
+  |     7                           5 |     |     7 7 7 7 7 7 7 7 7 7 7 7 7 7 5 |
+  |                                 5 |     |                                 5 |
+  |                                 5 |     |                                 5 |
+  |                                 5 |     |                                 5 |
+  |                                 5 |     |                                 5 |
+  |                                 5 |     |                                 5 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(17,16))          'Output' v('13713586') (grid(17,16))
+").
+
+
+%= fav(v('13713586'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/13713586.json']),filename(['/data/evaluation/13713586.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('13713586'),'muarc_cache/13713586.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('13713586')))
+%~ warn_skip(clear_saveable_test_info(v('136b0064')))
+fav_testcase(v('136b0064')>trn+1,"
+
+   _______________________________       _______________
+  | 2   2   6   6 4   5           |     |   5           |
+  | 2   2     6   4               |     | 2 2           |
+  | 2 2 2     6   4               |     | 1 1 1         |
+  |               4               |     |     1 1 1     |
+  | 1 1     3 3 3 4               |     |         6     |
+  | 1   1     3   4               |     |         6     |
+  |   1     3   3 4               |     |         6     |
+  |               4               |     |         6     |
+  | 1 1     6   6 4               |     |   3 3 3 3     |
+  | 1   1     6   4               |     |   6           |
+  |   1       6   4               |     |   6           |
+  |               4               |     |   1 1 1       |
+  | 6   6   1 1   4               |     |               |
+  |   6     1   1 4               |     |               |
+  |   6       1   4               |     |               |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,15))          'Output' v('136b0064') (grid(7,15))
+").
+
+
+%= fav(v('136b0064'),[no_sol(i(complete),resize_grid(7,7,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,7]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/136b0064.json']),filename(['/data/evaluation/136b0064.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('136b0064'),'muarc_cache/136b0064.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('136b0064')))
+%~ warn_skip(clear_saveable_test_info(v('12eac192')))
+fav_testcase(v('12eac192')>trn+1,"
+
+   _________________       _________________
+  |     1 8 1 1 1   |     |     3 3 1 1 1   |
+  | 1 5 1 7 1 1     |     | 3 3 3 7 1 1     |
+  |   8   7 7 7 8 8 |     |   8   7 7 7 8 8 |
+  |   8 8       8   |     |   8 8       8   |
+  |   7     8 5 5   |     |   3     3 3 3   |
+  | 1             1 |     | 3             3 |
+  | 1   8 7 7 8     |     | 3   8 7 7 3     |
+  |     8 7 7   8 8 |     |     8 7 7   8 8 |
+  |   8 8   8   8 8 |     |   8 8   3   8 8 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(8,9))            'Output' v('12eac192') (grid(8,9))
+").
+
+
+%= fav(v('12eac192'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/12eac192.json']),filename(['/data/evaluation/12eac192.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('12eac192'),'muarc_cache/12eac192.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('12eac192')))
+%~ warn_skip(clear_saveable_test_info(v('12997ef3')))
+fav_testcase(v('12997ef3')>trn+1,"
+
+   ___________________       _______
+  |                   |     |   3 3 |
+  |           3       |     | 3 3 3 |
+  |                   |     |   3   |
+  |           6       |     |   6 6 |
+  |   1 1             |     | 6 6 6 |
+  | 1 1 1     8       |     |   6   |
+  |   1               |     |   8 8 |
+  |                   |     | 8 8 8 |
+  |                   |     |   8   |
+  |                   |       ¯¯¯¯¯¯¯
+  |                   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(9,11))           'Output' v('12997ef3') (grid(3,9))
+").
+
+
+%= fav(v('12997ef3'),[no_sol(i(complete),resize_grid(9,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/12997ef3.json']),filename(['/data/evaluation/12997ef3.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 2) ']).
+%~ warn_skip(save_supertest(v('12997ef3'),'muarc_cache/12997ef3.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('12997ef3')))
+%~ warn_skip(clear_saveable_test_info(v('12422b43')))
+fav_testcase(v('12422b43')>trn+1,"
+
+   _______________       _______________
+  | 5   8 8       |     | 5   8 8       |
+  | 5     7       |     | 5     7       |
+  | 5     4 4     |     | 5     4 4     |
+  |     3 3       |     |     3 3       |
+  |     1 1       |     |     1 1       |
+  |               |     |     8 8       |
+  |               |     |       7       |
+  |               |     |       4 4     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(7,8))            'Output' v('12422b43') (grid(7,8))
+").
+
+
+%= fav(v('12422b43'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/12422b43.json']),filename(['/data/evaluation/12422b43.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(5, 1) ']).
+%~ warn_skip(save_supertest(v('12422b43'),'muarc_cache/12422b43.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('12422b43')))
+%~ warn_skip(clear_saveable_test_info(v('11e1fe23')))
+fav_testcase(v('11e1fe23')>trn+1,"
+
+   _______________________       _______________________
+  |                       |     |                       |
+  |                       |     |                       |
+  |                       |     |                       |
+  |                 2     |     |                 2     |
+  |                       |     |                       |
+  |                       |     |             2         |
+  |                       |     |           5           |
+  |                       |     |         8   6         |
+  |                       |     |                       |
+  |     8           6     |     |     8           6     |
+  |                       |     |                       |
+  |                       |     |                       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(11,12))          'Output' v('11e1fe23') (grid(11,12))
+").
+
+
+%= fav(v('11e1fe23'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/11e1fe23.json']),filename(['/data/evaluation/11e1fe23.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('11e1fe23'),'muarc_cache/11e1fe23.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('11e1fe23')))
+%~ warn_skip(clear_saveable_test_info(v('103eff5b')))
+fav_testcase(v('103eff5b')>trn+1,"
+
+   _________________________       _________________________
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+  |         3 1             |     |         3 1             |
+  |       4 3               |     |       4 3               |
+  |       2   4             |     |       2   4             |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+  |   8 8 8 8 8 8           |     |   2 2 2 4 4 4           |
+  |   8 8 8 8 8 8           |     |   2 2 2 4 4 4           |
+  |   8 8 8 8 8 8           |     |   2 2 2 4 4 4           |
+  |         8 8 8 8 8 8     |     |         3 3 3 3 3 3     |
+  |         8 8 8 8 8 8     |     |         3 3 3 3 3 3     |
+  |         8 8 8 8 8 8     |     |         3 3 3 3 3 3     |
+  |   8 8 8       8 8 8     |     |   4 4 4       1 1 1     |
+  |   8 8 8       8 8 8     |     |   4 4 4       1 1 1     |
+  |   8 8 8       8 8 8     |     |   4 4 4       1 1 1     |
+  |                         |     |                         |
+  |                         |     |                         |
+  |                         |     |                         |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(12,22))          'Output' v('103eff5b') (grid(12,22))
+").
+
+
+%= fav(v('103eff5b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/103eff5b.json']),filename(['/data/evaluation/103eff5b.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('103eff5b'),'muarc_cache/103eff5b.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('103eff5b')))
+%~ warn_skip(clear_saveable_test_info(v('0f63c0b9')))
+fav_testcase(v('0f63c0b9')>trn+1,"
+
+   _______________________________       _______________________________
+  |                               |     | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  |             8                 |     | 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 |
+  |                               |     | 8                           8 |
+  |                     1         |     | 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+  |                               |     | 1                           1 |
+  |                               |     | 1                           1 |
+  |                               |     | 2                           2 |
+  |       2                       |     | 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 |
+  |                               |     | 2                           2 |
+  |           3                   |     | 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 |
+  |                               |     | 3                           3 |
+  |                               |     | 3                           3 |
+  |                               |     | 3                           3 |
+  |                               |     | 3                           3 |
+  |                               |     | 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,15))          'Output' v('0f63c0b9') (grid(15,15))
+").
+
+
+%= fav(v('0f63c0b9'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0f63c0b9.json']),filename(['/data/evaluation/0f63c0b9.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('0f63c0b9'),'muarc_cache/0f63c0b9.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0f63c0b9')))
+%~ warn_skip(clear_saveable_test_info(v('0e671a1a')))
+fav_testcase(v('0e671a1a')>trn+1,"
+
+   ___________________________       ___________________________
+  |                           |     |                           |
+  |           3               |     |           3               |
+  |                           |     |           5               |
+  |                           |     |           5               |
+  |                           |     |           5               |
+  |                           |     |           5               |
+  |                           |     |           5               |
+  |                           |     |           5               |
+  |                       2   |     |     5 5 5 5 5 5 5 5 5 2   |
+  |                           |     |     5     5               |
+  |     4                     |     |     4 5 5 5               |
+  |                           |     |                           |
+  |                           |     |                           |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(13,13))          'Output' v('0e671a1a') (grid(13,13))
+").
+
+
+%= fav(v('0e671a1a'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0e671a1a.json']),filename(['/data/evaluation/0e671a1a.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('0e671a1a'),'muarc_cache/0e671a1a.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0e671a1a')))
+%~ warn_skip(clear_saveable_test_info(v('0d87d2a6')))
+fav_testcase(v('0d87d2a6')>trn+1,"
+
+   _________________________________________       _________________________________________
+  |             1                           |     |             1                           |
+  |                                         |     |             1                           |
+  |       2 2 2 2 2             2 2 2 2     |     |       1 1 1 1 1             2 2 2 2     |
+  |       2 2 2 2 2             2 2 2 2     |     |       1 1 1 1 1             2 2 2 2     |
+  |       2 2 2 2 2                         |     |       1 1 1 1 1                         |
+  |       2 2 2 2 2   2 2 2         2 2 2 2 |     |       1 1 1 1 1   2 2 2         2 2 2 2 |
+  |                   2 2 2         2 2 2 2 |     |             1     2 2 2         2 2 2 2 |
+  |     2 2           2 2 2         2 2 2 2 |     |     2 2     1     2 2 2         2 2 2 2 |
+  |     2 2                                 |     |     2 2     1                           |
+  |             1                           |     |             1                           |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(20,10))          'Output' v('0d87d2a6') (grid(20,10))
+").
+
+
+%= fav(v('0d87d2a6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0d87d2a6.json']),filename(['/data/evaluation/0d87d2a6.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('0d87d2a6'),'muarc_cache/0d87d2a6.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0d87d2a6')))
+%~ warn_skip(clear_saveable_test_info(v('0c9aba6e')))
+fav_testcase(v('0c9aba6e')>trn+1,"
+
+   _________       _________
+  | 2 2   2 |     |         |
+  | 2   2 2 |     |         |
+  | 2 2     |     |     8 8 |
+  |   2   2 |     | 8   8   |
+  |   2 2   |     |       8 |
+  | 2     2 |     |   8     |
+  | 7 7 7 7 |       ¯¯¯¯¯¯¯¯¯
+  | 6   6 6 |
+  |   6     |
+  |         |
+  |       6 |
+  | 6 6     |
+  | 6   6   |
+   ¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(4,13))           'Output' v('0c9aba6e') (grid(4,6))
+").
+
+
+%= fav(v('0c9aba6e'),[no_sol(i(complete),resize_grid(4,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0c9aba6e.json']),filename(['/data/evaluation/0c9aba6e.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('0c9aba6e'),'muarc_cache/0c9aba6e.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0c9aba6e')))
+%~ warn_skip(clear_saveable_test_info(v('0c786b71')))
+fav_testcase(v('0c786b71')>trn+1,"
+
+   _________       _________________
+  | 5 5 9 9 |     | 7 5 7 5 5 7 5 7 |
+  | 9 5 5 5 |     | 5 5 5 9 9 5 5 5 |
+  | 5 7 5 7 |     | 9 9 5 5 5 5 9 9 |
+   ¯¯¯¯¯¯¯¯¯      | 9 9 5 5 5 5 9 9 |
+                  | 5 5 5 9 9 5 5 5 |
+                  | 7 5 7 5 5 7 5 7 |
+                   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(4,3))            'Output' v('0c786b71') (grid(8,6))
+").
+
+
+%= fav(v('0c786b71'),[no_sol(i(complete),resize_grid(8,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([8,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0c786b71.json']),filename(['/data/evaluation/0c786b71.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('0c786b71'),'muarc_cache/0c786b71.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0c786b71')))
+%~ warn_skip(clear_saveable_test_info(v('0becf7df')))
+fav_testcase(v('0becf7df')>trn+1,"
+
+   _____________________       _____________________
+  | 1 3                 |     | 1 3                 |
+  | 2 8         1       |     | 2 8         3       |
+  |         1 1 1       |     |         3 3 3       |
+  |         1 1 1       |     |         3 3 3       |
+  |     3 3 3 3 1 8     |     |     1 1 1 1 3 2     |
+  |     3 3 2   8 8     |     |     1 1 8   2 2     |
+  |         2   8 8     |     |         8   2 2     |
+  |         2           |     |         8           |
+  |         2           |     |         8           |
+  |                     |     |                     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,10))          'Output' v('0becf7df') (grid(10,10))
+").
+
+
+%= fav(v('0becf7df'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0becf7df.json']),filename(['/data/evaluation/0becf7df.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('0becf7df'),'muarc_cache/0becf7df.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0becf7df')))
+%~ warn_skip(clear_saveable_test_info(v('0bb8deee')))
+fav_testcase(v('0bb8deee')>trn+1,"
+
+   ___________________________       _____________
+  |         1                 |     |   2 2 3     |
+  |         1                 |     | 2 2 2   3 3 |
+  |         1     3           |     |   2     3   |
+  |         1       3 3       |     |     5 8   8 |
+  |         1       3         |     | 5 5 5   8   |
+  |   2 2   1                 |     |   5   8     |
+  | 2 2 2   1                 |       ¯¯¯¯¯¯¯¯¯¯¯¯¯
+  |   2     1                 |
+  |         1                 |
+  | 1 1 1 1 1 1 1 1 1 1 1 1 1 |
+  |         1                 |
+  |     5   1                 |
+  | 5 5 5   1     8   8       |
+  |   5     1       8         |
+  |         1     8           |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(13,15))          'Output' v('0bb8deee') (grid(6,6))
+").
+
+
+%= fav(v('0bb8deee'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0bb8deee.json']),filename(['/data/evaluation/0bb8deee.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('0bb8deee'),'muarc_cache/0bb8deee.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0bb8deee')))
+%~ warn_skip(clear_saveable_test_info(v('0b17323b')))
+fav_testcase(v('0b17323b')>trn+1,"
+
+   _______________________________       _______________________________
+  | 1                             |     | 1                             |
+  |                               |     |                               |
+  |                               |     |                               |
+  |                               |     |                               |
+  |         1                     |     |         1                     |
+  |                               |     |                               |
+  |                               |     |                               |
+  |                               |     |                               |
+  |                 1             |     |                 1             |
+  |                               |     |                               |
+  |                               |     |                               |
+  |                               |     |                               |
+  |                               |     |                         2     |
+  |                               |     |                               |
+  |                               |     |                               |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(15,15))          'Output' v('0b17323b') (grid(15,15))
+").
+
+
+%= fav(v('0b17323b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0b17323b.json']),filename(['/data/evaluation/0b17323b.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
+%~ warn_skip(save_supertest(v('0b17323b'),'muarc_cache/0b17323b.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0b17323b')))
+%~ warn_skip(clear_saveable_test_info(v('0a2355a6')))
+fav_testcase(v('0a2355a6')>trn+1,"
+
+   _______________________       _______________________
+  |                       |     |                       |
+  |     8 8 8 8 8         |     |     2 2 2 2 2         |
+  |     8   8   8         |     |     2   2   2         |
+  |     8 8 8 8 8         |     |     2 2 2 2 2         |
+  |     8   8       8 8 8 |     |     2   2       1 1 1 |
+  |     8   8       8   8 |     |     2   2       1   1 |
+  |     8 8 8       8 8 8 |     |     2 2 2       1 1 1 |
+  |                       |     |                       |
+  | 8 8 8                 |     | 3 3 3                 |
+  | 8   8       8 8 8 8   |     | 3   3       1 1 1 1   |
+  | 8 8 8 8 8   8     8   |     | 3 3 3 3 3   1     1   |
+  | 8       8   8     8   |     | 3       3   1     1   |
+  | 8 8 8 8 8   8 8 8 8   |     | 3 3 3 3 3   1 1 1 1   |
+  |                       |     |                       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(11,14))          'Output' v('0a2355a6') (grid(11,14))
+").
+
+
+%= fav(v('0a2355a6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0a2355a6.json']),filename(['/data/evaluation/0a2355a6.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('0a2355a6'),'muarc_cache/0a2355a6.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0a2355a6')))
+%~ warn_skip(clear_saveable_test_info(v('0a1d4ef5')))
+fav_testcase(v('0a1d4ef5')>trn+1,"
+
+   _____________________________________________________________       _______
+  |   2       2   8       2   2   2     2 8     2   8           |     | 3 1 9 |
+  |       3 3 3 3 3 3       1 1 1 1 1 1 1 1 2 8 8 2             |     | 6 4 1 |
+  | 8   2 3 3 3 3 3 3     2 1 1 1 1 1 1 1 1       9 9 9 9 9     |       ¯¯¯¯¯¯¯
+  | 8   8 3 3 3 3 3 3 2 2 2 1 1 1 1 1 1 1 1 8   8 9 9 9 9 9 8 8 |
+  | 2 8   3 3 3 3 3 3 8 8   1 1 1 1 1 1 1 1     2 9 9 9 9 9     |
+  | 8     3 3 3 3 3 3     2 2 2 8 8 8 8   2 8 2   9 9 9 9 9     |
+  |       8     8     2 8 2     2             8   9 9 9 9 9 8 8 |
+  |   8 8 8     2   8       2 8 8       8   2   2   8     8 8   |
+  |                   2 2 2     2 8 8 2     2     2     8 2 8   |
+  | 8           8 2 8 2 8             2 8 2           8         |
+  |     2 6 6 6 6   8     4 4 4 4 4 4 2       8     2       2   |
+  | 8   8 6 6 6 6   8   8 4 4 4 4 4 4 2   2 2 2   1 1 1 1 1 8   |
+  |   2   6 6 6 6 8   2 2 4 4 4 4 4 4 8   8       1 1 1 1 1   2 |
+  |   2 8 6 6 6 6 8   8   4 4 4 4 4 4   8 2 2   2 1 1 1 1 1   8 |
+  |     2 6 6 6 6       2 4 4 4 4 4 4     8   8 8 1 1 1 1 1 8   |
+  |       6 6 6 6     2 8   8 8 2 8   8           1 1 1 1 1   2 |
+  | 2 8   6 6 6 6   2         2 8       2 8     2               |
+  |     8   2           8       2 8                 8 2       2 |
+  |     2   8       2 8   8       8   8 8 8   8     8   2 2   2 |
+  | 8           8 8 2 2 8   8 2 2 8         8   2   8       8 2 |
+  | 2 2         2 8   8     2 2 8     2       2 2 2       2 2 8 |
+  |   8 8     8 8   8   8                   2 2         8 2     |
+  |     2 8 2   2     8       2   8       2 8 8   8   2       8 |
+  | 2               8 8   2   8             2 2     2     8 8   |
+  | 8 2       8   8   8 2       8     8   2     8   2 2 8       |
+  |   8   2 2 8 2 8   2 2       2 2 2 2 2 2       8   8     8 2 |
+  |     2 8 2 8                 8     2   2 2     8   2     8 8 |
+  |         8       8   2 8                     2 8 2 8     8   |
+  | 8 2   2 8 8       2       8 8   8       8 2 8 8   2 8 2 2 2 |
+  | 2   8 8       8     8   8       8   2     8   8     2 8     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(30,30))          'Output' v('0a1d4ef5') (grid(3,2))
+").
+
+
+%= fav(v('0a1d4ef5'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0a1d4ef5.json']),filename(['/data/evaluation/0a1d4ef5.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('0a1d4ef5'),'muarc_cache/0a1d4ef5.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0a1d4ef5')))
+%~ warn_skip(clear_saveable_test_info(v('09c534e7')))
+fav_testcase(v('09c534e7')>trn+1,"
+
+   _________________________________________       _________________________________________
+  |                                         |     |                                         |
+  |     1 1 1 1                 1 1 1 1     |     |     1 1 1 1                 1 1 1 1     |
+  |     1 3 1 1                 1 1 4 1     |     |     1 3 3 1                 1 4 4 1     |
+  |     1 1 1 1                 1 1 1 1     |     |     1 1 1 1                 1 4 4 1     |
+  |         1                   1 1 1 1     |     |         1                   1 1 1 1     |
+  |     1 1 1 1 1 1                 1       |     |     1 1 1 1 1 1                 1       |
+  |     1 1 1 1 1 1   1 1 1       1 1 1     |     |     1 3 3 3 3 1   1 1 1       1 1 1     |
+  |     1 1 1 1 1 1 1 1 1 1       1 1 1     |     |     1 3 3 3 3 1 1 1 3 1       1 4 1     |
+  |     1 1 1 1 1 1   1 1 1       1 1 1     |     |     1 1 1 1 1 1   1 1 1       1 1 1     |
+  |                                         |     |                                         |
+  |                                         |     |                                         |
+  |                                         |     |                                         |
+  |           1 1 1 1     1 1 1             |     |           1 1 1 1     1 1 1             |
+  |           1 1 2 1 1 1 1 1 1             |     |           1 2 2 1 1 1 1 2 1             |
+  | 1 1 1     1 1 1 1     1 1 1             |     | 1 1 1     1 2 2 1     1 1 1             |
+  | 1 1 1 1 1 1 1 1 1                       |     | 1 2 1 1 1 1 1 1 1                       |
+  | 1 1 1         1                         |     | 1 2 1         1                         |
+  | 1 1 1       1 1 1                       |     | 1 1 1       1 1 1                       |
+  |             1 1 1                       |     |             1 2 1                       |
+  |             1 1 1                       |     |             1 1 1                       |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(20,20))          'Output' v('09c534e7') (grid(20,20))
+").
+
+
+%= fav(v('09c534e7'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/09c534e7.json']),filename(['/data/evaluation/09c534e7.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('09c534e7'),'muarc_cache/09c534e7.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('09c534e7')))
+%~ warn_skip(clear_saveable_test_info(v('0934a4d8')))
+fav_testcase(v('0934a4d8')>trn+1,"
+
+   _____________________________________________________________       ___________
+  | 9 9 2 3 4 4 7 5 3 3 6 6 3 5 6 4 4 6 5 3 6 6 3 3 5 7 4 4 3 2 |     | 3 1 4 4 4 |
+  | 7 9 3 5 4 4 5 7 3 3 6 6 6 3 4 6 6 4 3 6 6 6 3 3 7 5 4 4 5 3 |     | 3 4 1 4 4 |
+  | 3 2 9 9 7 5 4 4 4 1 3 3 6 4 4 7 7 4 4 6 3 8 8 8 8 8 5 7 9 9 |     | 6 6 3 3 5 |
+  | 2 3 7 9 5 7 4 4 1 4 3 3 4 6 7 4 4 7 6 4 3 8 8 8 8 8 7 5 9 7 |     | 4 3 5 2 3 |
+  | 7 7 9 3 9 9 5 3 3 6 6 4 6 7 9 9 9 9 7 6 4 8 8 8 8 8 9 9 3 9 |       ¯¯¯¯¯¯¯¯¯¯¯
+  | 7 7 3 9 7 9 3 2 5 3 4 6 2 6 9 9 9 9 6 2 6 8 8 8 8 8 9 7 9 3 |
+  | 9 3 7 7 3 2 9 9 6 4 4 7 9 2 6 7 7 6 2 9 7 4 4 6 9 9 2 3 7 7 |
+  | 3 9 7 7 2 3 7 9 4 6 7 4 2 9 2 6 6 2 9 2 4 7 6 4 9 7 3 2 7 7 |
+  | 3 3 4 1 3 5 6 4 2 4 7 7 1 6 7 2 2 7 6 1 7 7 4 2 4 6 5 3 1 4 |
+  | 3 3 1 4 6 3 4 6 2 2 7 1 6 1 2 7 7 2 1 6 1 7 2 2 6 4 3 6 4 1 |
+  | 6 6 3 3 6 4 4 7 1 1 2 4 7 2 1 6 6 1 2 7 4 2 1 1 7 4 4 6 3 3 |
+  | 6 6 3 3 4 6 7 4 1 3 2 2 2 7 6 1 1 6 7 2 2 2 3 1 4 7 6 4 3 3 |
+  | 3 6 6 4 6 2 9 2 9 9 9 7 2 4 1 7 7 1 4 2 7 9 9 9 2 9 2 6 4 6 |
+  | 5 3 4 6 7 6 2 9 9 9 7 9 2 2 7 7 7 7 2 2 9 7 9 9 9 2 6 7 6 4 |
+  | 6 4 4 7 9 9 6 2 9 7 9 9 3 1 2 4 4 2 1 3 9 9 7 9 2 6 9 9 7 4 |
+  | 4 6 7 4 9 9 7 6 7 9 9 9 1 1 2 2 2 2 1 1 9 9 9 7 6 7 9 9 4 7 |
+  | 4 6 7 4 9 9 7 6 7 9 9 9 1 1 2 2 2 2 1 1 9 9 9 7 6 7 9 9 4 7 |
+  | 6 4 4 7 9 9 6 2 9 7 9 9 3 1 2 4 4 2 1 3 9 9 7 9 2 6 9 9 7 4 |
+  | 5 3 4 6 7 6 2 9 9 9 7 9 2 2 7 7 7 7 2 2 9 7 9 9 9 2 6 7 6 4 |
+  | 3 6 6 4 6 2 9 2 9 9 9 7 2 4 1 7 7 1 4 2 7 9 9 9 2 9 2 6 4 6 |
+  | 6 6 3 3 4 6 7 4 1 3 2 2 2 7 6 1 1 6 7 2 2 2 3 1 4 7 6 4 3 3 |
+  | 6 6 3 3 6 4 4 7 1 1 2 4 7 2 1 6 6 1 2 7 4 2 1 1 7 4 4 6 3 3 |
+  | 3 3 1 4 6 3 4 6 2 2 7 1 6 1 2 7 7 2 1 6 1 7 2 2 6 4 3 6 4 1 |
+  | 3 3 4 1 3 5 6 4 2 4 7 7 1 6 7 2 2 7 6 1 7 7 4 2 4 6 5 3 1 4 |
+  | 3 9 7 7 2 3 7 9 4 6 7 4 2 9 2 6 6 2 9 2 4 7 6 4 9 7 3 2 7 7 |
+  | 9 3 7 7 3 2 9 9 6 4 4 7 9 2 6 7 7 6 2 9 7 4 4 6 9 9 2 3 7 7 |
+  | 7 7 3 9 7 9 3 2 5 3 4 6 2 6 9 9 9 9 6 2 6 4 3 5 2 3 9 7 9 3 |
+  | 7 7 9 3 9 9 5 3 3 6 6 4 6 7 9 9 9 9 7 6 4 6 6 3 3 5 9 9 3 9 |
+  | 2 3 7 9 5 7 4 4 1 4 3 3 4 6 7 4 4 7 6 4 3 3 4 1 4 4 7 5 9 7 |
+  | 3 2 9 9 7 5 4 4 4 1 3 3 6 4 4 7 7 4 4 6 3 3 1 4 4 4 5 7 9 9 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(30,30))          'Output' v('0934a4d8') (grid(5,4))
+").
+
+
+%= fav(v('0934a4d8'),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,4]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0934a4d8.json']),filename(['/data/evaluation/0934a4d8.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('0934a4d8'),'muarc_cache/0934a4d8.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0934a4d8')))
+%~ warn_skip(clear_saveable_test_info(v('08573cc6')))
+fav_testcase(v('08573cc6')>trn+1,"
+
+   _______________________       _______________________
+  | 3 2                   |     |                       |
+  |                       |     |                       |
+  |                       |     |                       |
+  |                       |     |                       |
+  |                       |     |     3 3 3 3 3 3 2     |
+  |                       |     |     2           2     |
+  |             1         |     |     2   3 3 1   2     |
+  |                       |     |     2   2       2     |
+  |                       |     |     2   2       2     |
+  |                       |     |     2   2 3 3 3 3     |
+  |                       |     |     2                 |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(11,11))          'Output' v('08573cc6') (grid(11,11))
+").
+
+
+%= fav(v('08573cc6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/08573cc6.json']),filename(['/data/evaluation/08573cc6.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('08573cc6'),'muarc_cache/08573cc6.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('08573cc6')))
+%~ warn_skip(clear_saveable_test_info(v('070dd51e')))
+fav_testcase(v('070dd51e')>trn+1,"
+
+   _____________________       _____________________
+  |                     |     |                     |
+  |                     |     |                     |
+  |       4             |     |       4             |
+  |                     |     |       4             |
+  |     3         3     |     |     3 4 3 3 3 3     |
+  |                     |     |       4             |
+  |                     |     |       4             |
+  |                     |     |       4             |
+  |     7     7         |     |     7 4 7 7         |
+  |                     |     |       4             |
+  |       4             |     |       4             |
+  |                     |     |                     |
+  |           9         |     |           9         |
+  |                     |     |           9         |
+  |   8         8       |     |   8 8 8 8 9 8       |
+  |                     |     |           9         |
+  |                     |     |           9         |
+  |                     |     |           9         |
+  |           9         |     |           9         |
+  |                     |     |                     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,20))          'Output' v('070dd51e') (grid(10,20))
+").
+
+
+%= fav(v('070dd51e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/070dd51e.json']),filename(['/data/evaluation/070dd51e.json']),-rotation_match,-mask_match,+shape_match,+color_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',grid_size_same,alphabetical_v,'(2, 1) ','(2, 1)']).
+%~ warn_skip(save_supertest(v('070dd51e'),'muarc_cache/070dd51e.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('070dd51e')))
+%~ warn_skip(clear_saveable_test_info(v('0692e18c')))
+fav_testcase(v('0692e18c')>trn+1,"
+
+   _______       ___________________
+  |     6 |     |             6 6   |
+  |   6   |     |             6   6 |
+  | 6     |     |               6 6 |
+   ¯¯¯¯¯¯¯      |       6 6         |
+                |       6   6       |
+                |         6 6       |
+                | 6 6               |
+                | 6   6             |
+                |   6 6             |
+                 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(3,3))            'Output' v('0692e18c') (grid(9,9))
+").
+
+
+%= fav(v('0692e18c'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0692e18c.json']),filename(['/data/evaluation/0692e18c.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('0692e18c'),'muarc_cache/0692e18c.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0692e18c')))
+%~ warn_skip(clear_saveable_test_info(v('0607ce86')))
+fav_testcase(v('0607ce86')>trn+1,"
+
+   _____________________________________________       _____________________________________________
+  |   3       3 3         3                     |     |                                             |
+  |   1 1 2 3 3   1 1 2 3 3 1 1 1 2 3 3   3     |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   1 1 3 3 3   1 1 2 3 3   1 1 2 3 3 3   3   |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   1 1 2 3 3   1 1 2 3 3   1 1 1 3 3       3 |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   1 3 3 3 1   1 1 2 3 3   1 1 2 3 3         |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   8 8 8 8 8   8 8 8 8 8   8 8 8 8 8         |     |   8 8 8 8 8   8 8 8 8 8   8 8 8 8 8         |
+  |                                             |     |                                             |
+  |   3 1 3 3 3   3 1 2 3 3   1 1 2 3 3     3   |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   1 1 2 3 3   1 3 2 1 3   1 1 2 3 3         |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  | 1 1 1 2 3 3   1 1 2 3 3 3 1 3 2 3 3         |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   8 1 8 8 3   8 8 8 8 8   1 8 8 8 8         |     |   8 8 8 8 8   8 8 8 8 8   8 8 8 8 8         |
+  |       1                               3 3   |     |                                             |
+  |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3     3   |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   1 1 3 3 3   1 1 2 3 3   1 1 2 3 3         |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  |   1 1 2 3 3   1 1 1 3 3   1 1 2 3 1         |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  | 1 1 1 2 3 3   1 1 2 3 1   1 1 2 3 3         |     |   1 1 2 3 3   1 1 2 3 3   1 1 2 3 3         |
+  | 3 8 8 8 3 3 1 8 8 8 8 8   8 8 8 8 8     1   |     |   8 8 8 8 8   8 8 8 8 8   8 8 8 8 8         |
+  |   1                                         |     |                                             |
+  |   3 3   3   3   1 1   3                   1 |     |                                             |
+  |     3     1           3                     |     |                                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(22,21))          'Output' v('0607ce86') (grid(22,21))
+").
+
+
+%= fav(v('0607ce86'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0607ce86.json']),filename(['/data/evaluation/0607ce86.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('0607ce86'),'muarc_cache/0607ce86.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('0607ce86')))
+%~ warn_skip(clear_saveable_test_info(v('05a7bcf2')))
+fav_testcase(v('05a7bcf2')>trn+1,"
+
+   _____________________________________________________________       _____________________________________________________________
+  |                   8                     2                   |     |                   8                     2                   |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |                   8                 2 2 2                   |     |                   8                 2 2 2                   |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |     4 4           8                     2                   |     |     3 3 4 4 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 |
+  |     4 4           8                     2                   |     |     3 3 4 4 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 |
+  |                   8                 2 2 2                   |     |                   8                 2 2 2                   |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |                   8               2 2 2 2                   |     |                   8               2 2 2 2                   |
+  |                   8                 2 2 2                   |     |                   8                 2 2 2                   |
+  |                   8                     2                   |     |                   8                     2                   |
+  |     4             8                   2 2                   |     |     3 4 4 4 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 2 |
+  |     4             8                 2 2 2                   |     |     3 4 4 4 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 2 2 |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |                   8                     2                   |     |                   8                     2                   |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |                   8                     2                   |     |                   8                     2                   |
+  |                   8                     2                   |     |                   8                     2                   |
+  |         4 4       8                   2 2                   |     |         3 3 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 2 |
+  |         4 4       8                 2 2 2                   |     |         3 3 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 2 2 |
+  |           4       8                 2 2 2                   |     |           3 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 2 2 |
+  |                   8                     2                   |     |                   8                     2                   |
+  |                   8                     2                   |     |                   8                     2                   |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |                   8                     2                   |     |                   8                     2                   |
+  |       4 4         8                   2 2                   |     |       3 3 4 4 4 4 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 2 2 |
+  |                   8                     2                   |     |                   8                     2                   |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |                   8                   2 2                   |     |                   8                   2 2                   |
+  |                   8                     2                   |     |                   8                     2                   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(30,30))          'Output' v('05a7bcf2') (grid(30,30))
+").
+
+
+%= fav(v('05a7bcf2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/05a7bcf2.json']),filename(['/data/evaluation/05a7bcf2.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
+%~ warn_skip(save_supertest(v('05a7bcf2'),'muarc_cache/05a7bcf2.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('05a7bcf2')))
+%~ warn_skip(clear_saveable_test_info(v('03560426')))
+fav_testcase(v('03560426')>trn+1,"
+
+   _____________________       _____________________
+  |                     |     | 8 8 8               |
+  |                     |     | 8 8 8               |
+  |                     |     | 8 8 8               |
+  |                     |     | 8 8 7 7             |
+  |                     |     |     7 2 2 2         |
+  |                     |     |       2 2 2         |
+  | 8 8 8               |     |                     |
+  | 8 8 8               |     |                     |
+  | 8 8 8   7 7   2 2 2 |     |                     |
+  | 8 8 8   7 7   2 2 2 |     |                     |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(10,10))          'Output' v('03560426') (grid(10,10))
+").
+
+
+%= fav(v('03560426'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/03560426.json']),filename(['/data/evaluation/03560426.json']),grid_size_same]).
+%~ warn_skip(save_supertest(v('03560426'),'muarc_cache/03560426.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('03560426')))
+%~ warn_skip(clear_saveable_test_info(v('00dbd492')))
+fav_testcase(v('00dbd492')>trn+1,"
+
+   ___________________       ___________________
+  | 2 2 2 2 2 2 2     |     | 2 2 2 2 2 2 2     |
+  | 2           2     |     | 2 4 4 4 4 4 2     |
+  | 2           2     |     | 2 4 4 4 4 4 2     |
+  | 2     2     2     |     | 2 4 4 2 4 4 2     |
+  | 2           2     |     | 2 4 4 4 4 4 2     |
+  | 2           2     |     | 2 4 4 4 4 4 2     |
+  | 2 2 2 2 2 2 2     |     | 2 2 2 2 2 2 2     |
+  |                   |     |                   |
+  |                   |     |                   |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(9,9))            'Output' v('00dbd492') (grid(9,9))
+").
+
+
+%= fav(v('00dbd492'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/00dbd492.json']),filename(['/data/evaluation/00dbd492.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
+%~ warn_skip(save_supertest(v('00dbd492'),'muarc_cache/00dbd492.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('00dbd492')))
+%~ warn_skip(clear_saveable_test_info(v('009d5c81')))
+fav_testcase(v('009d5c81')>trn+1,"
+
+   _____________________________       _____________________________
+  |                             |     |                             |
+  |                             |     |                             |
+  |         8 8   8   8 8       |     |         3 3   3   3 3       |
+  |         8   8   8   8       |     |         3   3   3   3       |
+  |         8 8   8   8 8       |     |         3 3   3   3 3       |
+  |                             |     |                             |
+  |                             |     |                             |
+  |                             |     |                             |
+  |                             |     |                             |
+  |                             |     |                             |
+  |       1   1                 |     |                             |
+  |         1                   |     |                             |
+  |       1 1 1                 |     |                             |
+  |                             |     |                             |
+   ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(14,14))          'Output' v('009d5c81') (grid(14,14))
+").
+
+
+%= fav(v('009d5c81'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/009d5c81.json']),filename(['/data/evaluation/009d5c81.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(5, 1) ']).
+%~ warn_skip(save_supertest(v('009d5c81'),'muarc_cache/009d5c81.ansi.pl'))
+%~ warn_skip(clear_saveable_test_info(v('009d5c81')))
+%~ warn_skip(clear_saveable_test_info(v('00576224')))
+fav_testcase(v('00576224')>trn+1,"
+
+   _____       _____________
+  | 7 9 |     | 7 9 7 9 7 9 |
+  | 4 3 |     | 4 3 4 3 4 3 |
+   ¯¯¯¯¯      | 9 7 9 7 9 7 |
+              | 3 4 3 4 3 4 |
+              | 7 9 7 9 7 9 |
+              | 4 3 4 3 4 3 |
+               ¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+        'Training Pair #2 Input' (grid(2,2))            'Output' v('00576224') (grid(6,6))
+").
 
 %fav(t('05269061'),[indiv(complete)]).
 fav(t('007bbfb7'),[out_grid(9,9),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),image_repetition,fractal_repetition,'(5, 1)']).
@@ -19,6 +2784,8 @@ fav(t('00d62c1b'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shap
 fav(v(e99362f0),[combine_are_cells]).
 fav(v('27a77e38'),[second_most_used_color]).
 fav(v('7c9b52a0'),[giz([never_repair])]).
+fav(v('7ee1c6ea'),[grid_size_same,-rotation_match,+shape_match,+mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
+
 %fav(v('7c9b52a0'),[indiv([force_by_color,pbox_vm])]).
 fav(v('7c9b52a0'),[indiv([colormass,bg_shapes(colormass)])]).
 fav(t('484b58aa'),[indiv(i_repair_patterns_f)]).
@@ -32,52 +2799,52 @@ fav(t('b8825c91'),[indiv(i_repair_patterns_f)]).
 fav(v('47996f11'),[indiv(i_repair_patterns_f)]).
 fav(v('981571dc'),[indiv(i_repair_patterns_f)]).
 fav(v('929ab4e9'),[indiv(i_repair_patterns_f)]).
-fav(t('ff805c23'),[indiv(i_repair_patterns_f),human(repair_in_vm(repair_fourway),get(changed),trim_to_rect)]). fav(t('ff805c23'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),pattern_expansion,pattern_completion,crop,'(3, 1)']). %fav(t('ff805c23'),[human(repair_in_vm(repair_repeats(blue)),get(changed),trim_to_rect)]).
+fav(t('ff805c23'),[indiv(i_repair_patterns_f),human(repair_in_vm(repair_fourway),get(changed),trim_to_rect)]). fav(t('ff805c23'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),pattern_expansion,pattern_completion,crop,'(3, 1)']). %fav(t('ff805c23'),[ohuman(repair_in_vm(repair_repeats(blue)),get(changed),trim_to_rect)]).
 %fav(TestID,[indiv(i_repair_patterns_f)]):- is_symgrid(TestID).
-fav(t('3631a71a'),[indiv(i_repair_patterns_f)]).   fav(t('3631a71a'),[human(repair_in_vm(repair_fourway),get(repaired))]). fav(t('3631a71a'),[-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
+fav(t('3631a71a'),[indiv(i_repair_patterns_f)]).   fav(t('3631a71a'),[ohuman(repair_in_vm(repair_fourway),get(repaired))]). fav(t('3631a71a'),[-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),pattern_rotation,pattern_expansion,image_filling,'(4, 1)']).
 fav(t('29ec7d0e'),[indiv(i_repair_patterns_f),human(repair_in_vm(repair_repeats(Black)),get(repaired))]):- get_black(Black). fav(t('29ec7d0e'),[-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),pattern_repetition,pattern_expansion,image_filling,detect_grid,'(4, 1)']).
 fav(v('de493100'),[indiv(i_repair_patterns_f)]). fav(v(de493100),[out_grid(8,6),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([eval400]),'(4, 1) ']).
 fav(t('9ecd008a'),[indiv(i_repair_patterns_f), human([indiv_is_one_hole,fix_image,selected_indiv,trim_to_rect])]).
-fav(t('73251a56'),[indiv(i_repair_patterns_f),learn([learn_mapping_stateful]),human([apply_mapping_stateful])]).
+fav(t('73251a56'),[indiv(i_repair_patterns_f),learn([learn_mapping_stateful]),ohuman([apply_mapping_stateful])]).
 
 
-fav(t('9aec4887'),[indiv(color_blind),todo_sol([find_individuals([hollow,inside([rectangle])],I),rest_indivdual(Is),put_inside(Is,I),
+fav(t('9aec4887'),[indiv_option(color_blind),todo_sol([find_individuals([hollow,inside([rectangle])],I),rest_indivdual(Is),put_inside(Is,I),
   if_edge_strong([color=C]),touch(Is,Point),set_color(C,Point)])]).
 
-fav(t(a740d043),[human(remove_color(blue))]).
+fav(t(a740d043),[ohuman(remove_color(blue))]).
 
 fav(t('47c1f68c'),[hedra,
    human(compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1),blur(flipH),blur(flipV))]).
 fav(t('47c1f68c'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),recoloring,image_repetition,image_reflection,find_the_intruder,detect_grid,crop,color_guessing,'(3, 1)']).
-fav(v('cad67732'),[human(i(whole),first_object_term(rotated),learn_rule),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
-fav(t('27a28665'),[human(i(whole),learn_rule)]).
-%fav(t('27a28665'),[human(i([glyphic]),one_obj,into_monochrome,db(largest:colorless_points,out:grid:p(1,1):color),resize_grid(1,1))]).
-%fav(t('27a28665'),[human(i(whole),one_obj,into_monochrome,db(largest:colorless_points,out:grid:p(1,1):color),resize_grid(1,1))]).
+fav(v('cad67732'),[ohuman(i(whole),first_object_term(rotated),learn_rule),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
+fav(t('27a28665'),[ohuman(i(whole),learn_rule)]).
+%fav(t('27a28665'),[ohuman(i([glyphic]),one_obj,into_monochrome,db(largest:colorlesspoints,out:grid:p(1,1):color),resize_grid(1,1))]).
+%fav(t('27a28665'),[ohuman(i(whole),one_obj,into_monochrome,db(largest:colorlesspoints,out:grid:p(1,1):color),resize_grid(1,1))]).
 fav(t('27a28665'),[learn([shape_to_color]),no_sol([make_box(1),shape_to_color(C),cls_with(C)])]).
 fav(t('27a28665'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),take_negative,associate_images_to_patterns,associate_colors_to_patterns,'(7, 3)']).
-%fav(t('44f52bb0'),[human(i(whole),print_grid,get_vm(objs,[Obj|_]),print_grid,(call(iz(Obj,symmetric_type(flipH)))->(print_grid,set_out([[blue]]));(print_grid,set_out([[orange]]))))]).
+%fav(t('44f52bb0'),[ohuman(i(whole),print_grid,get_vm(objs,[Obj|_]),print_grid,(call(iz(Obj,symmetric_type(flipH)))->(print_grid,set_out([[blue]]));(print_grid,set_out([[orange]]))))]).
 fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_repetition,pattern_expansion,pattern_completion,'(3, 1)']).
-fav(t('44f52bb0'),[human(i(whole),first_object_bool(symmetric_type(flipH)),learn_rule)]).
+fav(t('44f52bb0'),[ohuman(i(whole),first_object_bool(symmetric_type(flipH)),learn_rule)]).
 
 fav(t('40853293'),[indiv(by_color(2))]).
-%fav(t(d631b094),human(globalpoints,grid_target=[get(points)],maplist(arg(1)))).
-fav(t('d631b094'),[indiv(lo_dots),human(i(lo_dots),get(objs),learn_rule)]).
+%fav(t(d631b094),ohuman(globalpoints,grid_target=[get(points)],maplist(arg(1)))).
+fav(t('d631b094'),[indiv(lo_dots),ohuman(i(lo_dots),get(objs),learn_rule)]).
 fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),summarize,dominant_color,count_tiles,'(4, 1)']).
 
-%fav(t('0d3d703e'),[human(i([columns,done]),db(objs:color,color),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),associate_colors_to_colors,'(4, 1)']).
-fav(t('0d3d703e'),[indiv(i_columns),human(i([columns,done]),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),associate_colors_to_colors,'(4, 1)']).
-%fav(t('a85d4709'),[human(i([rows,done]),o([rows,done]),   db(objs:colorless_points,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),summarize,separate_images,associate_colors_to_images,'(4, 1)']).
+%fav(t('0d3d703e'),[ohuman(i([columns,done]),db(objs:color,color),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),associate_colors_to_colors,'(4, 1)']).
+fav(t('0d3d703e'),[indiv(i_columns),ohuman(i([columns,done]),get(objs),learn_rule),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),associate_colors_to_colors,'(4, 1)']).
+%fav(t('a85d4709'),[ohuman(i([rows,done]),o([rows,done]),   db(objs:colorlesspoints,color=Color),set(objs:rectangle,objs:monochrome=true,objs:color=Color)),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),summarize,separate_images,associate_colors_to_images,'(4, 1)']).
 fav(t('a85d4709'),[indiv(i_rows),learn(i([rows,done]),o([rows,done]),learn_rule),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),summarize,separate_images,associate_colors_to_images,'(4, 1)']).
 
-fav(t('60b61512'),[indiv(i_pbox)]).
+fav(t('60b61512'),[indiv(pbox_vm_special_sizes(3,3))]).
 
 fav(t('d0f5fe59'),[%indiv(colormass),
-  human(color(largest,Color),ray(Color-point_01_01,count),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
+  ohuman(color(largest,Color),ray(Color-point_01_01,count),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
 
 /*
   Grid = [[1,1,1,1]]
   The Drawer does 
-  Draw Grid = loc2D(1,1),line_hv(h), pen(1), amass(4)
+  Draw Grid = loc2D(1,1),line_hv(h), pen(1), mass(4)
   
   % Grid<->Drawer   Drawer<->Grid
   
@@ -87,75 +2854,75 @@ fav(t('d0f5fe59'),[%indiv(colormass),
   
   Slover = [- pen(1), + pen(2)]
   
-  DrawGrid = loc2D(1,1),line_hv(h), pen(2), amass(5)
+  DrawGrid = loc2D(1,1),line_hv(h), pen(2), mass(5)
   Grid = [[2,2,2,2,2]]
 */
 /*
-fav(t('44f52bb0'),[human(i(whole),grid_call((
+fav(t('44f52bb0'),[ohuman(i(whole),grid_call((
   get_vm(objs,[Obj|_]),(iz(Obj,symmetric_type(flipH))->set_vm(grid,[[blue]]);set_vm(grid,[[orange]])),set_vm(grid,[[orange]]))))]).
 fav(t('44f52bb0'),[lmDSL(into_monochrome,grid_to_individual(whole),one_obj,resize_grid(1,1,Color),db(largest:symmetric_type(flipH),Color)), -shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),detect_symmetry,associate_images_to_bools,'(6, 2)']).
 */
 
 fav(t('f76d97a5'),[indiv([include_black,force_by_color]),was__lmDSL([compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1)])]).
 
-fav(t('25d487eb'),[indiv(colormass),human([rocketship])]).
+fav(t('25d487eb'),[indiv(colormass),ohuman([rocketship])]).
 fav(t('25d487eb'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),draw_line_from_point,direction_guessing,color_guessing,'(3, 1)']).
-fav(v('762cd429'),[grid_size_same,human(i([shape_lib(filled_squares),delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects])),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(3, 1) ']).
+fav(v('762cd429'),[grid_size_same,ohuman(i([shape_lib(filled_squares),delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects])),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(3, 1) ']).
 
-%fav(t('6e82a1ae'),[human([rocketship])]).
-fav(v('e41c6fd3'),[human([forall(((iz(X,outl),color(X,cyan),vert_pos(X,Vert))),
+%fav(t('6e82a1ae'),[ohuman([rocketship])]).
+fav(v('e41c6fd3'),[indiv(colormass), ohuman([forall(((iz(X,outl),color(X,cyan),vert_pos(X,Vert))),
                                                                                (iz(Y,outl),vert_pos(Y,Vert)))])]).
 fav(t(c444b776),[detect_grid]).
-fav(v('94133066'),[human([largest_indiv,trim_to_rect,rot90,flipV])]).
-fav(v('762cd429'),[indiv(shape_lib(filled_squares)),human(delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects)]).
-fav(v(f9d67f8b),[grid_size_same,human([overlay_each_pattern]),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([eval400]),'(4, 1) ']).
+fav(v('94133066'),[ohuman([largest_indiv,trim_to_rect,rot90,flipV])]).
+fav(v('762cd429'),[indiv(shape_lib(filled_squares)),ohuman(delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects)]).
+fav(v(f9d67f8b),[grid_size_same,ohuman([overlay_each_pattern]),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([eval400]),'(4, 1) ']).
 
 fav(t('e9bb6954'),[debug_indiv]).
-fav(t('5582e5ca'),[grid_size_same,human([compute_max_color(_134548),cls_with(_134548)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),dominant_color,count_tiles,'(3, 1)']).
-fav(t('6f8cd79b'),[grid_size_same,human([add_borders(cyan)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),ex_nihilo,contouring,'(4, 1)']).
-fav(t('dae9d2b5'),[human([cut_in_half,overlay_all,set_all_fg(magenta)])]).
-fav(t('d6ad076f'),[human([find_smaller,shoot_at_other,wide_beam])]).
-fav(t('d511f180'),[indiv(i_by_color),human([swap_colors(cyan,silver)])]).
-fav(t('a79310a0'),[human([gravity(1,s),swap_colors(cyan,red)])]).
-fav(t('a48eeaf7'),[human([largest_indiv(I),tiny_individuals(Is),gravity_to(Is,I)])]).
-fav(t('97999447'),[human([find_ones,until_edges([copy_right(silver),copy_right(sameR)])])]).
-fav(t('8be77c9e'),[human([grow([[sameR],[flipV]])])]).
-fav(t('7f4411dc'),[human([shave_away_1s])]).
-fav(t('7b6016b9'),[human([fillFromBorder(green),subst_color(black,red)])]).
-fav(t('6f8cd79b'),[human([add_borders(cyan)])]).
-fav(t('6d58a25d'),[debug_indiv,print_grid,"the blue object is a downward beam maker, each beam must connect to one of its colors "]).
-fav(t('6cf79266'),[learn([find(nines),remove_them]),human(reverse_learned)]).
-fav(v(f9d67f8b),[human([overlay_each_pattern])]).
+fav(t('5582e5ca'),[grid_size_same,ohuman([compute_max_color(_134548),cls_with(_134548)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),dominant_color,count_tiles,'(3, 1)']).
+fav(t('6f8cd79b'),[grid_size_same,ohuman([add_borders(cyan)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),ex_nihilo,contouring,'(4, 1)']).
+fav(t('dae9d2b5'),[ohuman([cut_in_half,overlay_all,set_all_fg(magenta)])]).
+fav(t('d6ad076f'),[ohuman([find_smaller,shoot_at_other,wide_beam])]).
+fav(t('d511f180'),[indiv(i_by_color),ohuman([swap_colors(cyan,silver)])]).
+fav(t('a79310a0'),[ohuman([gravity(1,s),swap_colors(cyan,red)])]).
+fav(t('a48eeaf7'),[ohuman([largest_indiv(I),tiny_individuals(Is),gravity_to(Is,I)])]).
+fav(t('97999447'),[ohuman([find_ones,until_edges([copy_right(silver),copy_right(sameR)])])]).
+fav(t('8be77c9e'),[ohuman([grow([[sameR],[flipV]])])]).
+fav(t('7f4411dc'),[ohuman([shave_away_1s])]).
+fav(t('7b6016b9'),[ohuman([fillFromBorder(green),subst_color(black,red)])]).
+fav(t('6f8cd79b'),[ohuman([add_borders(cyan)])]).
+fav(t('6d58a25d'),[debug_indiv,print_grid,"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
+fav(t('6cf79266'),[learn([find(nines),remove_them]),ohuman(reverse_learned)]).
+fav(v(f9d67f8b),[ohuman([overlay_each_pattern])]).
 
 
 
-fav(t('9d9215db'),[human([overlay_each_pattern])]).
-fav(t('810b9b61'),[human([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
-fav(v('1d398264'),[human([((iz(X,keypad),iz(X,multicolor),centerof(X,C))-->sunburst(C))])]).
-fav(v('e9bb6954'),[human([(iz(X,keypad), iz(X,monocolor),centerof(X,C)-->starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
-fav(t('5c2c9af4'),[human([two_closest_dots_to_edge,make_a_box,grow_box_that_much_bigger,grow_box_that_much_bigger,grow_box_that_much_bigger])]).
-fav(t('5582e5ca'),[human([compute_max_color(C1),cls_with(C1)])]).
-fav(t('5521c0d9'),[human([with_each_indiv,move_above_itself])]).
+fav(t('9d9215db'),[ohuman([overlay_each_pattern])]).
+fav(t('810b9b61'),[ohuman([(iz(X,rectangle),iz(X,hollow),iz(X,thick1),iz(X,noexit))-->color(X,green)])]).
+fav(v('1d398264'),[ohuman([((iz(X,keypad),iz(X,multicolor),centerof(X,C))-->sunburst(C))])]).
+fav(v('e9bb6954'),[ohuman([(iz(X,keypad), iz(X,monocolor),centerof(X,C)-->starburst(C))]),e('box of nine draw outward, if you hit a drawn line blacken it')]).
+fav(t('5c2c9af4'),[ohuman([two_closest_dots_to_edge,make_a_box,grow_box_that_much_bigger,grow_box_that_much_bigger,grow_box_that_much_bigger])]).
+fav(t('5582e5ca'),[ohuman([compute_max_color(C1),cls_with(C1)])]).
+fav(t('5521c0d9'),[ohuman([with_each_indiv,move_above_itself])]).
 fav(t('5521c0d9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_moving,measure_length,'(3, 1)']).
-fav(t('5117e062'),[human([find_two_color_indivs,selected_indiv,trim_to_rect,main_color,paint_landscape])]).
-fav(t('44d8ac46'),[human([find_individuals([hollow,boxes,inside([rectangle])],I),indiv_fill_color(I,red)])]).
-fav(t('447fd412'),[human([find_two_color_indivs,find_lesser_block,select_scaled_versions,builds,create_greater_blocks])]).
+fav(t('5117e062'),[ohuman([find_two_color_indivs,selected_indiv,trim_to_rect,main_color,paint_landscape])]).
+fav(t('44d8ac46'),[ohuman([find_individuals([hollow,boxes,inside([rectangle])],I),indiv_fill_color(I,red)])]).
+fav(t('447fd412'),[ohuman([find_two_color_indivs,find_lesser_block,select_scaled_versions,builds,create_greater_blocks])]).
 fav(t('447fd412'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_resizing,pattern_repetition,draw_pattern_from_point,'(3, 1)']).
-fav(t('3c9b0459'),[human([rot180])]).
+fav(t('3c9b0459'),[ohuman([rot180])]).
 
-%fav(t('d511f180'),[human([compute_max_color(C1),compute_next_color(C2),swap_colors(C2,C1)])]).
-fav(t(dae9d2b5),[human([cut_in_half,overlay_all,set_all_fg(magenta)]),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),separate_images,recoloring,pattern_juxtaposition,'(5, 2)']).
+%fav(t('d511f180'),[ohuman([compute_max_color(C1),compute_next_color(C2),swap_colors(C2,C1)])]).
+fav(t(dae9d2b5),[ohuman([cut_in_half,overlay_all,set_all_fg(magenta)]),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),separate_images,recoloring,pattern_juxtaposition,'(5, 2)']).
 
 
 fav(v('4b6b68e5'),
  [ 
 
-human([
+ohuman([
   doall((iz(Obj,outline),internal_region(Obj,Region),individuate_by_color(Region),
          largestIn(Region,Largest),color(Largest,Color),fill(Color,Region)))]),
 
    nthDSL(2,[gather_object(O1,X,(iz(X,dot),inside(X,P),iz(P,polygon),wall_thickness(P,1),noexit(P))),
-          colors(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
+          colors_cc(O1,CC),first(C,CC),part_of(O1,E),color(E,C),fillAt(E,C),
                 forall(X,(iz(X,dot), \+ (inside(X,P),iz(P,polygon))),delete(X))])
 
   ]).
@@ -166,7 +2933,7 @@ human([
 is_fti_step(print_info).
 
 
-fav(v(be03b35f),[human(
+fav(v(be03b35f),[ohuman(
   (get_bgc(BG)),remove_color(BG),
    
    remove_color(red),   
@@ -178,40 +2945,40 @@ fav(v(be03b35f),[-shape_match,-rotation_match,-mask_match,-color_match,test_suit
 
 fav(t('4347f46a'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),loop_filling,color_guessing,'(3, 1)']).
 
-fav(v('73ccf9c2'),[human(colormass,most_unique(symmetry_type),get(solution),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
+fav(v('73ccf9c2'),[ohuman(colormass,most_unique(symmetry_type),get(solution),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
 
 fav(v('a8610ef7'),[grid_size_same,find_symmetry,-rotation_match,-color_match,+shape_match,+mask_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',test_suite([eval400]),'(4, 1)']).
 
-fav(v('6ea4a07e'),[clue(amass(in)+amass(out)=:=9),human(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(6, 2) ']).
+fav(v('6ea4a07e'),[clue(mass(in)+mass(out)=:=9),ohuman(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(6, 2) ']).
 
-fav(t('23b5c85d'),[human([smallest_indiv,trim_to_rect])]).
-fav(t('1cf80156'),[human([trim_to_rect])]).
+fav(t('23b5c85d'),[ohuman([smallest_indiv,trim_to_rect])]).
+fav(t('1cf80156'),[ohuman([trim_to_rect])]).
 fav(v('929ab4e9'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test_suite([eval400]),'(4, 1) ']).
-fav(v('94133066'),[human([largest_indiv,trim_to_rect,rot90,flipV]),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([eval400]),'(3, 1) ']).
-fav(t('23b5c85d'),[human([smallest_indiv,trim_to_rect]),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),take_minimum,measure_area,crop,'(5, 1)']).
+fav(v('94133066'),[ohuman([largest_indiv,trim_to_rect,rot90,flipV]),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([eval400]),'(3, 1) ']).
+fav(t('23b5c85d'),[ohuman([smallest_indiv,trim_to_rect]),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),take_minimum,measure_area,crop,'(5, 1)']).
 fav(t('8d5021e8'),[human_skip([grow([[rot180, flipV],[flipH, sameR],[rot180, flipV]])])]).
 
-fav(t('6150a2bd'),[clue(amass(in)=:=amass(out)),human(rot180),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),image_rotation,'(2, 1)']).
-fav(t('ed36ccf7'),[clue(amass(in)=:=amass(out)),human(rot270),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),image_rotation,'(4, 1)']).
+fav(t('6150a2bd'),[clue(mass(in)=:=mass(out)),ohuman(rot180),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),image_rotation,'(2, 1)']).
+fav(t('ed36ccf7'),[clue(mass(in)=:=mass(out)),ohuman(rot270),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),image_rotation,'(4, 1)']).
 
 
 
 :- style_check(-singleton).
 
 fav(t('83302e8f'),
- [human(i(complete),
+ [ohuman(i(complete),
    with_objects(iz(type(square)),subst_color(black,green)),
    with_objects(iz(media(shaped)),subst_color(black,yellow)),   
    objects_into_grid)]).
 
-fav(t(ff28f65a),[human(count_shapes,associate_images_to_numbers),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),count_shapes,associate_images_to_numbers,'(8, 3)']).
+fav(t(ff28f65a),[ohuman(count_shapes,associate_images_to_numbers),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),count_shapes,associate_images_to_numbers,'(8, 3)']).
 fav(t('1b60fb0c'),[
  %indiv([i_repair_patterns_f]),
- %human([new_things_are_a_color,fix_image]),
- %human([unbind_color(black),now_fill_in_blanks(blur(flipD)),subst_color(fg,red)]),
- %human([blur_least(_,fg),subst_color(blue,red),overlay_original]),
- %human([blur_least(_,fg),remember_repaired,with_objects(changedUntrimmed,[subst_color(blue,red),add_object(changedUntrimmed)])]),
- human([blur_least(_,_),remember_repaired,with_objects(changedUntrimmed,[subst_color(_,red),add_object(changedUntrimmed)])]),
+ %ohuman([new_things_are_a_color,fix_image]),
+ %ohuman([unbind_color(black),now_fill_in_blanks(blur(flipD)),subst_color(fg,red)]),
+ %ohuman([blur_least(_,fg),subst_color(blue,red),overlay_original]),
+ %ohuman([blur_least(_,fg),remember_repaired,with_objects(changedUntrimmed,[subst_color(blue,red),add_object(changedUntrimmed)])]),
+ ohuman([blur_least(_,_),remember_repaired,with_objects(changedUntrimmed,[subst_color(_,red),add_object(changedUntrimmed)])]),
  skip_human(
    in_out(In,Out),
    subtractGrid(Out,In,Alien),
@@ -221,43 +2988,43 @@ fav(t('1b60fb0c'),[
 fav(t('1b60fb0c'),[grid_size_same, -rotation_match,-mask_match,-color_match,+shape_match,+'Errors',test_suite([train400]),pattern_rotation,pattern_expansion,pattern_deconstruction,'https://github.com/fchollet/ARC/pull/33','(3, 1)']).
 
 %fav(t('23b5c85d'),[b7249182
-%fav(t('db3e9e38'),[human([flipV,C1=orange,C2=blue,[],flipV]).
-%fav(t(_),[human([fillFromBorder(none,yellow)])]).
+%fav(t('db3e9e38'),[ohuman([flipV,C1=orange,C2=blue,[],flipV]).
+%fav(t(_),[ohuman([fillFromBorder(none,yellow)])]).
 
 fav(t('8d510a79'),[indivs(find_grids,colormass),grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),draw_line_from_point,direction_guessing,detect_wall,associate_colors_to_bools,'(2, 1)']).
 
 fav(v('d304284e'),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(2, 1) ']).
 
 
-fav(t('7b6016b9'),[grid_size_same,human([fillFromBorder(green),subst_color(Black,red)]),
+fav(t('7b6016b9'),[grid_size_same,ohuman([fillFromBorder(green),subst_color(Black,red)]),
   -rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),loop_filling,color_guessing,background_filling,'(3, 1)']):- get_black(Black).
-fav(t('1cf80156'),[out_grid(4,4),human([trim_to_rect]),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),crop,'(3, 1)']).
+fav(t('1cf80156'),[out_grid(4,4),ohuman([trim_to_rect]),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),crop,'(3, 1)']).
 fav(t('8d5021e8'),[out_grid(4,9),human_skip([grow([[rot180,flipV],[flipH,sameR],[rot180,flipV]])]),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),image_repetition,image_reflection,'(3, 1)']).
 fav(t('8be77c9e'),[out_grid(3,6),human_skip([grow([[sameR],[flipV]])]),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),image_repetition,image_reflection,'(3, 1)']).
 fav(t(c9e6f938),[out_grid(6,3),human_skip([grow([[sameR,flipH]])]),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),image_repetition,image_reflection,'(3, 1)']).
-fav(t('5c2c9af4'),[grid_size_same,human([two_closest_dots_to_edge,make_a_box,grow_box_that_much_bigger,grow_box_that_much_bigger,grow_box_that_much_bigger]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),rectangle_guessing,pattern_expansion,'(3, 1)']).
-fav(t('7f4411dc'),[grid_size_same,human([shave_away_1s]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),remove_noise,rectangle_guessing,'(3, 1)']).
-fav(t('3c9b0459'),[grid_size_same,human([rot180]),-rotation_match,+shape_match,+mask_match,+color_match,test_suite([train400]),image_rotation,'(4, 1)']).
-fav(t('44d8ac46'),[grid_size_same,human([find_individuals([hollow,boxes,inside([rectangle])],_138006),indiv_fill_color(_138006,red)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),rectangle_guessing,loop_filling,'(4, 1)']).
-fav(t('ae4f1146'),[indiv(i_mono_nsew),learn([call(set_bgc(cyan))]),human([largest_indiv,trim_to_rect,set_bg(cyan)])]).
+fav(t('5c2c9af4'),[grid_size_same,ohuman([two_closest_dots_to_edge,make_a_box,grow_box_that_much_bigger,grow_box_that_much_bigger,grow_box_that_much_bigger]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),rectangle_guessing,pattern_expansion,'(3, 1)']).
+fav(t('7f4411dc'),[grid_size_same,ohuman([shave_away_1s]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),remove_noise,rectangle_guessing,'(3, 1)']).
+fav(t('3c9b0459'),[grid_size_same,ohuman([rot180]),-rotation_match,+shape_match,+mask_match,+color_match,test_suite([train400]),image_rotation,'(4, 1)']).
+fav(t('44d8ac46'),[grid_size_same,ohuman([find_individuals([hollow,boxes,inside([rectangle])],_138006),indiv_fill_color(_138006,red)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),rectangle_guessing,loop_filling,'(4, 1)']).
+fav(t('ae4f1146'),[indiv(i_mono_nsew),learn([call(set_bgc(cyan))]),ohuman([largest_indiv,trim_to_rect,set_bg(cyan)])]).
 fav(t('ae4f1146'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),separate_images,crop,count_tiles,'(4, 1)']).
-fav(t('97999447'),[grid_size_same,human([find_ones,until_edges([copy_right(silver),copy_right(sameR)])]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),pattern_expansion,draw_line_from_point,'(3, 1)']).
-fav(t('6cf79266'),[grid_size_same,learn([find(nines),remove_them]),human(reverse_learned),-rotation_match,-mask_match,-color_match,+shape_match,+'Errors',test_suite([train400]),rectangle_guessing,recoloring,'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021','(3, 1)']).
-fav(t('810b9b61'),[grid_size_same,human([(iz(_140032,rectangle),iz(_140032,hollow),iz(_140032,thick1),iz(_140032,noexit)-->color(_140032,green))]),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),recoloring,detect_closed_curves,'(3, 1)']).
+fav(t('97999447'),[grid_size_same,ohuman([find_ones,until_edges([copy_right(silver),copy_right(sameR)])]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),pattern_expansion,draw_line_from_point,'(3, 1)']).
+fav(t('6cf79266'),[grid_size_same,learn([find(nines),remove_them]),ohuman(reverse_learned),-rotation_match,-mask_match,-color_match,+shape_match,+'Errors',test_suite([train400]),rectangle_guessing,recoloring,'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021','(3, 1)']).
+fav(t('810b9b61'),[grid_size_same,ohuman([(iz(_140032,rectangle),iz(_140032,hollow),iz(_140032,thick1),iz(_140032,noexit)-->color(_140032,green))]),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),recoloring,detect_closed_curves,'(3, 1)']).
 
-fav(t(a48eeaf7),[grid_size_same,human([largest_indiv(_136900),tiny_individuals(_136910),gravity_to(_136910,_136900)]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_moving,gravity,direction_guessing,bring_patterns_close,'(2, 1)']).
-fav(v('4b6b68e5'),[grid_size_same,nthDSL(2,[gather_object(_145350,_145352,(iz(_145352,dot),inside(_145352,_145378),iz(_145378,polygon),wall_thickness(_145378,1),noexit(_145378))),colors(_145350,_145418),first(_145428,_145418),part_of(_145350,_145442),color(_145442,_145428),fillAt(_145442,_145428),forall(_145352,(iz(_145352,dot),\+ (inside(_145352,_145378),iz(_145378,polygon))),delete(_145352))]),human([doall((iz(_145548,outline),internal_region(_145548,_145562),individuate_by_color(_145562),largestIn(_145562,_145584),color(_145584,_145596),fill(_145596,_145562)))]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(3, 1) ']).
+fav(t(a48eeaf7),[grid_size_same,ohuman([largest_indiv(_136900),tiny_individuals(_136910),gravity_to(_136910,_136900)]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_moving,gravity,direction_guessing,bring_patterns_close,'(2, 1)']).
+fav(v('4b6b68e5'),[grid_size_same,nthDSL(2,[gather_object(_145350,_145352,(iz(_145352,dot),inside(_145352,_145378),iz(_145378,polygon),wall_thickness(_145378,1),noexit(_145378))),colors_cc(_145350,_145418),first(_145428,_145418),part_of(_145350,_145442),color(_145442,_145428),fillAt(_145442,_145428),forall(_145352,(iz(_145352,dot),\+ (inside(_145352,_145378),iz(_145378,polygon))),delete(_145352))]),ohuman([doall((iz(_145548,outline),internal_region(_145548,_145562),individuate_by_color(_145562),largestIn(_145562,_145584),color(_145584,_145596),fill(_145596,_145562)))]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(3, 1) ']).
 
 fav(t(d6ad076f),[grid_size_same,-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),draw_line_from_point,connect_the_dots,bridges,'(3, 1)']).
-fav(t('9d9215db'),[grid_size_same,human([overlay_each_pattern]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_rotation,pattern_reflection,pattern_expansion,'(3, 1)']).
+fav(t('9d9215db'),[grid_size_same,ohuman([overlay_each_pattern]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_rotation,pattern_reflection,pattern_expansion,'(3, 1)']).
 fav(v(e41c6fd3),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(3, 1) ']).
-fav(v('1d398264'),[grid_size_same,human([(iz(_140032,keypad),iz(_140032,multicolor),centerof(_140032,_140052)-->sunburst(_140052))]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(3, 2) ']).
-fav(v(e9bb6954),[grid_size_same,e('box of nine draw outward, if you hit a drawn line blacken it'),human([(iz(_142198,keypad),iz(_142198,monocolor),centerof(_142198,_142218)-->starburst(_142218))]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(4, 1) ']).
-fav(t(d511f180),[grid_size_same,human([swap_colors(cyan,silver)]),-rotation_match,-color_match,+shape_match,+mask_match,+'Errors',test_suite([train400]),'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021#760920',associate_colors_to_colors,'(3, 1)']).
-fav(t('73251a56'),[grid_size_same,learn([learn_mapping_stateful]),human([apply_mapping_stateful]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),image_filling,diagonal_symmetry,'(3, 1)']).
+fav(v('1d398264'),[grid_size_same,ohuman([(iz(_140032,keypad),iz(_140032,multicolor),centerof(_140032,_140052)-->sunburst(_140052))]),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(3, 2) ']).
+fav(v(e9bb6954),[grid_size_same,e('box of nine draw outward, if you hit a drawn line blacken it'),ohuman([(iz(_142198,keypad),iz(_142198,monocolor),centerof(_142198,_142218)-->starburst(_142218))]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(4, 1) ']).
+fav(t(d511f180),[grid_size_same,ohuman([swap_colors(cyan,silver)]),-rotation_match,-color_match,+shape_match,+mask_match,+'Errors',test_suite([train400]),'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021#760920',associate_colors_to_colors,'(3, 1)']).
+fav(t('73251a56'),[grid_size_same,learn([learn_mapping_stateful]),ohuman([apply_mapping_stateful]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),image_filling,diagonal_symmetry,'(3, 1)']).
 fav(t(f76d97a5),[grid_size_same,was__lmDSL([compute_max_color(_134548),compute_next_color(_134558),remove_color(_134548),subst_color(_134558,_134548)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),take_negative,recoloring,associate_colors_to_colors,'(3, 1)']).
 fav(t(ce22a75a),[grid_size_same,hint(grow_blue),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),replace_pattern,'(2, 1)']).
-fav(t(a79310a0),[grid_size_same,human([gravity(1,s),swap_colors(cyan,red)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),recoloring,pattern_moving,pairwise_analogy,'(3, 1)']).
+fav(t(a79310a0),[grid_size_same,ohuman([gravity(1,s),swap_colors(cyan,red)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),recoloring,pattern_moving,pairwise_analogy,'(3, 1)']).
 
 fav(t(b230c067),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),separate_shapes,recoloring,find_the_intruder,associate_colors_to_bools,'(2, 1)']).
 fav(t(d2abd087),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test_suite([train400]),separate_shapes,recoloring,count_tiles,associate_colors_to_numbers,'(3, 1)']).
@@ -271,11 +3038,14 @@ fav(t('08ed6ac7'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mas
 fav(v('626c0bcc'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test_suite([eval400]),'(3, 1) ']).
 fav(v('639f5a19'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test_suite([eval400]),'(2, 1) ']).
 
-fav(v('6ea4a07e'),[clue(amass(in)+amass(out)=9),human(use_clues),clue(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(6, 2) ']).
+fav(v('6ea4a07e'),[clue(mass(in)+mass(out)=9),ohuman(use_clues),clue(corispond_colors,invert_existence),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([eval400]),'(6, 2) ']).
+
+fav(TestID,Stuff):- fav_testcase((TestID>_+_),_,Stuff).
 
 fav_less(V,[test_suite([less_fav])|T]):- less_fav(V,T).
 
 
+less_fav(TestID,Stuff):- fav_testcase((TestID>_+_),_,Stuff).
 less_fav(t(ba97ae07),[grid_size_same,-rotation_match,+shape_match,+mask_match,+color_match,test_suite([train400]),rectangle_guessing,recoloring,pattern_modification,pairwise_analogy,'(4, 1)']).
 less_fav(t(cbded52d),[grid_size_same,-rotation_match,+shape_match,+mask_match,+color_match,+'Errors',test_suite([train400]),separate_images,pattern_repetition,pattern_modification,pattern_juxtaposition,'https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',detect_grid,connect_the_dots,'(3, 1)']).
 less_fav(t(e8dc4411),[grid_size_same,-rotation_match,+shape_match,+mask_match,+color_match,test_suite([train400]),pattern_expansion,direction_guessing,'(3, 1)']).
@@ -629,7 +3399,7 @@ less_fav(t('9172f3a0'),[out_grid(9,9),-shape_match,-rotation_match,-mask_match,+
 less_fav(t(d10ecb37),[out_grid(2,2),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),crop,'(3, 1)']).
 less_fav(t('963e52fc'),[out_grid(12,5),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),pattern_expansion,image_expansion,'(3, 1)']).
 less_fav(v('0c786b71'),[out_grid(8,6),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(3, 1) ']).
-less_fav(v('00576224'),[out_grid(6,6)]).
+%less_fav(v('00576224'),[out_grid(6,6)]).
 less_fav(v('8ba14f53'),[-shape_match,-rotation_match,-mask_match,+color_match,test_suite([eval400]),'(6, 1) ']).
 less_fav(t('67e8384a'),[out_grid(6,6),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),image_rotation,image_repetition,image_reflection,'(4, 1)']).
 less_fav(t('7fe24cdd'),[out_grid(6,6),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),image_rotation,image_repetition,'(3, 1)']).
@@ -686,7 +3456,7 @@ less_fav(t(ecdecbb3),[grid_size_same,-rotation_match,-mask_match,+shape_match,+c
 less_fav(v('73c3b0d8'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(4, 1) ']).
 less_fav(v(f8be4b64),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',test_suite([eval400]),'(4, 1)']).
 less_fav(v('17b80ad2'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(4, 1) ']).
-less_fav(t('6d58a25d'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),print_grid,draw_line_from_point,debug_indiv,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors "]).
+less_fav(t('6d58a25d'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),print_grid,draw_line_from_point,debug_indiv,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
 less_fav(t('7df24a62'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_rotation,pattern_repetition,pattern_juxtaposition,out_of_boundary,'(4, 1)']).
 less_fav(t('3bdb4ada'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),recoloring,pattern_repetition,holes,'(2, 1)']).
 less_fav(t('3618c87e'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),gravity,'(3, 1)']).
@@ -994,7 +3764,7 @@ less_fav(v(b0722778),[out_grid(2,11),-shape_match,-rotation_match,-mask_match,-c
 less_fav(v(e66aafb8),[out_grid(5,8),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([eval400]),'(5, 1) ']).
 less_fav(v('1a6449f1'),[out_grid(7,6),-shape_match,-rotation_match,-mask_match,-color_match,test_suite([eval400]),'(3, 1) ']).
 less_fav(v('25094a63'),[grid_size_same,-rotation_match,-color_match,+shape_match,+mask_match,test_suite([eval400]),'(2, 1) ']).
-less_fav(t('9aec4887'),[out_grid(6,6),todo_sol([find_individuals([hollow,inside([rectangle])],_137826),rest_indivdual(_137858),put_inside(_137858,_137826),if_edge_strong([color=_137892]),touch(_137858,_137904),set_color(_137892,_137904)]),indiv(color_blind),-shape_match,-rotation_match,-mask_match,+color_match,x_marks_the_spot,test_suite([train400]),recoloring,pattern_moving,crop,color_guessing,'(3, 1)']).
+less_fav(t('9aec4887'),[out_grid(6,6),todo_sol([find_individuals([hollow,inside([rectangle])],_137826),rest_indivdual(_137858),put_inside(_137858,_137826),if_edge_strong([color=_137892]),touch(_137858,_137904),set_color(_137892,_137904)]),indiv_option(color_blind),-shape_match,-rotation_match,-mask_match,+color_match,x_marks_the_spot,test_suite([train400]),recoloring,pattern_moving,crop,color_guessing,'(3, 1)']).
 less_fav(v('9356391f'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(2, 1) ']).
 less_fav(v('85fa5666'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(4, 1) ']).
 less_fav(v(f0df5ff0),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(3, 1) ']).

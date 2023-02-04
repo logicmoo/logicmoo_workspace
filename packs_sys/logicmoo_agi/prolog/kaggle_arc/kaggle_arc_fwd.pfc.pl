@@ -86,7 +86,7 @@ want_arg_counts(Pred,A,N,Col1,C,Col2)/(functor(CALL,Pred,A),arg(N,CALL,ARG1),arg
  ==>
 (arg1Isa(Pred,N,Col1),
  arg1Isa(Pred,C,Col2), 
- ((argInstance(Pred,N,ARG1)/findall_count(ARG2,CALL,Count)) ==> ({wdmsg(argInstanceInstanceCount(Pred,N,ARG1,C,Count))},argInstanceInstanceCount(Pred,N,ARG1,C,Count))),
+ ((argInstance(Pred,N,ARG1)/findall_count(ARG2,CALL,Count)) ==> ({u_dmsg(argInstanceInstanceCount(Pred,N,ARG1,C,Count))},argInstanceInstanceCount(Pred,N,ARG1,C,Count))),
  (CALL==>(argInstance(Pred,N,ARG1),argInstance(Pred,C,ARG2)))).
 
 :- mpred_info(want_arg_counts(_,_,_,_,_,_)).
@@ -106,6 +106,7 @@ arc_test_property(T, common,(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/
 %:- forall_assert(kaggle_arc_io(TestID,ExampleNum,IO,_),some_grid_tid(TestID>ExampleNum*IO)).
 :- set_prolog_flag(pfc_term_expansion,false).
 
+need_save_rule1(Mode,Why,I,O)==>do_save_rule1(Mode,Why,I,O).
 
 :- include(kaggle_arc_footer).
 

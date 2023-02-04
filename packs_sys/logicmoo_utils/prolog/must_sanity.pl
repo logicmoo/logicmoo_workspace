@@ -120,8 +120,9 @@ must_or_rtrace(G):- catch(G,Ex,mor_event(e(Ex,G)))*-> true; mor_event(f(G)).
 
 %:- export(notrace/1).
 %:- meta_predicate(notrace(:)).
-%notrace(G):- call(G). 
-:- '$hide'(notrace/1).
+%notrace(G):- call(G).
+:- redefine_system_predicate(system:notrace/1).
+:- '$hide'(system:notrace/1).
 
 %must_or_rtrace_mep(M,E,G):- get_must_l(G,Must),!,call(Must).
 %must_or_rtrace_mep(M,E,G):- catch(G,Err,(dmsg(error_must_or_rtrace(Err)->G),ignore(rtrace(G)),throw(Err))) *->true; ftrace(G).
@@ -326,9 +327,9 @@ scce_orig0(Setup0,Goal,Cleanup0):-
 %:- '$hide'(system:setup_call_catcher_cleanup/4).
 %:- 'my_set_predicate_attribute'(system:setup_call_catcher_cleanup/4, hide_childs, false).
 
-:- redefine_system_predicate(call_cleanup(_,_)).
-:- '$hide'(system:call_cleanup/2).
-:- 'my_set_predicate_attribute'(call_cleanup/2, hide_childs, false).
+%:- redefine_system_predicate(call_cleanup(_,_)).
+%:- '$hide'(system:call_cleanup/2).
+%:- 'my_set_predicate_attribute'(call_cleanup/2, hide_childs, false).
 
 
 scce_orig2(Setup,Goal,Cleanup):-

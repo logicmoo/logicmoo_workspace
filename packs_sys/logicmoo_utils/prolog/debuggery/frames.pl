@@ -5,12 +5,14 @@
             in_pengines/0,
             find_parent_frame_attribute/5,
             parent_goal/2,
+            parent_goal/1,
             prolog_frame_match/3,
             relative_frame/3,
             stack_check/0,
             stack_check/1,
             stack_check/2,
             stack_check_else/2,
+            stack_check_or_call/2,
             stack_depth/1
           ]).
 :- module_transparent
@@ -19,12 +21,14 @@
         in_pengines/0,
         find_parent_frame_attribute/5,
         parent_goal/2,
+        parent_goal/1,
         prolog_frame_match/3,
         relative_frame/3,
         stack_check/0,
         stack_check/1,
         stack_check/2,
         stack_check_else/2,
+        stack_check_or_call/2,
         stack_depth/1.
 
 :- set_module(class(library)).
@@ -80,6 +84,8 @@ stack_check(BreakIfOver,Error):- stack_check_else(BreakIfOver, trace_or_throw(st
 %
 stack_check_else(BreakIfOver,Call):- stack_depth(Level) ,  ( Level < BreakIfOver -> true ; (dbgsubst(Call,stack_lvl,Level,NewCall),NewCall)).
 
+stack_check_or_call(BreakIfOver,Call):- stack_depth(Level) ,  ( Level < BreakIfOver -> true ; call(Call)).
+
 
 
 %= 	 	 
@@ -101,7 +107,7 @@ in_pengines:- zotrace(relative_frame(context_module,pengines,_)).
 %
 relative_frame(Attrib,Term,Nth):- find_parent_frame_attribute(Attrib,Term,Nth,_RealNth,_FrameNum).
 
-:- export(parent_goal/2).
+
 
 %= 	 	 
 
@@ -109,6 +115,8 @@ relative_frame(Attrib,Term,Nth):- find_parent_frame_attribute(Attrib,Term,Nth,_R
 %
 % Parent Goal.
 %
+
+:- export(parent_goal/1).
 parent_goal(Goal):- nonvar(Goal), quietly((prolog_current_frame(Frame),prolog_frame_attribute(Frame,parent,PFrame),
   prolog_frame_attribute(PFrame,parent_goal,Goal))).
 parent_goal(Goal):- !, quietly((prolog_current_frame(Frame),prolog_frame_attribute(Frame,parent,PFrame0),

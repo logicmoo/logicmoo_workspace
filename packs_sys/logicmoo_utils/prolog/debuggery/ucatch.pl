@@ -1022,8 +1022,8 @@ source_variables_l(AllS):-
 
 uexecute_goal_vs(Vs):- uexecute_goal_vs0(Vs),!.
 uexecute_goal_vs([]).
-uexecute_goal_vs0(Vs):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_,Vs,_)),_,fail)).
-uexecute_goal_vs0(Vs):- notrace(catch(parent_goal('$toplevel':'$execute_goal2'(_,Vs)),_,fail)).
+uexecute_goal_vs0(Vs):- notrace(catch(ucatch_parent_goal('$toplevel':'$execute_goal2'(_,Vs,_)),_,fail)).
+uexecute_goal_vs0(Vs):- notrace(catch(ucatch_parent_goal('$toplevel':'$execute_goal2'(_,Vs)),_,fail)).
 
 
 %=
@@ -1082,7 +1082,7 @@ public_file_link(S,O):-   \+ ( nb_current('$inprint_message', Messages), Message
 public_file_link(MG,MG).
 
 into_link(_,M,O):- format(atom(O),'* ~w ',[M]),!.
-into_link(S,M,O):- format(atom(O),'<pre><a href="~w">~q</a></pre>',[M,S]).
+into_link(S,M,O):- format(atom(O),'<a href="~w"><pre>~q</pre></a>',[M,S]).
 
 :-export( as_clause_no_m/3).
 
@@ -1345,6 +1345,12 @@ keep(_, _).
 %
 set_block_exit(Name, Value) :-  prolog_current_frame(Frame),  prolog_frame_attribute(Frame, parent_goal,  mcall:block3(Name, _, Value)).
 
+
+:- export(ucatch_parent_goal/1).
+ucatch_parent_goal(M:Goal):- 
+  prolog_current_frame(F),
+  prolog_frame_attribute(F, parent, FP),
+  prolog_frame_attribute(FP, parent_goal, M:Goal).
 %=
 
 %% block( ?Name, ?Goal) is semidet.

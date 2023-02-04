@@ -42,10 +42,10 @@
  * @requires jquery
  */
 
-define([ "jquery", "config", "preferences", "form", "modal", "utils",
+define([ "jquery", "config", "preferences", "form", "modal", "utils", "backend",
 	 "svgavatar"
        ],
-       function($, config, preferences, form, modal, utils) {
+       function($, config, preferences, form, modal, utils, backend) {
 
 var MIN_RECONNECT_DELAY =  10000;
 var MAX_RECONNECT_DELAY = 300000;
@@ -789,7 +789,7 @@ var MAX_RECONNECT_DELAY = 300000;
 	  $(img).html(svg_images[url])
 	        .svgavatar('setAVappearanceByUserID', id);
 	} else {
-	  $.ajax({ url: options.avatar,
+	  backend.ajax({ url: options.avatar,
 		   type: "GET",
 		   dataType: "text",
 		   success: function(reply) {

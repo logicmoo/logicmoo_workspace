@@ -1,10 +1,11 @@
 /*  Part of SWISH
 
     Author:        Jan Wielemaker
-    E-mail:        J.Wielemaker@cs.vu.nl
+    E-mail:        jan@swi-prolog.org
     WWW:           http://www.swi-prolog.org
-    Copyright (C): 2016-2020, VU University Amsterdam
+    Copyright (C): 2016-2022, VU University Amsterdam
 			      CWI Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -64,6 +65,8 @@
 :- use_module(library(user_profile)).
 :- endif.
 :- use_module(library(aggregate)).
+:- use_module(library(redis)).
+:- use_module(library(solution_sequences)).
 
 :- use_module(storage).
 :- use_module(gitty).
@@ -74,6 +77,7 @@
 :- use_module(authenticate).
 :- use_module(pep).
 :- use_module(content_filter).
+:- use_module(swish_redis).
 
 :- html_meta(chat_to_profile(+, html)).
 
@@ -95,6 +99,7 @@ browsers which in turn may have multiple SWISH windows opened.
 
 swish_config:config(hangout, 'Hangout.swinb').
 swish_config:config(avatars, svg).		% or 'noble'
+swish_config:config(session_lost_timeout, 60).
 
 
 		 /*******************************
@@ -142,7 +147,8 @@ start_chat(Request, Options) :-
 
 extend_options([], Options, Options).
 extend_options([H|T0], Options, [H|T]) :-
-	ground(H), !,
+    ground(H),
+    !,
 	extend_options(T0, Options, T).
 extend_options([_|T0], Options, T) :-
 	extend_options(T0, Options, T).
@@ -180,7 +186,7 @@ accept_chat(Session, Options, WebSocket) :-
 accept_chat_(Session, Options, WebSocket) :-
 	create_chat_room,
 	(   reconnect_token(WSID, Token, Options),
-	    retractall(visitor_status(WSID, lost(_))),
+        visitor_status_del_lost(WSID),
 	    existing_visitor(WSID, Session, Token, TmpUser, UserData),
 	    hub_add(swish_chat, WebSocket, WSID)
 	->  Reason = rejoined
@@ -189,30 +195,38 @@ accept_chat_(Session, Options, WebSocket) :-
 					TmpUser, UserData, Options)),
 	    Reason = joined
 	),
+    gc_visitors,
 	visitor_count(Visitors),
 	option(check_login(CheckLogin), Options, true),
-	Msg = _{ type:welcome,
+    Msg0 = _{ type:welcome,
 		 uid:TmpUser,
 		 wsid:WSID,
 		 reconnect:Token,
 		 visitors:Visitors,
 		 check_login:CheckLogin
 	       },
+    add_redis_consumer(Msg0, Msg),
 	hub_send(WSID, json(UserData.put(Msg))),
 	must_succeed(chat_broadcast(UserData.put(_{type:Reason,
 						   visitors:Visitors,
 						   wsid:WSID}))),
-	gc_visitors,
 	debug(chat(websocket), '~w (session ~p, wsid ~p)',
 	      [Reason, Session, WSID]).
 
+add_redis_consumer(Msg0, Msg) :-
+    use_redis,
+    redis_consumer(Consumer),
+    Msg = Msg0.put(consumer, Consumer).
+add_redis_consumer(Msg, Msg).
 
 reconnect_token(WSID, Token, Options) :-
 	option(reconnect(Token), Options),
-	visitor_session(WSID, _, Token), !.
+    visitor_session(WSID, _, Token),
+    !.
 
 must_succeed(Goal) :-
-	catch(Goal, E, print_message(warning, E)), !.
+    catch(Goal, E, print_message(warning, E)),
+    !.
 must_succeed(Goal) :-
 	print_message(warning, goal_failed(Goal)).
 
@@ -221,12 +235,28 @@ must_succeed(Goal) :-
 		 *	        DATA		*
 		 *******************************/
 
-%%	visitor_session(?WSId, ?Session, ?Token).
-%%	session_user(?Session, ?TmpUser).
-%%	visitor_data(?TmpUser, ?UserData:dict).
-%%	subscription(?Session, ?Channel, ?SubChannel).
+%!  visitor_status(?WSID, ?Status).
+%!  visitor_session(?WSID, ?SessionId, ?Token).
+%!  session_user(?Session, ?TmpUser).
+%!  visitor_data(?TmpUser, ?UserData:dict).
+%!  subscription(?WSID, ?Channel, ?SubChannel).
 %
-%	These predicates represent our notion of visitors.
+%   These predicates represent our notion of visitors. Active modes:
+%
+%     - visitor_status(+WSID, -Status)
+%       - Indexes: 1
+%       - retract(visitor_status(+WSID, -Status))
+%       - assertz(visitor_status(+WSID, +Status))
+%       - retractall(visitor_status(+WSID, _))
+%     - visitor_session(+WSID, -SessionId, -Token)
+%       - Indexes: 1,2,3
+%     - session_user(?Session, ?TmpUser)
+%       - Indexes: 1
+%     - visitor_data(?TmpUser, ?UserData)
+%       - Indexes: 1
+%     - subscription(?WSID, ?Channel, ?SubChannel)
+%       - Indexes: 1,3
+%       Currently all subscriptions are on the Channel `gitty`
 %
 %	@arg WSID is the identifier of the web socket. As we may have to
 %	reconnect lost connections, this is may be replaced.
@@ -235,49 +265,328 @@ must_succeed(Goal) :-
 %	@arg TmpUser is the ID with which we identify the user for this
 %	run. The value is a UUID and thus doesn't reveal the real
 %	identity of the user.
-%	@arg UserDict is a dict that holds information about the real
+%   @arg UserData is a dict that holds information about the real
 %	user identity.  This can be empty if no information is known
 %	about this user.
+%   @arg Status is one of `unload` or `lost(Time)`
+%   @arg Channel is an atom denoting a chat channel
+%   @arg SubChannel is a related sub channel.
 
 :- dynamic
-	visitor_status/2,		% WSID, Status
-	visitor_session/3,		% WSID, Session, Token
-	session_user/2,			% Session, TmpUser
-	visitor_data/2,			% TmpUser, Data
-	subscription/3.			% WSID, Channel, SubChannel
+    visitor_status_db/2,            % WSID, Status
+    visitor_session_db/3,           % WSID, Session, Token
+    session_user_db/2,		    % Session, TmpUser
+    visitor_data_db/2,		    % TmpUser, Data
+    subscription_db/3.		    % WSID, Channel, SubChannel
+
+
+%!  redis_key(+Which, -Server, -Key) is semidet.
+
+redis_key(Which, Server, Key) :-
+    swish_config(redis, Server),
+    swish_config(redis_prefix, Prefix),
+    Which =.. List,
+    atomic_list_concat([Prefix, chat | List], :, Key).
+
+use_redis :-
+    swish_config(redis, _).
+
+
+%!  visitor_status(+WSID, -Status)
+%
+%   Status is one of lost(Time) if we   lost contact at Time or `unload`
+%   if the websocket was cleanly disconnected.
+%
+%   The Redis version keeps two keys per   WSID as described below. Note
+%   that these keys only  exist  on   temporary  lost  or  disconnecting
+%   websockets.
+%
+%     - unload:WSID = boolean
+%     - lost:WSID = time
+
+visitor_status(WSID, Status) :-
+    redis_key(unload(WSID), Server, UnloadKey),
+    !,
+    redis_key(lost(WSID), Server, LostKey),
+    redis(Server,
+          [ get(UnloadKey) -> Unload,
+            get(LostKey) -> Lost
+          ]),
+    (   number(Lost),
+        Status = lost(Lost)
+    ;   Unload \== nil
+    ->  Status = unload
+    ).
+visitor_status(WSID, Status) :-
+    visitor_status_db(WSID, Status).
+
+visitor_status_del(WSID) :-
+    redis_key(unload(WSID), Server, UnloadKey),
+    !,
+    redis_key(lost(WSID), Server, LostKey),
+    redis(Server,
+          [ del(UnloadKey),
+            del(LostKey)
+          ]).
+visitor_status_del(WSID) :-
+    retractall(visitor_status_db(WSID, _Status)).
+
+visitor_status_del_lost(WSID) :-
+    redis_key(lost(WSID), Server, Key),
+    !,
+    redis(Server, del(Key)).
+visitor_status_del_lost(WSID) :-
+    retractall(visitor_status_db(WSID, lost(_))).
+
+visitor_status_set_lost(WSID, Time) :-
+    redis_key(lost(WSID), Server, Key),
+    !,
+    redis(Server, set(Key, Time)).
+visitor_status_set_lost(WSID, Time) :-
+    assertz(visitor_status_db(WSID, lost(Time))).
+
+visitor_status_set_unload(WSID) :-
+    redis_key(unload(WSID), Server, Key),
+    !,
+    redis(Server, set(Key, true)).
+visitor_status_set_unload(WSID) :-
+    assertz(visitor_status_db(WSID, unload)).
+
+visitor_status_del_unload(WSID) :-
+    redis_key(unload(WSID), Server, Key),
+    !,
+    redis(Server, del(Key)).
+visitor_status_del_unload(WSID) :-
+    retract(visitor_status_db(WSID, unload)).
+
+%!  visitor_session(?WSID, ?Session, ?Token).
+%!  visitor_session(?WSID, ?Session, ?Token, ?Consumer).
+%
+%   Redis data:
+%
+%     - wsid: set of WSID
+%     - session:WSID to at(Consumer,Session,Token)
+
+visitor_session_create(WSID, Session, Token) :-
+    redis_key(wsid, Server, SetKey),
+    redis_key(session(WSID), Server, SessionKey),
+    !,
+    redis_consumer(Consumer),
+    redis(Server, sadd(SetKey, WSID)),
+    redis(Server, set(SessionKey, at(Consumer,Session,Token) as prolog)).
+visitor_session_create(WSID, Session, Token) :-
+    assertz(visitor_session_db(WSID, Session, Token)).
+
+visitor_session(WSID, Session, Token) :-
+    visitor_session(WSID, Session, Token, _Consumer).
+
+visitor_session(WSID, Session, Token, Consumer) :-
+    use_redis,
+    !,
+    current_wsid(WSID),
+    redis_key(session(WSID), Server, SessionKey),
+    redis(Server, get(SessionKey), at(Consumer,Session,Token)).
+visitor_session(WSID, Session, Token, single) :-
+    visitor_session_db(WSID, Session, Token).
+
+%!  visitor_session_reclaim(+WSID, -Session) is semidet.
+
+visitor_session_reclaim(WSID, Session) :-
+    redis_key(session(WSID), Server, SessionKey),
+    redis_key(wsid, Server, SetKey),
+    !,
+    (   redis(Server, get(SessionKey), at(_,Session,_Token))
+    ->  redis(Server, srem(SetKey, WSID))
+    ;   true
+    ).
+visitor_session_reclaim(WSID, Session) :-
+    retract(visitor_session_db(WSID, Session, _Token)).
+
+%!  visitor_session_reclaim_all(+WSID, +Session, +Token) is det.
+
+visitor_session_reclaim_all(WSID, _Session, _Token) :-
+    redis_key(wsid, Server, SetKey),
+    !,
+    redis(Server, srem(SetKey, WSID)),
+    redis_key(session(WSID), Server, SessionKey),
+    redis(Server, del(SessionKey)).
+visitor_session_reclaim_all(WSID, Session, Token) :-
+    retractall(visitor_session_db(WSID, Session, Token)).
+
+visiton_session_del_session(Session) :-
+    use_redis,
+    !,
+    (   current_wsid(WSID),
+        visitor_session_reclaim(WSID, Session),
+        fail
+    ;   true
+    ).
+visiton_session_del_session(Session) :-
+    retractall(visitor_session_db(_, Session, _)).
+
+%!  current_wsid(?WSID) is nondet.
+%
+%   True when WSID is a (Redis) known WSID.
+
+current_wsid(WSID) :-
+    nonvar(WSID),
+    !,
+    redis_key(wsid, Server, SetKey),
+    redis(Server, sismember(SetKey, WSID), 1).
+current_wsid(WSID) :-
+    redis_key(wsid, Server, SetKey),
+    redis_sscan(Server, SetKey, List, []),
+    member(WSID, List).
+
+%!  current_wsid(?WSID, -Consumer)
+%
+%   True when we have a visitor WSID on SWISH node Consumer.
+
+current_wsid(WSID, Consumer) :-
+    current_wsid(WSID),
+    redis_key(session(WSID), Server, SessionKey),
+    redis(Server, get(SessionKey), at(Consumer,_Session,_Token)).
+
+
+%!  session_user(?Session, ?TmpUser:atom).
+%
+%   Relate Session to a  tmp  user  id.   Info  about  the  tmp  user is
+%   maintained in visitor_data/2.
+
+session_user(Session, TmpUser) :-
+    http_current_session(Session, swish_user(TmpUser)).
+
+session_user_create(Session, User) :-
+    http_session_asserta(swish_user(User), Session).
+
+session_user_del(Session, User) :-
+    http_session_retract(swish_user(User), Session).
+
+%!  visitor_data(?Visitor, ?Data)
+
+visitor_data(Visitor, Data) :-
+    redis_key(visitor(Visitor), Server, Key),
+    !,
+    redis_get_hash(Server, Key, Data).
+visitor_data(Visitor, Data) :-
+    visitor_data_db(Visitor, Data).
+
+visitor_data_set(Visitor, Data) :-
+    redis_key(visitor(Visitor), Server, Key),
+    !,
+    redis_set_hash(Server, Key, Data).
+visitor_data_set(Visitor, Data) :-
+    retractall(visitor_data_db(Visitor, _)),
+    assertz(visitor_data_db(Visitor, Data)).
+
+visitor_data_del(Visitor, Data) :-
+    redis_key(visitor(Visitor), Server, Key),
+    !,
+    redis_get_hash(Server, Key, Data),
+    redis(Server, del(Key)).
+visitor_data_del(Visitor, Data) :-
+    retract(visitor_data_db(Visitor, Data)).
+
+%!  subscription(?WSID, ?Channel, ?SubChannel)
+%
+%   Requires both WSID -> Channel/SubChannel and backward relation.
+%   Redis:
+%
+%     channel:SubChannel --> set(WSID-Channel)
+%     subscription:WSID  --> set(Channel-SubChannel)
+
+subscription(WSID, Channel, SubChannel) :-
+    use_redis,
+    !,
+    (   nonvar(SubChannel)
+    ->  redis_key(channel(SubChannel), Server, ChKey),
+        redis_sscan(Server, ChKey, List, []),
+        member(WSID-Channel, List)
+    ;   current_wsid(WSID),
+        redis_key(subscription(WSID), Server, WsKey),
+        redis_sscan(Server, WsKey, List, []),
+        member(Channel-SubChannel, List)
+    ).
+subscription(WSID, Channel, SubChannel) :-
+    subscription_db(WSID, Channel, SubChannel).
+
+subscribe(WSID, Channel, SubChannel) :-
+    redis_key(channel(SubChannel), Server, ChKey),
+    redis_key(subscription(WSID), Server, WsKey),
+    !,
+    redis(Server, sadd(ChKey, WSID-Channel as prolog)),
+    redis(Server, sadd(WsKey, Channel-SubChannel as prolog)).
+subscribe(WSID, Channel, SubChannel) :-
+    (   subscription(WSID, Channel, SubChannel)
+    ->  true
+    ;   assertz(subscription_db(WSID, Channel, SubChannel))
+    ).
+
+unsubscribe(WSID, Channel, SubChannel) :-
+    use_redis,
+    !,
+    (   subscription(WSID, Channel, SubChannel),
+        redis_key(channel(SubChannel), Server, ChKey),
+        redis_key(subscription(WSID), Server, WsKey),
+        redis(Server, srem(ChKey, WSID-Channel as prolog)),
+        redis(Server, srem(WsKey, Channel-SubChannel as prolog)),
+        fail
+    ;   true
+    ).
+unsubscribe(WSID, Channel, SubChannel) :-
+    retractall(subscription_db(WSID, Channel, SubChannel)).
+
+
+		 /*******************************
+		 *        HIGH LEVEL DB		*
+		 *******************************/
 
 %!	visitor(?WSID) is nondet
 %
 %	True when WSID should be considered an active visitor.
 
 visitor(WSID) :-
-	visitor_session(WSID, _Session, _Token),
-	(   inactive(WSID, 30)
+    visitor(WSID, _).
+
+visitor(WSID, Consumer) :-
+    visitor_session(WSID, _Session, _Token, Consumer),
+    (   pending_visitor(WSID, 30)
 	->  fail
-	;   reap(WSID)
+    ;   reap(WSID, Consumer)
 	).
 
-:- if(current_predicate(hub_member/2)).
-reap(WSID) :-
+reap(WSID, _) :-
 	hub_member(swish_chat, WSID),
 	!.
-:- else.
-reap(_) :-
-	!.
-:- endif.
-reap(WSID) :-
+reap(WSID, Consumer) :-
+    use_redis,
+    !,
+    (   redis_consumer(Me)
+    ->  (   Me == Consumer
+        ->  reclaim_visitor(WSID),
+            fail
+        ;   true
+        )
+    ;   true
+    ).
+reap(WSID, _Consumer) :-            % non-redis setup
 	reclaim_visitor(WSID),
 	fail.
 
 visitor_count(Count) :-
+    use_redis,
+    !,
+    sync_active_wsid,
+    active_wsid_count(Count).
+visitor_count(Count) :-
 	aggregate_all(count, visitor(_), Count).
 
-%!	inactive(+WSID, +Timeout) is semidet.
+%!  pending_visitor(+WSID, +Timeout) is semidet.
 %
 %	True if WSID is inactive. This means   we lost the connection at
 %	least Timeout seconds ago.
 
-inactive(WSID, Timeout) :-
+pending_visitor(WSID, Timeout) :-
 	visitor_status(WSID, lost(Lost)),
 	get_time(Now),
 	Now - Lost > Timeout.
@@ -294,7 +603,8 @@ visitor_session(WSID, Session) :-
 %	True when WSID is associated with Visitor
 
 wsid_visitor(WSID, Visitor) :-
-	nonvar(WSID), !,
+    nonvar(WSID),
+    !,
 	visitor_session(WSID, Session),
 	session_user(Session, Visitor).
 wsid_visitor(WSID, Visitor) :-
@@ -309,12 +619,13 @@ wsid_visitor(WSID, Visitor) :-
 existing_visitor(WSID, Session, Token, TmpUser, UserData) :-
 	visitor_session(WSID, Session, Token),
 	session_user(Session, TmpUser),
-	visitor_data(TmpUser, UserData), !.
+    visitor_data(TmpUser, UserData),
+    !.
 existing_visitor(WSID, Session, Token, _, _) :-
-	retractall(visitor_session(WSID, Session, Token)),
+    visitor_session_reclaim_all(WSID, Session, Token),
 	fail.
 
-%%	create_visitor(+WSID, +Session, ?Token, -TmpUser, -UserData, +Options)
+%!  create_visitor(+WSID, +Session, ?Token, -TmpUser, -UserData, +Options)
 %
 %	Create a new visitor  when  a   new  websocket  is  established.
 %	Options provides information we have about the user:
@@ -328,7 +639,7 @@ existing_visitor(WSID, Session, Token, _, _) :-
 
 create_visitor(WSID, Session, Token, TmpUser, UserData, Options) :-
 	generate_key(Token),
-	assertz(visitor_session(WSID, Session, Token)),
+    visitor_session_create(WSID, Session, Token),
 	create_session_user(Session, TmpUser, UserData, Options).
 
 %!  generate_key(-Key) is det.
@@ -341,7 +652,7 @@ generate_key(Key) :-
 	phrase(base64url(Codes), Encoded),
 	atom_codes(Key, Encoded).
 
-%%	destroy_visitor(+WSID)
+%!  destroy_visitor(+WSID)
 %
 %	The web socket WSID has been   closed. We should not immediately
 %	destroy the temporary user as the browser may soon reconnect due
@@ -358,9 +669,10 @@ destroy_visitor(WSID) :-
 	(   Reason == unload
 	->  reclaim_visitor(WSID)
 	;   get_time(Now),
-	    assertz(visitor_status(WSID, lost(Now)))
+        visitor_status_set_lost(WSID, Now)
 	),
 	visitor_count(Count),
+    debug(chat(visitor), '~p left. Broadcasting ~d visitors', [WSID,Count]),
 	chat_broadcast(_{ type:removeUser,
 			  wsid:WSID,
 			  reason:Reason,
@@ -368,57 +680,56 @@ destroy_visitor(WSID) :-
 			}).
 
 destroy_reason(WSID, Reason) :-
-	retract(visitor_status(WSID, unload)), !,
+    visitor_status_del_unload(WSID),
+    !,
 	Reason = unload.
 destroy_reason(_, close).
 
 %!	gc_visitors
 %
-%	Reclaim all visitors with whom we   have lost the connection and
-%	the browser did not reclaim the selection within 5 minutes.
+%   Reclaim all visitors with whom we have   lost the connection and the
+%   browser did not reclaim the   session  within `session_lost_timeout`
+%   seconds.
 
 :- dynamic last_gc/1.
 
 gc_visitors :-
-	last_gc(Last),
+    swish_config(session_lost_timeout, TMO),
+    (   last_gc(Last),
 	get_time(Now),
-	Now-Last < 300, !.
-gc_visitors :-
-	with_mutex(gc_visitors, gc_visitors_sync).
+        Now-Last < TMO
+    ->  true
+    ;   with_mutex(gc_visitors, gc_visitors_sync(TMO))
+    ).
 
-gc_visitors_sync :-
+gc_visitors_sync(TMO) :-
 	get_time(Now),
 	(   last_gc(Last),
-	    Now-Last < 300
+        Now-Last < TMO
 	->  true
 	;   retractall(last_gc(_)),
 	    asserta(last_gc(Now)),
-	    do_gc_visitors
+        do_gc_visitors(TMO)
 	).
 
-do_gc_visitors :-
+do_gc_visitors(TMO) :-
 	forall(( visitor_session(WSID, _Session, _Token),
-		 inactive(WSID, 5*60)
+             pending_visitor(WSID, TMO)
 	       ),
 	       reclaim_visitor(WSID)).
 
 reclaim_visitor(WSID) :-
 	debug(chat(gc), 'Reclaiming idle ~p', [WSID]),
 	reclaim_visitor_session(WSID),
-	retractall(visitor_status(WSID, _Status)),
+    visitor_status_del(WSID),
 	unsubscribe(WSID, _).
 
 reclaim_visitor_session(WSID) :-
-	forall(retract(visitor_session(WSID, Session, _Token)),
+    forall(visitor_session_reclaim(WSID, Session),
 		       http_session_retractall(websocket(_, _), Session)).
 
-:- if(\+current_predicate(http_session_retractall/2)).
-http_session_retractall(Data, Session) :-
-	retractall(http_session:session_data(Session, Data)).
-:- endif.
 
-
-%%	create_session_user(+Session, -User, -UserData, +Options)
+%!  create_session_user(+Session, -User, -UserData, +Options)
 %
 %	Associate a user with the session. The user id is a UUID that is
 %	not associated with  any  persistent  notion   of  a  user.  The
@@ -429,22 +740,23 @@ http_session_retractall(Data, Session) :-
 
 create_session_user(Session, TmpUser, UserData, _Options) :-
 	session_user(Session, TmpUser),
-	visitor_data(TmpUser, UserData), !.
+    visitor_data(TmpUser, UserData),
+    !.
 create_session_user(Session, TmpUser, UserData, Options) :-
 	uuid(TmpUser),
 	get_visitor_data(UserData, Options),
-	assertz(session_user(Session, TmpUser)),
-	assertz(visitor_data(TmpUser, UserData)).
+    session_user_create(Session, TmpUser),
+    visitor_data_set(TmpUser, UserData).
 
 destroy_session_user(Session) :-
 	forall(visitor_session(WSID, Session, _Token),
 	       inform_session_closed(WSID, Session)),
-	retractall(visitor_session(_, Session, _)),
-	forall(retract(session_user(Session, TmpUser)),
+    visiton_session_del_session(Session),
+    forall(session_user_del(Session, TmpUser),
 	       destroy_visitor_data(TmpUser)).
 
 destroy_visitor_data(TmpUser) :-
-	(   retract(visitor_data(TmpUser, Data)),
+    (   visitor_data_del(TmpUser, Data),
 	    release_avatar(Data.get(avatar)),
 	    fail
 	;   true
@@ -459,7 +771,7 @@ inform_session_closed(WSID, Session) :-
 %!	update_visitor_data(+TmpUser, +Data, +Reason) is det.
 %
 %	Update the user data for the visitor   TmpUser  to Data. This is
-%	rather complicates due to all the   defaulting  rules. Reason is
+%   rather complicated due to all the   defaulting  rules. Reason is
 %	one of:
 %
 %	  - login
@@ -470,17 +782,20 @@ inform_session_closed(WSID, Session) :-
 %	@tbd Create a more declarative description  on where the various
 %	attributes must come from.
 
-update_visitor_data(TmpUser, _Data, logout) :- !,
+update_visitor_data(TmpUser, _Data, logout) :-
+    !,
 	anonymise_user_data(TmpUser, NewData),
 	set_visitor_data(TmpUser, NewData, logout).
 update_visitor_data(TmpUser, Data, Reason) :-
-	profile_reason(Reason), !,
+    profile_reason(Reason),
+    !,
 	(   visitor_data(TmpUser, Old)
 	;   Old = v{}
 	),
 	copy_profile([name,avatar,email], Data, Old, New),
 	set_visitor_data(TmpUser, New, Reason).
-update_visitor_data(TmpUser, _{name:Name}, 'set-nick-name') :- !,
+update_visitor_data(TmpUser, _{name:Name}, 'set-nick-name') :-
+    !,
 	visitor_data(TmpUser, Old),
 	set_nick_name(Old, Name, New),
 	set_visitor_data(TmpUser, New, 'set-nick-name').
@@ -495,7 +810,8 @@ copy_profile([H|T], New, Data0, Data) :-
 	copy_profile_field(H, New, Data0, Data1),
 	copy_profile(T, New, Data1, Data).
 
-copy_profile_field(avatar, New, Data0, Data) :-	!,
+copy_profile_field(avatar, New, Data0, Data) :-
+    !,
 	(   Data1 = Data0.put(avatar,New.get(avatar))
 	->  Data  = Data1.put(avatar_source, profile)
 	;   email_gravatar(New.get(email), Avatar),
@@ -508,7 +824,8 @@ copy_profile_field(avatar, New, Data0, Data) :-	!,
 			       anonymous_avatar:Avatar
 			      })
 	).
-copy_profile_field(email, New, Data0, Data) :- !,
+copy_profile_field(email, New, Data0, Data) :-
+    !,
 	(   NewMail = New.get(email)
 	->  update_avatar_from_email(NewMail, Data0, Data1),
 	    Data = Data1.put(email, NewMail)
@@ -537,15 +854,18 @@ set_nick_name(Data0, Name, Data) :-
 %	avatar.
 
 update_avatar_from_email(_, Data, Data) :-
-	Data.get(avatar_source) == profile, !.
+    Data.get(avatar_source) == profile,
+    !.
 update_avatar_from_email('', Data0, Data) :-
-	Data0.get(avatar_source) == email, !,
+    Data0.get(avatar_source) == email,
+    !,
 	noble_avatar_url(Avatar, []),
 	Data = Data0.put(_{avatar:Avatar, anonymous_avatar:Avatar,
 			   avatar_source:generated}).
 update_avatar_from_email(Email, Data0, Data) :-
 	email_gravatar(Email, Avatar),
-	valid_gravatar(Avatar), !,
+    valid_gravatar(Avatar),
+    !,
 	Data = Data0.put(avatar, Avatar).
 update_avatar_from_email(_, Data0, Data) :-
 	(   Avatar = Data0.get(anonymous_avatar)
@@ -571,7 +891,8 @@ anonymise_user_data(TmpUser, Data) :-
 	->  noble_avatar_url(Avatar, []),
 	    Data = _{anonymous_name:AName, anonymous_avatar:Avatar,
 		     name:AName, avatar:Avatar, avatar_source:generated}
-	), !.
+    ),
+    !.
 anonymise_user_data(_, Data) :-
 	noble_avatar_url(Avatar, []),
 	Data = _{anonymous_avatar:Avatar,
@@ -583,8 +904,7 @@ anonymise_user_data(_, Data) :-
 %	the changes.
 
 set_visitor_data(TmpUser, Data, Reason) :-
-	retractall(visitor_data(TmpUser, _)),
-	assertz(visitor_data(TmpUser, Data)),
+    visitor_data_set(TmpUser, Data),
 	inform_visitor_change(TmpUser, Reason).
 
 %!	inform_visitor_change(+TmpUser, +Reason) is det.
@@ -595,7 +915,8 @@ set_visitor_data(TmpUser, Data, Reason) :-
 %	websocket requests where we have the WSID.
 
 inform_visitor_change(TmpUser, Reason) :-
-	http_in_session(Session), !,
+    http_in_session(Session),
+    !,
 	public_user_data(TmpUser, Data),
 	forall(visitor_session(WSID, Session),
 	       inform_friend_change(WSID, Data, Reason)).
@@ -609,31 +930,17 @@ inform_friend_change(WSID, Data, Reason) :-
 			  wsid:WSID,
 			  reason:Reason
 			}.put(Data)),
-	hub_send(WSID, Message),
-	forall(viewing_same_file(WSID, Friend),
-	       ignore(hub_send(Friend, Message))).
+    send_friends(WSID, Message).
 
-viewing_same_file(WSID, Friend) :-
-	subscription(WSID, gitty, File),
-	subscription(Friend, gitty, File),
-	Friend \== WSID.
-
-%%	subscribe(+WSID, +Channel) is det.
+%!  subscribe(+WSID, +Channel) is det.
 
 subscribe(WSID, Channel) :-
 	subscribe(WSID, Channel, _SubChannel).
-subscribe(WSID, Channel, SubChannel) :-
-	(   subscription(WSID, Channel, SubChannel)
-	->  true
-	;   assertz(subscription(WSID, Channel, SubChannel))
-	).
 
 unsubscribe(WSID, Channel) :-
 	unsubscribe(WSID, Channel, _SubChannel).
-unsubscribe(WSID, Channel, SubChannel) :-
-	retractall(subscription(WSID, Channel, SubChannel)).
 
-%%	sync_gazers(+WSID, +Files:list(atom)) is det.
+%!  sync_gazers(+WSID, +Files:list(atom)) is det.
 %
 %	A browser signals it has Files open.   This happens when a SWISH
 %	instance is created as well  as   when  a SWISH instance changes
@@ -686,7 +993,7 @@ del_gazing1(WSID, File) :-
 	broadcast_event(closed(File), File, WSID),
 	unsubscribe(WSID, gitty, File).
 
-%%	add_user_details(+Message, -Enriched) is det.
+%!  add_user_details(+Message, -Enriched) is det.
 %
 %	Add additional information to a message.  Message must
 %	contain a `uid` field.
@@ -695,7 +1002,7 @@ add_user_details(Message, Enriched) :-
 	public_user_data(Message.uid, Data),
 	Enriched = Message.put(Data).
 
-%%	public_user_data(+UID, -Public:dict) is det.
+%!  public_user_data(+UID, -Public:dict) is det.
 %
 %	True when Public provides the   information  we publically share
 %	about UID. This is currently the name and avatar.
@@ -709,7 +1016,7 @@ public_user_data(UID, Public) :-
 	;   Public = _{}
 	).
 
-%%	get_visitor_data(-Data:dict, +Options) is det.
+%!  get_visitor_data(-Data:dict, +Options) is det.
 %
 %	Optain data for a new visitor.  Options include:
 %
@@ -768,7 +1075,7 @@ avatar_property(_Avatar, Source, avatar_source, Source).
 
 :- http_handler(swish('avatar/'), reply_avatar, [id(avatar), prefix]).
 
-%%	reply_avatar(+Request)
+%!  reply_avatar(+Request)
 %
 %	HTTP handler for Noble  Avatar   images.  Using  create_avatar/2
 %	re-creates avatars from the file name,  so we can safely discard
@@ -792,7 +1099,8 @@ reply_avatar(Request) :-
 
 
 noble_avatar_url(HREF, Options) :-
-	option(avatar(HREF), Options), !.
+    option(avatar(HREF), Options),
+    !.
 noble_avatar_url(HREF, _Options) :-
 	swish_config:config(avatars, noble),
 	!,
@@ -810,8 +1118,8 @@ noble_avatar_url(HREF, _Options) :-
 		 *	   BROADCASTING		*
 		 *******************************/
 
-%%	chat_broadcast(+Message) is det.
-%%	chat_broadcast(+Message, +Channel) is det.
+%!  chat_broadcast(+Message) is det.
+%!  chat_broadcast(+Message, +Channel) is det.
 %
 %	Send Message to all known SWISH clients. Message is a valid JSON
 %	object, i.e., a dict or option list.
@@ -820,17 +1128,33 @@ noble_avatar_url(HREF, _Options) :-
 %	where both Channel and SubChannel are atoms.
 
 chat_broadcast(Message) :-
+    use_redis,
+    !,
+    redis(swish, publish(swish:chat, chat(Message) as prolog)).
+chat_broadcast(Message) :-
+    chat_broadcast_local(Message).
+
+chat_broadcast(Message, Channel) :-
+    use_redis,
+    !,
+    redis(swish, publish(swish:chat, chat(Message, Channel) as prolog)).
+chat_broadcast(Message, Channel) :-
+    chat_broadcast_local(Message, Channel).
+
+
+chat_broadcast_local(Message) :-
 	debug(chat(broadcast), 'Broadcast: ~p', [Message]),
 	hub_broadcast(swish_chat, json(Message)).
 
-chat_broadcast(Message, Channel/SubChannel) :- !,
+chat_broadcast_local(Message, Channel/SubChannel) :-
+    !,
 	must_be(atom, Channel),
 	must_be(atom, SubChannel),
 	debug(chat(broadcast), 'Broadcast on ~p: ~p',
 	      [Channel/SubChannel, Message]),
 	hub_broadcast(swish_chat, json(Message),
 		      subscribed(Channel, SubChannel)).
-chat_broadcast(Message, Channel) :-
+chat_broadcast_local(Message, Channel) :-
 	must_be(atom, Channel),
 	debug(chat(broadcast), 'Broadcast on ~p: ~p', [Channel, Message]),
 	hub_broadcast(swish_chat, json(Message),
@@ -844,18 +1168,113 @@ subscribed(gitty, SubChannel, WSID) :-
 	swish_config:config(hangout, SubChannel),
 	\+ subscription(WSID, gitty, SubChannel).
 
+%!  send_friends(+WSID, +Message)
+%
+%   Send Message to WSID and all its friends.
+
+send_friends(WSID, Message) :-
+    use_redis,
+    !,
+    redis(swish, publish(swish:chat, send_friends(WSID, Message) as prolog)).
+send_friends(WSID, Message) :-
+    send_friends_local(WSID, Message).
+
+send_friends_local(WSID, Message) :-
+    hub_send_if_on_me(WSID, Message),
+    forall(distinct(viewing_same_file(WSID, Friend)),
+           ignore(hub_send_if_on_me(Friend, Message))).
+
+hub_send_if_on_me(WSID, Message) :-
+    hub_member(swish_chat, WSID),
+    !,
+    hub_send(WSID, Message).
+hub_send_if_on_me(_, _).
+
+viewing_same_file(WSID, Friend) :-
+    subscription(WSID, gitty, File),
+    subscription(Friend, gitty, File),
+    Friend \== WSID.
+
+
+		 /*******************************
+		 *      REDIS CONNNECTION       *
+		 *******************************/
+
+:- initialization
+    listen(redis(_, 'swish:chat', Message),
+           chat_message(Message)).
+
+chat_message(chat(Message)) :-
+    update_visitors(Message),
+    chat_broadcast_local(Message).
+chat_message(chat(Message, Channel)) :-
+    chat_broadcast_local(Message, Channel).
+chat_message(send_friends(WSID, Message)) :-
+    send_friends_local(WSID, Message).
+
+%!  update_visitors(+Msg) is det.
+%
+%   Maintain notion of active users  based on broadcasted (re)join and
+%   left messages.  We sync every 5 minutes to compensate for possible
+%   missed users.
+
+:- dynamic
+       (   last_wsid_sync/1,
+	   active_wsid/2
+       ) as volatile.
+
+update_visitors(Msg),
+  _{type:removeUser, wsid:WSID} :< Msg =>
+    retractall(active_wsid(WSID, _)).
+update_visitors(Msg),
+  _{type:joined, wsid:WSID} :< Msg,
+  \+ active_wsid(WSID, _) =>
+    asserta(active_wsid(WSID, Msg.get(consumer, -))).
+update_visitors(Msg),
+  _{type:rejoined, wsid:WSID} :< Msg,
+  \+ active_wsid(WSID, _) =>
+    asserta(active_wsid(WSID, Msg.get(consumer, -))).
+update_visitors(_) =>
+    true.
+
+sync_active_wsid :-
+    last_wsid_sync(Last),
+    get_time(Now),
+    Now-Last < 300,
+    !.
+sync_active_wsid :-
+    get_time(Now),
+    transaction(
+	(   retractall(last_wsid_sync(_)),
+	    asserta(last_wsid_sync(Now)))),
+    findall(WSID-Consumer, visitor(WSID, Consumer), Pairs),
+    transaction(
+	(   retractall(active_wsid(_,_)),
+	    forall(member(WSID-Consumer, Pairs),
+		   assertz(active_wsid(WSID, Consumer))))).
+
+active_wsid_count(Count) :-
+    predicate_property(active_wsid(_,_), number_of_clauses(Count)),
+    !.
+active_wsid_count(0).
+
+active_wsid_count(Consumer, Count) :-
+    aggregate(count, WSID^active_wsid(WSID, Consumer), Count).
+
 
 		 /*******************************
 		 *	     CHAT ROOM		*
 		 *******************************/
 
 create_chat_room :-
-	current_hub(swish_chat, _), !.
+    current_hub(swish_chat, _),
+    !.
 create_chat_room :-
 	with_mutex(swish_chat, create_chat_room_sync).
 
 create_chat_room_sync :-
-	current_hub(swish_chat, _), !.
+    current_hub(swish_chat, _),
+    !.
 create_chat_room_sync :-
 	hub_create(swish_chat, Room, _{}),
 	thread_create(swish_chat(Room), _, [alias(swish_chat)]).
@@ -878,12 +1297,15 @@ swish_chat_event(Room) :-
 	;   print_message(warning, goal_failed(handle_message(Message, Room)))
 	).
 
-%%	handle_message(+Message, +Room)
+%!  handle_message(+Message, +Room)
 %
-%	Handle incoming messages
+%   Handle incoming messages. This handles   messages from our websocket
+%   connections, i.e., this does  not  see   messages  on  other (Redis)
+%   instances.
 
 handle_message(Message, _Room) :-
-	websocket{opcode:text} :< Message, !,
+    websocket{opcode:text} :< Message,
+    !,
 	atom_json_dict(Message.data, JSON, []),
 	debug(chat(received), 'Received from ~p: ~p', [Message.client, JSON]),
 	WSID = Message.client,
@@ -892,30 +1314,34 @@ handle_message(Message, _Room) :-
 	    json_message(JSON, WSID),
 	    nb_delete(wsid)).
 handle_message(Message, _Room) :-
-	hub{joined:WSID} :< Message, !,
+    hub{joined:WSID} :< Message,
+    !,
 	debug(chat(visitor), 'Joined: ~p', [WSID]).
 handle_message(Message, _Room) :-
-	hub{left:WSID, reason:write(Lost)} :< Message, !,
+    hub{left:WSID, reason:write(Lost)} :< Message,
+    !,
 	(   destroy_visitor(WSID)
 	->  debug(chat(visitor), 'Left ~p due to write error for ~p',
 		  [WSID, Lost])
 	;   true
 	).
 handle_message(Message, _Room) :-
-	hub{left:WSID} :< Message, !,
+    hub{left:WSID} :< Message,
+    !,
 	(   destroy_visitor(WSID)
 	->  debug(chat(visitor), 'Left: ~p', [WSID])
 	;   true
 	).
 handle_message(Message, _Room) :-
-	websocket{opcode:close, client:WSID} :< Message, !,
+    websocket{opcode:close, client:WSID} :< Message,
+    !,
 	debug(chat(visitor), 'Left: ~p', [WSID]),
 	destroy_visitor(WSID).
 handle_message(Message, _Room) :-
 	debug(chat(ignored), 'Ignoring chat message ~p', [Message]).
 
 
-%%	json_message(+Message, +WSID) is det.
+%!  json_message(+Message, +WSID) is det.
 %
 %	Process a JSON message  translated  to   a  dict.  The following
 %	messages are understood:
@@ -933,34 +1359,41 @@ handle_message(Message, _Room) :-
 
 json_message(Dict, WSID) :-
 	_{ type: "subscribe",
-	   channel:ChannelS, sub_channel:SubChannelS} :< Dict, !,
+       channel:ChannelS, sub_channel:SubChannelS} :< Dict,
+    !,
 	atom_string(Channel, ChannelS),
 	atom_string(SubChannel, SubChannelS),
 	subscribe(WSID, Channel, SubChannel).
 json_message(Dict, WSID) :-
-	_{type: "subscribe", channel:ChannelS} :< Dict, !,
+    _{type: "subscribe", channel:ChannelS} :< Dict,
+    !,
 	atom_string(Channel, ChannelS),
 	subscribe(WSID, Channel).
 json_message(Dict, WSID) :-
 	_{ type: "unsubscribe",
-	   channel:ChannelS, sub_channel:SubChannelS} :< Dict, !,
+       channel:ChannelS, sub_channel:SubChannelS} :< Dict,
+    !,
 	atom_string(Channel, ChannelS),
 	atom_string(SubChannel, SubChannelS),
 	unsubscribe(WSID, Channel, SubChannel).
 json_message(Dict, WSID) :-
-	_{type: "unsubscribe", channel:ChannelS} :< Dict, !,
+    _{type: "unsubscribe", channel:ChannelS} :< Dict,
+    !,
 	atom_string(Channel, ChannelS),
 	unsubscribe(WSID, Channel).
 json_message(Dict, WSID) :-
-	_{type: "unload"} :< Dict, !,	% clean close/reload
+    _{type: "unload"} :< Dict,     % clean close/reload
+    !,
 	sync_gazers(WSID, []),
-	assertz(visitor_status(WSID, unload)).
+    visitor_status_set_unload(WSID).
 json_message(Dict, WSID) :-
-	_{type: "has-open-files", files:FileDicts} :< Dict, !,
+    _{type: "has-open-files", files:FileDicts} :< Dict,
+    !,
 	maplist(dict_file_name, FileDicts, Files),
 	sync_gazers(WSID, Files).
 json_message(Dict, WSID) :-
-	_{type: "reloaded", file:FileS, commit:Hash} :< Dict, !,
+    _{type: "reloaded", file:FileS, commit:Hash} :< Dict,
+    !,
 	atom_string(File, FileS),
 	event_html(reloaded(File), HTML),
 	Message = _{ type:notify,
@@ -971,11 +1404,13 @@ json_message(Dict, WSID) :-
 		   },
 	chat_broadcast(Message, gitty/File).
 json_message(Dict, WSID) :-
-	_{type: "set-nick-name", name:Name} :< Dict, !,
+    _{type: "set-nick-name", name:Name} :< Dict,
+    !,
 	wsid_visitor(WSID, Visitor),
 	update_visitor_data(Visitor, _{name:Name}, 'set-nick-name').
 json_message(Dict, WSID) :-
-	_{type: "chat-message", docid:DocID} :< Dict, !,
+    _{type: "chat-message", docid:DocID} :< Dict,
+    !,
 	chat_add_user_id(WSID, Dict, Message),
 	(   forbidden(Message, DocID, Why)
 	->  hub_send(WSID, json(json{type:forbidden,
@@ -1004,7 +1439,8 @@ dict_file_name(Dict, File) :-
 
 forbidden(Message, DocID, Why) :-
 	\+ swish_config:config(chat_spam_protection, false),
-	\+ ws_authorized(chat(post(Message, DocID)), Message.user), !,
+    \+ ws_authorized(chat(post(Message, DocID)), Message.user),
+    !,
 	Why = "Due to frequent spamming we were forced to limit \c
 	       posting chat messages to users who are logged in.".
 forbidden(Message, _DocID, Why) :-
@@ -1015,7 +1451,8 @@ forbidden(Message, _DocID, Why) :-
 forbidden(Message, _DocID, Why) :-
 	Payloads = Message.get(payload),
 	member(Payload, Payloads),
-	large_payload(Payload, Why), !.
+    large_payload(Payload, Why),
+    !.
 forbidden(Message, _DocID, Why) :-
 	\+ swish_config:config(chat_spam_protection, false),
 	eval_content(Message.get(text), _WC, Score),
@@ -1029,14 +1466,17 @@ large_payload(Payload, Why) :-
 	member(Selection, Selections),
 	(   string_length(Selection.get(string), SelLen), SelLen > 500
 	;   string_length(Selection.get(context), SelLen), SelLen > 500
-	), !,
+    ),
+    !,
 	Why = "Selection too long (max. 500 characters)".
 large_payload(Payload, Why) :-
-	string_length(Payload.get(query), QLen), QLen > 1000, !,
+    string_length(Payload.get(query), QLen), QLen > 1000,
+    !,
 	Why = "Query too long (max. 1000 characters)".
 
 user_score(Message, MsgScore, Cummulative, Count) :-
-	Profile	= Message.get(user).get(profile_id), !,
+    Profile = Message.get(user).get(profile_id),
+    !,
 	block(Profile, MsgScore, Cummulative, Count).
 user_score(_, _, 0, 1).
 
@@ -1048,7 +1488,8 @@ user_score(_, _, 0, 1).
 	blocked/4.
 
 block(User, Score, Cummulative, Count) :-
-	blocked(User, Score0, Count0, Time), !,
+    blocked(User, Score0, Count0, Time),
+    !,
 	get_time(Now),
 	Cummulative = Score0*(0.5**((Now-Time)/600)) + Score,
 	Count is Count0 + 1,
@@ -1068,7 +1509,7 @@ block(User, Score, Score, 1) :-
 %	Decorate a message with the user credentials.
 
 chat_add_user_id(WSID, Dict, Message) :-
-	visitor_session(WSID, Session, _Token),
+    visitor_session(WSID, Session),
 	session_user(Session, Visitor),
 	visitor_data(Visitor, UserData),
 	User0 = u{avatar:UserData.avatar,
@@ -1131,7 +1572,7 @@ chat_send(Message) :-
 :- unlisten(swish(_)),
    listen(swish(Event), chat_event(Event)).
 
-%%	chat_event(+Event) is semidet.
+%!  chat_event(+Event) is semidet.
 %
 %	Event happened inside SWISH.  Currently triggered events:
 %
@@ -1147,7 +1588,8 @@ chat_event(Event) :-
 	broadcast_event(Event),
 	http_session_id(Session),
 	debug(event, 'Event: ~p, session ~q', [Event, Session]),
-	event_file(Event, File), !,
+    event_file(Event, File),
+    !,
 	(   visitor_session(WSID, Session),
 	    subscription(WSID, gitty, File)
 	->  true
@@ -1156,16 +1598,28 @@ chat_event(Event) :-
 	;   WSID = undefined
 	),
 	session_broadcast_event(Event, File, Session, WSID).
-chat_event(logout(_ProfileID)) :- !,
+chat_event(logout(_ProfileID)) :-
+    !,
 	http_session_id(Session),
 	session_user(Session, User),
 	update_visitor_data(User, _, logout).
 chat_event(visitor_count(Count)) :-		% request
 	visitor_count(Count).
+chat_event(visitor_count(Cluster, Local)) :-             % request
+    visitor_count(Cluster),
+    (   use_redis,
+        redis_consumer(Consumer)
+    ->  (   active_wsid_count(Consumer, Local)
+        ->  true
+        ;   Local = 0
+        )
+    ;   Local = Cluster
+    ).
 
 :- if(current_predicate(current_profile/2)).
 
-chat_event(profile(ProfileID)) :- !,
+chat_event(profile(ProfileID)) :-
+    !,
 	current_profile(ProfileID, Profile),
 	http_session_id(Session),
 	session_user(Session, User),
@@ -1186,14 +1640,14 @@ propagate_profile_change(ProfileID, _, _) :-
 
 :- endif.
 
-%%	broadcast_event(+Event) is semidet.
+%!  broadcast_event(+Event) is semidet.
 %
 %	If true, broadcast this event.
 
-broadcast_event(updated(_File, _From, _To)).
+broadcast_event(updated(_File, _Commit)).
 
 
-%%	broadcast_event(+Event, +File, +WSID) is det.
+%!  broadcast_event(+Event, +File, +WSID) is det.
 %
 %	Event happened that is related to File  in WSID. Broadcast it to
 %	subscribed users as a notification. Always succeeds, also if the
@@ -1203,7 +1657,8 @@ broadcast_event(updated(_File, _From, _To)).
 
 broadcast_event(Event, File, WSID) :-
 	visitor_session(WSID, Session),
-	session_broadcast_event(Event, File, Session, WSID), !.
+    session_broadcast_event(Event, File, Session, WSID),
+    !.
 broadcast_event(_, _, _).
 
 session_broadcast_event(Event, File, Session, WSID) :-
@@ -1220,7 +1675,7 @@ session_broadcast_event(Event, File, Session, WSID) :-
 	add_user_details(Message0, Message),
 	chat_broadcast(Message, gitty/File).
 
-%%	event_html(+Event, -HTML:string) mis det.
+%!  event_html(+Event, -HTML:string) is det.
 %
 %	Describe an event as an HTML  message   to  be  displayed in the
 %	client's notification area.
@@ -1237,7 +1692,7 @@ event_message(created(File)) -->
 	html([ 'Created ', \file(File) ]).
 event_message(reloaded(File)) -->
 	html([ 'Reloaded ', \file(File) ]).
-event_message(updated(File, _From, _To)) -->
+event_message(updated(File, _Commit)) -->
 	html([ 'Saved ', \file(File) ]).
 event_message(deleted(File, _From, _To)) -->
 	html([ 'Deleted ', \file(File) ]).
@@ -1255,7 +1710,7 @@ event_message(download(Store, FileOrHash, Format)) -->
 file(File) -->
 	html(a(href('/p/'+File), File)).
 
-%%	event_file(+Event, -File) is semidet.
+%!  event_file(+Event, -File) is semidet.
 %
 %	True when Event is associated with File.
 
@@ -1303,13 +1758,14 @@ html_string(HTML, String) :-
 		 *	       UI		*
 		 *******************************/
 
-%%	notifications(+Options)//
+%!  notifications(+Options)//
 %
 %	The  chat  element  is  added  to  the  navbar  and  managed  by
 %	web/js/chat.js
 
 notifications(_Options) -->
-	{ swish_config:config(chat, true) }, !,
+    { swish_config:config(chat, true) },
+    !,
 	html(div(class(chat),
 		 [ div(class('chat-users'),
 		       ul([ class([nav, 'navbar-nav', 'pull-right']),
@@ -1331,7 +1787,8 @@ broadcast_bell(_Options) -->
 	{ swish_config:config(chat, true),
 	  swish_config:config(hangout, Hangout),
 	  atom_concat('gitty:', Hangout, HangoutID)
-	}, !,
+    },
+    !,
 	html([ a([ class(['dropdown-toggle', 'broadcast-bell']),
 		   'data-toggle'(dropdown)
 		 ],

@@ -354,7 +354,9 @@ lambda_free(Free) :-
 lambda_free({_}) :- !.
 lambda_free({}) :- !.
 lambda_free(Free) :-
+    trace,
     type_error(lambda_free, Free).
+%lambda_free(_):- trace.
 
 %!  expand_lambda(+Goal, -Head) is semidet.
 %

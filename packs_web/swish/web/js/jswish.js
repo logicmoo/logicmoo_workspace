@@ -51,6 +51,8 @@ define(["jquery",
   "preferences",
   "history",
   "modal",
+	 "backend",
+
   "chat",
   "splitter",
   "bootstrap",
@@ -79,6 +81,7 @@ define(["jquery",
   preferences.setDefault("ace-editor", false);
   preferences.setDefault("monaco-editor", false);
   preferences.setDefault("preserve-state", false);
+  preferences.setDefault("auto-binding-layout", true);
   preferences.setInform("preserve-state", ".unloadable");
 
   window.setupPanesOnce = false;
@@ -1136,6 +1139,14 @@ define(["jquery",
         $.error('Method ' + method + ' does not exist on jQuery.' + pluginName);
       }
     };
+  $.fn.swish.methods = methods;
   }(jQuery));
+
+	 return {
+	   swish: $("body"),
+	   trigger: function(name, data) {
+	     this.swish.swish('trigger', name, data);
+	   }
+	 };
 
 }); // define()

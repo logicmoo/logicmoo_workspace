@@ -42,8 +42,9 @@
  * @requires jquery
  */
 
-define([ "jquery", "config", "form", "modal", "laconic" ],
-       function($, config, form, modal) {
+define([ "jquery", "config", "form", "modal", "backend",
+	 "laconic" ],
+       function($, config, form, modal, backend) {
 
 (function($) {
   var pluginName = 'sourcelist';
@@ -105,8 +106,8 @@ define([ "jquery", "config", "form", "modal", "laconic" ],
       this[pluginName]('check_cache');
 
       if ( (reply = from_cache(query_cache, query)) ) {
-	$.ajax({
-	  url: config.http.locations.source_modified,
+	backend.ajax(
+	  { url: config.http.locations.source_modified,
 	  dataType: "json",
 	  success: function(json) {
 	    if ( json.modified < reply.modified+10 ) {
@@ -132,8 +133,8 @@ define([ "jquery", "config", "form", "modal", "laconic" ],
 	pending.push(query);
 	elem[pluginName]('busy', true);
 
-	$.ajax({
-	  url: config.http.locations.source_list,
+	backend.ajax(
+	  { url: config.http.locations.source_list,
 	  data: query,
 	  dataType: "json",
 	  success: function(reply) {

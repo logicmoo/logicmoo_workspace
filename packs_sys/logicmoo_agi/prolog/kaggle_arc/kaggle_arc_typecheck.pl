@@ -4,6 +4,7 @@
   This work may not be copied and used by anyone other than the author Douglas Miles
   unless permission or license is granted (contact at business@logicmoo.org)
 */
+:- encoding(iso_latin_1).
 :- include(kaggle_arc_header).
 
 kaggle_arc_pred(M,P):- 

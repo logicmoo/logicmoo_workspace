@@ -29,6 +29,7 @@
   write_html/1,
   bfly_tests/0,
   send_tokens/1,
+  sccs/3,
   pre_style/0,mouse_over_span/0]).
 :- endif.
 :- endif.
@@ -41,6 +42,7 @@
   write_html/1,
   bfly_tests/0,
   bfly/0,
+  sccs/3,
   print_raw_html_page/1,
   send_tokens/1,
   pre_style/0,mouse_over_span/0]).
@@ -68,7 +70,7 @@ wbfc(Goal):-with_butterfly_console(t,Goal).
 :- meta_predicate(with_butterfly_console(+,0)).
 with_butterfly_console(TF,Goal):- in_bfly(TF,Goal). 
 %with_butterfly_console(TF,Goal):- thread_self(X), %retractall(lmcache:is_butterfly_thread(X,_)),
-%  setup_call_cleanup(asserta(lmcache:is_butterfly_thread(X,TF),Ref),Goal,erase(Ref)).
+%  sccs(asserta(lmcache:is_butterfly_thread(X,TF),Ref),Goal,erase(Ref)).
 
 is_butterfly_console:- toplevel_pp(bfly),!.
 is_butterfly_console:- thread_self(X), lmcache:is_butterfly_thread(X,TF),!,TF==t.
@@ -240,11 +242,11 @@ as_html_encoded(Goal):- with_enc(utf8,Goal).
 
 with_enc(Enc,Goal):-
  stream_property(current_output,encoding(Was)),
- setup_call_cleanup(current_prolog_flag(encoding,EncWas),
+ sccs(current_prolog_flag(encoding,EncWas),
  (( ignore(catch(set_prolog_flag(encoding,Enc),_,true)),
     current_prolog_flag(encoding,EncNew),
      locally(set_prolog_flag(encoding,EncNew),
- setup_call_cleanup(
+ sccs(
        set_stream_encoding(Enc),
    Goal,
        set_stream_encoding(Was))))),
@@ -271,12 +273,13 @@ bfly_portray(X):-
 :- meta_predicate(in_bfly(+,0)).
 in_bfly(TF,Goal):- 
   bfly_get(butterfly,Was),
-  setup_call_cleanup(
+  sccs(
     bfly_set(butterfly,TF),
     Goal,
     bfly_set(butterfly,Was)),!.
 
 :- meta_predicate(in_pp_html(0)).
+in_pp_html(Goal):- wants_html,!,locally(t_l:print_mode(html),Goal).
 in_pp_html(Goal):- with_pp(bfly,Goal).
 
 bfly_ask_style(E):- maybe_into_number(E,Num), bfly_ask_style(E, Num).
@@ -320,7 +323,7 @@ tty_to_output_style(_,   ansi).
 bfly_html_goal(Goal):- bfly_in_out(Goal).
 
 bfly_write_h(S0):- !, bfly_write_hs(S0).
-bfly_write_h(S0):- prepend_trim_for_html(S0,SM), prepend_trim(SM,S), bfly_write_s(S),!.
+bfly_write_h(S0):- prepend_trim_for_html(S0,SM), prepend_trim(SM,S), bfly_write_hs(S),!.
 
 %bfly_write_hs(S):- bfly_in_out(write(S)),!.
 bfly_write_hs(S):- \+string(S),sformat(SS,'~w',[S]),!,bfly_write_hs(SS).
@@ -395,20 +398,28 @@ correct_html_len1(S,S).
 
 
 :- meta_predicate(bfly_out_in(0)).
-bfly_out_in(Goal):- inside_bfly_html_esc -> setup_call_cleanup(bfly_out, wotso(Goal), bfly_in) ; call(Goal).
+bfly_out_in(Goal):- inside_bfly_html_esc -> sccs(bfly_out, wotso(Goal), bfly_in) ; call(Goal).
 
 %:- meta_predicate(bfly_in_out(0)). 
-%bfly_in_out(Goal):- (inside_bfly_html_esc;in_pp(http)) -> call(Goal) ;  setup_call_cleanup(bfly_in, call(Goal), bfly_out).
+%bfly_in_out(Goal):- (inside_bfly_html_esc;in_pp(http)) -> call(Goal) ;  sccs(bfly_in, call(Goal), bfly_out).
 
 :- meta_predicate(bfly_in_out(0)).
 bfly_in_out(Goal):- in_pp(http),!,call(Goal).
 bfly_in_out(Goal):- is_string_output,!,call(Goal).
 % bfly_in_out(Goal):- inside_bfly_html_esc -> call(Goal) ;  (locally(bfly_tl:bfly_setting('$bfly_style_html_esc',t),wots(S,Goal)),our_pengine_output(S)).
 bfly_in_out(Goal):- inside_bfly_html_esc -> call(Goal) ; 
-  setup_call_cleanup(bfly_in,
+  sccs(bfly_in,
     locally(bfly_tl:bfly_setting('$bfly_style_html_esc',t),Goal), bfly_out). % our_pengine_output(S)).
 
 bflyw:-!.
+
+:- meta_predicate(sccs(:,0,:)).
+:- export(sccs/3).
+sccs(A,B,C):- setup_call_cleanup(sccs_log_error(A),once(B),sccs_log_error(C)),!.
+sccs_log_error(B):- catch(B,E,sccs_log_error(B,E)),!.
+%sccs_log_error(_,error(socket_error(epipe,_),_)):-!.
+sccs_log_error(B,E):- writeq_ue(sccs_log_error(B,E)).
+writeq_ue(P):- stream_property(O,file_no(2)), writeq(O,P),nl(O),flush_output(O). %%,ttyflush.
 
 ccls:- cls,bfly_write(ansi,escape_from_screen([call(cls)])).
 
@@ -416,11 +427,11 @@ bfly_title(_Title):- (toplevel_pp(swish);toplevel_pp(http)),!.
 bfly_title(Title):- escape_from_screen(format("\e]2;~w\a",[Title])).
 
 %with_html_mode(Goal):- nb_current(isHtmlMode,t)-> call(Goal);
-%  setup_call_cleanup(bfly_title("+HtmlMode"),locally(nb_setval(isHtmlMode,t),Goal),bfly_title("-HtmlMode")).
+%  sccs(bfly_title("+HtmlMode"),locally(nb_setval(isHtmlMode,t),Goal),bfly_title("-HtmlMode")).
 
 :- nb_setval(isMonospace,nil).
 with_monospace(Goal):- nb_current(isMonospace,t)-> call(Goal);
-  setup_call_cleanup(bfly_title("+Monospace"),locally(nb_setval(isMonospace,t),Goal),bfly_title("-Monospace")).
+  sccs(bfly_title("+Monospace"),locally(nb_setval(isMonospace,t),Goal),bfly_title("-Monospace")).
 
 %bfly_in  :- flag('$inside_bfly_html_esc_level',X,X+1), ignore((X == 0, bfly_in_f)).
 bfly_in  :- ignore(( \+ inside_bfly_html_esc, set_bfly_style('html_esc',t),!,bfly_write(_,[escape_from_screen([esc(80),';HTML|'])]))).
@@ -458,7 +469,8 @@ pre_tag = preformat text with HTML embedded
 %bformat(P):- compound(P),wots((S),post_html(P)),bfly_write_html(S),!.
 
 %write_direct(S):- in_swish,!, pengines:pengine_output(S).
-write_direct(S):- pformat(S).
+write_direct(S):- write(S).
+%write_direct(S):- pformat(S).
 
 %bformat(P):- atom(P),sformat_safe(S,P,[]),!,bformat(S).
 %bformat(S):- string(S),atom_concat(PL,'\n',S),!,bformat(PL).
@@ -544,7 +556,7 @@ bfly_write1(_Styl,X):-!, pformat(X).
 
 :- meta_predicate(esc_screen(0)).
 esc_screen(X):- Style=current,
-  setup_call_cleanup(
+  sccs(
    bfly_write(Style,when_in_screen(esc(80))),
    call(X),
    bfly_write(Style,when_in_screen(esc(97)))).
@@ -598,7 +610,7 @@ bfly_to_all_pts(S):-
 bfly_to_pts(E,S):- ignore((tty_to_output_style(E,Style),!,bfly_to_pts(E,Style,S))).
 
 bfly_to_pts(E,Style,S):-
- setup_call_cleanup(
+ sccs(
    open_for_output(E,Style,Out,OnExit),
    with_output_to(Out,bfly_write(Style,S)),
    OnExit),!.

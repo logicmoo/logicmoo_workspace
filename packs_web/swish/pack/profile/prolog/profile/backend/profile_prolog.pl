@@ -114,7 +114,8 @@ impl_current_profile(ProfileID, Attributes) :-
 		impl_profile_prolog_profile:
 		    profile_attribute(ProfileID, Name, Value),
 		Pairs),
-	dict_pairs(Attributes, user_profile, Pairs).
+	sort(1, @>, Pairs, Pairs1),
+	dict_pairs(Attributes, user_profile, Pairs1).
 
 %%	impl_profile_property(?ProfileID, ?Attribute)
 

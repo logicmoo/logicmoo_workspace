@@ -7,6 +7,7 @@ This notebook gives an overview of example programs for inference.
 Example files ending with =R= contain graphics elements produced by R.
 
 Examples divided by features:
+  - Abduction: [eruption_abduction.pl](example/inference/eruption_abduction.pl), [abd_graph.pl](example/inference/abd_graph.pl)
   - MPE inference: [bag_mpe.pl](example/inference/bag_mpe.pl), 
     [bag_game_mpe.pl](example/inference/bag_game_mpe.pl), [eruption_mpe.pl](example/inference/eruption_mpe.pl)
   - MAP inference: [bag_1.pl](example/inference/bag_1.pl)

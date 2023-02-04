@@ -23,13 +23,13 @@ D=fill_area
 */
 :- decl_pt(most_d_colors(grid,color,grid)).
 most_d_colors(Grid,ColorO,GridNM):-
-  %trace,
+  %atrace,
  
   get_fill_points(Grid,Points,GridNM),
   uneib(Points,FPoints),
   % grid_size(GridNM,H,V), pp(fillPoints(H,V) = FPoints),
-  sort(FPoints,NPSS),
-  %trace,
+  sort_safe(FPoints,NPSS),
+  %atrace,
   % (N2-C)-P1
   maplist(arg(1),NPSS,Colors),
   clumped(Colors,CColors),
@@ -49,6 +49,7 @@ maybe_make_bg_visible(In,Grid):- make_bg_visible(In,Grid),!,In\=@=Grid.
 
 %make_bg_visible(In,Grid):- var(In),!,Grid=In.
 %make_bg_visible(In,Grid):- !, duplicate_term(In,Grid),!.
+make_bg_visible(In,Grid):- arc_html,!,In=Grid.
 make_bg_visible(In,Grid):- duplicate_term(In,In0),subst001(In0,blue,'#6666FF',M),
   make_bg_visible_b(M,Grid).
 /*
@@ -68,7 +69,7 @@ make_bg_visible_b(In,Grid):- make_bg_visible_c(In,Grid).
 
 make_bg_visible_c(In,wbg):- plain_var(In),!.
 make_bg_visible_c(In,In):- var(In),!.
-make_bg_visible_c(In,Grid):- get_black(Black),subst001(In,Black,'#301030',Grid).
+make_bg_visible_c(In,Grid):- get_black(Black),subst001(In,Black,'#201020',Grid).
 
 
 
@@ -125,7 +126,7 @@ uneib(X,X).
 
 
 
-show_call_tf(G):- functor(G,F,_),\+ \+ (call(G)->wdmsg(F=true);wdmsg(F=false)).
+show_call_tf(G):- functor(G,F,_),\+ \+ (call(G)->u_dmsg(F=true);u_dmsg(F=false)).
 
 test_most_d_colors:- clsmake, forall(rp_test(G),show_most_d_colors(G)).
 show_most_d_colors(G):- 
@@ -211,13 +212,15 @@ neighbor_map1(H,V,[NC-P1|Ps],Points,[(N-C)-P1|Ps2]):-
   nei_map(H,V,C,P1,Points,N),
   neighbor_map1(H,V,Ps,Points,Ps2))).
 
-only_color_data(C,_):- var(C),!,fail.
-only_color_data(C,C):- is_unreal_color(C),!.
+only_color_data_or_atom(OC,C):- only_color_data(OC,C),!.
+only_color_data_or_atom(C,C).
 only_color_data(C,C):- is_color(C),!.
+only_color_data(C,C):- is_unreal_color(C),!.
+only_color_data(C,C):- var(C),!.
 only_color_data(NC,NC):- \+ compound(NC),!,fail.
+only_color_data(C-P,C):- var(C),is_nc_point(P),!.
 only_color_data(OC,C):- sub_term(C,OC),is_colorish(C),!.
-only_color_data(C-P,C):- is_nc_point(P),!.
-only_color_data(_-O,C):- only_color_data(O,C).
+%only_color_data(_-O,C):- only_color_data(O,C).
 
 only_point_data(NC,NC):- \+ compound(NC),!.
 only_point_data(_-C,NC):- only_point_data(C,NC).
@@ -421,7 +424,7 @@ map_neib_ex([_,sw],_,U):- curvDU(U).
 */
 
 
-same_sets(S1,S2):- sort(S1,SS1),sort(S2,SS2),SS1==SS2.
+same_sets(S1,S2):- sort_safe(S1,SS1),sort_safe(S2,SS2),SS1==SS2.
 
 map_neib_u1([n,s,e,w],[ne,se,nw,sw],'0').
 

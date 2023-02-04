@@ -1,12 +1,3 @@
-/* <module> xlisting_web
-% Provides /logicmoo runtime preds browsing
-%
-%
-% Logicmoo Project PrologMUD: A MUD server written in Prolog
-% Maintainer: Douglas Miles
-% Dec 13, 2035
-%
-*/
 % :-module(xlisting_web,[ensure_sigma/0,search4term/0]).
 %:- if(( ( \+ ((current_prolog_flag(logicmoo_include,Call),Call))) )). 
 :- module(xlisting_web,
@@ -29,12 +20,17 @@
             edit1term/0,
             output_telnet_console/1,
             edit1term/1,
+            in_pre/0,
+            with_pre/1,
+            with_tag/2,
             find_cl_ref/2,
             find_ref/2,
             fmtimg/3,
             'functor spec'/4,
             functor_to_color/2,
             functor_to_color/4,
+
+            atom_to_term_safe/3,
             
             get_http_current_request/1,
             get_http_session/1,
@@ -108,7 +104,7 @@
             search_filter_name_comment/3,
             section_close/1,
             section_open/1,
-            sensical_nonvar/1,
+            sensical_term/1,
             %send_tokens/1,
             session_checkbox/3,
             session_checked/1,
@@ -140,7 +136,7 @@
             write_atom_link/1,
             write_atom_link/2,
             write_atom_link/3,
-            write_begin_html/1,
+            write_begin_html/2,
             write_end_html/0,
             write_oper/5,
             write_out/5,
@@ -162,6 +158,15 @@
           ]).
 
 :- set_module(class(library)).
+/** <module> xlisting_web
+% Provides /logicmoo runtime preds browsing
+%
+%
+% Logicmoo Project PrologMUD: A MUD server written in Prolog
+% Maintainer: Douglas Miles
+% Dec 13, 2035
+%
+*/
 /*
 :- system:use_module(library(hook_database)).
 :- system:use_module(library(logicmoo/no_repeats)).
@@ -173,23 +178,24 @@
 
 :- dynamic user:library_directory/1.
 :- multifile user:library_directory/1.
-hide_xpce_library_directory:- fail,
+hide_xpce_library_directory:- 
   user:library_directory(X),
   atom(X),
   atom_concat(_,'xpce/prolog/lib/',X),!,
   retract((user:library_directory(X))),
   assert((user:library_directory(X):- \+ current_prolog_flag(hide_xpce_library_directory,true))).
 hide_xpce_library_directory.
+%:- hide_xpce_library_directory.
 
 %:- hide_xpce_library_directory.
-:- set_prolog_flag(hide_xpce_library_directory,true).
+:- set_prolog_flag(hide_xpce_library_directory,false).
 
 %:- ensure_loaded(library(logicmoo_swilib)).
 :- system:use_module(library(http/thread_httpd)).
 :- system:use_module(thread_httpd:library(http/http_dispatch)).
+:- system:use_module(library(http/http_dispatch)).
 %:- use_module(library(http/http_dispatch))
 :- system:use_module(swi(library/http/html_head)).
-:- system:use_module(library(http/http_dispatch)).
 :- system:use_module(library(http/http_path)).
 :- system:use_module(library(http/http_log)).
 :- system:use_module(library(http/http_client)).
@@ -204,7 +210,7 @@ hide_xpce_library_directory.
 
 
 :- system:use_module(library(predicate_streams)).
-:- system:use_module(library(logicmoo/with_no_x)).
+%:- system:use_module(library(logicmoo/with_no_x)).
 :- system:use_module(library(logicmoo/each_call)).
 %:- system:use_module(library(logicmoo/butterfly_console)).
 
@@ -294,11 +300,29 @@ suppliment_cp_menu:-
 
 :- suppliment_cp_menu.
 
-:- export(write_cmd_link/1).
-:- export(write_cmd_link/2).
-do_sort_menu_popups(Menu, Menu):- !.
-do_sort_menu_popups(I, O):- cp_menu:sort_menu_popups(I,O).
+:- multifile
+	cp_menu:menu_item/2,
+	cp_menu:menu_popup_order/2.
+:- dynamic
+	cp_menu:menu_item/2,
+	cp_menu:menu_popup_order/2.
 
+
+:- retractall(cp_menu:menu_item(_, 'XListing Web')).
+%:- asserta(cp_menu:menu_item(500=swish/swish, 'Swish')).
+:- asserta(cp_menu:menu_item('/swish/lm_xref/',	'XListing')).
+%:- asserta(cp_menu:menu_item(700=places/swish/lm_xref, 'XListing Web')).
+
+do_sort_menu_popups(List, Sorted) :-
+	map_list_to_pairs(our_popup_order, List, Keyed),
+	keysort(Keyed, KeySorted),
+	pairs_values(KeySorted, Sorted).
+
+our_popup_order(Key-Members, Order-(Key-Members)) :-
+	(   cp_menu:menu_popup_order(Key, Order)
+	->  true
+	;   Order = 550			% between application and help
+	).
 
 :- dynamic(baseKB:param_default_value/2).
 :- kb_global(baseKB:param_default_value/2).
@@ -441,7 +465,7 @@ baseKB:param_default_value(fa,'tHumanHead').
 
 :- forall(
   member(N=V,[
-     webproc=edit1term,
+     cmd=edit1term,
      'prover'='proverPTTP',
      'apply'='fa',
      'term'='',
@@ -563,7 +587,7 @@ xaction_menu_item('NonMonotonic',"Treat $item NonMonotonic").
 print_request([]).
 print_request([H|T]) :-
         H =.. [Name, Value],
-        format(user_error,'<tr><td>~w<td>~w~n', [Name, Value]),
+        format('<tr><td>~w<td>~w~n', [Name, Value]),
         print_request(T).
 
 
@@ -617,7 +641,7 @@ save_in_session(NV):- dmsg(not_save_in_session(NV)),!.
 %
 
 save_in_session(Search,List):-is_list(List),member(Search,[search,cookie]),once(save_in_session(List)),fail.
-save_in_session(Unsaved,_):- member(Unsaved,[session_data,request_uri,search,pool,path,input,session]),!.
+save_in_session(Unsaved,_):- member(Unsaved,[session_data,request_uri,search,pool,path,input,cmd,session]),!.
 save_in_session(_,V):- sub_term(Sub,V),nonvar(Sub),is_stream(Sub),!.
 save_in_session(N,V):- get_http_session(S), save_in_session(S, N,V),!.
 
@@ -642,9 +666,43 @@ save_in_session(S,N,V):- dmsg(not_save_in_session(S,N,V)),!.
 %
 % Show Http Session.
 %
-show_http_session:- get_http_session(S),listing(http_session:session_data(S,_NV)).
-  
+show_http_session:- get_http_session(S),with_pre(listing(http_session:session_data(S,_NV))).
 
+in_pre:- in_tag(pre).
+in_tag(Tag):- nb_current('$html_tags',[Tag|_]),!.
+in_tag(pp(PP)):- in_pp(PP),!.
+:- meta_predicate(with_pre(0)).
+with_pre(G):- with_tag('pre',G).
+:- meta_predicate(with_tag(+,0)).
+
+with_tag(Tag,GL):- is_list(GL),!,maplist(with_tag(Tag),GL).
+with_tag(Tag,G):- must_det_ll(call(xlisting_web:is_taglike,Tag)),
+  once(nb_current('$html_tags',Was);Was=[]),
+    locally(nb_setval('$html_tags',[Tag|Was]), 
+    sccs((write('<'),write(Tag),write('>')),once(G),
+     (write('</'),write(Tag),write('>')))).
+
+:- meta_predicate(with_tag_props(+,+,0)).
+with_tag_props(Tag,Props,GL):- is_list(GL),!,maplist(with_tag_props(Tag,Props),GL).
+with_tag_props(Tag,Props,G):- is_list(Props),!,
+  must_det_ll(wots(S,maplist(print_att_val,Props))),with_tag_props(Tag,S,G).
+with_tag_props(Tag,Props,G):- 
+  must_det_ll(call(xlisting_web:is_taglike,Tag)),
+  once(nb_current('$html_tags',Was);Was=[]),
+    locally(nb_setval('$html_tags',[Tag|Was]), 
+    sccs((write('<'),write(Tag),write(' '),write(Props),write('>')),once(G),
+     (write('</'),write(Tag),write('>')))).
+
+print_att_val(A=V):-!,print_att_val(A,V).
+print_att_val(A,V):- format(' ~w="~w"',[A,V]).
+
+
+:- export(is_taglike/1).
+is_taglike(H):- atom(H), atom_length(H,N), N>0.
+:- meta_predicate(with_tag_class(+,+,0)).
+with_tag_class(Tag,Class,Goal):- sformat(S,'class="~w"',[Class]), with_tag_props(Tag,S,Goal).
+:- meta_predicate(with_tag_style(+,+,0)).
+with_tag_style(Tag,Style,Goal):- sformat(S,'style="~w"',[Style]), with_tag_props(Tag,S,Goal).
 
 
 
@@ -740,14 +798,17 @@ fake_req(R):-
   [session('f505-37db-4b08-2150.gitlab'),protocol(http),peer(ip(10,0,0,122)),
    pool(client(TID,user:http_dispatch,IOS,IOS)),
    input(IOS), method(get),
-   request_uri('/swish/lm_xref/?cmd=is_detatched_thread'),path('/swish/lm_xref/'),
-   search([cmd=is_detatched_thread]),http_version(1-1),host('127.0.0.1'),port(3020),
+
+   request_uri('/swish/lm_xref/?cmd=is_detatched_thread'),path('/swish/lm_xref/'),search([cmd=is_detatched_thread]),
+
+   http_version(1-1),host('127.0.0.1'),port(3020),
    connection('keep-alive'),pragma('no-cache'),cache_control('no-cache'),upgrade_insecure_requests('1'),
    user_agent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.102 Safari/537.36'),
    accept([media(text/html,[],1.0,[]),media(application/'xhtml+xml',[],1.0,[]),media(image/avif,[],1.0,[]),
    media(image/webp,[],1.0,[]),media(image/apng,[],1.0,[]),media(application/'signed-exchange',[v=b3],0.9,[]),
    media(application/xml,[],0.9,[]),media(_4092/_4094,[],0.8,[])]),accept_encoding('gzip, deflate'),
    accept_language('en-US,en;q=0.9'),cookie([swipl_session='1ea7-7eda-8461-ce27.gitlab'])]),
+
    current_input(IS),current_output(OS),stream_pair(IOS,IS,OS),
    thread_self(TID).
 
@@ -769,6 +830,8 @@ get_param_sess(L,V,D):- get_nv_session(L,V,D).
 %
 % Get Param Req.
 %
+get_param_req(L,V):- httpd_wrapper:http_current_request(Request), 
+  member(search(List),Request),member(L=V,List),!.
 get_param_req(L,V):- (is_list(L)-> member(N,L) ; N=L),
      CALL2 =.. [N,V,[optional(true),default(Foo)]],
   get_http_current_request(B),
@@ -791,8 +854,8 @@ get_nv_session(L,V,_):- (is_list(L)-> member(N,L) ; N=L),
      CALL2 =.. [N,V], get_any_from_sess(_,CALL2).     
 get_nv_session(_,V,V):-!.
 
-get_any_from_sess(F,CALL2):- get_http_session(F),http_session:session_data(F, CALL2),!.
-get_any_from_sess(_,CALL2):- http_session:session_data(_, CALL2),!.
+get_any_from_sess(F,CALL2):- get_http_session(F),http_session:session_data(F, CALL2).
+%get_any_from_sess(_,CALL2):- http_session:session_data(_, CALL2),!.
 
 has_search_filter(Request):-  member(search(Search),Request), search_filter_name_comment(N,_,_), \+ \+ member(N=_,Search),!.
 clear_search_filter_in_session:- forall(search_filter_name_comment(N,_,_),save_in_session(N,'0')).
@@ -818,71 +881,77 @@ nop_format(G):- nop(format(G)).
 
 :- create_prolog_flag(retry_undefined,default,[type(term),keep(true)]).
 
-write_expandable(true,Goal):- !, inline_html_format(['<pre>',ignore(Goal),'</pre>']).
+write_expandable(true,Goal):- !, inline_html_format(['<pre>',call(Goal),'</pre>']).
 write_expandable(Showing,Goal):- write_expandable3(Showing,Goal,Goal).
 
 write_expandable3(Showing,Title,Goal):- 
- on_xf_ignore_flush(ensure_colapable_styles),
+ on_xf_ignore_flush(ensure_colapable_styles), 
  (Showing -> PX='128'; PX='600'),
  (Showing -> Exp=''; Exp='collapsed-c'),
-  with_pp(http,wots(S,weto(ignore(Goal)))),
   inline_html_format([
    '<pre><button type="button" class="collapsible">',Title,' (click to un/expand)</button>',
-   '<div class="',write(Exp),'" style="max-height: ',PX,'px"><pre>\n',S,'\n</pre></div></pre>']).
+   '<div class="',write(Exp),'" style="max-height: ',PX,'px"><pre>',
+   call(Goal),'</pre></div></pre>']).
 
 
-%% write_begin_html( ?ARG1 ) is det.
+%% write_begin_html( ?ARG1, Call ) is det.
 %
 % Write Begin HTML.
 %
 % <link rel="SHORTCUT ICON" href="/swish/lm_xref/pixmapx/mini-logo.gif"><meta name="ROBOTS" content="NOINDEX, NOFOLLOW">
-write_begin_html(Title):-
-  inline_html_format([print_xlisting_head(Title),
-   `<body id="body" class="yui-skin-sam cliopatria">`,call(ensure_swish_app_html),`<div style="display: none;">`,  
+write_begin_html(Title,InHead):-
+  inline_html_format([print_xlisting_head(Title,InHead),
+   '<body id="body" class="yui-skin-sam cliopatria">',
+   %call(ensure_swish_app_html),
+   '<div style="display: none;">',  
   (get_param_req(lean,'1') -> write("</div>") ; (write("</div>"), do_cp_menu, format('<br/>'))),  
-  % ensure_colapsable_script,
-   call(ensure_colapsable_styles)]).
+  % ensure_collapsable_script,
+   call(ensure_collapsable_styles)]).
 
-print_xlisting_head(Title):-
- inline_html_format([`<html><head><title>LOGICMOO XListing - `,write(Title),`</title>`,
- `<meta name="viewport" content="width=device-width, initial-scale=1.0">
+print_xlisting_head(Title,InHead):-
+ inline_html_format(['<html><head><title>LOGICMOO XListing - ',write(Title),'</title>',
+ '<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Prolog XListing for Logicmoo Code">
 	<meta name="author" content="logicmoo@gmail.com">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<link rel="stylesheet" type="text/css" href="/swish/css/menu.css">
-	<link rel="stylesheet" type="text/css" href="/swish/css/cliopatria.css">
+	<link rel="stylesheet" type="text/css" href="/swish/css/menu.css"> 
+  <link rel="stylesheet" type="text/css" href="/swish/css/cliopatria.css">  
 	<script src="https://unpkg.com/gojs@2.2.15/release/go.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script type="text/javascript">window.name="lm_xref"; </script>
-	<script data-main="/swish/js/swish" src="https://logicmoo.org/node_modules/requirejs/require.js"></script>
+	<!-- <script data-main="/swish/js/swish" src="/node_modules/requirejs/require.js"></script>  -->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
-	<script type="text/javascript" src="https://logicmoo.org/www/yui/2.7.0/build/utilities/utilities.js"></script>
+	<script type="text/javascript" src="/www/yui/2.7.0/build/utilities/utilities.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <script type="text/javascript" src="/swish/lm_xref/pixmapx/popupmenu/scripts/Popup-plugin.js"></script>
 	<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/popupmenu/styles/Popup-plugin.css">
   <script type="text/javascript" src="/swish/lm_xref/pixmapx/selected/js/social.selection.js"></script>
 	<link rel="stylesheet" type="text/css" href="/swish/lm_xref/pixmapx/selected/css/social.selection.css">
-	<script type="text/javascript" src="/swish/js/cliopatria.js"></script>
+  <script type="text/javascript" src="/swish/js/cliopatria.js"></script>
 	<link rel="stylesheet" type="text/css" href="/swish/css/butterfly_term.css">
   <script type="text/javascript" href="/swish/js/butterfly_term.js"></script>
-	<link rel="stylesheet" type="text/css" href="/swish/css/term.css">
-	</head>`]).
+	<link rel="stylesheet" type="text/css" href="/swish/css/term.css">',
+  call(InHead),
+	'</head>']).
 
-
+do_cp_menu:- \+ current_predicate(cp_menu/2),!.
 do_cp_menu:-
-  nop(output_html(div([id('cp-menu'), class(menu)],  \ cp_menu))).
+  output_html(div([id('cp-menu'), class(menu)],  \ cp_menu)).
 
 offer_testcases :- forall(no_repeats(X,xlisting_whook:offer_testcase(X)),write_cmd_link(X)).
 
+:- export(write_cmd_link/1).
 write_cmd_link(menu(Info,Goal)):- nonvar(Info),!, write_cmd_link(Info,Goal).
 write_cmd_link(Goal):- sformat(S,'~q',['?-'(Goal)]),write_cmd_link(S,Goal).
 
+:- export(write_cmd_link/2).
 write_cmd_link(Info,Goal):- nonvar(Goal),with_output_to(string(S),writeq(Goal)),
   toplevel_pp(PP),
+  %in_pp(PP),
   www_form_encode(S,A), 
-   sformat(SO,'<a href="/swish/lm_xref/?mouse_iframer_div=~w&cmd=~w" target="lm_xref">~w</a> ',[PP,A,Info]),!,
+   sformat(SO,'<a href="/swish/lm_xref/?mouse_iframer_div=~w&cmd=~w" target="lm_xref">~w</a>~n ',[PP,A,Info]),!,
    our_pengine_output(SO).
 
 :- dynamic(xlisting_whook:offer_testcase/1).
@@ -920,6 +989,10 @@ handler_logicmoo_cyclone_call(Request):-
 
 on_xf_ignore_flush(G):- flush_output_safe,notrace(ignore(catch(G,_,true))),flush_output_safe.
 
+system:xweto(G):- call(G).
+%system:xweto(G):- weto(G).
+
+
 system:xnotrace(G):- call(G).
 
 %handler_logicmoo_cyclone(Request):- !, arcproc_left(Request),!.
@@ -927,7 +1000,7 @@ handler_logicmoo_cyclone(Request):-
   (html_write:html_current_option(content_type(D))-> true ; D=  'text/html'),
   format('Content-type: ~w~n~n', [D]),!,
   %format('<!DOCTYPE html>',[]),flush_output_safe,
-  no_xdbg_flags,
+  %no_xdbg_flags,
   with_http(
     must_run_html(handler_logicmoo_cyclone000(Request))
      -> true ; handler_logicmoo_cyclone000(Request)),!.
@@ -936,7 +1009,7 @@ handler_logicmoo_cyclone000(Request):-
   ignore(intern_request_data(Request)),
   handler_logicmoo_cyclone111.
 
-mUST_CALL(G):- must_det_ll(G).
+mUST_CALL(G):- G*->true;writeln(failed(G)).
 %mUST_CALL(G):- mUST_det_ll(G).
 
 intern_request_data(Request):-
@@ -982,18 +1055,18 @@ handler_logicmoo_cyclone111:-
  get_webproc(WebProc),
  ignore(WebProc=ls),
  maplist(on_xf_ignore_flush,[
-  write_begin_html(WebProc),
+  write_begin_html(WebProc,true),
 
   ((ignore( \+ ((  
     get_param_req(cmd,Call),url_decode_term(Call,Prolog),
     current_predicate(_,Prolog),
     dmsg(cmd=Prolog),
     ignore((nonvar(Prolog),asserta_new(xlisting_whook:offer_testcase(Prolog)))), 
-    weto(write_expandable(true,Prolog))))))),
+    xweto(write_expandable(true,Prolog))))))),
   %write_expandable(true,(menu)),
    write_expandable(false,(offer_testcases,show_http_session)),
    maybe_do_wp(WebProc),
-   ensure_colapsable_script,write_end_html]), !.
+   ensure_collapsable_script,write_end_html]), !.
 
  maybe_do_wp(WebProc):- 
     ((ignore(  \+ (( callable(WebProc), must_run_html(WebProc)))))),
@@ -1006,7 +1079,7 @@ get_param_req_or_session(N,V):- get_param_req(N,M),!,url_decode_term(M,V).
 get_param_req_or_session(N,V):- get_param_sess(N,M),!,url_decode_term(M,V).
 
 get_webproc(Call):- nonvar(Call),get_webproc(SCall),!,Call==SCall.
-get_webproc(CallD):- get_param_req_or_session(webproc,Call),url_decode_term(Call,CallD),!.
+get_webproc(CallD):- get_param_req_or_session(cmd,Call),url_decode_term(Call,CallD),!.
 get_webproc(PageName):- get_param_req(path,PATH),directory_file_path(_,PageName,PATH),current_predicate(PageName/0),!.
 
 %% write_end_html is det.
@@ -1020,18 +1093,12 @@ write_end_html:- flush_output_safe,
 
 
 
-:- multifile(cp_menu:menu_item/2).
-:- dynamic(cp_menu:menu_item/2).
-:- retractall(cp_menu:menu_item(_, 'XListing Web')).
-%:- asserta(cp_menu:menu_item(500=swish/swish, 'Swish')).
-:- asserta(cp_menu:menu_item('/swish/lm_xref/',	'XListing')).
-%:- asserta(cp_menu:menu_item(700=places/swish/lm_xref, 'XListing Web')).
 
 /*
 dasm:print_clause_plain(Term) :-
         current_prolog_flag(color_term, Prolog_flag_Ret),
         make_pretty(Term, Make_pretty_Ret),
-        setup_call_cleanup(set_prolog_flag(color_term, false),
+        sccs(set_prolog_flag(color_term, false),
                            ( nl,
                              lcolormsg1(Make_pretty_Ret)
                            ),
@@ -1067,7 +1134,7 @@ add_context_menu:-!.
 
 :- include(xlisting_web_cm).
 
-:- listing(ensure_colapsable_script/0).
+:- listing(ensure_collapsable_script/0).
 
 % logicmoo_html_needs_debug.
 
@@ -1205,10 +1272,10 @@ write_atom_link(W,A/_,N):-atom(A),!,write_atom_link(W,A,N).
 write_atom_link(W,C,N):- sanity(nonvar(W)),compound(C),get_functor(C,F,A),!,write_atom_link(W,F/A,N).
 %write_atom_link(W,_,N):- thread_self_main,!,write_plain_atom(W,N),!.
 write_atom_link(W,_,N):- \+ is_html_mode, write_plain_atom(W,N),!.
-write_atom_link(W,_,N):- nb_current('$no_hrefs',t), !, format(W,'<a>~q</a>',[N]),!.
+write_atom_link(W,_,N):- nb_current('$no_hrefs',t), !, format(W,'<code>~w</code>',[N]),!.
 write_atom_link(W,A,N):-  
  catch((into_attribute_q(A,TextBoxObj),
-   format(W,'<a href="?fa=~w">~q</a>',[TextBoxObj,N])),E,(dsmg(E),write_plain_atom(W,N))).
+   format(W,'<a href="?fa=~w">~q</a>',[TextBoxObj,N])),E,(dmsg(E),write_plain_atom(W,N))).
 
 
 %% write_plain_atom( :TermARG1, ?ARG2) is det.
@@ -1989,10 +2056,10 @@ bok((pkif :-
 
 
 
-%make_here:- ttyflush,notrace(ignore(weto(wo_messages((make_here0,ttyflush))))).
+%make_here:- ttyflush,notrace(ignore(xweto(wo_messages((make_here0,ttyflush))))).
 make_here:- !.
 make_here:-  with_no_x_http(make_here0).
-make_here0:- with_output_to(string(_),weto(ignore(make))),!.
+make_here0:- with_output_to(string(_),xweto(ignore(make))),!.
 make_here0:- with_output_to(string(_),make),!.
 
 x123:- make_here,x123(test_rok(tHumanHead)).
@@ -2105,22 +2172,30 @@ get_search_term(Obj):-
    url_decode_term(SObj,Obj).
 
 
-ensure_guitracer_x:-!.
-ensure_guitracer_x:- break,
- absolute_file_name(swi(xpce/prolog/lib),X), assert_if_new(user:library_directory(X)), 
- user:use_module(library(pce_prolog_xref)),
- user:use_module(library(emacs_extend)),
- user:use_module(library(trace/gui)),
- user:use_module(library(pce)),
- user:use_module(library(gui_tracer)),
- reload_library_index.
+%ensure_guitracer_x:-!.
+ensure_guitracer_x:- %break,
+  current_prolog_flag(xpce,Was1),
+  current_prolog_flag(gui,Was2),
+  absolute_file_name(swi(xpce/prolog/lib),X), 
+  set_prolog_flag(xpce,false),
+  set_prolog_flag(gui,false),
+  asserta(user:library_directory(X),CLRef), 
+  user:use_module(library(pce_prolog_xref)),
+  user:use_module(library(emacs_extend)),
+  user:use_module(library(trace/gui)),
+  user:use_module(library(pce)),
+  user:use_module(library(gui_tracer)),
+  %reload_library_index,
+  erase(CLRef),
+  set_prolog_flag(xpce,Was1),
+  set_prolog_flag(gui,Was2).
 
 
 %% do_guitracer is det.
 %
 % Do Guitracer.
 %
-do_guitracer:- ensure_guitracer_x, guitracer,dtrace.
+do_guitracer:- ensure_guitracer_x, call(call,guitracer),dtrace.
 
 output_telnet_console(Port):- HttpPort is Port +100,
   sformat(HTML,'<iframe id="port~w" src="https://logicmoo.org:~w/" height="600" width="100%">loading...</iframe>',[HttpPort,HttpPort]),
@@ -2136,21 +2211,21 @@ output_telnet_console2(Port):- HttpPort is Port +100,
 
 inline_html_format(G):- must_run_html(ilhf(G)).
 
-ilhf(X):- var(X), !, writeq(var_ilhf(X)).
-ilhf(call(X)):- !, ignore(mUST_CALL(X)),flush_output_safe.
-ilhf(X):- string(X),!,format('~s',[X]),!.
-ilhf(X):- atom(X),atom_contains(X,'<'),!,format('~w',[X]),!.
+ilhf(X):- var(X),!,format(' ~p ',[X]),!,flush_output_safe.
+ilhf(X):- (string(X);is_codelist(X);is_charlist(X)),!,format('~s',[X]),flush_output_safe.
+ilhf(X):- \+ callable(X), !, format(' ~p ',[X]),!,flush_output_safe.
 ilhf([]):-!.
-ilhf([H|T]):- is_codelist([H|T]),!,format('~s',[[H|T]]),!.
-ilhf([H|T]):- is_charlist([H|T]),!,format('~s',[[H|T]]),!.
-ilhf([H|T]):- !, setup_call_cleanup(flush_output_safe,ilhf(H),ilhf(T)).
-ilhf((H,T)):- !, setup_call_cleanup(flush_output_safe,ilhf(H),ilhf(T)).
-ilhf(w(X)):-!, write(X), flush_output_safe.
+ilhf([H|T]):- is_grid([H|T]),print_grid([H|T]),!.
+ilhf([H]):- !, ilhf(H).
+ilhf([H|T]):- !, ilhf(H),ilhf(T).
+ilhf((H,T)):- !, ilhf(H),ilhf(T).
+ilhf(X):- atom(X), \+ current_predicate(_,X), !, catch(format(X),_,write(X)), flush_output_safe.
+ilhf(call(X)):- !, mUST_CALL(X),flush_output_safe.
+ilhf(ignore(X)):- !, mUST_CALL(ignore(X)),flush_output_safe.
+ilhf(q(X)):-!, into_attribute(X,Y),write(Y), flush_output_safe.
+ilhf(w(X)):-!, write(X),flush_output_safe.
 ilhf(h(X)):-!, with_http(ilhf(X)), flush_output_safe.
 %ilhf(h(X)):-!, write_bfly_html(X), flush_output_safe.
-ilhf(q(X)):-!, into_attribute(X,Y),write(Y), flush_output_safe.
-ilhf(X):- \+ callable(X), !, write(X), flush_output_safe.
-ilhf(X):- atom(X), \+ current_predicate(_,X), !, catch(format(X),_,write(X)), flush_output_safe.
 ilhf(X):- ( current_predicate(_,X)->ignore(mUST_CALL(X));print_tree(X)),flush_output_safe.
 
 
@@ -2167,7 +2242,7 @@ get_session_term(Term,Vs):-
 % show_pre_call.
 %
 show_pre_call(Goal):- 
-  inline_html_format(['<pre>',weto(on_x_debug(Goal)),'</pre>']).
+  inline_html_format(['<pre>',xweto(on_x_debug(Goal)),'</pre>']).
 
 do_post_edit_term(Term,Vs):- get_param_req('ASK','ASK'),!,
   show_pre_call(forall(Term,pp_item_html('Answer',':-'(Vs,Term)))),!.
@@ -2196,11 +2271,11 @@ edit1term(String):- url_decode_term(String,Term,Vs), show_edit_term(Term,Vs).
 show_edit_term(Term,Vs):- show_edit_term_c(Term,Vs).
 show_edit_term_c(Term,Vs):-
  inline_html_format([ 
-'<form action="/swish/lm_xref/?webproc=edit1term"> <table width="90%" cellspacing="0" cellpadding="0" height="121" id="table4">',
+'<form action="?cmd=edit1term"> <table width="90%" cellspacing="0" cellpadding="0" height="121" id="table4">',
 '<tbody><tr><td align="left" valign="top" width="36"><img src="/swish/lm_xref/pixmapx/sigmaSymbol-gray.gif"></td><td></td><td align="left" valign="top" width="711" rowspan="2"><img src="/swish/lm_xref/pixmapx/logoText-gray.gif">&nbsp;&nbsp;Prover:&nbsp;',
  show_select2(prover, web_prover_name,[]),
-'<table cellspacing="0" cellpadding="0" id="table5" width="658" height="97"><tbody><tr><td align="right"><b>Fml:</b></td><td align="left" valign="top" colspan="2">',
-'<textarea style="white-space: pre; overflow: auto; font-size: 7pt; font-weight: bold; font-family: Verdana, Arial, Helvetica, sans-serif; border: 1px solid black; margin: 0px; width: 1020px; height: 259px;" wrap="off" rows="20" cols="70" name="term">',print_pretty_string(Term,Vs),'</textarea></td><td align="left" valign="top" height="68"><label>',
+'<table cellspacing="0" cellpadding="0" id="table5" width="658" height="97"><tbody><tr><td align="left"><b>Fml:</b></td><td align="left" valign="top" colspan="4">',
+'<textarea style="white-space: pre;overflow: auto;font-size: 7pt;font-weight: bold;font-family: Verdana, Arial, Helvetica, sans-serif;border: 1px solid black;margin: 0px;width: 600px;height: 131px;" wrap="off" rows="20" cols="70" name="term"textarea style="white-space: pre;overflow: auto;font-size: 7pt;font-weight: bold;font-family: Verdana, Arial, Helvetica, sans-serif;border: 1px solid black;margin: 0px;width: 600px;height: 131px;" wrap="off" rows="20" cols="70" name="term">',print_pretty_string(Term,Vs),'</textarea></td><td align="left" valign="top" height="68"><label>',
 action_menu_applied('action_above',"Item",""),
 '&nbsp;&nbsp;&nbsp;<input type="submit" value="Now" name="Apply"></label><br><b>Microthory</b><br>',
 show_select2('context',is_context,[]),
@@ -2273,7 +2348,7 @@ handler_logicmoo_slowcode_call(Request):-
   member(search(List),Request),
   member(goal=String,List), 
   url_decode_term(String,Goal),!,    
-  must_run_html(((weto(call(Goal))))),!.
+  must_run_html(((xweto(call(Goal))))),!.
 
 handler_logicmoo_slowcode_call(Request):- 
  must_run((
@@ -2580,7 +2655,7 @@ numberlist_at(Was,[_|More]):- N2 is Was+2, numberlist_at(N2,More),!.
 
 
 %get_clause_vars_for_print_here(HB,HB2):- catch(get_clause_vars_for_print(HB,HB2),_,fail),!.
-get_clause_vars_for_print_here(HB,HB2):- setup_call_cleanup(lock_vars(HB),pretty_numbervars(HB,HB2),unlock_vars(HB)),!.
+get_clause_vars_for_print_here(HB,HB2):- sccs(lock_vars(HB),pretty_numbervars(HB,HB2),unlock_vars(HB)),!.
 get_clause_vars_for_print_here(HB,HB2):- HB=HB2.
 
 %% pp_i2tml_v( ?ARG1) is det.
@@ -2754,8 +2829,10 @@ session_checked(Name):- (get_param_sess(Name,V);baseKB:param_default_value(Name,
 %
 % Session Checkbox.
 %
-session_checkbox(Name,Caption,BR):-
- (session_checked(Name)-> CHECKED='CHECKED';CHECKED=''),
+session_checkbox(Name,Caption,BR):-session_checkbox(Name,Caption,BR,session_checked(Name)).
+
+session_checkbox(Name,Caption,BR,Call):-
+ (Call-> CHECKED='CHECKED';CHECKED=''),
  format('<input type="checkbox" name="~w" value="1" ~w />~w~w',[Name,CHECKED,Caption,BR]).
  % format('<font size="-3"><label><input type="checkbox" name="~w" value="1" ~w/>~w</label></font>~w',[Name,CHECKED,Caption,BR]).
 
@@ -2799,7 +2876,7 @@ is_context0('BaseKB').
 %
 % Get Request Variables.
 %
-get_request_vars(Format):- ignore(Exclude=[term,fa,session_data,webproc,user_agent,referer,session,request_uri,accept]),
+get_request_vars(Format):- ignore(Exclude=[term,fa,session_data,cmd,user_agent,referer,session,request_uri,accept]),
    findall(N=V,(current_form_var(N),\+ member(N,Exclude),once(get_param_sess(N,V))),NVs),
    forall(member(N=V,NVs),format(Format,[N,V])).
 
@@ -2818,11 +2895,11 @@ must_run_html(Goal):-
 
 must_run(List):- is_list(List),!,maplist(must_run0,List).
 must_run(Goal):- must_run0(Goal).
+
 must_run0(Goal):- tracing,!, 
   ((Goal) *-> true ; wdmsg(assertion_failed(fail, Goal))),
   flush_output_safe.
 must_run0((G1,G2)):- !, call_cleanup(must_run0(G1),must_run0(G2)),!.
-
 %must_run0(Goal):- ignore(catch(no_undefined_preds(Goal),_,true)),!.
 must_run0(Goal):- flush_output_safe, 
   (catch(mUST_CALL(no_undefined_preds(mUST_CALL(Goal))),E,(wdmsg(E),www_dumpST,wdmsg(E=Goal),fail)) -> true ; 
@@ -2842,10 +2919,8 @@ no_undefined_preds(G):- call(G).
 % Call For Terms.
 %
 call_for_terms(Call):- 
-   must_run_html((
-        setup_call_cleanup(format('<pre>',[]),        
-        ignore((locally_tl(print_mode(html),with_search_filters(catch(ignore(with_no_x_http(Call)),E,dmsg(E)))))),
-        format('</pre>',[])),
+   must_run_html((       
+      with_pre(ignore((locally_tl(print_mode(html),with_search_filters(catch(ignore(with_no_x_http(Call)),E,dmsg(E))))))),
         show_pcall_footer)),!.
 
 :- thread_local(t_l:tl_hide_data/1).
@@ -2901,6 +2976,7 @@ try_or_rtrace(G):- tracing,!,dmsg(try(G)),call(G).
 try_or_rtrace(G):- fast_and_mean, !, with_no_x_http(G).
 try_or_rtrace(G):- catch(G,E,(E==time_limit_exceeded->throw(time_limit_exceeded);(ignore((dmsg(G=E),www_dumpST,dmsg(G=E),thread_self(main),rtrace(G),www_dumpST,dmsg(G=E),break))))).
 
+www_dumpST:- !.
 www_dumpST:- with_output_to(user_error,dumpST),write_expandable(false,(write('<pre>'),dumpST,write('</pre>'))).
 % :- prolog_xref:assert_default_options(register_called(all)).
 
@@ -2949,7 +3025,7 @@ object_sub_page(Obj, Options) -->
 %
 % Return Converted To Pos.
 %
-return_to_pos(Call):- setup_call_cleanup(current_line_position(LP),Call,set_line_pos(LP)),!.
+return_to_pos(Call):- sccs(current_line_position(LP),Call,set_line_pos(LP)),!.
 
 
 
@@ -2999,7 +3075,7 @@ current_line_position(LP):-current_output(Out),current_line_position(Out,LP).
 %
 current_line_position(Out,LP):-stream_property(Out,position( Y)),stream_position_data(line_position,Y,LP),!.
 
-a_ok(_LP):-b([1,2,3,4]).
+a_ok(_LP):-writeln([1,2,3,4]).
 
 %% test_tmw is det.
 %
@@ -3009,8 +3085,8 @@ test_tmw:- locally_tl(print_mode(html),test_tmw2).
 
 test_tmw2:- 
  rok_portray_clause(a_ok(LP)), 
- rok_portray_clause((a_ok(LP):-b([1,2,3,4]))),
- print((a_ok(_LP):-b([1,2,3,4]))),
+ rok_portray_clause((a_ok(LP):-writeln([1,2,3,4]))),
+ print((a_ok(_LP):-writeln([1,2,3,4]))),
   nl,nl,
     wid_kif(KIF),
  KIF='=>'(_,_),nl,nl,
@@ -3127,14 +3203,24 @@ url_encode_term(InTerm,VsIn,_Un,URL):-
 %url_decode_term(Sym,T):- \+ atom(Sym),Sym=T.
 %url_decode_term(Sym,T):- atom_concat('#%24%28',_,Sym) , url_decode_term(Sym,T,_),!,T=T.
 
-url_decode_term(Sym,T):- url_decode_term(Sym,T,Vs), (sensical_nonvar(T); Vs\==[]), !,add_to_env_here(Vs).
-url_decode_term(Sym,Sym).
+url_decode_term0(Sym,Term):- url_decode_term(Sym,Term,Vs), (sensical_term(Term); Vs\==[]), !,add_to_env_here(Vs).
+url_decode_term0(Sym,Sym).
 
-%% sensical_nonvar( ?ARG1) is det.
+url_decode_term(S,O):- url_decode_term0(S,M), any_to_atom_term(M,[],O,_Vs),!.
+
+un_inner_quote(AtomIn,AtomOut):- atom(AtomIn),atom_concat('\'',L,AtomIn),atom_concat(AtomOut,'\'',L),!.
+%any_to_atom_term(Term,Vs,Term,Vs):-!.
+any_to_atom_term(Atom,_,Term,Vs):- fail, un_inner_quote(Atom,R), atom_to_term_safe(R,Term,Vs),!.
+any_to_atom_term(Atom,_,Term,Vs):- atom_to_term_safe(Atom,Term,Vs),(sensical_term(Term); Vs\==[]),!.
+any_to_atom_term(Term,Vs,Term,Vs).
+
+atom_to_term_safe(Key,Prolog,Vs):- atom(Key),notrace(catch(atom_to_term(Key,Prolog,Vs),_,fail)), sensical_term(Prolog).
+
+%% sensical_term( ?ARG1) is det.
 %
 % Sensical Nonvar.
 %
-sensical_nonvar(O):-nonvar(O), O \= (_ - _).
+sensical_term(O):-nonvar(O), O\==[], O\=='', O \= (_ - _), O\==end_of_file.
 
 
 %% url_decode_term( ?ARG1, ?ARG2) is det.
@@ -3145,8 +3231,7 @@ url_decode_term(Sym,T,Vs):- var(Sym),!, T=Sym, term_varnames(T,Vs,_),!.
 url_decode_term(Sym,T,Vs):- empty_str(Sym),!, T=Sym, Vs=[].
 
 url_decode_term(Sym,T,Vs):- url_decode_term0(Sym,TMid,VsMid), 
-  ((atom(TMid),(atom_concat(_,'.',TMid);atom_contains(TMid,')'))) 
-   -> atom_to_term(TMid,T,Vs) ; (VsMid=Vs,T=TMid)).
+  any_to_atom_term(TMid,VsMid,T,Vs).
 
 url_decode_term0(Sym,T,Vs):- atom(Sym) -> url_decode_atom(Sym,T,Vs) ; url_decode_nonatom(Sym,T,Vs).
 
@@ -3167,8 +3252,8 @@ decode_f1('f'(M:F1),M:T,Vs):- nonvar(F1), !, decode_f1('f'(F1),T,Vs).
  
 %sorted_term_variables(Set,Vs):- term_variables(Set,VsU),sort(VsU,Vs).
 %same_varsets(Set1,Set2):- sorted_term_variables(Set1,Vs1),sorted_term_variables(Set2,Vs2),Vs1==Vs2.
-rtfa_decode(Sym,T,Vs):- catch(atom_to_term(Sym,f(H:F1),_),_,fail),!,nonvar(F1),decode_f1(f(H:F1),T,Vs),!.  
-rtfa_decode(Sym,T,Vs):- catch(atom_to_term(Sym,T,Vs),_,fail), Vs==[], sensical_nonvar(T),!.
+rtfa_decode(Sym,T,Vs):- notrace(catch(atom_to_term(Sym,f(H:F1),_),_,fail)),!,nonvar(F1),decode_f1(f(H:F1),T,Vs),!.  
+rtfa_decode(Sym,T,Vs):- atom_to_term_safe(Sym,T,Vs),!.
 
 add_to_env_here(A):- \+ compound(A).
 add_to_env_here([H|T]):-
@@ -3267,7 +3352,7 @@ with_no_x_http(Goal):- call(Goal).
 %
 fmtimg(N,Title,TermE):- is_html_mode,!,
  into_attribute(Title,TitleQ),
- format('~N<a href="?webproc=edit1term&term=~w" target="lm_xref"><img src="/swish/lm_xref/pixmapx/~w.gif" alt="~w" title="~w"><a>',[TermE,N,TitleQ,TitleQ]).
+ format('~N<a href="?cmd=edit1term&term=~w" target="lm_xref"><img src="/swish/lm_xref/pixmapx/~w.gif" alt="~w" title="~w"><a>',[TermE,N,TitleQ,TitleQ]).
 fmtimg(_,_,_).
 
 
@@ -3355,8 +3440,8 @@ xlisting_web_file.
           
 %:- baseKB:import(xlisting_web:web_prover_name/2).
 
-write_non_pre(G):- must_run_html(setup_call_cleanup(write('\n</pre>'),G,write('<pre>\n'))).
-write_pre(G):- must_run_html(setup_call_cleanup(write('<pre>'),G,write('</pre>'))).
+write_non_pre(G):- must_run_html(sccs(write('\n</pre>'),once(G),write('<pre>\n'))).
+write_pre(G):- must_run_html(sccs(write('<pre>'),once(G),write('</pre>'))).
 
 
 
@@ -3403,7 +3488,7 @@ rok_portray(P):- return_to_pos(rok_portray_clause(P)),!.
 
 max_depth_goal(Max,Var,Goal):- 
  flag(Var,N,N), N =< Max, 
-  setup_call_cleanup(flag(Var,N,N+1),(Goal),flag(Var,_,N)).
+  sccs(flag(Var,N,N+1),(Goal),flag(Var,_,N)).
 
 :- fixup_exports.
 

@@ -80,6 +80,7 @@ ufsp((examples/learning)).
 ufsp((examples/lemur)).
 ufsp((examples/phil)).
 ufsp((examples/aleph)).
+ufsp((examples/pascal)).
 
 ufsp((examples/trill)).
 
@@ -469,6 +470,17 @@ community_examples(json{menu:[json{group:community, rank:50000}],
 	!,
 	findall(Ex, community_example(Ex), Files).
 community_examples(json{}).
+
+
+community_example(json{title:Title, file:File, group:community, type:store}) :- !, % NEW WAY
+	storage_file_extension_head(File, _Type, Head),
+	storage_commit(Head, Meta),
+	Meta.get(example) == true,
+	(   Title = Meta.get(title), Title \== ""
+	->  true
+	;   file_name_extension(Base, _, File),
+	    file_name_to_title(Base, Title)
+	).
 
 community_example(json{title:Title, file:File, group:community, type:store}) :-
 	storage_file(File),

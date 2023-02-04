@@ -349,6 +349,7 @@ pengines:prepare_module(Module, swish, Options2) :-
 :- use_module(swish(lib/render/prolog),	  []).
 :- use_module(swish(lib/render/tiles),	  []).
 :- use_module(swish(lib/render/sldnf),	  []).
+:- use_module(swish(lib/render/pic),	  []).
 
 :- use_module(library(pita)).
 :- use_module(library(mcintyre)).

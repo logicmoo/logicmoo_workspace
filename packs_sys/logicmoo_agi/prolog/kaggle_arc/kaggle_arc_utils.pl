@@ -12,19 +12,30 @@ my_len(X,Y):- is_list(X),!,length(X,Y).
 my_len(X,Y):- functor([_|_],F,A),functor(X,F,A),!,length(X,Y).
 my_len(X,Y):- arcST,!,break.
 */
-arcST:- nop(dumpST).
+sort_safe(I,O):- catch(sort(I,O),_,I=O).
+
+with_tty_false(Goal):- with_set_stream(current_output,tty(false),Goal).
+
 
 nb_subst(Obj,New,Old):-
   get_setarg_p1(nb_setarg,Found,Obj,P1),Found=@=Old,!,
   call(P1,New),!,nb_subst(Obj,New,Old).
 nb_subst(_Obj,_New,_Old).
 
+system:any_arc_files(Some):- is_list(Some),!, Some\==[],maplist(any_arc_files,Some).
+system:any_arc_files(Some):- atom_contains(Some,'arc').
 
 :- thread_local(in_memo_cached/5).
 :- multifile(prolog:make_hook/2).
 :- dynamic(prolog:make_hook/2).
-prolog:make_hook(before, Some):- Some \==[], \+ luser_getval(extreme_caching,true), retractall(in_memo_cached(_,_,_,_,_)), fail.
+prolog:make_hook(before, Some):- any_arc_files(Some), forall(muarc:clear_all_caches,true).
+
+:- multifile(muarc:clear_all_caches/0).
+:- dynamic(muarc:clear_all_caches/0).
+muarc:clear_all_caches:-  \+ luser_getval(extreme_caching,true), retractall(in_memo_cached(_,_,_,_,_)), fail.
 %arc_memoized(G):- !, call(G).
+
+arc_memoized(G):- compound(G),ground(G),functor(G,F,1),functor(C,F,1),!,arc_memoized(C),G=C,!.
 arc_memoized(G):-
   copy_term(G,C,GT),
   (Key = (C+GT)),
@@ -105,11 +116,11 @@ as_debug(L,G):- as_debug(L,true,G).
 as_debug(9,_,_):- !.
 as_debug(_,C,G):- ignore(catch((call(C)->wots(S,G),format('~NDEBUG: ~w~N',[S]);true),_,true)).
 
-count_each([],_,[]).
 count_each([C|L],GC,[Len-C|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each(L,GC,LL).
+count_each([],_,[]).
 
-count_each_inv([],_,[]).
 count_each_inv([C|L],GC,[C-Len|LL]):- include(==(C),GC,Lst),length(Lst,Len),count_each_inv(L,GC,LL).
+count_each_inv([],_,[]).
 
 maplist_n(N,P,[H1|T1]):-
   call(P,N,H1), N1 is N+1,
@@ -226,31 +237,47 @@ subst0011(X, Y, Term, NewTerm ) :-
         compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 
+
+subst_2LC([],_,I,I):-!.
+subst_2LC(_,[],I,I):-!.
+subst_2LC([F|FF],[R|RR],I,O):- subst0011C(F,R,I,M),subst_2LC(FF,RR,M,O).
+
+
+subst001C(I,F,R,O):- subst0011C(F,R,I,O),!.
+
+subst0011C(X, Y, Term, NewTerm ) :-
+ (same_term(X,Term)-> Y=NewTerm ;
+  (is_list(Term)-> maplist(subst0011C(X, Y), Term, NewTerm );
+   (( \+ compound(Term); Term='$VAR'(_))->Term=NewTerm;
+     ((compound_name_arguments(Term, F, Args),
+       maplist(subst0011C(X, Y), Args, ArgsNew),
+        compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
+
+
+
 ppa(FF):-
   copy_term(FF,FA,GF),  
   numbervars(FA+GF,0,_,[attvar(bind),singletons(true)]),
-  sort(GF,GS),write(' '),
+  sort_safe(GF,GS),write(' '),
   locally(b_setval(arc_can_portray,nil),
       ppawt(FA)),format('~N'),
   ignore((GS\==[], format('\t'),ppawt(attvars=GS),nl)),nl,!.
 
 ppawt(FA):-
-  write_term(FA,[numbervars(true), quoted(true), 
+  write_term(FA,[numbervars(false), quoted(true), 
    character_escapes(true),cycles(true),dotlists(false),no_lists(false),
     blobs(portray),attributes(dots), 
     portray(true), partial(false), fullstop(true),
     %portray(false), partial(true), fullstop(true),
    ignore_ops(false), quoted(true), quote_non_ascii(true), brace_terms(false)]).
 
-:- export(plain_var/1).
-plain_var(V):- notrace((var(V), \+ attvar(V), \+ get_attr(V,ci,_))).
 
 my_assertion(G):- call(G),!.
-my_assertion(G):- wdmsg(my_assertion(G)),writeq(goal(G)),nl,!,break.
+my_assertion(G):- u_dmsg(my_assertion(G)),writeq(goal(G)),nl,!,break.
 must_be_free(AllNew):- plain_var(AllNew),!.
-must_be_free(AllNew):- arcST,wdmsg(must_be_free(AllNew)),break,fail.
+must_be_free(AllNew):- arcST,u_dmsg(must_be_free(AllNew)),break,fail.
 must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.
-must_be_nonvar(AllNew):- arcST,wdmsg(must_be_nonvar(AllNew)),break,fail.
+must_be_nonvar(AllNew):- arcST,u_dmsg(must_be_nonvar(AllNew)),break,fail.
 
 intersection([],LeftOverB,[],[],LeftOverB):-!.
 intersection(LeftOverA,[],[],LeftOverA,[]):-!.
@@ -293,7 +320,7 @@ run_source_code(ShareVars, Vs, QQ):-
     ; maplist(mort,SourceCode)).
 
 
-%vars_to_dictation([_=Value|Gotten],TIn,TOut):- is_map(Value),!, vars_to_dictation(Gotten,TIn,TOut).
+%vars_to_dictation([_=Value|Gotten],TIn,TOut):- is_vm_map(Value),!, vars_to_dictation(Gotten,TIn,TOut).
 
 vars_to_dictation([Name=Value|Gotten],TIn,TOut):- !,
   my_assertion(atom(Name)),
@@ -357,6 +384,7 @@ dont_include_var(Vs0,Vs,Var):- select(_=VV,Vs0,Vs),VV==Var,!.
 dont_include_var(Vs,Vs,_).
   
 append_sets(Sets,Set):- append(Sets,List),list_to_set(List,Set).
+append_sets(Set1,Set2,Set):- append(Set1,Set2,List),list_to_set(List,Set).
 flatten_sets(Sets,Set):- flatten(Sets,List),list_to_set(List,Set).
 
 print_prop_val(N=V):- to_prop_name(N,P),format('~N\t\t'),print(P=V),nl.

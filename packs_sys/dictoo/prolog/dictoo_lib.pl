@@ -5,6 +5,7 @@
   is_oo/2,
   % '$was_dictoo'/2,
   is_oo_invokable/2,
+  is_oo_hooked/4,
   oo_call/4,
   oo_call_dot_hook/4,
   oo_jpl_call/3,
@@ -166,6 +167,7 @@ oo_set(UDT,Key,Value):- is_list(UDT),!,((member(KV,UDT),get_kv(KV,K,_),Key==K,nb
 oo_set(UDT,Key,Value):- fail_on_missing(jpl_is_ref(UDT)),fail_on_missing(jpl_set(UDT,Key,Value)).
 %oo_set(UDT,Key,Value):- trace_or_throw(oo_set(UDT,Key,Value)).
 
+nb_rb_insert(UDT,Key,Value,NewUDT):- nb_rb_insert(UDT,Key,Value),NewUDT=UDT. % not actually new
 
 oo_nb_set_varholder('$VAR',Name,[],UDT,Key,Value):- atom(Name),!,nb_setarg(1,UDT,att(vn, Name, att(Key,Value, []))).
 oo_nb_set_varholder('$VAR',Att3,[],UDT,Key,Value):- nb_setarg(1,UDT,att(Key,Value,Att3)).

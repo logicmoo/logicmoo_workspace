@@ -45,11 +45,11 @@
  */
 
 define(["jquery", "config", "preferences", "utils",
-    "cm/lib/codemirror", "form", "prolog", "links", "modal",
+	 "cm/lib/codemirror", "form", "prolog", "links", "modal", "backend",
     "answer", "laconic", "sparkline", "download", "search"
   ],
   function($, config, preferences, utils,
-    CodeMirror, form, prolog, links, modal) {
+		CodeMirror, form, prolog, links, modal, backend) {
 
     /*******************************
      *	  THE COLLECTION	*
@@ -1623,20 +1623,47 @@ define(["jquery", "config", "preferences", "utils",
       function handleSuccess() {
         var elem = this.pengine.options.runner;
 
-        if (elem.data(pluginName) == undefined) {
-          this.pengine.destroy(); /* element already gone */
+    /* Handle the s(CASP) bindings.  These are passed in reserved bindings
+     * as escaped HTML holding a Prolog string.
+     * TBD: Consider a clear way to pass real HTML around!
+     */
+
+    function specialBindings(answer)
+    { var vl = [];
+
+      for(var i=0; i<answer.variables.length; i++)
+      { var v = answer.variables[i];
+
+	function unescapeHTML(string_with_html) {
+	  //return $('<div></div>').html(JSON.parse(string_with_html)).text();
+	  return JSON.parse($('<div></div>').html(string_with_html).text());
+	}
+
+	if ( v.variables[0] == config.swish.scasp_model_var )
+	{ answer.scasp_model = unescapeHTML(v.value);
+	} else if ( v.variables[0] == config.swish.scasp_justification_var )
+	{ answer.scasp_justification = unescapeHTML(v.value);
+	} else
+	  vl.push(v);
+      }
+
+      answer.variables = vl;
+    }
+
+    if ( elem.data(pluginName) == undefined )
+    { this.pengine.destroy();			/* element already gone */
         } else {
           for (var i = 0; i < this.data.length; i++) {
             var answer = this.data[i];
             if (this.projection)
               answer.projection = this.projection;
+	specialBindings(answer);
 
             elem.prologRunner('renderAnswer', answer);
           }
           if (this.time > 0.1) /* more than 0.1 sec. CPU (TBD: preference) */
-            addAnswer(elem, $.el.div({
-                class: "cputime"
-              },
+	addAnswer(elem, $.el.div(
+	  {class:"cputime"},
               $.el.span(this.time.toFixed(3),
                 " seconds cpu time")));
 
