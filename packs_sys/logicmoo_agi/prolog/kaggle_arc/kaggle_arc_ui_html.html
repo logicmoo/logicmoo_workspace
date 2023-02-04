@@ -1,0 +1,543 @@
+<html>
+
+<head>
+    <title>Logicmoo ARC TopFrame</title>
+    <!--base href="https://logicmoo.org:11766/swish/muarc/kaggle_arc_ui_html.html"-->
+	<script src="kaggle_arc_ui_html.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/testing_interface.css"-->
+  
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <script type="text/javascript">
+        function ensureTopUsesIFrameParams() {
+            var iframe = document.getElementById("lm_xref");
+            var iframeSrch = iframe.contentWindow.location.search;
+            var topwSrch = window.location.search;
+            if (iframeSrch!=topwSrch) {
+                setMainQueryParams(iframeSrch);
+            }
+        }
+
+         function ensureIFrameUseTopParams() {
+            var iframe = document.getElementById("lm_xref");
+            var iframeSrch = iframe.contentWindow.location.search;			
+            var topwSrch = window.location.search;
+            if (iframeSrch!=topwSrch || iframe.contentWindow.location.href=="about:blank") {
+                navToParams(topwSrch);
+            }
+        }
+
+        window.onload = (event) => {
+            console.log("page is fully loaded");
+
+            window.onbeforeunload = function () {
+					//alert("Leaving page...");
+				return "onbeforeunload "+ document.activeElement.href ;
+			}
+            var iframe = document.getElementById('lm_xref');
+			var mainE = document.getElementById("main");
+
+             iframe.style.width = mainE.style.width - 800;
+
+            iframe.contentWindow.addEventListener("beforeunload", (e) => {
+                ensureTopUsesIFrameParams();
+            });
+            iframe.contentWindow.addEventListener("readystatechange", (e) => {
+                ensureTopUsesIFrameParams();
+            });
+            ensureIFrameUseTopParams();
+
+			if(true) {
+				var sessCmd = "arcproc_iframe?icmd=arc_session_vars";
+				var s = ""+window.location.search;
+				if(s.lenth!="") {
+					if(s.startsWith("?")) {
+						s=s.substring(1);
+					}
+					sessCmd=sessCmd+"&"+s;
+				}
+				document.getElementById('page_head_div').innerHTML =
+					'<p><a href="'+sessCmd+'" target="page_head_iframe">Refresh</a><br/></p>'+
+					'<p><iframe src="'+sessCmd+'" width="1024" height="70%"' +
+					'frameborder="0" id="page_head_iframe" name="page_head_iframe" style="width: 100%" scrolling="auto" /></p>';
+	
+			   //  document.getElementById("sess_accordian").click();
+
+			}
+            /*var iframe = document.getElementById("lm_xref");
+		   // Remove the unloadHandler in case it was already attached.
+		   // Otherwise, the change will be dispatched twice.
+		   iframe.contentWindow.removeEventListener("beforeunload", (e)=>{checkIFrameMainURL();});
+		   iframe.contentWindow.addEventListener("beforeunload", (e)=>{checkIFrameMainURL();});
+		   iframe.contentWindow.removeEventListener("readystatechange", (e)=>{checkIFrameMainURL();});*/
+            // debugger;
+        };
+    </script>
+    <style type="text/css">
+
+a { color: cyan; }
+
+.sidenavL {
+    width: 250px;
+    height: 100%;
+    z-index: 1;
+    color: #fff; background-color: #111;
+    overflow: scroll;
+    transition: 0.5s;
+    padding-top: 60px;
+    left: 0;
+    top: 0px;
+    display: inline;
+    position: fixed;
+    background-blend-mode: none;
+    mix-blend-mode: none;
+}
+
+.sidenavL a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 12px;
+    color: #818181;
+    display: inline;
+    white-space: nowrap;
+    overflow: auto;
+    transition: 0.3s;
+}
+
+.sidenavR {
+    height: 100%;
+    z-index: 1;
+	color: #eeeeee; background-color: #111;
+    overflow: scroll;
+    transition: 0.5s;
+    padding-top: 10px;
+    right: 0;
+    top: 0px;
+    display: inline;
+    position: fixed;
+    width: 250px;
+    background-blend-mode: none;
+    mix-blend-mode: none;
+}
+
+.sidenavR a {
+    padding: 8px 8px 8px 8px;
+    text-decoration: none;
+    font-size: 12px;
+    color: #f1f1f1;
+    display: block;
+	overflow: auto;
+    transition: 0.3s;
+}
+
+.sidenavL a:hover {
+    color: #ffffff;
+}
+
+.sidenavR a:hover {
+   color: #ffffff;
+}
+
+.closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    overflow: none;
+    background-blend-mode: none;
+    mix-blend-mode: none;
+
+}
+
+@media screen and (max-height: 450px) {
+    .sidenavR {
+        padding-top: 15px;
+    }
+    .sidenavR a {
+        font-size: 18px;
+    }
+    .sidenavL {
+        padding-top: 15px;
+    }
+    .sidenavL a {
+        font-size: 18px;
+    }
+}
+
+    </style>
+<link rel="stylesheet" type="text/css" href="kaggle_arc_ui_html.css">
+</head>
+<body><div id="mySideNavL" class="sidenavL">
+        <a href="javascript:void(0)" class="closebtn" onclick="toggleNavL('mySideNavL')">&#10005;</a><br>
+        <a href="javascript:void(0)" onclick="navCmd('300')">300: <font color="yellow" style="color: yellow">evaluation=100</font></a> &lt;&lt;&lt;&lt;-------
+        <a href="javascript:void(0)" onclick="navCmd('301')">301: <font color="yellow" style="color: yellow">easy_solve_suite=7</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('302')">302: <font color="yellow" style="color: yellow">test_names_by_fav=97</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('303')">303: <font color="yellow" style="color: yellow">human_t=6</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('377')">377: <font color="yellow" style="color: yellow">adapt_image_to_grid=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('378')">378: <font color="yellow" style="color: yellow">algebra=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('379')">379: <font color="yellow" style="color: yellow">associate_color_to_bools=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('380')">380: <font color="yellow" style="color: yellow">associate_colors_to_bools=7</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('381')">381: <font color="yellow" style="color: yellow">associate_colors_to_colors=7</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('382')">382: <font color="yellow" style="color: yellow">associate_colors_to_images=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('383')">383: <font color="yellow" style="color: yellow">associate_colors_to_numbers=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('384')">384: <font color="yellow" style="color: yellow">associate_colors_to_patterns=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('385')">385: <font color="yellow" style="color: yellow">associate_colors_to_ranks=6</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('386')">386: <font color="yellow" style="color: yellow">associate_colors_to_shapes=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('387')">387: <font color="yellow" style="color: yellow">associate_images_to_bools=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('388')">388: <font color="yellow" style="color: yellow">associate_images_to_colors=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('389')">389: <font color="yellow" style="color: yellow">associate_images_to_images=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('390')">390: <font color="yellow" style="color: yellow">associate_images_to_numbers=6</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('391')">391: <font color="yellow" style="color: yellow">associate_images_to_patterns=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('392')">392: <font color="yellow" style="color: yellow">associate_patterns_to_colors=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('393')">393: <font color="yellow" style="color: yellow">associate_patterns_to_patterns=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('394')">394: <font color="yellow" style="color: yellow">background_filling=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('395')">395: <font color="yellow" style="color: yellow">bouncing=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('396')">396: <font color="yellow" style="color: yellow">bridges=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('397')">397: <font color="yellow" style="color: yellow">bring_patterns_close=9</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('398')">398: <font color="yellow" style="color: yellow">clue=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('399')">399: <font color="yellow" style="color: yellow">color_guessing=20</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('400')">400: <font color="yellow" style="color: yellow">color_matching=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('401')">401: <font color="yellow" style="color: yellow">color_palette=7</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('402')">402: <font color="yellow" style="color: yellow">color_permutation=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('403')">403: <font color="yellow" style="color: yellow">combine_are_cells=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('404')">404: <font color="yellow" style="color: yellow">compare_image=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('405')">405: <font color="yellow" style="color: yellow">concentric=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('406')">406: <font color="yellow" style="color: yellow">connect_the_dots=14</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('407')">407: <font color="yellow" style="color: yellow">contouring=11</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('408')">408: <font color="yellow" style="color: yellow">count_different_colors=4</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('409')">409: <font color="yellow" style="color: yellow">count_hor_lines=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('410')">410: <font color="yellow" style="color: yellow">count_patterns=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('411')">411: <font color="yellow" style="color: yellow">count_shapes=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('412')">412: <font color="yellow" style="color: yellow">count_tiles=33</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('413')">413: <font color="yellow" style="color: yellow">count_ver_lines=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('414')">414: <font color="yellow" style="color: yellow">create_grid=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('415')">415: <font color="yellow" style="color: yellow">create_image_from_info=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('416')">416: <font color="yellow" style="color: yellow">crop=62</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('417')">417: <font color="yellow" style="color: yellow">cylindrical=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('418')">418: <font color="yellow" style="color: yellow">debug_indiv=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('419')">419: <font color="yellow" style="color: yellow">detect_background_color=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('420')">420: <font color="yellow" style="color: yellow">detect_closed_curves=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('421')">421: <font color="yellow" style="color: yellow">detect_connectedness=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('422')">422: <font color="yellow" style="color: yellow">detect_enclosure=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('423')">423: <font color="yellow" style="color: yellow">detect_grid=29</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('424')">424: <font color="yellow" style="color: yellow">detect_hor_lines=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('425')">425: <font color="yellow" style="color: yellow">detect_repetition=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('426')">426: <font color="yellow" style="color: yellow">detect_symmetry=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('427')">427: <font color="yellow" style="color: yellow">detect_wall=16</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('428')">428: <font color="yellow" style="color: yellow">diagonal_symmetry=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('429')">429: <font color="yellow" style="color: yellow">diagonals=16</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('430')">430: <font color="yellow" style="color: yellow">direction_guessing=38</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('431')">431: <font color="yellow" style="color: yellow">divide_by_n=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('432')">432: <font color="yellow" style="color: yellow">dominant_color=4</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('433')">433: <font color="yellow" style="color: yellow">draw_line_from_border=4</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('434')">434: <font color="yellow" style="color: yellow">draw_line_from_point=48</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('435')">435: <font color="yellow" style="color: yellow">draw_parallel_line=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('436')">436: <font color="yellow" style="color: yellow">draw_pattern_from_point=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('437')">437: <font color="yellow" style="color: yellow">draw_rectangle=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('438')">438: <font color="yellow" style="color: yellow">e=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('439')">439: <font color="yellow" style="color: yellow">enlarge_image=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('440')">440: <font color="yellow" style="color: yellow">even_or_odd=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('441')">441: <font color="yellow" style="color: yellow">ex_nihilo=4</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('442')">442: <font color="yellow" style="color: yellow">extrapolate_image_from_grid=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('443')">443: <font color="yellow" style="color: yellow">find_symmetry=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('444')">444: <font color="yellow" style="color: yellow">find_the_intruder=26</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('445')">445: <font color="yellow" style="color: yellow">fractal_repetition=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('446')">446: <font color="yellow" style="color: yellow">giz=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('447')">447: <font color="yellow" style="color: yellow">gravity=12</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('448')">448: <font color="yellow" style="color: yellow">grid_coloring=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('449')">449: <font color="yellow" style="color: yellow">grid_size_same=524</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('450')">450: <font color="yellow" style="color: yellow">hedra=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('451')">451: <font color="yellow" style="color: yellow">hint=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('452')">452: <font color="yellow" style="color: yellow">holes=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('453')">453: <font color="yellow" style="color: yellow">homeomorphism=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('454')">454: <font color="yellow" style="color: yellow">human=6</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('455')">455: <font color="yellow" style="color: yellow">human_skip=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('456')">456: <font color="yellow" style="color: yellow">image_expansion=12</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('457')">457: <font color="yellow" style="color: yellow">image_filling=10</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('458')">458: <font color="yellow" style="color: yellow">image_juxtaposition=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('459')">459: <font color="yellow" style="color: yellow">image_reflection=19</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('460')">460: <font color="yellow" style="color: yellow">image_repetition=23</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('461')">461: <font color="yellow" style="color: yellow">image_resizing=11</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('462')">462: <font color="yellow" style="color: yellow">image_rotation=9</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('463')">463: <font color="yellow" style="color: yellow">image_within_image=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('464')">464: <font color="yellow" style="color: yellow">indiv=33</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('465')">465: <font color="yellow" style="color: yellow">indiv_option=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('466')">466: <font color="yellow" style="color: yellow">indivs=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('467')">467: <font color="yellow" style="color: yellow">inside_out=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('468')">468: <font color="yellow" style="color: yellow">jigsaw=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('469')">469: <font color="yellow" style="color: yellow">learn=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('470')">470: <font color="yellow" style="color: yellow">loop_filling=17</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('471')">471: <font color="yellow" style="color: yellow">maze=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('472')">472: <font color="yellow" style="color: yellow">measure_area=9</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('473')">473: <font color="yellow" style="color: yellow">measure_distance_from_side=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('474')">474: <font color="yellow" style="color: yellow">measure_length=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('475')">475: <font color="yellow" style="color: yellow">mimic_pattern=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('476')">476: <font color="yellow" style="color: yellow">no_sol=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('477')">477: <font color="yellow" style="color: yellow">nthDSL=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('478')">478: <font color="yellow" style="color: yellow">obstacles=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('479')">479: <font color="yellow" style="color: yellow">ohuman=48</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('480')">480: <font color="yellow" style="color: yellow">one_yes_one_no=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('481')">481: <font color="yellow" style="color: yellow">only_one=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('482')">482: <font color="yellow" style="color: yellow">order_numbers=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('483')">483: <font color="yellow" style="color: yellow">out_of_boundary=6</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('484')">484: <font color="yellow" style="color: yellow">pairwise_analogy=15</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('485')">485: <font color="yellow" style="color: yellow">pattern_alignment=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('486')">486: <font color="yellow" style="color: yellow">pattern_coloring=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('487')">487: <font color="yellow" style="color: yellow">pattern_completion=13</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('488')">488: <font color="yellow" style="color: yellow">pattern_deconstruction=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('489')">489: <font color="yellow" style="color: yellow">pattern_differences=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('490')">490: <font color="yellow" style="color: yellow">pattern_expansion=68</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('491')">491: <font color="yellow" style="color: yellow">pattern_intersection=10</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('492')">492: <font color="yellow" style="color: yellow">pattern_juxtaposition=23</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('493')">493: <font color="yellow" style="color: yellow">pattern_modification=11</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('494')">494: <font color="yellow" style="color: yellow">pattern_moving=29</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('495')">495: <font color="yellow" style="color: yellow">pattern_reflection=18</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('496')">496: <font color="yellow" style="color: yellow">pattern_repetition=36</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('497')">497: <font color="yellow" style="color: yellow">pattern_resizing=8</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('498')">498: <font color="yellow" style="color: yellow">pattern_rotation=13</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('499')">499: <font color="yellow" style="color: yellow">portals=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('500')">500: <font color="yellow" style="color: yellow">projection_unto_rectangle=4</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('501')">501: <font color="yellow" style="color: yellow">proximity_guessing=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('502')">502: <font color="yellow" style="color: yellow">recoloring=58</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('503')">503: <font color="yellow" style="color: yellow">rectangle_guessing=32</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('504')">504: <font color="yellow" style="color: yellow">remove_intruders=7</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('505')">505: <font color="yellow" style="color: yellow">remove_noise=11</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('506')">506: <font color="yellow" style="color: yellow">replace_pattern=8</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('507')">507: <font color="yellow" style="color: yellow">second_most_used_color=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('508')">508: <font color="yellow" style="color: yellow">separate_image=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('509')">509: <font color="yellow" style="color: yellow">separate_images=41</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('510')">510: <font color="yellow" style="color: yellow">separate_shapes=10</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('511')">511: <font color="yellow" style="color: yellow">shape_guessing=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('512')">512: <font color="yellow" style="color: yellow">size_guessing=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('513')">513: <font color="yellow" style="color: yellow">skip_human=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('514')">514: <font color="yellow" style="color: yellow">spacing=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('515')">515: <font color="yellow" style="color: yellow">summarize=17</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('516')">516: <font color="yellow" style="color: yellow">take_complement=7</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('517')">517: <font color="yellow" style="color: yellow">take_half=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('518')">518: <font color="yellow" style="color: yellow">take_intersection=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('519')">519: <font color="yellow" style="color: yellow">take_maximum=15</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('520')">520: <font color="yellow" style="color: yellow">take_minimum=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('521')">521: <font color="yellow" style="color: yellow">take_negative=5</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('522')">522: <font color="yellow" style="color: yellow">todo_sol=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('523')">523: <font color="yellow" style="color: yellow">was__lmDSL=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('524')">524: <font color="yellow" style="color: yellow">x_marks_the_spot=9</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('525')">525: <font color="yellow" style="color: yellow">+Errors=26</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('526')">526: <font color="yellow" style="color: yellow">+color_match=330</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('527')">527: <font color="yellow" style="color: yellow">+mask_match=113</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('528')">528: <font color="yellow" style="color: yellow">+shape_match=528</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('529')">529: <font color="yellow" style="color: yellow">-color_match=463</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('530')">530: <font color="yellow" style="color: yellow">-mask_match=680</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('531')">531: <font color="yellow" style="color: yellow">-rotation_match=790</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('532')">532: <font color="yellow" style="color: yellow">-shape_match=265</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('533')">533: <font color="yellow" style="color: yellow">failed_predict_grid_size=14</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('304')">304: <font color="yellow" style="color: yellow">is_symgrid=36</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('305')">305: <font color="yellow" style="color: yellow">dbigham_train_core=92</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('306')">306: <font color="yellow" style="color: yellow">dbigham_eval_pass=64</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('307')">307: <font color="yellow" style="color: yellow">dbigham_train_pass=88</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('308')">308: <font color="yellow" style="color: yellow">dbigham_personal=14</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('309')">309: <font color="yellow" style="color: yellow">dbigham_fail=589</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('310')">310: <font color="yellow" style="color: yellow">test_names_by_hard=834</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('311')">311: <font color="yellow" style="color: yellow">MyTrainingData=21</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('312')">312: <font color="yellow" style="color: yellow">1D_testset=12</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('313')">313: <font color="yellow" style="color: yellow">devaluation=400</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('314')">314: <font color="yellow" style="color: yellow">eval400=400</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('315')">315: <font color="yellow" style="color: yellow">training=400</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('316')">316: <font color="yellow" style="color: yellow">train400=400</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('317')">317: <font color="yellow" style="color: yellow">icecuber_pass=233</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('318')">318: <font color="yellow" style="color: yellow">icecuber_fail=167</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('319')">319: <font color="yellow" style="color: yellow">every_grid(is_mass_lte_25)=213</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('320')">320: <font color="yellow" style="color: yellow">every_grid(is_size_1x1)= ?</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('321')">321: <font color="yellow" style="color: yellow">every_grid(is_size_3x3)=14</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('322')">322: <font color="yellow" style="color: yellow">every_grid(is_size_gte_20x20)=58</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('323')">323: <font color="yellow" style="color: yellow">every_grid(is_size_lte_3x3)=16</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('324')">324: <font color="yellow" style="color: yellow">every_input_grid(is_mass_lte_25)=370</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('325')">325: <font color="yellow" style="color: yellow">every_input_grid(is_size_1x1)= ?</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('326')">326: <font color="yellow" style="color: yellow">every_input_grid(is_size_3x3)=47</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('327')">327: <font color="yellow" style="color: yellow">every_input_grid(is_size_gte_20x20)=80</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('328')">328: <font color="yellow" style="color: yellow">every_input_grid(is_size_lte_3x3)=52</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('329')">329: <font color="yellow" style="color: yellow">every_output_grid(is_mass_lte_25)=334</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('330')">330: <font color="yellow" style="color: yellow">every_output_grid(is_size_1x1)=8</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('306')">306: <font color="yellow" style="color: yellow">every_output_grid(is_size_3x3)=51</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('332')">332: <font color="yellow" style="color: yellow">every_output_grid(is_size_gte_20x20)=59</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('333')">333: <font color="yellow" style="color: yellow">every_output_grid(is_size_lte_3x3)=75</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('334')">334: <font color="yellow" style="color: yellow">every_pair(op_op(grid_size_term,\==))=272</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('335')">335: <font color="yellow" style="color: yellow">no_grid(is_mass_lte_25)=214</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('336')">336: <font color="yellow" style="color: yellow">no_grid(is_size_1x1)=822</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('337')">337: <font color="yellow" style="color: yellow">no_grid(is_size_3x3)=678</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('338')">338: <font color="yellow" style="color: yellow">no_grid(is_size_gte_20x20)=673</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('339')">339: <font color="yellow" style="color: yellow">no_grid(is_size_lte_3x3)=648</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('340')">340: <font color="yellow" style="color: yellow">no_input_grid(is_mass_lte_25)=305</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('341')">341: <font color="yellow" style="color: yellow">no_input_grid(is_size_1x1)= ?</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('342')">342: <font color="yellow" style="color: yellow">no_input_grid(is_size_3x3)=740</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('343')">343: <font color="yellow" style="color: yellow">no_input_grid(is_size_gte_20x20)=675</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('344')">344: <font color="yellow" style="color: yellow">no_input_grid(is_size_lte_3x3)=736</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('345')">345: <font color="yellow" style="color: yellow">no_output_grid(is_mass_lte_25)=322</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('346')">346: <font color="yellow" style="color: yellow">no_output_grid(is_size_1x1)=822</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('347')">347: <font color="yellow" style="color: yellow">no_output_grid(is_size_3x3)=731</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('348')">348: <font color="yellow" style="color: yellow">no_output_grid(is_size_gte_20x20)=733</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('349')">349: <font color="yellow" style="color: yellow">no_output_grid(is_size_lte_3x3)=699</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('350')">350: <font color="yellow" style="color: yellow">no_pair(op_op(grid_size_term,\==))=556</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('351')">351: <font color="yellow" style="color: yellow">(10, 2)=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('352')">352: <font color="yellow" style="color: yellow">(2, 1)=57</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('353')">353: <font color="yellow" style="color: yellow">(2, 1)=44</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('354')">354: <font color="yellow" style="color: yellow">(2, 2)=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('355')">355: <font color="yellow" style="color: yellow">(3, 1)=232</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('356')">356: <font color="yellow" style="color: yellow">(3, 1)=209</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('357')">357: <font color="yellow" style="color: yellow">(3, 2)=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('358')">358: <font color="yellow" style="color: yellow">(3, 2)=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('359')">359: <font color="yellow" style="color: yellow">(4, 1)=79</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('360')">360: <font color="yellow" style="color: yellow">(4, 1)=83</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('361')">361: <font color="yellow" style="color: yellow">(4, 2)=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('362')">362: <font color="yellow" style="color: yellow">(4, 2) =4</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('363')">363: <font color="yellow" style="color: yellow">(5, 1)=17</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('364')">364: <font color="yellow" style="color: yellow">(5, 1) =23</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('365')">365: <font color="yellow" style="color: yellow">(5, 2)=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('366')">366: <font color="yellow" style="color: yellow">(5, 2) =7</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('367')">367: <font color="yellow" style="color: yellow">(6, 1)=3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('368')">368: <font color="yellow" style="color: yellow">(6, 1) =12</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('369')">369: <font color="yellow" style="color: yellow">(6, 2)=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('370')">370: <font color="yellow" style="color: yellow">(6, 2) =2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('371')">371: <font color="yellow" style="color: yellow">(7, 1) =1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('372')">372: <font color="yellow" style="color: yellow">(7, 2)=2</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('373')">373: <font color="yellow" style="color: yellow">(7, 2) =3</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('374')">374: <font color="yellow" style="color: yellow">(7, 3)=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('375')">375: <font color="yellow" style="color: yellow">(8, 1)=1</font></a>
+        <a href="javascript:void(0)" onclick="navCmd('376')">376: <font color="yellow" style="color: yellow">(8, 3)=1</font></a>
+    </div>
+	<div id="mySideNavR" class="sidenavR">
+  <a href="javascript:void(0)" class="closebtn" onclick="toggleNavR('mySideNavR')">&#10005;</a>
+<pre><nav id="navbar-example" class="navbar navbar-light bg-light px-3" style="white-space: pre;">
+  <ul id="navbar_items" class="nav nav-pills">
+  </ul></nav></pre><br><hr><br><ul id="menu2">
+	With selected test: ....
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('t')">You may fully (t)rain from examples</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('i')">See the (i)ndividuation correspondences in the input/outputs</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('I')">FULL (I)ndividuation</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('o')">(o)bjects found in the input/outputs</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('u')">(u)niqueness between objects in the input/outputs</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('y')">Wh(y) between objects in the input/outputs</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('a')">(a)ll between objects</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('j')">(j)unctions between objects</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('k')">(k)ill/clear all test data.</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('B')">(B)oxes test.</a></li> 
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('R')">(R)epairs test.</a></li> 
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('g')">(g)ridcells between objects in the input/outputs</a></li> 
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('p')">(p)rint the test (textured grid)</a></li> 
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('w')">(w)rite the test info</a></li> 
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('X')">E(X)amine the program leared by training</a></li> 
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('L')">(L)earned program</a></li> 
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('e')">(e)xecute .................. '<font color="cyan" style="color: cyan">306</font>'</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('x')">e(x)ecute .................. '<font color="blue" style="color: blue">print_all_info_for_test</font>'</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('s')">Try to (s)olve based on training</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('S')">(S)olve confirming it works on training pairs</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('h')">(h)uman proposed solution</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('r')">Maybe (r)un some of the above: (p)rint, (t)rain, (e)xamine and (s)olve !</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('A')">(A)dvance to the next test and (r)un it</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('n')">(n)ext test (skipping this one)</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('b')">(b)ack to previous test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('f')">(f)orce a favorite test.</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('~')">(PageUp) to begining of suite</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('N')">(N)ext suite</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('R')">Menu to (R)un all tests noninteractively</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('l')">(l)ist special tests to run,</a></li> &nbsp;
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('clear_tee%2cupdate_changes')">recomple this progra(m),</a></li> &nbsp;
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('force_full_tee%2creally_cls')">(c)lear the scrollback buffer,</a></li> &nbsp;
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('clear_training%2cclear_test')">(C)lear cached test info,</a></li> &nbsp;
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('call_dsl')">(r)un DSL code,</a></li> &nbsp;
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('true')">(Q)uit Menu,</a></li> &nbsp;
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('halt%284%29')">(^q)uit to shell,</a></li> &nbsp;
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('break')">or (D)ebug/break to interpreter.</a></li>
+</ul>
+<ul id="menu3">
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('pbox')">100:pbox</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_pbox')">101:test_pbox</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('clear_test')">102:clear_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('compile_and_save_test')">103:compile_and_save_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('enter_test')">104:enter_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('fully_test')">105:fully_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('human_test')">106:human_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('js_test')">107:js_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('learned_test')">108:learned_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('local_sanity_test')">109:local_sanity_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('mregression_test')">110:mregression_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('next_random_test')">111:next_random_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('next_test')">112:next_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('prev_test')">113:prev_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('preview_test')">114:preview_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('print_all_info_for_test')">115:print_all_info_for_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('print_test')">116:print_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('print_whole_test')">117:print_whole_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('report_test')">118:report_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('run_next_test')">119:run_next_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('show_colorfull_idioms')">120:show_colorfull_idioms</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('show_make_symmetrical')">121:show_make_symmetrical</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('show_neighbor_map')">122:show_neighbor_map</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('show_patterns')">123:show_patterns</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('show_reps')">124:show_reps</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('solve_test')">125:solve_test</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_abstracted_recall')">126:test_abstracted_recall</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_arcui')">127:test_arcui</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_blur_least')">128:test_blur_least</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_classes')">129:test_classes</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_w_section')">130:test_w_section</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_compile_arcathon')">131:test_compile_arcathon</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_easy')">132:test_easy</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_encoder_for_simple_output')">133:test_encoder_for_simple_output</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_encoders')">134:test_encoders</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_encoders_mining')">135:test_encoders_mining</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_example_grid')">136:test_example_grid</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_find_outline')">137:test_find_outline</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_grav_rot')">138:test_grav_rot</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_grid_size_prediction')">139:test_grid_size_prediction</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_is_single_char_ifiable')">140:test_is_single_char_ifiable</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_learn_decls')">141:test_learn_decls</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_load_task_states')">142:test_load_task_states</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_make_predicate')">143:test_make_predicate</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_make_symmetrical')">144:test_make_symmetrical</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_make_symmetrical_sanity_tests')">145:test_make_symmetrical_sanity_tests</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_most_d_colors')">146:test_most_d_colors</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_neighbor_map')">147:test_neighbor_map</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_ogs')">148:test_ogs</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_ogs_l')">149:test_ogs_l</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_ogs_m')">150:test_ogs_m</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_ogs_s')">151:test_ogs_s</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_pp')">152:test_pp</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_print_tree')">153:test_print_tree</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_reduce_grid')">154:test_reduce_grid</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_reduce_grid_mo')">155:test_reduce_grid_mo</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_regressions')">156:test_regressions</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_repair_symmetry')">157:test_repair_symmetry</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_repair_symmetry_ALL')">158:test_repair_symmetry_ALL</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_reps')">159:test_reps</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_rok')">160:test_rok</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_rot')">161:test_rot</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_run_arcathon')">162:test_run_arcathon</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_secret_data')">163:test_secret_data</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_show_colors')">164:test_show_colors</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_show_grid_objs')">165:test_show_grid_objs</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_show_patterns')">166:test_show_patterns</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_supergrid')">167:test_supergrid</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_tag')">168:test_tag</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_tmw')">169:test_tmw</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_try_something')">170:test_try_something</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_url_encode')">171:test_url_encode</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_webui_menu')">172:test_webui_menu</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('test_what_unique')">173:test_what_unique</a></li>
+ <li class="nav-item"><a class="nav-link" href="javascript:void(0)"  onclick="navCmd('train_test')">174:train_test</a></li>
+</ul></div>
+<div id="main" style="top: 0; left: 0">
+ <span style="font-size:20px;cursor:pointer; top: 0; left: 0; position: fixed" onclick="toggleNavL('mySideNavL')">&#9776; Task Suites</span>
+ <span style="font-size:20px;cursor:pointer; top: 0; right: 0; position: fixed" onclick="toggleNavR('mySideNavR')">&#9776; Task Operations</span><input type="checkbox" id="sess_accordian" class="hidecontent">
+	  <label for="sess_accordian"><div class="font(1)">Session Info</div></label>
+		<div class="content hidecontent"><div id="page_head_div"></div><label id="sess_accordian_x" for="sess_accordian" style="right: 0; position: relative; width: 8px">x</label></div>  
+		<iframe src="about:blank" nononLoad="ensureTopUsesIFrameParams()" 
+			width="1024" height="100%" frameborder="0" name="lm_xref" id="lm_xref" 
+			style="width: 100%; height=" scrolling="auto" />
+		</iframe>
+</div>
+</body>
+</html>
+
