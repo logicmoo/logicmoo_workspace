@@ -529,7 +529,7 @@ protect_vars(AB,ABC,HowUnprotect):-
   HowUnprotect = subst_2LC_safe(From,Into).
   
 subst_2LC_safe([F|From],[B|Into],I,O):- 
-  (var(B)->subst_2LC([F],[B],I,O);true),
+  (var(B)->subst_2L_p2(same_term,[F],[B],I,O);true),
   subst_2LC_safe(From,Into,I,O).
 subst_2LC_safe([],[],I,I).
   

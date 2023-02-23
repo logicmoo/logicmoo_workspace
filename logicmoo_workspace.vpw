@@ -7,4 +7,7 @@
 		<Project File="other_files.vpj"/>
 		<Project File="../CYC_JRTL_with_CommonLisp/platform/new-platform.vpj"/>
 	</Projects>
+	<TagFiles>
+		<TagFile File="logicmoo_workspace-2.vtg" AutoUpdateFrom="/Users/logicmoo/OneDrive/Documents/My SlickEdit Config/logicmoo_workspace.vtg"/>
+	</TagFiles>
 </Workspace>

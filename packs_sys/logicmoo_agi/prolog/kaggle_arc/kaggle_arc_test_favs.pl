@@ -2789,7 +2789,7 @@ fav(v('7ee1c6ea'),[grid_size_same,-rotation_match,+shape_match,+mask_match,+colo
 %fav(v('7c9b52a0'),[indiv([force_by_color,pbox_vm])]).
 fav(v('7c9b52a0'),[indiv([colormass,bg_shapes(colormass)])]).
 fav(t('484b58aa'),[indiv(i_repair_patterns_f)]).
-fav(t('0dfd9992'),[indiv(i_repair_patterns_f)]).
+%fav(t('0dfd9992'),[indiv(i_repair_patterns_f)]).
 fav(v('af22c60d'),[indiv(i_repair_patterns_f)]).
 fav(v('903d1b4a'),[indiv(i_repair_patterns_f)]).
 fav(v('e66aafb8'),[indiv(i_repair_patterns_f)]).
@@ -2877,7 +2877,7 @@ fav(v('94133066'),[ohuman([largest_indiv,trim_to_rect,rot90,flipV])]).
 fav(v('762cd429'),[indiv(shape_lib(filled_squares)),ohuman(delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects)]).
 fav(v(f9d67f8b),[grid_size_same,ohuman([overlay_each_pattern]),-rotation_match,-color_match,+shape_match,+mask_match,test_suite([eval400]),'(4, 1) ']).
 
-fav(t('e9bb6954'),[debug_indiv]).
+fav(t('e9bb6954'),[print_info]).
 fav(t('5582e5ca'),[grid_size_same,ohuman([compute_max_color(_134548),cls_with(_134548)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),dominant_color,count_tiles,'(3, 1)']).
 fav(t('6f8cd79b'),[grid_size_same,ohuman([add_borders(cyan)]),-rotation_match,-mask_match,-color_match,+shape_match,test_suite([train400]),ex_nihilo,contouring,'(4, 1)']).
 fav(t('dae9d2b5'),[ohuman([cut_in_half,overlay_all,set_all_fg(magenta)])]).
@@ -2890,7 +2890,7 @@ fav(t('8be77c9e'),[ohuman([grow([[sameR],[flipV]])])]).
 fav(t('7f4411dc'),[ohuman([shave_away_1s])]).
 fav(t('7b6016b9'),[ohuman([fillFromBorder(green),subst_color(black,red)])]).
 fav(t('6f8cd79b'),[ohuman([add_borders(cyan)])]).
-fav(t('6d58a25d'),[debug_indiv,print_grid,"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
+fav(t('6d58a25d'),[print_info,print_grid,"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
 fav(t('6cf79266'),[learn([find(nines),remove_them]),ohuman(reverse_learned)]).
 fav(v(f9d67f8b),[ohuman([overlay_each_pattern])]).
 
@@ -3456,7 +3456,7 @@ less_fav(t(ecdecbb3),[grid_size_same,-rotation_match,-mask_match,+shape_match,+c
 less_fav(v('73c3b0d8'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(4, 1) ']).
 less_fav(v(f8be4b64),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',test_suite([eval400]),'(4, 1)']).
 less_fav(v('17b80ad2'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(4, 1) ']).
-less_fav(t('6d58a25d'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),print_grid,draw_line_from_point,debug_indiv,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
+less_fav(t('6d58a25d'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),print_grid,draw_line_from_point,print_info,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
 less_fav(t('7df24a62'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),pattern_rotation,pattern_repetition,pattern_juxtaposition,out_of_boundary,'(4, 1)']).
 less_fav(t('3bdb4ada'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),recoloring,pattern_repetition,holes,'(2, 1)']).
 less_fav(t('3618c87e'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),gravity,'(3, 1)']).

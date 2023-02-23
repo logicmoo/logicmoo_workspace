@@ -115,10 +115,11 @@ io_colors(I,O,IOColors):-
   list_to_set(OIColors,IOColors).
 
 subst_colors_with_vars(Colors,Vars,I,O):-
-  unique_colors(I,UC),
-  include(is_real_color,UC,Colors),
- % io_colors(I,O,Colors),
-  length(Colors,CL),length(Vars,CL),
+  if_t(var(Colors), 
+  (unique_colors(I,UC),
+    include(is_real_color,UC,Colors))),
+    % io_colors(I,O,Colors),
+    length(Colors,CL),length(Vars,CL),
   subst_2L(Colors,Vars,I,O),!.
 
 %apply_equiv_xforms(subst_colors_with_vars(Colors,Vars),II,III):- subst_colors_with_vars(Colors,Vars,II,III).

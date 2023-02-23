@@ -441,3 +441,45 @@ w_section(Title,Goal,true):-
 
 */
 
+% grid_to_obj(Grid,[colormass,fg_shapes(colormass)],Obj),print_side_by_side(Grid,Obj).
+/*
+trim_for_offset_1_1(II,In,OX,OY):- 
+  trim_to_rect2(II,In), !, II\=@=In,
+  % print_side_by_side(II,In),
+  once(ogs_11(OX,OY,In,II);(OX=OY,OX=1)).
+*/
+/*
+all_ogs1(IO,Whole,II,Out,XY):-
+  findall(ogs(trim(IO),Whole,R,[loc2D(XX,YY),vis2D(SIX,SIY)]),
+     (trim_for_offset_1_1(II,In,OX,OY),
+       %maybe_ogs(SIX,SIY,R,In,Out),XX is X+OX-1, YY is Y+OY-1),XY),!.
+  maybe_ogs(SIX,SIY,R,In,Out),XX is X, YY is Y),XY),!.
+*/
+/*
+all_ogs1(IO,Whole,II,Out,XY):-
+  findall(ogs(trim_1_1(IO),Whole,R,[loc2D(XX,YY),vis2D(SIX,SIY)]),
+     (trim_for_offset_1_1(II,In,OX,OY),
+       maybe_ogs(SIX,SIY,R,In,Out),XX is X-OX+1, YY is Y-OY+1),XY),!.
+       %maybe_ogs(SIX,SIY,R,In,Out)),XY),!.
+*/
+
+
+%bg_to_plain_var(BG,BG).
+
+/*
+all_ogs2(IO,Whole,IIn,Out,XY):- 
+   unbind_bg(IIn,In),
+   findall(ogs(notrim(IO),Whole,R,[loc2D(XX,YY),vis2D(SIX,SIY)]),maybe_ogs(R,In,Out),XY),!.
+
+all_ogs3(IO,Grid,Out,XY):-
+  findall(ogs(notrim(IO),Named,R,[loc2D(XX,YY),vis2D(SIX,SIY)]),(fail,grid_to_so(Grid,Named,In),maybe_ogs(SIX,SIY,R,XX,YY,In,Out)),XY).
+
+all_ogs(IO,In,Out,Set):- %member(R,[strict,loose]),
+  all_ogs1(IO,whole,In,Out,XY1),
+  all_ogs2(IO,whole,In,Out,XY2),
+  all_ogs3(IO,In,Out,XY3),  
+  flatten([XY1,XY2,XY3],XY),
+  list_to_set(XY,Set).
+*/
+%maybe_ogs(R,In,Out):-  find_ogs(X,Y,In,Out)*->R=strict;(ogs_11(X,Y,In,Out),R=loose).
+

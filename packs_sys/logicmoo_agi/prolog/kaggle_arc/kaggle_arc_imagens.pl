@@ -115,9 +115,9 @@ the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
 the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
 the_hammer(Color,ColorComplex):- 
-  ColorComplex = obj([mass(6), colorlesspoints([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
-  colors_cc([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
-  Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rot2L(sameR), loc2D(2, 5), 
+  ColorComplex = obj([mass(6), shape_rep(grav,[point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
+  colors_cc([cc(Color, 6)]), points_rep(local,[Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
+  Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rot2D(sameR), loc2D(2, 5), 
   changes([]), iz(shape(rectangle)), iz(hammer), 
   globalpoints([Color-point_02_05, Color-point_02_06, Color-point_02_07, Color-point_03_05, Color-point_03_06, Color-point_04_06]), 
   grid_size(10, 10)]).
@@ -472,7 +472,7 @@ dupe_shape(L,E):- mapgroup(dupe_shape,L,E).
 
 show_shape_lib_expanded(Name):- 
   shape_lib_expanded(Name,GallerySOS),
-  debug_indiv(GallerySOS).
+  print_info(GallerySOS).
 
 show_shape_lib:- %mmake, 
   findall(Name,(clause(in_shape_lib(Name,_Obj),_),nonvar(Name)),Gallery),
@@ -499,7 +499,7 @@ show_shape(Shape):-
 
 print_shape_0(Shape):-
   vis2D(Shape,H,V),
-  localpoints(Shape,Points),
+  points_rep(local,Shape,Points),
   
   numbervars(Points,0,_,[attvar(bind)]),
   subst001(Points,'$VAR'(0),grey,Points0),
@@ -636,7 +636,7 @@ in_shape_lib(squares,LibObj):- thirty_down_2(HW), decl_one_fg_color(C),hollow_sq
 in_shape_lib(n_shape,LibObj):- n_shape(LibObj).
 
 in_shape_lib(hammer,Name):- the_hammer1(Name).
-in_shape_lib(seen,O):- get_current_test(TestID),g_2_o(TestID,_,O), localpoints(O,LP),LP\==[],length(LP,L),L>4.
+in_shape_lib(seen,O):- get_current_test(TestID),g_2_o(TestID,_,O), points_rep(local,O,LP),LP\==[],length(LP,L),L>4.
 
 all_rots(X,Y):- all_rotations(X,Y).
 

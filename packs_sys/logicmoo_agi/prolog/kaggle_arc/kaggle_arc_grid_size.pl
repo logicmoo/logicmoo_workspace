@@ -139,7 +139,9 @@ proportional_size(N1,N2,num(vals(Vals),+N,ratio(R))):- number(N1),number(N2),!,
 
 
 :- meta_predicate(with_other_grid(+,0)).
-with_other_grid(OtherGrid,Goal):- locally(nb_setval(other_grid,OtherGrid),(set_target_grid(OtherGrid),Goal)).
+with_other_grid(OtherGrid,Goal):- 
+  locally(nb_setval(other_grid,OtherGrid),
+    (set_target_grid(OtherGrid),Goal)).
 
 other_grid(_,OtherGrid):- luser_getval(other_grid,OtherGrid),is_grid(OtherGrid),!.
 other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.grid_target, is_grid(OtherGrid),!.
@@ -181,7 +183,11 @@ set_current_pair(I,O):-
   luser_setval(output_grid,O),ensure_other_grid(I,O),set_target_grid(O),
   must_det_ll((other_grid(I,OO),OO==O)).
 
-current_pair(I,O):- luser_getval(input_grid,I), must_det_ll((other_grid(I,O))).
+current_pair(I,O):- current_pair0(II,OO),II=I,OO=O.
+current_pair0(I,O):- luser_getval(input_grid,I), is_gridoid(I),!, must_det_ll((other_grid(I,O))).
+current_pair0(I,O):- current_test_example(TestID,ExampleNum),
+   setup_call_cleanup(true,
+     ((kaggle_arc(TestID,ExampleNum,I,O);fail),set_current_pair(I,O)), luser_setval(input_grid,[])).
 
 % test_hint(ratio_between(mass,mass)). %ac0a08a4
 increase_size_by_grid_mass(In,Out):- mass(In,Mass),increase_size(Mass,In,Out).

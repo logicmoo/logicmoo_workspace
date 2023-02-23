@@ -10,9 +10,10 @@
 saved_group(Why,IndvS):-
   is_why_grouped(_TestID,_Count,Why,IndvS).
 
-is_why_grouped(TestID,Count,Why,IndvS):-
+is_why_grouped(TestID,Count,Why,IndvSO):-
   is_why_grouped_g(TestID,Count,Why,IndvSG),
-  maplist(must_oid_to_object,IndvSG,IndvS).
+  maplist(must_oid_to_object,IndvSG,IndvS),!,
+  IndvSO=IndvS.
 
 must_oid_to_object(ID,O):- must_det_ll(oid_to_obj(ID,O)).
 
@@ -298,7 +299,7 @@ too_unique(/*b*/iz).
 
 good_overlap(P):- compound(P),!,compound_name_arity(P,F,_),!,good_overlap(F).
 good_overlap(localpoints).
-good_overlap(rot2L).
+good_overlap(rot2D).
 
 too_non_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_non_unique(F).
 too_non_unique(grid_size).
@@ -315,14 +316,14 @@ length_criteria(List,P):- compound(P), length(List,I), !, call(call,P,I).
 length_criteria(List,N):- length(List,N).
 
 tesT_compare_objects:- compare_objects([
-    obj([mass(1),colorlesspoints([point_01_01]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),
-      vis2D(1,1),rot2L(sameR),loc2D(4,9),changes([]),iz(type(dots)),iz(type(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(4,9),% obj_to_oid(t(af902bf9)>(tst+0)*in,37),globalpoints([yellow-point_04_09]),
+    obj([mass(1),shape_rep(grav,[point_01_01]),colors_cc([cc(yellow,1.0)]),points_rep(local,[yellow-point_01_01]),
+      vis2D(1,1),rot2D(sameR),loc2D(4,9),changes([]),iz(type(dots)),iz(type(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(4,9),% obj_to_oid(t(af902bf9)>(tst+0)*in,37),globalpoints([yellow-point_04_09]),
       grid_size(10,10),iz(important)]),
-    obj([mass(1),colorlesspoints([point_01_01]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rot2L(sameR),loc2D(4,6),changes([]),iz(type(dots)),iz(colorlesspoints(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(4,6),obj_to_oid(t(af902bf9)>(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
-    obj([mass(1),colorlesspoints([point_01_01]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rot2L(sameR),loc2D(1,6),changes([]),iz(type(dots)),iz(colorlesspoints(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(1,6),obj_to_oid(t(af902bf9)>(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
-    obj([mass(1),colorlesspoints([point_01_01]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rot2L(sameR),loc2D(10,5),changes([]),iz(type(dots)),iz(colorlesspoints(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(10,5),obj_to_oid(t(af902bf9)>(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
-    obj([mass(1),colorlesspoints([point_01_01]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rot2L(sameR),loc2D(6,5),changes([]),iz(type(dots)),iz(colorlesspoints(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(6,5),obj_to_oid(t(af902bf9)>(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
-    obj([mass(1),colorlesspoints([point_01_01]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rot2L(sameR),loc2D(10,1),changes([]),iz(type(dots)),iz(colorlesspoints(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(10,1),obj_to_oid(t(af902bf9)>(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
-    obj([mass(1),colorlesspoints([point_01_01]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-point_01_01]),vis2D(1,1),rot2L(sameR),loc2D(6,1),changes([]),iz(type(dots)),iz(colorlesspoints(dot)),iz(filltype(solid)),iz(jagged(true)),center2G(6,1),obj_to_oid(t(af902bf9)>(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
+    obj([mass(1),shape_rep(grav,[point_01_01]),colors_cc([cc(yellow,1.0)]),points_rep(local,[yellow-point_01_01]),vis2D(1,1),rot2D(sameR),loc2D(4,6),changes([]),iz(type(dots)),iz(shape_rep(grav,dot)),iz(filltype(solid)),iz(jagged(true)),center2G(4,6),obj_to_oid(t(af902bf9)>(tst+0)*in,39),globalpoints([yellow-point_04_06]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape_rep(grav,[point_01_01]),colors_cc([cc(yellow,1.0)]),points_rep(local,[yellow-point_01_01]),vis2D(1,1),rot2D(sameR),loc2D(1,6),changes([]),iz(type(dots)),iz(shape_rep(grav,dot)),iz(filltype(solid)),iz(jagged(true)),center2G(1,6),obj_to_oid(t(af902bf9)>(tst+0)*in,40),globalpoints([yellow-point_01_06]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape_rep(grav,[point_01_01]),colors_cc([cc(yellow,1.0)]),points_rep(local,[yellow-point_01_01]),vis2D(1,1),rot2D(sameR),loc2D(10,5),changes([]),iz(type(dots)),iz(shape_rep(grav,dot)),iz(filltype(solid)),iz(jagged(true)),center2G(10,5),obj_to_oid(t(af902bf9)>(tst+0)*in,41),globalpoints([yellow-point_10_05]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape_rep(grav,[point_01_01]),colors_cc([cc(yellow,1.0)]),points_rep(local,[yellow-point_01_01]),vis2D(1,1),rot2D(sameR),loc2D(6,5),changes([]),iz(type(dots)),iz(shape_rep(grav,dot)),iz(filltype(solid)),iz(jagged(true)),center2G(6,5),obj_to_oid(t(af902bf9)>(tst+0)*in,42),globalpoints([yellow-point_06_05]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape_rep(grav,[point_01_01]),colors_cc([cc(yellow,1.0)]),points_rep(local,[yellow-point_01_01]),vis2D(1,1),rot2D(sameR),loc2D(10,1),changes([]),iz(type(dots)),iz(shape_rep(grav,dot)),iz(filltype(solid)),iz(jagged(true)),center2G(10,1),obj_to_oid(t(af902bf9)>(tst+0)*in,43),globalpoints([yellow-point_10_01]),grid_size(10,10),iz(important)]),
+    obj([mass(1),shape_rep(grav,[point_01_01]),colors_cc([cc(yellow,1.0)]),points_rep(local,[yellow-point_01_01]),vis2D(1,1),rot2D(sameR),loc2D(6,1),changes([]),iz(type(dots)),iz(shape_rep(grav,dot)),iz(filltype(solid)),iz(jagged(true)),center2G(6,1),obj_to_oid(t(af902bf9)>(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
     OUTPUT),
   print(OUTPUT).

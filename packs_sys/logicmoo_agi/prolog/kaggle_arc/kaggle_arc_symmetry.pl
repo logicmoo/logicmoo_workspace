@@ -408,7 +408,7 @@ clip_quadrant(CRef,SXC,SXC,EXC,EYC,VM,SXQ4,SYQ4,EXQ4,EYQ4,G,Same,OBJL):-
   make_indiv_object(VM,
     [iz(quadrant(CRef,Same)),
      iz(pattern(CRef,SXC,SXC,EXC,EYC)),
-     rot2L(Same),
+     rot2D(Same),
      vis2D(Width,Height),
      loc2D(SXQ4,SYQ4),
      globalpoints(GPoints),
@@ -424,12 +424,12 @@ nop((
   globalpoints(Q4,LPoints),
   offset_points(SXQ4,SYQ4,LPoints,GPoints),
   embue_points1(VM,SXQ4,SYQ4,EXQ4,EYQ4,GPoints,Ps),!,
-  append([[rot2L(Same),
+  append([[rot2D(Same),
      center_info(CRef,SXC,SXC,EXC,EYC),grid(LikeQ4)],CommonQ,Ps],OBJL),
   OBJ=obj(OBJL))).
 
 
-%rot2L(obj(L),G):- member(rot2L(G),L).
+%rot2D(obj(L),G):- member(rot2D(G),L).
 % Hedra's t('47c1f68c')
 % v(be03b35f)>(trn+2),
 %detect_grid(Grid,E):- 
@@ -1694,14 +1694,6 @@ nb_set_local_point(H,V,C,Grid):- assertion(is_grid(Grid)),!,
   ignore((nth1(V,Grid,Row),(Row==[]-> true;nb_set_nth1(H,Row,C)))).
 
 
-my_partition(_,[],[],[]):-!.
-my_partition(P1,[H|L],[H|I],E):- \+ \+ call(P1,H),!,
-  my_partition(P1,L,I,E).
-my_partition(P1,[H|L],I,[H|E]):- 
-   my_partition(P1,L,I,E),!.
-my_partition(P1,H,I,HE):- arcST,break,
-  my_partition(P1,[H],I,HE).
-
 consensus22(Steps,ColorAdvice,L,C):- 
   my_partition(plain_var,L,Vars,Rest0),
   my_partition(=@=(ColorAdvice),Rest0,_,Rest),
@@ -1821,12 +1813,12 @@ replace_diffs(LPoints,Obj,NewObj):-
  must_not_error((
   vis2D(Obj,H,V),
   my_partition(point_between(1,1,H,V),LPoints,Points,_),
-  localpoints(Obj,LP),
+  points_rep(local,Obj,LP),
   intersection(LP,Points,_Same,LPOnly,LPointOnly),
   ((LPOnly ==[], LPointOnly ==[]) -> NewObjM = Obj ;
   (
    % pp(LPOnly), pp(LPointOnly),
-  rebuild_from_localpoints(Obj,Points,NewObjM))))),
+  rebuild_from_points_rep(local,Obj,Points,NewObjM))))),
   override_object(repaired(pattern),NewObjM,NewObj),
     %mprint_grid(NewObj),
   nop(show_shape(NewObj)),!.
@@ -1839,7 +1831,7 @@ point_between(LoH,LoV,HiH,HiV,Point):- point_to_hvc(Point,H,V,_),
 
 colored_pixel_count(A,Count):- is_points_list(A),fg_pixel_count(A,Count),!.
 colored_pixel_count(G,Count):- is_grid(G), fg_pixel_count(G,Count),!.
-colored_pixel_count(A,Count):- is_object(A),localpoints(A,G), fg_pixel_count(G,Count),!.
+colored_pixel_count(A,Count):- is_object(A),points_rep(local,A,G), fg_pixel_count(G,Count),!.
 colored_pixel_count(A,Count):- is_list(A),!,maplist(colored_pixel_count,A,Summe),sum_list(Summe,Count),!.
 colored_pixel_count(A,1):- atomic(A),is_fg_color(A),!.
 colored_pixel_count(_,0).

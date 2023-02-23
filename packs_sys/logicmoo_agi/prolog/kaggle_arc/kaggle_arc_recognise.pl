@@ -6,7 +6,7 @@
 */
 :- encoding(iso_latin_1).
 :- include(kaggle_arc_header).
-
+:- discontiguous is_exit_hook/1.
 :- discontiguous h666/2. 
 :- discontiguous f666/2. 
 :- discontiguous n_grid/2.
@@ -23,13 +23,635 @@ test_ogs_s:- clsmake, mmake, locally(b_setval(find_rule,strict),my_time(forall(t
 
 test_ogs0:- clsmake, my_time(forall(test_ogs0(_,_,_),true)).
 test_ogs1:- clsmake, my_time(forall(test_ogs1(_,_,_),true)).
-test_ogs2:- clsmake, my_time(forall(test_ogs2(_,_,_),true)).
+%test_ogs2:- clsmake, my_time(forall(test_ogs2(_,_,_),true)).
 
 :- arc_history1(test_ogs_m).
 :- arc_history1(test_ogs_m0).
 
 test_ogs_m:- clsmake, my_time(forall(test_ogs(_,_,true),true)).
 test_ogs_m0:- clsmake, my_time(forall(test_ogs0(_,_,true),true)).
+
+test_ogs_for_ans(PF,TestID,In,Out):- maybe_into_grid(In,InG),!,test_ogs_for_ans(PF,TestID,InG,Out).
+test_ogs_for_ans(PF,TestID,In,Out):- maybe_into_grid(Out,OutG),!,test_ogs_for_ans(PF,TestID,In,OutG).
+%test_ogs_for_ans(PF,TestID,In,Out):- % print_side_by_side(Test,In,Out), test_ogs_for_ans(PF,TestID,In,Out).
+test_ogs_for_ans(PF,TestID,In,Out):-   
+  trace_all_ogs([], Answers,In,Out), 
+  Answers\==[],(PF\==fail->!;true),show_ogs_ans_success(TestID,Answers,In,Out),!.
+
+test_ogs_for_ans(PF,TestID,In,Out):- % options: call,step,redo,exit,fail
+  PF\==pass,
+  trace_all_ogs([call,step,redo,exit,fail], Answers,In,Out), show_ogs_ans_success(TestID,Answers,In,Out), Answers\==[].
+
+show_ogs_ans_success(TestID,Answers,In,Out):- 
+  print_ss(TestID,In,Out),!,
+  must_det_ll((treeify_props(Answers,R),
+  pp(R))),
+  forall(member(Ans,Answers),show_answer(Ans,In,Out)),!.
+
+show_answer(Ans,_In,Out):- !,
+ must_det_ll((
+  member(grid(Grid),Ans), 
+  member(loc2D(H,V),Ans),
+  include(p1_not(p1_arg(1,is_gridoid)),Ans,Props),
+  grid_size(Out,GH,GV),
+  H2 is H-2, V2 is V-2,
+  offset_grid(H2,V2,Grid,OF),
+  print_grid(GH,GV,Props,OF))),!.
+
+show_answer(Ans,In,Out):-  
+ %must_det_ll((
+  include(p1_not(p1_arg(1,is_gridoid)),Ans,Props),
+  member(loc2D(H,V),Ans),
+  H2 is H-2, V2 is V-2,
+ (once(member(grid(Grid),Ans);member(f_grid(Grid),Ans);object_l(grid_f(Grid),Ans);object_l(grid(Grid),Ans))->
+  offset_grid(H2,V2,Grid,OF);OF=Out),
+  grid_size(Out,GH,GV),
+  (like_object(Ans,Out,ObjO)->true;ObjO=In),
+  print_side_by_side(Props,print_grid(GH,GV,OF),print_grid(GH,GV,[ObjO,ObjO])),!.
+
+
+like_obj_props(ObjL,_Ans,_GOPoints):- is_grid(ObjL),!,fail.
+like_obj_props(ObjL,Ans,GOPoints):- 
+ must_det_ll((
+  once((compound(ObjL),ObjL=obj(Ans));is_list(ObjL)->ObjL=Ans),
+  globalpoints(obj(Ans),GOPoints))).
+
+like_object(Ans,Out,obj(ObjO)):- 
+  like_obj_props(Ans,Props,GOPoints),
+  grid_to_gid(Out,GID),grid_size(Out,GH,GV), 
+  make_indiv_object_s(GID,GH,GV,Props,GOPoints,obj(ObjO)).
+/*
+like_object(Ans,Out,obj([f_grid(Grid),grid(Grid)|ObjO])):- 
+  like_obj_props(Ans,Props,GOPoints),
+  once(member(grid(Grid),Ans);member(f_grid(Grid),Ans);object_l(grid(Grid),Ans);object_l(grid_f(Grid),Ans)),
+  grid_size(Out,GH,GV),
+  grid_to_gid(Out,GID),
+  make_indiv_object_s(GID,GH,GV,Props,GOPoints,obj(ObjO)).
+*/
+
+test_ogs_a:- 
+  red_only(In),
+  test_ogs_for_ans(both,test_ogs_a,In,t_1b60fb0c_trn_0_out).
+test_ogs_b:-
+  red_only(In),
+  into_grid(t_1b60fb0c_trn_0_in,Out),!,
+  test_ogs_for_ans(both,test_ogs_b,In,Out).
+test_ogs_c:- 
+   test_ogs_for_ans(both,test_ogs_c,v_2697da3f_trn_0_in,v_2697da3f_trn_0_out).
+
+test_ogs_d:- test_ogs_mode(pass).
+test_ogs_e:- test_ogs_mode(both).
+test_ogs_f:- test_ogs_mode(fail).
+
+test_ogs_mode(Pass):-
+ with_pair_mode(entire_suite,test_ogs_mode(Pass,_)).
+test_ogs_mode(Pass,TestSpec):-
+ forall_count(testspec_to_pairs(TestSpec,TestID,ExampleNum,In,Out),
+  test_ogs_for_ans(Pass,test_ogs_mode(Pass,TestID>ExampleNum),In,Out)).
+
+
+
+with_ogs_trace(Ports,Goal):-
+ locally(t_l:pss_trace(Ports),Goal).
+trace_all_ogs(Ports,R,In,Out):-
+ with_ogs_trace(Ports, all_ogs(R,In,Out)).
+all_ogs(R,In,Out):-
+  findall(E,maybe_ogs(E,In,Out),R).
+  
+
+maybe_ogs(ROut,In,Out):- 
+   def_ogs_prog(Constr),
+    maybe_ogs(Constr,RRR,In,Out),
+    simpl_ogs(RRR,ROut),
+    (member(rul(loose),ROut) -> was_loose_ok(ROut) ; true).
+%maybe_ogs(ROut,In,Out):- try_ogs_pass_9([plain],ROut,In,Out).
+
+maybe_ogs(Constr,R,In,Out):- var(In),!,maybe_ogs_test_i(In),maybe_ogs(Constr,R,In,Out).
+maybe_ogs(Constr,R,In,Out):- var(Out),!,maybe_ogs_test_o(Out),maybe_ogs(Constr,R,In,Out).
+
+maybe_ogs(Constr,R,In,Out):- \+ is_grid(Out),!,into_grid(Out,OOut),maybe_ogs(Constr,R,In,OOut).
+maybe_ogs(Constr,R,In,Out):- is_grid(In),!, maybe_ogs_pass0([],Constr,R,In,Out).
+maybe_ogs(Constr,R,[In|List],Out):- !,
+ maybe_cvt_to_grid(In,Grid),!, (maybe_ogs_pass0([maybe_cvt_to_grid],Constr,R,Grid,Out);maybe_ogs(Constr,R,List,Out)).
+maybe_ogs(Constr,R,In,Out):- In\==[],maybe_cvt_to_grid(In,Grid),!, maybe_ogs_pass0([],Constr,R,Grid,Out).
+
+%maybe_ogs_pass0(Constr,R,Grid,Out):- maybe_if_changed(fpad_grid(s),Out,OOut),!, maybe_ogs_pass_1(Prf,Constr,R,Grid,OOut).
+
+maybe_ogs_pass0(Prf,Constr,ROut,In,Out):- 
+  prepare_output_hooks(CheckTypes,List1,Out,OutC),!,
+  prepare_input_hooks(CheckTypes,List2,In,InC),!,
+  append([Prf,List1,List2],Strt),
+  maybe_ogs_pass0a(CheckTypes,Strt,Constr,ROut,InC,OutC).
+
+maybe_ogs_pass0a(CheckTypes,Prf,Constr,ROut,Grid,Out):- 
+  \+ \+ trace_ogs(call,begin_search(Constr),Grid,Out),
+  (maybe_ogs_pass_cs(Prf,Constr,RR,Grid,Out),
+   CheckTypes=run,
+   must((do_exit_hooks(RR))),
+   reverse(RR,ROut)).
+
+
+maybe_ogs_pass_cs(Prf,Constr,R,In,Out):- maybe_ogs_pass_1(Prf,Constr,R,In,Out).
+%maybe_ogs_pass_cs(Prf,Constr,[auto(Cs)|R],In,Out):- do_suggested_color_swaps(Cs,In,Out,InCs,OutCs), maybe_ogs_pass_1(Prf,Constr,R,InCs,OutCs).
+
+
+do_exit_hooks(R):- \+ compound(R),!.
+do_exit_hooks([H|T]):-!,do_exit_hooks(H),do_exit_hooks(T).
+do_exit_hooks(C):- clause(is_exit_hook(C),Hook),!,show_failure(Hook).
+do_exit_hooks(_-C):- clause(is_exit_hook(C),Hook),!,show_failure(Hook).
+do_exit_hooks(_).
+
+select_allow_or_must(Idea,Constr,Next):-
+  select(Idea,Constr,Next),functor(Idea,F,_),member(F,[allow,must]).
+/*
+maybe_ogs_pass_1(Prf,Constr,R,In,Out):- select(after(Before,Idea),Constr,Next),member(Before,Prf),!, 
+  idea_io_goal(Idea,IO,Call), maybe_ogs_pass_2([Idea|Prf],Next,Idea,IO,Call,R,In,Out).  
+
+maybe_ogs_pass_1(Prf,Constr,R,In,Out):- 
+  select(must(Idea),Constr,Next),  idea_io_goal(Idea,IO,Call),!,
+  maybe_ogs_pass_2([Idea|Prf],[disallow(Idea)|Next],must(IO),Call,R,In,Out).
+
+maybe_ogs_pass_1(Prf,Constr,R,In,Out):- (member(allow(Idea),Constr); idea_for(In,Out,Idea)), 
+  allowed_in(Idea,Constr), idea_io_goal(Idea,IO,Call),  
+  maybe_ogs_pass_2([Idea|Prf],[disallow(Idea)|Constr],IO,Call,R,In,Out).  
+*/
+maybe_ogs_pass_1(Prf,_Constr,R,In,Out):- 
+  try_ogs_pass_7(Prf,R,In,Out),
+  ignore(learn_hybrid_shape_board(ogs(R),In)).
+
+
+maybe_ogs_pass_2(Prf,Constr,must(IO),Call,R,In,Out):- 
+  must_det_ll(use_idea(IO,grid_call(Call),In,Out,NewIn,NewOut)),
+   maybe_ogs_pass_1(Prf,Constr,R,NewIn,NewOut).
+
+/*
+maybe_ogs_pass_2(Prf,Constr,IO,Call,R,In,Out):- 
+   use_idea(IO,maybe_if_changed_grid_call(Call),In,Out,NewIn,NewOut),
+   maybe_ogs_pass_1(Prf,Constr,R,NewIn,NewOut).
+*/
+
+maybe_ogs_pass_2(Prf,Constr,IO,Call,R,In,Out):- 
+   use_idea(IO,grid_call(Call),In,Out,NewIn,NewOut),
+   maybe_ogs_pass_1(Prf,Constr,R,NewIn,NewOut).
+
+
+use_idea(inp,Call,In,Out,NewIn,Out):- copy_term(In,InC),call(Call,In,NewIn),trace_ogs(step,before_and_after(inp,Call),InC,NewIn).
+use_idea(out,Call,In,Out,In,NewOut):- call(Call,Out,NewOut),trace_ogs(step,before_and_after(out,Call),Out,NewOut).
+
+
+release_some_c(Grid,Grid):-!.
+
+release_some_c(Grid,NonBG):- is_group(Grid),!,mapgroup(release_some_c,Grid,NonBG).
+release_some_c(Grid,Out):- sub_var(black,Grid),!,Out=Grid.
+release_some_c(Grid,Out):- release_non_fg(Grid,Out).
+
+release_non_mc(Grid,Grid):-!.
+
+release_non_mc(Grid,NonBG):- is_group(Grid),!,mapgroup(release_non_mc,Grid,NonBG).
+release_non_mc(Grid,NonBG):- 
+ ((sub_var(black,Grid),(sub_var(bg,Grid);sub_var(wbg,Grid);sub_var(fg,Grid);sub_var(zero,Grid);sub_var(wfg,Grid)))->
+  release_non_bg(Grid,NonBG);release_non_fg(Grid,NonBG)).
+
+
+release_non_fg(Point,Point):- is_fg_color(Point),!.
+release_non_fg(Point,_):- is_color(Point),!.
+release_non_fg(List,FGList):- is_list(List),!,maplist(release_non_fg,List,FGList).
+release_non_fg(Keep,NonFG):- is_grid(Keep),!,mapgrid(release_non_fg,Keep,NonFG).
+release_non_fg(Keep,NonFG):- is_cpoints_list(Keep),!,maplist(release_non_fg,Keep,NonFG).
+release_non_fg(Keep,NonFG):- map_pred1(release_non_fg,Keep,NonFG),!.
+release_non_fg(Keep,Keep).
+
+release_non_bg(Point,Point):- is_bg_color(Point),!.
+release_non_bg(Point,_):- is_color(Point),!.
+release_non_bg(Keep,NonFG):- is_grid(Keep),!,mapgrid(release_non_bg,Keep,NonFG).
+release_non_bg(Keep,NonFG):- is_cpoints_list(Keep),!,maplist(release_non_bg,Keep,NonFG).
+release_non_bg(List,FGList):- is_list(List),!,maplist(release_non_bg,List,FGList).
+release_non_bg(Keep,NonBG):- map_pred1(release_non_bg,Keep,NonBG),!.
+release_non_bg(Keep,Keep).
+
+subst_all_fg_colors_with_vars(Cs,Vs,In,Mid):- 
+  copy_safe(In,InC),unique_fg_colors(InC,Cs),
+  Cs\==[], % at least some colors
+  subst_colors_with_vars(Cs,Vs,InC,Mid),    
+  ground(Cs), % fully grounded test
+  maplist(cfg,Vs), % constrain to foreground
+  maplist(dif(zero),Vs), % constrain to not zero
+  !.
+
+  
+
+is_exit_hook(subst_all_fg_colors_with_vars(Cs,Vs,_In,_Out)):- 
+  Cs\=@=Vs, % slightly differnt 
+  list_to_set(Vs,Set), Vs=@=Set, % All differnt colors
+  ground(Vs), % fully grounded results
+  maplist(same_color_class,Cs,Vs), % FG == FG ,.. BG == BG etc    
+  %\+ member(black,Vs),
+  !.
+
+
+maybe_if_changed_grid_call(Call,Out,NewOut):-
+   maybe_if_changed(grid_call(Call),Out,NewOut).
+
+   %maybe_ogs(pass_1,[unbind_black|R],In,Out):- sub_var(black,In),maybe_if_changed(unbind_black,In,IIn), mass(IIn,Mass),Mass>0, maybe_ogs(pass_2,R,IIn,Out).
+%maybe_ogs(pass_2,[into_monogrid(find)|R],In,Out):- maybe_if_changed(into_monogrid,Out,OOut), maybe_ogs(pass_3,R,In,OOut).
+%maybe_ogs(pass_3,[into_monogrid(srcharea)|R],In,Out):- maybe_if_changed(into_monogrid,In,IIn), maybe_ogs(pass_4,R,IIn,Out).
+%maybe_ogs(pass_4,[trim_to_rect|R],In,Out):- maybe_if_changed(trim_to_rect,In,IIn),maybe_ogs(pass_5,R,IIn,Out).
+%maybe_ogs(pass_5,R,In,Out):- subst(In,red,blue,InC),rot180(InC,In180), maybe_ogs(pass_7,R,In180,Out).
+%maybe_ogs_pass_cs(Prf,Constr,R,In,Out):- maybe_ogs_pass_1(Prf,Constr,R,In,Out).
+
+try_ogs_pass_7(Prf,[rot2P(RotG)|R],In,Out):- 
+  findall_rotations(RotG,In,InR),
+  try_ogs_pass_8(Prf,R,InR,Out).
+
+findall_rotations(sameR,In,In).
+findall_rotations(RotG,In,InR):-
+  Rot = (RotG-InR),
+  findall(Rot,((enum_orientation(RotG),RotG\==rollD,once(call(RotG,In,InR)),InR\=@=In)),RotL),
+  predsort(using_compare(arg(2)),RotL,RotS),member(Rot,RotS).
+
+enum_simple_xforms(RotG):- enum_orientation(RotG).
+enum_simple_xforms(Blur_FlipV):- easy0(4,Blur_FlipV).
+enum_simple_xforms(Grow2):- easy0(5,Grow2).
+enum_simple_xforms(Flip_Once):- easy0(2,Flip_Once).
+enum_simple_xforms(invert_one_color(_)).
+
+invert_one_color(Cs,In,Out):- var(Cs),!,unique_fg_colors(In,[Cs]),
+  choose_bg_color(Out,Black,black),
+  swap_colors(Cs,Black,In,Out).
+
+try_ogs_pass_8(Prf,R,In,Out):- try_ogs_pass_9(Prf,R,In,Out).
+try_ogs_pass_8(Prf,[Cs|R],In,Out):- 
+  do_suggested_color_swaps(Cs,In,Out,InCs,OutCs), InCs\=@=In,
+  try_ogs_pass_9(Prf,R,InCs,OutCs).
+%try_ogs_pass_8a(Prf,R,In,Out):- try_ogs_pass_9(Prf,R,In,Out).
+/*
+try_ogs_pass_8b(Prf,R,In,Out):- try_ogs_pass_8a(Prf,R,In,Out).
+try_ogs_pass_8b(Prf,ROut,In,Out):- 
+  subst_all_fg_colors_with_vars(Cs,Vs,In,IIn),
+  Cs\==[], % at least some colors
+  ground(Cs), % fully grounded test
+  try_ogs_pass_9(Prf,R,IIn,Out),  % do our search!
+  Cs\=@=Vs, % slightly differnt 
+  maplist(cfg,Vs),
+  maplist(same_color_class,Cs,Vs), % FG == FG ,.. BG == BG etc    
+  ground(Vs), % fully grounded results
+  list_to_set(Vs,Set), Vs=@=Set, % All differnt colors
+  [subst(Cs,Vs)|R]=ROut.
+*/
+% 007bbfb7 needs loose %,!,R\==loose.
+%try_ogs_pass_9(Prf,[rul(R),loc2D(X,Y)/*f_grid(In)*/],In,Out):- nonvar(R),!,(R==strict->find_ogs(X,Y,In,Out);ogs_11(X,Y,In,Out)).
+%try_ogs_pass_9(Prf,[loc2D(X,Y),rul(ogs_11)/*f_grid(In)*/|Prf],In,Out):- 
+%  trace_ogs(redo,ogs_11(Prf),In,Out),
+try_ogs_pass_9(Prf,ROut,In,Out):- !,
+  (try_ogs_pass_9a(Prf,ROut,In,Out)
+   *-> trace_ogs(exit,ROut,In,Out)
+    ; (trace_ogs(fail,Prf,In,Out),fail)).
+
+try_ogs_pass_9a(Prf,ROut,In,Out):-
+  trim_rect_by_1(In,InRect),
+  trim_rect_by_1(Out,OutRect),!,
+   XYR = xyr(X,Y,R),
+   findall(XYR,  (ogs_r_find(X,Y,R,In,Out);ogs_r_find(X,Y,R,InRect,OutRect)),XYRL),!,
+   XYRL\==[],
+  must_det_ll((
+   list_to_set(XYRL,XYRS),
+   %(XYRS == [] -> trace_ogs(fail,ogs_r_find(Prf),In,Out); trace_ogs(fail,ogs_r_find(Prf),In,Out)),
+   member(XYR,XYRS),
+   [loc2D(X,Y),rul(R),grid(InRect)|Prf]=ROut)).
+
+trim_rect_by_1(In,Rect):- 
+  append([_|Mid],[_],In),
+  rot90(Mid,Mid90),
+  append([_|Mid270],[_],Mid90),
+  rot270(Mid270,Rect).
+
+ogs_r_find(X,Y,R,In,Out):- 
+  mass(In,N),N>0,
+  copy_term(In+Out,CIn+COut),
+  copy_term(In+Out,DIn+DOut), 
+  ogs_11(X,Y,DIn,DOut),(find_ogs(X,Y,CIn,COut)->R=strict;R=loose),  
+  R\==loose,
+  In=CIn,DIn=CIn,
+  Out=COut,DOut=COut.
+
+red_only(X):-
+  into_grid(t_1b60fb0c_trn_0_in,In),
+  into_grid(t_1b60fb0c_trn_0_out,Y),
+  grid_minus_grid(Y,In,X),!.
+
+
+
+:- thread_local(t_l:pss_trace/1).
+
+maybe_ogs_test:- 
+  set_current_test('1b60fb0c'),
+  forall(maybe_ogs_test_i(In),
+    forall(maybe_ogs_test_o(Out),
+      ( findall(R,maybe_ogs(R,In,Out),RL),
+        print_table([[call(pp(RL))],[call(print_side_by_side(In,Out))]])))).
+
+maybe_ogs_test2:- 
+ maybe_ogs(R,X,Y),print_grid(X),pp(R),print_grid(Y).
+
+maybe_ogs_test_i(In):- maybe_ogs_test_j(I),(maybe_if_changed(trim_to_rect,I,In);In=I),mass(In,Mass),Mass>0.
+maybe_ogs_test_j(In):- enum_object(O),global_grid(O,In).
+maybe_ogs_test_j(In):- maybe_ogs_test_p(In).
+maybe_ogs_test_p(In):- current_pair(I,O),grid_minus_grid(I,O,In).
+maybe_ogs_test_p(In):- current_pair(I,O),mapgrid(cell_minus_cell,O,I,In).
+maybe_ogs_test_p(Out):- current_test_example(X,Y),into_grid(X>Y*_,Out).
+maybe_ogs_test_o(Out):- get_current_test(TestID), kaggle_arc(TestID,_,_,Out), \+ maybe_ogs_test_p(Out).
+maybe_ogs_test_o(Out):- maybe_ogs_test_p(Out).
+
+bg_to_not_fg(G,GG):- is_grid(G),!,mapgrid(bg_to_not_fg,G,GG).
+bg_to_not_fg(G,GG):- is_group(G),!,mapgroup(bg_to_not_fg,G,GG).
+bg_to_not_fg(G,GG):- is_bg_color(G),!,decl_cbg(GG).
+%bg_to_not_fg(G,GG):- plain_var(G),!,nop(cbg(GG)).
+bg_to_not_fg(G,GG):- is_grid_cell(G),!,G=GG.
+bg_to_not_fg(G,GG):- is_gridoid(G),maptree(bg_to_not_fg,G,GG).
+bg_to_not_fg(G,G). 
+/*
+bg_to_not_fg(G,GG):- attvar(G), \+ get_attr(G,ci,_),!, GG = G, put_attr(GG,ci,bg(_)).
+bg_to_not_fg(G,GG):- attvar(G), !, GG=G.
+bg_to_not_fg(G,GG):- fail, var(G),freeze(G,if_t(is_color(G),cbg(GG))).
+bg_to_not_fg(G,GG):- is_bg_color(G),!,cbg(GG).*/
+
+decl_cbg(GG):- is_fg_color(GG),!.
+decl_cbg(GG):- cbg(GG).
+
+cbg(Trig,Var):- freeze(Trig, cbg(Var)).
+cbg(GG):- plain_var(GG),!,decl_bg_color(GG).
+cbg(GG):- is_fg_color(GG),!,fail.
+cbg(GG):- \+ is_fg_color(GG),!, decl_bg_color(GG).
+cbg(GG):- freeze(GG, \+ is_fg_color(GG)).
+%cbg(Var):- freeze(Var, \+ is_fg_color(Var)).
+
+/*
+yg_to_not_xg(G,GG):- is_grid(G),!,mapgrid(yg_to_not_xg,G,GG).
+yg_to_not_xg(G,GG):- is_group(G),!,mapgroup(yg_to_not_xg,G,GG).
+yg_to_not_xg(G,GG):- var(G),freeze(G,if_t(is_color(G), \+ is_xg_color(GG))).
+yg_to_not_xg(G,GG):- is_list(G),!,maplist(yg_to_not_xg,G,GG).
+yg_to_not_xg(G,GG):- is_yg_color(G),!,freeze(GG, \+ is_xg_color(GG)).
+yg_to_not_xg(G,G). 
+*/
+fg_to_not_bg(G,GG):- is_grid(G),!,mapgrid(fg_to_not_bg,G,GG).
+fg_to_not_bg(G,GG):- is_group(G),!,mapgroup(fg_to_not_bg,G,GG).
+fg_to_not_bg(G,GG):- plain_var(G),!,cfg(GG).
+fg_to_not_bg(G,GG):- is_fg_color(G),!,cfg(GG).
+fg_to_not_bg(G,GG):- is_grid_cell(G),!,G=GG.
+fg_to_not_bg(G,GG):- is_gridoid(G),maptree(fg_to_not_bg,G,GG).
+fg_to_not_bg(G,G). 
+/*
+fg_to_not_bg(G,GG):- attvar(G), \+ get_attr(G,ci,_),!, GG = G, put_attr(GG,ci,fg(_)).
+fg_to_not_bg(G,GG):- attvar(G), !, GG=G.
+fg_to_not_bg(G,GG):- fail, var(G),freeze(G,if_t(is_color(G),cfg(GG))).
+fg_to_not_bg(G,GG):- is_fg_color(G),!,cfg(GG).*/
+
+
+cfg(Trig,Var):- freeze(Trig, cfg(Var)).
+cfg(GG):- plain_var(GG),!,put_attr(GG,ci,fg(_)),!. 
+cfg(GG):- \+ is_bg_color(GG).
+
+unbind_bg(BRect0,BRect):- sub_var(bg,BRect0),!,maptree(bg_to_plain_var,BRect0,BRect).
+unbind_bg(BRect0,BRect):- unbind_black(BRect0,BRect).
+unbind_black(BRect0,BRect):- maptree(black_to_plain_var,BRect0,BRect).
+bg_to_plain_var(BG,_):- BG==bg,!.  black_to_plain_var(G,_):- G==black,!.
+
+is_trimmable_cell(BG,Cell):- \+ \+ BG = Cell, !, BG=Cell.
+%is_trimmable_cell(_BG,Cell):- is_bg_color(Cell),!.
+is_trimmable_cell(_BG,Cell):- \+ is_fg_color(Cell),!.
+%is_trimmable_cell(_BG,Cell):- attvar(Cell),!,fail.
+
+itrace:- if_thread_main(nop(trace)).
+ibreak:- if_thread_main(((trace,break))).
+recolor(_,_):- ibreak.
+
+is_exit_hook(prepare_output_hooks(CheckTypes,_)):- CheckTypes=run.
+is_exit_hook(prepare_input_hooks(CheckTypes,_)):- CheckTypes=run.
+choose_bg_color(Out,Black,Else):-
+  (sub_var(bg,Out)->Black=bg;
+    sub_var(wbg,Out)->Black=wbg;
+     sub_var(black,Out)->Black=black;
+       Black = Else).
+
+%maybe_constrain_grid_now(f,CheckTypes,Out2,OutZ):- constrain_grid_now(f,CheckTypes,Out2,OutZ),!.
+maybe_constrain_grid_now(f,_CheckTypes,OutZ,OutZ):-!.
+
+prepare_output_hooks(CheckTypes,[canvas(BlackS,ZeroS),ogs_trig(CheckTypes)],Out,OutZ):-
+  Zero = black, Else = Zero,
+  choose_bg_color(Out,Black,Else),
+  subst_color_auto(Black,Zero,Out,Out1),
+  fpad_grid(f,var,Out1,Out2),
+  maybe_constrain_grid_now(f,CheckTypes,Out2,OutZ),
+  sformat(BlackS,'~w',[Black]),
+  sformat(ZeroS,'~w',[Zero]).
+
+%if_be_fast(G):- can_be_slow,!.
+if_be_fast(G):-once(G).
+
+prepare_input_hooks(CheckTypes,Props,In,O):- % R = [],
+ grid_size(In,GH,GV),if_be_fast(GH>=3;GV>=3),!,
+ must_det_ll(( 
+   choose_bg_color(In,Black,dont),
+   subst_color_auto(Black,bg,In,InBG),
+   trim_to_rect4_always(T,L,B,R,InBG,InBGTrimmed))),
+ grid_size(InBGTrimmed,H,V),if_be_fast(H>=3;V>=3),
+ must_det_ll(( fpad_grid(f,var,InBGTrimmed,MO),constrain_grid_now(f,CheckTypes,MO,O),  
+   Props = [offset2D(L,T),shrinkSE(R,B),size2D(H,V),vis2D_Z(GH,GV)])).
+/*
+prepare_input_hooks(CheckTypes,Props,I,O):- % R = [],
+ must_det_ll(( grid_size(I,GH,GV), I=M, ([T,L,B,R] = [0,0,0,0]),
+  grid_size(M,H,V),fpad_grid(f,var,M,MO),constrain_grid_now(f,CheckTypes,MO,O),
+  Props = [offset2D(L,T),shrinkSE(R,B),size2D(H,V),vis2D_Z(GH,GV)])).
+*/
+trim_to_rect4_always(T,L,B,R,I,M):- trim_to_rect4(T,L,B,R,I,M),!.
+trim_to_rect4_always(0,0,0,0,I,M):- I=M.
+
+trim_to_rect4(Grid,MGrid):-  trim_to_rect4(_T,_R,_B,_L,Grid,MGrid).
+%trim_to_rect4(T,L,B,R,Grid,MGrid):- get_bgc(BG), trim_then_90(BG,[T,L,B,R],Grid,MGrid),!.
+trim_to_rect4(T,L,B,R,Grid,IM360):-
+  trim_unused_n_vert(0,BG,Grid,IM,T), 
+  rot90(IM,IM90),
+  trim_unused_n_vert(0,BG,IM90,I90,L), 
+  rot90(I90,IM180),
+  trim_unused_n_vert(0,BG,IM180,I180,B), 
+  rot90(I180,IM270),
+  trim_unused_n_vert(0,BG,IM270,I270,R),
+  rot90(I270,IM360).
+
+%trim_to_rect4(_T,_R,_B,_L,Color,MGrid):- trim_to_rect(Color,MGrid). 
+trim_then_90(_,[],Grid,Grid):- !.
+trim_then_90(BG,[R90|More],Grid,GridO):- trim_unused_n_vert(0,BG,Grid,GridR,R90),
+  rot90(GridR,Grid90),trim_then_90(BG,More,Grid90,GridO).
+
+is_trimmable_row(Row,BG):- maplist(is_trimmable_cell(BG),Row).
+
+trim_unused_n_vert(N,BG,[Row|Grid],GridO,N2):- 
+  is_trimmable_row(Row,BG),!,
+  trim_unused_n_vert(N,BG,Grid,GridO,N1),plus(N1,1,N2).
+trim_unused_n_vert(N,_,GridO,GridO,N):-!.
+
+allowed_in(IO-Idea,Constr):- member(allow(all(IO)),Constr),!, \+ member(disallow(IO-Idea),Constr).
+allowed_in(Idea,Constr):- member(allow(all),Constr),!, \+ member(disallow(Idea),Constr).
+allowed_in(IO-Idea,Constr):- member(disallow(all(IO)),Constr),!, member(allow(IO-Idea),Constr).
+allowed_in(Idea,Constr):- member(disallow(all),Constr),!, member(allow(Idea),Constr).
+allowed_in(Idea,Constr):- member(allow(Idea),Constr).
+
+idea_io_goal(IO-Call,IO,Call).
+expand_io(IO,IOD):- IO == both,!,member(IOD,[inp,out]).
+expand_io(IO,IO).
+
+
+copy_safe(In,InC):- duplicate_term(In,InC). % ,copy_term(In,InC),In=InC.
+
+suggested_fg_color_swaps(In,Out,CIn,COut):- 
+  copy_safe(In,InC),copy_safe(Out,OutC),
+  unique_fg_colors(InC,InCs),InCs=[_],
+  unique_fg_colors(OutC,CsOut),
+  InC \== OutC,  
+  member(CIn,InCs), % \+ member(CIn,CsOut),
+  member(COut,CsOut), 
+  COut \== zero,
+  \+ member(COut,InCs).
+
+subst_color_auto(F,_,I,O):- must_be_free(O),F== dont,!,I=O.
+subst_color_auto(F,R,I,O):- subst0011(F,R,I,O).
+%subst_color_auto(F,R,I,O):- subst(I,F,R,O).
+%subst_color_auto(F,R,I,O):- subst0011a(F,R,I,O).
+
+do_suggested_color_swaps(recolor(CIn,COut),In,Out,InCs,Out):- 
+ suggested_fg_color_swaps(In,Out,CIn,COut),
+ subst_color_auto(CIn,COut,In,InCs).
+do_suggested_color_swaps(recolor(CIn,CIn),In,Out,In,Out):- 
+ suggested_fg_color_swaps(In,Out,CIn,_),!.
+/*
+idea_for(In,Out,IODCall):-  fail, 
+  suggested_fg_color_swaps(In,Out,CIn,COut),
+  idea_io_goal(IODCall,inp,subst_color_auto(CIn,COut)).
+
+%idea_for(_,_,IOD-Call):- fail, idea_for_data(IO-Call),expand_io(IO,IOD).
+%idea_for_data(inp-trim_to_rect4(_T,_Rgt,_B,_L)).
+%idea_for_data(out-trim_to_rect4).
+%idea_for_data(inp-fpad_grid(f)).
+%idea_for_data(out-fpad_grid(s)).
+%idea_for_data(inp-subst_color(red,blue)).
+%idea_for_data(both-bg_to_not_fg).
+%idea_for_data(subst_all_fg_colors_with_vars(_,_)).
+%idea_for_data(both-unbind_bg).
+%idea_for_data(both-unbind_black).
+%idea_for_data(both-constrain_grid(f,_CheckType)).
+%idea_for_data(out-constrain_grid(s,_CheckType)).
+%idea_for_data(inp-ogs_rotate(_,[rot2P(_P2)])).
+%idea_for_data(both-into_monogrid).
+*/
+was_loose_ok(R):- \+ member(subst(_,_),R), \+ member(rotate(_),R), \+ member(into_monogrid(_),R).
+
+ogs_rotate(_Trig,[rot2P(P2)],I,O):- rotP2(P2),P2\==rollD,grid_call(P2,I,O),I\=@=O.
+
+simpl_ogs(In,Out):- maplist(prop_lists,In,Props), !, append(Props,Out).
+simpl_ogs(IO,IO).
+
+prop_lists(_-P,Props):-!,prop_lists(P,Props).
+prop_lists(P,P):- is_list(P),!.
+prop_lists(P,Props):- arg(2,P,Props),is_list(Props),!.
+prop_lists(P,[P]).
+
+
+
+safe_select(HAD,R,RR):- select(H,R,RR), H=@=HAD. 
+
+maybe_if_changed(P2,I,O):- grid_call(P2,I,O),notrace(((I\=@=O,mass(O,Mass),Mass>0))).
+
+skip_pps_port(Port):- t_l:pss_trace(List),!, \+ member(Port,List).
+%skip_pps_port(Port):- Port \== exit,!.
+skip_pps_port(_All).
+
+trace_ogs(Port,P2,I,O):- \+ \+ ignore(pss1(Port,P2,I,O)).
+pss1(Port,_,_,_):- skip_pps_port(Port),!.
+pss1(Port,P2,I,O):-   
+ (is_list(P2)->reverse(P2,P2R);P2=P2R),
+ once(( nl_if_needed, dash_chars,dash_chars,
+   pp(Port),pp(P2R), nl_if_needed,
+   writeg(I),nl_if_needed, 
+   print_side_by_side(wqs(P2R),I,O), writeg(O),nl_if_needed,
+   dash_chars)).   
+  
+def_ogs_prog(
+ [
+ %must(inp-subst_all_fg_colors_with_vars(_,_)),
+ %must(out-prepare_output_hooks(CheckTypes,_)),
+ %must(inp-prepare_input_hooks(CheckTypes,_)),
+ %must(out-bg_to_not_fg),
+ %must(out-subst_color_auto(black,zero)),
+ %must(out-fpad_grid(f,var)),
+ %must(out-constrain_grid_now(f,Trig)),
+ %must(out-fpad_grid(f,get_black)),
+ %allow(inp-subst_color(red,blue)),
+
+  disallow(inp-bg_to_not_fg),disallow(out-bg_to_not_fg),
+ % allow(inp-trim_to_rect4),
+  
+  allow(all)]).
+
+
+same_color_class(FG,NotBG):- is_fg_color(FG),!, \+ is_bg_color(NotBG).
+same_color_class(BG,NotFG):- is_bg_color(BG),!, \+ is_fg_color(NotFG).
+
+% unify allowing some failures
+uaf(Fm,G1,G2):- uaf(Fm,0,_Fo,G1,G2).
+
+uaf_split(Cmpd,H,T):- compound(Cmpd),uaf_split_2(Cmpd,H,T).
+uaf_split_2([H|T],H,T):-!.
+uaf_split_2(Cmpd,Name,Args):-compound_name_arguments(Cmpd,Name,Args).
+
+% unify allowing some failures (cells only)
+uaf(_Fm,Fn,Fn,Cell1,Cell2):- Cell1=Cell2,!.
+uaf(Fm,Fi,Fo,Cmpd1,Cmpd2):- uaf_split(Cmpd1,H1,T1),uaf_split(Cmpd2,H2,T2),
+  uaf(Fm,Fi,Fn,H1,H2), uaf(Fm,Fn,Fo,T1,T2).   
+uaf(Fm,Fi,Fo,_,_):- plus(Fi,1,Fo),Fm>Fo.
+
+% unify penalizing a resource each failure
+upref(Resource,O1,O2):-
+  resource_value(Resource,Value),
+  uaf(Value,0,Used,O1,O2),
+  ((Used>0) ->  
+    (plus(Value,-Used,NewValue),b_set_resource(Resource,NewValue)) 
+   ; true).
+
+uaf_append(Fm,Fi,Fo,[], L1, L2):- uaf(Fm,Fi,Fo,L1,L2).
+uaf_append(Fm,Fi,Fo,[H1|T], L, [H2|R]) :- uaf(Fm,Fi,Fn,H1,H2),
+    uaf_append(Fm,Fn,Fo,T, L, R).
+
+% append allowing some failures (cells only)
+
+  
+
+
+
+maybe_cvt_to_grid(In,Grid):- is_object(In),
+   global_grid(In,Grid),!.
+
+
+%pre_ogs_alter(maybe_unbind_bg).
+pre_ogs_alter(P2):- rot_ogs(P2).
+
+fg_to_bg(In,NewIn):- get_black(Black), \+ sub_var(Black,In), unique_colors(In,UCs),
+ include(is_real_fg_color,UCs,FGC),!,FGC=[FG],subst(In,FG,Black,NewIn),!.
+
+
+rot_ogs_step2(maybe_if_changed(subst_color(red,blue))).
+rot_ogs_step2(maybe_if_changed(unbind_bg)).
+%rot_ogs_step2(maybe_if_changed(colors_to_vars)).
+rot_ogs_step1(maybe_if_changed(trim_to_rect)).
+rot_ogs_step1([maybe_if_changed(trim_to_rect),Step2]):- rot_ogs_step2(Step2).
+
+rot_ogs0(maybe_if_changed(unbind_bg)).
+
+rot_ogs1(Step1):- rot_ogs_step1(Step1).
+rot_ogs1(maybe_if_changed(P2)):- rotP0(P2).
+rot_ogs1([Step1,maybe_if_changed(P2)]):- rot_ogs_step1(Step1),rotP2(P2).
+
+rot_ogs(Step1):-rot_ogs1(Step1).
+rot_ogs([Step0,Step1]):-rot_ogs0(Step0),rot_ogs1(Step1).
 
 
 :- dynamic(tr:existing_result/3).
@@ -52,7 +674,25 @@ was_result(SG,FG,WMatch):-
   numbervars(CSG+CFG,999,_,[attvar(bind)]),
   ignore((perfect_result(CSG,CFG,WMatch))).
 
+:- asserta((prolog_stack:option(_,_):- fail)).
 
+test_ogs2:- 
+ with_tag_class('table','grid-to-grid', 
+  (findall(T-SG,ss666(T,SG),TargetsR),
+   reverse(TargetsR,Targets),
+   findall(th(SG),member(_-SG,Targets),THs),
+   html_table_row([th("test_ogs2&nbsp;"),th("&nbsp;find&nbsp;")|THs]),
+   forall(ff666(W,F), once(print_ff_row(W,F,Targets))))).
+
+print_ff_row(W,FG,Targets):-
+  findall(R,(member(T-SG,Targets),once(test_ogs2_fs(W=T,FG,SG,R))),Results),
+  html_table_row([th(FG),td(" ")|Results]).
+test_ogs2_fs(_W=_T,FG,SG,TDO):-
+  copy_term(SG,CSG),copy_term(FG,CFG),
+  findall(at(H,V),find_ogs(H,V,CFG,CSG),R),
+  TDO = td(pp(R)).
+
+  
 % hacking on this one
 test_ogs2(H,V,Match):-
   ppnl("searching..."),
@@ -61,9 +701,9 @@ test_ogs2(H,V,Match):-
   copy_term(SG,CSG),copy_term(FG,CFG),
   %copy_term(SG,XSG),copy_term(FG,XFG),
 
-  once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG))),
+  once((constrain_grid(f,CheckTypes,FG,XFG), constrain_grid(s,CheckTypes,SG,XSG))),
 
-  ((ogs_1(H,V,XFG,XSG),CheckType=run) *-> 
+  ((ogs_1(H,V,XFG,XSG),CheckTypes=run) *-> 
    (show_match(H,V,FG,XSG),Match=true);
    (show_mismatch(XFG,XSG),Match=fail)),
   got_result(CSG,CFG,Match),
@@ -78,18 +718,16 @@ test_ogs1(H,V,Match):-
 
   XSG = SG,
   get_black(Black),
-  once((constrain_grid(f,CheckType,FG,XFG))),
+  once((constrain_grid(f,CheckTypes,FG,XFG))),
   
-  once((grid_detect_bg(SG,Background), maplist(never_fg,Background))),
+  once((grid_detect_bg(SG,Background), maplist(cbg,Background))),
 
-  ((ogs_11(H,V,XFG,XSG),CheckType=Black) *-> Match=true; Match=false),
+  ((ogs_11(H,V,XFG,XSG),CheckTypes=Black) *-> Match=true; Match=false),
 
   (Match==true->show_match(H,V,Run,XFG,FG);show_mismatch(XFG,Run,FG)),
   ignore(got_result(SG,FG,Match)),
   Match==true.
 
-never_fg(Trig,Var):- freeze(Trig, \+ is_fg_color(Var)).
-never_fg(Var):- freeze(Var, \+ is_fg_color(Var)).
 
 
 % should still be the sameR
@@ -101,10 +739,10 @@ test_ogs0(H,V,Match):-
 
   ground(UFG),
   get_black(Black),
-  once((constrain_grid(f,CheckType,FG,XFG), nop(constrain_grid(s,CheckType,SG,XSG)))),
-  once((grid_detect_bg(XSG,Background), maplist(never_fg,Background))),
+  once((constrain_grid(f,CheckTypes,FG,XFG), nop(constrain_grid(s,CheckTypes,SG,XSG)))),
+  once((grid_detect_bg(XSG,Background), maplist(cbg,Background))),
   
-  ((ogs_11(H,V,XFG,XSG),CheckType=Black) *-> TMatch=true; TMatch=false),
+  ((ogs_11(H,V,XFG,XSG),CheckTypes=Black) *-> TMatch=true; TMatch=false),
 
   was_result(SG,FG,WMatch), 
   (WMatch\==TMatch ; TMatch == Match),
@@ -138,6 +776,7 @@ test_ogs(H,V,Match):-
 
 % get_prolog_backtrace(3,StackFrames,[]), nth0(2, StackFrames, SFrame) , prolog_stack_frame_property(SFrame, location(File:Line)),
 
+grid_minus_grid(I,O,In):- is_grid(I),is_grid(O),!,mapgrid(cell_minus_cell,I,O,In).
 grid_minus_grid(B,A,OI):- vis2D(B,BH,BV),vis2D(A,AH,AV),(BH\==AH;BV\==AV),!,OI=B.
 grid_minus_grid(B,A,OI):- remove_global_points(A,B,OI),!.
 %grid_minus_grid(B,A,OI):- is_list(B),maplist(grid_minus_grid,B,A,OI).
@@ -190,11 +829,11 @@ show_m_pair(_TF,S,H,V,F,G):-
   offset_grid(H2,V2,F,OF),
   constrain_grid(f,_TrigF,OF,FF),!, 
   print_grid("find",FF),
-  ppa(FF),
+  writeg(FF),
   dash_chars(60,' '),ignore(call(S)),nl,
   constrain_grid(s,_TrigG,G,CG),!,
   print_grid("find on",CG)]),!,
-  ppa(CG).
+  writeg(CG).
 
 
 print_fgrid(GH,GV,F):- ((\+ \+ ((constrain_grid(f,_Trig,F,_FG),print_grid(GH,GV,F),nl)))),!.
@@ -210,30 +849,32 @@ find_ogs(H,V,FG,SG):- luser_getval(find_rule,Rul),find_ogs_c(Rul,H,V,FG,SG).
 
 find_ogs_c(_,_,_,_FG,SG):- SG==[],!,fail.
 find_ogs_c(Rul,H,V,FG,SG):- 
-  %constrain_grid(f,CheckType,FG,_XFG2),
+  %constrain_grid(f,CheckTypes,FG,_XFG2),
   locally(nb_setval(find_rule,Rul),
-    once((constrain_grid(f,CheckType,FG,XFG), constrain_grid(s,CheckType,SG,XSG)))),
+    once((constrain_grid(f,CheckTypes,FG,XFG), constrain_grid(s,CheckTypes,SG,XSG)))),
   get_black(Black),
-  ogs_1(H,V,XFG,XSG),CheckType=Black.
+  ogs_1(H,V,XFG,XSG),CheckTypes=Black.
 /*
 
 find_ogs(H,V,FG,SG):-
-  %constrain_type(CheckType,FG,FG,XFG),!,
-  ogs_0(CheckType,H,V,FG,SG),
-  CheckType=run.
+  %constrain_type(CheckTypes,FG,FG,XFG),!,
+  ogs_0(CheckTypes,H,V,FG,SG),
+  CheckTypes=run.
 */
 
-ogs_0(CheckType,H,V,FG,SG):-
-  %constrain_type(CheckType,Grid,FG,XFG),
-  once((constrain_grid(f,CheckType,FG,XFG),
-        constrain_grid(s,CheckType,SG,XSG))),
+ogs_0(CheckTypes,H,V,FG,SG):-
+  %constrain_type(CheckTypes,Grid,FG,XFG),
+  once((constrain_grid(f,CheckTypes,FG,XFG),
+        constrain_grid(s,CheckTypes,SG,XSG))),
   ogs_1(H,V,XFG,XSG).
-  %CheckType=run,
+  %CheckTypes=run,
   %print_grid(XFG),nl,
   %ppnl(found_at(H,V)),
   %print_grid(XSG),nl,
   %true.
 
+
+ogs_1(H,V,FindI,Search):- \+ is_grid(FindI),!,maybe_cvt_to_grid(FindI,Grid),ogs_1(H,V,Grid,Search).
 ogs_1(H,V,FindI,Search):- (\+ number(H); \+ number(V)), !, ogs_11(H,V,FindI,Search).
 ogs_1(Hi,Vi,Find,Search):-
   H is Hi - 1, V is Vi - 1,  
@@ -246,6 +887,7 @@ ogs_1(Hi,Vi,Find,Search):-
   ogs_pt2(H,FGrid,Next),!.
 
 
+ogs_11(H,V,FindI,Search):- \+ is_grid(FindI),!,maybe_cvt_to_grid(FindI,Grid),ogs_11(H,V,Grid,Search).
 ogs_11(H,V,FindI,Search):-
   vis2D(Search,SH,SV),
   vis2D(FindI,FH,FV),
@@ -281,19 +923,19 @@ grid_label_bg(CT,GridIn,GridO):- CT=f,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
-  get_bg_label(BGL),
+  get_dc_label(BGL),
   get_bgc(BG),subst001(Grid1,BG,BGL,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- CT=s,!,
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
-  get_bg_label(BGL),
+  get_dc_label(BGL),
   get_bgc(BG),subst001(Grid1,BG,BGL,GridO),!.
 grid_label_bg(CT,GridIn,GridO):- 
   copy_term(GridIn,Grid1),
   grid_detect_bg(Grid1,Background),
   maplist(to_grid_bg(CT,Grid1),Background),
-  get_bg_label(BGL),
+  get_dc_label(BGL),
   get_bgc(BG),subst001(Grid1,BG,BGL,GridO),!.
 grid_label_bg(_,GridO,GridO):-!.
 
@@ -327,6 +969,8 @@ maybe_grid_numbervars(GridIn,GridIn):-!.
 
 not_in(Background,Foreground):-
   \+ (member(E,Background), E == Foreground). 
+not_sub_var(Background,Foreground):-
+  \+ sub_var(Foreground,Background).
 
 to_grid_fg(_CT,_,E,_):- cant_be_color(E),!.
 to_grid_fg(_CT,_,N,'$VAR'(N)):-!.
@@ -352,13 +996,17 @@ offset_v_grid_row(GW,V2,FF,[Row|OF]):- V1 is V2-1,
    length(Row,GW), offset_v_grid_row(GW,V1,FF,OF).
    
   
-
+get_dc_label(bg).
 
 %pad_with_contraints_3(GridO,TODO):-
 %  vis2D(GridO,HH,VV),
 %  pad_with_contraints_3(GridO,HH,VV,TODO),!.
+fpad_grid(CT,Before,After):-
+  get_dc_label(BGL),sub_var(BGL,Before),!,
+  fpad_grid(CT,=(BGL),Before,After).
+
 fpad_grid(CT,Before,After):-  
-  get_bg_label(BGL),
+  get_dc_label(BGL),
   fpad_grid(CT,=(BGL),Before,After).
 fpad_grid(CT,P1,O,GridO):- is_object(O),!,object_grid(O,GridIn),!,fpad_grid(CT,P1,GridIn,GridO).
 fpad_grid(_CT,P1,Grid,Grid2):-
@@ -469,8 +1117,10 @@ constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- nonvar(C1I), nonva
 constrain_ele(f,_GH,_GV,_Trig,_GridIn,_H,_V,C1I,C1O,_GridO):- fail, is_spec_fg_color(C1I,_),nonvar(C1I),!, 
   (C1O==C1I -> true ; C1O=C1I).
 
+
 constrain_ele(f,_GH,_GV,Trig,GridIn,H,V,C1I,C1O,GridO):- is_spec_fg_color(C1I,_),!, 
-  ((C1O==C1I,false) -> true ; must_det_ll((constrain_type(Trig,C1I=C1O), attach_fg_ci(C1O,C1I)))), 
+  C1I=C1O,
+  ((C1O==C1I) -> true ; must_det_ll((constrain_type(Trig,C1I=C1O), attach_fg_ci(C1O,C1I)))), 
   constrain_dir_ele(f,Trig,[n,s,e,w],GridIn,H,V,C1I,C1O,GridO).
 
 % BG Find On Canvas
@@ -511,6 +1161,8 @@ mfreeze(Trig,CDE):- constrain_type(Trig,CDE).
 
 constrain_dir_ele(_CT,_Trig,_,_GridIn,_H,_V,_C1I,_C1O,_GridO):- luser_getval(find_rule,loose),!.
 constrain_dir_ele(_CT,_Trig,[],_GridIn,_H,_V,_C1I,_C1O,_GridO).
+
+/*
 constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):- luser_getval(find_rule,strict),!,
   muarc_mod(M),
   ignore((
@@ -520,6 +1172,8 @@ constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):- luser_getval(fi
      \+ is_spec_fg_color(C2I,_),
      dif(C2O,C1O))),!,
   constrain_dir_ele(CT, Trig,SEW,GridIn,H,V,C1I,C1O,GridO).
+*/
+
 constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
   muarc_mod(M),
   ignore((
@@ -538,6 +1192,7 @@ constrain_dir_ele(CT, Trig,[Dir|SEW],GridIn,H,V,C1I,C1O,GridO):-
 o_c_n(f,_,[],[_]):-!,fail. % no neighbours and just self
 o_c_n(f,_,[_,_|_],[]):-!,fail. % no neighbours and just self
 %o_c_n(f,_,[_,_|_],_):-!,fail.
+o_c_n(f,_,[_],_):-!,fail.
 o_c_n(f,_,_,_).
 o_c_n(s,_,_,_).
 
@@ -633,8 +1288,7 @@ f666(_Color,
 f666(_Ham,G):- the_hammer1(G).
 f666(_Ham,G):- in_shape_lib(hammer,Ham),object_grid(Ham,G0),all_rotations(G0,G).
 
-h666(_Ham,
-"_________________________________________________
+ham_h_s("_________________________________________________
       B B B                           B B B       
         B B                             B B      
         B       B                       B       B
@@ -643,7 +1297,22 @@ h666(_Ham,
           B                       R       B      
         B B                             B B      
         B B B                           B B B     
-__________________________________________________"):- fail.
+__________________________________________________").
+
+ham_h_s2(
+"_________________________________________________
+ 0 0 B B B 0 0 0 0 0 0 0 0 0 0 0 0 0 B B B 0 0 0 0
+ 0 0 0 B B 0 0 0 0 0 0 0 0 0 0 0 0 0 0 B B 0 0 0 0
+ 0 0 0 B 0 0 0 B 0 0 0 0 0 0 0 0 0 0 0 B 0 0 0 B 0
+ 0 0 0 B B B B B 0 0 0 0 0 0 0 0 R R 0 B B B B B 0
+ 0 0 0 B B 0 B B 0 0 0 0 0 0 0 0 R R R B B 0 B B 0
+ 0 0 0 0 B 0 0 0 0 0 0 0 0 0 0 0 R 0 0 0 B 0 0 0 0
+ 0 0 0 B B 0 0 0 0 0 0 0 0 0 0 0 0 0 0 B B 0 0 0 0
+ 0 0 0 B B B 0 0 0 0 0 0 0 0 0 0 0 0 0 B B B 0 0 0
+ _________________________________________________").
+
+s666(_Ham,G):-ham_h_s2(TG),into_grid(TG,G).
+%s666(_Ham,G):-ham_h_s(TG),into_grid(TG,G).
 
 f666(_Ham,G):-clause(hamstring(G),Body),notrace(Body).
 
@@ -652,25 +1321,29 @@ S="
  _________
  B B B B B 
  B B B B B 
-     B    
-     B    
+ 0 0 B 0 0
+ 0 0 B 0 0
  _________",
- must_det_ll((atrace,text_to_grid(S,SG),print_ss(SG),into_g666(SG,G1),Color=blue,once(subst001(G1,blue,Color,G)))).
+ must_det_ll((text_to_grid(S,SG),print_grid(SG),into_g666(SG,G1),Color=blue,once(subst001(G1,blue,Color,G)))).
 
-hamstring(G):- 
+hamstring2(G):- 
 S="
  _________
  B B B B B 
  B B B B B 
-     B    
-     B    
+ 0 0 B 0 0
+ 0 0 B 0 0
  _________",
  must_det_ll((text_to_grid(S,SG),into_g666(SG,G1),Same=_,once(subst001(G1,blue,Same,G)))).
+
+hamstring3(G):- hamstring(G1),subst001(G1,'blue',red,G).
+%hamstring4(G):- hamstring(G1),subst001(G1,'#6666FF',_Same,G).
+
 
 h666(_Ham,G):- into_grid(v(aa4ec2a5)>(tst+0)*in,G).
 
 
-h666(_Ham,
+ham_h_p(
 "_________________________________________________
          B B B B B               B B B B B
          B B B B B               B B B B B
@@ -681,14 +1354,17 @@ h666(_Ham,
              B     B B       R R     B     B B
          B B B B B               B B B B B
          B B B B B               B B B B B
- _________________________________________________"):- fail.
+ _________________________________________________").
 
+h666(_Ham,G):-ham_h_p(TG),into_grid(TG,G).
+
+trans_to_color('B','blue').
 trans_to_color('R','red').
-trans_to_color('B','brown').
 trans_to_color('G','green').
 trans_to_color('O','orange').
 trans_to_color('®','red').
 trans_to_color('Y','yellow').
+trans_to_color('b','brown').
 trans_to_color('f','fg').
 trans_to_color('v','purple').
 trans_to_color('½','cyan').
@@ -703,6 +1379,7 @@ into_grid_color(O,O).
 
 into_g666(Nil,_):- Nil==[],!,fail.
 into_g666(Text,G):- string(Text),maybe_fix_ascii(Text,Ascii0),!,into_g666(Ascii0,G).
+into_g666([Nil|Grid],G):- Nil==[], is_grid(Grid),!,mapgrid(into_grid_color,Grid,G),!.
 into_g666(String,G):- string(String),!,text_to_grid(String,TG),!,into_g666(TG,G),!.
 into_g666(Grid,G):- is_grid_of(integer,Grid),!,mapgrid(into_grid_color,Grid,G),!.
 into_g666(Grid,G):- is_grid(Grid),!,mapgrid(into_grid_color,Grid,G),!.

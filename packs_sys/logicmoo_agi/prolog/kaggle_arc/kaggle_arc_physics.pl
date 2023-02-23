@@ -26,7 +26,7 @@ into_gridoid0(N,G):- get_current_test(TestID),is_why_grouped(TestID,_,N,UG), UG\
 into_gridoid0(N,G):- into_obj(N,G).
 into_gridoid0(N,G):- into_grids(N,G).
 
-into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort_safe(P,S))).
+into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(points_rep(local,G,P)),sort_safe(P,S))).
 %into_gridoid(N,G):- into_gridoid0(N,G).    
    
 
@@ -404,7 +404,7 @@ move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(
 move_object(NX,NY,I,M):- is_object(I),!,
  /*must_det_ll*/((
   (NY<1 -> M=I ;
-  ( localpoints(I,LPoints),
+  ( points_rep(local,I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
     setq(I,[globalpoints(GPoints),loc2D(NX,NY)],M))))).
 move_object(H,V,L,LM):- is_group(L),!,mapgroup(move_object(H,V),L,LM).

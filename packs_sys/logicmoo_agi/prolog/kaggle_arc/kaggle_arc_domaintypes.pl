@@ -146,9 +146,10 @@ into_color_name_always(Grid,Grid).
 
 is_spec_color(V,C):- into_color_name_always(V,C),!,atom(C),!,C\==fg,C\==fg,C\==wbg,C\==bg.
 
-is_color(CO):- attvar(CO),!,get_attr(CO,ci,_).
-is_color(CO):- is_unreal_color(CO).
-is_color(CO):- is_real_color(CO).
+is_color(CO):- notrace(is_color0(CO)).
+is_color0(CO):- attvar(CO),!,get_attr(CO,ci,_).
+is_color0(CO):- is_unreal_color(CO).
+is_color0(CO):- is_real_color(CO).
 
 :- multifile(color_decls/0).
 :- dynamic(color_decls/0).
@@ -163,10 +164,14 @@ get_real_fg_color(C):- named_colors(L),member(C,L),is_fg_color(C).
 is_real_fg_color(C):- C\== is_colorish_var, is_real_color(C),is_fg_color(C).
 
 decl_one_fg_color(Color):- put_attr(Color,ci,fg(Color)).
-decl_many_fg_colors(X):- put_attr(X,ci,fg(X)),multivar:multivar(X).
-decl_bg_color(X):- put_attr(X,ci,bg(X)),multivar:multivar(X).
+decl_many_fg_colors(X):- put_attr(X,ci,fg(X)),decl_multivar(X).
+decl_many_bg_colors(X):- put_attr(X,ci,bg(X)),decl_multivar(X).
+decl_bg_color(X):- put_attr(X,ci,bg(X)).
 decl_fill_color(X):-  put_attr(X,ci,hollow(X)),
-    freeze(X,(mv_peek1(X,V)->(var(V)->true;is_color(V));true)),multivar:multivar(X).
+    freeze(X,(mv_peek1(X,V)->(var(V)->true;is_color(V));true)),decl_multivar(X).
+
+decl_multivar(_).
+%decl_multivar(X):- multivar:multivar(X).
 
 decl_not_color(NC,GC):- is_bg_color(NC),!,decl_many_fg_colors(GC).
 decl_not_color(NC,GC):- decl_fill_color(GC),!,dif(GC,NC).
@@ -186,6 +191,13 @@ cauh(_Self,_Atts,Val):- \+ is_color(Val),!, fail.
 cauh(_,_,_).
 
 ci:attr_unify_hook(Atts,Val):- (arg(1,Atts,Self)-> cauh(Self,Atts,Val) ; true).
+%ci:project_attributes(QueryVars, ResidualVars):-
+ci:attribute_goals(Var) --> {findall(Meaning,ci_meaning(Var,Meaning),MeaningList)},MeaningList.
+
+ci_meaning(Var,cant_be_color(Var,Color)):- cant_be_color(Var,Color).
+ci_meaning(Var,cbg(Var)):- get_attr(Var,ci,bg(_)).
+ci_meaning(Var,cfg(Var)):- get_attr(Var,ci,fg(_)).
+% ci:attr_portray_hook(Var)
 
 cant_be_color(Y):- get_attr(Y,dif,_),!.
 cant_be_color(Y):- get_attr(Y,cc,_),!.
@@ -331,6 +343,7 @@ subtypes(C,S):- subClassOf(S,C).
 allow_dir_list(nsew,[n,s,e,w]). %s,e,n,w 
 
 allow_dir_list(nsew_5,[n,s,e,w]). %s,e,n,w 
+allow_dir_list(nsew_2,[n,s,e,w]). %s,e,n,w 
 
 allow_dir_list(s_e,[s,e]). %s,e,n,w 
 allow_dir_list(n_e,[n,e]). %s,e,n,w 
@@ -458,7 +471,8 @@ data_typec(Out,FS):- compound_name_arity(Out,F,A),arg(A,Out,P),data_type(P,S),!,
 
 is_point(P):- var(P),!,fail.
 is_point(P):- is_nc_point(P),!.
-is_point(P):- is_cpoint(P).
+is_point(P):- is_cpoint(P),!.
+is_point(_-P):- is_nc_point(P),!.
 
 %elems_are(L,P1):- L\==[],is_list(L),maplist(P1,L).
 elems_are([E|_],P1):- !, call(P1,E),!.
@@ -534,10 +548,11 @@ vm_grid(VM,VM.grid).
 vm_obj(VM,O):- member(O,VM.objs).
 
 :- export(is_grid/1).
-is_grid(G):- nonvar(G), \+ \+  quietly(fast_is_grid(G)).
+is_grid(G):- \+ \+  quietly(fast_is_grid(G)).
 %is_grid(G):- nonvar(G), \+ \+  quietly(is_grid_of(is_grid_cell,G)).
 
-fast_is_grid([[C|H]|R]):- is_list(H), is_list(R), \+ is_list(C), !, is_grid_cell(C).
+fast_is_grid(List):- nonvar(List), List\==[], maplist(fast_is_row(_LenMinus1),List).
+fast_is_row(LenMinus1,[C|List]):- is_list(List), is_grid_cell(C), !, length(List,LenMinus1),!.
 
 is_grid_of(P1,[[C|H]|R]):- 
   call(P1,C),!,is_list(H),is_list(R),
@@ -547,16 +562,21 @@ is_grid_of(P1,[[C|H]|R]):-
 is_row_len(N,L):- is_list(L),length(L,N).
 
 %is_object(H):- is_list(H),is_cpoints_list(H).
-%is_grid_cell(C):- var(C),!.
-is_grid_cell(AB):- \+ compound(AB),!.
-%is_grid_cell(C):- number(C),C<13.
-%is_grid_cell(C):- is_colorish(C),!.
+%is_grid_cell(AB):- ,!, \+ is_list(AB), sub_term(E,AB),(var(E);is_colorish(E)),!.
+is_grid_cell(C):- var(C),!.
+is_grid_cell(A):- \+ compound(A),!,is_grid_cell_e(A).
 is_grid_cell(att(_,_)):-!.
+is_grid_cell('cell'(_)):-!.
+is_grid_cell('{}'(_)):-!.
 is_grid_cell('$VAR'(_)):-!.
-is_grid_cell(cell(_)):-!.
+is_grid_cell((A-B)):- !,(is_grid_cell_e(B);is_grid_cell_e(A)).
+
+is_grid_cell_e(C):- atom(C),!,(is_colorish(C);atom_length(C,1)).
+is_grid_cell_e(C):- is_color(C),!.
+is_grid_cell_e(C):- integer(C),!,C<13,C>=0.
 
 %is_grid_cell(C):- atomic(C),!.
-is_grid_cell(AB):- compound(AB),!, \+ is_list(AB), sub_term(E,AB),(var(E);is_colorish(E)),!.
+
 
 h_symmetric(Obj):- is_object(Obj),!,object_grid(Obj,Grid),!,h_symmetric(Grid).
 h_symmetric(Grid):- is_grid(Grid),!, mirror_h(I,_C,Grid),grid_size(Grid,H,_V), I is floor(H/2).
@@ -613,11 +633,13 @@ non_v_ori(flipH).
 non_v_ori(rot270).
 
 enum_orientation(sameR).
-enum_orientation(flipV).
 enum_orientation(rot180). % = rot180
 enum_orientation(rot90).
 enum_orientation(rot270).
 enum_orientation(flipH).
+enum_orientation(flipV).
+enum_orientation(rollD).
+enum_orientation(flipD).
 
   
 ap(scotch_patterns). ap(rug_patterns). ap(rougue_like). ap(space_invaders).
@@ -638,7 +660,7 @@ ap(diagonal_line). ap(horizontal_line). ap(vertical_line). ap(open_edge). ap(con
 
 ap(rotated45). ap(resizes). ap(diamond).
 apv(square(len)). apv(round(h,w)). apv(triangle). apv(rectangular(h,w)). apv(polygon(sides)).
-apv(colorlesspoints(num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(vis2D(h,w)). apv(loc2D(h,w)). 
+apv(shape_rep(grav,num)).  apv(facing(dir)). apv(min(n)). apv(max(n)).  apv(vis2D(h,w)). apv(loc2D(h,w)). 
 apv(scale(n)).  apv(ext_key(k)). apv(io_bud(k)). apv(linked_bud(k)).
 
 apv(points_old([])).

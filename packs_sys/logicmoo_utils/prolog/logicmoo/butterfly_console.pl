@@ -707,9 +707,10 @@ into_attribute_q(Obj,TextBoxObj):- sformat_safe(Text,'~q',[Obj]),into_attribute(
 :- export(into_attribute/2).
 :- system:import(into_attribute/2).
 
-into_attribute(Obj,TextBoxObj):-
+into_attribute(Obj,TextBoxObjO):-
   (atomic(Obj)->sformat_safe(Text,'~w',[Obj]);sformat_safe(Text,'~q',[Obj])),
-   xml_quote_attribute(Text,TextBoxObj,ascii),!.
+   xml_quote_attribute(Text,TextBoxObj,ascii),!,
+   replace_in_string(['\r\n'='\n','"'='&#34;','\''='&apos;','\r'='\n','\n'='&#13;&#10;'],TextBoxObj,TextBoxObjO).
 
 bfly_tests:- forall(clause(bfly_test(Name),Body),
                ((writeln(test(Name)),ignore(Body),nl))),!.

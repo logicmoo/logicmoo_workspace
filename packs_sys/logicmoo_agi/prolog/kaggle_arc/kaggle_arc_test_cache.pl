@@ -3618,7 +3618,7 @@ testcase(t('6d58a25d')>tst+0,"
    -----------------------------------------                                                           ----------------------------------------- 
                                                        
 ").
-%= fav(t('6d58a25d'),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,print_grid,grid_size_same,draw_line_from_point,debug_indiv,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
+%= fav(t('6d58a25d'),[no_sol(i(complete),copy_grid(in),incomplete),-[rotation_match],-[mask_match],+[shape_match],+[color_match],tt,training,print_grid,grid_size_same,draw_line_from_point,print_info,'(3, 1)',"the blue object is a downward beam maker, each beam must connect to one of its colors_cc "]).
 
 
 testcase(t('6d75e8bb')>tst+0,"
@@ -18019,7 +18019,7 @@ testcase(v(e9bb6954)>tst+0,"
    ---------------------------------------                                                         --------------------------------------- 
                                                      
 ").
-%= fav(v(e9bb6954),[no_sol(i(complete),copy_grid(in),incomplete),human([(iz(_55900,keypad),iz(_55900,monocolor),centerof(_55900,_55920)-->starburst(_55920))]),e(['box of nine draw outward, if you hit a drawn line blacken it']),-[rotation_match],-[mask_match],-[color_match],+[shape_match],grid_size_same,evaluation,debug_indiv,'(4, 1) ']).
+%= fav(v(e9bb6954),[no_sol(i(complete),copy_grid(in),incomplete),human([(iz(_55900,keypad),iz(_55900,monocolor),centerof(_55900,_55920)-->starburst(_55920))]),e(['box of nine draw outward, if you hit a drawn line blacken it']),-[rotation_match],-[mask_match],-[color_match],+[shape_match],grid_size_same,evaluation,print_info,'(4, 1) ']).
 
 
 testcase(v(e9c9d9a1)>tst+0,"

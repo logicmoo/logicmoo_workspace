@@ -2,7 +2,8 @@
 <Project
 	Version="10.0"
 	VendorName="SlickEdit"
-	WorkingDir=".">
+	WorkingDir="."
+	VCSProject="CVS:">
 	<Config
 		Name="Release"
 		OutputFile=""

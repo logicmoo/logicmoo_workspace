@@ -660,7 +660,8 @@ save_in_session(S,N,V):- dmsg(not_save_in_session(S,N,V)),!.
 
 
 
-
+skip_if_ansi(Goal):- is_html_mode,!,call(Goal).
+skip_if_ansi(_).
 
 %% show_http_session is det.
 %
@@ -673,8 +674,11 @@ in_tag(Tag):- nb_current('$html_tags',[Tag|_]),!.
 in_tag(pp(PP)):- in_pp(PP),!.
 :- meta_predicate(with_pre(0)).
 with_pre(G):- with_tag('pre',G).
-:- meta_predicate(with_tag(+,0)).
 
+:- export(is_taglike/1).
+is_taglike(H):- atom(H), atom_length(H,N), N>0.
+
+:- meta_predicate(with_tag(+,0)).
 with_tag(Tag,GL):- is_list(GL),!,maplist(with_tag(Tag),GL).
 with_tag(Tag,G):- must_det_ll(call(xlisting_web:is_taglike,Tag)),
   once(nb_current('$html_tags',Was);Was=[]),
@@ -682,27 +686,46 @@ with_tag(Tag,G):- must_det_ll(call(xlisting_web:is_taglike,Tag)),
     sccs((write('<'),write(Tag),write('>')),once(G),
      (write('</'),write(Tag),write('>')))).
 
+:- meta_predicate(with_tag_class(+,+,0)).
+with_tag_class(Tag,Class,Goal):- with_tag_ats(Tag,class(Class),Goal).
+:- meta_predicate(with_tag_style(+,+,0)).
+with_tag_style(Tag,Style,Goal):- with_tag_ats(Tag,style(Style),Goal).
 :- meta_predicate(with_tag_props(+,+,0)).
-with_tag_props(Tag,Props,GL):- is_list(GL),!,maplist(with_tag_props(Tag,Props),GL).
-with_tag_props(Tag,Props,G):- is_list(Props),!,
-  must_det_ll(wots(S,maplist(print_att_val,Props))),with_tag_props(Tag,S,G).
-with_tag_props(Tag,Props,G):- 
+with_tag_props(Tag,Props,Goal):- with_tag_ats(Tag,Props,Goal).
+:- meta_predicate(with_tag_ats(+,+,0)).
+with_tag_ats(Tag,Props,GL):- is_list(GL),!,maplist(with_tag_ats(Tag,Props),GL).
+with_tag_ats(Tag,Props,G):- 
   must_det_ll(call(xlisting_web:is_taglike,Tag)),
   once(nb_current('$html_tags',Was);Was=[]),
     locally(nb_setval('$html_tags',[Tag|Was]), 
-    sccs((write('<'),write(Tag),write(' '),write(Props),write('>')),once(G),
-     (write('</'),write(Tag),write('>')))).
+    sccs(
+     skip_if_ansi(((write('<'),write(Tag),print_tag_ats(Props),write('>')))),
+     once(G),
+     skip_if_ansi(((write('</'),write(Tag),write('>')))))).
 
-print_att_val(A=V):-!,print_att_val(A,V).
-print_att_val(A,V):- format(' ~w="~w"',[A,V]).
+print_tag_ele(List):- is_list(List),!,maplist(print_tag_ele,List).
+print_tag_ele(A:V):- nonvar(A),!, format(' ~w: ~w;',[A:V]).
+print_tag_ele(AV):- format(' ~w',[AV]).
+
+print_tag_ats(AV):- (AV==[];var(AV)),!.
+print_tag_ats(List):- is_list(List),!,print_tag_ats_l(List).
+print_tag_ats(CLASS):- atom(CLASS),!,print_att_val(class,CLASS).
+print_tag_ats(AV):- \+ compound(AV),!,format(' ~w',[AV]).
+
+print_tag_ats({AV}):- conjuncts_to_list(AV,List), !, print_tag_ats(List).
+print_tag_ats((A,V)):- conjuncts_to_list((A,V),List), !, print_tag_ats(List).
+print_tag_ats(call(AV)):- !, call(AV).
+print_tag_ats(AV):- compound_name_arguments(AV,A,[V]),!,print_att_val(A,V).
+print_tag_ats(AV):- compound_name_arguments(AV,_,[A,V]),!,print_att_val(A,V).
+print_tag_ats(AV):- format(' ~w',[AV]).
 
 
-:- export(is_taglike/1).
-is_taglike(H):- atom(H), atom_length(H,N), N>0.
-:- meta_predicate(with_tag_class(+,+,0)).
-with_tag_class(Tag,Class,Goal):- sformat(S,'class="~w"',[Class]), with_tag_props(Tag,S,Goal).
-:- meta_predicate(with_tag_style(+,+,0)).
-with_tag_style(Tag,Style,Goal):- sformat(S,'style="~w"',[Style]), with_tag_props(Tag,S,Goal).
+print_tag_ats_l([H|T]):- !,print_tag_ats(H),print_tag_ats(T).
+print_tag_ats_l(AV):- my_partition(has_functor(':'),AV,Styles,Rest),Styles\==[],!,format(' style="@~"',[print_tag_ele(Styles)]),print_tag_ats(Rest).
+print_tag_ats_l(AV):- my_partition(p1_call(has_functor('class');atom),AV,Classes,Rest),Classes\==[],!,format(' class="@~"',[print_tag_ele(Classes)]),print_tag_ats(Rest).
+
+print_att_val(A,V):- into_attribute(V,VV), format(' ~w="~w"',[A,VV]).
+
 
 
 

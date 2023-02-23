@@ -313,14 +313,14 @@ override_object_io(_VM,Update,Obj,In,Out):-
 
 sync_colors(Orig,Colors):- is_object(Orig),!,colors_cc(Orig,Colors),
   globalpoints(Orig,OrigGPoints),colors_cc(OrigGPoints,Colors),
-  localpoints(Orig,OrigLPoints),colors_cc(OrigLPoints,Colors),!.
+  points_rep(local,Orig,OrigLPoints),colors_cc(OrigLPoints,Colors),!.
 sync_colors(Orig,Colors):- colors_cc(Orig,Colors).
 
 uncast_grid_to_object(Orig,Grid,NewObj):- 
  must_det_ll((
-  localpoints(Grid,LocalPoints),
+  points_rep(local,Grid,LocalPoints),
   (( LocalPoints==[]) -> (arcST,writeq(LocalPoints),atrace ); true),
-  rebuild_from_localpoints(Orig,LocalPoints,NewObj))).
+  rebuild_from_points_rep(local,Orig,LocalPoints,NewObj))).
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
@@ -443,6 +443,7 @@ was_grid_gid(Grid,GID):- atom(GID),oid_to_gridoid(GID,G),into_grid(G,GG),Grid=GG
 was_grid_gid(Grid,GID):- is_grid_tid(Grid,GID),atom(GID),assertz_if_new(gid_to_grid(GID,Grid)).
 assert_grid_tid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
 assert_grid_gid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
+assert_grid_oid(Grid,GID):- asserta_new(is_grid_tid(Grid,GID)),ignore((atom(GID),asserta_new(gid_to_grid(GID,Grid)))).
 
 oid_to_gridoid(GID,G):- current_predicate(gid_to_grid/2), call(call,gid_to_grid,GID,G),!.
 
@@ -695,8 +696,9 @@ create_bag(Obj1):- gensym(bag_,Obj1),ain(iz(Obj1,group)).
 
 missing_arity(P2,N):- \+ callable_arity(P2,N).
 
-callable_arity(P2,N):- compound(P2),!, \+ is_list(P2), compound_name_arity(P2,F,Am2),A is Am2 + N, current_predicate(F/A).
-callable_arity(F,N):-  atom(F),current_predicate(F/N).
+callable_arity(F,N):-  atom(F),!, upcase_atom(F,UC), \+ downcase_atom(F,UC), current_predicate(F/N).
+callable_arity(P2,N):- compound(P2),!, \+ is_list(P2), compound_name_arity(P2,F,Am2),A is Am2 + N, callable_arity(F,A).
+  
 
 % turtle(H,V,Dir,N,H2,V2):- 
 prim_ops([

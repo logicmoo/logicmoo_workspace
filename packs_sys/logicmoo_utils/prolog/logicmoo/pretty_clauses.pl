@@ -1647,6 +1647,12 @@ term_is_ansi(S):- \+ atom(S),!,fail.
 term_is_ansi(S):- sub_string(S,_,_,_,"\x1B"),!.
 term_is_ansi(S):- is_ansi_color(S).
 
+
+:- export(maybe_write_atom_link/1).
+maybe_write_atom_link(Term):-
+  with_no_hrefs(t,(if_defined(rok_linkable(Term),fail), !,
+  write_atom_link(Term))),!.
+
 term_contains_ansi(S):- \+ compound(S),!,term_is_ansi(S).
 term_contains_ansi(S):- arg(_,S,E),term_contains_ansi(E),!.
 :- export(term_contains_ansi/1).
@@ -1661,13 +1667,24 @@ pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
 pt1(_FS,Tab,_S) :- prefix_spaces(Tab), fail.
 
+
 pt1(FS, _Tab,S) :- maybe_pp_hook(pt1(FS),S),!.
+
+% pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,sys:plpp(Term),!.
+pt1(_FS,Tab,Term) :- is_dict(Term), !,  prefix_spaces(Tab), system_portray(Tab,Term).
+pt1(FS,Tab,Term) :- 
+   is_dict(Term),
+   dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),!,
+   prefix_spaces(Tab), pl_span_goal('functor',( print_tree_no_nl(Tag), pformat('{ '))),
+   locally(t_l:printing_dict,pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons)),!.
+
+%t_l:printing_dict
+pt1(_FS,_Tab,(NPV)) :- compound(NPV), NPV=..[OP,V,N], OP==(:), atomic(N),
+  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree_unit(V),!.
 
 pt1(_FS,_Tab,S) :- term_is_ansi(S), !, write_keeping_ansi(S).
 
-pt1(_, Tab,Term) :- 
-  with_no_hrefs(t,(if_defined(rok_linkable(Term),fail), !,
-  prefix_spaces(Tab), write_atom_link(Term))),!.
+pt1(_, _Tab,Term) :- atom(Term),maybe_write_atom_link(Term),!.
 
 pt1(_FS,Tab,[H|T]) :- is_codelist([H|T]), !,  
    sformat(S, '`~s`', [[H|T]]),
@@ -1677,13 +1694,9 @@ pt1(_, Tab,Term) :-
    use_system_portray(Term), !, 
    system_portray(Tab,Term).
 
-%t_l:printing_dict
-pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], OP==(:), atomic(N),
-  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree_unit(V),!.
-
 pt1(_,_Tab,Term) :- Term=ref(_), !, write_q(Term),!.
 pt1(_,_Tab,Term) :- Term=element(_,_,List),List==[], !, write_q(Term),!.
-   
+
 
 pt1(_, Tab,Term) :- fail,
    as_is(Term), !,
@@ -1697,13 +1710,6 @@ pt1(_FS,Tab,T) :- % fail,
    prefix_spaces(Tab), write_q(T).
    %system_portray(Tab,T),!.
    
-% pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,sys:plpp(Term),!.
-pt1(FS,Tab,Term) :- 
-   is_dict(Term),
-   dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),
-   prefix_spaces(Tab), pl_span_goal('functor',( print_tree_no_nl(Tag), pformat('{ '))),
-   locally(t_l:printing_dict,pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons)),!.
-
 pt1(FS,Tab,List) :- List=[_|_], !,
   prefix_spaces(Tab),pformat_functor('[ '),
   pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
@@ -1796,10 +1802,21 @@ pt1(_FS,Tab,T) :-
    max_output(Tab,W120,T),!,
    system_portray(Tab,T),!.
 
-% xfy/yfx/xfx
+
+% yfx
 pt1(_FS,Tab,T) :-
   compound_name_arity(T,OP, 2),  
-  (current_op(Pri,xfy,OP);current_op(Pri,yfx,OP);current_op(Pri,xfx,OP)),
+  (current_op(Pri,yfx,OP)),
+  Pri >= 400,
+  pred_juncts_to_list(OP,T,[Y,X]),!,
+  prefix_spaces(Tab), pformat_functor('( '),  
+    pformat_e_args(T, 
+       pt_list_juncts(Tab+2,OP,[Y,X])), 
+   pformat(')'),!.
+% xfy/xfx
+pt1(_FS,Tab,T) :-
+  compound_name_arity(T,OP, 2),  
+  (current_op(Pri,xfy,OP);current_op(Pri,xfx,OP)),
   Pri >= 400,
   pred_juncts_to_list(OP,T,List),!,
   prefix_spaces(Tab), pformat_functor('( '),  
@@ -1959,12 +1976,12 @@ pt_cont_args_s(Sep1, Tab, Sep,_Mid,_FS, List) :- % ground(List),
 :- export(print_tab_term/2).
 :- export(print_tab_term/3).
 
+is_arity_lt1(V) :- is_dict(V), !, fail.
 is_arity_lt1(S):- notrace(is_arity_lt10(S)).
 is_arity_lt1(V):- term_contains_ansi(V),!,fail.
 is_arity_lt10(A) :- \+ compound(A),!.
 is_arity_lt10(A) :- compound_name_arity(A,_,0),!.
 is_arity_lt10(A) :- functor(A,'$VAR',_),!.
-is_arity_lt10(V) :- is_dict(V), !, fail.
 is_arity_lt10(S) :- is_charlist(S),!.
 is_arity_lt10(S) :- is_codelist(S),!.
 
@@ -1981,12 +1998,12 @@ use_system_portray(Term):- (( \+ compound(Term)); is_arity_lt1(Term); functor(Te
 use_system_portray(A=B):- use_system_portray(A),use_system_portray(B),!. 
 
 
-as_is(V):-notrace(as_is0(V)).
+as_is(V):- as_is0(V).
 
 as_is0(V):- var(V).
-as_is0(V):- term_contains_ansi(V),!,fail.
-as_is0(V) :- is_dict(V), !, fail.
 as_is0(A) :- is_arity_lt1(A), !.
+as_is0(V) :- is_dict(V), !, fail.
+as_is0(V):- term_contains_ansi(V),!,fail.
 as_is0(A) :- functor(A,F,_), simple_f(F), !.
 as_is0(A) :- ground(A), A = [ tag(_,_), Atom],atomic(Atom),!.
 as_is0(A) :- ground(A), A =  tag(_,_),!.
@@ -2020,6 +2037,7 @@ is_quoted_pt(Q):- nonvar(Q), fail, catch(call(call,quote80(Q)),_,fail),!.
 
 simple_fs(:).
 
+simple_f(A):- \+ atom(A),!,fail.
 simple_f(denotableBy).
 simple_f(iza).
 simple_f(c).
