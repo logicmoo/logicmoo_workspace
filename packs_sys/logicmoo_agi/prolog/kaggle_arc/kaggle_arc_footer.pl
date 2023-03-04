@@ -7,6 +7,7 @@
 
 %:- set_prolog_flag(verbose_load,true).  
 %:- set_prolog_flag(verbose_autoload,true).
+%:- prolog_load_context(source,SF),ufmt(prolog_load_context(source,SF)).
 
 %:- learn_shapes.
 :- ensure_loaded(kaggle_arc_utils).
@@ -44,3 +45,4 @@
 
 :- fixup_module_exports_now.
 :- fixup_exports.
+

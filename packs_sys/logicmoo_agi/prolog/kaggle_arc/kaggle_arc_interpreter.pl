@@ -19,17 +19,24 @@ gref_call(P1,In,Out):-
 dref_grid(IIn,Grid):- is_grid(IIn),!,Grid=IIn.
 dref_grid(IIn,Grid):- arg(_,IIn,Grid),is_grid(Grid),!.
 
-grid_call(T,I,O):- grid_call(call,T,I,O).
+
+grid_call(Nil,I,O):- Nil==[],!,I=O.
+grid_call(PT,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(PT,G,O).
+grid_call(=,I,O):- !, I=O. 
+grid_call(P2,IO,IIOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIOO,How,II,OO),grid_call(P2,I,II),grid_call(P2,O,OO).
+grid_call([H|T],I,O):- nonvar(H), !, grid_call(H,I,M), grid_call(T,M,O).
+grid_call(P2,IG,IIOO):- is_grid_group(IG),!, grid_group_call(P2,IG,IIOO).
+grid_call(P2,I,O):- p2_call(P2,I,O)*->true;grid_call(call,P2,I,O).
 
 grid_call(PC,Nil,I,O):- Nil==[],!,call(PC,I=O).
 grid_call(PC,T,I,O):- plain_var(I),var(O),!,into_grid(_,G),G\=@=I,I=G,grid_call(PC,T,G,O).
 grid_call(PC,=,I,O):- !, call(PC,I=O). 
-grid_call(PC,P2,IO,IIOO):- is_plus_split(IO,I,O),!,unplus_split(IIOO,II,OO),grid_call(PC,P2,I,II),grid_call(PC,P2,O,OO).
+grid_call(PC,P2,IO,IIOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIOO,How,II,OO),grid_call(PC,P2,I,II),grid_call(PC,P2,O,OO).
 grid_call(PC,[H|T],I,O):- nonvar(H), !, grid_call(PC,H,I,M), grid_call(PC,T,M,O).
-
 grid_call(PC,P2,IG,IIOO):- is_grid_group(IG),!, call(PC,grid_group_call(P2,IG,IIOO)).
 %grid_call(PC,T,I,O):- into_p2(T,I,O,P),check_args(P,PP),call(PP).
-grid_call(PC,T,I,O):- call(PC,call(T,I,O)).
+%grid_call(PC,T,I,O):- call(PC,call(T,I,O)).
+grid_call(PC,T,I,O):- call(PC,T,I,O).
 
 c_r(P2,Grid,Double):- a_as_g(h_as_v0(P2),Grid,Double).
 r_c(P2,Grid,Double):- h_as_rv(P2,Grid,Double).
@@ -62,7 +69,7 @@ object_call(=,I,O):- !, I=O.
 
 
 object_call(Nil,I,I):- Nil==[],!. 
-object_call(P2,IO,IIOO):- is_plus_split(IO,I,O),!,unplus_split(IIOO,II,OO), object_call(P2,I,II),object_call(P2,O,OO).
+object_call(P2,IO,IIOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIOO,How,II,OO), object_call(P2,I,II),object_call(P2,O,OO).
 object_call([H|T],I,O):- nonvar(H), !, object_call(H,I,M), object_call(T,M,O).
 object_call(T,I,O):- call(T,I,O).
 
@@ -70,13 +77,15 @@ object_call(T,I,O):- call(T,I,O).
 grid_call_alters([H|T],I,O):- !, grid_call_alters(H,I,M),grid_call_alters(T,M,O).
 grid_call_alters(T,I,O):- grid_call(T,I,O),I\=@=O.
 
-:- meta_predicate(try_p2(+,+,-)).
+:- meta_predicate(try_p2(+,+,+)).
+try_p2(P2,In,Out):- var(Out),!,try_p2(P2,In,Out).
 try_p2(P2,In,Out):- grid_call(P2,In,Mid),Mid=@=Out.
 
-is_plus_split(IO,I,O):- compound(IO),unplus_split(IO,I,O).
-unplus_split(II^OO,II,OO).
+is_plus_split(IO,How,I,O):- compound(IO),unplus_split(IO,How,I,O).
+unplus_split(II^OO,^,II,OO).
+unplus_split(II+OO,+,II,OO).
 
-show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,I,O),!,unplus_split(IIIOOO,III,OOO),
+show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIIOOO,How,III,OOO),
  must_det_ll((grid_to_gid(I,GIDI),grid_to_gid(O,GIDO),
   copy_term(P2,P22),
   grid_call_for_info(P2,I,III,S1),
@@ -167,7 +176,7 @@ exp_call(_VM,P,(length(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=len(X),!.
 exp_call(_VM,Expr,Value):- notrace(catch(Value is Expr,_,fail)),!.
 exp_call(VM,I,O):- compound(I),
        compound_name_arguments(I, F, Args),
-       maplist(exp_call(VM), Args, ArgsNew),
+       my_maplist(exp_call(VM), Args, ArgsNew),
        compound_name_arguments( O, F, ArgsNew ),!.
 %exp_call(_VM,P,(=(X,R),call(F,R,N))):- P=..[F,E,N],compound(E),E=val(X).
 exp_call(_,E,E).
@@ -192,41 +201,42 @@ set_vm_grid(VM,In):- into_grid(In,Grid), set_vm_grid_now(VM,Grid),!.
 set_vm_grid(VM,In):- is_vm_map(In), map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
 set_vm_grid(VM,In):- w_section(debug,set_vm_grid_now(VM,In)).
 
-set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
+%set_vm_grid_now(VM,Grid):- VM.grid=@=Grid,!.
 set_vm_grid_now(VM,Grp):- 
   data_type(Grp,Type),
   gset(VM.type) = data_type(Type),
   pp(yellow,set_vm_grid_now(Type)),pp(cyan,Type),fail.
 set_vm_grid_now(VM,In):- VM==In,!.
 set_vm_grid_now(VM,In):- is_vm_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
-set_vm_grid_now(VM,Grp):- is_group(Grp), !,
-  gset(VM.points_o) = VM.points,
-  gset(VM.objs)=Grp,
-  globalpoints(Grp, Points),
-  gset(VM.points)=Points,
-  grid_size(Grp,H,V), gset(VM.h)=H, gset(VM.v)=V, 
-  points_to_grid(H,V,Points,Grid),
-  gset(VM.grid)=Grid,!.
 
-set_vm_grid_now(VM,Obj):- is_object(Obj), !,
-  gset(VM.objs)=[Obj],
-  object_grid(Obj,Grid),
-  gset(VM.grid)=Grid,
-  vis2D(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
-  gset(VM.points_o) = VM.points,
-  localpoints_include_bg(Obj, Points),
-  gset(VM.points)=Points .
 
 set_vm_grid_now(VM,Grid):- is_grid(Grid), !,
   gset(VM.grid)=Grid, 
   grid_size(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
-  gset(VM.points_o) = VM.points,
+%  gset(VM.start_points) = VM.lo_points,
   localpoints_include_bg(Grid, Points),
-  gset(VM.points)=Points.
+  gset(VM.lo_points)=Points.
+
+set_vm_grid_now(VM,Points):- is_cpoints_list(Points), !,  
+%  gset(VM.start_points) = VM.lo_points,
+  gset(VM.lo_points)=Points,
+  points_to_grid(VM.h,VM.v,Points,Grid),
+  gset(VM.grid)=Grid,!.
+
+set_vm_grid_now(VM,Grp):- is_group(Grp), !,  
+  grid_size(Grp,H,V), gset(VM.h)=H, gset(VM.v)=V,
+  globalpoints(Grp, Points),
+  set_vm_grid_now(VM,Points),
+  gset(VM.objs)=Grp.
+
+set_vm_grid_now(VM,Obj):- is_object(Obj), !,
+  localpoints(Obj,Points),
+  set_vm_grid_now(VM,Points),
+  gset(VM.objs)=[Obj].
 
 set_vm_grid_now(VM,In):- gset(VM.last_key) = In,!.
 
-expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
+expand_dsl_value(VM, Mode,In,Val,OutValue):- is_list(Val),!, my_maplist(expand_dsl_value(VM, Mode,In),Val,OutValue).
 expand_dsl_value(VM, Mode,In,Val,OutValue):-
   run_dsl(VM, Mode,Val,In,OutValue).
 
@@ -251,13 +261,14 @@ run_dsl(VM,Mode,forall(All,Exec),In,OutO):-!,
 
 run_dsl(VM,_Mode,call(G),In,Out):-!, call_expanded(VM,G),(plain_var(Out)->Out=In; true).
 
-%run_dsl(VM, Mode,[N|V],In,OutValue):-!, vm_grid(VM, maplist(expand_dsl_value(VM, Mode,In),[N|V],OutValue),In,_Out).
+%run_dsl(VM, Mode,[N|V],In,OutValue):-!, vm_grid(VM, my_maplist(expand_dsl_value(VM, Mode,In),[N|V],OutValue),In,_Out).
 
 run_dsl(VM, Mode,Name=Val,In,Out):- nonvar(Name),run_dsl(VM, Mode,nb_set(Name,Val),In,Out).
 run_dsl(VM,_Mode,get(Name,Val),In,Out):- !, vm_grid(VM,get_vm(Name,Val),In,Out).
 
 run_dsl(VM,_Mode,get(Name),In,Out):- !, vm_grid(VM, (get_vm(Name,Out),nonvar(Out)),In,Out),!.
-run_dsl(VM,_Mode,get(Name),_In,Out):- maybe_set_vm(VM),
+run_dsl(VM,_Mode,get(Name),_In,Out):-  
+  ignore(maybe_set_vm(VM)),
   must_det_ll(get_vm(Name,Val)),nonvar(Val),!,into_grid(Val,VOut), trim_to_rect(VOut,Rect), print_grid(Name,Rect),
   set(VM.grid)=Rect,
   Rect=Out.
@@ -269,34 +280,30 @@ run_dsl(VM,_Mode,nb_link(Name,Val),In,Out):- !, expand_dsl_value(VM, Mode,In,Val
 run_dsl(VM,_Mode,vm_set(Name,Val),In,Out):- !, vm_grid(VM,set_vm(Name,Val),In, Out).
 run_dsl(VM,_Mode,i(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,In,Objs),set_vm_grid(VM,Objs)),In,Out).
 
-run_dsl(VM,_Mode,o(_Indiv),In,In):- var(VM.grid_target),!.
-run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.grid_target,Objs),set_vm_grid(VM,Objs)),In,Out).
+run_dsl(VM,_Mode,o(_Indiv),In,In):- var(VM.target_grid),!.
+run_dsl(VM,_Mode,o(Indiv),In,Out):- !, vm_grid(VM,(individuate(Indiv,VM.target_grid,Objs),set_vm_grid(VM,Objs)),In,Out).
 run_dsl(_VM,_Mode,get_in(In),Pass,Pass):- copy_term(Pass,In),!.
 run_dsl(_VM,_Mode,set_out(Out),_In,Out):-!.
 
-run_dsl(_VM,Mode,Prog,In,_Out):- ppt(yellow,run_dsl(vm,Mode,Prog,in,out)), once(print_grid(_,_,Prog,In)),fail.
+run_dsl(_VM,Mode,Prog,In,_Out):- once(print_grid(_,_,ppt(yellow,run_dsl(vm,Mode,Prog)),In)),fail.
 
 run_dsl(VM,Mode,Prog,In,Out):- In==dsl_pipe,!,  must_det_ll((luser_getval(dsl_pipe,PipeIn),PipeIn\==[])), run_dsl(VM,Mode,Prog,PipeIn,Out).
 run_dsl(VM,Mode,Prog,In,Out):- Out==dsl_pipe,!, run_dsl(VM,Mode,Prog,In,PipeOut),luser_linkval(dsl_pipe,PipeOut).
 run_dsl(_VM,_Mode,sameR,In,Out):-!, duplicate_term(In,Out).
 
 % prevents unneeded updates such as color/position settings
-run_dsl(VM,_Mode,Prog,In,Out):- callable_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
+run_dsl(VM,enforce,color(Obj,Color),In,Out):-!,  color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out), override_object_io(VM,color(Color),Obj,In,Out).
+run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc2D(Obj,X,_Old), override_object_io(VM,loc2D(X,New),Obj,In,Out).
+
 run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), is_fti_step(F), !, vm_grid(VM, call(Step,VM),In,Out).
 run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), is_fti_stepr(F), Step=..[F|ARGS], !, vm_grid(VM, apply(F,[VM|ARGS]),In,Out).
+run_dsl(VM,_Mode,Prog,In,Out):- callable_arity(Prog, 0), !, vm_grid(VM, call_expanded(VM,Prog),In,Out).
 run_dsl(VM,_Mode,Step,In,Out):- callable_arity(Step, 1), functor(Step,F,_), ping_indiv_grid(F), !, vm_grid(VM, call(Step,VM.grid),In,Out).
-
-run_dsl(VM,_Mode,Step,In,Out):-  i_step(Step), !, vm_grid(VM,fti(VM,Step),In,Out).
-
-
-run_dsl(VM,enforce,color(Obj,Color),In,Out):-!, 
- color(Obj,ColorWas),subst_color(ColorWas,Color,In,Out),
-    override_object_io(VM,color(Color),Obj,In,Out).
-
-run_dsl(VM,enforce,vert_pos(Obj,New),In,Out):-!, loc2D(Obj,X,_Old), override_object_io(VM,loc2D(X,New),Obj,In,Out).
 
 run_dsl(VM,Mode,Prog,In,Out):- callable_arity(Prog,2), !, 
   vm_grid(VM, run_dsl_call_io(VM,Mode,Prog,In,Out), In, Out).
+
+run_dsl(VM,_Mode,Step,In,Out):-  i_step(Step), !, vm_grid(VM,fti(VM,Step),In,Out).
 
 run_dsl(_VM,Mode,Prog,In,In):- arcdbg(warn(missing(run_dsl(Mode,Prog)))),!,fail.
 
@@ -313,14 +320,14 @@ override_object_io(_VM,Update,Obj,In,Out):-
 
 sync_colors(Orig,Colors):- is_object(Orig),!,colors_cc(Orig,Colors),
   globalpoints(Orig,OrigGPoints),colors_cc(OrigGPoints,Colors),
-  points_rep(local,Orig,OrigLPoints),colors_cc(OrigLPoints,Colors),!.
+  localpoints(Orig,OrigLPoints),colors_cc(OrigLPoints,Colors),!.
 sync_colors(Orig,Colors):- colors_cc(Orig,Colors).
 
 uncast_grid_to_object(Orig,Grid,NewObj):- 
  must_det_ll((
-  points_rep(local,Grid,LocalPoints),
+  localpoints(Grid,LocalPoints),
   (( LocalPoints==[]) -> (arcST,writeq(LocalPoints),atrace ); true),
-  rebuild_from_points_rep(local,Orig,LocalPoints,NewObj))).
+  rebuild_from_localpoints(Orig,LocalPoints,NewObj))).
 
 closure_grid_to_group(Orig,Grid,Group):- individuate(Orig,Grid,Group).
 
@@ -392,7 +399,7 @@ recast_to_grid0(Points,Grid, throw_no_conversion(Points,grid)):- compound(Points
 group_to_grid(Grp,Grid):-   
   reproduction_objs(Grp,Objs),
   grid_size(Objs,H,V),
-  maplist(globalpoints,Objs,Points),
+  my_maplist(globalpoints,Objs,Points),
   append(Points,AllPoints),
   points_to_grid(H,V,AllPoints,Grid),!.
 
@@ -486,7 +493,7 @@ addProgramStep(_VM,Step):-
   pp(addProgramStep(vm,Step)).
 
 kaggle_arc_io(Name,ExampleNum,IO,G):- 
-  arg(_,v(trn+_,tst+_),ExampleNum),
+  arg(_,v((trn+_),(tst+_)),ExampleNum),
   kaggle_arc(Name,ExampleNum,In,Out), ((IO=in,G=In);(IO=out,G=Out)).
 %kaggle_arc_io(Name,tst+ID,out,Grid):- kaggle_arc_answers(Name,ID,ID,Grid).
 
@@ -508,9 +515,9 @@ set_grid_tid(Grid,ID):-
 to_assertable_grid(A,A):- ground(A),!.
 %to_assertable_grid(A,C):- copy_term(A,B),numbervars(B,0,_,[attvar(skip),singletons(true)]),B\==A,to_assertable_grid(B,C).
 to_assertable_grid(A,B):- 
-  term_attvars(A,V),maplist(get_attrs,V,ATTS),term_attvars(A+ATTS,V2),maplist(get_attrs,V2,ATTS2),
+  term_attvars(A,V),my_maplist(get_attrs,V,ATTS),term_attvars(A+ATTS,V2),my_maplist(get_attrs,V2,ATTS2),
   copy_term(A+V2+ATTS2,B+VV2+VATTS2,_),
-  maplist(save_atts,VATTS2,VV2),numbervars(B+VV2+VATTS2,0,_,[attvar(skip),singletons(true)]).
+  my_maplist(save_atts,VATTS2,VV2),numbervars(B+VV2+VATTS2,0,_,[attvar(skip),singletons(true)]).
 
 save_atts(A,'$attrs'(Attrs)):- attvar(A),!,get_attrs(A,Attrs).
 save_atts(A,'$attrs'(A)). 
@@ -542,7 +549,8 @@ into_oid(X,ID):- tid_to_gids(X,ID),!.
 
 
 makeup_gridname(Grid,TID):- nonvar(TID),!,makeup_gridname(Grid,GridNameM),!,must_det_ll((GridNameM=TID)).
-makeup_gridname(Grid,TID):- get_current_test(TestID), kaggle_arc_io(TestID,Trn+Num,IO,Grid), name_num_io_id(TestID,Trn,Num,IO,TID),!.
+makeup_gridname(Grid,TID):- get_current_test(TestID), kaggle_arc_io(TestID,Trn+Num,IO,Grid), 
+  name_num_io_id(TestID,Trn,Num,IO,TID),!.
 makeup_gridname(Grid,TID):- is_grid_tid(Grid,TID),!.
 %makeup_gridname(Grid,TID):- was_grid_gid(Grid,TID),!.
 makeup_gridname(Grid,TID):- get_current_test(TestID),
@@ -567,7 +575,7 @@ into_obj(G,O):- is_object(G),!,G=O.
 into_obj(G,O):- is_grid(G),!,individuate(whole,G,Objs),last(Objs,O),!.
 into_obj(G,O):- no_repeats(O,known_obj0(G,O))*->true; (into_grid(G,GG),!,into_obj(GG,O)),!.
 
-  %set(VM.points)=[],!.
+  %set(VM.lo_points)=[],!.
 
 
 :- module_transparent register_obj/1.
@@ -658,7 +666,7 @@ into_group(GI,G):- into_group(GI,G, _ ).
 into_group(G,G,(=)) :- G==[],!.
 into_group(P,G,(=)):- is_group(P),!,G=P.
 into_group(G, G, _):- plain_var(G),!, %throw(var_into_group(G)),
-          current_group(G).
+          current_groups(G).
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),G=VM.objs,is_group(G),!.
 into_group(VM,G,(group_to_and_from_vm(VM))):- is_vm(VM),run_fti(VM),G=VM.objs,is_group(G),!.
 into_group(G,I, into_grid):- is_grid(G),!,compute_shared_indivs(G,I).
@@ -715,7 +723,7 @@ prim_ops([
   rotate_grid(nsew)]).
 
 
-throw_missed(G):-  Info = missed(G),u_dmsg(Info),break, arcST,throw_missed_pt2(G,Info).
+throw_missed(G):-  Info = missed(G),u_dmsg(Info),ibreak, arcST,throw_missed_pt2(G,Info).
 throw_missed_pt2(_,Info):- tracing,!,throw(Info).
 throw_missed_pt2(G,Info):- notrace,nortrace,atrace,u_dmsg(Info),break,rrtrace(G),throw(Info).
 
@@ -778,7 +786,7 @@ goal_expansion_query(Goal,Out):- compound(Goal),
    call(P1,Var),expand_goal((Exp,Goal),Out).
 
 is_goal_query(Goal):- 
-  \+ source_location(_,_),luser_getval('$goal', Term), !, % writeq(Term=@=Goal),nl,
+  \+ source_location(_,_),nb_current('$goal', Term), !, % writeq(Term=@=Goal),nl,
   Goal=@=Term.
 
 goal_expansion_q(Goal,I,Out,O):- var(I), is_goal_query(Goal), (goal_expansion_query(Goal,Out)-> Goal\=@=Out),I=O.
@@ -799,19 +807,21 @@ goal_expansion(Goal,I,Out,O):-
 % ?- print_grid(gridFn(X)).
 %:- export(is_toplevel_query/2).
 %:- b_setval('$goal', []).
-:- luser_linkval('$goal', []).
+:- nb_linkval('$goal', []).
 %:- b_setval('$goal_expanded', []).
-:- luser_linkval('$goal_expanded', []).
+:- nb_linkval('$goal_expanded', []).
 expand_query(Goal, Expanded, Bindings, ExpandedBindings):- 
+  \+ current_prolog_flag(arc_term_expansion,false),
+  \+ current_prolog_flag(arc_query_expansion,false),
   current_predicate(luser_linkval/2),
     % Have vars to expand and varnames are empty
-    luser_getval('$goal', WGoal), WGoal\=@=Goal, % this prevents the loop
-    luser_linkval('$goal', Goal),
+    nb_current('$goal', WGoal), WGoal\=@=Goal, % this prevents the loop
+    nb_linkval('$goal', Goal),
     quietly((Bindings\==[],prolog_load_context(variable_names,Vs), Vs ==[])), % this prevents the loop
-    luser_linkval('$variable_names', Bindings),
+    nb_linkval('$variable_names', Bindings),
     debug(expand_query,'~q',[b_setval('$variable_names', Bindings)]),
     writeq(Goal+Bindings),nl,
     expand_query(Goal, Expanded, Bindings, ExpandedBindings),
-    luser_linkval('$goal_expanded', Expanded).    
+    nb_linkval('$goal_expanded', Expanded).    
 
 

@@ -91,7 +91,7 @@ test_easy_solve_test_pair_now(P2Possibles,TestID,ExampleNum,I,O,P2S):-
      print_side_by_side([grid_call_2(P2)=I,result=EM,needed=O])),P2S)),
 */
    nl_if_needed,
-   (P2S\==[] -> wqs(["Passed:\n ",CALL," using\n ",call(maplist(show_passing(TestID),P2S))]) ; ( \+ get_pair_mode(entire_suite),wqs(["failed: ",b(q(CALL))]),!,fail)).
+   (P2S\==[] -> wqs(["Passed:\n ",CALL," using\n ",call(my_maplist(show_passing(TestID),P2S))]) ; ( \+ get_pair_mode(entire_suite),wqs(["failed: ",b(q(CALL))]),!,fail)).
 
 show_passing(TestID,P2):- write(' '),pp(green, ?- easy_solve_suite(TestID,P2)).
 grid_call_unify(P2,I,O):- grid_call(P2,I,O).
@@ -352,7 +352,7 @@ test_easy(TestID):-  test_easy_testid(TestID).
 solves_all_pairs(TestID,P,P2S):- kaggle_arc(TestID,tst+0,_,_), 
  findall(P2,(easy_solve_by(TestID,P2),
    findall(try_p2(P2,In,Out),
-     kaggle_arc(TestID,_,In,Out),AllTrue),maplist(call,AllTrue)),[P|P2S]).
+     kaggle_arc(TestID,_,In,Out),AllTrue),my_maplist(call,AllTrue)),[P|P2S]).
 /*
 test_easy:- clsmake, forall_count(ensure_test(TestID),test_easy(TestID)).
 test_easy(TestID):- 
@@ -366,7 +366,7 @@ solves_all_pairs(TestID,P2):- !,
 solves_all_pairs(TestID,P2):-
    easy_solve_by(TestID,P2),
    findall(grid_call(P2,In,Out),kaggle_arc(TestID,_,In,Out),AllTrue),   
-   nop(maplist(grid_call,AllTrue)),
+   nop(my_maplist(grid_call,AllTrue)),
    kaggle_arc(TestID,trn+0,TI,TO),
    try_p2(P2,TI,TO), 
    kaggle_arc(TestID,tst+0,EI,EO), 
@@ -449,8 +449,8 @@ easy_solve_training(TestID,P2In):-
 
 
 :- meta_predicate(with_io_training_context(+,+,0)).
-with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.grid_o  =@=I),!, set(PrevVM.grid_target)=O, with_current_pair(I,O,G).
-with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.grid_o \=@=I),!,
+with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.start_grid  =@=I),!, set(PrevVM.target_grid)=O, with_current_pair(I,O,G).
+with_io_training_context(I,O,G):- (peek_vm(PrevVM), PrevVM.start_grid \=@=I),!,
  call_cleanup(with_io_training_context1(I,O,G),set_vm(PrevVM)),!.
 with_io_training_context(I,O,G):- with_io_training_context1(I,O,G).
 :- meta_predicate(with_io_training_context1(+,+,0)).
@@ -461,7 +461,7 @@ with_io_training_context1(I,O,G):-
  with_current_pair(I,O,
   (grid_to_tid(I,ID), into_fti(ID,in_out,I,VM),
    set(VM.grid)=I,
-   set(VM.grid_target)=O,
+   set(VM.target_grid)=O,
    set_vm(VM),
    call(G))).
 
@@ -580,7 +580,7 @@ guess_simple_todolist(N,SolSoFar,DoneSoFar,Plan,I,O,OO):- !,
 -> (Plan=DoneSoFar,OO=I) 
 ;(findall(h_g(H1,I1),(easy0(N,H1),grid_call(H1, I,I1), (H1=='=' -> true ; (is_a_change(I,I1), \+ member(I1,SolSoFar)))), H1G),
   predsort_using_only(arg(2),H1G,H1GSS),sort_safe(H1GSS,H1GS),
-  maplist(arg(2),H1GS,SOFAR),append(SolSoFar,SOFAR,NewSOFAR),
+  my_maplist(arg(2),H1GS,SOFAR),append(SolSoFar,SOFAR,NewSOFAR),
   member(h_g(H1,I1),H1GS),
   Next is N+1,
   guess_simple_todolist(Next,NewSOFAR,[H1|DoneSoFar],Plan,I1,O,OO))).
@@ -606,7 +606,7 @@ guess_simple_todolist(N,Failed,Planned,Plan,I,O,OO):- Next is N+1,
 simple_todolist(SolSoFar,List,I,O,OO):-
   findall(h_g(H1,I1),(easy0(H1),grid_call(H1, I,I1),\+ member(I1,SolSoFar)), H1G),
   predsort_using_only(arg(2),H1G,H1GSS),sort_safe(H1GSS,H1GS),
-  maplist(arg(2),H1GS,SOFAR),
+  my_maplist(arg(2),H1GS,SOFAR),
   member(h_g(H1,I1),H1GS),
   ((findall(h_g(H2,I2),(easy2(H2),H1\==H2,grid_call(H2,I1,I2),\+ member(I2,SOFAR)),H2G),
     predsort_using_only(arg(2),H2G,H2GSS),sort_safe(H2GSS,H2GS),
@@ -680,7 +680,7 @@ is_fti_step(overlay_original).
 % =====================================================================
 
 overlay_original(VM):-
-  mapgrid(overlay_onto,VM.grid_o,VM.grid,set(VM.grid)).
+  mapgrid(overlay_onto,VM.start_grid,VM.grid,set(VM.grid)).
 
 
 overlay_onto(FG,_,FG):- is_fg_color(FG),!.
@@ -694,8 +694,8 @@ add_object(Spec,VM):-
   UParentVM = VM.parent_vm,
   (var(UParentVM) -> ParentVM = VM ; ParentVM = UParentVM),
   include(has_prop(Spec),VM.objs,Matches),
-  Unsullied = Matches,%maplist(remove_giz,Matches,Unsullied),
-  maplist(addNonVMObject(ParentVM),Unsullied).
+  Unsullied = Matches,%my_maplist(remove_giz,Matches,Unsullied),
+  my_maplist(addNonVMObject(ParentVM),Unsullied).
 
 
 addNonVMObject(VM,Obj):-
@@ -715,7 +715,7 @@ is_fti_step(with_objects).
 with_objects(Spec,Code,VM):-
   ensure_objects(VM),
   include(has_prop(Spec),VM.objs,Matches),
-  maplist(run_code_on_object(VM,Code),Matches).
+  my_maplist(run_code_on_object(VM,Code),Matches).
 
 run_code_on_object(VM,Code,Obj):- 
   ensure_objects(VM),
@@ -735,7 +735,7 @@ test_tag_info(X):-
   length(Set,LS),
   dash_chars,
   u_dmsg(?- test_tag_info(X)=LS),
-  maplist(test_tag_info(X),Set),
+  my_maplist(test_tag_info(X),Set),
   u_dmsg(test_tag_info(X)=LS),
   dash_chars.
 

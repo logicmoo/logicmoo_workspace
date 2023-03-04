@@ -14,7 +14,7 @@
 
 recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
-   nop((set(VM.program_i) = [After,recalc_sizes|TODO])).
+   nop((set(VM.lo_program) = [After,recalc_sizes|TODO])).
 /*
    � mass(3) cc(blue,3.0) vis2D(1,3) loc2D(2,1) pen([]) /*b*/iz((nsew)) iz(symmetry_type(sym_hv)) center2G(2,2) layer(in) nth(21)
 %mass(3) cc(cyan,3.0) vis2D(1,3) loc2D(1,1) pen([]) /*b*/iz((nsew)) iz(symmetry_type(sym_hv)) center2G(1,2) layer(in) nth(22)
@@ -50,8 +50,8 @@ cullObjectsOutsideOf(VM,Min,Max):-
 within_mass(Min,Max,Obj):- mass(Obj,Mass),between(Min,Max,Mass).
 
 size_to_keys(N,N-N).
-computeMassIndex(VM,Sizes):-  maplist(mass,VM.objs,UKeySizes), maplist(size_to_keys,UKeySizes,KSizes),keysort(KSizes,SKSizes),
-  maplist(arg(2),SKSizes,SKSizesR),reverse(SKSizesR,Sizes).
+computeMassIndex(VM,Sizes):-  my_maplist(mass,VM.objs,UKeySizes), my_maplist(size_to_keys,UKeySizes,KSizes),keysort(KSizes,SKSizes),
+  my_maplist(arg(2),SKSizes,SKSizesR),reverse(SKSizesR,Sizes).
 
 computeMinMass(VM,Min):- computeMassIndex(VM,List),length(List,Count),computeMinMass(VM,List,Count,Min).
 computeMinMass(VM,List,Count,Min):- Count>VM.objs_max_len,length(Left,VM.objs_max_len),append(Left,_,List),
@@ -104,7 +104,7 @@ individuals_from_pair(PairName,In,Out,IH,IV,OH,OV,ShapesI,ShapesO):-
   add_note("trying unique_colors per grid"),
   unique_colors(In,ICs), unique_colors(Out,OCs),
   intersection(ICs,OCs,CommonCs,IPCs,OPCs),
-  maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
+  my_maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
   individuals_from_pair_colors(PairName,In,Out,
     IH,IV,OH,OV,
     ICs,IPCs,CommonCs,OPCs,OCs,
@@ -178,7 +178,7 @@ learn_shapelib(PairName,In,Out,IH,IV,OH,OV):- !,
   add_note("trying unique_colors per grid"),
   unique_colors(In,ICs), unique_colors(Out,OCs),
   intersection(ICs,OCs,CommonCs,IPCs,OPCs),
-  maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
+  my_maplist(length,[ICs,IPCs,CommonCs,OPCs,OCs],[ICsL,IPCsL,CommonCsL,OPCsL,OCsL]),
   learn_color_individuals_lib(PairName,In,Out,
     IH,IV,OH,OV,
     ICs,IPCs,CommonCs,OPCs,OCs,

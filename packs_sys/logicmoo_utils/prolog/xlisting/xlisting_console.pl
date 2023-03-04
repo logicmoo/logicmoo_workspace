@@ -1421,7 +1421,7 @@ Warning: in_pce_thread_sync/1, which is referenced by
 Warning:        /usr/lib/swi-prolog/xpce/prolog/lib/gui_tracer.pl:80:4: 3-th clause of guitracer/0
 Warning:        /usr/lib/swi-prolog/xpce/prolog/lib/gui_tracer.pl:139:8: 1-st clause of trace_goal_2/1
 Warning: gvs:is_oo_hooked/4, which is referenced by
-Warning:        /home/norights/.local/share/swi-prolog/pack/dictoo/prolog/dictoo_lib.pl:506:68: 2-nd clause of gvs:is_dot_hook/4
+Warning:        /home/norights/.local/share/swi-prolog/pack/dictoo/prolog/dictoo_lib.pl:506:68: 2-nd clause of dictoo:is_dot_hook/4
 Warning: start_emacs/0, which is referenced by
 Warning:        /usr/lib/swi-prolog/library/doc_http.pl:242:4: 1-st clause of prepare_editor/0
 Warning: pretty_clauses:bfly_write_s/1, which is referenced by

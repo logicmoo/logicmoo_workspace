@@ -812,6 +812,7 @@ decl_wrapped(M,F,A,How):-
 %
 % Same Terms.
 %
+same_terms(A,B):-same_term(A,B),!.
 same_terms(A,B):-A==B,!.
 same_terms(A,B):-A=@=B,!.
 same_terms(A,B):-A=@=B,!,A=B.

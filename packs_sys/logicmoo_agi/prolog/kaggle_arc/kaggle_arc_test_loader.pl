@@ -23,7 +23,7 @@
 mask_to_fullnames(Mask,FullNames):- absolute_file_name(Mask,AbsMask,[relative_to('/data')]), 
   expand_file_name(AbsMask,FullNames),FullNames\==[].
 mask_to_fullnames(Mask,FullNames):- AbsMask = Mask, expand_file_name(AbsMask,Nonmask),Nonmask\==[],
-  maplist(absolute_file_name,Nonmask,FullNames).
+  my_maplist(absolute_file_name,Nonmask,FullNames).
 mask_to_fullnames(Mask,FullNames):-
   arc_sub_path('.',ARC_DIR), member(Rel,['.','/','/data',ARC_DIR]), absolute_file_name(Mask,AbsMask,[relative_to(Rel)]),
   expand_file_name(AbsMask,FullNames),FullNames\==[].
@@ -40,7 +40,7 @@ load_json_files(SuiteX,F,Mask):-
 load_json_files(F,Mask):- 
   mask_to_fullnames(Mask,FullNames),  FullNames\==[],
   u_dmsg(load_json_files(F,Mask)),
-  maplist(load_json_file(F),FullNames),!.
+  my_maplist(load_json_file(F),FullNames),!.
 */
 no_uscore(UBaseName,BaseName):- 
   atomic_list_concat(List,'_',UBaseName),
@@ -49,19 +49,19 @@ no_uscore(UBaseName,BaseName):-
 /*
 expand_to_abs_file_name_list(FName,ABSFullNames):- 
   \+ exists_file(FName), expand_file_name(FName,FullNames),FullNames\=@=[FName],
-  maplist(afn_maybe,FullNames,ABSFullNames),
+  my_maplist(afn_maybe,FullNames,ABSFullNames),
   last(ABSFullNames,Exist),
   exists_file(Exist),!.
 afn_maybe(A,A).
 load_json_file(F, FName):-  pp(load_json_file(F)=FName),fail.
-load_json_file(F, FName):- is_list(FName),!,maplist(load_json_file(F), FName).
+load_json_file(F, FName):- is_list(FName),!,my_maplist(load_json_file(F), FName).
 load_json_file(F, FName):- \+ exists_file(FName), !, expand_to_abs_file_name_list(FName,FullNames),load_json_file(F, FullNames).
 %load_json_file(F, FName):- exists_file(FName),\+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\==ABSName,!,load_json_file_abs(F, ABSName).
 load_json_file(F, FName):- \+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\=@=ABSName,!,load_json_file_abs(F, ABSName).
 load_json_file(F, FName):- load_json_file_abs(F, FName),!.
 */
 %load_json_file(F, FName):-  pp(load_json_file(F)=FName),fail.
-load_json_file(F, FName):- is_list(FName),!,maplist(load_json_file(F), FName).
+load_json_file(F, FName):- is_list(FName),!,my_maplist(load_json_file(F), FName).
 load_json_file(F, FName):- \+ exists_file(FName), expand_file_name(FName,FullNames),FullNames\=@=[FName],last(FullNames,Exist),exists_file(Exist),!,load_json_file(F, FullNames).
 %load_json_file(F, FName):- exists_file(FName),\+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\==ABSName,!,load_json_file2(F, ABSName).
 load_json_file(F, FName):- \+ is_absolute_file_name(FName), absolute_file_name(FName,ABSName),FName\=@=ABSName,!,load_json_file2(F, ABSName),!.
@@ -98,7 +98,7 @@ add_testfile_name(Testname,FullName):-
 add_test_info(Name):- forall(t_l:local_test_props(Props),add_test_info_props(Name,Props)).
 
 
-add_test_info_props(Name,RestInfo):- is_list(RestInfo),!, maplist(add_test_info_props(Name),RestInfo).
+add_test_info_props(Name,RestInfo):- is_list(RestInfo),!, my_maplist(add_test_info_props(Name),RestInfo).
 add_test_info_props(Name,F=V):- !, add_test_info_prop(Name,F,V).
 add_test_info_props(Name,FV):- compound_name_arguments(FV,F,V),add_test_info_prop(Name,F,V),!.
 add_test_info_props(Name,TV):- assert_if_new(some_test_info_prop(Name,TV)),u_dmsg(fallback_some_test_info_prop(Name,TV)).
@@ -158,7 +158,7 @@ add_test_info_prop(Name,F,V):-
 
   load_json_of_file(Name, _Type,List):- select(predictions=Items,List,Rest),!,
     add_test_info_props(Name,Rest),
-    maplist(load_json_predictions(Name,Rest),Items).
+    my_maplist(load_json_predictions(Name,Rest),Items).
 
   load_json_of_file(Name,_,Type=Value):-!, load_json_of_file(Name,Type,Value).
   load_json_of_file(TestID,train,T):-!,load_json_of_file(TestID,trn,T).
@@ -211,7 +211,7 @@ nth11(N,HT,E,Rest):- nth00(N2,HT,E,Rest),N2 is N+1.
 
 % json_to_colors(Out,Color):- is_grid_color(Out),!,Out=Color.
 :- export(json_to_colors/2).
-json_to_colors(Out,Color):- is_list(Out),!,maplist(json_to_colors,Out,Color).
+json_to_colors(Out,Color):- is_list(Out),!,my_maplist(json_to_colors,Out,Color).
 json_to_colors(Out,Color):- grid_color_code(Out,Color).
 
 

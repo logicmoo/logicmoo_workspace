@@ -26,7 +26,7 @@ into_gridoid0(N,G):- get_current_test(TestID),is_why_grouped(TestID,_,N,UG), UG\
 into_gridoid0(N,G):- into_obj(N,G).
 into_gridoid0(N,G):- into_grids(N,G).
 
-into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(points_rep(local,G,P)),sort_safe(P,S))).
+into_gridoid(N,G):- no_repeats(S,(into_gridoid0(N,G),once(localpoints(G,P)),sort_safe(P,S))).
 %into_gridoid(N,G):- into_gridoid0(N,G).    
    
 
@@ -62,17 +62,35 @@ flip_Once(flipDHV,X,Y):- flipDHV(X,Y).
 flip_Many(Rot,X,Y):- flip_Once(Rot,X,Y),X\=@=Y.
 flip_Many(sameR,X,X).
 
-normal_w(_,CC,N):- plain_var(CC),N is -2,!.
-normal_w(_,CC,N):- integer(CC),N=CC,!.
-normal_w(L,CC,N):- nth1(N,L,C),C==CC,!.
-normal_w(_,CC,N):- color_mass_int(CC,N).
-color_mass_int(Cell,-2):- plain_var(Cell),!.
-color_mass_int(Cell,-20):- var(Cell),is_fg_color(Cell),!.
-color_mass_int(Cell,-10):- var(Cell),is_bg_color(Cell),!.
-color_mass_int(Cell,1):- is_fg_color(Cell),!.
-color_mass_int(Cell,0):- is_bg_color(Cell),!.
-%color_mass_int(Cell,N):- color_int(Cell,N),!.
-color_mass_int(_,0).
+
+%grid_mass_ints(Grid,[[1]]):- Grid=@=[[_]],!. 
+grid_mass_ints(Grid,GridIII):- 
+  unique_fg_colors(Grid,Sorted),
+  %arc_test_property(Prop),
+  mapgrid(normal_w(Sorted),Grid,GridIII),!.
+  /*
+  %Prop = unique_colors(lst(vals([[cyan,yellow,orange,green,red,blue,black],[orange,cyan,yellow,green,black,red,blue]]),len(7),diff([orange,cyan,yellow,green,black,red,blue]=@=[cyan,yellow,orange,green,red,blue,black])))
+  
+  include(is_fg_color,CC,FG),
+  (FG==[]->SORT=[fg,black,bg];SORT=FG),!,
+  %((unique_fg_colors(Grid,FG)->FG\==[])->true;FG=[black]),
+  mapgrid(normal_w(SORT),Grid,GridIII),!.
+*/
+%normal_w(_,CC,N):- plain_var(CC),N is -2,!.
+%normal_w(L,CC,N):- nth1(N,L,C),C==CC,!.
+normal_w(_ColorSort,Cell,Cell):- integer(Cell),!.
+normal_w(_ColorSort,Cell,-4):- Cell==bg,!.
+normal_w(_ColorSort,Cell,-3):- Cell==wbg.
+normal_w(_ColorSort,Cell,-2):- var(Cell),is_bg_color(Cell),!.
+normal_w(_ColorSort,Cell,-1):- is_bg_color(Cell),!.
+normal_w( ColorSort,Cell,Nth):- nth1(Nth,[_,_,_|ColorSort],Color),Cell==Color,!.
+normal_w(_ColorSort,Cell,0):- plain_var(Cell),!.
+normal_w(_ColorSort,Cell,1):- is_fg_color(Cell).
+normal_w(_ColorSort,Cell,1):- Cell==fg,!.
+normal_w(_ColorSort,Cell,2):- Cell==wfg,!.
+normal_w(_ColorSort,Cell,3):- var(Cell),is_fg_color(Cell),!.
+%normal_w(ColorSort,Cell,N):- color_int(Cell,N),!.
+normal_w(_ColorSort,_,0).
 
 /*
 arc_test_property(Prop):-
@@ -80,38 +98,25 @@ arc_test_property(Prop):-
  arc_test_property(TestID, gh(N), comp(cbg(black), i-o, _), Prop).
 
 */
-
-
-%grid_mass_ints(Grid,[[1]]):- Grid=@=[[_]],!. 
-grid_mass_ints(Grid,GridIII):- 
-  %arc_test_property(Prop),
-  mapgrid(color_mass_int,Grid,GridIII),!.
-  /*
-  %Prop = unique_colors(lst(vals([[cyan,yellow,orange,green,red,blue,black],[orange,cyan,yellow,green,black,red,blue]]),len(7),diff([orange,cyan,yellow,green,black,red,blue]=@=[cyan,yellow,orange,green,red,blue,black])))
-  unique_colors(Grid,CC),
-  include(is_fg_color,CC,FG),
-  (FG==[]->SORT=[fg,black,bg];SORT=FG),!,
-  %((unique_fg_colors(Grid,FG)->FG\==[])->true;FG=[black]),
-  mapgrid(normal_w(SORT),Grid,GridIII),!.
-*/
-
 grav_rot(Grid,sameR,Grid):- \+ \+ Grid=[[_]],!.
-grav_rot(Grid,RotG,Rotated):- dif(RotG,rollD),
+grav_rot(Grid,RotG,Rotated):- %must_be_free(RotG),  
   must_det_ll((into_grid(Grid,GridII),
-   grid_mass_ints(GridII,GridIII),
-   best_grav_rot(GridIII,RotG,_),
-   call(RotG,GridII,Rotated))),!.
-best_grav_rot(Shape,RotG,Rotated):- must_be_free(Rotated),  
+   dif(RotG,rollD),
+   best_grav_rot_grid(GridII,RotG,Rotated))).
+
+best_grav_rot(Shape,RotG,Rotated):- must_be_free(Rotated),
     must_det_ll((
     cast_to_grid(Shape,Grid,Uncast),
     best_grav_rot_grid(Grid,RotG,Final),
-    uncast(Shape,Uncast,Final,Rotated))),!.
+    uncast(Shape,Uncast,Final,Rotated))).
 
-best_grav_rot_grid(Grid,RotG,Rotated):- must_be_free(Rotated), 
+best_grav_rot_grid(Grid,sameR,Grid):- \+ \+ Grid=[[_]],!.
+best_grav_rot_grid(Grid,RotG,RotatedG):- must_be_free(Rotated), 
  must_det_ll(( is_grid(Grid), 
-    w(W,Rotated,RotG)=Template,
-    findall(Template,(flip_Many(RotG,Grid,Rotated),rot_mass(Rotated,W)),Pos),
-    sort_safe(Pos,LPos),last(LPos,Template))).
+    grid_mass_ints(Grid,GridInts),
+    w(W,RotG)=Template,
+    findall(Template,(flip_Many(RotG,GridInts,Rotated),rot_mass(Rotated,W)),Pos),
+    sort_safe(Pos,LPos),last(LPos,Template),call(RotG,Grid,RotatedG))).
 
 length_safe(L,N):- do_my_check_args(length(L,N)),length(L,N).
 
@@ -122,13 +127,13 @@ my_check_args(length(L,_)):- nonvar(L),my_assertion(is_list(L)).
 rot_mass(Grid,Mass):- 
  into_grid(Grid,LP0), !,
  LP = [C|_],
- must_det_ll(( mapgrid(color_mass_int,LP0,LP),
+ must_det_ll(( grid_mass_ints(LP0,LP),
     length_safe(C,Len),map_row_size(10,Len,LP,Mass))).
 
 rot_mass(Grid,OMass):- into_grid(Grid,LP0), 
  LP = [C|_],
  must_det_ll(( 
-  mapgrid(color_mass_int,LP0,LP),
+  grid_mass_ints(LP0,LP),
   length_safe(C,Len),map_row_size(10,Len,LP,Mass),
    (is_top_heavy(LP)->Bonus is -1; Bonus is 1),
    (is_left_heavy(LP)->Bonus2 is 16 ;Bonus2 is -16),
@@ -267,7 +272,7 @@ grid_rollDR(Grid,RollD):-  do_rollDR(Grid,RollD),!.
 grid_rot90(Grid,Rot90):-  rot270(Grid,Rot270),rot180(Rot270,Rot90).
 grid_rot180(Grid,Rot180):- flipV(Grid,Rot90),flipH(Rot90,Rot180).
 grid_rot270(Grid,NewAnyWUpdate):- get_colums(Grid,NewAnyWUpdate),!.
-grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
+grid_flipH(Grid,FlipH):- my_maplist(reverse,Grid,FlipH).
 grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
 
 grid_flipDV(Grid,FlipHV):-flipD(Grid,FlipH),flipV(FlipH,FlipHV),!.
@@ -404,7 +409,7 @@ move_scale_dir_object(N,D,I,O):- into_group(I,M),M\=@=I,!,move_scale_dir_object(
 move_object(NX,NY,I,M):- is_object(I),!,
  /*must_det_ll*/((
   (NY<1 -> M=I ;
-  ( points_rep(local,I,LPoints),
+  ( localpoints(I,LPoints),
     offset_points(NX,NY,LPoints,GPoints),
     setq(I,[globalpoints(GPoints),loc2D(NX,NY)],M))))).
 move_object(H,V,L,LM):- is_group(L),!,mapgroup(move_object(H,V),L,LM).
@@ -428,10 +433,10 @@ show_object_changes(VM,S,Goal):-
           print_side_by_side(silver,print_grid(VM.h,VM.v,Was),objs>was:S,_,print_grid(VM.h,VM.v,VM.objs),objs>new:S)))).
 
 show_point_changes(VM,S,Goal):-
-   setup_call_cleanup(duplicate_term(VM.points,Was),
+   setup_call_cleanup(duplicate_term(VM.lo_points,Was),
       Goal,
-     ignore((VM.points\=@=Was,
-        print_side_by_side(silver,print_grid(VM.h,VM.v,Was),points>was:S,_,print_grid(VM.h,VM.v,VM.points),points>new:S)))).
+     ignore((VM.lo_points\=@=Was,
+        print_side_by_side(silver,print_grid(VM.h,VM.v,Was),points>was:S,_,print_grid(VM.h,VM.v,VM.lo_points),points>new:S)))).
 
 show_grid_changes(VM,S,Goal):-
    setup_call_cleanup(duplicate_term(VM.grid,Was),
@@ -473,7 +478,7 @@ find_relations(VM):-
 find_relationsA(Objs,NewObjs):-
  must_det_ll((
   include(is_physical_object,Objs,Phys),
-  maplist(add_oinfo,Phys,PhysOInfo),
+  my_maplist(add_oinfo,Phys,PhysOInfo),
   find_relationsB(PhysOInfo,[],TodoLIST),
   flatten(TodoLIST,TodoLISTF),
   do_todo3(PhysOInfo,TodoLISTF,NewObjs))).
@@ -555,14 +560,15 @@ sees_dir(w,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX
 
 related_how2(sees(DirsDists),O1,O2,Ps1,Ps2,Overlap,P1L,
   SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
-  findall(cc(Dir,Dist),sees_dir(Dir,Dist,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2),DirsDists), DirsDists\==[].
+  findall(cc(Dir,Dist),(sees_dir(Dir,Dist,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2),Dist<3),DirsDists), 
+   DirsDists\==[].
 
-%related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 < SX2, SY1 < SY2, EX2 < EX1, EY2 < EY1, How = contains(engulfed).
-related_how2(contains,O1,O2,Ps1,Ps2,Overlap,P1L,
+%related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 < SX2, SY1 < SY2, EX2 < EX1, EY2 < EY1, How = contained_by(engulfed).
+related_how2(contained_by,O1,O2,Ps1,Ps2,Overlap,P1L,
   SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
   SX1 >= SX2, SY1 >= SY2, EX2 >= EX1, EY2 >= EY1.
-%related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 > SX2, SY1 > SY2, EX2 > EX1, EY2 > EY1, How = contained_by(engulfed).
-related_how2(contained_by,O1,O2,Ps1,Ps2,Overlap,P1L,
+%related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 > SX2, SY1 > SY2, EX2 > EX1, EY2 > EY1, How = contains(engulfed).
+related_how2(contains,O1,O2,Ps1,Ps2,Overlap,P1L,
   SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
   SX1 =< SX2, SY1 =< SY2, EX2 =< EX1, EY2 =< EY1.
 
@@ -619,11 +625,11 @@ better_sdir(S,Iv,Dirs,link(S,Iv,Dirs)).
 % Contained
 % ==============================================
 % Find free points that are contained in objects and individuate them in their own way
-%fti(VM,[find_contained_points|set(VM.program_i)]):- find_contained_points(VM).
+%fti(VM,[find_contained_points|set(VM.lo_program)]):- find_contained_points(VM).
 is_fti_step(find_contained_points).
-%fti(VM,[colormass_subshapes|set(VM.program_i)]):- colormass_subshapes(VM),!.
+%fti(VM,[colormass_subshapes|set(VM.lo_program)]):- colormass_subshapes(VM),!.
 find_contained_points(VM):-
-  show_vm_changes(VM,find_contained_points,find_contained_points(VM.h,VM.v,VM.id,VM.objs,set(VM.objs),VM.points,set(VM.points))),!.
+  show_vm_changes(VM,find_contained_points,find_contained_points(VM.h,VM.v,VM.id,VM.objs,set(VM.objs),VM.lo_points,set(VM.lo_points))),!.
 
 find_contained_points(_H,_V,_ID,Sofar,Sofar,[],[]).
 find_contained_points(_H,_V,_ID,[],[],NextScanPoints,NextScanPoints).

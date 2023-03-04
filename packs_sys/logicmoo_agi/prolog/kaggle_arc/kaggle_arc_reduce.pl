@@ -42,14 +42,14 @@ combin_pair_op(OPA,OPB,OP):- (OPA=OPB->OP=OPA;OP=op(OPA,OPB)).
 reduce_op2(PassNo,A^B,OPA^OPB,AA^BB):- reduce_op1(PassNo,B,OPB,BB), ensure_reduction_guide(OPB,OPA),reduce_op1(PassNo,A,OPA,AA),!.
 reduce_op1(PassNo,A^B,OPA^OPB,AA^BB):- reduce_op1(PassNo,A,OPA,AA), reduce_op1(PassNo,B,OPB,BB),ensure_reduction_guide(OPA,OPB).
 reduce_op1(PassNo,A^B,OPA^OPB,AA^BB):- reduce_op2(PassNo,A^B,OPA^OPB,AA^BB).
-reduce_op1(PassNo,A^B,OPA^OPB,AA^BB):- nth1(N,A,EA,A0),maplist(=(_),EA),nth1(N,B,EB,B0),EA=@=EB,reduce_op2(PassNo,A0^B0,OPA^OPB,AA^BB).
+reduce_op1(PassNo,A^B,OPA^OPB,AA^BB):- nth1(N,A,EA,A0),my_maplist(=(_),EA),nth1(N,B,EB,B0),EA=@=EB,reduce_op2(PassNo,A0^B0,OPA^OPB,AA^BB).
 reduce_op1(PassNo,A^B,OPA^OPB,AA^BB):- !, reduce_op2(PassNo,B^A,OPB^OPA,BB^AA).
 */
 
 get_reduction_types(Types):- nb_current(grid_reductions,Types),Types\==[],!.
 get_reduction_types([shrink]).
 
-reduce_op1(PassNo,A^B,OP,AA^BB):-  stack_check_or_call(2000,(dmsg(stackcheck>2000),break)),
+reduce_op1(PassNo,A^B,OP,AA^BB):-  stack_check_or_call(2000,(dmsg(stackcheck>2000),ibreak)),
   get_reduction_types(Types),
   reduce_op1_by_size(Types,PassNo,A,OPA,AA),is_grid(AA),
   ensure_reduction_guide(OPA,OPB),
@@ -174,20 +174,20 @@ reduce_1op(_Type,Len1,Half1,PassNo,GridIn,[],Out):- GridIn = [[C1,C1]],GridIn = 
 reduce_1op(_Type,Len1,Half1,PassNo,GridIn,[],Out):- GridIn = [[C1],[C1]],GridIn = Out,!.
 %reduce_1op(_Type,Len1,Half1,PassNo,GridIn,[make_solid_object(square,1,1)],Out):- GridIn = [[C1]],GridIn = Out,!.
 
-%reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  GridIn = [Row1|GridR], maplist(=@=(Row1),GridR),
-%  Row1= [C1|Row], maplist(=@=(C1),Row), grid_size(GridIn,H,V), once(H > 1 ; V > 1),!,
+%reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  GridIn = [Row1|GridR], my_maplist(=@=(Row1),GridR),
+%  Row1= [C1|Row], my_maplist(=@=(C1),Row), grid_size(GridIn,H,V), once(H > 1 ; V > 1),!,
 %    (H==V->(Rect=square,OUT=[[C1]]);(H>V->(Rect=rect,OUT=[[C1,C1]]);(Rect=rect,OUT=[[C1],[C1]]))).
-reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  fail, GridIn = [Row1|GridR], maplist(=@=(Row1),GridR),
-  Row1= [C1|Row], maplist(=@=(C1),Row), grid_size(GridIn,H,V), once(H > 1 ; V > 1),!,
+reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  fail, GridIn = [Row1|GridR], my_maplist(=@=(Row1),GridR),
+  Row1= [C1|Row], my_maplist(=@=(C1),Row), grid_size(GridIn,H,V), once(H > 1 ; V > 1),!,
     (H==V->(Rect=square,OUT=[[C1]]);(H>V->(Rect=rect,OUT=[[C1,C1]]);(Rect=rect,OUT=[[C1],[C1]]))).
 
-reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  GridIn = [Row1|GridR], maplist(=@=(Row1),GridR),
-  Row1= [C1|Row], maplist(=@=(C1),Row), grid_size(GridIn,H,V), once(H > 1 ; V > 1),!,
+reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  GridIn = [Row1|GridR], my_maplist(=@=(Row1),GridR),
+  Row1= [C1|Row], my_maplist(=@=(C1),Row), grid_size(GridIn,H,V), once(H > 1 ; V > 1),!,
     (H==V->(Rect=square,OUT=[[C1]]);(H>V->(Rect=rect,OUT=[[C1]]);(Rect=rect,OUT=[[C1]]))).
 
 
 reduce_1op(_Type,Half,Len,_,[Row1|Grid],copy_row_ntimes(1,Times),[Row1]):- 
-  maplist(=@=(Row1),Grid),length([Row1|Grid],Times),Times>1.
+  my_maplist(=@=(Row1),Grid),length([Row1|Grid],Times),Times>1.
 
 reduce_1op(Types,Half,Len,_,I,double_size,O):- is_reduce_type(shrink,Types), I=[I1,I2|_],I1=@=I2, half_size(I,O),!.
 
@@ -251,12 +251,12 @@ reduce_1op_ci(Half,Len,_,Grid,copy_insert(N1,N22),GridR):- nth1(N1,Grid,Row1),
   include(\=@=(Row1),Right,GridRR),append(Left,GridRR,GridR).
 
 
-%one_reduction1(insert_row(N,[E|Row1]),G1,G2,G1R,G2R):- nth1(N,G1,[E|Row1],G1R),maplist(=@=(E),Row1),nth1(N,G2,[E|Row2],G2R),Row1=@=Row2.
+%one_reduction1(insert_row(N,[E|Row1]),G1,G2,G1R,G2R):- nth1(N,G1,[E|Row1],G1R),my_maplist(=@=(E),Row1),nth1(N,G2,[E|Row2],G2R),Row1=@=Row2.
 % COMPRESS
 reduce_1op(Types,Half,Len,_,Grid,insert_row_of(Row,Black),GridR):- is_reduce_type(compress,Types),
   (Row==1;Row==Len),
   nth1(Row,Grid,[Black|Same],GridR),
-  maplist(=@=(Black),Same).  
+  my_maplist(=@=(Black),Same).  
 
 
 %reduce_1op(Types,Half,Len,_,Grid,copy_insert(N1,N2),GridR):- nth1(N1,Grid,Row1), nth1(N2,Grid,Row2,GridR),N1<N2, Row1=@=Row2.
@@ -345,7 +345,7 @@ reduce_1op(Types,Half,Len,_,Grid,left_right(Left,Reduced),GridR):- fail,
 reversed(R^R,G,GG):- !, undo_effect(R,G,GG).
 reversed(R,G,GG):- !, undo_effect(R,G,GG).
 
-copy_n_times(N,[C],Rows):- between(2,15,N), length(Rows,N),maplist(=(C),Rows).
+copy_n_times(N,[C],Rows):- between(2,15,N), length(Rows,N),my_maplist(=(C),Rows).
 
 mult_rows_n_times(N,Grid,NGrid):- mult_rows_in_pattern(copy_n_times(N),Grid,NGrid).
 
@@ -445,8 +445,8 @@ reduce_1pair_op(PassNo,A^B,OOO,AA^BB):-
   xfr_write_op(as_rot(Rot90,Rot270,Op),OOO).
 
 copy_rows(Grid1^Grid2,[delete_row(N1,Color)|More],GridR1^GridR2):- 
-   nth1(N1,Grid1,A1,GridM1),maplist(=(Color),A1),
-   nth1(N1,Grid2,A2,GridM2),maplist(=(Color),A2),
+   nth1(N1,Grid1,A1,GridM1),my_maplist(=(Color),A1),
+   nth1(N1,Grid2,A2,GridM2),my_maplist(=(Color),A2),
    copy_rows(GridM1^GridM2,More,GridR1^GridR2).
 copy_rows(Grid1^Grid2,[copy_insert(N1,N2)|More],GridR1^GridR2):- 
    nth1(N2,Grid1,A1),N2>1, between(1,N2,N1),N1<N2,nth1(N1,Grid1,B1,GridM1), A1=@=B1,
@@ -505,11 +505,11 @@ with_protected_vars(AB,Goal):- term_variables(AB,ABV),term_variables(Goal,GoalV)
    %reduce_grid_pair1(ABC,OPSC,ARBRC),
    call(GoalC),
    resubst_vars(110,Ten,(GoalC,ABGoals),(Goal,ABGoalsCallable)),
-   maplist(call,ABGoalsCallable).
+   my_maplist(call,ABGoalsCallable).
 */
 
 
-%resubst_vars(S,E,Info,ReInfo):- subst_2LC(S,E,Goal+Info,RGoal+RInfo). %,maplist(call,RGoal).
+%resubst_vars(S,E,Info,ReInfo):- subst_2LC(S,E,Goal+Info,RGoal+RInfo). %,my_maplist(call,RGoal).
 term_var_types(AB,Attvars,PlainVars,PlainSingles):-
   term_variables(AB,Vars),
   term_attvars(AB,Attvars),
@@ -565,10 +565,11 @@ fix_bg(Which,OO,X):- fail, Which=@=OO,!,freeze(X,X\=(_,_)).
 %fix_bg(Which,OO,_):-OO=fg,!.
 fix_bg(_,OO,OO).
 
-compress_grid(Op,I,OO):- 
-  normalize_grid(NOp,I,II),
-  locally(nb_setval(grid_reductions,[compress]),reduce_grid(II,COp,OO)),
-  append(COp,NOp,Op).
+%compress_grid(COp,I,OO):- normalize_grid(_NOp,I,II), I\=@=II,!,compress_grid1(COp,II,OO). % really we should compleain they forgot to mnormalize first
+compress_grid(COp,I,OO):- normalize_grid(_NOp,I,II), compress_grid1(COp,II,OO),!. % really we should compleain they forgot to mnormalize first
+compress_grid(COp,I,OO):- compress_grid1(COp,I,OO),!.
+compress_grid1(COp,I,OO):- locally(nb_setval(grid_reductions,[compress]),reduce_grid(I,COp,OO)).
+  %append(COp,NOp,Op).
 %b_grid_to_norm(IOps,LGrid,LPointsNorm):- reduce_grid(LGrid^LGrid,IOps,LPointsNorm^_).
 %b_grid_to_norm([],I,I).
 
@@ -649,7 +650,7 @@ reductions(GL,OPS,REDUCE):- into_grid_list(GL,List), reductions1(List,OPS,REDUCE
 reductions1(List,[Reduce|OPS],REDUCE):-
    select(G1,List,Rest0),select(G2,Rest0,Rest),
    reductions_from_two(Reduce,G1,G2,G1R,G2R),
-   maplist(reductions_from_two(Reduce),Rest,Rest,RRest,RRest),
+   my_maplist(reductions_from_two(Reduce),Rest,Rest,RRest,RRest),
    reductions1([G1R,G2R|RRest],OPS,REDUCE),!.
 reductions1(AB,[],AB).
 
@@ -674,7 +675,7 @@ one_reduction1(OP^OP,G1,G1R):-!,one_reduction1(OP,G1,G1R).
 one_reduction1((OP),G1,G1R):-!, grid_call(OP,G1,G1R). % dmsg(one_reduction1(OP,G1,G1R)).
 
 
-%reduce_grid(A^B,OPA^OPB,AA^BB):- A\=@=B,nth1(N,A,EA,A0),maplist(=(_),EA),nth1(N,B,EB,B0),EA=@=EB,reduce_grid(A0^B0,OPA^OPB,AA^BB).
+%reduce_grid(A^B,OPA^OPB,AA^BB):- A\=@=B,nth1(N,A,EA,A0),my_maplist(=(_),EA),nth1(N,B,EB,B0),EA=@=EB,reduce_grid(A0^B0,OPA^OPB,AA^BB).
 
 reduce_grid_pass(PassNo,Grid,NBC,OP,GridR):- reduce_pair_op(PassNo,Grid,NBC,OP,GridR),!.
 reduce_grid_pass(PassNo,Grid,NBC,OP,GridR):- PassNo<4,plus(PassNo,1,PassNo2), reduce_grid_pass(PassNo2,Grid,NBC,OP,GridR),!.
@@ -740,13 +741,13 @@ reapply_cutaway(LBR,I,O):- h_and_v(reapply_cutaway_row(LBR),I,O).
 reduce_cutaway(LBR,I,O):- h_and_v(reduce_cutaway_row(LBR),I,O).
 
 reduce_cutaway_row(LBR,I,O):-              LBR = nlbr(1,Left,Between,Right),
-                                            once((member(Row,I), \+ maplist(=(_),Row))),
+                                            once((member(Row,I), \+ my_maplist(=(_),Row))),
                                             (var(Between) -> common_cutaway(LBR) ; true),                                                 
                                             once((cutaway_row(Left,Between,Right,Row,_))),
                                             do_cutaway_rows(LBR,I,O),
                                             LBR\=nlbr(_,[],[],[]).
 
-do_cutaway_rows(nlbr(1,L,B,R),I,O):- maplist(cutaway_row(L,B,R),I,O).
+do_cutaway_rows(nlbr(1,L,B,R),I,O):- my_maplist(cutaway_row(L,B,R),I,O).
 cutaway_row(L,B,R,Row,NewRow):- append([L,Mid,R],Row),cut_mid(B,Mid,NewRow),!.
 
 cut_mid(_,[C],[C]).

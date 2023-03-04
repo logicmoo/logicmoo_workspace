@@ -7006,7 +7006,7 @@ testcase(t(d0f5fe59)>tst+0,"
    -------------------------                                        
                                        
 ").
-%= fav(t(d0f5fe59),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),out_grid([4,4]),human([color(largest,_17074),ray(_17074-point_01_01,count),trim_to_rect]),-[shape_match],-[rotation_match],-[mask_match],+[color_match],tt,training,separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
+%= fav(t(d0f5fe59),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),out_grid([4,4]),human([color(largest,_17074),ray(_17074-hv(1,1),count),trim_to_rect]),-[shape_match],-[rotation_match],-[mask_match],+[color_match],tt,training,separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
 
 
 testcase(t(d10ecb37)>tst+0,"

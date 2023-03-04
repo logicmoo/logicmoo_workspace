@@ -15,7 +15,7 @@ make_training(TestID,VMO):-
      pre_in:_, pre_out:_,
      inC:_InC,outC:_OutC,
      removed:_,added:_, kept:_,   
-     grid_in:_,grid_target:_,
+     grid_in:_,target_grid:_,
    set(VM.mappings) =[map])), !. % pp(VM),nl.
   */
 
@@ -138,9 +138,9 @@ train_for_objects_from_1pair1(Dict0,TestID,Desc,InA,OutA,Dict1):-
     into_fti(TestID>(Trn+N2)*IO2,ModeOut,Out,OutVM),!,
 
    %InVM.compare=OutVM, 
-   set(InVM.grid_target)=Out,
+   set(InVM.target_grid)=Out,
    %OutVM.compare=InVM, 
-   set(OutVM.grid_target)=In,
+   set(OutVM.target_grid)=In,
    show_pair_grid(yellow,IH,IV,OH,OV,original(InVM.id),original(OutVM.id),PairName,In,Out),!,  
    individuate_c(InVM),!,
    individuate_c(OutVM),!,
@@ -188,12 +188,16 @@ show_pair_code(In,Out):-
   dash_chars,dash_chars.
 
 % trials(learn). trials(clue).   
-%trials(human). 
-trials(sol).
+trials(human). 
+trials(Sol):-trial_non_human(Sol).
 % trials(dsl). trials(runDSL).
 trial_non_human(sol).
 
-sols_for(TestID,Trial,TrialSol):- trials(Trial),once((compound_name_arguments(Entry,Trial,[Sol]), test_info(TestID,Sols),member(Entry,Sols))),
+sols_for(TestID,Trial,TrialSol):- 
+ ensure_test(TestID),
+ (var(Trial)->trials(Trial);true),
+ once((compound_name_arguments(Entry,Trial,[Sol]), 
+ test_info(TestID,Sols),member(Entry,Sols))),
   append_trial(Trial,Sol,TrialSol).
 
 append_trial(Trial,Sol,TrialSol):- listify(Sol,SolL),
@@ -248,11 +252,11 @@ solve_test_trial(Trial,TestID,ExampleNum,TestIn,ExpectedOut):-
     flag(indiv,_,0),    
     into_fti(TestID>ExampleNum*in,in,TestIn,InVM),!,
     set(InVM.objs) = [],
-    %set(InVM.points) = [],
+    %set(InVM.lo_points) = [],
     %set(InVM.training) = Training,
     set_training(Training),
     maybe_set_vm(InVM),    
-    gset(InVM.grid_target) = _,
+    gset(InVM.target_grid) = ExpectedOut,
     must_det_ll((
     %print(training(Training)),nl,
     %ppt(InVM),
@@ -308,7 +312,7 @@ reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
   reuse_indivs_cleanup(IndvAS,IndvBS,IndvCS,BetterA,BetterB,_BetterC),!.
 
 reuse_indivs_cleanup(IndvA,IndvB,IndvC,_,_,_):-
-  maplist(length,[IndvA,IndvB,IndvC],Rest),
+  my_maplist(length,[IndvA,IndvB,IndvC],Rest),
   u_dmsg(len=Rest),fail.
 reuse_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   select(A,IndvC,IndvCRest), member(B,IndvCRest),
@@ -332,4 +336,4 @@ reuse_a_b(A,B,AA):-
   ignore((How ==[]-> nop(pp(shared_object(GlyphB->GlyphA))); 
     (pp(same_object(GlyphA,GlyphB,How))))).
 
-
+:- ensure_loaded('arc-dsl/dsl_solvers.pl').

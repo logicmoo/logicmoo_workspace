@@ -70,7 +70,7 @@ test_classes :-
     csv_read_file('test_classes.csv', CSV, []),
     CSV = [Colnames|Rows],
     Colnames =.. [row,_|Names],
-    maplist(test_classes_row(Names), Rows).
+    my_maplist(test_classes_row(Names), Rows).
 
 test_classes_row(Names, Row) :-
     Row =.. [row,Name|Fields],

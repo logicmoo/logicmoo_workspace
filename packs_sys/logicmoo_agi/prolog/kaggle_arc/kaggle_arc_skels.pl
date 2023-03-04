@@ -31,9 +31,9 @@ most_d_colors(Grid,ColorO,GridNM):-
   sort_safe(FPoints,NPSS),
   %atrace,
   % (N2-C)-P1
-  maplist(arg(1),NPSS,Colors),
+  my_maplist(arg(1),NPSS,Colors),
   clumped(Colors,CColors),
-  maplist(arg(2),CColors,Set),
+  my_maplist(arg(2),CColors,Set),
   get_black(Black),
   (Set==[]->ColorO=[Black];ColorO=Set),!.
 
@@ -63,7 +63,7 @@ make_bg_visible(In,Grid):- duplicate_term(In,In0),
 %make_bg_visible_b(In,Grid):- var(In),!,Grid=In.
 %make_bg_visible_b(In,Grid):- !, duplicate_term(In,Grid),!.
 make_bg_visible_b(In,Grid):- is_grid(In),!,mapgrid(make_bg_visible_c,In,Grid).
-make_bg_visible_b(In,Grid):- is_list(In),!,maplist(make_bg_visible_b,In,Grid).
+make_bg_visible_b(In,Grid):- is_list(In),!,my_maplist(make_bg_visible_b,In,Grid).
 make_bg_visible_b(C-P,CC-P):- !, make_bg_visible_c(C,CC).
 make_bg_visible_b(In,Grid):- make_bg_visible_c(In,Grid).
 
@@ -80,7 +80,7 @@ get_fill_points(In,UNFP,GridO):-
  make_bg_visible_b(In,Grid),
  %print(In=Grid),
  neighbor_map(Grid,GridO), 
- points_rep(local,GridO,NPS),  
+ localpoints(GridO,NPS),  
  %print(NPS),nl,
  include(p1_or(is_point_type('~'),is_fill_point(NPS)),NPS,FillPoints),
  %%include(is_point_type('wbg'),NPS,NotFillPoints),
@@ -168,7 +168,7 @@ e_int2glyph(B,G):- atom_number(G,B).
 
 was_adjacent(LPS,SOP,_-P1):- is_adjacent_point(P1,_,P2),member(_-P2,SOP),member(CCC-P1,LPS),member(CCC-P2,LPS),!.
 
-cull_rest(Rest,GridS,GridO):- is_list(GridS),!,maplist(cull_rest(Rest),GridS,GridO).
+cull_rest(Rest,GridS,GridO):- is_list(GridS),!,my_maplist(cull_rest(Rest),GridS,GridO).
 cull_rest(Rest,GridS,0):- number(GridS),member(GridS,Rest),!.
 cull_rest(_Rest,GridS,GridS).
 
@@ -212,9 +212,12 @@ neighbor_map1(H,V,[(N-C)-P1|Ps],Points,[(N-C)-P1|Ps2]):- nonvar(C),!,
 
 neighbor_map1(H,V,[NC-P1|Ps],Points,[(N-C)-P1|Ps2]):-
   must_det_ll((
-  only_color_data(NC,C),
+  only_color_data_f(NC,C),
   nei_map(H,V,C,P1,Points,N),
   neighbor_map1(H,V,Ps,Points,Ps2))).
+
+only_color_data_f(OC,C):- only_color_data(OC,C),!.
+only_color_data_f(C,C).
 
 only_color_data_or_atom(OC,C):- only_color_data(OC,C),!.
 only_color_data_or_atom(C,C).
@@ -225,7 +228,7 @@ only_color_data0(C,C):- is_color(C),!.
 only_color_data0(C,C):- is_unreal_color(C),!.
 only_color_data0(C,C):- var(C),!.
 only_color_data0(NC,NC):- \+ compound(NC),!,fail.
-only_color_data0(C-P,C):- var(C),is_nc_point(P),!.
+only_color_data0(C-P,C):- var(C),is_ncpoint(P),!.
 only_color_data0(OC,C):- sub_term(C,OC),is_colorish(C),!.
 %only_color_data(_-O,C):- only_color_data(O,C).
 

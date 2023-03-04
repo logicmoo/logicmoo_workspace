@@ -61,6 +61,15 @@ in_lm_ws(MGoal):- getenv('LOGICMOO_WS',WS),!,
    setup_call_cleanup(cd(WS),(cd(prologmud_server),call(M:Goal)),cd(X)).
 in_lm_ws(MGoal):- strip_module(MGoal,M,Goal), call(M:Goal).
 
+sys:s_t_s(TIM,SM):- '$set_typein_module'(TIM),'$set_source_module'(SM).
+
+:- module_transparent(sys:with_typein_and_source/3).
+sys:with_typein_and_source(TIM,SM,MGoal):-
+  strip_module(MGoal,M,Goal),
+  '$current_typein_module'(WasTIM), '$current_source_module'(WasSM),
+  setup_call_cleanup(s_t_s(TIM,SM),M:Goal, s_t_s(WasTIM,WasSM)).
+
+
 :- module_transparent(sys:call_now/4).
 %sys:call_now(n,_TIM,_SM,_MGoal):-!.
 %sys:call_now(m,_TIM,_SM,_MGoal):-!.
@@ -74,20 +83,15 @@ call_with_typein_and_source(TIM,SM,MGoal):-
   strip_module(MGoal,M,Goal),  
   sys:with_typein_and_source(TIM,SM,M:Goal).
 
-:- module_transparent(sys:with_typein_and_source/3).
-sys:with_typein_and_source(TIM,SM,MGoal):-
-  strip_module(MGoal,M,Goal),
-  '$current_typein_module'(WasTIM), '$current_source_module'(WasSM),
-  setup_call_cleanup(('$set_typein_module'(TIM),'$set_source_module'(SM)),
-      M:Goal, ('$set_typein_module'(WasTIM),'$set_source_module'(WasSM))).
 
 dont_wl(X):- var(X),!,fail.
-dont_wl(all_source_file_predicates_are_exported).
+dont_wl(X):- strip_module(X,_,all_source_file_predicates_are_exported),!.
 dont_wl(X):- compound(X),compound_name_arity(X,F,_),(dont_wl(F);(arg(_,X,E),dont_wl(E))).
 
+
 :- export(maybe_writeln/1).
-maybe_writeln(X):- dont_wl(X),!.
 maybe_writeln(_):- !.
+maybe_writeln(X):- dont_wl(X),!.
 maybe_writeln(X):- writeln(X).
 
 :- if( \+ current_predicate(add_absolute_search_folder/2)).

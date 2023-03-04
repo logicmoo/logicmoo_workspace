@@ -13,7 +13,7 @@
 into_pipe(Grid,Grid):- !. % into_group
 into_pipe(Grid,Solution):- into_grid(Grid,Solution).
 
-describe_feature(Grid,List):- is_list(List),!,maplist(describe_feature(Grid),List).
+describe_feature(Grid,List):- is_list(List),!,my_maplist(describe_feature(Grid),List).
 describe_feature(_,call(Call)):- !, call(Call).
 describe_feature(Grid,Pred):- is_pointless(Grid), !, as_debug(9,pp(usupported_call(Pred,Grid))).
 describe_feature(Grid,Pred):- call(Pred,Grid,Res)->print_equals(Grid,Pred,Res);print_equals(Pred,f),!.
@@ -62,7 +62,7 @@ maybe_cache_glyphs(O):- ignore((is_group(O),mapgroup(o2g,O,_))).
 
 print_info_1(G):- print_info(G).
 
-print_info_l(Global):- maplist(print_info_1,Global).
+print_info_l(Global):- my_maplist(print_info_1,Global).
 
 
 :- discontiguous print_info/1. 
@@ -73,11 +73,12 @@ print_info(Atom):- atom(Atom),into_gridoid(Atom,Gridoid),pp(into_gridoid(Atom)),
 print_info(Grid):- is_grid(Grid),!,show_indiv(is_grid,Grid),!.
 print_info(OBJ):- compound(OBJ), OBJ=obj(_), show_indiv(print_info,OBJ),!.
 print_info(R):- is_object_props(R),!,print_info(obj(R)).
+print_info(TName):- fix_test_name(TName,TestID,ExampleNum), is_valid_testname(TestID), !, pp(testid(TestID>ExampleNum)).
 
 print_info(A):- is_grid(A),print_grid(print_info,A),!.
 print_info(Grid):- is_cpoints_list(Grid),!,print_grid(is_cpoints_list,Grid).
-print_info(Grid):- maplist(is_point,Grid),!,print_grid(is_points_list,Grid).
-  %print_info(obj(A)):- is_list(A),!, dash_chars,   maplist(print_info_2(obj(A)),A), dash_chars,!.  print_info_2(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),print_info(Obj,P,F,A),!.
+print_info(Grid):- my_maplist(is_point,Grid),!,print_grid(is_points_list,Grid).
+  %print_info(obj(A)):- is_list(A),!, dash_chars,   my_maplist(print_info_2(obj(A)),A), dash_chars,!.  print_info_2(Obj,P):- compound(P),!,compound_name_arguments(P,F,A),print_info(Obj,P,F,A),!.
 print_info(diff(_)):-!.
 
 print_info([Other]):-print_info(Other),!.
@@ -126,7 +127,7 @@ show_indiv(Why, Obj):- wants_html,!,show_indiv_html(Why, Obj).
 show_indiv(Why,A):- \+ \+ show_indiv_object(Why,A).
 
 fruity:- fruity([green,red,yellow,cyan,blue,white]).
-fruity(Colors):- maplist(fruity,Colors).
+fruity(Colors):- my_maplist(fruity,Colors).
 fruity(Color):- color_print(Color,call(dash_chars(45))).
 
 show_indiv_object(Why, Obj):-
@@ -153,42 +154,46 @@ show_indiv_object(Why, Obj):-
      (((((copy_term(Obj,CObj),object_ngrid(CObj,NGrid), append(_,["NGrid"=NGrid|_],Grids)))))),
 
      ShowQ=_,
-     (((((normalize_grid(NOps,Grid,Normalized), nop((mif_t(Normalized\=@=Grid,append(_,["NORMALIZED!!!"=Normalized|_],Grids))))))))),
+     
+     (((((normalize_grid(NOps,Grid,Normalized), 
+         if_t(Normalized\=@=Grid,(sformat(SN,'~q',['NORMALIZED!!!'(NOps)]),append(_,[SN=Normalized|_],Grids)))))))),
 
      term_variables(Normalized,RV1),
      (((((GV1\=@=RV1 ; (Normalized\=@=Grid,Normalized=[[_]])) -> ShowQ = true ; ShowQ = _)))),
 
-     compress_grid(COps,Grid,Compressed), if_t(Compressed\=@=Normalized,append(_,["Compressed!!!"=Compressed|_],Grids)),
+     if_t(nonvar(Normalized),
+       (compress_grid(COps,Normalized,Compressed), 
+         if_t(Compressed\=@=Grid,(sformat(CN,'~q',['Compressed!!!'(COps)]),append(_,[CN=Compressed|_],Grids))))),
 
      if_t(DoFF,((constrain_grid(f,_TrigF,Grid,GridFF), if_t(GridFF\=@=Grid,append(_,["Find"=GridFF|_],Grids)),
        copy_term(Grid+GridFF,GG1+GridFFNV,GoalsFF), numbervars(GG1+GridFFNV+GoalsFF,10,_,[attvar(bind),singletons(false)]))))
    )),
-     append(_,[],Grids),
+     append(_,[],Grids),!,
      HH is (OH - 1) * 2, 
      call_w_pad(HH, print_side_by_side(Grids)),
 
      if_t(has_goals(GridFFNV),writeg(gridFF=GridFFNV)),
 
-     if_t((nonvar(COps),COps\==[]), 
+      if_t((nonvar(NOps)), 
+        (writeg(nops=NOps),
+         if_t((ShowQ==true;Normalized\=@=Grid;has_goals(Normalized);true), writeg(normalized=Normalized)),
+         nop((unreduce_grid(Normalized,NOps,Unnormalized), 
+         if_t(Unnormalized\=@=Grid, (ShowQ=true,writeg("Bad Unnormalized"=Unnormalized))))))),
+
+     if_t((nonvar(COps)), 
        (writeg(cops=COps), 
         nop((unreduce_grid(Compressed,COps,Uncompressed), 
-        if_t(Uncompressed\=@=Grid, (ShowQ=true,writeg("Bad Uncompressed"=Uncompressed))))))),
+        if_t(Uncompressed\=@=Normalized, (ShowQ=true,writeg("Bad Uncompressed"=Uncompressed))))))),
 
-     if_t((nonvar(NOps),NOps\==[]), 
-       (writeg(nops=NOps),
-        if_t((ShowQ==true;Normalized\=@=Grid;has_goals(Normalized);true), writeg(normalized=Normalized)),
-        nop((unreduce_grid(Normalized,NOps,Unnormalized), 
-        if_t(Unnormalized\=@=Grid, (ShowQ=true,writeg("Bad Unnormalized"=Unnormalized))))))),
-     
      if_t((ShowQ==true;has_goals(Grid)),    writeg(grid=Grid)),
      
 
      %writeg("NGrid"=NGrid),
    true)),
-  WillHaveShown = [loc2D(OH,OV),center2G(CX,CY),size2D(H,V)],    
+  WillHaveShown = [loc2D(OH,OV),center2G(CX,CY),size2D(H,V),globalpoints(Global),grid_ops(norm,Normalized)],    
   if_t(is_object(Obj),
     (format('~N~n'),
-     if_t(menu_or_upper('i'),
+     if_t((true;menu_or_upper('i');menu_or_upper('o')),
        locally(nb_setval(debug_indiv,f),
          underline_print(show_indiv_textinfo(Why,Obj,WillHaveShown)))),
 
@@ -197,42 +202,83 @@ show_indiv_object(Why, Obj):-
 show_indiv_textinfo(AS):-show_indiv_textinfo('',AS,[]).
 show_indiv_textinfo(Why,Obj,ExceptFor):- Obj = obj(A), nonvar(A),!,show_indiv_textinfo(Why,A,ExceptFor).
 show_indiv_textinfo(Why,Props,ExceptFor):- is_open_list(Props),!,must_det_ll((append(Props,[],CProps),!,show_indiv_textinfo(Why,CProps,ExceptFor))).
-show_indiv_textinfo(Why,AS0,ExceptFor):- 
+show_indiv_textinfo(Why,AS0,ExceptFor):- catch(show_indiv_textinfo1(Why,AS0,ExceptFor),_,true),!.
+show_indiv_textinfo(Why,AS0,_ExceptFor):- pp(show_indiv_textinfo(Why)=AS0),!.
+show_indiv_textinfo1(Why,AS0,ExceptFor):- 
  must_det_ll((
-  Obj = obj(AS0),
-  append(AS0,[],Props),
+  %Obj = obj(AS0),
+  append(AS0,[],Props11),
+
+
+  extend_grp_proplist([Props11],[Props]),
+
   %ignore((o2g(Obj,GGG), nonvar(GGG),set_glyph_to_object(GGG,Obj))),
  % will_show_grid(Obj,TF),
   TF = false,
  % obj_to_oid(Obj,MyOID),
   %o2ansi(MyOID,MissGlyph),
-  object_color_glyph_short(Obj,SGlyph),
+  Obj = obj(Props), object_color_glyph_short(Obj,SGlyph),
 
-  my_partition(is_functor(link),Props,ISLINK,AS1), r_props(ISLINK,ISLINKR),
-  my_partition(is_o3,AS1,TVSO0,AS),  r_props(TVSO0,TVSO), predsort_on(arg(2),TVSO,TVSOR),reverse(TVSOR,TVSOS),
-  short_indv_props(AS,TVSI1,TVSI2),append(TVSI1,TVSI2,TVSI),
+  my_partition(p1_subterm(p1_or(is_points_list,is_gridoid)),Props,ContainsGrid,Props1), 
+
+  my_partition(p1_or(is_functor(link),is_functor(elink)),Props1,ISLINK,Props2),
+
+  my_partition(is_o3,Props2,Rankings0,Props3),  sr_props(Rankings0,Rankings1), 
+  predsort_on(arg(2),Rankings1,Rankings2),reverse(Rankings2,Rankings),
+
+  %short_indv_props(Props3,TVSI1,TVSI2), 
+  %append(TVSI1,TVSI2,TVSI),
+   TVSI = Props3,
   %flatten(TV,F),predsort(longer_strings,F,[Caps|_]), 
   append([TVSI,Props],ASFROM), choose_header(ASFROM,Caps), toPropercase(Caps,PC),
   
   ignore((TF==true,dash_chars)),
   sformat(S,"% ~w ~w:\t~w  ",[Why,PC,SGlyph]), format('~N~s',[S]),
-  print_if_non_nil(ExceptFor,TVSI),
-  print_if_non_nil(ExceptFor,ISLINKR),
-  print_if_non_nil(ExceptFor,TVSOS),
-  ignore(( TF==true, mass(Obj,Mass),!,Mass>4, vis2D(Obj,H,V),!,H>1,V>1, points_rep(local,Obj,Points), print_grid(H,V,Points))),
+  wots(SZ,((
+  print_if_non_nil(props,ExceptFor,TVSI),
+  print_if_non_nil(links,ExceptFor,ISLINK),
+  print_if_non_nil(gridoids,ExceptFor,ContainsGrid),
+  print_if_non_nil(rankings,ExceptFor,Rankings)))),
+  
+  
+  atom_length(SZ,Len),(Len<10 -> pp(AS0);write(SZ)),
+  ignore(( TF==true, mass(Obj,Mass),!,Mass>4, vis2D(Obj,H,V),!,H>1,V>1, localpoints(Obj,Points), print_grid(H,V,Points))),
   ignore(( fail, mass(Obj,Mass),!,Mass>4, vis2D(Obj,H,V),!,H>1,V>1, show_st_map(Obj))),
   %pp(Props),
   ignore(( TF==true,dash_chars)))),!.
+
+
 :- export(show_indiv_textinfo/3).
 :- ansi_term:import(show_indiv_textinfo/3).
 
-print_if_non_nil(ExceptFor,TVSI):- \+ is_list(TVSI),!,print_if_non_nil(ExceptFor,[TVSI]).
-print_if_non_nil(ExceptFor,TVSI):- 
-  include(is_not_in(ExceptFor),TVSI,TVSI_PP),
-  ignore(((TVSI_PP \==[], print_if_non_nil(TVSI_PP)))).
+sr_props(Sort,SortRO):- \+ is_list(Sort),!,sr_props([Sort],SortRO).
+sr_props(Sort,SortRO):- predsort(sort_on(prop_display_order),Sort,SortR),Sort\=@=SortR,!,sr_props(SortR,SortRO).
+sr_props(Sort,SortRO):- colorize_oterms(Sort,SortRO),!.
+sr_props(Sort,Sort).
+%sr_props(Sort,Sort).
 
-print_if_non_nil(TVSI_PP):- wants_html,!,pp(TVSI_PP).
-print_if_non_nil(TVSI_PP):- wqs(TVSI_PP).
+prop_display_order(iz(P),iz+F):- prop_display_order(P,F).
+prop_display_order(giz(P),giz+F):- prop_display_order(P,F).
+prop_display_order(P,az+F):- functor(P,F,_).
+
+print_if_non_nil(Title,ExceptFor,TVSI):- sr_props(TVSI,SortRO),
+  include(is_not_in(ExceptFor),SortRO,TVSI_PP),
+  ignore(((TVSI_PP \==[], nl_if_needed, 
+    format('~w == ',[Title]),print_o_props(TVSI_PP)))).
+
+%sr_props2(Sort,SortRO):- remove_too_verbose(0,Sort,SortR),Sort\=@=SortR,!,sr_props2(SortR,SortRO).
+sr_props2(Sort,SortRO):- colorize_oterms(Sort,SortRO),!.
+sr_props2(Sort,Sort).
+
+%print_if_non_nil(I):- wants_html,!,pp(I).
+print_o_props(I):- is_list(I),my_maplist(print_o_props,I),!.
+print_o_props(I):- sr_props2(I,M),wots(SS,wqs(M)),!,write_trim_h_space(SS).
+%print_o_props(I):- !, pp(I).
+
+write_trim_h_space(SS):- atom_concat(' ',S,SS),!,write_trim_h_space(S).
+write_trim_h_space(SS):- atom_concat('\t',S,SS),!,write_trim_h_space(S).
+write_trim_h_space(SS):- atom_concat('\n',S,SS),!,write_trim_h_space(S).
+write_trim_h_space(SS):- nl_if_needed, write('  \t  '),write(SS).
 
 
 show_indiv_html(_Why, Obj):- obj(ObjL)=Obj,
@@ -385,17 +431,17 @@ print_colors_on_ss(Glyph,[],SSGlyph):- sformat(SSGlyph,'~q',[Glyph]),!.
 print_colors_on_ss(Glyph,Colors,SGlyph):- display_length(Glyph,N), 
   wots(SGlyph,print_colors_on(Colors,N,Glyph)).
 print_colors_on([Color],_,Glyph):- color_print(Color,call(writeq(Glyph))),!.
-print_colors_on(Colors,L,Glyph):- length(Colors,CL), CL>L,write('\''), user:maplist(print_ncolors(Glyph),Colors), write('\''),!.
+print_colors_on(Colors,L,Glyph):- length(Colors,CL), CL>L,write('\''), user:my_maplist(print_ncolors(Glyph),Colors), write('\''),!.
 print_colors_on(Colors,_,Glyph):- atom_chars(Glyph,Chars),write('\''),print_colors_on_s(Colors,Chars),write('\''),!.
-print_colors_on(Colors,Glyph):- write('\''), user:maplist(print_ncolors(Glyph),Colors), write('\'').
+print_colors_on(Colors,Glyph):- write('\''), user:my_maplist(print_ncolors(Glyph),Colors), write('\'').
 print_colors_on_s([],G):-  format('~s',[G]).
 print_colors_on_s([C],G):- sformat(GS,'~s',[G]),color_print(C,GS).
 print_colors_on_s([C|Color],Glyph):- length([C|Color],CL),length(Glyph,GL),CLL is CL div GL,CLL>1,length(GLL,CLL),append(GLL,More,Glyph),
   sformat(G,'~s',[GLL]),!,color_print(C,G),print_colors_on_s(Color,More).
 print_colors_on_s([C|Color],[G|Glyph]):- color_print(C,G),print_colors_on_s(Color,Glyph).
 
-object_color_glyph_old(Obj,S):- o2g(Obj,G),colors_cc(Obj,Colors),maplist(arg(1),Colors,NColors),
-  wots(S,maplist(user:print_ncolors1(G),NColors)),!.
+object_color_glyph_old(Obj,S):- o2g(Obj,G),colors_cc(Obj,Colors),my_maplist(arg(1),Colors,NColors),
+  wots(S,my_maplist(user:print_ncolors1(G),NColors)),!.
 
 print_ncolors(G,C):- color_print(C,G).
 print_ncolors1(G,C):- sformat(F,'~w',[G]),sub_string(F,0,1,_,SS),color_print(C,SS).
@@ -420,9 +466,9 @@ c_ot(P2,O,A):- lock_doing(c_ot,O,call(P2,O,A)),!.
 c_ot(_P2,O,A):- number(O),!,wots(A,bold_print(write(O))).
 c_ot(P2,-O,-A):- !, c_ot(P2,O,A).
 c_ot(P2,+O,+A):- !, c_ot(P2,O,A).
-c_ot(P2,O,A):- is_list(O),!,maplist(colorize_oterms(P2),O,A).
+c_ot(P2,O,A):- is_list(O),!,my_maplist(colorize_oterms(P2),O,A).
 c_ot(P2,O,A):- compound(O),compound_name_arguments(O,F,Args),!,
-  maplist(colorize_oterms(P2),Args,AArgs),
+  my_maplist(colorize_oterms(P2),Args,AArgs),
   (Args=@=AArgs-> O=A ; compound_name_arguments(A,F,AArgs)).
 
 c_ot(_P2,O,A):- \+ atom(O),!,A=O.
@@ -501,7 +547,7 @@ is_o3(pg(_OG,_,_,_)).
 
 show_st_map(Obj):-
   ignore(( 
-  points_rep(local,Obj,Points),
+  localpoints(Obj,Points),
 %  mass(Obj,Mass),!,Mass>4,
 %  vis2D(Obj,H,V),!,H>1,V>1,
   format('~N'),
@@ -513,15 +559,16 @@ show_st_map(Obj):-
 
 %alt_id(_MyID,ID,Alt):- int2glyph(ID,Alt).
 alt_id(MyOID,ID,Alt):- Alt is abs(MyOID-ID).
+
 remove_too_verbose(_MyID,Var,plain_var(Var)):- plain_var(Var),!.
 remove_too_verbose(_MyID,H,''):- too_verbose(H),!.
-remove_too_verbose(MyOID,List,ListO):- is_list(List),!,maplist(remove_too_verbose(MyOID),List,ListO),!.
-
+remove_too_verbose(MyOID,List,ListO):- is_list(List),my_maplist(remove_too_verbose(MyOID),ListM,ListO),exclude(==(''),ListM,ListO),!.
+remove_too_verbose(_MyOID,List,ListO):- is_list(List),exclude(==(''),List,ListO).
 % @TODO UNCOMMENT THIS remove_too_verbose(MyOID,dot,"point"):- !.
 %remove_too_verbose(MyOID,line(HV),S):- sformat(S,'~w-Line',[HV]).
 %remove_too_verbose(MyOID,square,S):- sformat(S,'square',[]).
 % @TODO UNCOMMENT THIS remove_too_verbose(MyOID,background,S):- sformat(S,'bckgrnd',[]).
-%remove_too_verbose(MyOID,iz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
+remove_too_verbose(MyOID,iz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
 remove_too_verbose(MyOID,giz(H),HH):- compound(H), remove_too_verbose(MyOID,H,HH),!.
 
 %remove_too_verbose(_MyID,obj_to _oid(_ * _ * X,Y),NTH):- NTH=..[X,Y].
@@ -537,7 +584,7 @@ remove_too_verbose(MyOID,link(Touched,ID),HH):- % number(MyOID),
   remove_too_verbose(0,link(Touched,Alt,Glyph),HH).
 
 remove_too_verbose(MyOID,TP,OO):- fail, compound(TP),compound_name_arguments(TP,link,[F|A]),atom(F),
-   maplist(colorize_oterms,A,AA),
+   my_maplist(colorize_oterms,A,AA),
    compound_name_arguments(TPP,F,AA),!,remove_too_verbose(MyOID,TPP,HH),
    OO= HH,!.
 
@@ -545,8 +592,8 @@ remove_too_verbose(MyOID,colors_cc(H),HH):- !, remove_too_verbose(MyOID,H,HH).
 %remove_too_verbose(MyOID,loc2D(X,Y),loc2D(X,Y)).
 %remove_too_verbose(MyOID,vis2D(X,Y),size2D(X,Y)).
 remove_too_verbose(_MyID,changes([]),'').
-remove_too_verbose(_MyID,rot2D(sameR),'').
-remove_too_verbose(MyOID,L,LL):- is_list(L),!, maplist(remove_too_verbose(MyOID),L,LL).
+%remove_too_verbose(_MyID,rot2D(sameR),'').
+%remove_too_verbose(MyOID,L,LL):- is_list(L),!, my_maplist(remove_too_verbose(MyOID),L,LL).
 remove_too_verbose(_MyID,H,HH):- compound(H),arg(1,H,L), is_list(L), maybe_four_terse(L,T),H=..[F,L|Args],HH=..[F,T|Args].
 remove_too_verbose(_MyID,H,H).
 

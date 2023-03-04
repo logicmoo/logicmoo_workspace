@@ -32,12 +32,12 @@
 :- system:reexport(library(dicts)).
 :- system:reexport(library(gvar_globals_api)).
 
-:- multifile(dot_eval/3).
-:- dynamic(dot_eval/3).
-:- module_transparent(dot_eval/3).
-:- meta_predicate(dot_eval(?,?,?)).
-:- '$dicts':import(dot_eval/3).
-:- 'system':import(dot_eval/3).
+:- multifile(dot_eval/4).
+:- dynamic(dot_eval/4).
+:- module_transparent(dot_eval/4).
+:- meta_predicate(dot_eval(?,?,?,?)).
+:- '$dicts':import(dot_eval/4).
+:- 'system':import(dot_eval/4).
 
 
 :- 'gvlib':export(expand_gvs_head/6).
@@ -66,7 +66,7 @@ install_dot_intercept:-
    module_transparent('$dicts':('.'/3)),
    '$set_source_module'('$dicts'),
    '$dicts':compile_aux_clauses([
-      (('.'(Self,Func,Value) :- notrace(gvlib:dot_eval(Self,Func,Value)))) %,
+      (('.'(SSelf,Func,Value) :- strip_module(SSelf,M,Self), dot_eval(M, Self,Func,Value))) %,
       % ('.'(Dict, Func, Value) ':-' BODY)
       ]),
    '$set_source_module'(gvlib),
@@ -83,34 +83,64 @@ install_dot_intercept:-
   system:assert((( 
   Head :- strip_module(SSelf,M,Self), 
           % nop(debugging(gvs,gvar_callable_syntax(Self, Func))),
-          dot_eval(M:Self, Func,_)))).
+          dot_eval(M, Self, Func,_)))).
 :- export(system:('.')/2).
 :- 'system':import(('.')/2).
 :- endif.
 
-:- multifile(gvs:is_dot_hook/4).
-:- dynamic(gvs:is_dot_hook/4).
-:- module_transparent(gvs:is_dot_hook/4).
-gvs:is_dot_hook(pldoc_wiki,_,_,_):-!,fail.
 
-:- multifile(gvs:dot_overload_hook/4).
-:- dynamic(gvs:dot_overload_hook/4).
-:- module_transparent(gvs:dot_overload_hook/4).
+:- if(false).
+:- if(\+ current_prolog_flag(gvar_callable_syntax,false)).
+:-
+   unlock_predicate('$dicts':(':'/4)),
+   % clause(':'(Dict, Func, Value),BODY),
+   redefine_system_predicate('$dicts':':'(_Dict, _Func, _Value)),
+   'system':abolish('$dicts':(':'/4)),
+   % dynamic('$dicts':(':'/4)),
+   % multifile('$dicts':(':'/4)),
+   module_transparent('$dicts':(':'/4)),
+   '$set_source_module'('$dicts'),
+   '$dicts':compile_aux_clauses([
+      ((':'(S1,Func,SSelf,Value) :- strip_module(SSelf,M,Self), missing_dict_function(M, S1,Self,Func,Value))) %,
+      % (':'(Dict, Func, Value) ':-' BODY)
+      ]),
+   '$set_source_module'(gvlib),
+   lock_predicate('$dicts':(':'/4)),
+   'system':import('$dicts':(':'/4)).
+
+%missing_dict_function(M, S1,Self,Func,Value):- throw(existence_error(procedure,'$dicts':(:)/4)).
+
+:- endif.
+:- endif.
+
+
+
+:- multifile(dictoo:is_dot_hook/4).
+:- dynamic(dictoo:is_dot_hook/4).
+:- module_transparent(dictoo:is_dot_hook/4).
+dictoo:is_dot_hook(pldoc_wiki,_,_,_):-!,fail.
+
+:- multifile(dictoo:dot_overload_hook/4).
+:- dynamic(dictoo:dot_overload_hook/4).
+:- module_transparent(dictoo:dot_overload_hook/4).
 
 :- export(gvlib:dot_call/2).
 :- module_transparent(gvlib:dot_call/2).
 :- 'system':import(gvlib:dot_call/2).
-dot_call(A,B):-dot_eval(A,B,_).
+dot_call(A,B):- strip_module(B,M,BB),dot_eval(M,A,BB,_).
 
-:- 'system':import(dot_eval/3).
-:- module_transparent(dot_eval/3).
-dot_eval( Self,Func,Value):- is_dict(Self),!,dot_dict(Self, Func, Value).
-dot_eval( Self,Func,Value):- nonvar(Func),compound(Self),Self=t(_,_,_,_),!,rb_lookup(Func,Value,Self),!.
-dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_lookup(Func,Value,Self),!.
-%dot_eval( Self,Func,Value):- is_rbtree(Self),!,rb_visit(Self,Pairs),strip_module(Func,_,Key),member(Key-Value,Pairs),!.
+:- 'system':import(dot_eval/4).
+:- module_transparent(dot_eval/4).
 
-dot_eval( Self,Func,Value):- is_assoc(Self),!,get_assoc(Func,Self,Value),!.
-dot_eval(MSelf,Func,Value):- dot_eval,!,strip_module(MSelf,M,_Self),dot_intercept(M,MSelf,Func,Value).
+dot_eval(M, Self,Func,Value):- dictoo:is_dot_hook(M, Self,Func,Value),!,dictoo:dot_overload_hook(M,Self,Func,Value).
+dot_eval(_, Self,Func,Value):- is_dict(Self),!,dot_dict_swi(Self, Func, Value).
+dot_eval(_, Self,Func,Value):- nonvar(Func),compound(Self),Self=t(_,_,_,_),!,rb_lookup(Func,Value,Self),!.
+dot_eval(_, Self,Func,Value):- is_rbtree(Self),!,rb_lookup(Func,Value,Self),!.
+%dot_eval(M, Self,Func,Value):- is_rbtree(Self),!,rb_visit(Self,Pairs),strip_module(Func,_,Key),member(Key-Value,Pairs),!.
+
+dot_eval(_, Self,Func,Value):- is_assoc(Self),!,get_assoc(Func,Self,Value),!.
+dot_eval(M, Self,Func,Value):- \+ is_dict(Self), dot_eval,dot_intercept(M, Self,Func,Value).
+
 
 dot_eval:- true.
 
@@ -120,18 +150,18 @@ dot_eval:- true.
 
 %dot_intercept(_M,Self,Func,Value):-  compound(Self),Self=t(_,_,_,_), trace,!,rb_lookup(Func,Value,Self).
 dot_intercept(M,Self,Func,Value):- 
-   ((once((show_failure(gvs:is_dot_hook(M,Self,Func,Value))->show_failure(use_dot(_,M)))) 
-      -> gvs:dot_overload_hook(M,Self,Func,Value)) *-> true ;
+   ((once((show_failure(dictoo:is_dot_hook(M,Self,Func,Value))->show_failure(use_dot(_,M)))) 
+      -> dictoo:dot_overload_hook(M,Self,Func,Value)) *-> true ;
    ((quietly(is_gvar(M,Self,Name)) -> gvar_call(M,Name,Func,Value) ) *-> true ; 
      dot_intercept_lazy(M,Self,Func,Value))).
 
 
-:- multifile(gvs:dot_overload_hook/4).
-:- dynamic(gvs:dot_overload_hook/4).
-:- module_transparent(gvs:dot_overload_hook/4).
-gvs:dot_overload_hook(_M,_NewName, _Memb, _Value):- fail.
+:- multifile(dictoo:dot_overload_hook/4).
+:- dynamic(dictoo:dot_overload_hook/4).
+:- module_transparent(dictoo:dot_overload_hook/4).
+dictoo:dot_overload_hook(_M,_NewName, _Memb, _Value):- fail.
 
-
+:- create_prolog_flag(gvar_lazy, false, [keep(true),type(term)]).
 :- module_transparent(dot_intercept_lazy/4).
 
 % '__index_wiki_pages'
@@ -142,9 +172,9 @@ dot_intercept_lazy(M,Self,Func,Value):- \+ is_dict(Self),
   \+ current_prolog_flag(gvar_lazy, false),!,
   % Value =.. ['.',Self,Func],  
   (var(Self) -> on_bind(Self,dot_intercept(M,Self,Func,Value));
-  (ignore(\+ \+ on_f_rtrace(gvs:is_dot_hook(M,Self,Func,Value))),
-                 must(gvs:dot_overload_hook(M,Self,Func,ValueO)),!,Value=ValueO)).
-dot_intercept_lazy(M,Self,Func,Value):- M:dot_dict(Self, Func, Value).
+  (ignore(\+ \+ ((ignore((Self==objs,bt)),on_f_rtrace(dictoo:is_dot_hook(M,Self,Func,Value))))),
+                 must(dictoo:dot_overload_hook(M,Self,Func,ValueO)),!,Value=ValueO)).
+dot_intercept_lazy(M,Self,Func,Value):- M:dot_dict_swi(Self, Func, Value).
 
 
 use_dot(Type):- 
@@ -171,7 +201,15 @@ use_dot(Type,M):-
 %   first argument is not a dict or the second is not a valid key or
 %   unbound.
 :- module_transparent(dot_dict/3).
-dot_dict(Data, Func, Value) :-
+:- 'system':import(dot_dict/3).
+dot_dict(Data, Func, Value) :- 
+  strip_module(Func,M, SFunct),
+  (dot_overload_hook(M, Data, SFunct, Value)*->true;
+    dot_dict_swi(Data, Func, Value)).
+
+:- module_transparent(dot_dict_swi/3).
+:- 'system':import(dot_dict_swi/3).
+dot_dict_swi(Data, Func, Value) :-
     (   '$get_dict_ex'(Func, Data, V0)
     *-> Value = V0
     ;   is_dict(Data, Tag)
@@ -428,17 +466,18 @@ show_gvar(Name):-
 :- dynamic(dot_cfg:dictoo_decl/8).
 %:- discontiguous(dot_cfg:dictoo_decl/8).
 
-simpl_dot_eval(IO,IO):- nc_arg(IO),!.
-simpl_dot_eval((A,B),O):- 
+:- module_transparent(simpl_dot_eval/3).
+simpl_dot_eval(_,IO,IO):- nc_arg(IO),!.
+simpl_dot_eval(M,(A,B),O):- 
   compound(A),compound(B), 
-  A = dot_eval(Self, Memb, Value), 
+  A = dot_eval(M, Self, Memb, Value), 
   B= (Var=Value),
   var(Value),
   Value=Var,
-  O= dot_eval(Self, Memb, Value).
-simpl_dot_eval(Term,TermO):-
+  O= dot_eval(M,Self, Memb, Value).
+simpl_dot_eval(M,Term,TermO):-
   Term=.. [F|ARGS],
-  maplist(simpl_dot_eval,ARGS,ARGSO),
+  maplist(simpl_dot_eval(M),ARGS,ARGSO),
   TermO=.. [F|ARGSO].
 
 show_gvs:- 
@@ -468,16 +507,18 @@ dot_ge(Goal, P, _):-
 dot_ge(Var,_,_):- nc_arg(Var),!,fail.
 dot_ge(call_has_functions(Goal),_, call_has_functions(Goal)):- !.
 dot_ge(Goal, _, GoalO):- 
+ prolog_load_context(module,M),
  % may_expand(Goal),
  use_dot(_Type),
  (tracing->true;(debugging(gvar(syntax))->trace;true)),  
   gvs_ge(Goal, Goal0),
   gvs_ge_pass2(Goal0, GoalM),
-  simpl_dot_eval(GoalM,GoalO),Goal\== GoalO,!.
+  simpl_dot_eval(M,GoalM,GoalO),Goal\== GoalO,!.
 dot_ge(Goal, _, GoalO):-
   use_dot(_Type),
   gvs_ge_pass2(Goal, GoalM),!,
-  simpl_dot_eval(GoalM,GoalO),Goal\== GoalO.
+  prolog_load_context(module,M),
+  simpl_dot_eval(M,GoalM,GoalO),Goal\== GoalO.
 
 gvs_ge(Var,Var):- \+ compound(Var),!.
 gvs_ge(M:Term, M:TermO):- !, gvs_module_ge(M,Term, TermO).
@@ -514,7 +555,7 @@ gvs_ge_pass2(Var,Var):- nc_arg(Var),!.
 gvs_ge_pass2(M:Term, M:TermO):- !, gvs_ge_pass2(Term, TermO).
 gvs_ge_pass2(call_has_functions(Goal), call_has_functions(Goal)):- !.
 gvs_ge_pass2(FHead, dot_call(A,B)):- FHead =.. ['.',A,B],!.
-gvs_ge_pass2('.'(A,B,C), dot_eval(A,B,C)):-!.
+gvs_ge_pass2('.'(A,B,C), dot_eval(M,A,B,C)):- prolog_load_context(module,M).
 % gvar_op_call
 gvs_ge_pass2(Goal,  gvar_op_call(OP,M,Var,Memb,Value) ):- 
    prolog_load_context(module, M),

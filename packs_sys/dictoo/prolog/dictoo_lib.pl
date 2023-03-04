@@ -494,19 +494,22 @@ oo_inner_class_end(Inner):- is_oo_class(inner(Name,Inner)),!,oo_class_end(inner(
 
 oo_class_field(Inner):- is_oo_class(Name),!,asserta(is_oo_class_field(Name,Inner)).
 
-:- multifile(gvs:dot_overload_hook/4).
-:- dynamic(gvs:dot_overload_hook/4).
-:- module_transparent(gvs:dot_overload_hook/4).
-gvs:dot_overload_hook(M,NewName, Memb, Value):- dot_cfg:using_dot_type(_,M)
-  -> show_call(dictoo(overload),oo_call_dot_hook(M,NewName, Memb, Value)).
+:- multifile(dictoo:dot_overload_hook/4).
+:- dynamic(dictoo:dot_overload_hook/4).
+:- module_transparent(dictoo:dot_overload_hook/4).
+dictoo:dot_overload_hook(M, Self, Memb, Value):- (dot_cfg:using_dot_type(_,M)
+  -> show_call(dictoo(overload),oo_call_dot_hook(M, Self, Memb, Value))).
 
-:- multifile(gvs:is_dot_hook/4).
-:- dynamic(gvs:is_dot_hook/4).
-:- module_transparent(gvs:is_dot_hook/4).
+:- multifile(dictoo:is_dot_hook/4).
+:- dynamic(dictoo:is_dot_hook/4).
+:- module_transparent(dictoo:is_dot_hook/4).
 
-%gvs:is_dot_hook(_,_,_,_):-!.
-gvs:is_dot_hook(M,Self,Func,Value):- dot_cfg:using_dot_type(_,M) -> is_oo_hooked(M,Self,Func,Value),!.
+%dictoo:is_dot_hook(_,_,_,_):-!.
+dictoo:is_dot_hook(M,Self,Func,Value):- dot_cfg:using_dot_type(_,M) -> is_oo_hooked(M,Self,Func,Value),!.
 
 :- include(gvar_fixup_exports).
+
+
+
 
 

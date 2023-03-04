@@ -11,6 +11,28 @@
 :- dynamic(fav/2).
 :- discontiguous fav/2.
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
+
+fav(v('p'),[dmiles]).
+
+fav(v('37d3e8b2'), 
+ human(
+   rule(links_count(contains,1),subst_color(fg,blue)),
+   rule(links_count(contains,2),subst_color(fg,red)),
+   rule(links_count(contains,3),subst_color(fg,green)),
+   rule(links_count(contains,4),subst_color(fg,yellow)))).
+
+fav(t('ea32f347'), 
+ human(
+   rule(pg(is_fg_object,RANK,_,1),subst_color(fg,blue)),
+   rule(pg(is_fg_object,RANK,_,2),subst_color(fg,yellow)),
+   rule(pg(is_fg_object,RANK,_,3),subst_color(fg,red)) )):-
+     %RANK = rankA(cc(fg))
+      RANK = rank1(mass)
+      .
+  
+
+
+
 %~ warn_skip(save_supertest(v('00576224'),'muarc_cache/00576224.ansi.pl'))
 %~ warn_skip(clear_saveable_test_info(v('00576224')))
 %~ warn_skip(clear_saveable_test_info(v('423a55dc')))
@@ -62,7 +84,7 @@ fav_testcase(v('414297c0')>trn+1,"
    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
         'Training Pair #2 Input' (grid(20,16))          'Output' v('414297c0') (grid(6,9))
-",[indiv(colormass)]).
+",[indiv_h(colormass)]).
 
 
 %= fav(v('414297c0'),[no_sol(i(complete),resize_grid(11,12,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([11,12]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/414297c0.json']),filename(['/data/evaluation/414297c0.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
@@ -105,7 +127,7 @@ fav_testcase(v('40f6cd08')>trn+1,"
    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
         'Training Pair #2 Input' (grid(30,30))          'Output' v('40f6cd08') (grid(30,30))
-",[indiv(colormass),human(paste_subobjs)]).
+",[indiv_h(colormass),human(paste_subobjs)]).
 
 
 %= fav(v('40f6cd08'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/40f6cd08.json']),filename(['/data/evaluation/40f6cd08.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
@@ -1722,7 +1744,7 @@ fav_testcase(v('184a9768')>trn+1,"
    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯       ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
 
         'Training Pair #2 Input' (grid(22,20))          'Output' v('184a9768') (grid(22,20))
-",[indiv(colormass),human([delete_color(silver)])]).
+",[indiv_h(colormass),human([delete_color(silver)])]).
 
 
 %= fav(v('184a9768'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/184a9768.json']),filename(['/data/evaluation/184a9768.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
@@ -2827,7 +2849,7 @@ fav(t('d8c310e9'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+colo
 fav(t('44f52bb0'),[ohuman(i(whole),first_object_bool(symmetric_type(flipH)),learn_rule)]).
 
 fav(t('40853293'),[indiv(by_color(2))]).
-%fav(t(d631b094),ohuman(globalpoints,grid_target=[get(points)],maplist(arg(1)))).
+%fav(t(d631b094),ohuman(globalpoints,target_grid=[get(points)],my_maplist(arg(1)))).
 fav(t('d631b094'),[indiv(lo_dots),ohuman(i(lo_dots),get(objs),learn_rule)]).
 fav(t('d631b094'),[-shape_match,-rotation_match,-mask_match,-color_match,test_suite([train400]),summarize,dominant_color,count_tiles,'(4, 1)']).
 
@@ -2838,8 +2860,8 @@ fav(t('a85d4709'),[indiv(i_rows),learn(i([rows,done]),o([rows,done]),learn_rule)
 
 fav(t('60b61512'),[indiv(pbox_vm_special_sizes(3,3))]).
 
-fav(t('d0f5fe59'),[%indiv(colormass),
-  ohuman(color(largest,Color),ray(Color-point_01_01,count),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
+fav(t('d0f5fe59'),[%indiv_h(colormass),
+  ohuman(color(largest,Color),ray(Color-hv(1,1),count),trim_to_rect),-shape_match,-rotation_match,-mask_match,+color_match,test_suite([train400]),separate_shapes,pairwise_analogy,count_shapes,associate_images_to_numbers,'(3, 1)']).
 
 /*
   Grid = [[1,1,1,1]]
@@ -2864,13 +2886,12 @@ fav(t('44f52bb0'),[lmDSL(into_monochrome,grid_to_individual(whole),one_obj,resiz
 */
 
 fav(t('f76d97a5'),[indiv([include_black,force_by_color]),was__lmDSL([compute_max_color(C1),compute_next_color(C2),remove_color(C1),subst_color(C2,C1)])]).
-
-fav(t('25d487eb'),[indiv(colormass),ohuman([rocketship])]).
+fav(t('25d487eb'),[indiv_h(colormass),ohuman([rocketship])]).
 fav(t('25d487eb'),[grid_size_same,-rotation_match,-mask_match,+shape_match,+color_match,test_suite([train400]),draw_line_from_point,direction_guessing,color_guessing,'(3, 1)']).
 fav(v('762cd429'),[grid_size_same,ohuman(i([shape_lib(filled_squares),delete_rest,shrink_all_to_size(1),tighten_grid_arround_objects])),-rotation_match,-mask_match,+shape_match,+color_match,test_suite([eval400]),'(3, 1) ']).
 
 %fav(t('6e82a1ae'),[ohuman([rocketship])]).
-fav(v('e41c6fd3'),[indiv(colormass), ohuman([forall(((iz(X,outl),color(X,cyan),vert_pos(X,Vert))),
+fav(v('e41c6fd3'),[indiv_h(colormass), ohuman([forall(((iz(X,outl),color(X,cyan),vert_pos(X,Vert))),
                                                                                (iz(Y,outl),vert_pos(Y,Vert)))])]).
 fav(t(c444b776),[detect_grid]).
 fav(v('94133066'),[ohuman([largest_indiv,trim_to_rect,rot90,flipV])]).

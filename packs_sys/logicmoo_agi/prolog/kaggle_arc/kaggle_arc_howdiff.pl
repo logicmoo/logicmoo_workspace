@@ -78,7 +78,7 @@ number_or_ratio(NR):- (number(NR);rational(NR)),!.
 atomic_type(number_or_ratio).
 atomic_type(string).
 atomic_type(is_fg_color). atomic_type(is_bg_color).
-atomic_type(is_nc_point). atomic_type(is_cpoint).
+atomic_type(is_ncpoint). atomic_type(is_cpoint).
 atomic_type(is_color).
 atomic_type(atom).
 atomic_type(is_list).
@@ -154,7 +154,7 @@ var_count(Term,N):-
  N = (FA+NCC+AC+VsL+NC+VC+GC+CC+GTerm).
 
 number_or_point(O):- number(O).
-number_or_point(O):- is_nc_point(O).
+number_or_point(O):- is_ncpoint(O).
 
 generalize_arglist2([A,B],[AA,BB]):- generalize_arg(A,AA),generalize_arg(B,BB).
 generalize_arglist2(I,O):- generalize_arglist3(I,O).
@@ -237,7 +237,7 @@ other_io(I,O):-
 find_obj_mappings(A,BG,OO):-
   obj_grp_atoms(IO,A,AINFO),
   other_io(IO,OI),
-  maplist(obj_grp_atoms(OI),BG,BBR),
+  my_maplist(obj_grp_atoms(OI),BG,BBR),
   find_obj_mappings2(AINFO,BBR,OO).
 
 
@@ -258,7 +258,7 @@ find_obj_mappings2([A,PA|PAP],BBR,pair4(A,PA,B,PB)):-
        JO is - rationalize(J/(O+1))))),
      Pairs), 
    sort_safe(Pairs,RPairs),!,
-   %maplist(writeln,Pairs),
+   %my_maplist(writeln,Pairs),
    %last(RPairs,prop_atoms(Best,_,_,_)),
    % Best = pair(PA,PB,_),
    member(Why,RPairs).
@@ -274,8 +274,8 @@ showdiff_groups(AG,BG):- showdiff_groups_new(AG,BG),!.
 showdiff_groups(AG,BG):- showdiff_groups_old(AG,BG),!.   
 
 showdiff_groups_old(AG,BG):-
-  maplist(obj_grp_comparable,AG,A3),
-  maplist(obj_grp_comparable,BG,B3),
+  my_maplist(obj_grp_comparable,AG,A3),
+  my_maplist(obj_grp_comparable,BG,B3),
   final_alignment(AG,BG,A3,B3,A4,B4),
   length(A3,LenA3),length(A4,LenA4),
   length(B3,LenB3),length(B4,LenB4),
@@ -304,33 +304,23 @@ showdiff_groups5(A,B,Pred,AAR,BBR):-
   pred_intersection(Pred,A,B,IntersectA,IntersectB,AAR,BBR),
   ignore(((IntersectA\==[], 
    w_section("Object Differences",
-     maplist(showdiff_objects_vis(Pred),IntersectA,IntersectB))))).
+     my_maplist(showdiff_objects_vis(Pred),IntersectA,IntersectB))))).
 
 
-diff_groups2(AAR,BBR,proportional(DD,Diffs)):- proportional(AAR,BBR,DD), maplist(diff_objects,AAR,BBR,Diffs).
+diff_groups2(AAR,BBR,proportional(DD,Diffs)):- proportional(AAR,BBR,DD), my_maplist(diff_objects,AAR,BBR,Diffs).
 diff_groups0(A3,B3,DD):- diff_groups2(A3,B3,DD).
 diff_groups0(A3,B3,DD):- diff_groups1(A3,B3,DD).
 
 diff_groups(A0,B0,DD):- 
-  maplist(obj_grp_comparable,A0,A2),
-  maplist(obj_grp_comparable,B0,B2),
+  my_maplist(obj_grp_comparable,A0,A2),
+  my_maplist(obj_grp_comparable,B0,B2),
   diff_groups1(A2,B2,DD).
 
 
-obj_atoms(PA,PAP):- must_det_ll((nonvar(PA),into_obj_plist(PA,M),M\==[],
+obj_atoms(PA,PAP):- must_det_ll((nonvar(PA),into_obj_plist(PA,MF),flatten(MF,M),M\==[],
   findall(E,(member(SE,M),sub_obj_atom(E,SE)),PAP),PAP\==[])),!.
 
-
-into_obj_plist(OID,List):- var(OID),!,enum_object(OID),into_obj_plist(OID,List).
-into_obj_plist(Grp,GrpOO):- is_group(Grp),!,mapgroup(into_obj_plist,Grp,GrpO),flatten(GrpO,GrpOO).
-into_obj_plist(PA,PAP):- is_list(PA),!,PAP=PA.
-into_obj_plist(obj(PA),PA):- my_assertion(is_list(PA)).
-into_obj_plist(OID,List):- is_oid(OID), oid_to_obj(OID,Obj),!,into_obj_plist(Obj,List).
-into_obj_plist(Obj,Props):- indv_props_list(Obj,Props),!.
-%%%into_obj_plist(PA,PAP):- must_det_ll((extend_grp_proplist(PA,Obj), into_obj_plist(Obj,PAP))),!.
- 
-
-never_matom(points_rep(local,_)).
+never_matom(localpoints(_)).
 never_matom(shape_rep(grav,_)).
 never_matom(pg(_OG,_,_,_)).
 never_matom(giz(_)).
@@ -345,9 +335,9 @@ sub_obj_atom(M,pg(OG,H,L,_)):- !, ((M = (L/H));(M = (L/OG))).
 %sub_obj_atom(M,M):- attvar(M),!.
 %sub_obj_atom(A,A).
 sub_obj_atom(E,E).
-%sub_obj_atom(globalpoints(E),globalpoints(CP)):- !, maplist(arg(2),CP,EL),!, (member(E,EL); (E=EL)).
+%sub_obj_atom(globalpoints(E),globalpoints(CP)):- !, my_maplist(arg(2),CP,EL),!, (member(E,EL); (E=EL)).
 %sub_obj_atom(_,M):- never_matom(M),!,fail.
-%sub_obj_atom(A,M):- M = points_rep(local,_),!,A=M.
+%sub_obj_atom(A,M):- M = localpoints(_),!,A=M.
 %sub_obj_atom(iz(A),iz(A)):-!. % sub_obj_atom(A,M).
 sub_obj_atom(A,M):- M=..[F,List],is_list(List),length(List,Len),!,
   (A=len(F,Len) ; (interesting_sub_atoms(List,E),A=..[F,E])).
@@ -379,7 +369,7 @@ select_obj_pair_2(AAR,BBR,PA,PB,(J/O)):-
      JO is - rationalize(J/(O+1))))),
    Pairs), 
  sort_safe(Pairs,RPairs),!,
- %maplist(writeln,Pairs),
+ %my_maplist(writeln,Pairs),
  %last(RPairs,prop_atoms(Best,_,_,_)),
  % Best = pair(PA,PB,_),
    member(Why,RPairs).
@@ -420,8 +410,8 @@ showdiff_groups_new(AG,BG):-
   retractall_in_testid(arc_cache:did_map(_,_,_,_)),   
   retractall_in_testid(arc_cache:object_atomslist(IO,_,_,_)),
   retractall_in_testid(arc_cache:object_atomslist(OI,_,_,_)),
-  maplist(obj_grp_atoms(IO),AG,_AGG),
-  maplist(obj_grp_atoms(OI),BG,_BGG),  
+  my_maplist(obj_grp_atoms(IO),AG,_AGG),
+  my_maplist(obj_grp_atoms(OI),BG,_BGG),  
    print_list_of(xfer_mappings("IN  -> OUT",AG,BG,BGG),  inputOutputMap,AGG),
    %print_list_of(prox_mappings("OUT -> OUT",BG,BG,BGG), outputOutputMap,BGG),   
    print_list_of(xfer_mappings("IN  <- OUT",BG,AG,AGG),  outputInputMap,BGG),   
@@ -511,8 +501,8 @@ map_objects(TITLE,PeersI,O2,PeersO,O2):-
   get_current_test(TestID), ignore(what_unique(TestID,O1)),
   remove_giz(S1,T1),remove_giz(S2,T2),
   indv_u_props(O1,IU),indv_u_props(O2,OU),
-  intersection(T1,T2,Sames,IA,OA),maplist(refunctor,Sames,NewSames),
-  object_props_diff(IA,OA,Diffs), listify(Diffs,DiffL),maplist(print_nl,DiffL),      
+  intersection(T1,T2,Sames,IA,OA),my_maplist(refunctor,Sames,NewSames),
+  object_props_diff(IA,OA,Diffs), listify(Diffs,DiffL),my_maplist(print_nl,DiffL),      
   undiff(IA,OA,IZ,OZ),
   subst_2L(Sames,NewSames, T1+ T2+IU +OU,
                           _U1+_U2+IU2+OU2),
@@ -580,7 +570,7 @@ refunctor(pen([cc(Silver,_)]),pen([cc(Silver,_)])).
 refunctor(edge(CI1,CI2),edge(CO1,CO2)):-!,(CI2=CO2;CI1=CO1).
 refunctor(pg(OG,NS1,WE,_),pg(OG,NS2,WE,_)):-!,NS1=NS2.
 refunctor([H|T],[HH|TT]):- !, refunctor(H,HH),refunctor(T,TT).
-%refunctor(C,O):- is_list(C),!,maplist(refunctor,C,O).
+%refunctor(C,O):- is_list(C),!,my_maplist(refunctor,C,O).
 refunctor(C,O):- compound_name_arguments(C,F,A),!,refunctor_args(A,B),compound_name_arguments(O,F,B).
 
 objs_to_io(O2,O1,O1,O2):- (has_prop(giz(g(in)),O1);has_prop(giz(g(out)),O2)),!.
@@ -687,8 +677,8 @@ diff_groups1(AAR,BBR,DD):- maybe_reorder_pair(AAR,BBR,AAR2,BBR2),!,  diff_groups
 diff_groups1(AAR,BBR,DD):- diff_groups1a(AAR,BBR,AAR,BBR,DD).
 
 diff_groups1a(_OA,_OB,[],[],[]):-!.
-diff_groups1a(_OA,_OB,[],B,right_over(BO)):- maplist(object_ref_desc,B,BO).
-diff_groups1a(_OA,_OB,B,[],left_over(BO)):- maplist(object_ref_desc,B,BO).
+diff_groups1a(_OA,_OB,[],B,right_over(BO)):- my_maplist(object_ref_desc,B,BO).
+diff_groups1a(_OA,_OB,B,[],left_over(BO)):- my_maplist(object_ref_desc,B,BO).
 diff_groups1a(OA,OB,AAR,BBR,DD):-
   select_obj_pair_1_3(AAR,BBR,PA,PB,Why),
   diff_objects(PA,PB,DAB,Same),
@@ -782,7 +772,7 @@ never_do_diff(V):- never_show_diff(V).
 
 make_comparable(I,I):- plain_var(I).
 make_comparable(I,I):- \+ compound(I),!.
-make_comparable(I,II):- is_list(I),!,maplist(make_comparable,I,II).
+make_comparable(I,II):- is_list(I),!,my_maplist(make_comparable,I,II).
 make_comparable(obj(L),obj(LL)):- !,make_comparable(L,LL).
 make_comparable(L,L):- usefull_compare(L),!.
 make_comparable(I,II):- functor(I,II,_).
@@ -801,7 +791,7 @@ maye_sort(L,S):- is_list(L),\+ is_grid(L), !,sort_safe(L,S).
 maye_sort(S,S).
 obj_make_comparable(I,_):- plain_var(I),!,fail.
 obj_make_comparable(obj(I),O):- !, obj_make_comparable(I,O).
-obj_make_comparable(I,O):- is_list(I),maplist(obj_make_comparable_e,I,M),sort_obj_props(M,O),
+obj_make_comparable(I,O):- is_list(I),my_maplist(obj_make_comparable_e,I,M),sort_obj_props(M,O),
  nop(pp(sort_obj_props(O))).
 obj_make_comparable(I,O):- into_obj(I,M),obj_make_comparable(M,O).
 %obj_make_comparable_e(I,O):- is_list(I),sort_safe(I,O).
@@ -873,7 +863,7 @@ overlap_same_obj_no_diff(I,O):- compare_objs1(perfect,I,O). %diff_objects(I,O,Di
 
 overlap_same_obj(I,O):- compare_objs1(sameO,I,O).
 
-%fti(VM,[combine_objects|set(VM.program_i)]):- combine_objects(VM),!.
+%fti(VM,[combine_objects|set(VM.lo_program)]):- combine_objects(VM),!.
 is_fti_step(combine_objects).
 combine_objects(VM):- combine_objects(VM.objs,set(VM.objs)).
 combine_objects(I,I):-!.
@@ -931,17 +921,17 @@ showdiff_objects1(change_obj(N,O1,O2)):-
   show_pair_now(N,O1,O2),!.
 showdiff_objects1(XY):- pp(showdiff_objects(XY)),!.
 
-print_sames(N):- is_list(N),!, maplist(print_sames,N).
+print_sames(N):- is_list(N),!, my_maplist(print_sames,N).
 print_sames(N):- format('\t'), pp_no_nl(N),nl_if_needed_ansi.
 
-print_diffs(D,N):- is_list(N),!, maplist(print_diffs(D + 1),N).
+print_diffs(D,N):- is_list(N),!, my_maplist(print_diffs(D + 1),N).
 print_diffs(D,diff(List1->List2)):- \+ is_points_list(List1), \+ is_points_list(List2), !,  
      n_tabs(D-1), print_list_of(print_diffs(D + 2),uniqLeft,List1),print_list_of(print_diffs(D + 1),uniqRight,List2).
 print_diffs(D,N):- n_tabs(D), pp_no_nl(N),nl_if_needed_ansi.
 
 n_tabs(D):- DD is D, forall(between(1,DD,_),format('\t')).
 
-print_hints(N):- is_list(N),!, maplist(print_hints,N).
+print_hints(N):- is_list(N),!, my_maplist(print_hints,N).
 print_hints(N):- format('\t'), pp_no_nl(N),nl_if_needed_ansi.
 
 excl_diff(C):- var(C),!,fail.
@@ -1074,7 +1064,7 @@ relation_value(II,OO,Val,RelsC,MissedRel):-
   include(cmpable_value,OL,OLC),
   intersection(IL,OL,Rels,LO,RO),!,
   intersection(ILC,OLC,RelsC,LOC,ROC),!,
-  maplist(length,[Rels,LO,RO,RelsC,LOC,ROC],[RelsL,LOL,ROL,RelsCL,LOCL,ROCL]),
+  my_maplist(length,[Rels,LO,RO,RelsC,LOC,ROC],[RelsL,LOL,ROL,RelsCL,LOCL,ROCL]),
   max_min(LOL,ROL,_,Missed),
   max_min(LOCL,ROCL,_,MissedC),
   (MissedC==LOCL->MissedRel=LOC;MissedRel=ROC),
@@ -1085,13 +1075,13 @@ relation_value(I,O,Val):-
 write_ta(Title):- write(' title="'), write_ea(Title), write('"'),!.
 
 write_gec(N=V):- nl_if_needed,nonvar(N), !, pp_no_nl(N),writeln(' = '), !, wots(S,write_gec(V)),print_w_pad(2,S).
-write_gec(Val):- is_list(Val), !, wots(S,maplist(write_gec,Val)), print_w_pad(2,S).
+write_gec(Val):- is_list(Val), !, wots(S,my_maplist(write_gec,Val)), print_w_pad(2,S).
 write_gec(Val):- writeg(Val).
 
 
 write_ea(Title):-  string(Title),!, into_attribute(Title,TitleSA),write(TitleSA).
 write_ea(Title):-  wots_ansi(TitleS,wqs_c((Title))), into_attribute(TitleS,TitleSA),write(TitleSA).
-write_eh(List):- is_list(List),!,maplist(write_eh,List).
+write_eh(List):- is_list(List),!,my_maplist(write_eh,List).
 write_eh(String):- atomic(String),!,write(String).
 write_eh(Compound):- wqs_c(Compound),!.
 
@@ -1128,7 +1118,7 @@ dir_to_oidset(Dir,OIDSet):-
 get_relation_between(DIR,Nodes,Links):-
   dir_to_oidset(Dir,OIDSet),
   u_dmsg(tOIDSet=OIDSet),
-  maplist(oid_to_node,OIDSet,Nodes),
+  my_maplist(oid_to_node,OIDSet,Nodes),
   findall(_{source: OID1, target: OID2, value: Val100}, 
    (dir_to_oidset(Dir,OIDSet),
     member(OID1,OIDSet),
@@ -1284,13 +1274,13 @@ near_props(Prop1,Prop2):-  atom(Prop1),!,atom(Prop2),!.
 near_props(Prop1,Prop2):-  compound(Prop1),
   compound_name_arguments(Prop1,_,Args1),
   compound_name_arguments(Prop2,_,Args2),
-  maplist(near_props,Args1,Args2).
+  my_maplist(near_props,Args1,Args2).
 differ_props(Prop1,Prop2):- \+ not_differ_props(Prop1,Prop2).
 not_differ_props(Prop1,Prop2):- Prop1=Prop2,!.
 not_differ_props(Prop1,Prop2):- fail, compound(Prop1),
   compound_name_arguments(Prop1,_,Args1),
   compound_name_arguments(Prop2,_,Args2),
-  maplist(not_differ_props,Args1,Args2).
+  my_maplist(not_differ_props,Args1,Args2).
   
 
 
@@ -1338,7 +1328,7 @@ diff_termz(I,O,[]):- O==I,!.
 diff_termz(I,O,O):- I==[],!.
 diff_termz(I,O,I):- O==[],!.
 */
-diff_termz([IH,IV],[OH,OV],D):- maplist(number,[IH,IV,OH,OV]),!,maplist(diff_numbers,[IH,IV],[OH,OV],D).
+diff_termz([IH,IV],[OH,OV],D):- my_maplist(number,[IH,IV,OH,OV]),!,my_maplist(diff_numbers,[IH,IV],[OH,OV],D).
 
 %diff_termz(I,O, [] ):- (never_do_diff(I);never_do_diff(O)),!.
 diff_termz(shape_rep(grav,I),shape_rep(grav,O),[]):- !,sort_safe(I,II),sort_safe(O,OO),II=@=OO,!.
@@ -1368,7 +1358,7 @@ diff_termz(I,O,D):- compound(I),compound(O),!,diff_compounds(I,O,D).
 diff_compounds(I,O, [] ):- fail, (never_show_diff(I);never_show_diff(O)),!.
 
 diff_compounds(I,O,D):- compound_name_arguments(I,IF,IA),compound_name_arguments(O,OF,OA),
-  maplist(compute_diff_or_same,IA,OA,DA),
+  my_maplist(compute_diff_or_same,IA,OA,DA),
   diff_compounds(I,IF,O,OF,DA,D).
 
 diff_compounds( I, F,_O, F, DA, D):- I=@=DA, D=[].
@@ -1452,7 +1442,7 @@ two_ok(A,B):- maybe_good_prop(A,B).
 two_ok(CI,CO):- compound(CI),compound(CO),functor(CI,F,A),functor(CO,F,A),!,
   compound_name_arguments(CI,F,A1),compound_name_arguments(CO,F,A2),!,
   nop(args_ok(F,A,A1,A2)).  
-  %maplist(two_ok,A1,A2).
+  %my_maplist(two_ok,A1,A2).
 two_ok(CI,CO):- two_ok_dt(CI,CO).
 
 args_ok(_,_,[],[]).
@@ -1633,14 +1623,14 @@ proportional(Obj1,Obj2,Out):- compound(Obj1), compound(Obj2),  fail,
 proportional(L1,L2,_List):- is_grid(L1),is_grid(L2),!,fail.
 
 proportional(N1,N2,N):- compound(N1),compound_name_arguments(N1,F,A1),compound_name_arguments(N2,F,A2),
-  maplist(proportional_or_same,A1,A2,AR),compound_name_arguments(N,F,AR).
+  my_maplist(proportional_or_same,A1,A2,AR),compound_name_arguments(N,F,AR).
   
 proportional(L1,L2,Diff):- locally(nb_setval(diff_porportional,t),diff2_terms(L1,L2,Diff)),!.
 
-:- multifile(gvs:dot_overload_hook/4).
-:- dynamic(gvs:dot_overload_hook/4).
-:- module_transparent(gvs:dot_overload_hook/4).
-gvs:dot_overload_hook(_M,_NewName, _Memb, _Value):- fail.
+:- multifile(dictoo:dot_overload_hook/4).
+:- dynamic(dictoo:dot_overload_hook/4).
+:- module_transparent(dictoo:dot_overload_hook/4).
+dictoo:dot_overload_hook(_M,_NewName, _Memb, _Value):- fail.
 
 
 grid_props(Obj1,OOO):- \+ is_grid(Obj1),!,into_grid(Obj1,G),print_grid(G),grid_props(G,OOO).
@@ -1722,7 +1712,7 @@ proportional_lists(L1,L2,OUT):-
  must_det_ll((
   length(L1,N1),length(L2,N2), proportional_size(N1,N2,N),
   intersection(L1,L2,Shared,IOnlyC,OOnlyC), 
-  maplist(length,[L1,L2,IOnlyC,Shared,OOnlyC],Lens),
+  my_maplist(length,[L1,L2,IOnlyC,Shared,OOnlyC],Lens),
   into_vals(L1,L2,Vals),
   list_to_set(Shared,SharedS),
   diff_lists(IOnlyC,OOnlyC,Diff),
@@ -1764,12 +1754,12 @@ calc_ratio(Ratio,Out,In):- catch(NRatio is rationalize(In/Out),error(evaluation_
 each_object(Grid,ListO):- \+ arc_option(grid_size_only), arc_memoized(individuate(complete,Grid,List)),!, simplify_objs(List,ListO).
 %each_object(Grid,ListO):- print_collapsed(100,memoized(individuate(complete,Grid,List))),!, simplify_objs(List,ListO).
 
-simplify_objs(I,O):-is_list(I),!,maplist(simplify_objs,I,O).
+simplify_objs(I,O):-is_list(I),!,my_maplist(simplify_objs,I,O).
 simplify_objs(obj(I),obj(O)):-!,simplify_objs_l(I,O).
 simplify_objs(F,F).
 
 simplify_objs_l(obj(I),O):- is_list(I),!,simplify_objs_l(I,O).
-simplify_objs_l(I,O):- include(compound,I,M1),sort_obj_props(M1,M2),maplist(simplify_objs_e,M2,O).
+simplify_objs_l(I,O):- include(compound,I,M1),sort_obj_props(M1,M2),my_maplist(simplify_objs_e,M2,O).
 %simplify_objs(giz(g(_)),giz(g(_))).
 %simplify_objs(Comp,F):- compound(Comp),functor(Comp,F,_),uncomparable(group,Comp),!.
 

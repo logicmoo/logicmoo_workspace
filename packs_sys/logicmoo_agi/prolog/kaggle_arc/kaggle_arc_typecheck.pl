@@ -127,7 +127,7 @@ narrow_using(clauses,Depth,M,P,Vars):-  compound(P), \+ ground(P),
       nop(pp((clause(M:PP,BodyC), (SPP:-SBodyC)))),
       Depth2 is Depth-1,      
       ignore(ded_argtypes_until(Depth2,M,SBodyC,Vars)),
-      maplist(var,SPPArgs),  P = SPP)))).
+      my_maplist(var,SPPArgs),  P = SPP)))).
 
 narrow_using(clauses,Depth,M,P,Vars):- Depth>0,  compound(P), \+ ground(P), P\= run_fti(_,_), 
  functor(P,F,A), functor(PP,F,A), \+ (is_decl_pt(_,PP),ground(PP)), 
@@ -145,7 +145,7 @@ narrow_using(metapreds,Depth,M,P,Vars):- Depth<10,
   compound_name_arguments(MP,_,MArgs),
   compound_name_arguments(P,_,PArgs),
   Depth2 is Depth-1,
-  maplist(maybe_label_args(Depth2,Vars,M),MArgs,PArgs))).
+  my_maplist(maybe_label_args(Depth2,Vars,M),MArgs,PArgs))).
 
 /*
 functor(SPP,F,A),
@@ -159,7 +159,7 @@ functor(SPP,F,A),
       (pp(((SPP:-SBodyC)))),
       Depth2 is Depth-1,      
       ignore(ded_argtypes_until(Depth2,M,SBodyC,Vars)),
-      maplist(var,SPPArgs),  P = SPP)))).
+      my_maplist(var,SPPArgs),  P = SPP)))).
 */
 narrow_using(metapreds,Depth,M,P,Vars):- Depth<10,
   predicate_property(M:P,meta_predicate(MP)),
@@ -167,7 +167,7 @@ narrow_using(metapreds,Depth,M,P,Vars):- Depth<10,
   compound_name_arguments(MP,_,MArgs),
   compound_name_arguments(P,_,PArgs),
   Depth2 is Depth-1,
-  maplist(maybe_label_args(Depth2,Vars,M),MArgs,PArgs))).
+  my_maplist(maybe_label_args(Depth2,Vars,M),MArgs,PArgs))).
 
 
 maybe_label_args(_Depth,_Vars,_M,(+),_).
@@ -182,7 +182,7 @@ arg_to_argtypes(P,Args):-
   predicate_property(P,meta_predicate(MP)),
   compound_name_arguments(MP,_,MArgs),
   compound_name_arguments(P,_,PArgs),
-  maplist(should_replace_arg,MArgs,PArgs,Vars),append(Vars,Args).
+  my_maplist(should_replace_arg,MArgs,PArgs,Vars),append(Vars,Args).
 arg_to_argtypes(PP,NVArgs):- compound_name_arguments(PP,_,NVArgs).
 
 should_replace_arg((+),A,[A]).

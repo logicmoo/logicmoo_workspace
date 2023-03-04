@@ -10,7 +10,7 @@
 my_len(X,Y):- var(X),!,length(X,Y).
 my_len(X,Y):- is_list(X),!,length(X,Y).
 my_len(X,Y):- functor([_|_],F,A),functor(X,F,A),!,length(X,Y).
-my_len(X,Y):- arcST,!,break.
+my_len(X,Y):- arcST,!,ibreak.
 */
 sort_safe(I,O):- catch(sort(I,O),_,I=O).
 
@@ -20,10 +20,10 @@ with_tty_true(Goal):- with_set_stream(current_output,tty(true),Goal).
 
 nb_subst(Obj,New,Old):-
   get_setarg_p1(nb_setarg,Found,Obj,P1),Found=@=Old,!,
-  call(P1,New),!,nb_subst(Obj,New,Old).
+  p2_call(P1,New),!,nb_subst(Obj,New,Old).
 nb_subst(_Obj,_New,_Old).
 
-system:any_arc_files(Some):- is_list(Some),!, Some\==[],maplist(any_arc_files,Some).
+system:any_arc_files(Some):- is_list(Some),!, Some\==[],fmy_maplist(any_arc_files,Some).
 system:any_arc_files(Some):- atom_contains(Some,'arc').
 
 :- thread_local(in_memo_cached/5).
@@ -44,7 +44,7 @@ arc_memoized(G):-
   numbervars(Key,0,_,[attvar(bind),singletons(true)]),!,
   setup_call_cleanup((asserta(in_memo_cached(Key,C,track,started,_),Started)),
   catch(
-  (in_memo_cached(Key,C,GT,Found,AttGoals)*->(G=Found,maplist(call,AttGoals))
+  (in_memo_cached(Key,C,GT,Found,AttGoals)*->(G=Found,my_maplist(call,AttGoals))
     ; ((call(G),copy_term(G,CG,GG)) *->asserta(in_memo_cached(Key,C,GT,CG,GG))
                   ;asserta(in_memo_cached(Key,C,GT,failed,_)))),
   E, (retractall(in_memo_cached(Key,C,GT,_,_)),throw(E))),erase(Started)).
@@ -85,8 +85,8 @@ add_note(Info):- add_i(note,Info).
 add_indiv(W,Info):- add_i(indiv(W),Info).
 add_comparitor(Info):- add_i(comparitor,Info).
 show_rules:- 
- luser_getval(pair_rules,PRules), maplist(pp(cyan),PRules),
- luser_getval(test_rules,TRules), maplist(pp(blue),TRules),
+ luser_getval(pair_rules,PRules), my_maplist(pp(cyan),PRules),
+ luser_getval(test_rules,TRules), my_maplist(pp(blue),TRules),
  !.
   
 sub_atom_value(TestID,A):- sub_term(A,TestID),(atom(A);string(A)).
@@ -95,11 +95,11 @@ my_list_to_set(List, Set):- my_list_to_set(List, (=) ,Set).
 my_list_to_set_variant(List, Set):- my_list_to_set(List, (=@=) ,Set).
 my_list_to_set_cmp(List, Set):- my_list_to_set(List, (=@=) ,Set).
 
-my_list_to_set([E|List],P2, Set):- select(C,List,Rest), call(P2, E,C), !, my_list_to_set([E|Rest],P2, Set).
+my_list_to_set([E|List],P2, Set):- select(C,List,Rest), p2_call(P2, E,C), !, my_list_to_set([E|Rest],P2, Set).
 my_list_to_set([E|List],P2, [E|Set]):-!, my_list_to_set(List,P2, Set).
 my_list_to_set([],_,[]).
 
-my_list_to_set_cmp([E|List],C3, Set):- select(C,List,Rest), call(C3,R,E,C), 
+my_list_to_set_cmp([E|List],C3, Set):- select(C,List,Rest), p2_call(C3,R,E,C), 
    R== (=), my_list_to_set_cmp([C|Rest],C3, Set),!.
   my_list_to_set_cmp([E|List],C3, [E|Set]):-!, my_list_to_set_cmp(List,C3, Set).
 my_list_to_set_cmp([],_,[]).
@@ -119,10 +119,12 @@ as_debug(L,G):- as_debug(L,true,G).
 as_debug(9,_,_):- !.
 as_debug(_,C,G):- ignore(catch((call(C)->wots(S,G),format('~NDEBUG: ~w~N',[S]);true),_,true)).
 
+shall_count_as_same(A,B):- same_term(A,B),!. % unify ok_ok cmatch
 shall_count_as_same(A,B):- plain_var(A),!,A==B.
 shall_count_as_same(A,B):- atomic(A),!, A=@=B.
 shall_count_as_same(A,B):- var(B),!,A=@=B.
 shall_count_as_same(A,B):- A=@=B,!.
+shall_count_as_same(A,B):- copy_term(B,C), A=B, B=@=C,!.
 shall_count_as_same(A,B):- \+ A \= B, !.
 
 count_each([C|L],GC,[Len-C|LL]):- include(shall_count_as_same(C),GC,Lst),length(Lst,Len),!,count_each(L,GC,LL).
@@ -132,7 +134,7 @@ count_each_inv([C|L],GC,[C-Len|LL]):- include(shall_count_as_same(C),GC,Lst),len
 count_each_inv([],_,[]).
 
 maplist_n(N,P,[H1|T1]):-
-  call(P,N,H1), N1 is N+1,
+  p2_call(P,N,H1), N1 is N+1,
   maplist_n(N1,P,T1).
 maplist_n(_N,_P,[]).
 
@@ -173,27 +175,27 @@ kaggle_arc_train('00d62c1b', tst, [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0
 %tell(s), ignore((nl, nl, test_pairs(Name, ExampleNum, In, Out), format('~N~q.~n', [test_pairs_cache(Name, ExampleNum, In, Out)]), fail)), told.
 map_pred(Pred, P, X) :- map_pred([],Pred, P, X).
 %map_pred(NoCycles,_Pred, P, X) :- member(E,NoCycles), E==P,!, X = P.
-map_pred(NoCycles,Pred, P, X) :- call(Pred, P, X)*->true;map_pred0(NoCycles,Pred, P, X).
+map_pred(NoCycles,Pred, P, X) :- p2_call(Pred, P, X)*->true;map_pred0(NoCycles,Pred, P, X).
 
 map_pred1(Pred, P, P1) :- map_pred1(P, Pred, P, P1).
 
 map_pred0(_NoCycles,_Pred, Args, ArgSO) :- must_be_free(ArgSO), Args==[],!, ArgSO=[].
-map_pred0(_NoCycles, Pred, P, P1) :-  call(Pred, P, P1),!. % *->true;fail.
+map_pred0(_NoCycles, Pred, P, P1) :-  p2_call(Pred, P, P1),!. % *->true;fail.
 map_pred0(NoCycles,Pred, P, X) :- fail, attvar(P), !, %duplicate_term(P,X),P=X, 
   get_attrs(P,VS), map_pred([P|NoCycles],Pred, VS, VSX), P=X, put_attrs(X,VSX),!.
 map_pred0(NoCycles,Pred, P, X):- map_pred1(NoCycles,Pred, P, X).
 
 map_pred1(_NoCycles,_Pred, P, P1) :- ( \+ compound(P) ; is_ftVar(P)), !, must_det_ll(P1=P), !.
-% map_pred0(NoCycles,Pred, Args, ArgSO) :- is_list(Args), !, maplist(map_pred([Args|NoCycles],Pred), Args, ArgS), ArgS=ArgSO.
-map_pred1(NoCycles,Pred, IO, OO) :- is_list(IO),!, maplist(map_pred(NoCycles,Pred), IO, OO).
+% map_pred0(NoCycles,Pred, Args, ArgSO) :- is_list(Args), !, my_maplist(map_pred([Args|NoCycles],Pred), Args, ArgS), ArgS=ArgSO.
+map_pred1(NoCycles,Pred, IO, OO) :- is_list(IO),!, my_maplist(map_pred(NoCycles,Pred), IO, OO).
 map_pred1(NoCycles,Pred, IO, [O|ArgS]) :-  IO= [I|Args], !, 
   map_pred([IO,ArgS|NoCycles],Pred, I, O), map_pred0([IO,I|NoCycles],Pred, Args, ArgS).
 map_pred1(NoCycles,Pred, P, P1) :-  
-  compound_name_arguments(P, F, Args), maplist(map_pred([P|NoCycles],Pred),Args,ArgS), compound_name_arguments(P1, F, ArgS).
+  compound_name_arguments(P, F, Args), my_maplist(map_pred([P|NoCycles],Pred),Args,ArgS), compound_name_arguments(P1, F, ArgS).
 %map_pred(_Pred, P, P).
 /*
 :- meta_predicate map_pred(2, ?, ?, ?, ?).
-map_pred(Pred, P, X, Sk, P1) :- must_be_free(X), call(Pred, P, X), !, must(Sk=P1), !.
+map_pred(Pred, P, X, Sk, P1) :- must_be_free(X), p2_call(Pred, P, X), !, must(Sk=P1), !.
 map_pred(_Pred, P, _, _, P1) :- is_ftVar(P), !, must(P1=P), !.
 map_pred(Pred, [P|Args], X, Sk, [P1|ArgS]) :- !, map_pred(Pred, P, X, Sk, P1), !, must(map_pred(Pred, Args, X, Sk, ArgS)), !.
 map_pred(Pred, P, X, Sk, P1) :- compound(P), !, compound_name_arguments(P, F, Args), map_pred(Pred, [F|Args], X, Sk, [Fs|ArgS]), !, compound_name_arguments(P1, Fs, ArgS), !.
@@ -204,52 +206,95 @@ into_grid_or_var(G,G):- is_cons(G),!.
 into_grid_or_var(G,G):- var(G),!.
 into_grid_or_var(O,G):- cast_to_grid(O,G,_Uncast),!.
 
+maybe_mapgrid(P2,I,O):- is_grid(I),!,mapgrid(P2,I,O).
+maybe_mapgrid(P3,I,O,M):- is_grid(I),!,mapgrid(P3,I,O,M).
+maybe_mapgrid(P4,I,O,M,N):- is_grid(I),!,mapgrid(P4,I,O,M,N).
+
 mapgrid(P4,Grid,GridM,GridN,GridO):- into_grid_or_var(Grid,G1),into_grid_or_var(GridM,G2),into_grid_or_var(GridN,G3),into_grid_or_var(GridO,G4),mapg_list(P4,G1,G2,G3,G4).
-mapg_list(P4,Grid,GridM,GridN,GridO):- is_list(Grid),!,maplist(mapg_list(P4),Grid,GridM,GridN,GridO).
+mapg_list(P4,Grid,GridM,GridN,GridO):- is_list(Grid),!,my_maplist(mapg_list(P4),Grid,GridM,GridN,GridO).
 mapg_list(P4,Grid,GridM,GridN,GridO):- call(P4,Grid,GridM,GridN,GridO),!.
 
 mapgrid(P3,Grid,GridN,GridO):- into_grid_or_var(Grid,G1),into_grid_or_var(GridN,G2),into_grid_or_var(GridO,G3),mapg_list(P3,G1,G2,G3).
-mapg_list(P3,Grid,GridN,GridO):- is_list(Grid),!,maplist(mapg_list(P3),Grid,GridN,GridO).
+mapg_list(P3,Grid,GridN,GridO):- is_list(Grid),!,my_maplist(mapg_list(P3),Grid,GridN,GridO).
 mapg_list(P3,Grid,GridN,GridO):- call(P3,Grid,GridN,GridO),!.
 
 mapgrid(P2, Grid,GridN):- into_grid_or_var(Grid,G1),into_grid_or_var(GridN,G2),mapg_list(P2, G1,G2).
-mapg_list(P2, Grid,GridN):- is_list(Grid),!,maplist(mapg_list(P2),Grid,GridN).
-mapg_list(P2, Grid,GridN):- call_p2s(P2, Grid,GridN),!.
-
-call_p2s([P2],Grid,GridN):- !, call(P2, Grid,GridN).
-call_p2s([P2|P2L],Grid,GridN):- !, call(P2, Grid,GridM),call_p2s(P2L,GridM,GridN).
-call_p2s(P2, Grid,GridN):- call(P2, Grid,GridN).
+mapg_list(P2, Grid,GridN):- is_list(Grid),!,my_maplist(mapg_list(P2),Grid,GridN).
+mapg_list(P2, Grid,GridN):- p2_call(P2, Grid,GridN),!.
 
 mapgrid(P1,Grid):- into_grid_or_var(Grid,G1),mapg_list(P1,G1).
-mapg_list(P1,Grid):- is_list(Grid),!,maplist(mapg_list(P1),Grid).
-mapg_list(P1,Grid):- call(P1,Grid),!.
+mapg_list(P1,Grid):- is_list(Grid),!,my_maplist(mapg_list(P1),Grid).
+mapg_list(P1,Grid):- p1_call(P1,Grid),!.
 
 
 maplist_ignore(_3,H,I,J):- (H==[];I==[],J==[]),!,(ignore(H=[]),ignore(I=[]),ignore(J=[])).
-maplist_ignore(P3,H,I,J):- \+ is_list(H),!, ignore(call(P3,H,I,J)).
+maplist_ignore(P3,H,I,J):- \+ is_list(H),!, ignore(p2_call(P3,H,I,J)).
 maplist_ignore(P3,[H|Grid],[I|GridN],[J|GridO]):- maplist_ignore(P3,H,I,J), !,maplist_ignore(P3,Grid,GridN,GridO).
 
 maplist_ignore(_2,H,I):- (H==[];I==[]),!,(ignore(H=[]),ignore(I=[])).
-maplist_ignore(P2, H,I):- \+ is_list(H),!, ignore(call(P2, H,I)).
+maplist_ignore(P2, H,I):- \+ is_list(H),!, ignore(p2_call(P2, H,I)).
 maplist_ignore(P2, [H|Grid],[I|GridN]):- maplist_ignore(P2, H,I), !,maplist_ignore(P2, Grid,GridN).
 
 %p1_or(P1,Q1,E):- must_be(callable,P1),!, (p1_call(P1,E);p1_call(Q1,E)).
 
 p1_call((P1;Q1),E):- must_be(callable,P1),!, (p1_call(P1,E);p1_call(Q1,E)).
 p1_call((P1,Q1),E):- must_be(callable,P1),!, (p1_call(P1,E),p1_call(Q1,E)).
-p1_call(not(P1),E):- !, \+ p1_call(P1,E).
+p1_call(or(P1,Q1),E):- must_be(callable,P1),!, (p1_call(P1,E);p1_call(Q1,E)).
+p1_call(and(P1,Q1),E):- must_be(callable,P1),!, (p1_call(P1,E),p1_call(Q1,E)).
+p1_call(not(not(P1)),E):- !, p1_call(P1,E).
+p1_call(not(P1),E):- !, not(p1_call(P1,E)).
+p1_call(once(P1),E):- !, once(p1_call(P1,E)).
+p1_call(chk(P1),E):- !, \+ \+ (p1_call(P1,E)).
+p1_call( \+ (P1),E):- !, \+ p1_call(P1,E).
 p1_call(P1,E):- !, call(P1,E).
 
+p2_call_p2(P2a,P2b,A,B):- p2_call(P2a,A,M),p2_call(P2b,M,B).
+
+p2_call(p1_call(P1),E,O):- !, p1_call(P1,E), E=O.
+p2_call([P2],Grid,GridN):- !, p2_call(P2, Grid,GridN).
+p2_call([P2|P2L],Grid,GridN):- !, p2_call(P2, Grid,GridM),p2_call(P2L,GridM,GridN).
+p2_call(ignore(P2),A,B):- p2_call(P2,A,B)*->true;A=B.
+p2_call(type(Type,P2),A,B):- coerce(Type,A,AA),p2_call(P2,AA,B).
+p2_call(or(P2,Q2),A,B):- must_be(callable,P2),!, (p2_call(P2,A,B);p2_call(Q2,A,B)).
+p2_call(and(P2,Q2),A,B):- must_be(callable,P2),!, (p2_call(P2,A,AB),p2_call(Q2,AB,B)).
+p2_call(P2,A,B):- call(P2,A,B).
+
+
 p1_or(P1A,P1B,X):- p1_call(P1A,X)->true;p1_call(P1B,X).
+p1_and(P1A,P1B,X):- p1_call(P1A,X),p1_call(P1B,X).
 p1_not(P1,E):- \+ p1_call(P1,E).
 p1_arg(N,P1,E):- arg(N,E,Arg),p1_call(P1,Arg).
+p1_subterm(P1,E):- sub_term(Arg,E),p1_call(P1,Arg).
 my_partition(_,[],[],[]):-!.
-my_partition(P1,[H|L],[H|I],E):- \+ \+ call(P1,H),!,
+my_partition(P1,[H|L],[H|I],E):- \+ \+ p1_call(P1,H),!,
   my_partition(P1,L,I,E).
 my_partition(P1,[H|L],I,[H|E]):- 
    my_partition(P1,L,I,E),!.
-my_partition(P1,H,I,HE):- arcST,break,
+my_partition(P1,H,I,HE):- arcST,ibreak,
   my_partition(P1,[H],I,HE).
+
+
+mapgroup(P2,G1,L2):- into_list(G1,L1),!, with_group(L1,my_maplist(P2,L1,L2)).
+mapgroup(P1,G1):- into_list(G1,L1), !, with_group(L1,my_maplist(P1,L1)).
+
+selected_group(Grp):- nb_current('$outer_group',Grp),!.
+selected_group([]).
+
+with_group([O|Grp],Goal):- compound(O),O=obj(_),!, locally(nb_setval('$outer_group',[O|Grp]),Goal).
+with_group(_,Goal):- call(Goal).
+
+into_mlist(L,L).
+my_maplist(P4,G1,L2,L3,L4):- into_mlist(G1,L1),!, with_group(L1,maplist(P4,L1,L2,L3,L4)).
+my_maplist(P3,G1,L2,L3):- into_mlist(G1,L1),!, with_group(L1,maplist(P3,L1,L2,L3)).
+my_maplist(P2,G1,L2):- into_mlist(G1,L1),!, with_group(L1,maplist(P2,L1,L2)).
+my_maplist(P1,G1):- into_mlist(G1,L1), !, with_group(L1,maplist(P1,L1)).
+
+
+my_include(P1,[H|L],O):- (p2_call(p1_call(P1),H,HH)*->(my_include(P1,L,I),O=[HH|I]);my_include(P1,L,O)).
+my_include(_,_,[]).
+
+%my_exclude(P1,I,O):- my_include(not(P1),I,O).
+my_exclude(P1,I,O):- my_partition(P1,I,_,O).
 
 
 subst_1L([],Term,Term):-!.
@@ -272,16 +317,16 @@ subst0011(X, Y, Term, NewTerm ) :-
      (NewGoals==Goals -> 
        subst0011a( X, Y, Term, NewTerm )
        ; (subst0011a(CX, CY, Copy, NewCopy),
-          NewTerm = NewCopy, maplist(call,NewGoals))))).
+          NewTerm = NewCopy, my_maplist(call,NewGoals))))).
          
     
 
 subst0011a(X, Y, Term, NewTerm ) :-
  ((X==Term)-> Y=NewTerm ;
-  (is_list(Term)-> maplist(subst0011a(X, Y), Term, NewTerm );
+  (is_list(Term)-> my_maplist(subst0011a(X, Y), Term, NewTerm );
    (( \+ compound(Term); Term='$VAR'(_))->Term=NewTerm;
      ((compound_name_arguments(Term, F, Args),
-       maplist(subst0011a(X, Y), Args, ArgsNew),
+       my_maplist(subst0011a(X, Y), Args, ArgsNew),
         compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 subst001C(I,F,R,O):- subst001_p2(same_term,I,F,R,O),!.
@@ -307,14 +352,14 @@ subst0011_p2(P2, X, Y, Term, NewTerm ) :-
      (NewGoals==Goals -> 
        subst0011a_p2(P2, X, Y, Term, NewTerm )
        ; (subst0011a_p2(P2, CX, CY, Copy, NewCopy),
-          NewTerm = NewCopy, maplist(call,NewGoals))))).
+          NewTerm = NewCopy, my_maplist(call,NewGoals))))).
 
 subst0011a_p2(P2, X, Y, Term, NewTerm ) :-
- (call_p2s(P2,X,Term)-> Y=NewTerm ;
-  (is_list(Term)-> maplist(subst0011a_p2(P2, X, Y), Term, NewTerm );
+ (p2_call(P2,X,Term)-> Y=NewTerm ;
+  (is_list(Term)-> my_maplist(subst0011a_p2(P2, X, Y), Term, NewTerm );
    (( \+ compound(Term); Term='$VAR'(_))->Term=NewTerm;
      ((compound_name_arguments(Term, F, Args),
-       maplist(subst0011a_p2(P2, X, Y), Args, ArgsNew),
+       my_maplist(subst0011a_p2(P2, X, Y), Args, ArgsNew),
         compound_name_arguments( NewTerm, F, ArgsNew )))))),!.
 
 
@@ -336,13 +381,6 @@ ppawt(FA):-
    ignore_ops(false), quoted(true), quote_non_ascii(true), brace_terms(false)]).
 
 
-my_assertion(G):- call(G),!.
-my_assertion(G):- u_dmsg(my_assertion(G)),writeq(goal(G)),nl,!,break.
-must_be_free(AllNew):- plain_var(AllNew),!.
-must_be_free(AllNew):- arcST,u_dmsg(must_be_free(AllNew)),break,fail.
-must_be_nonvar(AllNew):- nonvar_or_ci(AllNew),!.
-must_be_nonvar(AllNew):- arcST,u_dmsg(must_be_nonvar(AllNew)),break,fail.
-
 intersection([],LeftOverB,[],[],LeftOverB):-!.
 intersection(LeftOverA,[],[],LeftOverA,[]):-!.
 intersection([A|APoints],BPoints,[A|Intersected],LeftOverA,LeftOverB):-
@@ -359,7 +397,7 @@ pred_intersection(_P2, [],LeftOverB, [],[], [],LeftOverB):-!.
 pred_intersection(_P2, LeftOverA,[], [],[], LeftOverA,[]):-!.
 pred_intersection(P2, [A|APoints],BPoints,[A|IntersectedA],[B|IntersectedB],LeftOverA,LeftOverB):-
   select(B,BPoints,BPointsMinusA),
-  \+ \+ call(P2, A,B),!,
+  \+ \+ p2_call(P2, A,B),!,
   pred_intersection(P2, APoints,BPointsMinusA,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
 pred_intersection(P2, [A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA],LeftOverB):-
   pred_intersection(P2, APoints,BPoints,IntersectedA,IntersectedB,LeftOverA,LeftOverB).
@@ -370,18 +408,18 @@ pred_intersection(P2, [A|APoints],BPoints,IntersectedA,IntersectedB,[A|LeftOverA
 run_source_code(ShareVars, SourceCode, Vs, QQ):- 
   QQ = source_buffer(SourceCode,Vs),!, 
   %print(term=Sourcecode -> vs=Vs), 
-  maplist(share_vars(Vs),ShareVars),
+  my_maplist(share_vars(Vs),ShareVars),
   (\+ is_list(SourceCode)
     -> mort(SourceCode)
-    ; maplist(mort,SourceCode)).
+    ; my_maplist(mort,SourceCode)).
 
 run_source_code(ShareVars, Vs, QQ):- 
   QQ = source_buffer(SourceCode,Vs),!, 
   %print(term=Sourcecode -> vs=Vs), 
-  maplist(share_vars(Vs),ShareVars),
+  my_maplist(share_vars(Vs),ShareVars),
   (\+ is_list(SourceCode)
     -> mort(SourceCode)
-    ; maplist(mort,SourceCode)).
+    ; my_maplist(mort,SourceCode)).
 
 
 %vars_to_dictation([_=Value|Gotten],TIn,TOut):- is_vm_map(Value),!, vars_to_dictation(Gotten,TIn,TOut).

@@ -11,6 +11,14 @@
 :- module(dictoo, [  ]).
 :- op(2,fx,prolog:'?').
 
+:- multifile(dictoo:is_dot_hook/4).
+:- dynamic(dictoo:is_dot_hook/4).
+:- module_transparent(dictoo:is_dot_hook/4).
+:- multifile(dictoo:dot_overload_hook/4).
+:- dynamic(dictoo:dot_overload_hook/4).
+:- module_transparent(dictoo:dot_overload_hook/4).
+
+
 /** <module> dictoo - Dict-like OO Syntax Pack
 
     Author:        Douglas R. Miles

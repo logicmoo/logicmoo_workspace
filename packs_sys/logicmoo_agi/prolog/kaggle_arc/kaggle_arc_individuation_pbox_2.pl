@@ -234,7 +234,7 @@ found_box(L_S,NSEW,OH,OV,Srch,XSG,H,V,Center,Inside,Find,IBorder,OBorder,   insi
   H>3,V>3,
   maplist_ls(=(C),Inside),
   get_edges(Inside,Top,Bottem,Left,Right),
-  maplist(trim_ends,[Top,Bottem,Left,Right],TrimmedRows),
+  my_maplist(trim_ends,[Top,Bottem,Left,Right],TrimmedRows),
   findall(E,(member_ls(E,TrimmedRows),maplist_ls(=(C),E)),Borders),
   length(Borders,NN),
   \+ maplist_ls(==(black),Inside),
@@ -268,7 +268,7 @@ found_box(L_S,NSEW,OH,OV,Srch,XSG,H,V,Center,Inside,Find,IBorder,OBorder,   insi
 different_enough(L_S,Inside,Find,Inside,OBorder):-
   a_portion_colors(Inside,InsideC,InsideV,InsideBG,InsideFG),
   a_portion_colors(OBorder, BorderC,BorderV,BorderBG,BorderFG),
-  maplist(sort_safe,[BorderC,BorderV,BorderBG,BorderFG,InsideC,InsideV,InsideBG,InsideFG],
+  my_maplist(sort_safe,[BorderC,BorderV,BorderBG,BorderFG,InsideC,InsideV,InsideBG,InsideFG],
                [SBorderC,SBorderV,SBorderBG,SBorderFG,SInsideC,SInsideV,SInsideBG,SInsideFG]),
   different_enough_c(Inside,Find,L_S,SBorderC,SBorderV,SBorderBG,SBorderFG,
                                                SInsideC,SInsideV,SInsideBG,SInsideFG),!.
@@ -282,8 +282,8 @@ a_portion_colors(IA,Compass,Vars,BG,FG):-
 
 %        different_enough_c(_I,_F,BorderV,BorderBG,BorderFG,   insideV,InsideBG,InsideFG):-!.
 
-has_blank_rows(I,N):- findall(Row,(append([_|_],[Row,_|_],I), maplist(cmatch(is_bg_color),Row)),N).
-%has_blank_rows(I,N):- findall(Row,(member(Row,I), maplist(cmatch(is_bg_color),Row)),N).
+has_blank_rows(I,N):- findall(Row,(append([_|_],[Row,_|_],I), my_maplist(cmatch(is_bg_color),Row)),N).
+%has_blank_rows(I,N):- findall(Row,(member(Row,I), my_maplist(cmatch(is_bg_color),Row)),N).
 has_blank_cols(C,N):- rot90(C,I),has_blank_rows(I,N).
 
 different_enough_c(_I,_F,l_s(2),   _, _,           [_],        [],    

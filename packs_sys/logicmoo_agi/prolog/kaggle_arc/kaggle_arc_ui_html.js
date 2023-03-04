@@ -185,13 +185,15 @@ var TwoFiftyPx = "250px";
 
 function toggleNavL(nameE) {
 	var nameE = top.document.getElementById(nameE);
+	var mainE = top.document.getElementById('main');
     if (nameE.style.width != "0px") {
         nameE.style.width = "0px";
     } else {
         nameE.style.width = TwoFiftyPx;
     }
 	
-    everyoneScrollLeft();
+    try {everyoneScrollLeft();} catch (err) {}
+	mainE.style.left = nameE.style.width;
 }
 
 
@@ -203,7 +205,7 @@ function toggleNavR(Name) {
 	} else {
 		nameE.style.width = TwoFiftyPx;
 	}
-    everyoneScrollLeft();
+    try {everyoneScrollLeft();} catch (err) {};
 }
 
 function likeMain(mainE) {
@@ -688,7 +690,7 @@ function writeTips(info) {
     }
 
     $(tipsListDiv).prepend(jqinfo);
-    tipsListDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    scrollToVertically(tipsListDiv);
     top.winObj.focus();
 }
 
@@ -813,7 +815,7 @@ function clickAccordian(target_name, scrollTo) {
     }
 
     if (scrollTo) {
-        everyoneScrollLeft();
+        try {everyoneScrollLeft();} catch (err) {}
     }
 
 }
@@ -943,7 +945,7 @@ function setVisible(panel, tf) {
     panel.style.display = block;
     //panel.nextElementSibling.style.display=block;
     panel.scrollIntoView(false);
-    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+    scrollToVertically(panel)
 }
 
 function scrollToPanel(panel) {
@@ -952,8 +954,13 @@ function scrollToPanel(panel) {
     var scrl = panel.previousElementSibling;
     if (scrl == null)
         scrl = panel;
-    scrl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    scrollToVertically(scrl);
 }
+
+function scrollToVertically(scrl) {
+  scrl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'start' });
+}
+
 
 {
     top.lastPanelShown = null;
@@ -1036,7 +1043,7 @@ function showPanel(name, keepGoing, scrollTo) {
         var scrl = panel.previousElementSibling;
         if (scrl == null)
             scrl = panel;
-        scrl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        scrollToVertically(scrl);
         top.lastPanelShown = panel;
     }
 
@@ -1208,7 +1215,7 @@ function openCloseMenu(target_name, isExpanded) {
         var scount = occurrences(sibling.innerHTML, "&nbsp;");
         if (scount <= count) {
             // if(isExpanded) {
-            sibling.previousElementSibling.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+            scrollToVertically(sibling.previousElementSibling);
             //}
             break;
         }
@@ -2869,6 +2876,7 @@ function topReady() {
         if (top.lastScoller != null) {
             $(top.lastScoller).scrollLeft(sl);
         }
+		window.top.$("#lm_xref").contents().find("#main_in_iframe").scrollLeft(sl);
         syncScroll(top.divToScroll, sl, undefined);
     });
     if (false) {
@@ -2903,6 +2911,10 @@ function xframeReady() {
         document.removeEventListener('scroll', interceptScrollEvent);
         document.addEventListener('scroll', interceptScrollEvent);
     }
+	window.top.$('#top_scoller').scroll(function() {
+        var sl = window.top.$('#top_scoller').scrollLeft();
+		window.top.$("#lm_xref").contents().find("#main_in_iframe").scrollLeft(sl);
+    });
     console.log("XFrame Ready End: " + window.location.href);
 }
 

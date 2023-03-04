@@ -18,7 +18,7 @@ store_grid_size_predictions:- forall_count(all_arc_test_name(TestID), test_grid_
 test_grid_sizes(TestID):- 
    retractall(muarc_tmp:learned_grid_size(TestID,_)),
    retractall(muarc_tmp:grid_size_prediction(TestID,_,_,_)),
-   findall(R,(kaggle_arc(TestID,trn+_,In,Out),learn_grid_size(In,Out,R),nop((writeq(R),write('.\n')))),L), 
+   findall(R,(kaggle_arc(TestID,(trn+_),In,Out),learn_grid_size(In,Out,R),nop((writeq(R),write('.\n')))),L), 
    asserta_if_new(muarc_tmp:learned_grid_size(TestID,L)),
    forall(kaggle_arc(TestID,tst+_,In,Out),predict_grid_size(TestID,In,Out)).
 
@@ -43,16 +43,16 @@ predict_grid_size(TestID,In,Out):-
 
 
 add_akeys(A,A-A).
-alphabetize(List,ListA):- maplist(add_akeys,List,AKeys),keysort(AKeys,AKeysSorted),maplist(arg(2),AKeysSorted,ListA).
+alphabetize(List,ListA):- my_maplist(add_akeys,List,AKeys),keysort(AKeys,AKeysSorted),my_maplist(arg(2),AKeysSorted,ListA).
 
 
 predict_grid_size(List,IH,IV,PH,PV):-
   alphabetize(List,ListA),
   predsort_on(better_grid_size_prop,ListA,SList),
   add_info(SList,[],NewInfo),
-   %maplist(ppnl,List),dash_chars,
-   maplist(ppnl,ListA),dash_chars,
-   maplist(ppnl,NewInfo),dash_chars,
+   %my_maplist(ppnl,List),dash_chars,
+   my_maplist(ppnl,ListA),dash_chars,
+   my_maplist(ppnl,NewInfo),dash_chars,
   predict_grid_size1(ListA,NewInfo,IH,IV,PH,PV).
 predict_grid_size(_List,IH,IV,IH,IV).
 
@@ -72,24 +72,24 @@ add_info([E|More],List,NewInfo):-
 predict_grid_size1(_OList, List,IH,IV,PH,PV):- member(size2D(MH,MV),List), apply_proportional(IH,MH,PH,IV,MV,PV),!.
 predict_grid_size1( ListA, _List, _, _,PH,PV):- findall(size2D(MH,MV),
   (member(size2D(o_i_swap(ratio_of(MV,G27)),o_i_swap(ratio_of(MH,G27))),ListA),number(MH)),L),
-  L\=[],L\=[_],maplist(=(_),L),last(L,size2D(PH,PV)),!.
+  L\=[],L\=[_],my_maplist(=(_),L),last(L,size2D(PH,PV)),!.
 
 
 predict_grid_size1( ListA, _List, _, _,PH,PV):- 
   findall(size2D(MH,MV),
   (member((_->size2D(MH,MV)),ListA),number(MH)),L),
-  L\=[],L\=[_],maplist(=(_),L),last(L,size2D(PH,PV)),!.
+  L\=[],L\=[_],my_maplist(=(_),L),last(L,size2D(PH,PV)),!.
 
 predict_grid_size1( ListA, _List, _, _,PH,PV):- findall(size2D(MH,MV),
   (member(size2D(MH,MV),ListA),number(MH)),L),
-  L\=[],L\=[_],maplist(=(_),L),last(L,size2D(PH,PV)),!.
+  L\=[],L\=[_],my_maplist(=(_),L),last(L,size2D(PH,PV)),!.
 
 predict_grid_size1( ListA, _List, IH, IV,PH,PV):-  
  findall(size2D(PH,PV),
   (member((size_inv(num(_,+_,_),num(_,+_,ratio(Two)))
   ),ListA),
   integer(Two),PH = IH, PV is IV / Two, PV is floor(PV)),L),
-  L\=[],L\=[_],maplist(=(_),L),last(L,size2D(PH,PV)),!.
+  L\=[],L\=[_],my_maplist(=(_),L),last(L,size2D(PH,PV)),!.
 
 apply_proportional(IH,MH,PH,IV,MV,PV):- 
   %functor(MH,F,A), functor(MV,F,A),
@@ -144,7 +144,7 @@ with_other_grid(OtherGrid,Goal):-
     (set_target_grid(OtherGrid),Goal)).
 
 other_grid(_,OtherGrid):- luser_getval(other_grid,OtherGrid),is_grid(OtherGrid),!.
-other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.grid_target, is_grid(OtherGrid),!.
+other_grid(_,OtherGrid):- peek_vm(VM), OtherGrid = VM.target_grid, is_grid(OtherGrid),!.
 other_grid(Grid,OtherGrid):- is_other_grid(Grid,OtherGrid),!.
 other_grid(Grid,OtherGrid):- \+ is_grid(Grid),!, into_grid(Grid,ThisGrid),  Grid\==ThisGrid,!,other_grid(ThisGrid,OtherGrid).
 other_grid(In,OtherGrid):- get_current_test(TestID), muarc_tmp:grid_size_prediction(TestID,In,PH,PV), make_grid(PH,PV,OtherGrid).

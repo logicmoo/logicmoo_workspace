@@ -124,11 +124,12 @@ w_section_4(Title,Goal,Spyable,Showing):- w_section_ansi(Title,Goal,Spyable,Show
 
 
 w_section_ansi(Title0,Goal,Spyable,_Showing):- 
-  must_det_ll((into_title_str(Title0,Title),
+ must_det_ll((
+  wots(Str,print(Title0)),
   nl_if_needed,dash_chars,
   MU = '', % was 'mu'
   once(nb_current('$w_section',Was);Was=[]), length(Was,Depth),!,wots(Ident,dash_chars(Depth,' ')),
-  setup_call_cleanup(must_det_ll((format('~N~w~w!~w! ~@ |~n',[MU,Ident, Spyable, print_title(Title)]))),  
+  setup_call_cleanup(must_det_ll((format('~N~w~w!~w! ~@ |~n',[MU,Ident, Spyable, write(Str)]))),  
                      locally(b_setval('$w_section',[c(Spyable)|Was]),
                                       ignore(once(tabbed_print_im(Depth+2,in_w_section_depth(Goal))))), 
                      must_det_ll((format('~N~w\u00A1~w~w\u00A1 ',[Ident, MU,Spyable])))))).
@@ -143,10 +144,12 @@ clip_string(Attr,Len,SAttr):- atom_length(Attr,SLen),clip_string(SLen,Attr,Len,S
 clip_string(SLen,Attr,Len,Attr):- SLen=<Len,!.
 clip_string(_,Attr,Len,SAttr):- sub_string(Attr, 0, Len, _After, SAttr).
 
-w_section_html(Title,Goal,Spyable,ran_collapsed):- !, w_section_html(Title,Goal,Spyable,panel_shown,false).
-w_section_html(Title,Goal,Spyable,Showing):- w_section_html(Title,Goal,Spyable,panel_shown,Showing).
 
-w_section_html(Title,Goal,_Spyable,Class,Showing):-
+w_section_html(Title,Goal,Spyable,_Showing):- flag('$w_section_depth',X,X),X>2,!, w_section_html_real(Title,Goal,Spyable,panel_hidden,false).
+w_section_html(Title,Goal,Spyable,ran_collapsed):- !, w_section_html_real(Title,Goal,Spyable,panel_shown,false).
+w_section_html(Title,Goal,Spyable,Showing):- w_section_html_real(Title,Goal,Spyable,panel_shown,Showing).
+
+w_section_html_real(Title,Goal,_Spyable,Class,Showing):-
  must_det_ll(( 
  copy_term(Goal,GoalC),
   gensym('accordian_css_',Sym),
@@ -269,8 +272,8 @@ title_string_to_functor(Str,_Goal,Spyable):- callable(Str),invent_key(Str,Spyabl
 
 
 string_to_functor(F,OO):- 
- to_case_breaks(F,X),include(\=(xti(_,punct)),X,O),maplist(arg(1),O,O1),
- maplist(any_to_atom,O1,O2),maplist(toLowercase,O2,O3),atomic_list_concat(O3,'_',OO),!.
+ to_case_breaks(F,X),include(\=(xti(_,punct)),X,O),my_maplist(arg(1),O,O1),
+ my_maplist(any_to_atom,O1,O2),my_maplist(toLowercase,O2,O3),atomic_list_concat(O3,'_',OO),!.
 string_to_functor(F,OO):- atom_string(OO,F),!.
 
 %header_arg(_:Term,E):-!,header_arg(Term,E).
@@ -561,7 +564,7 @@ arc_html_format(TextAndGoal):- bfly_in_out(call(call,inline_html_format(TextAndG
 
 arc_inline_html_format(Var):- var(Var),!, arc_inline_html_format(writeln(var(Var))).
 arc_inline_html_format(S):- (string(S);is_codelist(S);is_charlist(S)),!,format('~s',[S]).
-arc_inline_html_format(TextAndGoal):- is_list(TextAndGoal),!,maplist(arc_inline_html_format,TextAndGoal).
+arc_inline_html_format(TextAndGoal):- is_list(TextAndGoal),!,my_maplist(arc_inline_html_format,TextAndGoal).
 %arc_inline_html_format(Msg):- flush_output_safe, u_dmsg(call(Msg)),fail.
 arc_inline_html_format(format(H,V)):-!, format(H,V).
 arc_inline_html_format(TextAndGoal):- inline_html_format(TextAndGoal),flush_output_safe.
@@ -632,7 +635,7 @@ http_debug_console:- current_prolog_flag(xpce,true),
   nodebug,notrace,
   current_output(Out),
   nl(Out),flush_output(Out),
-  attach_console,
+  %attach_console,
   current_input(In),
   current_output(Err),
   set_prolog_IO(In,Out,Err).
@@ -742,7 +745,7 @@ print_title(Var):- (var(Var);Var==[]),!.
 print_title(Title):- into_title_str(Title,Str), trim_newlines(wqs_c(Str)).
 
 % width: fit-content
-% print_table(ListOfLists):- setup_call_cleanup(write('<table style="width: fit-content;m width: 100%; border: 0px">'), maplist(html_table_row,ListOfLists), write('</table>')),!.
+% print_table(ListOfLists):- setup_call_cleanup(write('<table style="width: fit-content;m width: 100%; border: 0px">'), my_maplist(html_table_row,ListOfLists), write('</table>')),!.
 
 is_real_grid(Grid):- is_grid(Grid),!,mapgrid(can_be_cell,Grid).
 can_be_cell(Cell):-var(Cell),!.
@@ -765,10 +768,10 @@ cant_be_cell(T):- atom(T), !, \+ is_color(T).
 %print_table(Rows):- make_rows_same_length(Rows,LLRows),!, print_table_rows(LLRows).
 print_table(Rows):- print_table_rows(Rows).
 print_table_rows(Row):- \+ is_list(Row),!,print_table_rows([Row]).
-print_table_rows(Rows):- with_tag_class('table','tblo', maplist(html_table_row,Rows)).
+print_table_rows(Rows):- with_tag_class('table','tblo', my_maplist(html_table_row,Rows)).
 
 %html_table_row(Row):- \+ is_list(Row),!,html_table_row([Row]).
-html_table_row(Cols):- with_tag('tr',maplist(html_table_col,Cols)).
+html_table_row(Cols):- with_tag('tr',my_maplist(html_table_col,Cols)).
 
 html_table_col(td(H)):-with_tag('td',html_table_cell(H)).
 html_table_col(th(H)):-with_tag('th',html_table_cell(H)).
@@ -784,13 +787,13 @@ print_cell([]):- !,write_nbsp.
 print_cell(H):- print_card_n('',H).
 
 make_rows_same_length(ListOfLists,ListOfRows):-
-  maplist(length,ListOfLists,Lens),
+  my_maplist(length,ListOfLists,Lens),
   sort(Lens,ListLens),last(ListLens,Len),
-  maplist(slack_rows(Len),ListOfLists,ListOfRows).
+  my_maplist(slack_rows(Len),ListOfLists,ListOfRows).
 
 slack_rows(Len,List,Row):-length(Row,Len),slack_into_rows(List,Row).
 blank_stuff(Col):- ignore(Col="&nbsp;").
-slack_into_rows(List,Row):- append(List,Stf,Row),!,maplist(blank_stuff,Stf).
+slack_into_rows(List,Row):- append(List,Stf,Row),!,my_maplist(blank_stuff,Stf).
 slack_into_rows(List,Row):- append(Row,_DropStf,List),!.
 
 :- meta_predicate(as_html_encoded(0)).
@@ -884,7 +887,7 @@ print_grid_html(SH,SV,EH,EV,Grid):-
 has_content(Header):- nonvar(Header), Header\==[], Header\=='',Header\=="''&nbsp;",Header\=='\'\'&nbsp;', Header\=="".
 
 
-print_ss_html(TitleColor,G1,N1,LW,G2,N2):- \+ wants_html,!,  print_side_by_side_ansi(TitleColor,G1,N1,LW,G2,N2).
+print_ss_html(TitleColor,G1,N1,LW,G2,N2):- \+ wants_html,!,  print_side_by_side_ansi(TitleColor,G1,N1,LW,G2,N2),!.
 
 print_ss_html(TitleColor,In,FIn,_LW,Out,FOut):-
  wots_vs(HIn, with_color_span(color(TitleColor),wqs_c(FIn))),
@@ -1293,10 +1296,10 @@ get_context_atoms(TestAtom,PairName):-
 show_selected_object:- get_pair_mode(entire_suite),!, preview_suite.
 
 show_selected_object:- get_pair_mode(whole_test),!, get_current_test(TestID),get_current_test_atom(TestAtom),
-  w_section(title(["Task",TestAtom]),((preview_test(TestID),do_web_menu_key('i')))).
+  w_section(title(["Task",TestAtom]),((preview_test(TestID),do_web_menu_key('o')))).
 show_selected_object:- get_pair_mode(single_pair),!,   
   get_context_atoms(TestAtom,PairName),
-  w_section(title(["Pair ",PairName,"of",TestAtom]),((preview_test(PairName),do_web_menu_key('i')))).
+  w_section(title(["Pair ",PairName,"of",TestAtom]),((preview_test(PairName),do_web_menu_key('o')))).
   
 
 show_selected_object:-   
@@ -1341,8 +1344,10 @@ if_extreme_debug(G):- nop(G).
 wants_output_for(SpyableC):- is_cgi,!, copy_term(SpyableC,Spyable),
   if_extreme_debug((wants_output_for_1(Spyable)-> make_session_checkbox(Spyable,wants_output_for(Spyable),'<br/>',true) ;
     (make_session_checkbox(Spyable,wants_output_for(Spyable),'<br/>',false),!,fail))).
+
+wants_output_for(_Spyable):- main_thread,!.
 wants_output_for(SpyableC):- copy_term(SpyableC,Spyable),
-   (wants_output_for_1(Spyable)-> pp(showing(Spyable));
+   (wants_output_for_1(Spyable)-> pp(wqs(showing(Spyable)));
      ((arc_spyable_keyboard_key(Spyable,SpyableKey)->pp(skipping(Spyable,key(SpyableKey)));(pp(skipping(Spyable)))),!,fail)).
 
 wants_output_for_1(Spyable):- nb_current(menu_key,_), arc_spyable_keyboard_key(Spyable,SpyableKey), menu_or_upper(SpyableKey),!.

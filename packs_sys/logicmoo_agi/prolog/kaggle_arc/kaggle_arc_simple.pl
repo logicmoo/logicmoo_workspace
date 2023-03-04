@@ -55,7 +55,7 @@ grid_grouped(Grid,Why,Objs):-
 
 group_same_props(IndvS0,Ps):-  guard_invs(IndvS0,IndvS),
   group_props(IndvS,PropsSet),
-  findall(Prop,(member(Prop,PropsSet),maplist(has_prop(Prop),IndvS)),Ps).
+  findall(Prop,(member(Prop,PropsSet),my_maplist(has_prop(Prop),IndvS)),Ps).
 
 
 group_same_props(IndvS0,P1N,GsOO):-  guard_invs(IndvS0,IndvS),
@@ -64,7 +64,7 @@ group_same_props(IndvS0,P1N,GsOO):-  guard_invs(IndvS0,IndvS),
 
 combine_keys([],[]):-!.
 combine_keys([K1-V1|GsO],[K1-Props|GsOO]):- my_partition(=(K1-_),[K1-V1|GsO],G1,G2),
- maplist(arg(2),G1,Props),combine_keys(G2,GsOO).
+ my_maplist(arg(2),G1,Props),combine_keys(G2,GsOO).
 
 group_same_prop(IndvS,Prop,Have,HaveNots):-
   group_props(IndvS,PropsSet),
@@ -82,7 +82,7 @@ group_at_least_1_diff_props(IndvS0,Prop,Obj,HaveNots,Actuals):- guard_invs(IndvS
   member(Prop,PropsSet),
   once((my_partition(has_prop(Prop),IndvS,Have,HaveNots),
   Have=[Obj])),
-  maplist(member_prop(Prop),HaveNots,Actuals).
+  my_maplist(member_prop(Prop),HaveNots,Actuals).
 
 group_all_diff_props(IndvS0,Prop,Obj,HaveNots,OtherProp):- guard_invs(IndvS0,IndvS),
   group_at_least_1_diff_props(IndvS,Prop,Obj,HaveNots,Actuals),
@@ -98,7 +98,7 @@ arc_grid(_,Grid), \+ \+ individuate(complete,Grid,_),
 
 group_diff_props(IndvS0,Ps):- guard_invs(IndvS0,IndvS),
   group_props(IndvS,PropsSet),
-  findall(Prop,(member(Prop,PropsSet),\+ maplist(has_prop(Prop),IndvS)),Ps).
+  findall(Prop,(member(Prop,PropsSet),\+ my_maplist(has_prop(Prop),IndvS)),Ps).
 
 group_props(IndvS,PropsSet):- 
   findall(Props,(member(Obj,IndvS),indv_props_list(Obj,Props)),PropsL),
@@ -121,13 +121,13 @@ relax_prop2(loc2D(_,Y),loc2D(_,Y)).
 
 
 simplify_props(IndvS,[R1|Props],SPropsF):- never_group_on(R1), !,simplify_props(IndvS,Props,SPropsF).
-simplify_props(IndvS,[R1|Props],SPropsF):- maplist(haz_prop(R1),IndvS), !,simplify_props(IndvS,Props,SPropsF).
+simplify_props(IndvS,[R1|Props],SPropsF):- my_maplist(haz_prop(R1),IndvS), !,simplify_props(IndvS,Props,SPropsF).
 simplify_props(IndvS,Props,[R1|SPropsF]):- 
   select(S1,Props,More),\+ never_group_on(S1),
   select(S2,More,More2),\+ never_group_on(S2),
   relax_prop(S1,R1),relax_prop(S2,R2),R1=@=R2,
   %ground(S1),ground(S2),
-  \+ maplist(haz_prop(R1),IndvS),
+  \+ my_maplist(haz_prop(R1),IndvS),
   my_partition(=(R2),More2,_Remove,Keep),!,
   simplify_props(IndvS,Keep,SPropsF).
 simplify_props(_,A,A).
@@ -138,7 +138,7 @@ pregroup1(iz(chromatic(N,BGN))):- between(1,10,N),between(0,2,BGN).
 pregroup1(pg(_OG,_,_,How)):- dif(How,i_repair_patterns).
 
 
-never_uprop(points_rep(local,_)).
+never_uprop(localpoints(_)).
 never_group_on(pg(_,I,_,_)):- I == i_repair_patterns.
 never_group_on(P):- never_uprop(P).
 
@@ -182,7 +182,7 @@ number_obj(N,obj(List),obj([ord(N)|List])).
   select(shape_rep(grav,Shape),List,Rest2),mapgrid(sometimes_assume(=,bg),Shape),
   Rest3 = Rest2,
   must_det_ll((remove_too_verbose(MyID,Rest3,TV00))),flatten([TV00],TV0),
-  must_det_ll((include(not_too_verbose,TV0,TV1),maplist(fix_iz,TV1,TV))),!,
+  must_det_ll((include(not_too_verbose,TV0,TV1),my_maplist(fix_iz,TV1,TV))),!,
   member(MrT,[oform(Shape),ogrid(Grid)|TV])*/
 
 %grid_part(Grid,P):- globalpoints(Grid,Points),member(P,Points).
