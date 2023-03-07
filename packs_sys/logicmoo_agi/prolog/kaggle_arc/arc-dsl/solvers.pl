@@ -30,17 +30,6 @@ TupleTuple = Tuple[Tuple]
 ContainerContainer = Container[Container]
 
 */
-solve(N,IN,OUT):-
-  clause(l_solve(TestID,IN,OUT),Program),
-
-  (clause(p_solve(TestID,IN,OUT), Body) -> true;
-   (
-    translate_program(Program,Trans),
-    list_to_conjucts(Trans,Body),
-    assert_if_new(p_solve(TestID,IN,OUT):- Body))),
-  forall(kaggle_arc(TestID,ExampleNum,I,O),
-    once((into_pygrid(I,IN),into_pygrid(O,TOUT))),
-    ignore((p_solve(N,IN,OUT),OUT=TOUT))).
 
 fix_type_arg(_When,Var,Var,true):- is_ftVar(Var),!.
 fix_type_arg(When,Var:Type,Var,ensure_type(When,Var,Type)).
@@ -66,18 +55,42 @@ translate_call(On_enter,Prop,[TransIn,Call,TransOut]):-
   maplist(fix_type_arg(On_enter),ARGS,NARGS,TransIn),
   Call=..[ff,F|NARGS].
 
-same_fn(vmirror,flipV).
-same_fn(hmirror,flipH).
-same_fn(dmirror,flipD).
-same_fn1(rot180).
-same_fn([upscale,I,Mass,O],increase_size(Mass,I,O))
-same_fn([downscale,I,Mass,O],increase_size(Mass,O,I
-same_fn1(hconcat).
-same_fn(replace,subst001).
-same_fn1(rot270).
+% the same 
+identical_impl(rot180).
+identical_impl(hconcat).
+identical_impl(vconcat).
+identical_impl(rot270).
 
-same_fn([crop,I,TL,BR,O],crop(I,L,T,R,B,O)):- tl_br(TL,T,L),tl_br(BR,B,R).
-same_fn([switch,N1,N2,O],swap_colors(C1,C2,I,O)):- color_name(N1,C1),color_name(N2,C2).
+% michods -> dmiles
+identical_impl_differing_names(vmirror,flipV).
+identical_impl_differing_names(hmirror,flipH).
+identical_impl_differing_names(dmirror,flipD).
+identical_impl_differing_names(replace,subst001).
+
+% michods -> dmiles
+translated_call_patterns([upscale,I,Mass,O],  increase_size(Mass,I,O)).
+translated_call_patterns([downscale,I,Mass,O],increase_size(Mass,O,I)).  % Prolog mades automatically bidirectional
+translated_call_patterns([crop,I,TL,BR,O],crop(I,L,T,R,B,O)):- tl_br(TL,T,L),tl_br(BR,B,R).
+translated_call_patterns([switch,N1,N2,O],swap_colors(C1,C2,I,O)):- color_name(N1,C1),color_name(N2,C2).
+
+maybe_jit_one_test(TestID):-
+  clause(l_solve(TestID,IN,OUT),Program),
+  (clause(p_solve(TestID,IN,OUT), Body) -> true;
+   (
+    translate_program(Program,Trans),
+    list_to_conjucts(Trans,Body),
+    assert_if_new(p_solve(TestID,IN,OUT):- Body),
+    pp(p_solve(TestID,IN,OUT):- Body))).
+
+into_pygrid(IO,IO).
+
+solve(N,IN,OUT):-
+  maybe_jit_one_test(N),
+  fix_testid(N,TestID),
+  forall(kaggle_arc(TestID,ExampleNum,I,O),
+    once((into_pygrid(I,IN),into_pygrid(O,TOUT))),
+    ignore((p_solve(N,IN,OUT),
+      print_ss(TestID>ExampleNum,OUT,TOUT)))).
 
 l_solve('67a3c6ac', IN, OUT) :-
     [f(vmirror, IN:'Piece', OUT:'Piece')].
