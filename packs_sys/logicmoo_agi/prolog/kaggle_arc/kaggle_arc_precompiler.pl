@@ -26,8 +26,8 @@ must_det_ll_maplist(P2,[HA|TA],[HB|TB]):- must_det_ll(call(P2,HA,HB)), must_det_
 must_det_ll_maplist(_,[],[],[]):-!.
 must_det_ll_maplist(P3,[HA|TA],[HB|TB],[HC|TC]):- must_det_ll(call(P3,HA,HB,HC)), must_det_ll_maplist(P3,TA,TB,TC).
 
-must_det_ll(G):- tracing,!, (call(G)->true;must_det_ll_failed(G)),!.
 must_det_ll(G):- notrace(arc_html),!, ignore(notrace(G)).
+must_det_ll(G):- tracing,!, (call(G)->true;must_det_ll_failed(G)),!.
 %must_det_ll(X):- !,must_not_error(X).
 must_det_ll((X,Goal)):- is_trace_call(X),!,call((itrace,Goal)).
 must_det_ll(X):- is_trace_call(X),!,itrace.
@@ -66,25 +66,22 @@ must_det_ll(X):-
 must_not_error(G):- tracing,!,call(G).
 must_not_error(G):- is_cgi,!, catch(notrace(G),E,((u_dmsg(E=G)))).
 must_not_error(X):- \+ nb_current(cant_rrtrace,t),is_guitracer,!, call(X).
-must_not_error(X):- catch(X,E,((E=='$aborted';nb_current(cant_rrtrace,t))-> throw(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
+must_not_error(X):- catch(X,E,(always_rethrow(E)-> throw(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
   rrtrace(visible_rtrace([-all,+exception]),X)))).
 
-:- meta_predicate(odd_failure(0)).
-odd_failure(G):- nb_current(cant_rrtrace,t),!,call(G).
-odd_failure(G):- wno_must(G)*->true;fail_odd_failure(G).
+always_rethrow(_):- nb_current(cant_rrtrace,t),!.
+always_rethrow('$aborted').
+always_rethrow(must_det_ll_failed(_)).
 
-:- meta_predicate(fail_odd_failure(0)).
-fail_odd_failure(G):- u_dmsg(odd_failure(G)),rtrace(G), fail.
-%fail_odd_failure(G):- call(G)*->true;(u_dmsg(odd_failure(G)),fail,rrtrace(G)).
 
 main_debug:- main_thread,current_prolog_flag(debug,true).
 
 %must_det_ll_failed(X):- predicate_property(X,number_of_clauses(1)),clause(X,(A,B,C,Body)), (B\==!),!,must_det_ll(A),must_det_ll((B,C,Body)).
-must_det_ll_failed(G):- tracing,notrace(u_dmsg(must_det_ll_failed(G))),!,fail.
+must_det_ll_failed(G):- tracing,notrace(u_dmsg(must_det_ll_failed(G))),!,throw(must_det_ll_failed(G)).
 must_det_ll_failed(G):- main_debug,notrace(u_dmsg(must_det_ll_failed(G))),!,trace,call(G).
 must_det_ll_failed(G):- is_cgi,!, u_dmsg(arc_html(must_det_ll_failed(G))).
 must_det_ll_failed(X):- notrace,is_guitracer,u_dmsg(failed(X))/*,arcST*/,nortrace,atrace, call(X).
-must_det_ll_failed(X):-  u_dmsg(failed(X))/*,arcST*/,nortrace,atrace,visible_rtrace([-all,+fail,+exception],X).
+must_det_ll_failed(X):-  u_dmsg(failed(X))/*,arcST*/,nortrace,atrace,visible_rtrace([-all,+fail,+call,+exception],X).
 % must_det_ll(X):- must_det_ll(X),!.
 
 :- meta_predicate(rrtrace(0)).
@@ -104,6 +101,15 @@ arc_wote(G):- with_pp(ansi,wote(G)).
 arcST:- itrace,arc_wote(bts),itrace.
 atrace:- arc_wote(bts).
 %atrace:- ignore((stream_property(X,file_no(2)), with_output_to(X,dumpST))),!.
+
+:- meta_predicate(odd_failure(0)).
+odd_failure(G):- nb_current(cant_rrtrace,t),!,call(G).
+odd_failure(G):- wno_must(G)*->true;fail_odd_failure(G).
+
+:- meta_predicate(fail_odd_failure(0)).
+fail_odd_failure(G):- u_dmsg(odd_failure(G)),rtrace(G), fail.
+%fail_odd_failure(G):- call(G)*->true;(u_dmsg(odd_failure(G)),fail,rrtrace(G)).
+
 
 bts:- 
  ensure_loaded(library(prolog_stack)),

@@ -1714,8 +1714,6 @@ pt1(_FS,Tab,_S) :- prefix_spaces(Tab), fail.
 
 
 
-pt1(_FS,Tab,T) :- operator_is_basic_print(T),!,prefix_spaces(Tab),print(T).
-
 pt1(FS, _Tab,S) :- maybe_pp_hook(pt1(FS),S),!.
 
 % pt1(_FS,_Tab,Term) :- is_dict(Term), ansi_ansi,!,sys:plpp(Term),!.
@@ -1730,8 +1728,8 @@ pt1(FS,Tab,Term) :-
 pt1(_FS,Tab,List) :- is_simple_2x2(List), print_simple_2x2(print,Tab,List),!.
 
 %t_l:printing_dict
-pt1(_FS,_Tab,(NPV)) :- compound(NPV), NPV=..[OP,V,N], OP==(:), atomic(N),
-  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree_unit(V),!.
+%pt1(_FS,_Tab,(NPV)) :- compound(NPV), NPV=..[OP,V,N], OP==(:), atomic(N),
+%  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree_unit(V),!.
 
 pt1(_FS,_Tab,S) :- term_is_ansi(S), !, write_keeping_ansi(S).
 
@@ -1765,10 +1763,8 @@ pt1(FS,Tab,List) :- List=[_|_], !,
   prefix_spaces(Tab),pformat_functor('[ '),
   pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
 
-pt1(_FS,Tab,T) :- operator_is_basic_print(T),!,prefix_spaces(Tab),print(T).
+%pt1(_FS,Tab,T) :- operator_is_basic_print(T),!,prefix_spaces(Tab),print(T).
 
-pt1(_FS,Tab,T) :- 
-  compound_name_arity(T,OP, 2),  current_op(_Pri,XFY,OP), atom_length(XFY,3),!,prefix_spaces(Tab),print(T).
 
 
 % H:-B
