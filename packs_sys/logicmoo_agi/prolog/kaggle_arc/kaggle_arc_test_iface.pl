@@ -83,7 +83,7 @@ menu_cmd1(i,'i','             See the (i)ndividuation correspondences in the inp
 menu_cmd1(_,'I','                  or (I)ndividuate all',(whole_ndividuator)).
 menu_cmd1(i,'o','                  or (o)bjects found in the input/outputs',                (clear_tee,cls_z_make,!,locally(nb_setval(show_indiv,t),ndividuator))).
 menu_cmd1(_,'u','                  or (u)niqueness between objects in the input/outputs',   (cls_z_make,!,ignore(what_unique),ndividuator)).
-menu_cmd1(_,'y','                  or Wh(y) between objects in the input/outputs',   (cls_z_make,!,ndividuator)).
+menu_cmd1(_,'y','                  or Wh(y) between objects in the input/outputs',   ((cls_z_make,!,ndividuator))).
 menu_cmd1(_,'a','                  or (a)ll between objects',   (cls_z_make,!,ndividuator)).
 menu_cmd1(_,'j','                  or (j)unctions between objects',   (cls_z_make,!,ndividuator)).
 menu_cmd1(_,'k','                  or (k)ill/clear all test data.',(update_changes,clear_test)).
@@ -260,7 +260,8 @@ clear_pending_input:- is_input_null_stream,!.
 clear_pending_input:- read_pending_codes(user_input,_Ignored1,[]).
 menu_goal(Goal):-  
   clear_pending_input,
-  pp(calling(Goal)),!, ignore(once((catch(my_menu_call(Goal),'$aborted',fail)*->!;(!,fail,atrace,arcST,rrtrace(Goal))))),!,
+  pp(calling(Goal)),!, 
+  ignore(once((time(((catch(my_menu_call(Goal),'$aborted',fail))))*->!;(!,fail,atrace,arcST,rrtrace(Goal))))),!,
   clear_pending_input,!.
 
 :- public(do_web_menu_key/1).

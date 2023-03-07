@@ -1329,8 +1329,8 @@ with_toplevel_pp(PP,Goal):- locally(nb_setval('$fake_toplevel_pp',PP),Goal).
 
 toplevel_pp(X):- nonvar(X), toplevel_pp(Y), !, X==Y.
 toplevel_pp(PP):- nb_current('$fake_toplevel_pp',PP),PP\==[],!.
-toplevel_pp(swish):- on_x_log_fail(nb_current('$pp_swish',t);pengines:pengine_self(_Self)),!.
-toplevel_pp(http):- on_x_log_fail(httpd_wrapper:http_current_request(_)),!.
+toplevel_pp(swish):- \+ thread_self(main), on_x_log_fail(nb_current('$pp_swish',t);(pengines:pengine_self(_Self))),!.
+toplevel_pp(http):- \+ thread_self(main), on_x_log_fail(httpd_wrapper:http_current_request(_)),!.
 % Fake only for testing between bfly/ansi
 toplevel_pp(bfly):- getenv('TERM','xterm-256color'),!.
 toplevel_pp(ansi):- getenv('TERM','xterm'),!.
@@ -1659,7 +1659,52 @@ term_contains_ansi(S):- arg(_,S,E),term_contains_ansi(E),!.
 
 :- thread_local(t_l:printing_dict/0).
 
+
+
+is_row_list(Lst):- is_list(Lst), \+ (member(E,Lst),( \+ is_ftVar(E),(compound(E);E==[]))).
+
+is_simple_2x2(List):- is_list(List), List\==[], maplist(is_row_list,List).
+
+print_simple_2x2:- print_simple_2x2([ [    bg   ,   bg   ,   bg ], [    bg   ,   bg   ,   bgggg]] ).
+
+print_simple_2x2(List):- print_simple_2x2(print,List).
+print_simple_2x2(PS2,List):- current_output_line_position(Tab),print_simple_2x2(PS2,Tab,List).
+print_simple_2x2(PS2,Tab,List):- compound(Tab), TabN is Tab, !,print_simple_2x2(PS2,TabN,List).
+print_simple_2x2(PS2,Tab,[E|List]):- Tab>1, length(E,Len), Len>23,write('\n\r'),!,print_simple_2x2(PS2,1,[E|List]).
+print_simple_2x2(PS2,Tab,[E|List]):- 
+  print_to_string11(PS2,0,[E|List],[ES|Str],Pad1),Pad is Pad1,
+  prefix_spaces(Tab),pformat_functor('[ '), 
+      pt11(Pad, ES), maplist(pt111(Tab+2,Pad),Str),
+   write(']').
+
+pt111(Tab, Pad, List):- 
+  format(',~N'), prefix_spaces(Tab), pt11(Pad, List).
+
+pt11(Pad, [E|List]):-
+  pformat_functor('[ '), print_using_up(Pad,'',E), maplist(print_using_up(Pad,','),List), write(']'),!.
+
+be_extra(Goal):- ignore(call(Goal)).
+
+print_to_string11(_,Max,VarOrNill,VarOrNill,Max):- (var(VarOrNill);VarOrNill==[]),!.
+print_to_string11(PS2,I,[H|T],[HH|TT],O):- !, print_to_string11(PS2,I,H,HH,M),print_to_string11(PS2,M,T,TT,O).
+print_to_string11(PS2,Cur,H,HH,Max):- wots(HH,call(PS2,H)), atom_length(HH,Len), Max is max(Cur,Len).
+
+print_using_up(Total,Comma,S):- atom_length(S,Len),Used is Total-Len, write(Comma),print_s_up(S,Used).
+
+print_s_up(S,Used):- Used>0, Need1 is floor(Used/2),Need2 is round(Used/2),
+  print_n_sp(Need1),write(S),print_n_sp(Need2),!.
+print_s_up(S,_):- write(S),!.
+
+print_n_sp(N):- N>0,!,write(' '),Nm1 is N -1,print_n_sp(Nm1).
+print_n_sp(_).
+
 is_infix_op(OP):- current_op(_,XFY,OP), (yfx==XFY ; xfx==XFY ; xfy==XFY ).
+
+operator_is_basic_print(T):- \+ compound(T),!,fail.
+operator_is_basic_print(T):- compound_name_arity(T,OP, 1), !, current_op(_Pri,XFY,OP), atom_length(XFY,2),!.
+operator_is_basic_print(T):- compound_name_arity(T,OP, 2), not_list_op(OP), is_infix_op(OP),!.
+not_list_op(OP):- OP \== '|', OP \== '[|]', OP \== '.'.
+
 
 print_lc_tab_term(LC,Tab,T):- write(LC),print_tab_term(Tab,T).
 
@@ -1667,6 +1712,9 @@ pt1(FS,TpN,Term):- recalc_tab(TpN, New), TpN\==New, !, pt1(FS,New,Term).
 
 pt1(_FS,Tab,_S) :- prefix_spaces(Tab), fail.
 
+
+
+pt1(_FS,Tab,T) :- operator_is_basic_print(T),!,prefix_spaces(Tab),print(T).
 
 pt1(FS, _Tab,S) :- maybe_pp_hook(pt1(FS),S),!.
 
@@ -1677,6 +1725,9 @@ pt1(FS,Tab,Term) :-
    dict_pairs(Term, Tag, Pairs), maplist(pair_to_colon,Pairs,Colons),!,
    prefix_spaces(Tab), pl_span_goal('functor',( print_tree_no_nl(Tag), pformat('{ '))),
    locally(t_l:printing_dict,pt_args_arglist([dict|FS],Tab+2,'','@','}',Colons)),!.
+
+
+pt1(_FS,Tab,List) :- is_simple_2x2(List), print_simple_2x2(print,Tab,List),!.
 
 %t_l:printing_dict
 pt1(_FS,_Tab,(NPV)) :- compound(NPV), NPV=..[OP,V,N], OP==(:), atomic(N),
@@ -1709,10 +1760,17 @@ pt1(_FS,Tab,T) :- % fail,
    max_output(Tab,W120,T),!,
    prefix_spaces(Tab), write_q(T).
    %system_portray(Tab,T),!.
-   
+
 pt1(FS,Tab,List) :- List=[_|_], !,
   prefix_spaces(Tab),pformat_functor('[ '),
   pt_args_arglist([lf|FS],Tab+2,'',' | ',']',List),!.
+
+pt1(_FS,Tab,T) :- operator_is_basic_print(T),!,prefix_spaces(Tab),print(T).
+
+pt1(_FS,Tab,T) :- 
+  compound_name_arity(T,OP, 2),  current_op(_Pri,XFY,OP), atom_length(XFY,3),!,prefix_spaces(Tab),print(T).
+
+
 % H:-B
 pt1(_FS,Tab, H:- T) :- 
   OP = (','),
@@ -1730,27 +1788,28 @@ pt1(_FS,Tab, H:- T) :-
 % xfy/yfx/xfx
 pt1(_FS,Tab,T) :- 
   compound_name_arity(T,OP, 2),  
-  (current_op(Pri,_,OP),is_infix_op(OP)),
+  (current_op(Pri,YFX,OP),is_infix_op(OP)),
   Pri >= 400,
   pred_juncts_to_list(OP,T,List), List=[H,R,E|ST], REST = [R,E|ST],!,
   prefix_spaces(Tab),pl_span_goal('functor', (
-    pformat('( '), pformat(''),print_tree_no_nl(H),pformat('  '), pformat(OP))),
+    pformat('( '), be_extra((pformat('/*e'),pformat(YFX),pformat('*/'))),print_tree_no_nl(H),pformat('  '), pformat(OP))),
     pformat_e_args(REST, (
        pt_list_juncts(Tab+2,OP,REST))), 
    pformat(')'),!.   
 
-%t_l:printing_dict
-pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),
-  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree_unit(V),!.
 
-
-pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP), !,
-    print_tab_term(Tab,[OP|FS], N),
-    format(' '), pformat(OP), pformat(' '),
+pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), current_op(_,yfx,OP), !, YFX=yfx,
+    print_tab_term(Tab,[op(OP,2)|FS], N),
+    format(' '), pformat(OP), pformat(' '),be_extra(( pformat('/*a'),pformat(YFX),pformat('*/'))),
     print_tab_term(Tab+2,V).
+
+%t_l:printing_dict
+pt1(_FS,_Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP), atomic(N),current_op(_,YFX,OP), !, 
+  write_q(N), be_extra((pformat('/*d*'),pformat(YFX),pformat('*/'))), pformat(OP),pformat(' '), print_tree_unit(V),!.
+
     
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N,V], is_colon_mark(OP),
-  print_tab_term(Tab,[OP|FS], N),
+  print_tab_term(Tab,[op(OP,2)|FS], N),
   pl_span_goal('functor', (
     pformat(' '), pformat(OP), pformat('  '))),
     (ansi_ansi->true; (pformat_ellipsis(V),prefix_spaces(Tab+5))),
@@ -1770,9 +1829,6 @@ pt1(FS,Tab,{Prolog}) :-
 
 
 pt1(FS,Tab,q(E,V,G)):- atom(E), !, T=..[E,V,G],!, pt1(FS,Tab,T).
-
-pt1(_FS,Tab,(NPV)) :- use_new, NPV=..[OP,N],
-    prefix_spaces(Tab), pformat(OP), pformat('( '), print_tree_no_nl(N), pformat(')'),!.
 
 
 % xf/yf
@@ -1802,6 +1858,9 @@ pt1(_FS,Tab,T) :-
    max_output(Tab,W120,T),!,
    system_portray(Tab,T),!.
 
+pt1(FS,Tab,(NPV)) :- use_new, NPV=..[OP,N],
+    prefix_spaces(Tab), pformat(OP), pformat('(/*a1*/ '), print_tree_no_nl(N), pformat(')'),!,
+    ignore(((FS=[Fst|_],Fst=op(_,N),N>1,nl))).
 
 % yfx
 pt1(_FS,Tab,T) :-
@@ -1809,7 +1868,7 @@ pt1(_FS,Tab,T) :-
   (current_op(Pri,yfx,OP)),
   Pri >= 400,
   pred_juncts_to_list(OP,T,[Y,X]),!,
-  prefix_spaces(Tab), pformat_functor('( '),  
+  prefix_spaces(Tab), pformat_functor('(/*1*/ '),  
     pformat_e_args(T, 
        pt_list_juncts(Tab+2,OP,[Y,X])), 
    pformat(')'),!.
@@ -1819,7 +1878,7 @@ pt1(_FS,Tab,T) :-
   (current_op(Pri,xfy,OP);current_op(Pri,xfx,OP)),
   Pri >= 400,
   pred_juncts_to_list(OP,T,List),!,
-  prefix_spaces(Tab), pformat_functor('( '),  
+  prefix_spaces(Tab), pformat_functor('(/*2*/ '),  
     pformat_e_args(T, 
        pt_list_juncts(Tab+2,OP,List)), 
    pformat(')'),!.
@@ -1828,20 +1887,20 @@ pt1(FS,Tab,Term) :-
    compound_name_arguments(Term,F,[Arg]), nonvar(Arg), Arg = [A|Args],
    is_arity_lt1(A), !,
    prefix_spaces(Tab), print_atomf(F), pformat_functor('([ '),
-   pt_args_arglist([F|FS],Tab+3,'','|','',[A|Args]), !,
+   pt_args_arglist([op(F,1)|FS],Tab+3,'','|','',[A|Args]), !,
    pformat('])').
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Arg]), nonvar(Arg), Arg = [A|Args],
    is_arity_lt1(A),
    prefix_spaces(Tab), print_atomf(F), pformat_functor(format('([ ~p, ',[A])),
-   pt_args_arglist([F|FS],Tab+3,'','|','',Args), !,
+   pt_args_arglist([op(F,1)|FS],Tab+3,'','|','',Args), !,
    pformat('])').
 
 pt1(FS,Tab,Term) :- 
    compound_name_arguments(Term,F,[Args]), nonvar(Args), Args = [_|_],
    prefix_spaces(Tab), print_atomf(F), pformat_functor('([ '),
-   pt_args_arglist([F|FS],Tab+3,'','|','',Args), !,
+   pt_args_arglist([op(F,1)|FS],Tab+3,'','|','',Args), !,
    pformat('])').
 
 pt1(_FS,Tab,(NPV)) :- NPV=..[OP,N|Args], Args=[Arg], as_is(N), compound(Arg), compound_name_arity(Arg,_,3),!,
@@ -1850,12 +1909,20 @@ pt1(_FS,Tab,(NPV)) :- NPV=..[OP,N|Args], Args=[Arg], as_is(N), compound(Arg), co
     prefix_spaces(Tab+2),print_tree_no_nl(Arg),pformat(')').
 
  % include arg1
+pt1(_FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
+  Args=[Arg], is_list(Arg), is_simple_2x2(Arg),!,
+  prefix_spaces(Tab), print_atomf(OP), 
+  pformat('( '), print_tree_no_nl(N), pformat_functor(', '),  
+ %do_fold_this_round
+  current_output_line_position(L), print_simple_2x2(print,L+1,Arg), write(')').
+
+ % include arg1
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
   Args=[Arg], is_list(Arg),
   prefix_spaces(Tab), print_atomf(OP), 
   pformat('( '), print_tree_no_nl(N), pformat_functor(', ['),  
  %do_fold_this_round
-  pt_args_arglist([OP|FS],Tab+2,'','@','])',Arg),!.
+  pt_args_arglist([op(OP,2)|FS],Tab+2,'','@','])',Arg),!.
 
  % include arg1
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
@@ -1863,19 +1930,19 @@ pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),
   prefix_spaces(Tab), print_atomf(OP),
   pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', '))),  
  %do_fold_this_round
-  pt_args_arglist([OP|FS],Tab+2,'','@',')',Args),!.
+  pt_args_arglist([op(OP,2)|FS],Tab+2,'','@',')',Args),!.
 
 % include arg1
 pt1(FS,Tab,(NPV)) :- NPV=..[OP,N|Args], as_is(N), % \+ compound_gt(N,0),  
   prefix_spaces(Tab), print_atomf(OP),
   pl_span_goal('functor', ( pformat('( '), print_tree_no_nl(N), pformat(', '))),  
  %do_fold_this_round
-  pt_args_arglist([OP|FS],Tab+2,'','@',')',Args),!.
+  pt_args_arglist([op(OP,2)|FS],Tab+2,'','@',')',Args),!.
 
 pt1(FS,Tab,Term) :- 
-   compound_name_arguments(Term,F,Args),
+   compound_name_arguments(Term,F,Args), length(Args,Arity),
    prefix_spaces(Tab), print_atomf(F), pformat_functor('( '),
-   pt_args_arglist([F|FS],Tab+3,'','@',')',Args), !.
+   pt_args_arglist([op(F,Arity)|FS],Tab+3,'','@',')',Args), !.
 
 
 

@@ -115,10 +115,10 @@ show_indiv(Grid):- show_indiv('',Grid),!.
 show_indiv(Why,R):- atom(R), atom_contains(R,'_'), pp_parent([LF|_]), \+ (LF==sf;LF==objFn), 
   resolve_reference(R,Var), R\==Var, \+ plain_var(Var),!, 
   write(' '), writeq(R), write(' /* '), show_indiv(Why,Var), write(' */ ').
-show_indiv(Why,R):- is_object_props(R),!,show_indiv(Why,obj(R)).
+%show_indiv(Why,R):- is_object_props(R),!,show_indiv(Why,obj(R)).
 show_indiv(Why,obj(A)):- is_cons(A), \+ is_list(A), \+ \+ ( append(A,[],A),show_indiv(Why,obj(A))),!.
-show_indiv(Why,obj(A)):- \+ is_list(A),!, pp(show_indiv(Why,obj(A))).
-show_indiv(Why,Grid):- \+ is_object(Grid), !, writeln(why(Why)),!,print_info(Grid).
+%show_indiv(Why,obj(A)):- \+ is_list(A),!, pp(show_indiv(Why,obj(A))).
+%show_indiv(Why,Grid):- \+ is_object(Grid), !, writeln(why(Why)),!,print_info(Grid).
 
 show_indiv(Why,A):- nb_current(debug_indiv,f), 
    \+ \+ locally(nb_setval(debug_indiv,f),show_indiv_textinfo(Why,A,[])),!.
@@ -200,24 +200,30 @@ show_indiv_object(Why, Obj):-
   format('~N'),dash_chars(15))),!.
 
 show_indiv_textinfo(AS):-show_indiv_textinfo('',AS,[]).
+show_indiv_textinfo(Why,Obj,ExceptFor):- indv_props_list(Obj,Props),Obj\=@=Props,!,show_indiv_textinfo(Why,Props,ExceptFor).
 show_indiv_textinfo(Why,Obj,ExceptFor):- Obj = obj(A), nonvar(A),!,show_indiv_textinfo(Why,A,ExceptFor).
 show_indiv_textinfo(Why,Props,ExceptFor):- is_open_list(Props),!,must_det_ll((append(Props,[],CProps),!,show_indiv_textinfo(Why,CProps,ExceptFor))).
 show_indiv_textinfo(Why,AS0,ExceptFor):- catch(show_indiv_textinfo1(Why,AS0,ExceptFor),_,true),!.
 show_indiv_textinfo(Why,AS0,_ExceptFor):- pp(show_indiv_textinfo(Why)=AS0),!.
-show_indiv_textinfo1(Why,AS0,ExceptFor):- 
+show_indiv_textinfo1(Why,AS0,ExceptFor):- user:'@'(show_indiv_textinfo2(Why,AS0,ExceptFor),user),!.
+show_indiv_textinfo2(Why,AS0,ExceptFor):-
  must_det_ll((
   %Obj = obj(AS0),
   append(AS0,[],Props11),
 
 
-  extend_grp_proplist([Props11],[Props]),
+  % pp(vAS0=AS0),
+  extend_grp_proplist([obj(Props11)],[obj(Props)]),
 
   %ignore((o2g(Obj,GGG), nonvar(GGG),set_glyph_to_object(GGG,Obj))),
  % will_show_grid(Obj,TF),
   TF = false,
  % obj_to_oid(Obj,MyOID),
   %o2ansi(MyOID,MissGlyph),
-  Obj = obj(Props), object_color_glyph_short(Obj,SGlyph),
+  Obj = obj(Props), 
+
+  %pp(props=Props),
+  object_color_glyph_short(Obj,SGlyph),
 
   my_partition(p1_subterm(p1_or(is_points_list,is_gridoid)),Props,ContainsGrid,Props1), 
 

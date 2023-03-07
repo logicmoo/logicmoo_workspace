@@ -114,7 +114,7 @@ hammer3("
 the_hammer1(BlueComplex):- the_hammer(blue,BlueComplex).
 the_hammer1(RedComplex):-  the_hammer(red,RedComplex).
 
-the_hammer(Color,ColorComplex):- fail,
+the_hammer(Color,ColorComplex):- \+ point_atoms,!,
   ColorComplex = obj([mass(6), shape_rep(grav,[hv(1,1), hv(1,2), hv(1,3), hv(2,1), hv(2,2), hv(3,2)]), 
   colors_cc([cc(Color, 6)]), localpoints([Color-hv(1,1), Color-hv(1,2), Color-hv(1,3), Color-hv(2,1), 
   Color-hv(2,2), Color-hv(3,2)]), vis2D(3, 3), rot2D(sameR), loc2D(2, 5), 
@@ -122,7 +122,7 @@ the_hammer(Color,ColorComplex):- fail,
   globalpoints([Color-hv(2,5), Color-hv(2,6), Color-hv(2,7), Color-hv(3,5), Color-hv(3,6), Color-hv(4,6)]), 
   grid_size(10, 10)]).
 
-the_hammer(Color,ColorComplex):- 
+the_hammer(Color,ColorComplex):- point_atoms,
   ColorComplex = obj([mass(6), colorless_points([point_01_01, point_01_02, point_01_03, point_02_01, point_02_02, point_03_02]), 
   colors([cc(Color, 6)]), localpoints([Color-point_01_01, Color-point_01_02, Color-point_01_03, Color-point_02_01, 
   Color-point_02_02, Color-point_03_02]), vis2D(3, 3), rot2L(sameR), loc2D(2, 5), 

@@ -945,7 +945,6 @@ enum_ruleset(Rules):-
      arc_cache:object_to_object(TestID,Name,LHS,Create,DebugInfo,DebugInfo2),Rules).
 
 
-
 reduce_rules(lhs(LHS),Out):- !,reduce_rules(LHS,Out).
 reduce_rules(rhs(LHS),Out):- !,reduce_rules(LHS,Out).
 reduce_rules([LHS],Out):- !,reduce_rules(LHS,Out).
@@ -2191,7 +2190,7 @@ use_test_associatable_obj(In,Sol):-
 
    if_t(List\==[],
         (member(F0,List),gather_assumed_mapped(F0,F1),
-         print_ss([in=In,mid=F0,out=F1]))),
+         print_side_by_side_three(0,[in=In,mid=F0,inout=F1]))),
 
    matches_close_prop(In,giz(g(out)),OutList),
    if_t(OutList\==[],

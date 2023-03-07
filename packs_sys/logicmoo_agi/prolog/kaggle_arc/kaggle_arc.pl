@@ -837,9 +837,13 @@ use_gui_debugger:-
 :- luser_default(task,v('1d398264')). 
 :- luser_default(task,v('37d3e8b2')). 
 */
-create_group_dmiles:- must_det_ll((create_group(dmiles,['e41c6fd3','ea32f347','37d3e8b2','1b60fb0c','1d398264','0d3d703e','626c0bcc','5582e5ca','ea32f347',
-                '25d487eb','0a2355a6',
-                '32e9702f','f8b3ba0a'  ]))).
+create_group_dmiles:- must_det_ll((create_group(dmiles,[
+              'e41c6fd3','0a2355a6', 
+              '37d3e8b2','ea32f347',
+              '1b60fb0c','1d398264',
+              '0d3d703e','626c0bcc',
+              '5582e5ca','25d487eb',
+              '32e9702f','f8b3ba0a'  ]))).
 :- initialization(create_group_dmiles).
 %:- noguitracer.
 % :- set_current_test(t('0d3d703e')).  % :- set_current_test(t('5582e5ca')).

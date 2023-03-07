@@ -1478,7 +1478,7 @@ localpoints(I,LPoints):- object_grid(I,Grid),localpoints(Grid,LPoints).
 object_grid(I,LPoints):- localpoints(I,LPoints),vis2D(H,V),points_to_grid(H,V,LPoints,Grid).
 */
 %ogs_into_obj_props(_Obj,AnsProps,Obj):-
-%ogs_with_location(_OutGrid,ObjL,Obj):- \+ is_list(ObjL), into_obj_plist(ObjL,PropStart),ogs_into_obj_props(PropStart,Obj),!.
+%ogs_with_location(_OutGrid,ObjL,Obj):- \+ is_list(ObjL), indv_props_list(ObjL,PropStart),ogs_into_obj_props(PropStart,Obj),!.
 ogs_with_location(_OutterGrid,ObjL,GPoints,Props):- get_gpoints_and_props(ObjL,GPoints,Props),!.
   
 get_gpoints_and_props(ReallyAdd,GPoints,Props):- var(ReallyAdd),!,throw(instaniation_error(get_gpoints_and_props(ReallyAdd,GPoints,Props))).
@@ -1486,8 +1486,8 @@ get_gpoints_and_props(obj_loc(PropsM,GPointsM),GPoints,Props):- !,
   get_gpoints_and_props(PropsM,_,Props), get_gpoints_and_props(GPointsM,GPoints,_).
 get_gpoints_and_props(ReallyAdd,GPoints,Props):- is_grid(ReallyAdd),!, globalpoints(ReallyAdd,GPoints),Props=[].
 get_gpoints_and_props(ReallyAdd,GPoints,Props):- is_cpoints_list(ReallyAdd),!, globalpoints(ReallyAdd,GPoints),Props=[].
-%get_gpoints_and_props(ReallyAdd,GPoints,Props):- \+ is_obj_props(ReallyAdd),!,into_obj_plist(ReallyAdd,PropsList),!,get_gpoints_and_props(PropsList,GPoints,Props).
-get_gpoints_and_props(ReallyAdd,GPoints,Props):- \+ is_list(ReallyAdd),!,into_obj_plist(ReallyAdd,PropsList),!,
+%get_gpoints_and_props(ReallyAdd,GPoints,Props):- \+ is_obj_props(ReallyAdd),!,indv_props_list(ReallyAdd,PropsList),!,get_gpoints_and_props(PropsList,GPoints,Props).
+get_gpoints_and_props(ReallyAdd,GPoints,Props):- \+ is_list(ReallyAdd),!,indv_props_list(ReallyAdd,PropsList),!,
   get_gpoints_and_props(PropsList,GPoints,Props).
 %get_gpoints_and_props(ReallyAdd,GPoints,Props):- compound(ReallyAdd),ReallyAdd=obj(LProps),!,get_gpoints_and_props(LProps,GPoints,Props).
 get_gpoints_and_props(ReallyAdd,GPoints,Props):- 

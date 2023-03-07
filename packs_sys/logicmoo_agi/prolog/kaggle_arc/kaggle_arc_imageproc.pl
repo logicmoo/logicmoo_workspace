@@ -158,28 +158,28 @@ blank(G,G1):- grid_size(G,H,V),make_grid(H,V,G1).
 blank(E,G,G1):- blank(G,G1),mapgrid(=(E),G1).
 
 join_cols([],[]).
-join_cols([Grid1,Grid2],Grid):- is_grid(Grid1), !,append_left(Grid1,Grid2,Grid).
+join_cols([Grid1,Grid2],Grid):- is_grid(Grid1), !,hconcat(Grid1,Grid2,Grid).
 join_cols([Grid|Grids],GridO):- !,join_cols(Grid,Grids,GridO).
 
 join_cols(Grid1,[],Grid1):-!.
 join_cols(Grid1,[Grid2|Grids],Result):-   
-  append_left(Grid1,Grid2,NewGrid),
+  hconcat(Grid1,Grid2,NewGrid),
   join_cols(NewGrid,Grids,Result).
  
 % grow([[sameR,sameR]],[[a,b,c]], [[a,b,c,a,b,c]]).
-append_left(Grid1,[],Grid1):-!.
-append_left(Grid1,Empty,Grid1):- is_empty_grid(Empty),!.
-append_left(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),my_maplist(my_append,Grid1,Grid2,Grid).
+hconcat(Grid1,[],Grid1):-!.
+hconcat(Grid1,Empty,Grid1):- is_empty_grid(Empty),!.
+hconcat(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),my_maplist(my_append,Grid1,Grid2,Grid).
 
-append_down(Grid1,Grid2,Grid):- my_append(Grid1,Grid2,Grid).
+vconcat(Grid1,Grid2,Grid):- my_append(Grid1,Grid2,Grid).
 
 p2_grow_row([],_,[]).
-p2_grow_row([C1|Row],Grid,GM):- !, call(C1,Grid,G1),p2_grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+p2_grow_row([C1|Row],Grid,GM):- !, call(C1,Grid,G1),p2_grow_row(Row,Grid,GR),hconcat(G1,GR,GM).
 p2_grow([],       _  ,[]).
 p2_grow([Row|Rows],Grid,G1GridO):- p2_grow_row(Row,Grid,G1), p2_grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
 
 p1_grow_row([],_,[]).
-p1_grow_row([C1|Row],Grid,GM):- !, call(C1,G1),p1_grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+p1_grow_row([C1|Row],Grid,GM):- !, call(C1,G1),p1_grow_row(Row,Grid,GR),hconcat(G1,GR,GM).
 p1_grow([],       _  ,[]).
 p1_grow([Row|Rows],Grid,G1GridO):- p1_grow_row(Row,Grid,G1), p1_grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
 
@@ -187,7 +187,7 @@ p1_grow([Row|Rows],Grid,G1GridO):- p1_grow_row(Row,Grid,G1), p1_grow(Rows,Grid,G
 copy_grid_based_on_color(Cell,G,G1):- \+ is_fg_color(Cell),!,grid_size(G,H,V),make_grid(H,V,G1), mapgrid(=(Cell),G1).
 copy_grid_based_on_color(_,G,G1):- safe_grid(G,G1).
 grow_row([],_,[]).
-grow_row([C1|Row],Grid,GM):- !, copy_grid_based_on_color(C1,Grid,G1),grow_row(Row,Grid,GR),append_left(G1,GR,GM).
+grow_row([C1|Row],Grid,GM):- !, copy_grid_based_on_color(C1,Grid,G1),grow_row(Row,Grid,GR),hconcat(G1,GR,GM).
 grow([],       _  ,[]).
 grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
 
@@ -681,19 +681,19 @@ grid_size_term(I,size2D(X,Y)):- grid_size(I,X,Y),!.
 :- decl_pt(grid_size(prefer_grid,_,_)).
 %grid_size(Points,H,V):- is_vm_map(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(NIL,1,1):- NIL==[],!.
-grid_size(I,X,Y):- is_object(I),indv_props_list(I,L),(member(grid_size(X,Y),L);member(giz(grid_sz(X,Y)),L);member(vis2D(X,Y),L)),!.
-grid_size(G,H,V):- quietly(is_object(G)), !, vis2D(G,H,V).
-grid_size(Points,H,V):- is_points_list(Points),!,points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
+grid_size(G,H,V):- notrace(is_grid(G)),!,grid_size_nd(G,H,V),!.
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
+grid_size(I,X,Y):- notrace(is_object(I)),indv_props_list(I,L),(member(giz(grid_sz(X,Y)),L);member(grid_size(X,Y),L);member(vis2D(X,Y),L)),!.
+%grid_size(G,H,V):- quietly(is_object(G)), !, vis2D(G,H,V).
+grid_size(Points,H,V):- is_points_list(Points),!,points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
 %grid_size(G,H,V):- is_graid(G,GG),!, grid_size(GG,H,V).
-grid_size(G,H,V):- is_vm_map(G),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
-grid_size(G,H,V):- is_grid(G),!,grid_size_nd(G,H,V),!.
-grid_size(G,X,Y):- is_group(G),!,mapgroup(grid_size_term,G,Offsets),sort_safe(Offsets,HighToLow),last(HighToLow,size2D(X,Y)).
+grid_size(G,H,V):- notrace(is_vm_map(G)),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
+grid_size(G,X,Y):- notrace(is_group(G)),!,mapgroup(grid_size_term,G,Offsets),sort_safe(Offsets,HighToLow),last(HighToLow,size2D(X,Y)).
 %grid_size([G|G],H,V):- is_list(G), length(G,H),length([G|G],V),!.
 grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
 %grid_size([G|G],H,V):- is_list(G),is_list(G), grid_size_nd([G|G],H,V),!.
 %grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
-grid_size(_,30,30).
+grid_size(O,30,30):- dmsg(warn(grid_size(O,30,30))),!.
 
 :- system:import(grid_size/3).
 :- ansi_term:import(grid_size/3).

@@ -23,7 +23,7 @@ nb_subst(Obj,New,Old):-
   p2_call(P1,New),!,nb_subst(Obj,New,Old).
 nb_subst(_Obj,_New,_Old).
 
-system:any_arc_files(Some):- is_list(Some),!, Some\==[],fmy_maplist(any_arc_files,Some).
+system:any_arc_files(Some):- is_list(Some),!, Some\==[],my_maplist(any_arc_files,Some).
 system:any_arc_files(Some):- atom_contains(Some,'arc').
 
 :- thread_local(in_memo_cached/5).

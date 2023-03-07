@@ -544,7 +544,7 @@ learn_about_p2(grow_4_rot).
 grow_4_rot(In,Out):- grow_4_p2(rot90,In,Out).
 
 %grow_4(In,Out):- !, p2_grow([[sameR,sameR],[sameR,sameR]],In,Out).
-grow_4_flipHV(In,Out):- !, flipV(In,FlipV),append(In,FlipV,Left),flipH(Left,Right),append_left(Left,Right,Out).
+grow_4_flipHV(In,Out):- !, flipV(In,FlipV),append(In,FlipV,Left),flipH(Left,Right),hconcat(Left,Right,Out).
 %grow_4(In,Out):- grow_each_p2(=,In,[A,B,C,D]), grow([[A,B],[D,C]],[],Out).
 grow_4(In,Out):- grow_4_p2(sameR,In,Out).
 
@@ -659,8 +659,8 @@ blur_or_not_least_rot90_x4(I,O):-
 %  now_fill_in_blanks(P2,Grid,RepairedResultO).
 
 crop_by(HH/H,In,Out):- grid_size(In,H,V),between(1,H,HH),HH<H,clip(1,1,HH,V,In,Out).
-grow_2(In,Out):- append_left(In,In,Out).
-grow_flip_2(In,Out):- flipH(In,FlipH),append_left(In,FlipH,Out).
+grow_2(In,Out):- hconcat(In,In,Out).
+grow_flip_2(In,Out):- flipH(In,FlipH),hconcat(In,FlipH,Out).
 shrink_grid(I,O):- normalize_grid(_,I,O),!.
 
 

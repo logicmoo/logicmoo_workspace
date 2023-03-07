@@ -317,7 +317,7 @@ diff_groups(A0,B0,DD):-
   diff_groups1(A2,B2,DD).
 
 
-obj_atoms(PA,PAP):- must_det_ll((nonvar(PA),into_obj_plist(PA,MF),flatten(MF,M),M\==[],
+obj_atoms(PA,PAP):- must_det_ll((nonvar(PA),indv_props_list(PA,MF),flatten(MF,M),M\==[],
   findall(E,(member(SE,M),sub_obj_atom(E,SE)),PAP),PAP\==[])),!.
 
 never_matom(localpoints(_)).

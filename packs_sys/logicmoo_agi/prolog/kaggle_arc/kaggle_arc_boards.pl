@@ -88,8 +88,7 @@ compile_and_save_test_now(TestID):-
       detect_all_training_hints(TestID),
       nop(individuate_pairs_from_hints(TestID)),
       %train_test(TestID,train_using_io),  
-      %print_hybrid_set,
-      save_the_alt_grids(TestID),
+      %print_hybrid_set,      
       save_supertest(TestID))))).
 
 
@@ -285,6 +284,7 @@ must_ll(G):- G*->true;throw(failed(G)).
 
 detect_all_training_hints:- get_current_test(TestID),time(detect_all_training_hints(TestID)).
 detect_all_training_hints(TestID):- ensure_test(TestID),
+  save_the_alt_grids(TestID),
   training_only_examples(ExampleNum), 
   w_section(title(detect_all_training_hints(TestID>ExampleNum)),
     ( 
@@ -461,7 +461,8 @@ add_hint(TestID,ExampleNum,Hints):-
   hint_functor(Hints,F),hint_into_data(Hints,D), assert_test_property(TestID,ExampleNum,F,D).
 
 assert_test_property(TestID,ExampleNum,Prop,Data):-
-  arc_assert(arc_test_property(TestID,ExampleNum,Prop,Data)).
+  assert_if_new(arc_test_property(TestID,ExampleNum,Prop,Data)),
+  pp(assert_test_property(TestID,ExampleNum,Prop,Data)).
   
   % forall((kaggle_arc_io(TestID,ExampleNum,in,Out1),N2 is N+1,  (kaggle_arc_io(TestID,(trn+N2),in,Out2)->true;kaggle_arc_io(TestID,(trn+0),in,Out2)),  grid_hint_recolor(i-i,Out1,Out2,Hints)),add_hint(TestID,Hints,N)).
 
@@ -496,7 +497,7 @@ list_common_props_so_far(TestID):-
     retractall(arc_test_property(TestID,common,F,_)),
     (( findall(Data,arc_test_property(TestID,(trn+_),F,Data),Commons),
       once((some_min_unifier(Commons,Common),nonvar(Common))))),
-      arc_assert(arc_test_property(TestID,common,F,Common))),FComs),
+      assert_test_property(TestID,common,F,Common)),FComs),
   sort_safe(FComs,SComs),
   %dash_chars,
   %print_test(TestID),
@@ -549,7 +550,7 @@ compute_all_test_hints(TestID):-
 compute_test_io_hints(TestID):- 
   forall(
     kaggle_arc(TestID,ExampleNum,In,Out), 
-     maybe_compute_test_io_hints(i-o,TestID,ExampleNum,In,Out)).
+     ignore(maybe_compute_test_io_hints(i-o,TestID,ExampleNum,In,Out))).
 
 %maybe_compute_test_io_hints(_,TestID,ExampleNum,_,_):- arc_test_property(TestID,_,_-N),!.
 maybe_compute_test_io_hints(IO,TestID,ExampleNum,In,Out):-
@@ -567,7 +568,8 @@ compute_test_oo_hints(TestID):-
      (next_example(TestID,ExampleNum,ExampleNum2), kaggle_arc_io(TestID,ExampleNum2,out,Out2),
       maybe_compute_test_oo_hints(TestID,ExampleNum,Out1,Out2))),!.
 
-  maybe_compute_test_oo_hints(TestID,ExampleNum,Out1,Out2):- forall(grid_hint_recolor(o-o,Out1,Out2,Hints),add_hint(TestID,ExampleNum,Hints)).
+ maybe_compute_test_oo_hints(TestID,ExampleNum,Out1,Out2):- 
+   forall(grid_hint_recolor(o-o,Out1,Out2,Hints),add_hint(TestID,ExampleNum,Hints)).
 
 compute_test_ii_hints(_):-!.
 compute_test_ii_hints(TestID):- 
@@ -1101,7 +1103,8 @@ save_the_alt_grids(TestID,ExampleNum,_XForms,In,Out):-
   
 save_the_alt_grids_now(TestID,ExampleNum,XForms,In,Out):-
   my_maplist(save_grid_calc(TestID,ExampleNum,XForms,In,Out),
-     [fg_intersectiond,fg_intersectiond_mono,cell_minus_cell,mono_cell_minus_cell,overlapping_image]),
+     [fg_intersectiond,fg_intersectiond_mono,cell_minus_cell,mono_cell_minus_cell,overlapping_image,
+      minus_overlapping_image]),
   ignore(( \+ has_blank_alt_grid(TestID,ExampleNum))),!.
 
 colors_of(O,Cs):- unique_fg_colors(O,Cs),!.
@@ -1119,8 +1122,15 @@ save_the_alt_grids_now2(TestID,ExampleNum,XForms,In,Out):-
     assert_test_property(TestID,ExampleNum,ori([overlapping_image|XForms]),Out.overlapping_image),
     assert_test_property(TestID,ExampleNum,iro([overlapping_image|XForms]),In.overlapping_image))),!.*/
 
+minus_overlapping_image(In,Other,MOI):-  overlapping_image(In,Other,OLIn), grid_minus_grid(In,OLIn,MOI).
 
-overlapping_image(In,Other,OLIn):- 
+/*
+overlapping_image(In,Other,RIO):- detect_iro(In,Other,TestID,ExampleNum,iro),
+   arc_test_property(TestID,ExampleNum,iro([overlapping_image]),RIO),!.
+overlapping_image(In,Other,ROI):- detect_ori(In,Other,TestID,ExampleNum,ori),
+   arc_test_property(TestID,ExampleNum,ori([overlapping_image]),ROI),!.
+*/
+overlapping_image(In,Other,OLIn):-
   colors_of(In.cell_minus_cell(Other),CsIn),
   colors_of(Other.cell_minus_cell(In),CsOut),
   colors_of(In,CsInO), 
@@ -1136,12 +1146,12 @@ save_grid_calc(TestID,ExampleNum,XForms,In,Out,Op):-
   assert_test_property(TestID,ExampleNum,ori([Op|XForms]),ROI),
   print_ss(no(Op,TestID,ExampleNum,XForms),RIO,ROI).
 
-  
+
 
 same_sizes([I|In],[O|Out]):- length(I,Cols),length(O,Cols),length(In,Rows0),length(Out,Rows0).
 
 some_norm(Out,[],Out).
-some_norm(Out,[trim_to_rect|Op],NOut):- trim_to_rect(Out,Mid),Out\==Mid,some_norm(Out,Op,NOut).
+some_norm(Out,[trim_to_rect|Op],NOut):- notrace((trim_to_rect(Out,Mid),Out\=@=Mid)),some_norm(Out,Op,NOut).
 some_norm(Out,[grav_rot(Rot)],NOut):- grav_rot(Out,Rot,NOut),!.
 
 has_blank_alt_grid(TestID,ExampleNum):- blank_alt_grid_count(TestID,ExampleNum,N),N>0.

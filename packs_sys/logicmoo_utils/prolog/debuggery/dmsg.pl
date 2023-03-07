@@ -180,10 +180,10 @@
 
 use_html_styles:-!,fail.
 use_html_styles:- notrace(use_html_styles0).
-use_html_styles0 :- on_x_fail(httpd_wrapper:http_current_request(_)),!.
-use_html_styles0 :- on_x_fail(pengines:pengine_self(_)),!.
 use_html_styles0 :- on_x_fail(t_l:print_mode(html)).
 use_html_styles0 :- dis_pp(ansi),!,fail.
+%use_html_styles0 :- on_x_fail(httpd_wrapper:http_current_request(_)),!.
+%use_html_styles0 :- on_x_fail(pengines:pengine_self(_)),!.
 use_html_styles0 :- current_predicate(is_butterfly_console/0), (inside_bfly_html_esc;is_butterfly_console),!.
 %= 	 	 
 

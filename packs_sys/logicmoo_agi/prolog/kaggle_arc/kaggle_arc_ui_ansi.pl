@@ -694,18 +694,28 @@ writeg0(Term):- \+ ground(Term), must_det_ll((
 writeg0(Term):- writeg5(Term),!.
 
 writeg5(X):- is_ftVar(X),!,write_nbsp,write_nbsp,print(X).
-writeg5(N=V):- is_gridoid(V),!,print_grid(N,V),writeln(' = '),call_w_pad_prev(2,my_maplist(writeg9,V)).
-writeg5(V):- is_gridoid(V),!,call_w_pad_prev(2,my_maplist(writeg9,V)).
+writeg5(N=V):- is_simple_2x2(V),!,print_grid(N,V),writeln(' = '),call_w_pad_prev(2,writeg9(V)).
+writeg5(N=V):- is_gridoid(V),!,print_grid(N,V),writeln(' = '),call_w_pad_prev(2,writeg9(V)).
 writeg5(N=V):- nl_if_needed,nonvar(N), pp_no_nl(N),writeln(' = '), !, call_w_pad_prev(2,writeg5(V)). 
 writeg5(_):- write_nbsp, fail.
-writeg5(V):- is_list(V),nl_if_needed,write('['),my_maplist(writeg5,V),write(']').
-writeg5(V):- pp_no_nl(V).
+writeg5(V):- writeg9(V).
 
-writeg9(V):- is_list(V),nl_if_needed,write('['),!,my_maplist(writeg9,V),write(']').
+writeg8(X):- is_ftVar(X),!,print(X).
+writeg8(X):- var(X),!,print(X).
+writeg8(X):- writeq(X).
+
+writeg9(V):- is_simple_2x2(V),!,print_simple_2x2(writeg8,V).
+writeg9(V):- is_list(V),nl_if_needed,write('['),!,my_maplist(writeg5,V),write(']').
 writeg9(_):- write_nbsp,write(' \t '),fail.
 writeg9(X):- is_ftVar(X),!,write_nbsp,write_nbsp,print(X).
 writeg9(V):- pp_no_nl(V).
 
+
+/*
+writeg5(V):- is_simple_2x2(V),!,print_simple_2x2(writeg8,V).
+writeg5(V):- is_gridoid(V),!,call_w_pad_prev(2,writeg9(V)).
+writeg5(V):- is_list(V),nl_if_needed,write('['),my_maplist(writeg5,V),write(']').
+*/
 arg1_near(Vars,Goal,Nth):- arg(1,Goal,PreSort),nth1(Nth,Vars,E),E==PreSort,!.
 arg1_near(_VarsC,Goal,PreSort):- arg(1,Goal,PreSort),!.
 arg1_near(_VarsC,Goal,Goal).
@@ -1117,6 +1127,7 @@ print_side_by_side(A^B):- caret_to_list(A^B,List),print_side_by_side(List),!.
 print_side_by_side(call(P)):- !, call(P,Ret),!,print_side_by_side_l(1,Ret).
 print_side_by_side(List):- is_obj_props(List),!,wqs(List).
 print_side_by_side(G):- is_grid(G),!,print_grid(G).
+print_side_by_side(G):- is_object(G),!,print_grid([G]).
 print_side_by_side(GF):- grid_footer(GF,G,W),is_gridoid(G),!,print_grid(W,G).
 %print_side_by_side(Title=(A^B)):- print_side_by_side((Title=A)^B).
 

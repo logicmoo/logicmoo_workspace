@@ -854,6 +854,7 @@ id_shape(ShapeID,Shape):- is_shape_id_for(Shape,ShapeID).
 iv_for(L,Iv):- copy_term(L,CT,_),numbervars(CT,0,_,[attvar(bind),singletons(true)]),term_hash(CT,Fv),
  number(Fv), Iv is (Fv rem 800) + 1,!. % (\+ is_iv_for(Iv,_) -> asserta_if_new(is_iv_for(Iv,L)) ; true).
 
+obj_iv(obj(obj(Obj)),Iv):- !, obj_iv(obj((Obj)),Iv).
 obj_iv(Obj,Iv):- indv_props(Obj,giz(iv(Iv))),!.
 obj_iv(Obj,Iv):- indv_u_props(Obj,L),iv_for(L,Iv),!.
 obj_iv(Obj,Iv):- globalpoints(Obj,GP),gpoints_to_iv(GP,Iv),!.
@@ -880,6 +881,7 @@ obj_to_oid(I,X):- var_check(I,obj_to_oid(I,X))*->!;
 */
 obj_to_oid(Obj,OID):-  var(Obj),!,oid_glyph_object(OID,_,Obj).
 obj_to_oid(Obj,OID):-  atom(Obj),display_length(Obj,L),L>5,Obj=OID,!.
+obj_to_oid(obj(obj(Obj)),OID):- !, obj_to_oid(obj(Obj),OID).
 obj_to_oid(Obj,OID):-  oid_glyph_object(OID,_,Obj),!.
 obj_to_oid(Obj,OID):-  obj_to_decl_oid(Obj,OID),!, 
   %must_det_ll(object_glyph(Obj,Glyph)),!,
@@ -1040,13 +1042,19 @@ metaq_1(P3,Did,Old,New,Orig,Saved):- compound(Orig),Orig=Old, call(P3,Old,New,Sa
 %indv_prop_val1(I,V):- indv_props(I,V).
 %indv_prop_val1(I,X):- compound(X),I=obj(List),member(X,List).
 indv_props_list(Obj,Props):- var(Obj),!,enum_object(Obj),indv_props_list0(Obj,Props).
+indv_props_list(Grp,GrpOO):- is_group(Grp),!,mapgroup(indv_props_list0,Grp,GrpO),append(GrpO,GrpOO).
 indv_props_list(OID,NVL):- indv_props_list0(OID,NVL).
 
-indv_props_list0(OID,NVL):- is_oid(OID),!,oid_to_objlist(OID,NVS), combine_cindv(OID,NVS,NVL).
-indv_props_list0(Obj,NVL):- is_object(Obj),!,obj_to_objlist(Obj,NVS), combine_cindv(Obj,NVS,NVL).
+
+indv_props_list0(OID,NVL):- is_oid(OID),!,oid_to_propslist(OID,NVS), combine_cindv(OID,NVS,NVL).
+indv_props_list0(Obj,NVL):- is_object(Obj),!,obj_to_propslist(Obj,NVS), combine_cindv(Obj,NVS,NVL).
+indv_props_list0(obj(PA),PA):- my_assertion(is_list(PA)).
+%indv_props_list0(OID,List):- is_oid(OID), oid_to_obj(OID,Obj),!,indv_props_list(Obj,List).
 indv_props_list0(OProps,Props):- is_obj_props(OProps),!,Props=OProps.
 indv_props_list0([E|OID],[E|NVL]):- is_prop(E),!,indv_props_list1(OID,NVL).
-indv_props_list0(Objs,Props):- is_list(Objs),!,my_maplist(indv_props_list0,Objs,OProps),append(OProps,Props).
+indv_props_list0(Objs,Props):- is_list(Objs),!,my_maplist(indv_props_list0,Objs,Props).
+indv_props_list0(PA,PAP):- is_list(PA),!,PAP=PA.
+indv_props_list0(alone(_OID,PA),PA):- my_assertion(is_list(PA)).
 indv_props_list0(Obj,Props):- lock_doing(has_prop_list,Obj,has_prop_list(Obj,Props)).
 
 indv_props_list1(Var,Var):- var(Var),!.
@@ -1079,10 +1087,10 @@ indv_props(I,NV):-  must_be(compound,NV), cindv(I,NV).
 cindv(OID,NV):- var(OID),!,is_oid(OID),cindv(OID,NV).
 cindv(OID,NV):- is_oid(OID),!,cindv0(OID,NV).
 cindv(Obj,_):- \+ is_object(Obj),!,fail.
-cindv(Obj,NV):- obj_to_objlist(Obj,L),member(NV,L).
+cindv(Obj,NV):- obj_to_propslist(Obj,L),member(NV,L).
 cindv(Obj,NV):- really_use_cindv, obj_to_oid(Obj,OID),cindv0(OID,NV).
 
-cindv0(OID,NV):- \+ nb_current(o2obj,t), oid_to_objlist(OID,L),nv_member(NV,L).
+cindv0(OID,NV):- \+ nb_current(o2obj,t), oid_to_propslist(OID,L),nv_member(NV,L).
 cindv0(OID,NV):- really_use_cindv, cindv1(OID,NV).
 
 cindv1(OID,NV):- compound(NV),!,NV=..NVL,apply(cindv(OID),NVL).
@@ -1093,16 +1101,16 @@ cindv1(OID,NV):- cindv(OID,A,B,C,D,E),NV=..[A,B,C,D,E].
 
 really_use_cindv:- false.
 
-oid_to_objlist(OID,List):- oid_to_obj(OID,Obj),obj_to_objlist(Obj,List).
+oid_to_propslist(OID,List):- oid_to_obj(OID,Obj),obj_to_propslist(Obj,List).
 
-obj_to_objlist(obj(List),ListO):- member(was_oid(OID),List),!,oid_to_obj(OID,obj(ListM)),append_sets(ListM,List,ListO).
-obj_to_objlist(obj(List),List).
-obj_to_objlist(Obj,[NV]):- fail, \+ nb_current(o2obj,t), locally(nb_setval(o2obj,t),is_in_subgroup(_Grp,Obj,NV)).
+obj_to_propslist(obj(List),ListO):- member(was_oid(OID),List),!,oid_to_obj(OID,obj(ListM)),append_sets(ListM,List,ListO).
+obj_to_propslist(obj(List),List).
+obj_to_propslist(Obj,[NV]):- fail, \+ nb_current(o2obj,t), locally(nb_setval(o2obj,t),is_in_subgroup(_Grp,Obj,NV)).
 
-cindv(OID,A,B):- oid_to_objlist(OID,L),member(NV,L),NV=..[A,B].
-cindv(OID,A,B,C):- oid_to_objlist(OID,L),member(NV,L),NV=..[A,B,C].
-cindv(OID,A,B,C,D):- oid_to_objlist(OID,L),member(NV,L),NV=..[A,B,C,D].
-cindv(OID,A,B,C,D,E):- oid_to_objlist(OID,L),member(NV,L),NV=..[A,B,C,D,E].
+cindv(OID,A,B):- oid_to_propslist(OID,L),member(NV,L),NV=..[A,B].
+cindv(OID,A,B,C):- oid_to_propslist(OID,L),member(NV,L),NV=..[A,B,C].
+cindv(OID,A,B,C,D):- oid_to_propslist(OID,L),member(NV,L),NV=..[A,B,C,D].
+cindv(OID,A,B,C,D,E):- oid_to_propslist(OID,L),member(NV,L),NV=..[A,B,C,D,E].
 
 nv_member(NV,L):- var(NV),nonvar(L),!,member(PNV,L),pnv_to_nv(PNV,NV).
 nv_member(PNV,L):- nonvar(PNV),pnv_to_nv1(PNV,NV),!,member(PNV2,L),pnv_to_nv(PNV2,NV).
@@ -1649,36 +1657,41 @@ rotSize2D(grav,Grid,H,V):- is_grid(Grid),!,grav_roll(Grid,_RotG,RotShape),grid_s
 rotSize2D(grav,NT,H,V):-  into_gridoid(NT,G),G\==NT, rotSize2D(grav,G,H,V).
 
 
-%externalize_links(Obj,[link(C,A),EL|More],[link(C,A),elink(C,Ext)|LMore]):- EL\=elink(_,_),externalize_obj(Obj,Other,Ext),!,externalize_links(Obj,[EL|More],LMore).
-externalize_links(Objs,NewObjs):- is_group(Objs),!,
-  mapgroup(externalize_links,Objs,NewObjs).
-externalize_links(Obj,NewObj):- is_object(Obj),!,externalize_obj_links(Obj,NewObj),!.
-externalize_links(Objs,Objs):-!.
+%externalize_links(obj_grp(O1L,Grp),[link(C,A),EL|More],[link(C,A),elink(C,Ext)|LMore]):- EL\=elink(_,_),externalize_obj(Obj,Other,Ext),!,externalize_links(obj_grp(O1L,Grp),[EL|More],LMore).
+externalize_links(Grp,NewObjs):- 
+ must_det_ll((is_group_or_objects_list(Grp), 
+   maplist(externalize_links(grp(Grp)),Grp,NewObjs))).
+%externalize_links(obj_grp(O1L,Grp),NewObj):- is_object(Obj),!,externalize_obj_links(Obj,NewObj),!.
+%externalize_links(obj_grp(O1L,Grp),Objs):-!.
 
-externalize_obj_links(Obj,NewObj):- indv_props_list(Obj,List),
-  externalize_links(Obj,List,NewList),NewObj=obj(NewList).
+externalize_links(grp(Grp),Obj,NewObj):-
+   indv_props_list(Obj,O1L), 
+   maplist(externalize_links(obj_grp(O1L,Grp)),O1L,NewList), 
+   NewObj=obj(NewList).
 
-externalize_links(Obj,[link(C,A)|More],[elink(C,Ext)|LMore]):- atom(A),externalize_obj(Obj,A,Ext),!, externalize_links(Obj,More,LMore).
-externalize_links(Obj,[A|More],[A|LMore]):-!,externalize_links(Obj,More,LMore).  
-externalize_links(_Obj,A,A).
+externalize_links(obj_grp(O1L,Grp),link(C,A),elink(C,Ext)):- !, externalize_obj(obj_grp_link(O1L,Grp,C),A,Ext).
+externalize_links(obj_grp(_O1L,_Grp),A,A).
 
-externalize_obj(Obj,Other,Ext):-
-  must_det_ll(( indv_props_list(Obj,O1L),
-   indv_props_list(Other,O2L),
-   my_maplist(externalize_prop(O1L,O2L),[giz(glyph),loc2D,vis2D,rot2D,iz(sid),iz(stype),colors],Ext))).
+externalize_obj(obj_grp_link(O1,_Grp, C),OID2,Ext):- 
+ must_det_ll((
+   indv_props_list(O1,O1L), 
+   indv_props_list(OID2,O2L),
+   findall(Prop,
+     (member(Functor,[giz(glyph),iz(sid),iz(type),iz(stype),delta(loc2D),delta(vis2D),delta(rot2D),delta(pen)]),
+      externalize_prop(O1L,C,O2L,Functor,Prop)),Ext))).
 
 %[loc2D,vis2D,rot2D,iz(sid),iz(stype),colors]
-externalize_prop(O1L,O2L,Prop,Ext):- 
-  select_prop(Prop,O1L,P1),
-  select_prop(Prop,O2L,P2),
-  proportional(P1,P2,Ext),!.
-externalize_prop(_O1L,O2L,Prop,Ext):- 
-  select_prop(Prop,O2L,Ext),!.
-externalize_prop(_Obj,_Other,Prop,unk(Prop)). 
+externalize_prop(O1L,_C,O2L,delta(Functor),Delta):- 
+  select_prop(Functor,O1L,Prop1),
+  select_prop(Functor,O2L,Prop2),
+  must_det_ll(proportional(Prop1,Prop2,Delta)),!.
+externalize_prop(O1L,C,O2L,delta(Functor),Prop):- !, externalize_prop(O1L,C,O2L,Functor,Prop).
+externalize_prop(_O1L,_C,O2L,Functor,Prop):-  select_prop(Functor,O2L,Prop),!.
+%externalize_prop(_Obj,_C,_O2L,Functor,unk(Functor)). 
    
-select_prop(Prop,O2L,P2):- atom(Prop),!,member(P2,O2L), functor(O2L,Prop,_).
-select_prop(iz(Prop),O2L,P2):- atom(Prop),!,member(iz(P2),O2L), functor(O2L,Prop,_).
-select_prop(giz(Prop),O2L,P2):- atom(Prop),!,member(iz(P2),O2L), functor(O2L,Prop,_).
+select_prop(Functor,O2L,Prop):- atom(Functor),!,member(Prop,O2L), functor(Prop,Functor,_).
+select_prop(iz(Functor),O2L,Prop):- atom(Functor),!,member(iz(Prop),O2L), functor(Prop,Functor,_).
+select_prop(giz(Functor),O2L,Prop):- atom(Functor),!,member(giz(Prop),O2L), functor(Prop,Functor,_).
 
 %vis2D(Obj,size2D(H,V)):- vis2D(Obj,H,V).
 %loc2D(Obj,loc2D(H,V)):- loc2D(Obj,H,V).

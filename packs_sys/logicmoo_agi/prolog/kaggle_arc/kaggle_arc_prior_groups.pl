@@ -247,7 +247,7 @@ print_treeified_props(Named,Objs):-
   print_ptree(Named,PropLists))).
 
 treed_plist(Obj,PropList):-
-  into_obj_plist(Obj,RawPropList),
+  indv_props_list(Obj,RawPropList),
   treed_props_list(RawPropList,PropList),!.
 
 treed_props_list(RawPropLists,PropLists):-
@@ -279,29 +279,27 @@ contains_enough_for_print([P|Props],G):- is_obj_props(Props),!,(contains_enough_
 is_obj_props(Props):- is_list(Props), Props\==[], \+ is_gridoid(Props), \+ is_points_list(Props),
   my_maplist(is_prop,Props).
 is_prop(Prop):- compound(Prop), \+ is_list(Prop), \+ is_gridoid(Prop),!.
-is_prop(Prop):- writeln(not(is_prop(Prop))),!,fail.
+is_prop(Prop):- writeln(user_error,not(is_prop(Prop))),!,fail.
 
 %extend_grp_proplist(Grp,GrpO):- Grp==[],!,GrpO=[].
-extend_grp_proplist(Grp,GrpO):-
-  must_det_ll((mapgroup(extend_obj_proplist(Grp),Grp,GrpM),
+extend_grp_proplist(Grp,GrpO):- user:extend_grp_proplist0(Grp,GrpO),!.
+extend_grp_proplist0(Grp,GrpO):-
+  must_det_ll((maplist(extend_obj_proplist(Grp),Grp,GrpM),
   externalize_links(GrpM,GrpO))).
 
 
 extend_obj_proplist(Obj,Props):- extend_obj_proplist(_,Obj,Props).
 
 %extend_obj_proplist(Var,NewObj):- var(Var),!, enum_object(Var),extend_grp_proplist(Var,NewObj).
-extend_obj_proplist(Grp,[obj(Obj)],[obj(OUT)]):-!, extend_obj_proplist1(Grp,Obj,OUT).
-extend_obj_proplist(Grp,obj(Obj),obj(OUT)):-!, extend_obj_proplist1(Grp,Obj,OUT).
-extend_obj_proplist(Grp,L1,L2):- extend_obj_proplist1(Grp,L1,L2).
-
-
-extend_obj_proplist1(Grp,Props,OUTL):- must_det_ll(is_obj_props(Props)),
+extend_obj_proplist(Grp,[obj(Obj)],[obj(OUT)]):-!, extend_obj_proplist(Grp,Obj,OUT).
+extend_obj_proplist(Grp,obj(Obj),obj(OUT)):-!, extend_obj_proplist(Grp,Obj,OUT).
+extend_obj_proplist(Grp,Props,OUTL):- must_det_ll(is_obj_props(Props)),
   Obj = obj(Props),
   findall(P,extend_obj_prop(Grp,Obj,P),NewProps),
   flatten(NewProps,NewPropsF),
   override_object(NewPropsF,Props,Obj1),
   %override_object(Props,Obj1,OUT),
-  into_obj_plist(Obj1,OUTL).
+  indv_props_list(Obj1,OUTL).
 
   
 %lazy_prop(Prop):-  algo_list(Algo), arg(_,v(grid_ops(Algo,_NormOps),iz(algo_sid(Algo,_NormShapeID)),grid_rep(Algo,_NormGrid)),Prop).
@@ -314,18 +312,11 @@ extend_obj_prop(_Grp,Obj,Prop):- compound(Obj), Obj = obj(List),
 
 
 extend_obj_or_proplist(In,PLists):- is_list(In), last(In,Obj),is_object(Obj),!,must_det_ll((extend_grp_proplist(In,Objs),
-  my_maplist(into_obj_plist,Objs,PLists))).
-extend_obj_or_proplist(In,PLists):- is_list(In), last(In,Obj),is_list(Obj),!, must_det_ll((my_maplist(into_obj_plist,In,PLists))).
+  my_maplist(indv_props_list,Objs,PLists))).
+extend_obj_or_proplist(In,PLists):- is_list(In), last(In,Obj),is_list(Obj),!, must_det_ll((my_maplist(indv_props_list,In,PLists))).
 extend_obj_or_proplist(In,In).
 
-into_obj_plist(OID,List):- var(OID),!,enum_object(OID),into_obj_plist(OID,List).
-into_obj_plist(alone(_OID,PA),PA):- my_assertion(is_list(PA)).
-into_obj_plist(Grp,GrpOO):- is_group(Grp),!,mapgroup(into_obj_plist,Grp,GrpO),flatten(GrpO,GrpOO).
-into_obj_plist(PA,PAP):- is_list(PA),!,PAP=PA.
-into_obj_plist(obj(PA),PA):- my_assertion(is_list(PA)).
-into_obj_plist(OID,List):- is_oid(OID), oid_to_obj(OID,Obj),!,into_obj_plist(Obj,List).
-into_obj_plist(Obj,Props):- indv_props_list(Obj,Props),!.
-%%%into_obj_plist(PA,PAP):- must_det_ll((extend_grp_proplist(PA,Obj), into_obj_plist(Obj,PAP))),!.
+%%%indv_props_list(PA,PAP):- must_det_ll((extend_grp_proplist(PA,Obj), indv_props_list(Obj,PAP))),!.
  
 
 non_interesting_props(OProps):- var(OProps),!.

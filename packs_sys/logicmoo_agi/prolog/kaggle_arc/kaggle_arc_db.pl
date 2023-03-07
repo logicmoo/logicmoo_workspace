@@ -500,7 +500,7 @@ is_adjacent_2points(HV,Dir,HV2,HV3):-  is_adjacent_point(HV,Dir,HV2),is_adjacent
 
 create_points_plus:- show_time_gt_duration(0.3,create_points_plus_now).
 
-%create_points_plus_now:- \+ point_atoms,!.
+create_points_plus_now:- \+ point_atoms,!.
 create_points_plus_now:- 
  forall(
   (between(1,30,H1),between(1,30,V1),
@@ -519,6 +519,10 @@ create_points_plus_now:-
 assert_point_plus_if_needed(HV1,HV2,HV):- point_plus(HV1,HV2,HV),!.
 assert_point_plus_if_needed(HV1,HV2,HV):- assert(is_point_plus(HV1,HV2,HV)).
 
+point_plus(hv(H1,V1),hv(H2,V2),hv(H3,V3)):- \+ point_atoms,!, 
+  H3 #= H1 + H2 -1,
+  V3 #= V1 + V2 -1.
+  
 point_plus(HV0101,HV,HV):- hv_point(1,1,HV0101), hv_point(_,_,HV).
 point_plus(HV,HV0101,HV):- hv_point(1,1,HV0101), hv_point(_,_,HV).
 point_plus(HV1,HV2,HV):- is_point_plus(HV1,HV2,HV).

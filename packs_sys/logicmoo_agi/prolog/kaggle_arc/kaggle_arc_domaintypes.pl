@@ -221,34 +221,32 @@ is_grid_color(C):- is_color(C).
 
 is_color_dat(C):- atomic(C),user:color_code(C,W),!,C==W.
 
-
 :- export(set_bgc/1).
-:- nb_delete(grid_bgc).
-set_bgc(C):- atom(C),color_code(C,N),C\==N,!,set_bgc(N).
-set_bgc(C):- plain_var(C),nb_delete(grid_bgc),fail.
-set_bgc(C):- luser_setval(grid_bgc,C),!.
+:- decl_pt(set_bgc(color)).
+set_bgc(BGC):- var(BGC),!,ignore(nb_delete(grid_bgc)),luser_linkval(grid_bgc,BGC),!.
+set_bgc(BGC):- luser_linkval(grid_bgc,BGC).
 
-
-
-
-
-
-:- decl_pt(get_black(color)).
-get_black(B):- get_bgco(B),!.
-get_black(B):- luser_getval(user_black,B).
-%get_black(0).
-:- luser_default(user_black,black).
-
-:- decl_pt(get_bgco(color)).
-get_bgco(X):- luser_getval(grid_bgc,X),X\==[],is_color_dat(X),!.
-:- set_bgc(black).
-
+:- export(get_bgc/1).
 :- decl_pt(get_bgc(color)).
-get_bgc(X):- get_bgco(X),!.
-get_bgc(X):- get_black(X).
+get_bgc(BGC):- !,BGC = black.
+get_bgc(BGC):- luser_getval(grid_bgc,BGC),!.
+get_bgc(BGC):- get_black(BGC).
+:- nb_delete(grid_bgc).
+:- luser_default(grid_bgc,bgc).
 
-grid_bgc(G,BG):- sub_var(black,G),BG=black,!.
-grid_bgc(_,BGC):- get_bgc(BGC).
+:- export(set_black/1).
+:- decl_pt(set_black(color)).
+set_black(BGC):- var(BGC),!,ignore(nb_delete(grid_black)),luser_linkval(grid_black,BGC),!.
+set_black(BGC):- luser_linkval(grid_black,BGC).
+
+:- export(get_black/1).
+:- decl_pt(get_black(color)).
+get_black(BGC):- !,BGC = black.
+get_black(BGC):- luser_getval(grid_black,BGC),!.
+get_black(black).
+:- nb_delete(grid_black).
+:- luser_default(grid_black,black).
+
 
 is_color_no_bgc(X):- \+ is_bg_color(X), is_color(X).
 
@@ -260,7 +258,7 @@ free_cell(Var):- plain_var(Var),!.
 free_cell(wbg):-!.
 free_cell(bg):-!.
 %adjacent_point_allowe
-free_cell(C):- get_bgco(X),C==X.
+free_cell(C):- get_bgc(X),C==X.
 
 non_free_fg(C):- \+ free_cell(C), \+ is_bg_color(C).
 
@@ -600,6 +598,9 @@ is_object(O):- compound(O), O = obj(_).
 %is_object_group([G|V]):- is_object(G),is_list(V),my_maplist(is_object,V).
 %is_group(Dict):- is_vm_map(Dict),!,get_kov(objs,Dict,_).
 is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),my_maplist(is_object_or_grid,V),!.
+
+:- ansi_term:import(is_group/1).
+
 
 is_functor(F,E):- compound(E),functor(E,F,_).
 is_functor(F,A,E):- compound(E),functor(E,F,A).
