@@ -1683,7 +1683,8 @@ pt111(Tab, Pad, List):-
 pt11(Pad, [E|List]):-
   pformat_functor('[ '), print_using_up(Pad,'',E), maplist(print_using_up(Pad,','),List), write(']'),!.
 
-be_extra(Goal):- ignore(call(Goal)).
+%be_extra(Goal):- ignore(call(Goal)).
+be_extra(_DONT).
 
 print_to_string11(_,Max,VarOrNill,VarOrNill,Max):- (var(VarOrNill);VarOrNill==[]),!.
 print_to_string11(PS2,I,[H|T],[HH|TT],O):- !, print_to_string11(PS2,I,H,HH,M),print_to_string11(PS2,M,T,TT,O).
@@ -1855,7 +1856,8 @@ pt1(_FS,Tab,T) :-
    system_portray(Tab,T),!.
 
 pt1(FS,Tab,(NPV)) :- use_new, NPV=..[OP,N],
-    prefix_spaces(Tab), pformat(OP), pformat('(/*a1*/ '), print_tree_no_nl(N), pformat(')'),!,
+    prefix_spaces(Tab), pformat(OP), pformat('( '), 
+    print_tree_no_nl(N), pformat(')'),!,
     ignore(((FS=[Fst|_],Fst=op(_,N),N>1,nl))).
 
 % yfx
