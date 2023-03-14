@@ -1,5 +1,5 @@
 
-
+% ?- uast_test.
 
 
 %~ % Universal AST Pass #0
@@ -42,34 +42,127 @@ identity(X_01,ANY_02) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(add_token(+),subscript_value_slice("a",1),"b")]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"tuple"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right(add_token(+),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]),
+%~                                             orelse_else_stmts( [ if_test_body(
+%~                                                                     bool_op_values( ['python:And'], [
+%~                                                                       call_func_args("isinstance",[A_01,"int"]),
+%~                                                                       call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                                     body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                                               bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,1))]))]))]))]))
+%~
+%~ replacing_with_var(body_stmts([return_value(bin_op_left_right(add_token(+),A_01,B_02))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"int"]))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"tuple"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right(add_token(+),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]),
+%~                        orelse_else_stmts( [ if_test_body(
+%~                                                bool_op_values( ['python:And'], [
+%~                                                  call_func_args("isinstance",[A_01,"int"]),
+%~                                                  call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                          bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,1))]))]))])))
+%~
+%~ replacing_with_var(return_value(bin_op_left_right(add_token(+),A_01,B_02)))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right(add_token(+),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"int"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,1))]))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"tuple"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right(add_token(+),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"int"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,1))]))])))
+%~
+%~ replacing_with_var(call_func_args(add_token(+),[A_01,B_02]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right(add_token(+),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right(add_token(+),A_01,subscript_value_slice(B_02,1))]))
+%~
 % Compiled KL-1 for add
 add(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' addition ') ,
-  ( testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,int])])) ->
-      [call_op(+,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,tuple]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_04], [
-          call_func_args(+,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-          call_func_args(+,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_04,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03)) ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_05], [
-          call_func_args(+,[A_01,subscript_value_slice(B_02,0)]),
-          call_func_args(+,[A_01,subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_05,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03))) ,
-  assign_targets_value( [ARG_06], [
-    call_func_args(+,[subscript_value_slice(A_01,0),B_02]),
-    call_func_args(+,[subscript_value_slice(A_01,1),B_02])]) ,
-  tuple_elts(ARG_06,NUMERICAL_03) ,
+  subscript_value_slice(A_01,0,ARG_027) ,
+  subscript_value_slice(B_02,0,ARG_028) ,
+  call([op_call(add_token(+,ARG_027,ARG_028,ARG_022))]) ,
+  subscript_value_slice(A_01,1,ARG_029) ,
+  subscript_value_slice(B_02,1,ARG_030) ,
+  call([op_call(add_token(+,ARG_029,ARG_030,ARG_023))]) ,
+  tuple_elts(ARG_022,ARG_023,ARG_021) ,
+  return_value(ARG_021,ARG_018) ,
+  body_stmts([ARG_018],ARG_014) ,
+  subscript_value_slice(B_02,0,ARG_035) ,
+  call([op_call(add_token(+,A_01,ARG_035,ARG_033))]) ,
+  subscript_value_slice(B_02,1,ARG_036) ,
+  call([op_call(add_token(+,A_01,ARG_036,ARG_034))]) ,
+  tuple_elts(ARG_033,ARG_034,ARG_032) ,
+  return_value(ARG_032,ARG_031) ,
+  body_stmts([ARG_031],ARG_024) ,
+  if_test_body(
+     [ isinstance(A_01,INT,ARG_025),
+       isinstance(B_02,TUPLE,ARG_026),
+       bool_op_values(['python:And'],[ARG_025,ARG_026])], ARG_024,ARG_019) ,
+  orelse_else_stmts([ARG_019],ARG_015) ,
+  if_test_body_orelse(
+     [ isinstance(A_01,TUPLE,ARG_016),
+       isinstance(B_02,TUPLE,ARG_017),
+       bool_op_values(['python:And'],[ARG_016,ARG_017])], ARG_014,ARG_015,
+     ARG_010) ,
+  orelse_else_stmts([ARG_010],ARG_04) ,
+  (/*2*/
+    [ call([op_call(add_token(+,A_01,B_02,ARG_020))]),
+      return_value(ARG_020,ARG_011),
+      body_stmts([ARG_011],ARG_05),
+      testif( [ isinstance(A_01,INT,ARG_06),
+                isinstance(B_02,INT,ARG_07),
+                bool_op_values(['python:And'],[ARG_06,ARG_07])]) ->
+        ARG_05] ;
+    ARG_04) ,
+  subscript_value_slice(A_01,0,ARG_012) ,
+  call([op_call(add_token(+,ARG_012,B_02,ARG_08))]) ,
+  subscript_value_slice(A_01,1,ARG_013) ,
+  call([op_call(add_token(+,ARG_013,B_02,ARG_09))]) ,
+  tuple_elts(ARG_08,ARG_09,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "subtract",
@@ -99,34 +192,127 @@ add(A_01,B_02,NUMERICAL_03) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(sub_token(-),subscript_value_slice("a",1),"b")]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"tuple"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right(sub_token(-),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]),
+%~                                             orelse_else_stmts( [ if_test_body(
+%~                                                                     bool_op_values( ['python:And'], [
+%~                                                                       call_func_args("isinstance",[A_01,"int"]),
+%~                                                                       call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                                     body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                                               bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,1))]))]))]))]))
+%~
+%~ replacing_with_var(body_stmts([return_value(bin_op_left_right(sub_token(-),A_01,B_02))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"int"]))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"tuple"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right(sub_token(-),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]),
+%~                        orelse_else_stmts( [ if_test_body(
+%~                                                bool_op_values( ['python:And'], [
+%~                                                  call_func_args("isinstance",[A_01,"int"]),
+%~                                                  call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                          bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,1))]))]))])))
+%~
+%~ replacing_with_var(return_value(bin_op_left_right(sub_token(-),A_01,B_02)))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right(sub_token(-),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"int"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,1))]))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"tuple"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right(sub_token(-),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"int"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,1))]))])))
+%~
+%~ replacing_with_var(call_func_args(sub_token(-),[A_01,B_02]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right(sub_token(-),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right(sub_token(-),A_01,subscript_value_slice(B_02,1))]))
+%~
 % Compiled KL-1 for subtract
 subtract(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' subtraction ') ,
-  ( testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,int])])) ->
-      [call_op(-,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,tuple]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_04], [
-          call_func_args(-,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-          call_func_args(-,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_04,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03)) ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_05], [
-          call_func_args(-,[A_01,subscript_value_slice(B_02,0)]),
-          call_func_args(-,[A_01,subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_05,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03))) ,
-  assign_targets_value( [ARG_06], [
-    call_func_args(-,[subscript_value_slice(A_01,0),B_02]),
-    call_func_args(-,[subscript_value_slice(A_01,1),B_02])]) ,
-  tuple_elts(ARG_06,NUMERICAL_03) ,
+  subscript_value_slice(A_01,0,ARG_027) ,
+  subscript_value_slice(B_02,0,ARG_028) ,
+  call([op_call(sub_token(-,ARG_027,ARG_028,ARG_022))]) ,
+  subscript_value_slice(A_01,1,ARG_029) ,
+  subscript_value_slice(B_02,1,ARG_030) ,
+  call([op_call(sub_token(-,ARG_029,ARG_030,ARG_023))]) ,
+  tuple_elts(ARG_022,ARG_023,ARG_021) ,
+  return_value(ARG_021,ARG_018) ,
+  body_stmts([ARG_018],ARG_014) ,
+  subscript_value_slice(B_02,0,ARG_035) ,
+  call([op_call(sub_token(-,A_01,ARG_035,ARG_033))]) ,
+  subscript_value_slice(B_02,1,ARG_036) ,
+  call([op_call(sub_token(-,A_01,ARG_036,ARG_034))]) ,
+  tuple_elts(ARG_033,ARG_034,ARG_032) ,
+  return_value(ARG_032,ARG_031) ,
+  body_stmts([ARG_031],ARG_024) ,
+  if_test_body(
+     [ isinstance(A_01,INT,ARG_025),
+       isinstance(B_02,TUPLE,ARG_026),
+       bool_op_values(['python:And'],[ARG_025,ARG_026])], ARG_024,ARG_019) ,
+  orelse_else_stmts([ARG_019],ARG_015) ,
+  if_test_body_orelse(
+     [ isinstance(A_01,TUPLE,ARG_016),
+       isinstance(B_02,TUPLE,ARG_017),
+       bool_op_values(['python:And'],[ARG_016,ARG_017])], ARG_014,ARG_015,
+     ARG_010) ,
+  orelse_else_stmts([ARG_010],ARG_04) ,
+  (/*2*/
+    [ call([op_call(sub_token(-,A_01,B_02,ARG_020))]),
+      return_value(ARG_020,ARG_011),
+      body_stmts([ARG_011],ARG_05),
+      testif( [ isinstance(A_01,INT,ARG_06),
+                isinstance(B_02,INT,ARG_07),
+                bool_op_values(['python:And'],[ARG_06,ARG_07])]) ->
+        ARG_05] ;
+    ARG_04) ,
+  subscript_value_slice(A_01,0,ARG_012) ,
+  call([op_call(sub_token(-,ARG_012,B_02,ARG_08))]) ,
+  subscript_value_slice(A_01,1,ARG_013) ,
+  call([op_call(sub_token(-,ARG_013,B_02,ARG_09))]) ,
+  tuple_elts(ARG_08,ARG_09,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "multiply",
@@ -156,34 +342,127 @@ subtract(A_01,B_02,NUMERICAL_03) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(mult_token(*),subscript_value_slice("a",1),"b")]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"tuple"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right(mult_token(*),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]),
+%~                                             orelse_else_stmts( [ if_test_body(
+%~                                                                     bool_op_values( ['python:And'], [
+%~                                                                       call_func_args("isinstance",[A_01,"int"]),
+%~                                                                       call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                                     body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                                               bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,1))]))]))]))]))
+%~
+%~ replacing_with_var(body_stmts([return_value(bin_op_left_right(mult_token(*),A_01,B_02))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"int"]))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"tuple"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right(mult_token(*),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]),
+%~                        orelse_else_stmts( [ if_test_body(
+%~                                                bool_op_values( ['python:And'], [
+%~                                                  call_func_args("isinstance",[A_01,"int"]),
+%~                                                  call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                          bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,1))]))]))])))
+%~
+%~ replacing_with_var(return_value(bin_op_left_right(mult_token(*),A_01,B_02)))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right(mult_token(*),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"int"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,1))]))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"tuple"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right(mult_token(*),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"int"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,1))]))])))
+%~
+%~ replacing_with_var(call_func_args(mult_token(*),[A_01,B_02]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right(mult_token(*),subscript_value_slice(A_01,1),subscript_value_slice(B_02,1))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right(mult_token(*),A_01,subscript_value_slice(B_02,1))]))
+%~
 % Compiled KL-1 for multiply
 multiply(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' multiplication ') ,
-  ( testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,int])])) ->
-      [call_op(*,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,tuple]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_04], [
-          call_func_args(*,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-          call_func_args(*,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_04,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03)) ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_05], [
-          call_func_args(*,[A_01,subscript_value_slice(B_02,0)]),
-          call_func_args(*,[A_01,subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_05,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03))) ,
-  assign_targets_value( [ARG_06], [
-    call_func_args(*,[subscript_value_slice(A_01,0),B_02]),
-    call_func_args(*,[subscript_value_slice(A_01,1),B_02])]) ,
-  tuple_elts(ARG_06,NUMERICAL_03) ,
+  subscript_value_slice(A_01,0,ARG_027) ,
+  subscript_value_slice(B_02,0,ARG_028) ,
+  call([op_call(mult_token(*,ARG_027,ARG_028,ARG_022))]) ,
+  subscript_value_slice(A_01,1,ARG_029) ,
+  subscript_value_slice(B_02,1,ARG_030) ,
+  call([op_call(mult_token(*,ARG_029,ARG_030,ARG_023))]) ,
+  tuple_elts(ARG_022,ARG_023,ARG_021) ,
+  return_value(ARG_021,ARG_018) ,
+  body_stmts([ARG_018],ARG_014) ,
+  subscript_value_slice(B_02,0,ARG_035) ,
+  call([op_call(mult_token(*,A_01,ARG_035,ARG_033))]) ,
+  subscript_value_slice(B_02,1,ARG_036) ,
+  call([op_call(mult_token(*,A_01,ARG_036,ARG_034))]) ,
+  tuple_elts(ARG_033,ARG_034,ARG_032) ,
+  return_value(ARG_032,ARG_031) ,
+  body_stmts([ARG_031],ARG_024) ,
+  if_test_body(
+     [ isinstance(A_01,INT,ARG_025),
+       isinstance(B_02,TUPLE,ARG_026),
+       bool_op_values(['python:And'],[ARG_025,ARG_026])], ARG_024,ARG_019) ,
+  orelse_else_stmts([ARG_019],ARG_015) ,
+  if_test_body_orelse(
+     [ isinstance(A_01,TUPLE,ARG_016),
+       isinstance(B_02,TUPLE,ARG_017),
+       bool_op_values(['python:And'],[ARG_016,ARG_017])], ARG_014,ARG_015,
+     ARG_010) ,
+  orelse_else_stmts([ARG_010],ARG_04) ,
+  (/*2*/
+    [ call([op_call(mult_token(*,A_01,B_02,ARG_020))]),
+      return_value(ARG_020,ARG_011),
+      body_stmts([ARG_011],ARG_05),
+      testif( [ isinstance(A_01,INT,ARG_06),
+                isinstance(B_02,INT,ARG_07),
+                bool_op_values(['python:And'],[ARG_06,ARG_07])]) ->
+        ARG_05] ;
+    ARG_04) ,
+  subscript_value_slice(A_01,0,ARG_012) ,
+  call([op_call(mult_token(*,ARG_012,B_02,ARG_08))]) ,
+  subscript_value_slice(A_01,1,ARG_013) ,
+  call([op_call(mult_token(*,ARG_013,B_02,ARG_09))]) ,
+  tuple_elts(ARG_08,ARG_09,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "divide",
@@ -213,34 +492,137 @@ multiply(A_01,B_02,NUMERICAL_03) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(floor_div_token(//),subscript_value_slice("a",1),"b")]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"tuple"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right( floor_div_token(//),
+%~                                                                                         subscript_value_slice(A_01,1),
+%~                                                                                         subscript_value_slice(B_02,1))]))]),
+%~                                             orelse_else_stmts( [ if_test_body(
+%~                                                                     bool_op_values( ['python:And'], [
+%~                                                                       call_func_args("isinstance",[A_01,"int"]),
+%~                                                                       call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                                     body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                                               bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,1))]))]))]))]))
+%~
+%~ replacing_with_var( body_stmts([return_value(bin_op_left_right(floor_div_token(//),A_01,B_02))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"int"]))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"tuple"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right( floor_div_token(//),
+%~                                                                    subscript_value_slice(A_01,1),
+%~                                                                    subscript_value_slice(B_02,1))]))]),
+%~                        orelse_else_stmts( [ if_test_body(
+%~                                                bool_op_values( ['python:And'], [
+%~                                                  call_func_args("isinstance",[A_01,"int"]),
+%~                                                  call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                                body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                          bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,1))]))]))])))
+%~
+%~ replacing_with_var(return_value(bin_op_left_right(floor_div_token(//),A_01,B_02)))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right( floor_div_token(//),
+%~                                                                 subscript_value_slice(A_01,1),
+%~                                                                 subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body(
+%~                                             bool_op_values( ['python:And'], [
+%~                                               call_func_args("isinstance",[A_01,"int"]),
+%~                                               call_func_args("isinstance",[B_02,"tuple"])]),
+%~                                             body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,0)),
+%~                                                                                       bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,1))]))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"tuple"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right( floor_div_token(//),
+%~                                                   subscript_value_slice(A_01,1),
+%~                                                   subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          call_func_args("isinstance",[A_01,"int"]),
+%~                          call_func_args("isinstance",[B_02,"tuple"])]),
+%~                        body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,0)),
+%~                                                                  bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,1))]))])))
+%~
+%~ replacing_with_var(call_func_args(floor_div_token(//),[A_01,B_02]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right( floor_div_token(//),
+%~                                     subscript_value_slice(A_01,1),
+%~                                     subscript_value_slice(B_02,1))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,0)),
+%~                                                               bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,1))]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[A_01,"int"]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[B_02,"tuple"]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,0)),
+%~                                                 bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,1))])))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,0)),
+%~                                   bin_op_left_right(floor_div_token(//),A_01,subscript_value_slice(B_02,1))]))
+%~
 % Compiled KL-1 for divide
 divide(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' floor division ') ,
-  ( testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,int])])) ->
-      [call_op(//,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,tuple]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_04], [
-          call_func_args(//,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-          call_func_args(//,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_04,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03)) ;
-    testif( bool_op_values( ['python:And'], [
-              call_func_args(isinstance,[A_01,int]),
-              call_func_args(isinstance,[B_02,tuple])])) ->
-      ( assign_targets_value( [ARG_05], [
-          call_func_args(//,[A_01,subscript_value_slice(B_02,0)]),
-          call_func_args(//,[A_01,subscript_value_slice(B_02,1)])])  ,
-        tuple_elts(ARG_05,NUMERICAL_03) ,
-        exit_proc(NUMERICAL_03))) ,
-  assign_targets_value( [ARG_06], [
-    call_func_args(//,[subscript_value_slice(A_01,0),B_02]),
-    call_func_args(//,[subscript_value_slice(A_01,1),B_02])]) ,
-  tuple_elts(ARG_06,NUMERICAL_03) ,
+  subscript_value_slice(A_01,0,ARG_027) ,
+  subscript_value_slice(B_02,0,ARG_028) ,
+  call([op_call(floor_div_token(//,ARG_027,ARG_028,ARG_022))]) ,
+  subscript_value_slice(A_01,1,ARG_029) ,
+  subscript_value_slice(B_02,1,ARG_030) ,
+  call([op_call(floor_div_token(//,ARG_029,ARG_030,ARG_023))]) ,
+  tuple_elts(ARG_022,ARG_023,ARG_021) ,
+  return_value(ARG_021,ARG_018) ,
+  body_stmts([ARG_018],ARG_014) ,
+  subscript_value_slice(B_02,0,ARG_035) ,
+  call([op_call(floor_div_token(//,A_01,ARG_035,ARG_033))]) ,
+  subscript_value_slice(B_02,1,ARG_036) ,
+  call([op_call(floor_div_token(//,A_01,ARG_036,ARG_034))]) ,
+  tuple_elts(ARG_033,ARG_034,ARG_032) ,
+  return_value(ARG_032,ARG_031) ,
+  body_stmts([ARG_031],ARG_024) ,
+  if_test_body(
+     [ isinstance(A_01,INT,ARG_025),
+       isinstance(B_02,TUPLE,ARG_026),
+       bool_op_values(['python:And'],[ARG_025,ARG_026])], ARG_024,ARG_019) ,
+  orelse_else_stmts([ARG_019],ARG_015) ,
+  if_test_body_orelse(
+     [ isinstance(A_01,TUPLE,ARG_016),
+       isinstance(B_02,TUPLE,ARG_017),
+       bool_op_values(['python:And'],[ARG_016,ARG_017])], ARG_014,ARG_015,
+     ARG_010) ,
+  orelse_else_stmts([ARG_010],ARG_04) ,
+  (/*2*/
+    [ call([op_call(floor_div_token(//,A_01,B_02,ARG_020))]),
+      return_value(ARG_020,ARG_011),
+      body_stmts([ARG_011],ARG_05),
+      testif( [ isinstance(A_01,INT,ARG_06),
+                isinstance(B_02,INT,ARG_07),
+                bool_op_values(['python:And'],[ARG_06,ARG_07])]) ->
+        ARG_05] ;
+    ARG_04) ,
+  subscript_value_slice(A_01,0,ARG_012) ,
+  call([op_call(floor_div_token(//,ARG_012,B_02,ARG_08))]) ,
+  subscript_value_slice(A_01,1,ARG_013) ,
+  call([op_call(floor_div_token(//,ARG_013,B_02,ARG_09))]) ,
+  tuple_elts(ARG_08,ARG_09,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "invert",
@@ -253,17 +635,25 @@ divide(A_01,B_02,NUMERICAL_03) :-
 %~                                           tuple_elts( [ unary_op_operand(us_ub_token(-),subscript_value_slice("n",0)),
 %~                                                         unary_op_operand(us_ub_token(-),subscript_value_slice("n",1))])))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[N_01,"int"]))
+%~
+%~ replacing_with_var(subscript_value_slice(N_01,0))
+%~
+%~ replacing_with_var(subscript_value_slice(N_01,1))
+%~
 % Compiled KL-1 for invert
 invert(N_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' inversion with respect to addition ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[N_01,int])]) ->
-      [call_op(-,N_01,NUMERICAL_02)] ;
-    [ assign_targets_value( [ARG_03], [
-        call_func_args(-,[subscript_value_slice(N_01,0)]),
-        call_func_args(-,[subscript_value_slice(N_01,1)])]),
-      tuple_elts(ARG_03,NUMERICAL_02)]) ,
+    [ isinstance(N_01,INT,ARG_03),
+      testif(ARG_03)] ->
+      [ unary_op_operand(us_ub_token(-),N_01,NUMERICAL_02)] ;
+    [ subscript_value_slice(N_01,0,ARG_06),
+      unary_op_operand(us_ub_token(-),ARG_06,ARG_04),
+      subscript_value_slice(N_01,1,ARG_07),
+      unary_op_operand(us_ub_token(-),ARG_07,ARG_05),
+      tuple_elts(ARG_04,ARG_05,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "even",
@@ -272,12 +662,14 @@ invert(N_01,NUMERICAL_02) :-
 %~      block_statements( [ expr_value(string_value(' evenness ')),
 %~                          return_value(compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),"n",2),0))])))
 %~
+%~ replacing_with_var(bin_op_left_right(mod_token('%'),N_01,2))
+%~
 % Compiled KL-1 for even
 even(N_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' evenness ') ,
-  call_op('%',N_01,2,ARG_03) ,
-  call_op(==,ARG_03,0,BOOLEAN_02) ,
+  call([op_call(mod_token('%',N_01,2,ARG_03))]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_03,0,BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "double",
@@ -290,17 +682,21 @@ even(N_01,BOOLEAN_02) :-
 %~                                           tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice("n",0),2),
 %~                                                         bin_op_left_right(mult_token(*),subscript_value_slice("n",1),2)])))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[N_01,"int"]))
+%~
 % Compiled KL-1 for double
 double(N_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' scaling by two ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[N_01,int])]) ->
-      [call_op(*,N_01,2,NUMERICAL_02)] ;
-    [ assign_targets_value( [ARG_03], [
-        call_func_args(*,[subscript_value_slice(N_01,0),2]),
-        call_func_args(*,[subscript_value_slice(N_01,1),2])]),
-      tuple_elts(ARG_03,NUMERICAL_02)]) ,
+    [ isinstance(N_01,INT,ARG_03),
+      testif(ARG_03)] ->
+      [call([op_call(mult_token(*,N_01,2,NUMERICAL_02))])] ;
+    [ subscript_value_slice(N_01,0,ARG_06),
+      call([op_call(mult_token(*,ARG_06,2,ARG_04))]),
+      subscript_value_slice(N_01,1,ARG_07),
+      call([op_call(mult_token(*,ARG_07,2,ARG_05))]),
+      tuple_elts(ARG_04,ARG_05,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "halve",
@@ -313,17 +709,21 @@ double(N_01,NUMERICAL_02) :-
 %~                                           tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice("n",0),2),
 %~                                                         bin_op_left_right(floor_div_token(//),subscript_value_slice("n",1),2)])))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[N_01,"int"]))
+%~
 % Compiled KL-1 for halve
 halve(N_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' scaling by one half ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[N_01,int])]) ->
-      [call_op(//,N_01,2,NUMERICAL_02)] ;
-    [ assign_targets_value( [ARG_03], [
-        call_func_args(//,[subscript_value_slice(N_01,0),2]),
-        call_func_args(//,[subscript_value_slice(N_01,1),2])]),
-      tuple_elts(ARG_03,NUMERICAL_02)]) ,
+    [ isinstance(N_01,INT,ARG_03),
+      testif(ARG_03)] ->
+      [call([op_call(floor_div_token(//,N_01,2,NUMERICAL_02))])] ;
+    [ subscript_value_slice(N_01,0,ARG_06),
+      call([op_call(floor_div_token(//,ARG_06,2,ARG_04))]),
+      subscript_value_slice(N_01,1,ARG_07),
+      call([op_call(floor_div_token(//,ARG_07,2,ARG_05))]),
+      tuple_elts(ARG_04,ARG_05,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "flip",
@@ -336,7 +736,7 @@ halve(N_01,NUMERICAL_02) :-
 flip(B_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' logical not ') ,
-  'python:Not'(B_01,BOOLEAN_02) ,
+  unary_op_operand(['python:Not'],B_01,BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "equality",
@@ -352,7 +752,7 @@ flip(B_01,BOOLEAN_02) :-
 equality(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' equality ') ,
-  call_op(==,A_01,B_02,BOOLEAN_03) ,
+  compare_ops_left_comparators(eq_token(==),A_01,B_02,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "contained",
@@ -368,7 +768,7 @@ equality(A_01,B_02,BOOLEAN_03) :-
 contained(VALUE_01,CONTAINER_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' element of ') ,
-  'python:In'(VALUE_01,CONTAINER_02,BOOLEAN_03) ,
+  compare_ops_left_comparators(['python:In'],VALUE_01,CONTAINER_02,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "combine",
@@ -386,9 +786,10 @@ contained(VALUE_01,CONTAINER_02,BOOLEAN_03) :-
 combine(A_01,B_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' union ') ,
-  starred_value(B_02,ARG_05) ,
-  tuple_elts(ARG_05,ARG_04) ,
-  call_op(call_func_args("type",[A_01],ARG_04,CONTAINER_03)) ,
+  starred_value(A_01,ARG_05) ,
+  starred_value(B_02,ARG_06) ,
+  tuple_elts(ARG_05,ARG_06,ARG_04) ,
+  call([op_call(call_func_args("type",[A_01],ARG_04,CONTAINER_03))]) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "intersection",
@@ -404,7 +805,7 @@ combine(A_01,B_02,CONTAINER_03) :-
 intersection(A_01,B_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' returns the intersection of two containers ') ,
-  call_op(&,A_01,B_02,FROZENSET_03) ,
+  call([op_call(bit_and_token(&,A_01,B_02,FROZENSET_03))]) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
 %~ def( "difference",
@@ -420,7 +821,7 @@ intersection(A_01,B_02,FROZENSET_03) :-
 difference(A_01,B_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' set difference ') ,
-  call_op(-,A_01,B_02,FROZENSET_03) ,
+  call([op_call(sub_token(-,A_01,B_02,FROZENSET_03))]) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
 %~ def( "dedupe",
@@ -435,16 +836,41 @@ difference(A_01,B_02,FROZENSET_03) :-
 %~                                                  call_func_args(qualified_identifier_identifiers(["tup",boxed_attribute_value("index")]),["e"]),
 %~                                                  "i")])])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["i","e"]),
+%~                       call_func_args("enumerate",[TUP_01]),
+%~                       [ compare_ops_left_comparators( eq_token(==),
+%~                           call_func_args(
+%~                              qualified_identifier_identifiers([TUP_01,boxed_attribute_value("index")]),
+%~                              ["e"]),
+%~                           "i")]))
+%~
+%~ replacing_with_var(tuple_elts(["i","e"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[TUP_01]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       call_func_args(
+%~                          qualified_identifier_identifiers([TUP_01,boxed_attribute_value("index")]),
+%~                          ["e"]),
+%~                       "i"))
+%~
+%~ replacing_with_var( call_func_args(
+%~                        qualified_identifier_identifiers([TUP_01,boxed_attribute_value("index")]),
+%~                        ["e"]))
+%~
+%~ replacing_with_var(boxed_attribute_value("index"))
+%~
 % Compiled KL-1 for dedupe
 dedupe(TUP_01,TUPLE_02) :-
   willBeType(TUPLE_02,'Tuple') ,
   comment(' remove duplicates ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "e",
-      [ comprehension_target_iter_ifs( tuple_elts(["i","e"]),
-          call_func_args("enumerate",[TUP_01]),
-          [ call_func_args(==,[call_func_args("index",[TUP_01,"e"]),"i"])])])) ,
+  into_tuple(I,E,ARG_05) ,
+  enumerate(TUP_01,ARG_06) ,
+  call( [ op_call( [ boxed_attribute_value("index",ARG_09),
+                     qualified_identifier_identifiers([TUP_01,ARG_09],E,ARG_08)])]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_08,I,ARG_07) ,
+  comprehension_target_iter_ifs(ARG_05,ARG_06,[ARG_07],ARG_04) ,
+  generator_exp_elt_generators(E,[ARG_04],ARG_03) ,
   tuple(ARG_03,TUPLE_02) ,
   exit_proc(TUPLE_02).
 %~ % Universal AST Pass #0
@@ -462,8 +888,10 @@ dedupe(TUP_01,TUPLE_02) :-
 order(CONTAINER_01,COMPFUNC_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' order container by custom key ') ,
-  assign_var( ARG_04,
-    call_func_args_keywords("sorted",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
+  call_func_args_keywords( "sorted",
+    [CONTAINER_01],
+    [keyword_value(COMPFUNC_02)],
+    ARG_04) ,
   tuple(ARG_04,TUPLE_03) ,
   exit_proc(TUPLE_03).
 %~ % Universal AST Pass #0
@@ -477,14 +905,17 @@ order(CONTAINER_01,COMPFUNC_02,TUPLE_03) :-
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators("item",[comprehension_target_iter("i",call_func_args("range",["num"]))])]))])))
 %~
+%~ replacing_with_var(comprehension_target_iter("i",call_func_args("range",[NUM_02])))
+%~
+%~ replacing_with_var(call_func_args("range",[NUM_02]))
+%~
 % Compiled KL-1 for repeat
 repeat(ITEM_01,NUM_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' repetition of item within vector ') ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      ITEM_01,
-      [ assign_targets_value1("i",call_func_args("range",[NUM_02]))])) ,
+  range(NUM_02,ARG_06) ,
+  comprehension_target_iter("i",ARG_06,ARG_05) ,
+  generator_exp_elt_generators(ITEM_01,[ARG_05],ARG_04) ,
   tuple(ARG_04,TUPLE_03) ,
   exit_proc(TUPLE_03).
 %~ % Universal AST Pass #0
@@ -501,7 +932,7 @@ repeat(ITEM_01,NUM_02,TUPLE_03) :-
 greater(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' greater ') ,
-  call_op(>,A_01,B_02,BOOLEAN_03) ,
+  compare_ops_left_comparators(gt_token(>),A_01,B_02,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "size",
@@ -527,16 +958,18 @@ size(CONTAINER_01,INTEGER_02) :-
 %~                                               comprehension_target_iter("c","containers"),
 %~                                               comprehension_target_iter("e","c")])]))])))
 %~
+%~ replacing_with_var(comprehension_target_iter("e","c"))
+%~
 % Compiled KL-1 for merge
 merge(CONTAINERS_01,CONTAINER_02) :-
   willBeType(CONTAINER_02,'Container') ,
   comment(' merging ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "e",
-      [ assign_targets_value1("c",CONTAINERS_01),
-        assign_targets_value1("e","c")])) ,
-  call_op(call_func_args("type",[CONTAINERS_01],ARG_03,CONTAINER_02)) ,
+  comprehension_target_iter("e","c",ARG_04) ,
+  generator_exp_elt_generators( "e",
+    [ assign_targets_value1("c",CONTAINERS_01),
+      ARG_04],
+    ARG_03) ,
+  call( [ op_call(call_func_args("type",[CONTAINERS_01],ARG_03,CONTAINER_02))]) ,
   exit_proc(CONTAINER_02).
 %~ % Universal AST Pass #0
 %~ def( "maximum",
@@ -545,12 +978,14 @@ merge(CONTAINERS_01,CONTAINER_02) :-
 %~      block_statements( [ expr_value(string_value(' maximum ')),
 %~                          return_value(call_func_args_keywords("max",["container"],[keyword_value(0)]))])))
 %~
+%~ replacing_with_var(keyword_value(0))
+%~
 % Compiled KL-1 for maximum
 maximum(CONTAINER_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' maximum ') ,
-  assign_var( INTEGER_02,
-    call_func_args_keywords("max",[CONTAINER_01],[keyword_value(0)])) ,
+  keyword_value(0,ARG_03) ,
+  call_func_args_keywords("max",[CONTAINER_01],[ARG_03],INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "minimum",
@@ -559,12 +994,14 @@ maximum(CONTAINER_01,INTEGER_02) :-
 %~      block_statements( [ expr_value(string_value(' minimum ')),
 %~                          return_value(call_func_args_keywords("min",["container"],[keyword_value(0)]))])))
 %~
+%~ replacing_with_var(keyword_value(0))
+%~
 % Compiled KL-1 for minimum
 minimum(CONTAINER_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' minimum ') ,
-  assign_var( INTEGER_02,
-    call_func_args_keywords("min",[CONTAINER_01],[keyword_value(0)])) ,
+  keyword_value(0,ARG_03) ,
+  call_func_args_keywords("min",[CONTAINER_01],[ARG_03],INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "valmax",
@@ -577,16 +1014,19 @@ minimum(CONTAINER_01,INTEGER_02) :-
 %~                          return_value( call_func_args( "compfunc", [
 %~                                          call_func_args_keywords("max",["container"],[keyword_value("compfunc"),keyword_value(0)])]))])))
 %~
+%~ replacing_with_var(keyword_value(0))
+%~
 % Compiled KL-1 for valmax
 valmax(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' maximum by custom function ') ,
-  assign_var( ARG_04,
-    call_func_args_keywords( "max",
-      [CONTAINER_01],
-      [ keyword_value(COMPFUNC_02),
-        keyword_value(0)])) ,
-  call_op(COMPFUNC_02,ARG_04,INTEGER_03) ,
+  keyword_value(0,ARG_05) ,
+  call_func_args_keywords( "max",
+    [CONTAINER_01],
+    [ keyword_value(COMPFUNC_02),
+      ARG_05],
+    ARG_04) ,
+  call([op_call(op_call(COMPFUNC_02,ARG_04,INTEGER_03))]) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
 %~ def( "valmin",
@@ -599,16 +1039,19 @@ valmax(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
 %~                          return_value( call_func_args( "compfunc", [
 %~                                          call_func_args_keywords("min",["container"],[keyword_value("compfunc"),keyword_value(0)])]))])))
 %~
+%~ replacing_with_var(keyword_value(0))
+%~
 % Compiled KL-1 for valmin
 valmin(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' minimum by custom function ') ,
-  assign_var( ARG_04,
-    call_func_args_keywords( "min",
-      [CONTAINER_01],
-      [ keyword_value(COMPFUNC_02),
-        keyword_value(0)])) ,
-  call_op(COMPFUNC_02,ARG_04,INTEGER_03) ,
+  keyword_value(0,ARG_05) ,
+  call_func_args_keywords( "min",
+    [CONTAINER_01],
+    [ keyword_value(COMPFUNC_02),
+      ARG_05],
+    ARG_04) ,
+  call([op_call(op_call(COMPFUNC_02,ARG_04,INTEGER_03))]) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
 %~ def( "argmax",
@@ -624,8 +1067,10 @@ valmin(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
 argmax(CONTAINER_01,COMPFUNC_02,ANY_03) :-
   willBeType(ANY_03,'Any') ,
   comment(' largest item by custom order ') ,
-  assign_var( ANY_03,
-    call_func_args_keywords("max",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
+  call_func_args_keywords( "max",
+    [CONTAINER_01],
+    [keyword_value(COMPFUNC_02)],
+    ANY_03) ,
   exit_proc(ANY_03).
 %~ % Universal AST Pass #0
 %~ def( "argmin",
@@ -641,8 +1086,10 @@ argmax(CONTAINER_01,COMPFUNC_02,ANY_03) :-
 argmin(CONTAINER_01,COMPFUNC_02,ANY_03) :-
   willBeType(ANY_03,'Any') ,
   comment(' smallest item by custom order ') ,
-  assign_var( ANY_03,
-    call_func_args_keywords("min",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
+  call_func_args_keywords( "min",
+    [CONTAINER_01],
+    [keyword_value(COMPFUNC_02)],
+    ANY_03) ,
   exit_proc(ANY_03).
 %~ % Universal AST Pass #0
 %~ def( "mostcommon",
@@ -653,14 +1100,23 @@ argmin(CONTAINER_01,COMPFUNC_02,ANY_03) :-
 %~                                          [ call_func_args("set",["container"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["container",boxed_attribute_value("count")]))]))])))
 %~
+%~ replacing_with_var(call_func_args("set",[CONTAINER_01]))
+%~
+%~ replacing_with_var( keyword_value(qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")])))
+%~
+%~ replacing_with_var( qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")]))
+%~
+%~ replacing_with_var(boxed_attribute_value("count"))
+%~
 % Compiled KL-1 for mostcommon
 mostcommon(CONTAINER_01,ANY_02) :-
   willBeType(ANY_02,'Any') ,
   comment(' most common item ') ,
-  assign_var( ANY_02,
-    call_func_args_keywords( "max",
-      [ call_func_args("set",[CONTAINER_01])],
-      [keyword_value(["count",CONTAINER_01])])) ,
+  set(CONTAINER_01,ARG_03) ,
+  boxed_attribute_value("count",ARG_06) ,
+  qualified_identifier_identifiers([CONTAINER_01,ARG_06],ARG_05) ,
+  keyword_value(ARG_05,ARG_04) ,
+  call_func_args_keywords("max",[ARG_03],[ARG_04],ANY_02) ,
   exit_proc(ANY_02).
 %~ % Universal AST Pass #0
 %~ def( "leastcommon",
@@ -671,14 +1127,23 @@ mostcommon(CONTAINER_01,ANY_02) :-
 %~                                          [ call_func_args("set",["container"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["container",boxed_attribute_value("count")]))]))])))
 %~
+%~ replacing_with_var(call_func_args("set",[CONTAINER_01]))
+%~
+%~ replacing_with_var( keyword_value(qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")])))
+%~
+%~ replacing_with_var( qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")]))
+%~
+%~ replacing_with_var(boxed_attribute_value("count"))
+%~
 % Compiled KL-1 for leastcommon
 leastcommon(CONTAINER_01,ANY_02) :-
   willBeType(ANY_02,'Any') ,
   comment(' least common item ') ,
-  assign_var( ANY_02,
-    call_func_args_keywords( "min",
-      [ call_func_args("set",[CONTAINER_01])],
-      [keyword_value(["count",CONTAINER_01])])) ,
+  set(CONTAINER_01,ARG_03) ,
+  boxed_attribute_value("count",ARG_06) ,
+  qualified_identifier_identifiers([CONTAINER_01,ARG_06],ARG_05) ,
+  keyword_value(ARG_05,ARG_04) ,
+  call_func_args_keywords("min",[ARG_03],[ARG_04],ANY_02) ,
   exit_proc(ANY_02).
 %~ % Universal AST Pass #0
 %~ def( "initset",
@@ -691,7 +1156,7 @@ leastcommon(CONTAINER_01,ANY_02) :-
 initset(VALUE_01,FROZENSET_02) :-
   willBeType(FROZENSET_02,'FrozenSet') ,
   comment(' initialize container ') ,
-  assign_var(ARG_03,set_elts([VALUE_01])) ,
+  set_elts([VALUE_01],ARG_03) ,
   frozenset(ARG_03,FROZENSET_02) ,
   exit_proc(FROZENSET_02).
 %~ % Universal AST Pass #0
@@ -708,8 +1173,7 @@ initset(VALUE_01,FROZENSET_02) :-
 both(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' logical and ') ,
-  assign_var( BOOLEAN_03,
-    bool_op_values(['python:And'],[A_01,B_02])) ,
+  bool_op_values(['python:And'],[A_01,B_02],BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "either",
@@ -725,7 +1189,7 @@ both(A_01,B_02,BOOLEAN_03) :-
 either(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' logical or ') ,
-  assign_var(BOOLEAN_03,bool_op_values(['python:Or'],[A_01,B_02])) ,
+  bool_op_values(['python:Or'],[A_01,B_02],BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "increment",
@@ -738,17 +1202,21 @@ either(A_01,B_02,BOOLEAN_03) :-
 %~                                           tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice("x",0),1),
 %~                                                         bin_op_left_right(add_token(+),subscript_value_slice("x",1),1)])))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[X_01,"int"]))
+%~
 % Compiled KL-1 for increment
 increment(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' incrementing ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[X_01,int])]) ->
-      [call_op(+,X_01,1,NUMERICAL_02)] ;
-    [ assign_targets_value( [ARG_03], [
-        call_func_args(+,[subscript_value_slice(X_01,0),1]),
-        call_func_args(+,[subscript_value_slice(X_01,1),1])]),
-      tuple_elts(ARG_03,NUMERICAL_02)]) ,
+    [ isinstance(X_01,INT,ARG_03),
+      testif(ARG_03)] ->
+      [call([op_call(add_token(+,X_01,1,NUMERICAL_02))])] ;
+    [ subscript_value_slice(X_01,0,ARG_06),
+      call([op_call(add_token(+,ARG_06,1,ARG_04))]),
+      subscript_value_slice(X_01,1,ARG_07),
+      call([op_call(add_token(+,ARG_07,1,ARG_05))]),
+      tuple_elts(ARG_04,ARG_05,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "decrement",
@@ -761,17 +1229,21 @@ increment(X_01,NUMERICAL_02) :-
 %~                                           tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice("x",0),1),
 %~                                                         bin_op_left_right(sub_token(-),subscript_value_slice("x",1),1)])))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[X_01,"int"]))
+%~
 % Compiled KL-1 for decrement
 decrement(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' decrementing ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[X_01,int])]) ->
-      [call_op(-,X_01,1,NUMERICAL_02)] ;
-    [ assign_targets_value( [ARG_03], [
-        call_func_args(-,[subscript_value_slice(X_01,0),1]),
-        call_func_args(-,[subscript_value_slice(X_01,1),1])]),
-      tuple_elts(ARG_03,NUMERICAL_02)]) ,
+    [ isinstance(X_01,INT,ARG_03),
+      testif(ARG_03)] ->
+      [call([op_call(sub_token(-,X_01,1,NUMERICAL_02))])] ;
+    [ subscript_value_slice(X_01,0,ARG_06),
+      call([op_call(sub_token(-,ARG_06,1,ARG_04))]),
+      subscript_value_slice(X_01,1,ARG_07),
+      call([op_call(sub_token(-,ARG_07,1,ARG_05))]),
+      tuple_elts(ARG_04,ARG_05,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "crement",
@@ -802,37 +1274,98 @@ decrement(X_01,NUMERICAL_02) :-
 %~                                                            bin_op_left_right(add_token(+),subscript_value_slice("x",1),1),
 %~                                                            bin_op_left_right(sub_token(-),subscript_value_slice("x",1),1)))]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value( if_exp_test_body_orelse(
+%~                                                    compare_ops_left_comparators(eq_token(==),X_01,0),
+%~                                                    0,
+%~                                                    if_exp_test_body_orelse(
+%~                                                       compare_ops_left_comparators(gt_token(>),X_01,0),
+%~                                                       bin_op_left_right(add_token(+),X_01,1),
+%~                                                       bin_op_left_right(sub_token(-),X_01,1))))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[X_01,"int"]))
+%~
+%~ replacing_with_var( return_value( if_exp_test_body_orelse(
+%~                                      compare_ops_left_comparators(eq_token(==),X_01,0),
+%~                                      0,
+%~                                      if_exp_test_body_orelse(
+%~                                         compare_ops_left_comparators(gt_token(>),X_01,0),
+%~                                         bin_op_left_right(add_token(+),X_01,1),
+%~                                         bin_op_left_right(sub_token(-),X_01,1)))))
+%~
+%~ replacing_with_var( if_exp_test_body_orelse(
+%~                        compare_ops_left_comparators(eq_token(==),X_01,0),
+%~                        0,
+%~                        if_exp_test_body_orelse(
+%~                           compare_ops_left_comparators(gt_token(>),X_01,0),
+%~                           bin_op_left_right(add_token(+),X_01,1),
+%~                           bin_op_left_right(sub_token(-),X_01,1))))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),subscript_value_slice(X_01,0),0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),subscript_value_slice(X_01,1),0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),X_01,0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),subscript_value_slice(X_01,0),0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,1))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),subscript_value_slice(X_01,1),0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),X_01,0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,1))
+%~
 % Compiled KL-1 for crement
 crement(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' incrementing positive and decrementing negative ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[X_01,int])]) ->
-      (/*2*/
-        (/*2*/
-          testif(call_func_args(==,[X_01,0])) ->
-            call(NUMERICAL_02=0) ;
-          [ (/*2*/
-              testif(call_func_args(>,[X_01,0])) ->
-                [call_op(+,X_01,1,NUMERICAL_02)] ;
-              [call_op(-,X_01,1,NUMERICAL_02)])]) ,
-        exit_proc(NUMERICAL_02))) ,
-  assign_targets_value( [ARG_03], [
-    if_exp_test_body_orelse(
-       call_func_args(==,[subscript_value_slice(X_01,0),0]),
-       0,
-       if_exp_test_body_orelse(
-          call_func_args(>,[subscript_value_slice(X_01,0),0]),
-          call_func_args(+,[subscript_value_slice(X_01,0),1]),
-          call_func_args(-,[subscript_value_slice(X_01,0),1]))),
-    if_exp_test_body_orelse(
-       call_func_args(==,[subscript_value_slice(X_01,1),0]),
-       0,
-       if_exp_test_body_orelse(
-          call_func_args(>,[subscript_value_slice(X_01,1),0]),
-          call_func_args(+,[subscript_value_slice(X_01,1),1]),
-          call_func_args(-,[subscript_value_slice(X_01,1),1])))]) ,
-  tuple_elts(ARG_03,NUMERICAL_02) ,
+    [ (/*2*/
+        [ compare_ops_left_comparators(eq_token(==),X_01,0,ARG_011),
+          testif(ARG_011)] ->
+          call(ARG_08=0) ;
+        [ (/*2*/
+            [ compare_ops_left_comparators(gt_token(>),X_01,0,ARG_020),
+              testif(ARG_020)] ->
+              [call([op_call(add_token(+,X_01,1,ARG_08))])] ;
+            [call([op_call(sub_token(-,X_01,1,ARG_08))])])]),
+      return_value(ARG_08,ARG_07),
+      body_stmts([ARG_07],ARG_03),
+      [ isinstance(X_01,INT,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
+  (/*2*/
+    [ subscript_value_slice(X_01,0,ARG_012),
+      compare_ops_left_comparators(eq_token(==),ARG_012,0,ARG_09),
+      testif(ARG_09)] ->
+      call(ARG_05=0) ;
+    [ (/*2*/
+        [ subscript_value_slice(X_01,0,ARG_021),
+          compare_ops_left_comparators(gt_token(>),ARG_021,0,ARG_013),
+          testif(ARG_013)] ->
+          [ subscript_value_slice(X_01,0,ARG_014),
+            call([op_call(add_token(+,ARG_014,1,ARG_05))])] ;
+        [ subscript_value_slice(X_01,0,ARG_015),
+          call([op_call(sub_token(-,ARG_015,1,ARG_05))])])]) ,
+  (/*2*/
+    [ subscript_value_slice(X_01,1,ARG_016),
+      compare_ops_left_comparators(eq_token(==),ARG_016,0,ARG_010),
+      testif(ARG_010)] ->
+      call(ARG_06=0) ;
+    [ (/*2*/
+        [ subscript_value_slice(X_01,1,ARG_022),
+          compare_ops_left_comparators(gt_token(>),ARG_022,0,ARG_017),
+          testif(ARG_017)] ->
+          [ subscript_value_slice(X_01,1,ARG_018),
+            call([op_call(add_token(+,ARG_018,1,ARG_06))])] ;
+        [ subscript_value_slice(X_01,1,ARG_019),
+          call([op_call(sub_token(-,ARG_019,1,ARG_06))])])]) ,
+  tuple_elts(ARG_05,ARG_06,NUMERICAL_02) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "sign",
@@ -856,33 +1389,88 @@ crement(X_01,NUMERICAL_02) :-
 %~                                                         if_exp_test_body_orelse(
 %~                                                            compare_ops_left_comparators(gt_token(>),subscript_value_slice("x",1),0), 1,unary_op_operand(us_ub_token(-),1)))]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value( if_exp_test_body_orelse(
+%~                                                    compare_ops_left_comparators(eq_token(==),X_01,0),
+%~                                                    0,
+%~                                                    if_exp_test_body_orelse(
+%~                                                       compare_ops_left_comparators(gt_token(>),X_01,0), 1,unary_op_operand(us_ub_token(-),1))))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[X_01,"int"]))
+%~
+%~ replacing_with_var( return_value( if_exp_test_body_orelse(
+%~                                      compare_ops_left_comparators(eq_token(==),X_01,0),
+%~                                      0,
+%~                                      if_exp_test_body_orelse(
+%~                                         compare_ops_left_comparators(gt_token(>),X_01,0), 1,unary_op_operand(us_ub_token(-),1)))))
+%~
+%~ replacing_with_var( if_exp_test_body_orelse(
+%~                        compare_ops_left_comparators(eq_token(==),X_01,0),
+%~                        0,
+%~                        if_exp_test_body_orelse(
+%~                           compare_ops_left_comparators(gt_token(>),X_01,0), 1,unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),subscript_value_slice(X_01,0),0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),subscript_value_slice(X_01,1),0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),X_01,0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),subscript_value_slice(X_01,0),0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,1))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),subscript_value_slice(X_01,1),0))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),X_01,0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,0))
+%~
+%~ replacing_with_var(subscript_value_slice(X_01,1))
+%~
 % Compiled KL-1 for sign
 sign(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' sign ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[X_01,int])]) ->
-      (/*2*/
-        (/*2*/
-          testif(call_func_args(==,[X_01,0])) ->
-            call(NUMERICAL_02=0) ;
-          [ (/*2*/
-              testif(call_func_args(>,[X_01,0])) ->
-                call(NUMERICAL_02=1) ;
-              [call_op(-,1,NUMERICAL_02)])]) ,
-        exit_proc(NUMERICAL_02))) ,
-  assign_targets_value( [ARG_03], [
-    if_exp_test_body_orelse(
-       call_func_args(==,[subscript_value_slice(X_01,0),0]),
-       0,
-       if_exp_test_body_orelse(
-          call_func_args(>,[subscript_value_slice(X_01,0),0]), 1,call_func_args(-,[1]))),
-    if_exp_test_body_orelse(
-       call_func_args(==,[subscript_value_slice(X_01,1),0]),
-       0,
-       if_exp_test_body_orelse(
-          call_func_args(>,[subscript_value_slice(X_01,1),0]), 1,call_func_args(-,[1])))]) ,
-  tuple_elts(ARG_03,NUMERICAL_02) ,
+    [ (/*2*/
+        [ compare_ops_left_comparators(eq_token(==),X_01,0,ARG_011),
+          testif(ARG_011)] ->
+          call(ARG_08=0) ;
+        [ (/*2*/
+            [ compare_ops_left_comparators(gt_token(>),X_01,0,ARG_016),
+              testif(ARG_016)] ->
+              call(ARG_08=1) ;
+            [ unary_op_operand(us_ub_token(-),1,ARG_08)])]),
+      return_value(ARG_08,ARG_07),
+      body_stmts([ARG_07],ARG_03),
+      [ isinstance(X_01,INT,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
+  (/*2*/
+    [ subscript_value_slice(X_01,0,ARG_012),
+      compare_ops_left_comparators(eq_token(==),ARG_012,0,ARG_09),
+      testif(ARG_09)] ->
+      call(ARG_05=0) ;
+    [ (/*2*/
+        [ subscript_value_slice(X_01,0,ARG_017),
+          compare_ops_left_comparators(gt_token(>),ARG_017,0,ARG_013),
+          testif(ARG_013)] ->
+          call(ARG_05=1) ;
+        [ unary_op_operand(us_ub_token(-),1,ARG_05)])]) ,
+  (/*2*/
+    [ subscript_value_slice(X_01,1,ARG_014),
+      compare_ops_left_comparators(eq_token(==),ARG_014,0,ARG_010),
+      testif(ARG_010)] ->
+      call(ARG_06=0) ;
+    [ (/*2*/
+        [ subscript_value_slice(X_01,1,ARG_018),
+          compare_ops_left_comparators(gt_token(>),ARG_018,0,ARG_015),
+          testif(ARG_015)] ->
+          call(ARG_06=1) ;
+        [ unary_op_operand(us_ub_token(-),1,ARG_06)])]) ,
+  tuple_elts(ARG_05,ARG_06,NUMERICAL_02) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "positive",
@@ -895,7 +1483,7 @@ sign(X_01,NUMERICAL_02) :-
 positive(X_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' positive ') ,
-  call_op(>,X_01,0,BOOLEAN_02) ,
+  compare_ops_left_comparators(gt_token(>),X_01,0,BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "toivec",
@@ -908,7 +1496,7 @@ positive(X_01,BOOLEAN_02) :-
 toivec(I_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' vector pointing vertically ') ,
-  call(into_tuple(I_01,0,INTEGERTUPLE_02)) ,
+  into_tuple(I_01,0,INTEGERTUPLE_02) ,
   exit_proc(INTEGERTUPLE_02).
 %~ % Universal AST Pass #0
 %~ def( "tojvec",
@@ -921,7 +1509,7 @@ toivec(I_01,INTEGERTUPLE_02) :-
 tojvec(J_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' vector pointing horizontally ') ,
-  call(into_tuple(0,J_01,INTEGERTUPLE_02)) ,
+  into_tuple(0,J_01,INTEGERTUPLE_02) ,
   exit_proc(INTEGERTUPLE_02).
 %~ % Universal AST Pass #0
 %~ def( "sfilter",
@@ -936,17 +1524,20 @@ tojvec(J_01,INTEGERTUPLE_02) :-
 %~                                           [ generator_exp_elt_generators( "e", [
 %~                                               comprehension_target_iter_ifs("e","container",[call_func_args("condition",["e"])])])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( "e",
+%~                       CONTAINER_01,
+%~                       [ call_func_args(CONDITION_02,["e"])]))
+%~
+%~ replacing_with_var(call_func_args(CONDITION_02,["e"]))
+%~
 % Compiled KL-1 for sfilter
 sfilter(CONTAINER_01,CONDITION_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' keep elements in container that satisfy condition ') ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      "e",
-      [ comprehension_target_iter_ifs( "e",
-          CONTAINER_01,
-          [ call_func_args(CONDITION_02,["e"])])])) ,
-  call_op(call_func_args("type",[CONTAINER_01],ARG_04,CONTAINER_03)) ,
+  call([op_call(op_call(CONDITION_02,E,ARG_06))]) ,
+  comprehension_target_iter_ifs(E,CONTAINER_01,[ARG_06],ARG_05) ,
+  generator_exp_elt_generators(E,[ARG_05],ARG_04) ,
+  call( [ op_call(call_func_args("type",[CONTAINER_01],ARG_04,CONTAINER_03))]) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "mfilter",
@@ -977,16 +1568,19 @@ mfilter(CONTAINER_01,FUNCTION_02,FROZENSET_03) :-
 %~                                          generator_exp_elt_generators( "e", [
 %~                                            comprehension_target_iter_ifs("e","container",[call_func_args("condition",["e"])])])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( "e",
+%~                       CONTAINER_01,
+%~                       [ call_func_args(CONDITION_02,["e"])]))
+%~
+%~ replacing_with_var(call_func_args(CONDITION_02,["e"]))
+%~
 % Compiled KL-1 for extract
 extract(CONTAINER_01,CONDITION_02,ANY_03) :-
   willBeType(ANY_03,'Any') ,
   comment(' first element of container that satisfies condition ') ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      "e",
-      [ comprehension_target_iter_ifs( "e",
-          CONTAINER_01,
-          [ call_func_args(CONDITION_02,["e"])])])) ,
+  call([op_call(op_call(CONDITION_02,E,ARG_06))]) ,
+  comprehension_target_iter_ifs(E,CONTAINER_01,[ARG_06],ARG_05) ,
+  generator_exp_elt_generators(E,[ARG_05],ARG_04) ,
   next(ARG_04,ANY_03) ,
   exit_proc(ANY_03).
 %~ % Universal AST Pass #0
@@ -1043,15 +1637,18 @@ last(CONTAINER_01,ANY_02) :-
 %~                                           qualified_identifier_identifiers(["container",boxed_attribute_value("union")]),
 %~                                           [ call_func_args("frozenset",[set_elts(["value"])])]))])))
 %~
+%~ replacing_with_var(boxed_attribute_value("union"))
+%~
 % Compiled KL-1 for insert
 insert(VALUE_01,CONTAINER_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' insert item into container ') ,
-  assign_var(ARG_05,set_elts([VALUE_01])) ,
+  set_elts([VALUE_01],ARG_05) ,
   frozenset(ARG_05,ARG_04) ,
-  call_op( qualified_identifier_identifiers(
-              [ CONTAINER_02,
-                boxed_attribute_value("union")], ARG_04,FROZENSET_03)) ,
+  call( [ op_call( [ boxed_attribute_value("union",ARG_06),
+                     qualified_identifier_identifiers( [CONTAINER_02,ARG_06],
+                       ARG_04,
+                       FROZENSET_03)])]) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
 %~ def( "remove",
@@ -1066,17 +1663,20 @@ insert(VALUE_01,CONTAINER_02,FROZENSET_03) :-
 %~                                           [ generator_exp_elt_generators( "e", [
 %~                                               comprehension_target_iter_ifs("e","container",[compare_ops_left_comparators(not_eq_token('!='),"e","value")])])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( "e",
+%~                       CONTAINER_02,
+%~                       [ compare_ops_left_comparators(not_eq_token('!='),"e",VALUE_01)]))
+%~
+%~ replacing_with_var(call_func_args('!=',["e",VALUE_01]))
+%~
 % Compiled KL-1 for remove
 remove(VALUE_01,CONTAINER_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' remove item from container ') ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      "e",
-      [ comprehension_target_iter_ifs( "e",
-          CONTAINER_02,
-          [ call_func_args('!=',["e",VALUE_01])])])) ,
-  call_op(call_func_args("type",[CONTAINER_02],ARG_04,CONTAINER_03)) ,
+  call([op_call(op_call('!=',E,VALUE_01,ARG_06))]) ,
+  comprehension_target_iter_ifs(E,CONTAINER_02,[ARG_06],ARG_05) ,
+  generator_exp_elt_generators(E,[ARG_05],ARG_04) ,
+  call( [ op_call(call_func_args("type",[CONTAINER_02],ARG_04,CONTAINER_03))]) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "other",
@@ -1125,7 +1725,7 @@ interval(START_01,STOP_02,STEP_03,TUPLE_04) :-
 astuple(A_01,B_02,INTEGERTUPLE_03) :-
   willBeType(INTEGERTUPLE_03,'IntegerTuple') ,
   comment(' constructs a tuple ') ,
-  call(into_tuple(A_01,B_02,INTEGERTUPLE_03)) ,
+  into_tuple(A_01,B_02,INTEGERTUPLE_03) ,
   exit_proc(INTEGERTUPLE_03).
 %~ % Universal AST Pass #0
 %~ def( "product",
@@ -1140,14 +1740,17 @@ astuple(A_01,B_02,INTEGERTUPLE_03) :-
 %~                                            comprehension_target_iter("j","b"),
 %~                                            comprehension_target_iter("i","a")])]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
 % Compiled KL-1 for product
 product(A_01,B_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' cartesian product ') ,
-  assign_targets_value( [ARG_04], [
-    generator_exp_elt_generator_1("i",assign_targets_value1("j",B_02)),
-    generator_exp_elt_generator_1("j",assign_targets_value1("i",A_01)),
-    elt_generator(v1,tuple_elts([]),[])]) ,
+  into_tuple(I,J,ARG_05) ,
+  generator_exp_elt_generators( ARG_05,
+    [ assign_targets_value1(J,B_02),
+      assign_targets_value1(I,A_01)],
+    ARG_04) ,
   frozenset(ARG_04,FROZENSET_03) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
@@ -1195,13 +1798,24 @@ branch(CONDITION_01,A_02,B_03,ANY_04) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts(call_func_args("outer",[call_func_args("inner",["x"])]))))])))
 %~
+%~ replacing_with_var(arguments_args([argument_name("x")]))
+%~
+%~ replacing_with_var( body_stmts(call_func_args(OUTER_01,[call_func_args(INNER_02,["x"])])))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var(call_func_args(OUTER_01,[call_func_args(INNER_02,["x"])]))
+%~
 % Compiled KL-1 for compose
 compose(OUTER_01,INNER_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' function composition ') ,
-  assign_var( CALLABLE_03,
-    lambda_args_body( arguments_args([argument_name("x")]),
-      call_func_args(OUTER_01,[call_func_args(INNER_02,["x"])]))) ,
+  argument_name(X,ARG_06) ,
+  arguments_args([ARG_06],ARG_04) ,
+  call([op_call(op_call(INNER_02,X,ARG_08))]) ,
+  call([op_call(op_call(OUTER_01,ARG_08,ARG_07))]) ,
+  body_stmts(ARG_07,ARG_05) ,
+  lambda_args_body(ARG_04,ARG_05,CALLABLE_03) ,
   exit_proc(CALLABLE_03).
 %~ % Universal AST Pass #0
 %~ def( "chain",
@@ -1213,14 +1827,27 @@ compose(OUTER_01,INNER_02,CALLABLE_03) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts(call_func_args("h",[call_func_args("g",[call_func_args("f",["x"])])]))))])))
 %~
+%~ replacing_with_var(arguments_args([argument_name("x")]))
+%~
+%~ replacing_with_var( body_stmts( call_func_args( H_01, [
+%~                                   call_func_args(G_02,[call_func_args(F_03,["x"])])])))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var( call_func_args( H_01, [
+%~                       call_func_args(G_02,[call_func_args(F_03,["x"])])]))
+%~
 % Compiled KL-1 for chain
 chain(H_01,G_02,F_03,CALLABLE_04) :-
   willBeType(CALLABLE_04,'Callable') ,
   comment(' function composition with three functions ') ,
-  assign_var( CALLABLE_04,
-    lambda_args_body( arguments_args([argument_name("x")]),
-      call_func_args( H_01, [
-        call_func_args(G_02,[call_func_args(F_03,["x"])])]))) ,
+  argument_name(X,ARG_07) ,
+  arguments_args([ARG_07],ARG_05) ,
+  call([op_call(op_call(F_03,X,ARG_010))]) ,
+  call([op_call(op_call(G_02,ARG_010,ARG_09))]) ,
+  call([op_call(op_call(H_01,ARG_09,ARG_08))]) ,
+  body_stmts(ARG_08,ARG_06) ,
+  lambda_args_body(ARG_05,ARG_06,CALLABLE_04) ,
   exit_proc(CALLABLE_04).
 %~ % Universal AST Pass #0
 %~ def( "matcher",
@@ -1233,13 +1860,24 @@ chain(H_01,G_02,F_03,CALLABLE_04) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts(compare_ops_left_comparators(eq_token(==),call_func_args("function",["x"]),"target"))))])))
 %~
+%~ replacing_with_var(arguments_args([argument_name("x")]))
+%~
+%~ replacing_with_var( body_stmts( compare_ops_left_comparators(eq_token(==),call_func_args(FUNCTION_01,["x"]),TARGET_02)))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var( call_func_args(==,[call_func_args(FUNCTION_01,["x"]),TARGET_02]))
+%~
 % Compiled KL-1 for matcher
 matcher(FUNCTION_01,TARGET_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' construction of equality function ') ,
-  assign_var( CALLABLE_03,
-    lambda_args_body( arguments_args([argument_name("x")]),
-      call_func_args(==,[call_func_args(FUNCTION_01,["x"]),TARGET_02]))) ,
+  argument_name(X,ARG_06) ,
+  arguments_args([ARG_06],ARG_04) ,
+  call([op_call(op_call(FUNCTION_01,X,ARG_08))]) ,
+  call([op_call(op_call(==,ARG_08,TARGET_02,ARG_07))]) ,
+  body_stmts(ARG_07,ARG_05) ,
+  lambda_args_body(ARG_04,ARG_05,CALLABLE_03) ,
   exit_proc(CALLABLE_03).
 %~ % Universal AST Pass #0
 %~ def( "rbind",
@@ -1266,33 +1904,135 @@ matcher(FUNCTION_01,TARGET_02,CALLABLE_03) :-
 %~                                                                                           arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
 %~                                                                                           body_stmts(call_func_args("function",["x","y","z","fixed"]))))]))]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             compare_ops_left_comparators(eq_token(==),"n",3),
+%~                                             body_stmts( [ return_value( lambda_args_body(
+%~                                                                            arguments_args([argument_name("x"),argument_name("y")]),
+%~                                                                            body_stmts(call_func_args(FUNCTION_01,["x","y",FIXED_02]))))]),
+%~                                             orelse_else_stmts( [ return_value( lambda_args_body(
+%~                                                                                   arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
+%~                                                                                   body_stmts(call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))))]))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( lambda_args_body( arguments_args([argument_name("x")]),
+%~                                                   body_stmts(call_func_args(FUNCTION_01,["x",FIXED_02]))))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"n",2))
+%~
+%~ replacing_with_var(boxed_attribute_value("__code__"))
+%~
+%~ replacing_with_var(boxed_attribute_value("co_argcount"))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        compare_ops_left_comparators(eq_token(==),"n",3),
+%~                        body_stmts( [ return_value( lambda_args_body(
+%~                                                       arguments_args([argument_name("x"),argument_name("y")]),
+%~                                                       body_stmts(call_func_args(FUNCTION_01,["x","y",FIXED_02]))))]),
+%~                        orelse_else_stmts( [ return_value( lambda_args_body(
+%~                                                              arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
+%~                                                              body_stmts(call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))))])))
+%~
+%~ replacing_with_var( return_value( lambda_args_body( arguments_args([argument_name("x")]),
+%~                                     body_stmts(call_func_args(FUNCTION_01,["x",FIXED_02])))))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"n",3))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( lambda_args_body(
+%~                                                    arguments_args([argument_name("x"),argument_name("y")]),
+%~                                                    body_stmts(call_func_args(FUNCTION_01,["x","y",FIXED_02]))))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ return_value( lambda_args_body(
+%~                                                           arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
+%~                                                           body_stmts(call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))))]))
+%~
+%~ replacing_with_var( lambda_args_body( arguments_args([argument_name("x")]),
+%~                       body_stmts(call_func_args(FUNCTION_01,["x",FIXED_02]))))
+%~
+%~ replacing_with_var( return_value( lambda_args_body(
+%~                                      arguments_args([argument_name("x"),argument_name("y")]),
+%~                                      body_stmts(call_func_args(FUNCTION_01,["x","y",FIXED_02])))))
+%~
+%~ replacing_with_var( return_value( lambda_args_body(
+%~                                      arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
+%~                                      body_stmts(call_func_args(FUNCTION_01,["x","y","z",FIXED_02])))))
+%~
+%~ replacing_with_var(arguments_args([argument_name("x")]))
+%~
+%~ replacing_with_var(body_stmts(call_func_args(FUNCTION_01,["x",FIXED_02])))
+%~
+%~ replacing_with_var( lambda_args_body(
+%~                        arguments_args([argument_name("x"),argument_name("y")]),
+%~                        body_stmts(call_func_args(FUNCTION_01,["x","y",FIXED_02]))))
+%~
+%~ replacing_with_var( lambda_args_body(
+%~                        arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
+%~                        body_stmts(call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var(call_func_args(FUNCTION_01,["x",FIXED_02]))
+%~
+%~ replacing_with_var(arguments_args([argument_name("x"),argument_name("y")]))
+%~
+%~ replacing_with_var( body_stmts(call_func_args(FUNCTION_01,["x","y",FIXED_02])))
+%~
+%~ replacing_with_var(arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]))
+%~
+%~ replacing_with_var( body_stmts(call_func_args(FUNCTION_01,["x","y","z",FIXED_02])))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var(argument_name("y"))
+%~
+%~ replacing_with_var(call_func_args(FUNCTION_01,["x","y",FIXED_02]))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var(argument_name("y"))
+%~
+%~ replacing_with_var(argument_name("z"))
+%~
+%~ replacing_with_var(call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))
+%~
 % Compiled KL-1 for rbind
 rbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' fix the rightmost argument ') ,
-  assign_var( "n",
-    qualified_identifier_identifiers( [ FUNCTION_01,
-                                        boxed_attribute_value("__code__"),
-                                        boxed_attribute_value("co_argcount")])) ,
-  ( testif(call_func_args(==,["n",2])) ->
-      (/*2*/
-        assign_var( CALLABLE_03,
-          lambda_args_body( arguments_args([argument_name("x")]),
-            call_func_args(FUNCTION_01,["x",FIXED_02]))) ,
-        exit_proc(CALLABLE_03))  ;
-    testif(call_func_args(==,["n",3])) ->
-      (/*2*/
-        assign_var( CALLABLE_03,
-          lambda_args_body(
-             arguments_args([argument_name("x"),argument_name("y")]),
-             call_func_args(FUNCTION_01,["x","y",FIXED_02]))) ,
-        exit_proc(CALLABLE_03)) ;
-    (/*2*/
-      assign_var( CALLABLE_03,
-        lambda_args_body(
-           arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
-           call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))) ,
-      exit_proc(CALLABLE_03))).
+  boxed_attribute_value("__code__",ARG_07) ,
+  boxed_attribute_value("co_argcount",ARG_08) ,
+  qualified_identifier_identifiers( [FUNCTION_01,ARG_07,ARG_08],
+    N) ,
+  compare_ops_left_comparators(eq_token(==),N,3,ARG_011) ,
+  argument_name(X,ARG_027) ,
+  argument_name(Y,ARG_028) ,
+  arguments_args([ARG_027,ARG_028],ARG_023) ,
+  call([op_call(op_call(FUNCTION_01,X,Y,FIXED_02,ARG_029))]) ,
+  body_stmts(ARG_029,ARG_024) ,
+  lambda_args_body(ARG_023,ARG_024,ARG_019) ,
+  return_value(ARG_019,ARG_015) ,
+  body_stmts([ARG_015],ARG_012) ,
+  argument_name(X,ARG_030) ,
+  argument_name(Y,ARG_031) ,
+  argument_name(Z,ARG_032) ,
+  arguments_args([ARG_030,ARG_031,ARG_032],ARG_025) ,
+  call( [ op_call(op_call(FUNCTION_01,X,Y,Z,FIXED_02,ARG_033))]) ,
+  body_stmts(ARG_033,ARG_026) ,
+  lambda_args_body(ARG_025,ARG_026,ARG_020) ,
+  return_value(ARG_020,ARG_016) ,
+  orelse_else_stmts([ARG_016],ARG_013) ,
+  if_test_body_orelse(ARG_011,ARG_012,ARG_013,ARG_09) ,
+  orelse_else_stmts([ARG_09],ARG_04) ,
+  (/*2*/
+    [ argument_name(X,ARG_021),
+      arguments_args([ARG_021],ARG_017),
+      call([op_call(op_call(FUNCTION_01,X,FIXED_02,ARG_022))]),
+      body_stmts(ARG_022,ARG_018),
+      lambda_args_body(ARG_017,ARG_018,ARG_014),
+      return_value(ARG_014,ARG_010),
+      body_stmts([ARG_010],ARG_05),
+      [ compare_ops_left_comparators(eq_token(==),N,2,ARG_06),
+        testif(ARG_06)] ->
+        ARG_05] ;
+    ARG_04).
 %~ % Universal AST Pass #0
 %~ def( "lbind",
 %~   function_type_body(
@@ -1318,33 +2058,135 @@ rbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
 %~                                                                                           arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
 %~                                                                                           body_stmts(call_func_args("function",["fixed","y","z","a"]))))]))]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             compare_ops_left_comparators(eq_token(==),"n",3),
+%~                                             body_stmts( [ return_value( lambda_args_body(
+%~                                                                            arguments_args([argument_name("y"),argument_name("z")]),
+%~                                                                            body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))))]),
+%~                                             orelse_else_stmts( [ return_value( lambda_args_body(
+%~                                                                                   arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
+%~                                                                                   body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))))]))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( lambda_args_body( arguments_args([argument_name("y")]),
+%~                                                   body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y"]))))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"n",2))
+%~
+%~ replacing_with_var(boxed_attribute_value("__code__"))
+%~
+%~ replacing_with_var(boxed_attribute_value("co_argcount"))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        compare_ops_left_comparators(eq_token(==),"n",3),
+%~                        body_stmts( [ return_value( lambda_args_body(
+%~                                                       arguments_args([argument_name("y"),argument_name("z")]),
+%~                                                       body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))))]),
+%~                        orelse_else_stmts( [ return_value( lambda_args_body(
+%~                                                              arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
+%~                                                              body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))))])))
+%~
+%~ replacing_with_var( return_value( lambda_args_body( arguments_args([argument_name("y")]),
+%~                                     body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y"])))))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"n",3))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( lambda_args_body(
+%~                                                    arguments_args([argument_name("y"),argument_name("z")]),
+%~                                                    body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ return_value( lambda_args_body(
+%~                                                           arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
+%~                                                           body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))))]))
+%~
+%~ replacing_with_var( lambda_args_body( arguments_args([argument_name("y")]),
+%~                       body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y"]))))
+%~
+%~ replacing_with_var( return_value( lambda_args_body(
+%~                                      arguments_args([argument_name("y"),argument_name("z")]),
+%~                                      body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z"])))))
+%~
+%~ replacing_with_var( return_value( lambda_args_body(
+%~                                      arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
+%~                                      body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"])))))
+%~
+%~ replacing_with_var(arguments_args([argument_name("y")]))
+%~
+%~ replacing_with_var(body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y"])))
+%~
+%~ replacing_with_var( lambda_args_body(
+%~                        arguments_args([argument_name("y"),argument_name("z")]),
+%~                        body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))))
+%~
+%~ replacing_with_var( lambda_args_body(
+%~                        arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
+%~                        body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))))
+%~
+%~ replacing_with_var(argument_name("y"))
+%~
+%~ replacing_with_var(call_func_args(FUNCTION_01,[FIXED_02,"y"]))
+%~
+%~ replacing_with_var(arguments_args([argument_name("y"),argument_name("z")]))
+%~
+%~ replacing_with_var( body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z"])))
+%~
+%~ replacing_with_var(arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]))
+%~
+%~ replacing_with_var( body_stmts(call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"])))
+%~
+%~ replacing_with_var(argument_name("y"))
+%~
+%~ replacing_with_var(argument_name("z"))
+%~
+%~ replacing_with_var(call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))
+%~
+%~ replacing_with_var(argument_name("y"))
+%~
+%~ replacing_with_var(argument_name("z"))
+%~
+%~ replacing_with_var(argument_name("a"))
+%~
+%~ replacing_with_var(call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))
+%~
 % Compiled KL-1 for lbind
 lbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' fix the leftmost argument ') ,
-  assign_var( "n",
-    qualified_identifier_identifiers( [ FUNCTION_01,
-                                        boxed_attribute_value("__code__"),
-                                        boxed_attribute_value("co_argcount")])) ,
-  ( testif(call_func_args(==,["n",2])) ->
-      (/*2*/
-        assign_var( CALLABLE_03,
-          lambda_args_body( arguments_args([argument_name("y")]),
-            call_func_args(FUNCTION_01,[FIXED_02,"y"]))) ,
-        exit_proc(CALLABLE_03))  ;
-    testif(call_func_args(==,["n",3])) ->
-      (/*2*/
-        assign_var( CALLABLE_03,
-          lambda_args_body(
-             arguments_args([argument_name("y"),argument_name("z")]),
-             call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))) ,
-        exit_proc(CALLABLE_03)) ;
-    (/*2*/
-      assign_var( CALLABLE_03,
-        lambda_args_body(
-           arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
-           call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))) ,
-      exit_proc(CALLABLE_03))).
+  boxed_attribute_value("__code__",ARG_07) ,
+  boxed_attribute_value("co_argcount",ARG_08) ,
+  qualified_identifier_identifiers( [FUNCTION_01,ARG_07,ARG_08],
+    N) ,
+  compare_ops_left_comparators(eq_token(==),N,3,ARG_011) ,
+  argument_name(Y,ARG_027) ,
+  argument_name(Z,ARG_028) ,
+  arguments_args([ARG_027,ARG_028],ARG_023) ,
+  call([op_call(op_call(FUNCTION_01,FIXED_02,Y,Z,ARG_029))]) ,
+  body_stmts(ARG_029,ARG_024) ,
+  lambda_args_body(ARG_023,ARG_024,ARG_019) ,
+  return_value(ARG_019,ARG_015) ,
+  body_stmts([ARG_015],ARG_012) ,
+  argument_name(Y,ARG_030) ,
+  argument_name(Z,ARG_031) ,
+  argument_name(A,ARG_032) ,
+  arguments_args([ARG_030,ARG_031,ARG_032],ARG_025) ,
+  call( [ op_call(op_call(FUNCTION_01,FIXED_02,Y,Z,A,ARG_033))]) ,
+  body_stmts(ARG_033,ARG_026) ,
+  lambda_args_body(ARG_025,ARG_026,ARG_020) ,
+  return_value(ARG_020,ARG_016) ,
+  orelse_else_stmts([ARG_016],ARG_013) ,
+  if_test_body_orelse(ARG_011,ARG_012,ARG_013,ARG_09) ,
+  orelse_else_stmts([ARG_09],ARG_04) ,
+  (/*2*/
+    [ argument_name(Y,ARG_021),
+      arguments_args([ARG_021],ARG_017),
+      call([op_call(op_call(FUNCTION_01,FIXED_02,Y,ARG_022))]),
+      body_stmts(ARG_022,ARG_018),
+      lambda_args_body(ARG_017,ARG_018,ARG_014),
+      return_value(ARG_014,ARG_010),
+      body_stmts([ARG_010],ARG_05),
+      [ compare_ops_left_comparators(eq_token(==),N,2,ARG_06),
+        testif(ARG_06)] ->
+        ARG_05] ;
+    ARG_04).
 %~ % Universal AST Pass #0
 %~ def( "power",
 %~   function_type_body(
@@ -1358,16 +2200,25 @@ lbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
 %~                                          "function",
 %~                                          call_func_args("power",["function",bin_op_left_right(sub_token(-),"n",1)])]))])))
 %~
+%~ replacing_with_var(body_stmts([return_value(FUNCTION_01)]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),N_02,1))
+%~
 % Compiled KL-1 for power
 power(FUNCTION_01,N_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' power of function ') ,
   (/*2*/
-    testif(call_func_args(==,[N_02,1])) ->
-      call(CALLABLE_03=FUNCTION_01),exit_proc(CALLABLE_03)) ,
-  call_op(-,N_02,1,ARG_05) ,
-  power(FUNCTION_01,ARG_05,ARG_04) ,
-  compose(FUNCTION_01,ARG_04,CALLABLE_03) ,
+    [ body_stmts(
+         [ call(CALLABLE_03=FUNCTION_01),
+           exit_proc(CALLABLE_03)],
+         ARG_04),
+      [ compare_ops_left_comparators(eq_token(==),N_02,1,ARG_05),
+        testif(ARG_05)] ->
+        ARG_04]) ,
+  call([op_call(sub_token(-,N_02,1,ARG_07))]) ,
+  power(FUNCTION_01,ARG_07,ARG_06) ,
+  compose(FUNCTION_01,ARG_06,CALLABLE_03) ,
   exit_proc(CALLABLE_03).
 %~ % Universal AST Pass #0
 %~ def( "fork",
@@ -1379,15 +2230,29 @@ power(FUNCTION_01,N_02,CALLABLE_03) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts( call_func_args("outer",[call_func_args("a",["x"]),call_func_args("b",["x"])]))))])))
 %~
+%~ replacing_with_var(arguments_args([argument_name("x")]))
+%~
+%~ replacing_with_var( body_stmts( call_func_args( OUTER_01, [
+%~                                   call_func_args(A_02,["x"]),
+%~                                   call_func_args(B_03,["x"])])))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var( call_func_args( OUTER_01, [
+%~                       call_func_args(A_02,["x"]),
+%~                       call_func_args(B_03,["x"])]))
+%~
 % Compiled KL-1 for fork
 fork(OUTER_01,A_02,B_03,CALLABLE_04) :-
   willBeType(CALLABLE_04,'Callable') ,
   comment(' creates a wrapper function ') ,
-  assign_var( CALLABLE_04,
-    lambda_args_body( arguments_args([argument_name("x")]),
-      call_func_args( OUTER_01, [
-        call_func_args(A_02,["x"]),
-        call_func_args(B_03,["x"])]))) ,
+  argument_name(X,ARG_07) ,
+  arguments_args([ARG_07],ARG_05) ,
+  call([op_call(op_call(A_02,X,ARG_09))]) ,
+  call([op_call(op_call(B_03,X,ARG_010))]) ,
+  call([op_call(op_call(OUTER_01,ARG_09,ARG_010,ARG_08))]) ,
+  body_stmts(ARG_08,ARG_06) ,
+  lambda_args_body(ARG_05,ARG_06,CALLABLE_04) ,
   exit_proc(CALLABLE_04).
 %~ % Universal AST Pass #0
 %~ def( "apply",
@@ -1403,15 +2268,17 @@ fork(OUTER_01,A_02,B_03,CALLABLE_04) :-
 %~                                                call_func_args("function",["e"]),
 %~                                                [comprehension_target_iter("e","container")])]))])))
 %~
+%~ replacing_with_var(call_func_args(FUNCTION_01,["e"]))
+%~
 % Compiled KL-1 for apply
 apply(FUNCTION_01,CONTAINER_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' apply function to each item in container ') ,
-  assign_var( ARG_04,
-    generator_exp_elt_generators(
-       call_func_args(FUNCTION_01,["e"]),
-       [assign_targets_value1("e",CONTAINER_02)])) ,
-  call_op(call_func_args("type",[CONTAINER_02],ARG_04,CONTAINER_03)) ,
+  call([op_call(op_call(FUNCTION_01,E,ARG_05))]) ,
+  generator_exp_elt_generators( ARG_05,
+    [assign_targets_value1(E,CONTAINER_02)],
+    ARG_04) ,
+  call( [ op_call(call_func_args("type",[CONTAINER_02],ARG_04,CONTAINER_03))]) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "rapply",
@@ -1427,15 +2294,17 @@ apply(FUNCTION_01,CONTAINER_02,CONTAINER_03) :-
 %~                                                call_func_args("function",["value"]),
 %~                                                [comprehension_target_iter("function","functions")])]))])))
 %~
+%~ replacing_with_var(call_func_args("function",[VALUE_02]))
+%~
 % Compiled KL-1 for rapply
 rapply(FUNCTIONS_01,VALUE_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' apply each function in container to value ') ,
-  assign_var( ARG_04,
-    generator_exp_elt_generators(
-       call_func_args("function",[VALUE_02]),
-       [assign_targets_value1("function",FUNCTIONS_01)])) ,
-  call_op(call_func_args("type",[FUNCTIONS_01],ARG_04,CONTAINER_03)) ,
+  function(VALUE_02,ARG_05) ,
+  generator_exp_elt_generators( ARG_05,
+    [assign_targets_value1("function",FUNCTIONS_01)],
+    ARG_04) ,
+  call( [ op_call(call_func_args("type",[FUNCTIONS_01],ARG_04,CONTAINER_03))]) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "mapply",
@@ -1466,15 +2335,24 @@ mapply(FUNCTION_01,CONTAINER_02,FROZENSET_03) :-
 %~                                             call_func_args("function",["i","j"]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("zip",["a","b"]))])]))])))
 %~
+%~ replacing_with_var(call_func_args(FUNCTION_01,["i","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args("zip",[A_02,B_03])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("zip",[A_02,B_03]))
+%~
 % Compiled KL-1 for papply
 papply(FUNCTION_01,A_02,B_03,TUPLE_04) :-
   willBeType(TUPLE_04,'Tuple') ,
   comment(' apply function on two vectors ') ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args(FUNCTION_01,["i","j"]),
-       [ assign_targets_value1( tuple_elts(["i","j"]),
-           call_func_args("zip",[A_02,B_03]))])) ,
+  call([op_call(op_call(FUNCTION_01,I,J,ARG_06))]) ,
+  into_tuple(I,J,ARG_08) ,
+  zip(A_02,B_03,ARG_09) ,
+  comprehension_target_iter(ARG_08,ARG_09,ARG_07) ,
+  generator_exp_elt_generators(ARG_06,[ARG_07],ARG_05) ,
   tuple(ARG_05,TUPLE_04) ,
   exit_proc(TUPLE_04).
 %~ % Universal AST Pass #0
@@ -1506,15 +2384,17 @@ mpapply(FUNCTION_01,A_02,B_03,TUPLE_04) :-
 %~                                             [ comprehension_target_iter("j","b"),
 %~                                               comprehension_target_iter("i","a")])]))])))
 %~
+%~ replacing_with_var(call_func_args(FUNCTION_01,["i","j"]))
+%~
 % Compiled KL-1 for prapply
 prapply(FUNCTION_01,A_02,B_03,FROZENSET_04) :-
   willBeType(FROZENSET_04,'FrozenSet') ,
   comment(' apply function on cartesian product ') ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args(FUNCTION_01,["i","j"]),
-       [ assign_targets_value1("j",B_03),
-         assign_targets_value1("i",A_02)])) ,
+  call([op_call(op_call(FUNCTION_01,I,J,ARG_06))]) ,
+  generator_exp_elt_generators( ARG_06,
+    [ assign_targets_value1(J,B_03),
+      assign_targets_value1(I,A_02)],
+    ARG_05) ,
   frozenset(ARG_05,FROZENSET_04) ,
   exit_proc(FROZENSET_04).
 %~ % Universal AST Pass #0
@@ -1533,23 +2413,41 @@ prapply(FUNCTION_01,A_02,B_03,FROZENSET_04) :-
 %~                                          [ call_func_args("set",["values"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))]))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[ELEMENT_01,"tuple"]))
+%~
+%~ replacing_with_var(call_func_args("set",["values"]))
+%~
+%~ replacing_with_var( keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")])))
+%~
+%~ replacing_with_var(comprehension_target_iter("v","r"))
+%~
+%~ replacing_with_var(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))
+%~
+%~ replacing_with_var(tuple_elts(["v","_"]))
+%~
+%~ replacing_with_var(boxed_attribute_value("count"))
+%~
 % Compiled KL-1 for mostcolor
 mostcolor(ELEMENT_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' most common color ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
-      assign_var( "values",
-        list_comp_elt_generators( "v", [
-          assign_targets_value1("r",ELEMENT_01),
-          assign_targets_value1("v","r")])) ;
-    assign_var( "values",
-      list_comp_elt_generators( "v", [
-        assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)]))) ,
-  assign_var( INTEGER_02,
-    call_func_args_keywords( "max",
-      [ call_func_args("set",["values"])],
-      [keyword_value(["count","values"])])) ,
+    [ isinstance(ELEMENT_01,TUPLE,ARG_03),
+      testif(ARG_03)] ->
+      [ comprehension_target_iter(V,"r",ARG_06),
+        list_comp_elt_generators( V,
+          [ assign_targets_value1("r",ELEMENT_01),
+            ARG_06],
+          VALUES)] ;
+    [ list_comp_elt_generators( V,
+        [ into_tuple(V,"_",ARG_08),
+          assign_targets_value1(ARG_08,ELEMENT_01)],
+        VALUES)]) ,
+  set(VALUES,ARG_04) ,
+  boxed_attribute_value("count",ARG_09) ,
+  qualified_identifier_identifiers([VALUES,ARG_09],ARG_07) ,
+  keyword_value(ARG_07,ARG_05) ,
+  call_func_args_keywords("max",[ARG_04],[ARG_05],INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "leastcolor",
@@ -1567,23 +2465,41 @@ mostcolor(ELEMENT_01,INTEGER_02) :-
 %~                                          [ call_func_args("set",["values"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))]))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[ELEMENT_01,"tuple"]))
+%~
+%~ replacing_with_var(call_func_args("set",["values"]))
+%~
+%~ replacing_with_var( keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")])))
+%~
+%~ replacing_with_var(comprehension_target_iter("v","r"))
+%~
+%~ replacing_with_var(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))
+%~
+%~ replacing_with_var(tuple_elts(["v","_"]))
+%~
+%~ replacing_with_var(boxed_attribute_value("count"))
+%~
 % Compiled KL-1 for leastcolor
 leastcolor(ELEMENT_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' least common color ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
-      assign_var( "values",
-        list_comp_elt_generators( "v", [
-          assign_targets_value1("r",ELEMENT_01),
-          assign_targets_value1("v","r")])) ;
-    assign_var( "values",
-      list_comp_elt_generators( "v", [
-        assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)]))) ,
-  assign_var( INTEGER_02,
-    call_func_args_keywords( "min",
-      [ call_func_args("set",["values"])],
-      [keyword_value(["count","values"])])) ,
+    [ isinstance(ELEMENT_01,TUPLE,ARG_03),
+      testif(ARG_03)] ->
+      [ comprehension_target_iter(V,"r",ARG_06),
+        list_comp_elt_generators( V,
+          [ assign_targets_value1("r",ELEMENT_01),
+            ARG_06],
+          VALUES)] ;
+    [ list_comp_elt_generators( V,
+        [ into_tuple(V,"_",ARG_08),
+          assign_targets_value1(ARG_08,ELEMENT_01)],
+        VALUES)]) ,
+  set(VALUES,ARG_04) ,
+  boxed_attribute_value("count",ARG_09) ,
+  qualified_identifier_identifiers([VALUES,ARG_09],ARG_07) ,
+  keyword_value(ARG_07,ARG_05) ,
+  call_func_args_keywords("min",[ARG_04],[ARG_05],INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "height",
@@ -1602,20 +2518,44 @@ leastcolor(ELEMENT_01,INTEGER_02) :-
 %~                                            call_func_args("uppermost",["piece"])),
 %~                                          1))])))
 %~
+%~ replacing_with_var(body_stmts([return_value(0)]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),call_func_args("len",[PIECE_01]),0))
+%~
+%~ replacing_with_var(body_stmts([return_value(call_func_args("len",[PIECE_01]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[PIECE_01,"tuple"]))
+%~
+%~ replacing_with_var(return_value(0))
+%~
+%~ replacing_with_var(call_func_args("len",[PIECE_01]))
+%~
+%~ replacing_with_var(return_value(call_func_args("len",[PIECE_01])))
+%~
+%~ replacing_with_var(call_func_args("len",[PIECE_01]))
+%~
 % Compiled KL-1 for height
 height(PIECE_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' height of grid or patch ') ,
   (/*2*/
-    testif(call_func_args(==,[call_func_args("len",[PIECE_01]),0])) ->
-      call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
+    [ return_value(0,ARG_08),
+      body_stmts([ARG_08],ARG_03),
+      [ len(PIECE_01,ARG_09),
+        compare_ops_left_comparators(eq_token(==),ARG_09,0,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
   (/*2*/
-    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
-      len(PIECE_01,INTEGER_02),exit_proc(INTEGER_02)) ,
-  lowermost(PIECE_01,ARG_04) ,
-  uppermost(PIECE_01,ARG_05) ,
-  call_op(-,ARG_04,ARG_05,ARG_03) ,
-  call_op(+,ARG_03,1,INTEGER_02) ,
+    [ len(PIECE_01,ARG_013),
+      return_value(ARG_013,ARG_010),
+      body_stmts([ARG_010],ARG_05),
+      [ isinstance(PIECE_01,TUPLE,ARG_06),
+        testif(ARG_06)] ->
+        ARG_05]) ,
+  lowermost(PIECE_01,ARG_011) ,
+  uppermost(PIECE_01,ARG_012) ,
+  call([op_call(sub_token(-,ARG_011,ARG_012,ARG_07))]) ,
+  call([op_call(add_token(+,ARG_07,1,INTEGER_02))]) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "width",
@@ -1634,22 +2574,45 @@ height(PIECE_01,INTEGER_02) :-
 %~                                            call_func_args("leftmost",["piece"])),
 %~                                          1))])))
 %~
+%~ replacing_with_var(body_stmts([return_value(0)]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),call_func_args("len",[PIECE_01]),0))
+%~
+%~ replacing_with_var( body_stmts([return_value(call_func_args("len",[subscript_value_slice(PIECE_01,0)]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[PIECE_01,"tuple"]))
+%~
+%~ replacing_with_var(return_value(0))
+%~
+%~ replacing_with_var(call_func_args("len",[PIECE_01]))
+%~
+%~ replacing_with_var(return_value(call_func_args("len",[subscript_value_slice(PIECE_01,0)])))
+%~
+%~ replacing_with_var(call_func_args("len",[subscript_value_slice(PIECE_01,0)]))
+%~
 % Compiled KL-1 for width
 width(PIECE_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' width of grid or patch ') ,
   (/*2*/
-    testif(call_func_args(==,[call_func_args("len",[PIECE_01]),0])) ->
-      call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
+    [ return_value(0,ARG_08),
+      body_stmts([ARG_08],ARG_03),
+      [ len(PIECE_01,ARG_09),
+        compare_ops_left_comparators(eq_token(==),ARG_09,0,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
   (/*2*/
-    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
-      ( [subscript_value_slice(PIECE_01,0,ARG_03)]  ,
-        len(ARG_03,INTEGER_02) ,
-        exit_proc(INTEGER_02))) ,
-  rightmost(PIECE_01,ARG_05) ,
-  leftmost(PIECE_01,ARG_06) ,
-  call_op(-,ARG_05,ARG_06,ARG_04) ,
-  call_op(+,ARG_04,1,INTEGER_02) ,
+    [ subscript_value_slice(PIECE_01,0,ARG_014),
+      len(ARG_014,ARG_013),
+      return_value(ARG_013,ARG_010),
+      body_stmts([ARG_010],ARG_05),
+      [ isinstance(PIECE_01,TUPLE,ARG_06),
+        testif(ARG_06)] ->
+        ARG_05]) ,
+  rightmost(PIECE_01,ARG_011) ,
+  leftmost(PIECE_01,ARG_012) ,
+  call([op_call(sub_token(-,ARG_011,ARG_012,ARG_07))]) ,
+  call([op_call(add_token(+,ARG_07,1,INTEGER_02))]) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "shape",
@@ -1662,10 +2625,9 @@ width(PIECE_01,INTEGER_02) :-
 shape(PIECE_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' height and width of grid or patch ') ,
-  assign_targets_value( [ARG_03], [
-    call_func_args("height",[PIECE_01]),
-    call_func_args("width",[PIECE_01])]) ,
-  tuple_elts(ARG_03,INTEGERTUPLE_02) ,
+  height(PIECE_01,ARG_03) ,
+  width(PIECE_01,ARG_04) ,
+  tuple_elts(ARG_03,ARG_04,INTEGERTUPLE_02) ,
   exit_proc(INTEGERTUPLE_02).
 %~ % Universal AST Pass #0
 %~ def( "portrait",
@@ -1676,13 +2638,17 @@ shape(PIECE_01,INTEGERTUPLE_02) :-
 %~                                          call_func_args("height",["piece"]),
 %~                                          call_func_args("width",["piece"])))])))
 %~
+%~ replacing_with_var(call_func_args("height",[PIECE_01]))
+%~
+%~ replacing_with_var(call_func_args("width",[PIECE_01]))
+%~
 % Compiled KL-1 for portrait
 portrait(PIECE_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether height is greater than width ') ,
   height(PIECE_01,ARG_03) ,
   width(PIECE_01,ARG_04) ,
-  call_op(>,ARG_03,ARG_04,BOOLEAN_02) ,
+  compare_ops_left_comparators(gt_token(>),ARG_03,ARG_04,BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "colorcount",
@@ -1705,23 +2671,61 @@ portrait(PIECE_01,BOOLEAN_02) :-
 %~                                             compare_ops_left_comparators(eq_token(==),"v","value"),
 %~                                             [ comprehension_target_iter(tuple_elts(["v","_"]),"element")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "sum", [
+%~                                                   generator_exp_elt_generators(
+%~                                                      call_func_args(
+%~                                                         qualified_identifier_identifiers(["row",boxed_attribute_value("count")]),
+%~                                                         [VALUE_02]),
+%~                                                      [comprehension_target_iter("row",ELEMENT_01)])]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[ELEMENT_01,"tuple"]))
+%~
+%~ replacing_with_var( return_value( call_func_args( "sum", [
+%~                                     generator_exp_elt_generators(
+%~                                        call_func_args(
+%~                                           qualified_identifier_identifiers(["row",boxed_attribute_value("count")]),
+%~                                           [VALUE_02]),
+%~                                        [comprehension_target_iter("row",ELEMENT_01)])])))
+%~
+%~ replacing_with_var( call_func_args( "sum", [
+%~                       generator_exp_elt_generators(
+%~                          call_func_args(
+%~                             qualified_identifier_identifiers(["row",boxed_attribute_value("count")]),
+%~                             [VALUE_02]),
+%~                          [comprehension_target_iter("row",ELEMENT_01)])]))
+%~
+%~ replacing_with_var(call_func_args(==,["v",VALUE_02]))
+%~
+%~ replacing_with_var(tuple_elts(["v","_"]))
+%~
+%~ replacing_with_var( call_func_args(
+%~                        qualified_identifier_identifiers(["row",boxed_attribute_value("count")]),
+%~                        [VALUE_02]))
+%~
+%~ replacing_with_var(boxed_attribute_value("count"))
+%~
 % Compiled KL-1 for colorcount
 colorcount(ELEMENT_01,VALUE_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' number of cells with color ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
-      ( assign_var( ARG_04,
-          generator_exp_elt_generators(
-             call_func_args("count",["row",VALUE_02]),
-             [assign_targets_value1("row",ELEMENT_01)]))  ,
-        sum(ARG_04,INTEGER_03) ,
-        exit_proc(INTEGER_03))) ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args(==,["v",VALUE_02]),
-       [ assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)])) ,
-  sum(ARG_05,INTEGER_03) ,
+    [ call( [ op_call( [ boxed_attribute_value("count",ARG_013),
+                         qualified_identifier_identifiers(["row",ARG_013],VALUE_02,ARG_012)])]),
+      generator_exp_elt_generators( ARG_012,
+        [assign_targets_value1("row",ELEMENT_01)],
+        ARG_09),
+      sum(ARG_09,ARG_08),
+      return_value(ARG_08,ARG_07),
+      body_stmts([ARG_07],ARG_04),
+      [ isinstance(ELEMENT_01,TUPLE,ARG_05),
+        testif(ARG_05)] ->
+        ARG_04]) ,
+  call([op_call(op_call(==,V,VALUE_02,ARG_010))]) ,
+  generator_exp_elt_generators( ARG_010,
+    [ into_tuple(V,"_",ARG_011),
+      assign_targets_value1(ARG_011,ELEMENT_01)],
+    ARG_06) ,
+  sum(ARG_06,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
 %~ def( "colorfilter",
@@ -1739,18 +2743,26 @@ colorcount(ELEMENT_01,VALUE_02,INTEGER_03) :-
 %~                                                  subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
 %~                                                  "value")])])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( "obj",
+%~                       OBJS_01,
+%~                       [ compare_ops_left_comparators( eq_token(==),
+%~                           subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
+%~                           VALUE_02)]))
+%~
+%~ replacing_with_var( call_func_args( ==, [
+%~                       subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
+%~                       VALUE_02]))
+%~
 % Compiled KL-1 for colorfilter
 colorfilter(OBJS_01,VALUE_02,OBJECTS_03) :-
   willBeType(OBJECTS_03,'Objects') ,
   comment(' filter objects by color ') ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      "obj",
-      [ comprehension_target_iter_ifs( "obj",
-          OBJS_01,
-          [ call_func_args( ==, [
-              subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
-              VALUE_02])])])) ,
+  iter(OBJ,ARG_09) ,
+  next(ARG_09,ARG_08) ,
+  subscript_value_slice(ARG_08,0,ARG_07) ,
+  call([op_call(op_call(==,ARG_07,VALUE_02,ARG_06))]) ,
+  comprehension_target_iter_ifs(OBJ,OBJS_01,[ARG_06],ARG_05) ,
+  generator_exp_elt_generators(OBJ,[ARG_05],ARG_04) ,
   frozenset(ARG_04,OBJECTS_03) ,
   exit_proc(OBJECTS_03).
 %~ % Universal AST Pass #0
@@ -1767,16 +2779,20 @@ colorfilter(OBJS_01,VALUE_02,OBJECTS_03) :-
 %~                                              "container",
 %~                                              [ compare_ops_left_comparators(eq_token(==),call_func_args("len",["item"]),"n")])])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( "item",
+%~                       CONTAINER_01,
+%~                       [ compare_ops_left_comparators(eq_token(==),call_func_args("len",["item"]),N_02)]))
+%~
+%~ replacing_with_var(call_func_args(==,[call_func_args("len",["item"]),N_02]))
+%~
 % Compiled KL-1 for sizefilter
 sizefilter(CONTAINER_01,N_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' filter items by size ') ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      "item",
-      [ comprehension_target_iter_ifs( "item",
-          CONTAINER_01,
-          [ call_func_args(==,[call_func_args("len",["item"]),N_02])])])) ,
+  len(ITEM,ARG_07) ,
+  call([op_call(op_call(==,ARG_07,N_02,ARG_06))]) ,
+  comprehension_target_iter_ifs(ITEM,CONTAINER_01,[ARG_06],ARG_05) ,
+  generator_exp_elt_generators(ITEM,[ARG_05],ARG_04) ,
   frozenset(ARG_04,FROZENSET_03) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
@@ -1790,17 +2806,30 @@ sizefilter(CONTAINER_01,N_02,FROZENSET_03) :-
 %~                                            comprehension_target_iter( "j",
 %~                                              call_func_args("range",[call_func_args("len",[subscript_value_slice("grid",0)])]))])]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",[call_func_args("len",[GRID_01])])))
+%~
+%~ replacing_with_var( comprehension_target_iter( "j",
+%~                       call_func_args("range",[call_func_args("len",[subscript_value_slice(GRID_01,0)])])))
+%~
+%~ replacing_with_var(call_func_args("range",[call_func_args("len",[GRID_01])]))
+%~
+%~ replacing_with_var( call_func_args("range",[call_func_args("len",[subscript_value_slice(GRID_01,0)])]))
+%~
 % Compiled KL-1 for asindices
 asindices(GRID_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices of all grid cells ') ,
-  assign_targets_value( [ARG_03], [
-    generator_exp_elt_generator_1( "i",
-      assign_targets_value1("i",call_func_args("range",[call_func_args("len",[GRID_01])]))),
-    generator_exp_elt_generator_1( "j",
-      assign_targets_value1( "j",
-        call_func_args("range",[call_func_args("len",[subscript_value_slice(GRID_01,0)])]))),
-    elt_generator(v1,tuple_elts([]),[])]) ,
+  into_tuple(I,J,ARG_04) ,
+  len(GRID_01,ARG_08) ,
+  range(ARG_08,ARG_07) ,
+  comprehension_target_iter(I,ARG_07,ARG_05) ,
+  subscript_value_slice(GRID_01,0,ARG_011) ,
+  len(ARG_011,ARG_010) ,
+  range(ARG_010,ARG_09) ,
+  comprehension_target_iter(J,ARG_09,ARG_06) ,
+  generator_exp_elt_generators(ARG_04,[ARG_05,ARG_06],ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -1818,18 +2847,37 @@ asindices(GRID_01,INDICES_02) :-
 %~                                              call_func_args("enumerate",["r"]),
 %~                                              [ compare_ops_left_comparators(eq_token(==),"v","value")])])]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                       call_func_args("enumerate",["r"]),
+%~                       [ compare_ops_left_comparators(eq_token(==),"v",VALUE_02)]))
+%~
+%~ replacing_with_var(tuple_elts(["i","r"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[GRID_01]))
+%~
+%~ replacing_with_var(tuple_elts(["j","v"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",["r"]))
+%~
+%~ replacing_with_var(call_func_args(==,["v",VALUE_02]))
+%~
 % Compiled KL-1 for ofcolor
 ofcolor(GRID_01,VALUE_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' indices of all grid cells with value ') ,
-  assign_targets_value( [ARG_04], [
-    generator_exp_elt_generator_1( "i",
-      assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
-    generator_exp_elt_generator_1( "j",
-      comprehension_target_iter_ifs( tuple_elts(["j","v"]),
-        call_func_args("enumerate",["r"]),
-        [ call_func_args(==,["v",VALUE_02])])),
-    elt_generator(v1,tuple_elts([]),[])]) ,
+  into_tuple(I,J,ARG_05) ,
+  into_tuple(I,R,ARG_08) ,
+  enumerate(GRID_01,ARG_09) ,
+  comprehension_target_iter(ARG_08,ARG_09,ARG_06) ,
+  into_tuple(J,V,ARG_010) ,
+  enumerate(R,ARG_011) ,
+  call([op_call(op_call(==,V,VALUE_02,ARG_012))]) ,
+  comprehension_target_iter_ifs(ARG_010,ARG_011,[ARG_012],ARG_07) ,
+  generator_exp_elt_generators(ARG_05,[ARG_06,ARG_07],ARG_04) ,
   frozenset(ARG_04,INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
@@ -1868,20 +2916,41 @@ ulcorner(PATCH_01,INTEGERTUPLE_02) :-
 %~                                            call_func_args( "enumerate", [
 %~                                              call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])])]))])))
 %~
+%~ replacing_with_var(arguments_args([argument_name("ix")]))
+%~
+%~ replacing_with_var( body_stmts( call_func_args(
+%~                                    subscript_value_slice(
+%~                                       dict_keys_values([0,1],["min","max"]),
+%~                                       subscript_value_slice("ix",0)),
+%~                                    [subscript_value_slice("ix",1)])))
+%~
+%~ replacing_with_var(argument_name("ix"))
+%~
+%~ replacing_with_var( call_func_args(
+%~                        subscript_value_slice(
+%~                           dict_keys_values([0,1],["min","max"]),
+%~                           subscript_value_slice("ix",0)),
+%~                        [subscript_value_slice("ix",1)]))
+%~
+%~ replacing_with_var(dict_keys_values([0,1],["min","max"]))
+%~
+%~ replacing_with_var(subscript_value_slice("ix",0))
+%~
 % Compiled KL-1 for urcorner
 urcorner(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' index of upper right corner ') ,
-  assign_var( ARG_04,
-    lambda_args_body( arguments_args([argument_name("ix")]),
-      call_func_args(
-         subscript_value_slice(
-            dict_keys_values([0,1],["min","max"]),
-            subscript_value_slice("ix",0)),
-         [subscript_value_slice("ix",1)]))) ,
-  toindices(PATCH_01,ARG_08) ,
-  starred_value(ARG_08,ARG_07) ,
-  zip(ARG_07,ARG_06) ,
+  argument_name(IX,ARG_010) ,
+  arguments_args([ARG_010],ARG_07) ,
+  subscript_value_slice(IX,1,ARG_012) ,
+  call( [ op_call( [ dict_keys_values([0,1],["min","max"],ARG_014),
+                     subscript_value_slice(IX,0,ARG_015),
+                     subscript_value_slice(ARG_014,ARG_015,ARG_012,ARG_011)])]) ,
+  body_stmts(ARG_011,ARG_08) ,
+  lambda_args_body(ARG_07,ARG_08,ARG_04) ,
+  toindices(PATCH_01,ARG_013) ,
+  starred_value(ARG_013,ARG_09) ,
+  zip(ARG_09,ARG_06) ,
   enumerate(ARG_06,ARG_05) ,
   map(ARG_04,ARG_05,ARG_03) ,
   tuple(ARG_03,INTEGERTUPLE_02) ,
@@ -1902,20 +2971,41 @@ urcorner(PATCH_01,INTEGERTUPLE_02) :-
 %~                                            call_func_args( "enumerate", [
 %~                                              call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])])]))])))
 %~
+%~ replacing_with_var(arguments_args([argument_name("ix")]))
+%~
+%~ replacing_with_var( body_stmts( call_func_args(
+%~                                    subscript_value_slice(
+%~                                       dict_keys_values([0,1],["max","min"]),
+%~                                       subscript_value_slice("ix",0)),
+%~                                    [subscript_value_slice("ix",1)])))
+%~
+%~ replacing_with_var(argument_name("ix"))
+%~
+%~ replacing_with_var( call_func_args(
+%~                        subscript_value_slice(
+%~                           dict_keys_values([0,1],["max","min"]),
+%~                           subscript_value_slice("ix",0)),
+%~                        [subscript_value_slice("ix",1)]))
+%~
+%~ replacing_with_var(dict_keys_values([0,1],["max","min"]))
+%~
+%~ replacing_with_var(subscript_value_slice("ix",0))
+%~
 % Compiled KL-1 for llcorner
 llcorner(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' index of lower left corner ') ,
-  assign_var( ARG_04,
-    lambda_args_body( arguments_args([argument_name("ix")]),
-      call_func_args(
-         subscript_value_slice(
-            dict_keys_values([0,1],["max","min"]),
-            subscript_value_slice("ix",0)),
-         [subscript_value_slice("ix",1)]))) ,
-  toindices(PATCH_01,ARG_08) ,
-  starred_value(ARG_08,ARG_07) ,
-  zip(ARG_07,ARG_06) ,
+  argument_name(IX,ARG_010) ,
+  arguments_args([ARG_010],ARG_07) ,
+  subscript_value_slice(IX,1,ARG_012) ,
+  call( [ op_call( [ dict_keys_values([0,1],["max","min"],ARG_014),
+                     subscript_value_slice(IX,0,ARG_015),
+                     subscript_value_slice(ARG_014,ARG_015,ARG_012,ARG_011)])]) ,
+  body_stmts(ARG_011,ARG_08) ,
+  lambda_args_body(ARG_07,ARG_08,ARG_04) ,
+  toindices(PATCH_01,ARG_013) ,
+  starred_value(ARG_013,ARG_09) ,
+  zip(ARG_09,ARG_06) ,
   enumerate(ARG_06,ARG_05) ,
   map(ARG_04,ARG_05,ARG_03) ,
   tuple(ARG_03,INTEGERTUPLE_02) ,
@@ -1957,23 +3047,45 @@ lrcorner(PATCH_01,INTEGERTUPLE_02) :-
 %~                                                   slice_lower_upper( subscript_value_slice("start",0),
 %~                                                     bin_op_left_right(add_token(+),subscript_value_slice("start",0),subscript_value_slice("dims",0)))))])]))])))
 %~
+%~ replacing_with_var( subscript_value_slice( "r",
+%~                       slice_lower_upper( subscript_value_slice(START_02,1),
+%~                         bin_op_left_right(add_token(+),subscript_value_slice(START_02,1),subscript_value_slice(DIMS_03,1)))))
+%~
+%~ replacing_with_var( comprehension_target_iter( "r",
+%~                       subscript_value_slice( GRID_01,
+%~                         slice_lower_upper( subscript_value_slice(START_02,0),
+%~                           bin_op_left_right(add_token(+),subscript_value_slice(START_02,0),subscript_value_slice(DIMS_03,0))))))
+%~
+%~ replacing_with_var( subscript_value_slice( GRID_01,
+%~                       slice_lower_upper( subscript_value_slice(START_02,0),
+%~                         bin_op_left_right(add_token(+),subscript_value_slice(START_02,0),subscript_value_slice(DIMS_03,0)))))
+%~
+%~ replacing_with_var(subscript_value_slice(START_02,1))
+%~
+%~ replacing_with_var( bin_op_left_right(add_token(+),subscript_value_slice(START_02,1),subscript_value_slice(DIMS_03,1)))
+%~
+%~ replacing_with_var(subscript_value_slice(START_02,0))
+%~
+%~ replacing_with_var( bin_op_left_right(add_token(+),subscript_value_slice(START_02,0),subscript_value_slice(DIMS_03,0)))
+%~
 % Compiled KL-1 for crop
 crop(GRID_01,START_02,DIMS_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' subgrid specified by start and dimension ') ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       subscript_value_slice( "r",
-         slice_lower_upper( subscript_value_slice(START_02,1),
-           call_func_args( +, [
-             subscript_value_slice(START_02,1),
-             subscript_value_slice(DIMS_03,1)]))),
-       [ assign_targets_value1( "r",
-           subscript_value_slice( GRID_01,
-             slice_lower_upper( subscript_value_slice(START_02,0),
-               call_func_args( +, [
-                 subscript_value_slice(START_02,0),
-                 subscript_value_slice(DIMS_03,0)]))))])) ,
+  subscript_value_slice(START_02,1,ARG_011) ,
+  subscript_value_slice(START_02,1,ARG_013) ,
+  subscript_value_slice(DIMS_03,1,ARG_014) ,
+  call([op_call(add_token(+,ARG_013,ARG_014,ARG_012))]) ,
+  slice_lower_upper(ARG_011,ARG_012,ARG_07) ,
+  subscript_value_slice(R,ARG_07,ARG_06) ,
+  subscript_value_slice(START_02,0,ARG_015) ,
+  subscript_value_slice(START_02,0,ARG_017) ,
+  subscript_value_slice(DIMS_03,0,ARG_018) ,
+  call([op_call(add_token(+,ARG_017,ARG_018,ARG_016))]) ,
+  slice_lower_upper(ARG_015,ARG_016,ARG_010) ,
+  subscript_value_slice(GRID_01,ARG_010,ARG_09) ,
+  comprehension_target_iter(R,ARG_09,ARG_08) ,
+  generator_exp_elt_generators(ARG_06,[ARG_08],ARG_05) ,
   tuple(ARG_05,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
@@ -1993,23 +3105,60 @@ crop(GRID_01,START_02,DIMS_03,GRID_04) :-
 %~                                                             comprehension_target_iter(tuple_elts(["value","index"]),"patch")])]))])),
 %~                          return_value("patch")])))
 %~
+%~ replacing_with_var(body_stmts([return_value(call_func("frozenset"))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),call_func_args("len",[PATCH_01]),0))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators( "index", [
+%~                                                     comprehension_target_iter(tuple_elts(["value","index"]),PATCH_01)])]))]))
+%~
+%~ replacing_with_var( call_func_args( "isinstance", [
+%~                       subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
+%~                       "tuple"]))
+%~
+%~ replacing_with_var(return_value(call_func("frozenset")))
+%~
+%~ replacing_with_var(call_func_args("len",[PATCH_01]))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators( "index", [
+%~                                       comprehension_target_iter(tuple_elts(["value","index"]),PATCH_01)])])))
+%~
+%~ replacing_with_var(call_func("frozenset"))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators( "index", [
+%~                         comprehension_target_iter(tuple_elts(["value","index"]),PATCH_01)])]))
+%~
+%~ replacing_with_var(tuple_elts(["value","index"]))
+%~
 % Compiled KL-1 for toindices
 toindices(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices of object cells ') ,
   (/*2*/
-    testif(call_func_args(==,[call_func_args("len",[PATCH_01]),0])) ->
-      make_new("frozenset",INDICES_02),exit_proc(INDICES_02)) ,
+    [ make_new("frozenset",ARG_012),
+      return_value(ARG_012,ARG_08),
+      body_stmts([ARG_08],ARG_03),
+      [ len(PATCH_01,ARG_09),
+        compare_ops_left_comparators(eq_token(==),ARG_09,0,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
   (/*2*/
-    testif( [ call_func_args( isinstance, [
-                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
-                tuple])]) ->
-      ( assign_var( ARG_03,
-          elt_generator( v1,
-            "index",
-            [ assign_targets_value1(tuple_elts(["value","index"]),PATCH_01)]))  ,
-        frozenset(ARG_03,INDICES_02) ,
-        exit_proc(INDICES_02))) ,
+    [ generator_exp_elt_generators( INDEX,
+        [ into_tuple(VALUE,INDEX,ARG_016),
+          assign_targets_value1(ARG_016,PATCH_01)],
+        ARG_014),
+      frozenset(ARG_014,ARG_013),
+      return_value(ARG_013,ARG_010),
+      body_stmts([ARG_010],ARG_05),
+      [ iter(PATCH_01,ARG_015),
+        next(ARG_015,ARG_011),
+        subscript_value_slice(ARG_011,1,ARG_07),
+        isinstance(ARG_07,TUPLE,ARG_06),
+        testif(ARG_06)] ->
+        ARG_05]) ,
   call(INDICES_02=PATCH_01) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -2024,14 +3173,20 @@ toindices(PATCH_01,INDICES_02) :-
 %~                                          generator_exp_elt_generators( tuple_elts(["value","index"]), [
 %~                                            comprehension_target_iter("index",call_func_args("toindices",["patch"]))])]))])))
 %~
+%~ replacing_with_var(tuple_elts([VALUE_01,"index"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("index",call_func_args("toindices",[PATCH_02])))
+%~
+%~ replacing_with_var(call_func_args("toindices",[PATCH_02]))
+%~
 % Compiled KL-1 for recolor
 recolor(VALUE_01,PATCH_02,OBJECT_03) :-
   willBeType(OBJECT_03,'Object') ,
   comment(' recolor patch ') ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      tuple_elts([VALUE_01,"index"]),
-      [ assign_targets_value1("index",call_func_args("toindices",[PATCH_02]))])) ,
+  into_tuple(VALUE_01,INDEX,ARG_05) ,
+  toindices(PATCH_02,ARG_07) ,
+  comprehension_target_iter(INDEX,ARG_07,ARG_06) ,
+  generator_exp_elt_generators(ARG_05,[ARG_06],ARG_04) ,
   frozenset(ARG_04,OBJECT_03) ,
   exit_proc(OBJECT_03).
 %~ % Universal AST Pass #0
@@ -2057,27 +3212,69 @@ recolor(VALUE_01,PATCH_02,OBJECT_03) :-
 %~                                             tuple_elts([bin_op_left_right(add_token(+),"i","di"),bin_op_left_right(add_token(+),"j","dj")]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"patch")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators(
+%~                                                      tuple_elts( [ "value",
+%~                                                                    tuple_elts([bin_op_left_right(add_token(+),"i","di"),bin_op_left_right(add_token(+),"j","dj")])]),
+%~                                                      [ comprehension_target_iter(tuple_elts(["value",tuple_elts(["i","j"])]),PATCH_01)])]))]))
+%~
+%~ replacing_with_var( call_func_args( "isinstance", [
+%~                       subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
+%~                       "tuple"]))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators(
+%~                                        tuple_elts( [ "value",
+%~                                                      tuple_elts([bin_op_left_right(add_token(+),"i","di"),bin_op_left_right(add_token(+),"j","dj")])]),
+%~                                        [ comprehension_target_iter(tuple_elts(["value",tuple_elts(["i","j"])]),PATCH_01)])])))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators(
+%~                          tuple_elts( [ "value",
+%~                                        tuple_elts([bin_op_left_right(add_token(+),"i","di"),bin_op_left_right(add_token(+),"j","dj")])]),
+%~                          [ comprehension_target_iter(tuple_elts(["value",tuple_elts(["i","j"])]),PATCH_01)])]))
+%~
+%~ replacing_with_var( tuple_elts([bin_op_left_right(add_token(+),"i","di"),bin_op_left_right(add_token(+),"j","dj")]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( tuple_elts( [ "value",
+%~                                   tuple_elts([bin_op_left_right(add_token(+),"i","di"),bin_op_left_right(add_token(+),"j","dj")])]))
+%~
+%~ replacing_with_var(tuple_elts(["value",tuple_elts(["i","j"])]))
+%~
 % Compiled KL-1 for shift
 shift(PATCH_01,DIRECTIONS_02,PATCH_03) :-
   willBeType(PATCH_03,'Patch') ,
   comment(' shift patch ') ,
-  from_tuple(DIRECTIONS_02,"di","dj") ,
+  from_tuple(DIRECTIONS_02,DI,DJ) ,
   (/*2*/
-    testif( [ call_func_args( isinstance, [
-                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
-                tuple])]) ->
-      ( assign_var( ARG_04,
-          elt_generator( v1,
-            tuple_elts( [ "value",
-                          tuple_elts([call_func_args(+,["i","di"]),call_func_args(+,["j","dj"])])]),
-            [ assign_targets_value1(tuple_elts(["value",tuple_elts(["i","j"])]),PATCH_01)]))  ,
-        frozenset(ARG_04,PATCH_03) ,
-        exit_proc(PATCH_03))) ,
-  assign_var( ARG_05,
-    elt_generator( v1,
-      tuple_elts([call_func_args(+,["i","di"]),call_func_args(+,["j","dj"])]),
-      [ assign_targets_value1(tuple_elts(["i","j"]),PATCH_01)])) ,
-  frozenset(ARG_05,PATCH_03) ,
+    [ call([op_call(add_token(+,I,DI,ARG_019))]),
+      call([op_call(add_token(+,J,DJ,ARG_020))]),
+      tuple_elts(ARG_019,ARG_020,ARG_018),
+      tuple_elts(VALUE,ARG_018,ARG_017),
+      generator_exp_elt_generators( ARG_017,
+        [ into_tuple(I,J,ARG_022),
+          tuple_elts(VALUE,ARG_022,ARG_021),
+          assign_targets_value1(ARG_021,PATCH_01)],
+        ARG_011),
+      frozenset(ARG_011,ARG_010),
+      return_value(ARG_010,ARG_08),
+      body_stmts([ARG_08],ARG_04),
+      [ iter(PATCH_01,ARG_012),
+        next(ARG_012,ARG_09),
+        subscript_value_slice(ARG_09,1,ARG_06),
+        isinstance(ARG_06,TUPLE,ARG_05),
+        testif(ARG_05)] ->
+        ARG_04]) ,
+  call([op_call(add_token(+,I,DI,ARG_014))]) ,
+  call([op_call(add_token(+,J,DJ,ARG_015))]) ,
+  tuple_elts(ARG_014,ARG_015,ARG_013) ,
+  generator_exp_elt_generators( ARG_013,
+    [ into_tuple(I,J,ARG_016),
+      assign_targets_value1(ARG_016,PATCH_01)],
+    ARG_07) ,
+  frozenset(ARG_07,PATCH_03) ,
   exit_proc(PATCH_03).
 %~ % Universal AST Pass #0
 %~ def( "normalize",
@@ -2089,14 +3286,19 @@ shift(PATCH_01,DIRECTIONS_02,PATCH_03) :-
 %~                                          tuple_elts( [ unary_op_operand(us_ub_token(-),call_func_args("uppermost",["patch"])),
 %~                                                        unary_op_operand(us_ub_token(-),call_func_args("leftmost",["patch"]))])]))])))
 %~
+%~ replacing_with_var(call_func_args("uppermost",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("leftmost",[PATCH_01]))
+%~
 % Compiled KL-1 for normalize
 normalize(PATCH_01,PATCH_02) :-
   willBeType(PATCH_02,'Patch') ,
   comment(' moves upper left corner to origin ') ,
-  assign_targets_value( [ARG_04], [
-    call_func_args(-,[call_func_args("uppermost",[PATCH_01])]),
-    call_func_args(-,[call_func_args("leftmost",[PATCH_01])])]) ,
-  tuple_elts(ARG_04,ARG_03) ,
+  uppermost(PATCH_01,ARG_06) ,
+  unary_op_operand(us_ub_token(-),ARG_06,ARG_04) ,
+  leftmost(PATCH_01,ARG_07) ,
+  unary_op_operand(us_ub_token(-),ARG_07,ARG_05) ,
+  tuple_elts(ARG_04,ARG_05,ARG_03) ,
   shift(PATCH_01,ARG_03,PATCH_02) ,
   exit_proc(PATCH_02).
 %~ % Universal AST Pass #0
@@ -2114,19 +3316,40 @@ normalize(PATCH_01,PATCH_02) :-
 %~                                                      tuple_elts( [ subscript_value_slice("loc",0),
 %~                                                                    bin_op_left_right(add_token(+),subscript_value_slice("loc",1),1)])])]))])))
 %~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(LOC_01,0),1),
+%~                                   subscript_value_slice(LOC_01,1)]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(LOC_01,0),1),
+%~                                   subscript_value_slice(LOC_01,1)]))
+%~
+%~ replacing_with_var( tuple_elts( [ subscript_value_slice(LOC_01,0),
+%~                                   bin_op_left_right(sub_token(-),subscript_value_slice(LOC_01,1),1)]))
+%~
+%~ replacing_with_var( tuple_elts( [ subscript_value_slice(LOC_01,0),
+%~                                   bin_op_left_right(add_token(+),subscript_value_slice(LOC_01,1),1)]))
+%~
 % Compiled KL-1 for dneighbors
 dneighbors(LOC_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' directly adjacent indices ') ,
-  assign_var( ARG_03,
-    set_elts( [ tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
-                              subscript_value_slice(LOC_01,1)]),
-                tuple_elts( [ call_func_args(+,[subscript_value_slice(LOC_01,0),1]),
-                              subscript_value_slice(LOC_01,1)]),
-                tuple_elts( [ subscript_value_slice(LOC_01,0),
-                              call_func_args(-,[subscript_value_slice(LOC_01,1),1])]),
-                tuple_elts( [ subscript_value_slice(LOC_01,0),
-                              call_func_args(+,[subscript_value_slice(LOC_01,1),1])])])) ,
+  subscript_value_slice(LOC_01,0,ARG_016) ,
+  call([op_call(sub_token(-,ARG_016,1,ARG_05))]) ,
+  subscript_value_slice(LOC_01,1,ARG_06) ,
+  tuple_elts(ARG_05,ARG_06,ARG_04) ,
+  subscript_value_slice(LOC_01,0,ARG_017) ,
+  call([op_call(add_token(+,ARG_017,1,ARG_08))]) ,
+  subscript_value_slice(LOC_01,1,ARG_09) ,
+  tuple_elts(ARG_08,ARG_09,ARG_07) ,
+  subscript_value_slice(LOC_01,0,ARG_011) ,
+  subscript_value_slice(LOC_01,1,ARG_018) ,
+  call([op_call(sub_token(-,ARG_018,1,ARG_012))]) ,
+  tuple_elts(ARG_011,ARG_012,ARG_010) ,
+  subscript_value_slice(LOC_01,0,ARG_014) ,
+  subscript_value_slice(LOC_01,1,ARG_019) ,
+  call([op_call(add_token(+,ARG_019,1,ARG_015))]) ,
+  tuple_elts(ARG_014,ARG_015,ARG_013) ,
+  set_elts( [ARG_04,ARG_07,ARG_010,ARG_013],
+    ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -2144,19 +3367,44 @@ dneighbors(LOC_01,INDICES_02) :-
 %~                                                      tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice("loc",0),1),
 %~                                                                    bin_op_left_right(add_token(+),subscript_value_slice("loc",1),1)])])]))])))
 %~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(LOC_01,0),1),
+%~                                   bin_op_left_right(sub_token(-),subscript_value_slice(LOC_01,1),1)]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice(LOC_01,0),1),
+%~                                   bin_op_left_right(add_token(+),subscript_value_slice(LOC_01,1),1)]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(LOC_01,0),1),
+%~                                   bin_op_left_right(sub_token(-),subscript_value_slice(LOC_01,1),1)]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice(LOC_01,0),1),
+%~                                   bin_op_left_right(add_token(+),subscript_value_slice(LOC_01,1),1)]))
+%~
 % Compiled KL-1 for ineighbors
 ineighbors(LOC_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' diagonally adjacent indices ') ,
-  assign_var( ARG_03,
-    set_elts( [ tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
-                              call_func_args(-,[subscript_value_slice(LOC_01,1),1])]),
-                tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
-                              call_func_args(+,[subscript_value_slice(LOC_01,1),1])]),
-                tuple_elts( [ call_func_args(+,[subscript_value_slice(LOC_01,0),1]),
-                              call_func_args(-,[subscript_value_slice(LOC_01,1),1])]),
-                tuple_elts( [ call_func_args(+,[subscript_value_slice(LOC_01,0),1]),
-                              call_func_args(+,[subscript_value_slice(LOC_01,1),1])])])) ,
+  subscript_value_slice(LOC_01,0,ARG_016) ,
+  call([op_call(sub_token(-,ARG_016,1,ARG_05))]) ,
+  subscript_value_slice(LOC_01,1,ARG_017) ,
+  call([op_call(sub_token(-,ARG_017,1,ARG_06))]) ,
+  tuple_elts(ARG_05,ARG_06,ARG_04) ,
+  subscript_value_slice(LOC_01,0,ARG_018) ,
+  call([op_call(sub_token(-,ARG_018,1,ARG_08))]) ,
+  subscript_value_slice(LOC_01,1,ARG_019) ,
+  call([op_call(add_token(+,ARG_019,1,ARG_09))]) ,
+  tuple_elts(ARG_08,ARG_09,ARG_07) ,
+  subscript_value_slice(LOC_01,0,ARG_020) ,
+  call([op_call(add_token(+,ARG_020,1,ARG_011))]) ,
+  subscript_value_slice(LOC_01,1,ARG_021) ,
+  call([op_call(sub_token(-,ARG_021,1,ARG_012))]) ,
+  tuple_elts(ARG_011,ARG_012,ARG_010) ,
+  subscript_value_slice(LOC_01,0,ARG_022) ,
+  call([op_call(add_token(+,ARG_022,1,ARG_014))]) ,
+  subscript_value_slice(LOC_01,1,ARG_023) ,
+  call([op_call(add_token(+,ARG_023,1,ARG_015))]) ,
+  tuple_elts(ARG_014,ARG_015,ARG_013) ,
+  set_elts( [ARG_04,ARG_07,ARG_010,ARG_013],
+    ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -2174,7 +3422,7 @@ neighbors(LOC_01,INDICES_02) :-
   comment(' adjacent indices ') ,
   dneighbors(LOC_01,ARG_03) ,
   ineighbors(LOC_01,ARG_04) ,
-  call_op('|',ARG_03,ARG_04,INDICES_02) ,
+  call([op_call(bit_or_token('|',ARG_03,ARG_04,INDICES_02))]) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "objects",
@@ -2237,55 +3485,364 @@ neighbors(LOC_01,INDICES_02) :-
 %~                                                         [ call_func_args("frozenset",["obj"])]))])),
 %~                          return_value(call_func_args("frozenset",["objs"]))])))
 %~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      compare_ops_left_comparators(['python:In'],LOC_07,"occupied"),
+%~                                      body_stmts([['python:Continue']])),
+%~                                   assign_targets_value( ["val"],
+%~                                     subscript_value_slice(
+%~                                        subscript_value_slice(GRID_01,subscript_value_slice(LOC_07,0)),
+%~                                        subscript_value_slice(LOC_07,1))),
+%~                                   if_test_body(compare_ops_left_comparators(eq_token(==),"val","bg"),body_stmts([['python:Continue']])),
+%~                                   assign_targets_value(["obj"],set_elts([tuple_elts(["val",LOC_07])])),
+%~                                   assign_targets_value(["cands"],set_elts([LOC_07])),
+%~                                   while_test_body(
+%~                                      compare_ops_left_comparators(gt_token(>),call_func_args("len",["cands"]),0),
+%~                                      body_stmts( [ assign_targets_value(["neighborhood"],call_func("set")),
+%~                                                    for_target_iter_body( "cand",
+%~                                                      "cands",
+%~                                                      body_stmts( [ assign_targets_value( ["v"],
+%~                                                                      subscript_value_slice(
+%~                                                                         subscript_value_slice(GRID_01,subscript_value_slice("cand",0)),
+%~                                                                         subscript_value_slice("cand",1))),
+%~                                                                    if_test_body(
+%~                                                                       if_exp_test_body_orelse( UNIVALUED_02,
+%~                                                                         compare_ops_left_comparators(eq_token(==),"val","v"),
+%~                                                                         compare_ops_left_comparators(not_eq_token('!='),"v","bg")),
+%~                                                                       body_stmts( [ expr_value( call_func_args(
+%~                                                                                                    qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                                                                                    [tuple_elts(["v","cand"])])),
+%~                                                                                     expr_value( call_func_args(
+%~                                                                                                    qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                                                                                    ["cand"])),
+%~                                                                                     aug_assign_op_value_target( bit_or_token('|'),
+%~                                                                                       set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                                         comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                                                                           call_func_args("diagfun",["cand"]),
+%~                                                                                           [ bool_op_values( ['python:And'], [
+%~                                                                                               compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                                                               compare_ops_left_comparators(
+%~                                                                                                  ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                                                                       "neighborhood")]))])),
+%~                                                    assign_targets_value(["cands"],bin_op_left_right(sub_token(-),"neighborhood","occupied"))])),
+%~                                   expr_value( call_func_args(
+%~                                                  qualified_identifier_identifiers(["objs",boxed_attribute_value("add")]),
+%~                                                  [ call_func_args("frozenset",["obj"])]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators(['python:In'],LOC_07,"occupied"),
+%~                        body_stmts([['python:Continue']])))
+%~
+%~ replacing_with_var( if_test_body(compare_ops_left_comparators(eq_token(==),"val","bg"),body_stmts([['python:Continue']])))
+%~
+%~ replacing_with_var( while_test_body(
+%~                        compare_ops_left_comparators(gt_token(>),call_func_args("len",["cands"]),0),
+%~                        body_stmts( [ assign_targets_value(["neighborhood"],call_func("set")),
+%~                                      for_target_iter_body( "cand",
+%~                                        "cands",
+%~                                        body_stmts( [ assign_targets_value( ["v"],
+%~                                                        subscript_value_slice(
+%~                                                           subscript_value_slice(GRID_01,subscript_value_slice("cand",0)),
+%~                                                           subscript_value_slice("cand",1))),
+%~                                                      if_test_body(
+%~                                                         if_exp_test_body_orelse( UNIVALUED_02,
+%~                                                           compare_ops_left_comparators(eq_token(==),"val","v"),
+%~                                                           compare_ops_left_comparators(not_eq_token('!='),"v","bg")),
+%~                                                         body_stmts( [ expr_value( call_func_args(
+%~                                                                                      qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                                                                      [tuple_elts(["v","cand"])])),
+%~                                                                       expr_value( call_func_args(
+%~                                                                                      qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                                                                      ["cand"])),
+%~                                                                       aug_assign_op_value_target( bit_or_token('|'),
+%~                                                                         set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                           comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                                                             call_func_args("diagfun",["cand"]),
+%~                                                                             [ bool_op_values( ['python:And'], [
+%~                                                                                 compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                                                 compare_ops_left_comparators(
+%~                                                                                    ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                                                         "neighborhood")]))])),
+%~                                      assign_targets_value(["cands"],bin_op_left_right(sub_token(-),"neighborhood","occupied"))])))
+%~
+%~ replacing_with_var( expr_value( call_func_args(
+%~                                    qualified_identifier_identifiers(["objs",boxed_attribute_value("add")]),
+%~                                    [ call_func_args("frozenset",["obj"])])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(['python:In'],LOC_07,"occupied"))
+%~
+%~ replacing_with_var(body_stmts([['python:Continue']]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"val","bg"))
+%~
+%~ replacing_with_var(body_stmts([['python:Continue']]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),call_func_args("len",["cands"]),0))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["neighborhood"],call_func("set")),
+%~                                   for_target_iter_body( "cand",
+%~                                     "cands",
+%~                                     body_stmts( [ assign_targets_value( ["v"],
+%~                                                     subscript_value_slice(
+%~                                                        subscript_value_slice(GRID_01,subscript_value_slice("cand",0)),
+%~                                                        subscript_value_slice("cand",1))),
+%~                                                   if_test_body(
+%~                                                      if_exp_test_body_orelse( UNIVALUED_02,
+%~                                                        compare_ops_left_comparators(eq_token(==),"val","v"),
+%~                                                        compare_ops_left_comparators(not_eq_token('!='),"v","bg")),
+%~                                                      body_stmts( [ expr_value( call_func_args(
+%~                                                                                   qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                                                                   [tuple_elts(["v","cand"])])),
+%~                                                                    expr_value( call_func_args(
+%~                                                                                   qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                                                                   ["cand"])),
+%~                                                                    aug_assign_op_value_target( bit_or_token('|'),
+%~                                                                      set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                        comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                                                          call_func_args("diagfun",["cand"]),
+%~                                                                          [ bool_op_values( ['python:And'], [
+%~                                                                              compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                                              compare_ops_left_comparators(
+%~                                                                                 ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                                                      "neighborhood")]))])),
+%~                                   assign_targets_value(["cands"],bin_op_left_right(sub_token(-),"neighborhood","occupied"))]))
+%~
+%~ replacing_with_var(boxed_attribute_value("add"))
+%~
+%~ replacing_with_var(tuple_elts(["val",LOC_07]))
+%~
+%~ replacing_with_var(call_func_args("len",["cands"]))
+%~
+%~ replacing_with_var( for_target_iter_body( "cand",
+%~                       "cands",
+%~                       body_stmts( [ assign_targets_value( ["v"],
+%~                                       subscript_value_slice(
+%~                                          subscript_value_slice(GRID_01,subscript_value_slice("cand",0)),
+%~                                          subscript_value_slice("cand",1))),
+%~                                     if_test_body(
+%~                                        if_exp_test_body_orelse( UNIVALUED_02,
+%~                                          compare_ops_left_comparators(eq_token(==),"val","v"),
+%~                                          compare_ops_left_comparators(not_eq_token('!='),"v","bg")),
+%~                                        body_stmts( [ expr_value( call_func_args(
+%~                                                                     qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                                                     [tuple_elts(["v","cand"])])),
+%~                                                      expr_value( call_func_args(
+%~                                                                     qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                                                     ["cand"])),
+%~                                                      aug_assign_op_value_target( bit_or_token('|'),
+%~                                                        set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                          comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                                            call_func_args("diagfun",["cand"]),
+%~                                                            [ bool_op_values( ['python:And'], [
+%~                                                                compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                                compare_ops_left_comparators(
+%~                                                                   ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                                        "neighborhood")]))])))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["v"],
+%~                                     subscript_value_slice(
+%~                                        subscript_value_slice(GRID_01,subscript_value_slice("cand",0)),
+%~                                        subscript_value_slice("cand",1))),
+%~                                   if_test_body(
+%~                                      if_exp_test_body_orelse( UNIVALUED_02,
+%~                                        compare_ops_left_comparators(eq_token(==),"val","v"),
+%~                                        compare_ops_left_comparators(not_eq_token('!='),"v","bg")),
+%~                                      body_stmts( [ expr_value( call_func_args(
+%~                                                                   qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                                                   [tuple_elts(["v","cand"])])),
+%~                                                    expr_value( call_func_args(
+%~                                                                   qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                                                   ["cand"])),
+%~                                                    aug_assign_op_value_target( bit_or_token('|'),
+%~                                                      set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                        comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                                          call_func_args("diagfun",["cand"]),
+%~                                                          [ bool_op_values( ['python:And'], [
+%~                                                              compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                              compare_ops_left_comparators(
+%~                                                                 ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                                      "neighborhood")]))]))
+%~
+%~ replacing_with_var(make_new("set","neighborhood"))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        if_exp_test_body_orelse( UNIVALUED_02,
+%~                          compare_ops_left_comparators(eq_token(==),"val","v"),
+%~                          compare_ops_left_comparators(not_eq_token('!='),"v","bg")),
+%~                        body_stmts( [ expr_value( call_func_args(
+%~                                                     qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                                     [tuple_elts(["v","cand"])])),
+%~                                      expr_value( call_func_args(
+%~                                                     qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                                     ["cand"])),
+%~                                      aug_assign_op_value_target( bit_or_token('|'),
+%~                                        set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                                          comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                            call_func_args("diagfun",["cand"]),
+%~                                            [ bool_op_values( ['python:And'], [
+%~                                                compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                compare_ops_left_comparators(
+%~                                                   ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                        "neighborhood")])))
+%~
+%~ replacing_with_var( if_exp_test_body_orelse( UNIVALUED_02,
+%~                       compare_ops_left_comparators(eq_token(==),"val","v"),
+%~                       compare_ops_left_comparators(not_eq_token('!='),"v","bg")))
+%~
+%~ replacing_with_var( body_stmts( [ expr_value( call_func_args(
+%~                                                  qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                                  [tuple_elts(["v","cand"])])),
+%~                                   expr_value( call_func_args(
+%~                                                  qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                                  ["cand"])),
+%~                                   aug_assign_op_value_target( bit_or_token('|'),
+%~                                     set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                                       comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                         call_func_args("diagfun",["cand"]),
+%~                                         [ bool_op_values( ['python:And'], [
+%~                                             compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                             compare_ops_left_comparators(
+%~                                                ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                     "neighborhood")]))
+%~
+%~ replacing_with_var( expr_value( call_func_args(
+%~                                    qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
+%~                                    [tuple_elts(["v","cand"])])))
+%~
+%~ replacing_with_var( expr_value( call_func_args(
+%~                                    qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
+%~                                    ["cand"])))
+%~
+%~ replacing_with_var( aug_assign_op_value_target( bit_or_token('|'),
+%~                       set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                         comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                           call_func_args("diagfun",["cand"]),
+%~                           [ bool_op_values( ['python:And'], [
+%~                               compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                               compare_ops_left_comparators(
+%~                                  ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                       "neighborhood"))
+%~
+%~ replacing_with_var(boxed_attribute_value("add"))
+%~
+%~ replacing_with_var(boxed_attribute_value("add"))
+%~
+%~ replacing_with_var( set_comp_elt_generators( tuple_elts(["i","j"]), [
+%~                       comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                         call_func_args("diagfun",["cand"]),
+%~                         [ bool_op_values( ['python:And'], [
+%~                             compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                             compare_ops_left_comparators(
+%~                                ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                       call_func_args("diagfun",["cand"]),
+%~                       [ bool_op_values( ['python:And'], [
+%~                           compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                           compare_ops_left_comparators(
+%~                              ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("diagfun",["cand"]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["j","w"])))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["i","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["j","w"]))
+%~
 % Compiled KL-1 for objects
 objects(GRID_01,UNIVALUED_02,DIAGONAL_03,WITHOUT_BG_04,OBJECTS_05) :-
   willBeType(OBJECTS_05,'Objects') ,
   comment(' objects occurring on the grid ') ,
   (/*2*/
     testif(WITHOUT_BG_04)->[mostcolor(GRID_01,BG)] ;
-    assign_var("bg",none_literal_value_token('None','None'))) ,
-  make_new("set","objs") ,
-  make_new("set","occupied") ,
+    [none_literal_value_token('None','None',BG)]) ,
+  make_new("set",OBJS) ,
+  make_new("set",OCCUPIED) ,
   len(GRID_01,H) ,
   subscript_value_slice(GRID_01,0,ARG_06) ,
   len(ARG_06,W) ,
   asindices(GRID_01,UNVISITED) ,
   testif(DIAGONAL_03)->call("diagfun"="neighbors");call("diagfun"="dneighbors") ,
-  for_each( call(LOC_07="unvisited"),
-    ( testif(call_func_args('python:In',[LOC_07,"occupied"]))->'python:Continue';true  ,
-      [ subscript_value_slice(LOC_07,0,ARG_013),
-        subscript_value_slice(GRID_01,ARG_013,ARG_08)] ,
-      [subscript_value_slice(LOC_07,1,ARG_09)] ,
-      subscript_value_slice(ARG_08,ARG_09,VAL) ,
-      testif(call_func_args(==,["val","bg"]))->'python:Continue';true ,
-      assign_var("obj",set_elts([tuple_elts(["val",LOC_07])])) ,
-      assign_var("cands",set_elts([LOC_07])) ,
-      while_test_body(
-         call_func_args(>,[call_func_args("len",["cands"]),0]),
-         ( make_new("set","neighborhood")  ,
-           for_each( call(CAND_010="cands"),
-             ( [ subscript_value_slice(CAND_010,0,ARG_014),
-                 subscript_value_slice(GRID_01,ARG_014,ARG_011)]  ,
-               [subscript_value_slice(CAND_010,1,ARG_012)] ,
-               subscript_value_slice(ARG_011,ARG_012,V) ,
-               (/*2*/
-                 testif( if_exp_test_body_orelse( UNIVALUED_02,
-                           call_func_args(==,["val","v"]),
-                           call_func_args('!=',["v","bg"]))) ->
-                   ( expr_value(call_func_args("add",["obj",tuple_elts(["v",CAND_010])]))  ,
-                     expr_value(call_func_args("add",["occupied",CAND_010])) ,
-                     aug_assign_op_value_target( bit_or_token('|'),
-                       set_comp_elt_generators_ifs( tuple_elts(["i","j"]),
-                         tuple_elts(["i","j"]),
-                         call_func_args("diagfun",[CAND_010]),
-                         [ bool_op_values( ['python:And'], [
-                             call_func_args(<=,[0,"i"]),
-                             call_func_args(<,[0,"h"]),
-                             call_func_args(<=,[0,"j"]),
-                             call_func_args(<,[0,"w"])])]),
-                       "neighborhood"))))) ,
-           [call_op(-,NEIGHBORHOOD,OCCUPIED,CANDS)])) ,
-      expr_value(call_func_args("add",["objs",call_func_args("frozenset",["obj"])])))) ,
+  compare_ops_left_comparators(['python:In'],LOC_07,OCCUPIED,ARG_016) ,
+  body_stmts(['python:Continue'],ARG_017) ,
+  if_test_body(ARG_016,ARG_017,ARG_09) ,
+  compare_ops_left_comparators(eq_token(==),VAL,BG,ARG_018) ,
+  body_stmts(['python:Continue'],ARG_019) ,
+  if_test_body(ARG_018,ARG_019,ARG_010) ,
+  len(CANDS,ARG_025) ,
+  compare_ops_left_comparators(gt_token(>),ARG_025,0,ARG_020) ,
+  (/*2*/
+    testif(UNIVALUED_02) ->
+      [ compare_ops_left_comparators(eq_token(==),VAL,V,ARG_032)] ;
+    [ compare_ops_left_comparators(not_eq_token('!='),V,BG,ARG_032)]) ,
+  into_tuple(V,CAND,ARG_036) ,
+  call( [ op_call( [ boxed_attribute_value("add",ARG_039),
+                     qualified_identifier_identifiers( [OBJ,ARG_039],
+                       ARG_036,
+                       ARG_035)])]) ,
+  call( [ op_call( [ boxed_attribute_value("add",ARG_040),
+                     qualified_identifier_identifiers( [OCCUPIED,ARG_040],
+                       CAND,
+                       ARG_037)])]) ,
+  into_tuple(I,J,ARG_042) ,
+  into_tuple(I,J,ARG_044) ,
+  diagfun(CAND,ARG_045) ,
+  comprehension_target_iter_ifs( ARG_044,
+    ARG_045,
+    [ ops([lt_e_token(<=),lt_token(<)],ARG_048),
+      comparators([I,H],ARG_049),
+      compare_ops_left_comparators(ARG_048,0,ARG_049,ARG_046),
+      ops([lt_e_token(<=),lt_token(<)],ARG_050),
+      comparators([J,W],ARG_051),
+      compare_ops_left_comparators(ARG_050,0,ARG_051,ARG_047),
+      bool_op_values(['python:And'],[ARG_046,ARG_047])],
+    ARG_043) ,
+  set_comp_elt_generators(ARG_042,[ARG_043],ARG_041) ,
+  aug_assign_op_value_target(bit_or_token('|'),ARG_041,NEIGHBORHOOD,ARG_038) ,
+  body_stmts([ARG_035,ARG_037,ARG_038],ARG_033) ,
+  if_test_body(ARG_032,ARG_033,ARG_029) ,
+  body_stmts(
+     [ subscript_value_slice(CAND,0,ARG_034),
+       subscript_value_slice(GRID_01,ARG_034,ARG_030),
+       subscript_value_slice(CAND,1,ARG_031),
+       subscript_value_slice(ARG_030,ARG_031,V),
+       ARG_029],
+     ARG_027) ,
+  for_target_iter_body(CAND,CANDS,ARG_027,ARG_026) ,
+  make_new("set",NEIGHBORHOOD,ARG_028) ,
+  body_stmts(
+     [ ARG_028,
+       ARG_026,
+       call([op_call(sub_token(-,NEIGHBORHOOD,OCCUPIED,CANDS))])],
+     ARG_021) ,
+  while_test_body(ARG_020,ARG_021,ARG_011) ,
+  frozenset(OBJ,ARG_013) ,
+  call( [ op_call( [ boxed_attribute_value("add",ARG_022),
+                     qualified_identifier_identifiers( [OBJS,ARG_022],
+                       ARG_013,
+                       ARG_012)])]) ,
+  body_stmts(
+     [ ARG_09,
+       subscript_value_slice(LOC_07,0,ARG_023),
+       subscript_value_slice(GRID_01,ARG_023,ARG_014),
+       subscript_value_slice(LOC_07,1,ARG_015),
+       subscript_value_slice(ARG_014,ARG_015,VAL),
+       ARG_010,
+       into_tuple(VAL,LOC_07,ARG_024),
+       set_elts([ARG_024],OBJ),
+       set_elts([LOC_07],CANDS), ARG_011,ARG_012],
+     ARG_08) ,
+  for_each(call(LOC_07=UNVISITED),ARG_08) ,
   frozenset(OBJS,OBJECTS_05) ,
   exit_proc(OBJECTS_05).
 %~ % Universal AST Pass #0
@@ -2304,21 +3861,54 @@ objects(GRID_01,UNIVALUED_02,DIAGONAL_03,WITHOUT_BG_04,OBJECTS_05) :-
 %~                                                      [ compare_ops_left_comparators(eq_token(==),"v","value")])])]),
 %~                                             [ comprehension_target_iter("value",call_func_args("palette",["grid"]))])]))])))
 %~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators(
+%~                          tuple_elts(["v",tuple_elts(["i","j"])]),
+%~                          [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])),
+%~                            comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                              call_func_args("enumerate",["r"]),
+%~                              [ compare_ops_left_comparators(eq_token(==),"v","value")])])]))
+%~
+%~ replacing_with_var(comprehension_target_iter("value",call_func_args("palette",[GRID_01])))
+%~
+%~ replacing_with_var(call_func_args("palette",[GRID_01]))
+%~
+%~ replacing_with_var(tuple_elts(["v",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                       call_func_args("enumerate",["r"]),
+%~                       [ compare_ops_left_comparators(eq_token(==),"v","value")]))
+%~
+%~ replacing_with_var(tuple_elts(["i","r"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[GRID_01]))
+%~
+%~ replacing_with_var(tuple_elts(["j","v"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",["r"]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"v","value"))
+%~
 % Compiled KL-1 for partition
 partition(GRID_01,OBJECTS_02) :-
   willBeType(OBJECTS_02,'Objects') ,
   comment(' each cell with the same value part of the same object ') ,
-  assign_var( ARG_03,
-    generator_exp_elt_generators(
-       call_func_args( "frozenset", [
-         generator_exp_elt_generator_1( "v",
-           assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
-         generator_exp_elt_generator_1( tuple_elts(["i","j"]),
-           comprehension_target_iter_ifs( tuple_elts(["j","v"]),
-             call_func_args("enumerate",["r"]),
-             [ call_func_args(==,["v","value"])])),
-         elt_generator(v1,tuple_elts([]),[])]),
-       [ assign_targets_value1("value",call_func_args("palette",[GRID_01]))])) ,
+  into_tuple(I,J,ARG_09) ,
+  tuple_elts(V,ARG_09,ARG_08) ,
+  into_tuple(I,R,ARG_012) ,
+  enumerate(GRID_01,ARG_013) ,
+  comprehension_target_iter(ARG_012,ARG_013,ARG_010) ,
+  into_tuple(J,V,ARG_014) ,
+  enumerate(R,ARG_015) ,
+  compare_ops_left_comparators(eq_token(==),V,"value",ARG_016) ,
+  comprehension_target_iter_ifs(ARG_014,ARG_015,[ARG_016],ARG_011) ,
+  generator_exp_elt_generators(ARG_08,[ARG_010,ARG_011],ARG_05) ,
+  frozenset(ARG_05,ARG_04) ,
+  palette(GRID_01,ARG_07) ,
+  comprehension_target_iter("value",ARG_07,ARG_06) ,
+  generator_exp_elt_generators(ARG_04,[ARG_06],ARG_03) ,
   frozenset(ARG_03,OBJECTS_02) ,
   exit_proc(OBJECTS_02).
 %~ % Universal AST Pass #0
@@ -2340,24 +3930,64 @@ partition(GRID_01,OBJECTS_02) :-
 %~                                                   call_func_args("palette",["grid"]),
 %~                                                   set_elts([call_func_args("mostcolor",["grid"])])))])]))])))
 %~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators(
+%~                          tuple_elts(["v",tuple_elts(["i","j"])]),
+%~                          [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])),
+%~                            comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                              call_func_args("enumerate",["r"]),
+%~                              [ compare_ops_left_comparators(eq_token(==),"v","value")])])]))
+%~
+%~ replacing_with_var( comprehension_target_iter( "value",
+%~                       bin_op_left_right( sub_token(-),
+%~                         call_func_args("palette",[GRID_01]),
+%~                         set_elts([call_func_args("mostcolor",[GRID_01])]))))
+%~
+%~ replacing_with_var( bin_op_left_right( sub_token(-),
+%~                       call_func_args("palette",[GRID_01]),
+%~                       set_elts([call_func_args("mostcolor",[GRID_01])])))
+%~
+%~ replacing_with_var(tuple_elts(["v",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                       call_func_args("enumerate",["r"]),
+%~                       [ compare_ops_left_comparators(eq_token(==),"v","value")]))
+%~
+%~ replacing_with_var(tuple_elts(["i","r"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[GRID_01]))
+%~
+%~ replacing_with_var(tuple_elts(["j","v"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",["r"]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"v","value"))
+%~
+%~ replacing_with_var(call_func_args("mostcolor",[GRID_01]))
+%~
 % Compiled KL-1 for fgpartition
 fgpartition(GRID_01,OBJECTS_02) :-
   willBeType(OBJECTS_02,'Objects') ,
   comment(' each cell with the same value part of the same object without background ') ,
-  assign_var( ARG_03,
-    generator_exp_elt_generators(
-       call_func_args( "frozenset", [
-         generator_exp_elt_generator_1( "v",
-           assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
-         generator_exp_elt_generator_1( tuple_elts(["i","j"]),
-           comprehension_target_iter_ifs( tuple_elts(["j","v"]),
-             call_func_args("enumerate",["r"]),
-             [ call_func_args(==,["v","value"])])),
-         elt_generator(v1,tuple_elts([]),[])]),
-       [ assign_targets_value1( "value",
-           call_func_args( -, [
-             call_func_args("palette",[GRID_01]),
-             set_elts([call_func_args("mostcolor",[GRID_01])])]))])) ,
+  into_tuple(I,J,ARG_011) ,
+  tuple_elts(V,ARG_011,ARG_010) ,
+  into_tuple(I,R,ARG_014) ,
+  enumerate(GRID_01,ARG_015) ,
+  comprehension_target_iter(ARG_014,ARG_015,ARG_012) ,
+  into_tuple(J,V,ARG_016) ,
+  enumerate(R,ARG_017) ,
+  compare_ops_left_comparators(eq_token(==),V,"value",ARG_018) ,
+  comprehension_target_iter_ifs(ARG_016,ARG_017,[ARG_018],ARG_013) ,
+  generator_exp_elt_generators(ARG_010,[ARG_012,ARG_013],ARG_05) ,
+  frozenset(ARG_05,ARG_04) ,
+  palette(GRID_01,ARG_08) ,
+  mostcolor(GRID_01,ARG_019) ,
+  set_elts([ARG_019],ARG_09) ,
+  call([op_call(sub_token(-,ARG_08,ARG_09,ARG_07))]) ,
+  comprehension_target_iter("value",ARG_07,ARG_06) ,
+  generator_exp_elt_generators(ARG_04,[ARG_06],ARG_03) ,
   frozenset(ARG_03,OBJECTS_02) ,
   exit_proc(OBJECTS_02).
 %~ % Universal AST Pass #0
@@ -2369,14 +3999,21 @@ fgpartition(GRID_01,OBJECTS_02) :-
 %~                                          generator_exp_elt_generators( "i", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args("toindices",[PATCH_01])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[PATCH_01]))
+%~
 % Compiled KL-1 for uppermost
 uppermost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' row index of uppermost occupied cell ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "i",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
+  into_tuple(I,J,ARG_05) ,
+  toindices(PATCH_01,ARG_06) ,
+  comprehension_target_iter(ARG_05,ARG_06,ARG_04) ,
+  generator_exp_elt_generators(I,[ARG_04],ARG_03) ,
   min(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -2388,14 +4025,21 @@ uppermost(PATCH_01,INTEGER_02) :-
 %~                                          generator_exp_elt_generators( "i", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args("toindices",[PATCH_01])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[PATCH_01]))
+%~
 % Compiled KL-1 for lowermost
 lowermost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' row index of lowermost occupied cell ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "i",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
+  into_tuple(I,J,ARG_05) ,
+  toindices(PATCH_01,ARG_06) ,
+  comprehension_target_iter(ARG_05,ARG_06,ARG_04) ,
+  generator_exp_elt_generators(I,[ARG_04],ARG_03) ,
   max(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -2407,14 +4051,21 @@ lowermost(PATCH_01,INTEGER_02) :-
 %~                                          generator_exp_elt_generators( "j", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args("toindices",[PATCH_01])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[PATCH_01]))
+%~
 % Compiled KL-1 for leftmost
 leftmost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' column index of leftmost occupied cell ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "j",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
+  into_tuple(I,J,ARG_05) ,
+  toindices(PATCH_01,ARG_06) ,
+  comprehension_target_iter(ARG_05,ARG_06,ARG_04) ,
+  generator_exp_elt_generators(J,[ARG_04],ARG_03) ,
   min(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -2426,14 +4077,21 @@ leftmost(PATCH_01,INTEGER_02) :-
 %~                                          generator_exp_elt_generators( "j", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args("toindices",[PATCH_01])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[PATCH_01]))
+%~
 % Compiled KL-1 for rightmost
 rightmost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' column index of rightmost occupied cell ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "j",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
+  into_tuple(I,J,ARG_05) ,
+  toindices(PATCH_01,ARG_06) ,
+  comprehension_target_iter(ARG_05,ARG_06,ARG_04) ,
+  generator_exp_elt_generators(J,[ARG_04],ARG_03) ,
   max(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -2454,26 +4112,52 @@ rightmost(PATCH_01,INTEGER_02) :-
 %~                                               call_func_args("height",["piece"]),
 %~                                               call_func_args("width",["piece"]))])))])))
 %~
+%~ replacing_with_var(call_func_args("isinstance",[PIECE_01,"tuple"]))
+%~
+%~ replacing_with_var(call_func_args("len",[PIECE_01]))
+%~
+%~ replacing_with_var(call_func_args("len",[subscript_value_slice(PIECE_01,0)]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       bin_op_left_right( mult_token(*),
+%~                         call_func_args("height",[PIECE_01]),
+%~                         call_func_args("width",[PIECE_01])),
+%~                       call_func_args("len",[PIECE_01])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       call_func_args("height",[PIECE_01]),
+%~                       call_func_args("width",[PIECE_01])))
+%~
+%~ replacing_with_var( bin_op_left_right( mult_token(*),
+%~                       call_func_args("height",[PIECE_01]),
+%~                       call_func_args("width",[PIECE_01])))
+%~
+%~ replacing_with_var(call_func_args("len",[PIECE_01]))
+%~
+%~ replacing_with_var(call_func_args("height",[PIECE_01]))
+%~
+%~ replacing_with_var(call_func_args("width",[PIECE_01]))
+%~
 % Compiled KL-1 for square
 square(PIECE_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether the piece forms a square ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
-      [ len(PIECE_01,ARG_03),
-        subscript_value_slice(PIECE_01,0,ARG_05),
-        len(ARG_05,ARG_04),
-        call_op(==,ARG_03,ARG_04,BOOLEAN_02)] ;
-    assign_var( BOOLEAN_02,
-      bool_op_values( ['python:And'], [
-        call_func_args( ==, [
-          call_func_args( *, [
-            call_func_args("height",[PIECE_01]),
-            call_func_args("width",[PIECE_01])]),
-          call_func_args("len",[PIECE_01])]),
-        call_func_args( ==, [
-          call_func_args("height",[PIECE_01]),
-          call_func_args("width",[PIECE_01])])]))) ,
+    [ isinstance(PIECE_01,TUPLE,ARG_03),
+      testif(ARG_03)] ->
+      [ len(PIECE_01,ARG_04),
+        subscript_value_slice(PIECE_01,0,ARG_06),
+        len(ARG_06,ARG_05),
+        compare_ops_left_comparators(eq_token(==),ARG_04,ARG_05,BOOLEAN_02)] ;
+    [ height(PIECE_01,ARG_010),
+      width(PIECE_01,ARG_011),
+      call([op_call(mult_token(*,ARG_010,ARG_011,ARG_09))]),
+      len(PIECE_01,ARG_012),
+      compare_ops_left_comparators(eq_token(==),ARG_09,ARG_012,ARG_07),
+      height(PIECE_01,ARG_013),
+      width(PIECE_01,ARG_014),
+      compare_ops_left_comparators(eq_token(==),ARG_013,ARG_014,ARG_08),
+      bool_op_values(['python:And'],[ARG_07,ARG_08],BOOLEAN_02)]) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "vline",
@@ -2486,16 +4170,28 @@ square(PIECE_01,BOOLEAN_02) :-
 %~                                            call_func_args("len",["patch"])),
 %~                                          compare_ops_left_comparators(eq_token(==),call_func_args("width",["patch"]),1)]))])))
 %~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       call_func_args("height",[PATCH_01]),
+%~                       call_func_args("len",[PATCH_01])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),call_func_args("width",[PATCH_01]),1))
+%~
+%~ replacing_with_var(call_func_args("height",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("len",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("width",[PATCH_01]))
+%~
 % Compiled KL-1 for vline
 vline(PATCH_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether the piece forms a vertical line ') ,
-  assign_var( BOOLEAN_02,
-    bool_op_values( ['python:And'], [
-      call_func_args( ==, [
-        call_func_args("height",[PATCH_01]),
-        call_func_args("len",[PATCH_01])]),
-      call_func_args(==,[call_func_args("width",[PATCH_01]),1])])) ,
+  height(PATCH_01,ARG_05) ,
+  len(PATCH_01,ARG_06) ,
+  compare_ops_left_comparators(eq_token(==),ARG_05,ARG_06,ARG_03) ,
+  width(PATCH_01,ARG_07) ,
+  compare_ops_left_comparators(eq_token(==),ARG_07,1,ARG_04) ,
+  bool_op_values(['python:And'],[ARG_03,ARG_04],BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "hline",
@@ -2508,16 +4204,28 @@ vline(PATCH_01,BOOLEAN_02) :-
 %~                                            call_func_args("len",["patch"])),
 %~                                          compare_ops_left_comparators(eq_token(==),call_func_args("height",["patch"]),1)]))])))
 %~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       call_func_args("width",[PATCH_01]),
+%~                       call_func_args("len",[PATCH_01])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),call_func_args("height",[PATCH_01]),1))
+%~
+%~ replacing_with_var(call_func_args("width",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("len",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("height",[PATCH_01]))
+%~
 % Compiled KL-1 for hline
 hline(PATCH_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether the piece forms a horizontal line ') ,
-  assign_var( BOOLEAN_02,
-    bool_op_values( ['python:And'], [
-      call_func_args( ==, [
-        call_func_args("width",[PATCH_01]),
-        call_func_args("len",[PATCH_01])]),
-      call_func_args(==,[call_func_args("height",[PATCH_01]),1])])) ,
+  width(PATCH_01,ARG_05) ,
+  len(PATCH_01,ARG_06) ,
+  compare_ops_left_comparators(eq_token(==),ARG_05,ARG_06,ARG_03) ,
+  height(PATCH_01,ARG_07) ,
+  compare_ops_left_comparators(eq_token(==),ARG_07,1,ARG_04) ,
+  bool_op_values(['python:And'],[ARG_03,ARG_04],BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "hmatching",
@@ -2538,23 +4246,44 @@ hline(PATCH_01,BOOLEAN_02) :-
 %~                                                  comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["b"]))])]))]),
 %~                                          0))])))
 %~
+%~ replacing_with_var( call_func_args( "len", [
+%~                       bin_op_left_right( bit_and_token(&),
+%~                         call_func_args( "set", [
+%~                           generator_exp_elt_generators( "i", [
+%~                             comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])]),
+%~                         call_func_args( "set", [
+%~                           generator_exp_elt_generators( "i", [
+%~                             comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])]))]))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[A_01])))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[B_02])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[A_01]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[B_02]))
+%~
 % Compiled KL-1 for hmatching
 hmatching(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether there exists a row for which both patches have cells ') ,
-  assign_var( ARG_08,
-    elt_generator( v1,
-      "i",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])) ,
+  into_tuple(I,J,ARG_012) ,
+  toindices(A_01,ARG_013) ,
+  comprehension_target_iter(ARG_012,ARG_013,ARG_010) ,
+  generator_exp_elt_generators(I,[ARG_010],ARG_08) ,
   set(ARG_08,ARG_06) ,
-  assign_var( ARG_09,
-    elt_generator( v1,
-      "i",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])) ,
+  into_tuple(I,J,ARG_014) ,
+  toindices(B_02,ARG_015) ,
+  comprehension_target_iter(ARG_014,ARG_015,ARG_011) ,
+  generator_exp_elt_generators(I,[ARG_011],ARG_09) ,
   set(ARG_09,ARG_07) ,
-  call_op(&,ARG_06,ARG_07,ARG_05) ,
+  call([op_call(bit_and_token(&,ARG_06,ARG_07,ARG_05))]) ,
   len(ARG_05,ARG_04) ,
-  call_op(>,ARG_04,0,BOOLEAN_03) ,
+  compare_ops_left_comparators(gt_token(>),ARG_04,0,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "vmatching",
@@ -2575,23 +4304,44 @@ hmatching(A_01,B_02,BOOLEAN_03) :-
 %~                                                  comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["b"]))])]))]),
 %~                                          0))])))
 %~
+%~ replacing_with_var( call_func_args( "len", [
+%~                       bin_op_left_right( bit_and_token(&),
+%~                         call_func_args( "set", [
+%~                           generator_exp_elt_generators( "j", [
+%~                             comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])]),
+%~                         call_func_args( "set", [
+%~                           generator_exp_elt_generators( "j", [
+%~                             comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])]))]))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[A_01])))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[B_02])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[A_01]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[B_02]))
+%~
 % Compiled KL-1 for vmatching
 vmatching(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether there exists a column for which both patches have cells ') ,
-  assign_var( ARG_08,
-    elt_generator( v1,
-      "j",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])) ,
+  into_tuple(I,J,ARG_012) ,
+  toindices(A_01,ARG_013) ,
+  comprehension_target_iter(ARG_012,ARG_013,ARG_010) ,
+  generator_exp_elt_generators(J,[ARG_010],ARG_08) ,
   set(ARG_08,ARG_06) ,
-  assign_var( ARG_09,
-    elt_generator( v1,
-      "j",
-      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])) ,
+  into_tuple(I,J,ARG_014) ,
+  toindices(B_02,ARG_015) ,
+  comprehension_target_iter(ARG_014,ARG_015,ARG_011) ,
+  generator_exp_elt_generators(J,[ARG_011],ARG_09) ,
   set(ARG_09,ARG_07) ,
-  call_op(&,ARG_06,ARG_07,ARG_05) ,
+  call([op_call(bit_and_token(&,ARG_06,ARG_07,ARG_05))]) ,
   len(ARG_05,ARG_04) ,
-  call_op(>,ARG_04,0,BOOLEAN_03) ,
+  compare_ops_left_comparators(gt_token(>),ARG_04,0,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "manhattan",
@@ -2609,17 +4359,38 @@ vmatching(A_01,B_02,BOOLEAN_03) :-
 %~                                             [ comprehension_target_iter(tuple_elts(["ai","aj"]),call_func_args("toindices",["a"])),
 %~                                               comprehension_target_iter(tuple_elts(["bi","bj"]),call_func_args("toindices",["b"]))])]))])))
 %~
+%~ replacing_with_var( bin_op_left_right( add_token(+),
+%~                       call_func_args("abs",[bin_op_left_right(sub_token(-),"ai","bi")]),
+%~                       call_func_args("abs",[bin_op_left_right(sub_token(-),"aj","bj")])))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["ai","aj"]),call_func_args("toindices",[A_01])))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["bi","bj"]),call_func_args("toindices",[B_02])))
+%~
+%~ replacing_with_var(tuple_elts(["ai","aj"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[A_01]))
+%~
+%~ replacing_with_var(tuple_elts(["bi","bj"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[B_02]))
+%~
 % Compiled KL-1 for manhattan
 manhattan(A_01,B_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' closest manhattan distance between two patches ') ,
-  assign_var( ARG_04,
-    generator_exp_elt_generators(
-       call_func_args( +, [
-         call_func_args("abs",[call_func_args(-,["ai","bi"])]),
-         call_func_args("abs",[call_func_args(-,["aj","bj"])])]),
-       [ assign_targets_value1(tuple_elts(["ai","aj"]),call_func_args("toindices",[A_01])),
-         assign_targets_value1(tuple_elts(["bi","bj"]),call_func_args("toindices",[B_02]))])) ,
+  call([op_call(sub_token(-,AI,BI,ARG_010))]) ,
+  abs(ARG_010,ARG_06) ,
+  call([op_call(sub_token(-,AJ,BJ,ARG_011))]) ,
+  abs(ARG_011,ARG_07) ,
+  call([op_call(add_token(+,ARG_06,ARG_07,ARG_05))]) ,
+  into_tuple(AI,AJ,ARG_012) ,
+  toindices(A_01,ARG_013) ,
+  comprehension_target_iter(ARG_012,ARG_013,ARG_08) ,
+  into_tuple(BI,BJ,ARG_014) ,
+  toindices(B_02,ARG_015) ,
+  comprehension_target_iter(ARG_014,ARG_015,ARG_09) ,
+  generator_exp_elt_generators(ARG_05,[ARG_08,ARG_09],ARG_04) ,
   min(ARG_04,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
@@ -2632,12 +4403,14 @@ manhattan(A_01,B_02,INTEGER_03) :-
 %~      block_statements( [ expr_value(string_value(' whether two patches are adjacent ')),
 %~                          return_value(compare_ops_left_comparators(eq_token(==),call_func_args("manhattan",["a","b"]),1))])))
 %~
+%~ replacing_with_var(call_func_args("manhattan",[A_01,B_02]))
+%~
 % Compiled KL-1 for adjacent
 adjacent(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether two patches are adjacent ') ,
   manhattan(A_01,B_02,ARG_04) ,
-  call_op(==,ARG_04,1,BOOLEAN_03) ,
+  compare_ops_left_comparators(eq_token(==),ARG_04,1,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "bordering",
@@ -2657,20 +4430,50 @@ adjacent(A_01,B_02,BOOLEAN_03) :-
 %~                                            call_func_args("rightmost",["patch"]),
 %~                                            bin_op_left_right(sub_token(-),call_func_args("len",[subscript_value_slice("grid",0)]),1))]))])))
 %~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),call_func_args("uppermost",[PATCH_01]),0))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),call_func_args("leftmost",[PATCH_01]),0))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       call_func_args("lowermost",[PATCH_01]),
+%~                       bin_op_left_right(sub_token(-),call_func_args("len",[GRID_02]),1)))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       call_func_args("rightmost",[PATCH_01]),
+%~                       bin_op_left_right(sub_token(-),call_func_args("len",[subscript_value_slice(GRID_02,0)]),1)))
+%~
+%~ replacing_with_var(call_func_args("uppermost",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("leftmost",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("lowermost",[PATCH_01]))
+%~
+%~ replacing_with_var(bin_op_left_right(sub_token(-),call_func_args("len",[GRID_02]),1))
+%~
+%~ replacing_with_var(call_func_args("rightmost",[PATCH_01]))
+%~
+%~ replacing_with_var( bin_op_left_right(sub_token(-),call_func_args("len",[subscript_value_slice(GRID_02,0)]),1))
+%~
 % Compiled KL-1 for bordering
 bordering(PATCH_01,GRID_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether a patch is adjacent to a grid border ') ,
-  assign_var( BOOLEAN_03,
-    bool_op_values( ['python:Or'], [
-      call_func_args(==,[call_func_args("uppermost",[PATCH_01]),0]),
-      call_func_args(==,[call_func_args("leftmost",[PATCH_01]),0]),
-      call_func_args( ==, [
-        call_func_args("lowermost",[PATCH_01]),
-        call_func_args(-,[call_func_args("len",[GRID_02]),1])]),
-      call_func_args( ==, [
-        call_func_args("rightmost",[PATCH_01]),
-        call_func_args(-,[call_func_args("len",[subscript_value_slice(GRID_02,0)]),1])])])) ,
+  uppermost(PATCH_01,ARG_08) ,
+  compare_ops_left_comparators(eq_token(==),ARG_08,0,ARG_04) ,
+  leftmost(PATCH_01,ARG_09) ,
+  compare_ops_left_comparators(eq_token(==),ARG_09,0,ARG_05) ,
+  lowermost(PATCH_01,ARG_010) ,
+  len(GRID_02,ARG_012) ,
+  call([op_call(sub_token(-,ARG_012,1,ARG_011))]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_010,ARG_011,ARG_06) ,
+  rightmost(PATCH_01,ARG_013) ,
+  subscript_value_slice(GRID_02,0,ARG_016) ,
+  len(ARG_016,ARG_015) ,
+  call([op_call(sub_token(-,ARG_015,1,ARG_014))]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_013,ARG_014,ARG_07) ,
+  bool_op_values( ['python:Or'],
+    [ARG_04,ARG_05,ARG_06,ARG_07],
+    BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "centerofmass",
@@ -2683,17 +4486,31 @@ bordering(PATCH_01,GRID_02,BOOLEAN_03) :-
 %~                                              body_stmts( bin_op_left_right(floor_div_token(//),call_func_args("sum",["x"]),call_func_args("len",["patch"])))),
 %~                                            call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])]))])))
 %~
+%~ replacing_with_var(arguments_args([argument_name("x")]))
+%~
+%~ replacing_with_var( body_stmts( bin_op_left_right( floor_div_token(//),
+%~                                   call_func_args("sum",["x"]),
+%~                                   call_func_args("len",[PATCH_01]))))
+%~
+%~ replacing_with_var(argument_name("x"))
+%~
+%~ replacing_with_var( bin_op_left_right( floor_div_token(//),
+%~                       call_func_args("sum",["x"]),
+%~                       call_func_args("len",[PATCH_01])))
+%~
 % Compiled KL-1 for centerofmass
 centerofmass(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' center of mass ') ,
-  assign_var( ARG_04,
-    lambda_args_body( arguments_args([argument_name("x")]),
-      call_func_args( //, [
-        call_func_args("sum",["x"]),
-        call_func_args("len",[PATCH_01])]))) ,
-  toindices(PATCH_01,ARG_07) ,
-  starred_value(ARG_07,ARG_06) ,
+  argument_name(X,ARG_010) ,
+  arguments_args([ARG_010],ARG_07) ,
+  sum(X,ARG_012) ,
+  len(PATCH_01,ARG_013) ,
+  call([op_call(floor_div_token(//,ARG_012,ARG_013,ARG_011))]) ,
+  body_stmts(ARG_011,ARG_08) ,
+  lambda_args_body(ARG_07,ARG_08,ARG_04) ,
+  toindices(PATCH_01,ARG_09) ,
+  starred_value(ARG_09,ARG_06) ,
   zip(ARG_06,ARG_05) ,
   map(ARG_04,ARG_05,ARG_03) ,
   tuple(ARG_03,INTEGERTUPLE_02) ,
@@ -2712,19 +4529,48 @@ centerofmass(PATCH_01,INTEGERTUPLE_02) :-
 %~                          return_value( call_func_args( "frozenset", [
 %~                                          set_comp_elt_generators("v",[comprehension_target_iter(tuple_elts(["v","_"]),"element")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   set_comp_elt_generators( "v", [
+%~                                                     comprehension_target_iter("r",ELEMENT_01),
+%~                                                     comprehension_target_iter("v","r")])]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[ELEMENT_01,"tuple"]))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     set_comp_elt_generators( "v", [
+%~                                       comprehension_target_iter("r",ELEMENT_01),
+%~                                       comprehension_target_iter("v","r")])])))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       set_comp_elt_generators( "v", [
+%~                         comprehension_target_iter("r",ELEMENT_01),
+%~                         comprehension_target_iter("v","r")])]))
+%~
+%~ replacing_with_var(tuple_elts(["v","_"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("v","r"))
+%~
 % Compiled KL-1 for palette
 palette(ELEMENT_01,INTEGERSET_02) :-
   willBeType(INTEGERSET_02,'IntegerSet') ,
   comment(' colors occurring in object or grid ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
-      ( assign_var( ARG_03,
-          elt_generator(v2,"v",[assign_targets_value1("r",ELEMENT_01),assign_targets_value1("v","r")]))  ,
-        frozenset(ARG_03,INTEGERSET_02) ,
-        exit_proc(INTEGERSET_02))) ,
-  assign_var( ARG_04,
-    elt_generator(v2,"v",[assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)])) ,
-  frozenset(ARG_04,INTEGERSET_02) ,
+    [ comprehension_target_iter(V,"r",ARG_010),
+      set_comp_elt_generators( V,
+        [ assign_targets_value1("r",ELEMENT_01),
+          ARG_010],
+        ARG_08),
+      frozenset(ARG_08,ARG_07),
+      return_value(ARG_07,ARG_06),
+      body_stmts([ARG_06],ARG_03),
+      [ isinstance(ELEMENT_01,TUPLE,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
+  set_comp_elt_generators( V,
+    [ into_tuple(V,"_",ARG_09),
+      assign_targets_value1(ARG_09,ELEMENT_01)],
+    ARG_05) ,
+  frozenset(ARG_05,INTEGERSET_02) ,
   exit_proc(INTEGERSET_02).
 %~ % Universal AST Pass #0
 %~ def( "numcolors",
@@ -2777,6 +4623,32 @@ color(OBJ_01,INTEGER_02) :-
 %~                                                     compare_ops_left_comparators(
 %~                                                        ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])])]))])))
 %~
+%~ replacing_with_var( tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_02,"i"),"j"),
+%~                                   tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                       call_func_args("toindices",[PATCH_01]),
+%~                       [ bool_op_values( ['python:And'], [
+%~                           compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                           compare_ops_left_comparators(
+%~                              ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("toindices",[PATCH_01]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["j","w"])))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["i","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["j","w"]))
+%~
 % Compiled KL-1 for toobject
 toobject(PATCH_01,GRID_02,OBJECT_03) :-
   willBeType(OBJECT_03,'Object') ,
@@ -2784,17 +4656,23 @@ toobject(PATCH_01,GRID_02,OBJECT_03) :-
   len(GRID_02,H) ,
   subscript_value_slice(GRID_02,0,ARG_04) ,
   len(ARG_04,W) ,
-  assign_var( ARG_05,
-    elt_generator( v1,
-      tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_02,"i"),"j"),
-                    tuple_elts(["i","j"])]),
-      [ comprehension_target_iter_ifs( tuple_elts(["i","j"]),
-          call_func_args("toindices",[PATCH_01]),
-          [ bool_op_values( ['python:And'], [
-              call_func_args(<=,[0,"i"]),
-              call_func_args(<,[0,"h"]),
-              call_func_args(<=,[0,"j"]),
-              call_func_args(<,[0,"w"])])])])) ,
+  subscript_value_slice(GRID_02,I,ARG_010) ,
+  subscript_value_slice(ARG_010,J,ARG_07) ,
+  into_tuple(I,J,ARG_08) ,
+  tuple_elts(ARG_07,ARG_08,ARG_06) ,
+  into_tuple(I,J,ARG_011) ,
+  toindices(PATCH_01,ARG_012) ,
+  comprehension_target_iter_ifs( ARG_011,
+    ARG_012,
+    [ ops([lt_e_token(<=),lt_token(<)],ARG_015),
+      comparators([I,H],ARG_016),
+      compare_ops_left_comparators(ARG_015,0,ARG_016,ARG_013),
+      ops([lt_e_token(<=),lt_token(<)],ARG_017),
+      comparators([J,W],ARG_018),
+      compare_ops_left_comparators(ARG_017,0,ARG_018,ARG_014),
+      bool_op_values(['python:And'],[ARG_013,ARG_014])],
+    ARG_09) ,
+  generator_exp_elt_generators(ARG_06,[ARG_09],ARG_05) ,
   frozenset(ARG_05,OBJECT_03) ,
   exit_proc(OBJECT_03).
 %~ % Universal AST Pass #0
@@ -2808,16 +4686,33 @@ toobject(PATCH_01,GRID_02,OBJECT_03) :-
 %~                                             [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",["grid"])),
 %~                                               comprehension_target_iter(tuple_elts(["j","v"]),call_func_args("enumerate",["r"]))])]))])))
 %~
+%~ replacing_with_var(tuple_elts(["v",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])))
+%~
+%~ replacing_with_var( comprehension_target_iter(tuple_elts(["j","v"]),call_func_args("enumerate",["r"])))
+%~
+%~ replacing_with_var(tuple_elts(["i","r"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[GRID_01]))
+%~
+%~ replacing_with_var(tuple_elts(["j","v"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",["r"]))
+%~
 % Compiled KL-1 for asobject
 asobject(GRID_01,OBJECT_02) :-
   willBeType(OBJECT_02,'Object') ,
   comment(' conversion of grid to object ') ,
-  assign_targets_value( [ARG_03], [
-    generator_exp_elt_generator_1( "v",
-      assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
-    generator_exp_elt_generator_1( tuple_elts(["i","j"]),
-      assign_targets_value1(tuple_elts(["j","v"]),call_func_args("enumerate",["r"]))),
-    elt_generator(v1,tuple_elts([]),[])]) ,
+  into_tuple(I,J,ARG_05) ,
+  tuple_elts(V,ARG_05,ARG_04) ,
+  into_tuple(I,R,ARG_08) ,
+  enumerate(GRID_01,ARG_09) ,
+  comprehension_target_iter(ARG_08,ARG_09,ARG_06) ,
+  into_tuple(J,V,ARG_010) ,
+  enumerate(R,ARG_011) ,
+  comprehension_target_iter(ARG_010,ARG_011,ARG_07) ,
+  generator_exp_elt_generators(ARG_04,[ARG_06,ARG_07],ARG_03) ,
   frozenset(ARG_03,OBJECT_02) ,
   exit_proc(OBJECT_02).
 %~ % Universal AST Pass #0
@@ -2831,16 +4726,26 @@ asobject(GRID_01,OBJECT_02) :-
 %~                                              call_func_args( "zip", [
 %~                                                starred_value(subscript_value_slice("grid",slice_step(unary_op_operand(us_ub_token(-),1))))]))])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter( "row",
+%~                       call_func_args( "zip", [
+%~                         starred_value(subscript_value_slice(GRID_01,slice_step(unary_op_operand(us_ub_token(-),1))))])))
+%~
+%~ replacing_with_var( call_func_args( "zip", [
+%~                       starred_value(subscript_value_slice(GRID_01,slice_step(unary_op_operand(us_ub_token(-),1))))]))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
 % Compiled KL-1 for rot90
 rot90(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' quarter clockwise rotation ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "row",
-      [ assign_targets_value1( "row",
-          call_func_args( "zip", [
-            starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])) ,
+  unary_op_operand(us_ub_token(-),1,ARG_09) ,
+  slice_step(ARG_09,ARG_08) ,
+  subscript_value_slice(GRID_01,ARG_08,ARG_07) ,
+  starred_value(ARG_07,ARG_06) ,
+  zip(ARG_06,ARG_05) ,
+  comprehension_target_iter("row",ARG_05,ARG_04) ,
+  generator_exp_elt_generators("row",[ARG_04],ARG_03) ,
   tuple(ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -2853,14 +4758,30 @@ rot90(GRID_01,GRID_02) :-
 %~                                             call_func_args("tuple",[subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1)))]),
 %~                                             [ comprehension_target_iter("row",subscript_value_slice("grid",slice_step(unary_op_operand(us_ub_token(-),1))))])]))])))
 %~
+%~ replacing_with_var( call_func_args("tuple",[subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1)))]))
+%~
+%~ replacing_with_var( comprehension_target_iter( "row",
+%~                       subscript_value_slice(GRID_01,slice_step(unary_op_operand(us_ub_token(-),1)))))
+%~
+%~ replacing_with_var(subscript_value_slice(GRID_01,slice_step(unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
 % Compiled KL-1 for rot180
 rot180(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' half rotation ') ,
-  assign_var( ARG_03,
-    generator_exp_elt_generators(
-       call_func_args("tuple",[subscript_value_slice("row",slice_step(call_func_args(-,[1])))]),
-       [ assign_targets_value1("row",subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))])) ,
+  unary_op_operand(us_ub_token(-),1,ARG_010) ,
+  slice_step(ARG_010,ARG_07) ,
+  subscript_value_slice(ROW,ARG_07,ARG_05) ,
+  tuple(ARG_05,ARG_04) ,
+  unary_op_operand(us_ub_token(-),1,ARG_011) ,
+  slice_step(ARG_011,ARG_09) ,
+  subscript_value_slice(GRID_01,ARG_09,ARG_08) ,
+  comprehension_target_iter(ROW,ARG_08,ARG_06) ,
+  generator_exp_elt_generators(ARG_04,[ARG_06],ARG_03) ,
   tuple(ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -2877,18 +4798,39 @@ rot180(GRID_01,GRID_02) :-
 %~                                                      starred_value(subscript_value_slice("grid",slice_step(unary_op_operand(us_ub_token(-),1))))]))])]),
 %~                                           slice_step(unary_op_operand(us_ub_token(-),1))))])))
 %~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
+%~ replacing_with_var( call_func_args("tuple",[subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1)))]))
+%~
+%~ replacing_with_var( comprehension_target_iter( "row",
+%~                       call_func_args( "zip", [
+%~                         starred_value(subscript_value_slice(GRID_01,slice_step(unary_op_operand(us_ub_token(-),1))))])))
+%~
+%~ replacing_with_var( call_func_args( "zip", [
+%~                       starred_value(subscript_value_slice(GRID_01,slice_step(unary_op_operand(us_ub_token(-),1))))]))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
 % Compiled KL-1 for rot270
 rot270(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' quarter anticlockwise rotation ') ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args("tuple",[subscript_value_slice("row",slice_step(call_func_args(-,[1])))]),
-       [ assign_targets_value1( "row",
-           call_func_args( "zip", [
-             starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])) ,
+  unary_op_operand(us_ub_token(-),1,ARG_014) ,
+  slice_step(ARG_014,ARG_010) ,
+  subscript_value_slice(ROW,ARG_010,ARG_08) ,
+  tuple(ARG_08,ARG_07) ,
+  unary_op_operand(us_ub_token(-),1,ARG_016) ,
+  slice_step(ARG_016,ARG_015) ,
+  subscript_value_slice(GRID_01,ARG_015,ARG_013) ,
+  starred_value(ARG_013,ARG_012) ,
+  zip(ARG_012,ARG_011) ,
+  comprehension_target_iter(ROW,ARG_011,ARG_09) ,
+  generator_exp_elt_generators(ARG_07,[ARG_09],ARG_05) ,
   tuple(ARG_05,ARG_03) ,
-  assign_var(ARG_04,slice_step(call_func_args(-,[1]))) ,
+  unary_op_operand(us_ub_token(-),1,ARG_06) ,
+  slice_step(ARG_06,ARG_04) ,
   subscript_value_slice(ARG_03,ARG_04,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -2916,35 +4858,86 @@ rot270(GRID_01,GRID_02) :-
 %~                                             tuple_elts([bin_op_left_right(sub_token(-),"d","i"),"j"]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"piece")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value(subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1))))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[PIECE_01,"tuple"]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators(
+%~                                                      tuple_elts(["v",tuple_elts([bin_op_left_right(sub_token(-),"d","i"),"j"])]),
+%~                                                      [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])]))]))
+%~
+%~ replacing_with_var( call_func_args( "isinstance", [
+%~                       subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
+%~                       "tuple"]))
+%~
+%~ replacing_with_var( return_value(subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1)))))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators(
+%~                                        tuple_elts(["v",tuple_elts([bin_op_left_right(sub_token(-),"d","i"),"j"])]),
+%~                                        [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])])))
+%~
+%~ replacing_with_var(subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators(
+%~                          tuple_elts(["v",tuple_elts([bin_op_left_right(sub_token(-),"d","i"),"j"])]),
+%~                          [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])]))
+%~
+%~ replacing_with_var(tuple_elts([bin_op_left_right(sub_token(-),"d","i"),"j"]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
+%~ replacing_with_var( tuple_elts(["v",tuple_elts([bin_op_left_right(sub_token(-),"d","i"),"j"])]))
+%~
+%~ replacing_with_var(tuple_elts(["v",tuple_elts(["i","j"])]))
+%~
 % Compiled KL-1 for hmirror
 hmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along horizontal ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
-      ( assign_var(ARG_03,slice_step(call_func_args(-,[1])))  ,
-        subscript_value_slice(PIECE_01,ARG_03,PIECE_02) ,
-        exit_proc(PIECE_02))) ,
-  ulcorner(PIECE_01,ARG_08) ,
-  subscript_value_slice(ARG_08,0,ARG_06) ,
-  lrcorner(PIECE_01,ARG_09) ,
-  subscript_value_slice(ARG_09,0,ARG_07) ,
-  call_op(+,ARG_06,ARG_07,D) ,
+    [ unary_op_operand(us_ub_token(-),1,ARG_024),
+      slice_step(ARG_024,ARG_017),
+      subscript_value_slice(PIECE_01,ARG_017,ARG_016),
+      return_value(ARG_016,ARG_011),
+      body_stmts([ARG_011],ARG_03),
+      [ isinstance(PIECE_01,TUPLE,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
+  ulcorner(PIECE_01,ARG_012) ,
+  subscript_value_slice(ARG_012,0,ARG_05) ,
+  lrcorner(PIECE_01,ARG_013) ,
+  subscript_value_slice(ARG_013,0,ARG_06) ,
+  call([op_call(add_token(+,ARG_05,ARG_06,D))]) ,
   (/*2*/
-    testif( [ call_func_args( isinstance, [
-                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-                tuple])]) ->
-      ( assign_var( ARG_04,
-          elt_generator( v1,
-            tuple_elts(["v",tuple_elts([call_func_args(-,["d","i"]),"j"])]),
-            [ assign_targets_value1(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
-        frozenset(ARG_04,PIECE_02) ,
-        exit_proc(PIECE_02))) ,
-  assign_var( ARG_05,
-    elt_generator( v1,
-      tuple_elts([call_func_args(-,["d","i"]),"j"]),
-      [ assign_targets_value1(tuple_elts(["i","j"]),PIECE_01)])) ,
-  frozenset(ARG_05,PIECE_02) ,
+    [ call([op_call(sub_token(-,D,I,ARG_027))]),
+      tuple_elts(ARG_027,J,ARG_026),
+      tuple_elts(V,ARG_026,ARG_025),
+      generator_exp_elt_generators( ARG_025,
+        [ into_tuple(I,J,ARG_029),
+          tuple_elts(V,ARG_029,ARG_028),
+          assign_targets_value1(ARG_028,PIECE_01)],
+        ARG_019),
+      frozenset(ARG_019,ARG_018),
+      return_value(ARG_018,ARG_014),
+      body_stmts([ARG_014],ARG_07),
+      [ iter(PIECE_01,ARG_020),
+        next(ARG_020,ARG_015),
+        subscript_value_slice(ARG_015,1,ARG_09),
+        isinstance(ARG_09,TUPLE,ARG_08),
+        testif(ARG_08)] ->
+        ARG_07]) ,
+  call([op_call(sub_token(-,D,I,ARG_022))]) ,
+  tuple_elts(ARG_022,J,ARG_021) ,
+  generator_exp_elt_generators( ARG_021,
+    [ into_tuple(I,J,ARG_023),
+      assign_targets_value1(ARG_023,PIECE_01)],
+    ARG_010) ,
+  frozenset(ARG_010,PIECE_02) ,
   exit_proc(PIECE_02).
 %~ % Universal AST Pass #0
 %~ def( "vmirror",
@@ -2974,38 +4967,101 @@ hmirror(PIECE_01,PIECE_02) :-
 %~                                             tuple_elts(["i",bin_op_left_right(sub_token(-),"d","j")]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"piece")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "tuple", [
+%~                                                   generator_exp_elt_generators(
+%~                                                      subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1))),
+%~                                                      [comprehension_target_iter("row",PIECE_01)])]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[PIECE_01,"tuple"]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators(
+%~                                                      tuple_elts(["v",tuple_elts(["i",bin_op_left_right(sub_token(-),"d","j")])]),
+%~                                                      [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])]))]))
+%~
+%~ replacing_with_var( call_func_args( "isinstance", [
+%~                       subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
+%~                       "tuple"]))
+%~
+%~ replacing_with_var( return_value( call_func_args( "tuple", [
+%~                                     generator_exp_elt_generators(
+%~                                        subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1))),
+%~                                        [comprehension_target_iter("row",PIECE_01)])])))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators(
+%~                                        tuple_elts(["v",tuple_elts(["i",bin_op_left_right(sub_token(-),"d","j")])]),
+%~                                        [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])])))
+%~
+%~ replacing_with_var( call_func_args( "tuple", [
+%~                       generator_exp_elt_generators(
+%~                          subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1))),
+%~                          [comprehension_target_iter("row",PIECE_01)])]))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators(
+%~                          tuple_elts(["v",tuple_elts(["i",bin_op_left_right(sub_token(-),"d","j")])]),
+%~                          [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])]))
+%~
+%~ replacing_with_var(tuple_elts(["i",bin_op_left_right(sub_token(-),"d","j")]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var( tuple_elts(["v",tuple_elts(["i",bin_op_left_right(sub_token(-),"d","j")])]))
+%~
+%~ replacing_with_var(tuple_elts(["v",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
 % Compiled KL-1 for vmirror
 vmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along vertical ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
-      ( assign_var( ARG_03,
-          generator_exp_elt_generators(
-             subscript_value_slice("row",slice_step(call_func_args(-,[1]))),
-             [assign_targets_value1("row",PIECE_01)]))  ,
-        tuple(ARG_03,PIECE_02) ,
-        exit_proc(PIECE_02))) ,
-  ulcorner(PIECE_01,ARG_08) ,
-  subscript_value_slice(ARG_08,1,ARG_06) ,
-  lrcorner(PIECE_01,ARG_09) ,
-  subscript_value_slice(ARG_09,1,ARG_07) ,
-  call_op(+,ARG_06,ARG_07,D) ,
+    [ unary_op_operand(us_ub_token(-),1,ARG_031),
+      slice_step(ARG_031,ARG_025),
+      subscript_value_slice(ROW,ARG_025,ARG_024),
+      generator_exp_elt_generators( ARG_024,
+        [assign_targets_value1(ROW,PIECE_01)],
+        ARG_017),
+      tuple(ARG_017,ARG_016),
+      return_value(ARG_016,ARG_011),
+      body_stmts([ARG_011],ARG_03),
+      [ isinstance(PIECE_01,TUPLE,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
+  ulcorner(PIECE_01,ARG_012) ,
+  subscript_value_slice(ARG_012,1,ARG_05) ,
+  lrcorner(PIECE_01,ARG_013) ,
+  subscript_value_slice(ARG_013,1,ARG_06) ,
+  call([op_call(add_token(+,ARG_05,ARG_06,D))]) ,
   (/*2*/
-    testif( [ call_func_args( isinstance, [
-                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-                tuple])]) ->
-      ( assign_var( ARG_04,
-          elt_generator( v1,
-            tuple_elts(["v",tuple_elts(["i",call_func_args(-,["d","j"])])]),
-            [ assign_targets_value1(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
-        frozenset(ARG_04,PIECE_02) ,
-        exit_proc(PIECE_02))) ,
-  assign_var( ARG_05,
-    elt_generator( v1,
-      tuple_elts(["i",call_func_args(-,["d","j"])]),
-      [ assign_targets_value1(tuple_elts(["i","j"]),PIECE_01)])) ,
-  frozenset(ARG_05,PIECE_02) ,
+    [ call([op_call(sub_token(-,D,J,ARG_028))]),
+      tuple_elts(I,ARG_028,ARG_027),
+      tuple_elts(V,ARG_027,ARG_026),
+      generator_exp_elt_generators( ARG_026,
+        [ into_tuple(I,J,ARG_030),
+          tuple_elts(V,ARG_030,ARG_029),
+          assign_targets_value1(ARG_029,PIECE_01)],
+        ARG_019),
+      frozenset(ARG_019,ARG_018),
+      return_value(ARG_018,ARG_014),
+      body_stmts([ARG_014],ARG_07),
+      [ iter(PIECE_01,ARG_020),
+        next(ARG_020,ARG_015),
+        subscript_value_slice(ARG_015,1,ARG_09),
+        isinstance(ARG_09,TUPLE,ARG_08),
+        testif(ARG_08)] ->
+        ARG_07]) ,
+  call([op_call(sub_token(-,D,J,ARG_022))]) ,
+  tuple_elts(I,ARG_022,ARG_021) ,
+  generator_exp_elt_generators( ARG_021,
+    [ into_tuple(I,J,ARG_023),
+      assign_targets_value1(ARG_023,PIECE_01)],
+    ARG_010) ,
+  frozenset(ARG_010,PIECE_02) ,
   exit_proc(PIECE_02).
 %~ % Universal AST Pass #0
 %~ def( "dmirror",
@@ -3032,36 +5088,96 @@ vmirror(PIECE_01,PIECE_02) :-
 %~                                                           bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"i","a"),"b")]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"piece")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value(call_func_args("tuple",[call_func_args("zip",[starred_value(PIECE_01)])]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[PIECE_01,"tuple"]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators(
+%~                                                      tuple_elts( [ "v",
+%~                                                                    tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"j","b"),"a"),
+%~                                                                                  bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"i","a"),"b")])]),
+%~                                                      [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])]))]))
+%~
+%~ replacing_with_var( call_func_args( "isinstance", [
+%~                       subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
+%~                       "tuple"]))
+%~
+%~ replacing_with_var( return_value(call_func_args("tuple",[call_func_args("zip",[starred_value(PIECE_01)])])))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators(
+%~                                        tuple_elts( [ "v",
+%~                                                      tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"j","b"),"a"),
+%~                                                                    bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"i","a"),"b")])]),
+%~                                        [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])])))
+%~
+%~ replacing_with_var(call_func_args("tuple",[call_func_args("zip",[starred_value(PIECE_01)])]))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators(
+%~                          tuple_elts( [ "v",
+%~                                        tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"j","b"),"a"),
+%~                                                      bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"i","a"),"b")])]),
+%~                          [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)])]))
+%~
+%~ replacing_with_var( tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"j","b"),"a"),
+%~                                   bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"i","a"),"b")]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( tuple_elts( [ "v",
+%~                                   tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"j","b"),"a"),
+%~                                                 bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"i","a"),"b")])]))
+%~
+%~ replacing_with_var(tuple_elts(["v",tuple_elts(["i","j"])]))
+%~
 % Compiled KL-1 for dmirror
 dmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along diagonal ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
-      ( [ starred_value(PIECE_01,ARG_07),
-          zip(ARG_07,ARG_03)]  ,
-        tuple(ARG_03,PIECE_02) ,
-        exit_proc(PIECE_02))) ,
-  call(into_tuple("a","b",ARG_04)) ,
-  ulcorner(PIECE_01,ARG_04) ,
+    [ starred_value(PIECE_01,ARG_021),
+      zip(ARG_021,ARG_014),
+      tuple(ARG_014,ARG_013),
+      return_value(ARG_013,ARG_010),
+      body_stmts([ARG_010],ARG_03),
+      [ isinstance(PIECE_01,TUPLE,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
+  into_tuple(A,B,ARG_05) ,
+  ulcorner(PIECE_01,ARG_05) ,
   (/*2*/
-    testif( [ call_func_args( isinstance, [
-                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-                tuple])]) ->
-      ( assign_var( ARG_05,
-          elt_generator( v1,
-            tuple_elts( [ "v",
-                          tuple_elts( [ call_func_args(+,[call_func_args(-,["j","b"]),"a"]),
-                                        call_func_args(+,[call_func_args(-,["i","a"]),"b"])])]),
-            [ assign_targets_value1(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
-        frozenset(ARG_05,PIECE_02) ,
-        exit_proc(PIECE_02))) ,
-  assign_var( ARG_06,
-    elt_generator( v1,
-      tuple_elts( [ call_func_args(+,[call_func_args(-,["j","b"]),"a"]),
-                    call_func_args(+,[call_func_args(-,["i","a"]),"b"])]),
-      [ assign_targets_value1(tuple_elts(["i","j"]),PIECE_01)])) ,
-  frozenset(ARG_06,PIECE_02) ,
+    [ call([op_call(sub_token(-,J,B,ARG_031))]),
+      call([op_call(add_token(+,ARG_031,A,ARG_027))]),
+      call([op_call(sub_token(-,I,A,ARG_032))]),
+      call([op_call(add_token(+,ARG_032,B,ARG_028))]),
+      tuple_elts(ARG_027,ARG_028,ARG_026),
+      tuple_elts(V,ARG_026,ARG_025),
+      generator_exp_elt_generators( ARG_025,
+        [ into_tuple(I,J,ARG_030),
+          tuple_elts(V,ARG_030,ARG_029),
+          assign_targets_value1(ARG_029,PIECE_01)],
+        ARG_016),
+      frozenset(ARG_016,ARG_015),
+      return_value(ARG_015,ARG_011),
+      body_stmts([ARG_011],ARG_06),
+      [ iter(PIECE_01,ARG_017),
+        next(ARG_017,ARG_012),
+        subscript_value_slice(ARG_012,1,ARG_08),
+        isinstance(ARG_08,TUPLE,ARG_07),
+        testif(ARG_07)] ->
+        ARG_06]) ,
+  call([op_call(sub_token(-,J,B,ARG_022))]) ,
+  call([op_call(add_token(+,ARG_022,A,ARG_019))]) ,
+  call([op_call(sub_token(-,I,A,ARG_023))]) ,
+  call([op_call(add_token(+,ARG_023,B,ARG_020))]) ,
+  tuple_elts(ARG_019,ARG_020,ARG_018) ,
+  generator_exp_elt_generators( ARG_018,
+    [ into_tuple(I,J,ARG_024),
+      assign_targets_value1(ARG_024,PIECE_01)],
+    ARG_09) ,
+  frozenset(ARG_09,PIECE_02) ,
   exit_proc(PIECE_02).
 %~ % Universal AST Pass #0
 %~ def( "cmirror",
@@ -3077,23 +5193,60 @@ dmirror(PIECE_01,PIECE_02) :-
 %~                                                                               [ comprehension_target_iter("r",subscript_value_slice("piece",slice_step(unary_op_operand(us_ub_token(-),1))))]))])]))])),
 %~                          return_value( call_func_args("vmirror",[call_func_args("dmirror",[call_func_args("vmirror",["piece"])])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "tuple", [
+%~                                                   call_func_args( "zip", [
+%~                                                     starred_value( generator_exp_elt_generators(
+%~                                                                       subscript_value_slice("r",slice_step(unary_op_operand(us_ub_token(-),1))),
+%~                                                                       [ comprehension_target_iter("r",subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1))))]))])]))]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[PIECE_01,"tuple"]))
+%~
+%~ replacing_with_var( return_value( call_func_args( "tuple", [
+%~                                     call_func_args( "zip", [
+%~                                       starred_value( generator_exp_elt_generators(
+%~                                                         subscript_value_slice("r",slice_step(unary_op_operand(us_ub_token(-),1))),
+%~                                                         [ comprehension_target_iter("r",subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1))))]))])])))
+%~
+%~ replacing_with_var( call_func_args( "tuple", [
+%~                       call_func_args( "zip", [
+%~                         starred_value( generator_exp_elt_generators(
+%~                                           subscript_value_slice("r",slice_step(unary_op_operand(us_ub_token(-),1))),
+%~                                           [ comprehension_target_iter("r",subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1))))]))])]))
+%~
+%~ replacing_with_var(subscript_value_slice("r",slice_step(unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var( comprehension_target_iter("r",subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1)))))
+%~
+%~ replacing_with_var(subscript_value_slice(PIECE_01,slice_step(unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
 % Compiled KL-1 for cmirror
 cmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along counterdiagonal ') ,
   (/*2*/
-    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
-      ( [ assign_var( ARG_07,
-            generator_exp_elt_generators(
-               subscript_value_slice("r",slice_step(call_func_args(-,[1]))),
-               [ assign_targets_value1("r",subscript_value_slice(PIECE_01,slice_step(call_func_args(-,[1]))))])),
-          starred_value(ARG_07,ARG_05),
-          zip(ARG_05,ARG_03)]  ,
-        tuple(ARG_03,PIECE_02) ,
-        exit_proc(PIECE_02))) ,
-  vmirror(PIECE_01,ARG_06) ,
-  dmirror(ARG_06,ARG_04) ,
-  vmirror(ARG_04,PIECE_02) ,
+    [ unary_op_operand(us_ub_token(-),1,ARG_017),
+      slice_step(ARG_017,ARG_013),
+      subscript_value_slice(R,ARG_013,ARG_012),
+      unary_op_operand(us_ub_token(-),1,ARG_018),
+      slice_step(ARG_018,ARG_016),
+      subscript_value_slice(PIECE_01,ARG_016,ARG_015),
+      comprehension_target_iter(R,ARG_015,ARG_014),
+      generator_exp_elt_generators(ARG_012,[ARG_014],ARG_011),
+      starred_value(ARG_011,ARG_010),
+      zip(ARG_010,ARG_09),
+      tuple(ARG_09,ARG_08),
+      return_value(ARG_08,ARG_06),
+      body_stmts([ARG_06],ARG_03),
+      [ isinstance(PIECE_01,TUPLE,ARG_04),
+        testif(ARG_04)] ->
+        ARG_03]) ,
+  vmirror(PIECE_01,ARG_07) ,
+  dmirror(ARG_07,ARG_05) ,
+  vmirror(ARG_05,PIECE_02) ,
   exit_proc(PIECE_02).
 %~ % Universal AST Pass #0
 %~ def( "fill",
@@ -3121,6 +5274,42 @@ cmirror(PIECE_01,PIECE_02) :-
 %~                                             call_func_args("tuple",["row"]),
 %~                                             [comprehension_target_iter("row","grid_filled")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      bool_op_values( ['python:And'], [
+%~                                        compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                        compare_ops_left_comparators(
+%~                                           ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                                      body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("grid_filled","i"),"j")],VALUE_02)]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                          compare_ops_left_comparators(
+%~                             ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                        body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("grid_filled","i"),"j")],VALUE_02)])))
+%~
+%~ replacing_with_var(call_func_args("list",["row"]))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("grid_filled","i"),"j")],VALUE_02)]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["j","w"])))
+%~
+%~ replacing_with_var(call_func_args("tuple",["row"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("row","grid_filled"))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["i","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["j","w"]))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice("grid_filled","i"),"j"))
+%~
 % Compiled KL-1 for fill
 fill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
@@ -3128,24 +5317,30 @@ fill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
   len(GRID_01,H) ,
   subscript_value_slice(GRID_01,0,ARG_05) ,
   len(ARG_05,W) ,
-  assign_var( ARG_06,
-    generator_exp_elt_generators(
-       call_func_args("list",["row"]),
-       [assign_targets_value1("row",GRID_01)])) ,
+  list(ROW,ARG_011) ,
+  generator_exp_elt_generators( ARG_011,
+    [assign_targets_value1(ROW,GRID_01)],
+    ARG_06) ,
   list(ARG_06,GRID_FILLED) ,
-  for_each( [toindices(PATCH_03,'$VAR'('TUPLE_ELTS([I,J])_07'))],
-    (/*2*/
-      testif( bool_op_values( ['python:And'], [
-                call_func_args(<=,[0,"i"]),
-                call_func_args(<,[0,"h"]),
-                call_func_args(<=,[0,"j"]),
-                call_func_args(<,[0,"w"])])) ->
-        call(subscript_value_slice(subscript_value_slice("grid_filled","i"),"j")=VALUE_02))) ,
-  assign_var( ARG_08,
-    generator_exp_elt_generators(
-       call_func_args("tuple",["row"]),
-       [assign_targets_value1("row","grid_filled")])) ,
-  tuple(ARG_08,GRID_04) ,
+  body_stmts(
+     [ call( [ subscript_value_slice(GRID_FILLED,I,ARG_022),
+               subscript_value_slice(ARG_022,J,ARG_021),
+               ARG_021=VALUE_02])],
+     ARG_012) ,
+  if_test_body(
+     [ ops([lt_e_token(<=),lt_token(<)],ARG_017),
+       comparators([I,H],ARG_018),
+       compare_ops_left_comparators(ARG_017,0,ARG_018,ARG_013),
+       ops([lt_e_token(<=),lt_token(<)],ARG_019),
+       comparators([J,W],ARG_020),
+       compare_ops_left_comparators(ARG_019,0,ARG_020,ARG_014),
+       bool_op_values(['python:And'],[ARG_013,ARG_014])], ARG_012,ARG_010) ,
+  body_stmts([ARG_010],ARG_08) ,
+  for_each([toindices(PATCH_03,'$VAR'('TUPLE_ELTS([I,J])_07'))],ARG_08) ,
+  tuple(ROW,ARG_015) ,
+  comprehension_target_iter(ROW,"grid_filled",ARG_016) ,
+  generator_exp_elt_generators(ARG_015,[ARG_016],ARG_09) ,
+  tuple(ARG_09,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
 %~ def( "paint",
@@ -3175,6 +5370,42 @@ fill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
 %~                                             call_func_args("tuple",["row"]),
 %~                                             [comprehension_target_iter("row","grid_painted")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      bool_op_values( ['python:And'], [
+%~                                        compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                        compare_ops_left_comparators(
+%~                                           ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                                      body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("grid_painted","i"),"j")],"value")]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                          compare_ops_left_comparators(
+%~                             ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                        body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("grid_painted","i"),"j")],"value")])))
+%~
+%~ replacing_with_var(call_func_args("list",["row"]))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("grid_painted","i"),"j")],"value")]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["j","w"])))
+%~
+%~ replacing_with_var(call_func_args("tuple",["row"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("row","grid_painted"))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice("grid_painted","i"),"j"))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["i","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["j","w"]))
+%~
 % Compiled KL-1 for paint
 paint(GRID_01,OBJ_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
@@ -3182,24 +5413,30 @@ paint(GRID_01,OBJ_02,GRID_03) :-
   len(GRID_01,H) ,
   subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args("list",["row"]),
-       [assign_targets_value1("row",GRID_01)])) ,
+  list(ROW,ARG_010) ,
+  generator_exp_elt_generators( ARG_010,
+    [assign_targets_value1(ROW,GRID_01)],
+    ARG_05) ,
   list(ARG_05,GRID_PAINTED) ,
-  for_each( call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_06')=OBJ_02),
-    (/*2*/
-      testif( bool_op_values( ['python:And'], [
-                call_func_args(<=,[0,"i"]),
-                call_func_args(<,[0,"h"]),
-                call_func_args(<=,[0,"j"]),
-                call_func_args(<,[0,"w"])])) ->
-        assign_targets_value([subscript_value_slice(subscript_value_slice("grid_painted","i"),"j")],"value"))) ,
-  assign_var( ARG_07,
-    generator_exp_elt_generators(
-       call_func_args("tuple",["row"]),
-       [assign_targets_value1("row","grid_painted")])) ,
-  tuple(ARG_07,GRID_03) ,
+  body_stmts(
+     [ subscript_value_slice(GRID_PAINTED,I,ARG_017),
+       subscript_value_slice(ARG_017,J,ARG_016),
+       call(ARG_016="value")],
+     ARG_011) ,
+  if_test_body(
+     [ ops([lt_e_token(<=),lt_token(<)],ARG_018),
+       comparators([I,H],ARG_019),
+       compare_ops_left_comparators(ARG_018,0,ARG_019,ARG_012),
+       ops([lt_e_token(<=),lt_token(<)],ARG_020),
+       comparators([J,W],ARG_021),
+       compare_ops_left_comparators(ARG_020,0,ARG_021,ARG_013),
+       bool_op_values(['python:And'],[ARG_012,ARG_013])], ARG_011,ARG_09) ,
+  body_stmts([ARG_09],ARG_07) ,
+  for_each(call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_06')=OBJ_02),ARG_07) ,
+  tuple(ROW,ARG_014) ,
+  comprehension_target_iter(ROW,"grid_painted",ARG_015) ,
+  generator_exp_elt_generators(ARG_014,[ARG_015],ARG_08) ,
+  tuple(ARG_08,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "underfill",
@@ -3228,6 +5465,58 @@ paint(GRID_01,OBJ_02,GRID_03) :-
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators(call_func_args("tuple",["r"]),[comprehension_target_iter("r","g")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      bool_op_values( ['python:And'], [
+%~                                        compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                        compare_ops_left_comparators(
+%~                                           ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                                      body_stmts( [ if_test_body(
+%~                                                       compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                                                       body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],VALUE_02)]))]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                          compare_ops_left_comparators(
+%~                             ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                        body_stmts( [ if_test_body(
+%~                                         compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                                         body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],VALUE_02)]))])))
+%~
+%~ replacing_with_var(call_func_args("list",["r"]))
+%~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                                      body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],VALUE_02)]))]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["j","w"])))
+%~
+%~ replacing_with_var(call_func_args("tuple",["r"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("r","g"))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                        body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],VALUE_02)])))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["i","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["j","w"]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],VALUE_02)]))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice("g","i"),"j"))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice("g","i"),"j"))
+%~
 % Compiled KL-1 for underfill
 underfill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
@@ -3236,24 +5525,35 @@ underfill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
   subscript_value_slice(GRID_01,0,ARG_05) ,
   len(ARG_05,W) ,
   mostcolor(GRID_01,BG) ,
-  assign_var( ARG_06,
-    generator_exp_elt_generators(
-       call_func_args("list",["r"]),
-       [assign_targets_value1("r",GRID_01)])) ,
+  list(R,ARG_011) ,
+  generator_exp_elt_generators( ARG_011,
+    [assign_targets_value1(R,GRID_01)],
+    ARG_06) ,
   list(ARG_06,G) ,
-  for_each( [toindices(PATCH_03,'$VAR'('TUPLE_ELTS([I,J])_07'))],
-    (/*2*/
-      testif( bool_op_values( ['python:And'], [
-                call_func_args(<=,[0,"i"]),
-                call_func_args(<,[0,"h"]),
-                call_func_args(<=,[0,"j"]),
-                call_func_args(<,[0,"w"])])) ->
-        (/*2*/
-          testif(call_func_args(==,[subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"])) ->
-            call(subscript_value_slice(subscript_value_slice("g","i"),"j")=VALUE_02)))) ,
-  assign_var( ARG_08,
-    generator_exp_elt_generators(call_func_args("tuple",["r"]),[assign_targets_value1("r","g")])) ,
-  tuple(ARG_08,GRID_04) ,
+  subscript_value_slice(G,I,ARG_025) ,
+  subscript_value_slice(ARG_025,J,ARG_024) ,
+  compare_ops_left_comparators(eq_token(==),ARG_024,BG,ARG_022) ,
+  body_stmts(
+     [ call( [ subscript_value_slice(G,I,ARG_027),
+               subscript_value_slice(ARG_027,J,ARG_026),
+               ARG_026=VALUE_02])],
+     ARG_023) ,
+  if_test_body(ARG_022,ARG_023,ARG_017) ,
+  body_stmts([ARG_017],ARG_012) ,
+  if_test_body(
+     [ ops([lt_e_token(<=),lt_token(<)],ARG_018),
+       comparators([I,H],ARG_019),
+       compare_ops_left_comparators(ARG_018,0,ARG_019,ARG_013),
+       ops([lt_e_token(<=),lt_token(<)],ARG_020),
+       comparators([J,W],ARG_021),
+       compare_ops_left_comparators(ARG_020,0,ARG_021,ARG_014),
+       bool_op_values(['python:And'],[ARG_013,ARG_014])], ARG_012,ARG_010) ,
+  body_stmts([ARG_010],ARG_08) ,
+  for_each([toindices(PATCH_03,'$VAR'('TUPLE_ELTS([I,J])_07'))],ARG_08) ,
+  tuple(R,ARG_015) ,
+  comprehension_target_iter(R,G,ARG_016) ,
+  generator_exp_elt_generators(ARG_015,[ARG_016],ARG_09) ,
+  tuple(ARG_09,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
 %~ def( "underpaint",
@@ -3284,6 +5584,58 @@ underfill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators(call_func_args("tuple",["r"]),[comprehension_target_iter("r","g")])]))])))
 %~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      bool_op_values( ['python:And'], [
+%~                                        compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                        compare_ops_left_comparators(
+%~                                           ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                                      body_stmts( [ if_test_body(
+%~                                                       compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                                                       body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")]))]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        bool_op_values( ['python:And'], [
+%~                          compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                          compare_ops_left_comparators(
+%~                             ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))]),
+%~                        body_stmts( [ if_test_body(
+%~                                         compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                                         body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")]))])))
+%~
+%~ replacing_with_var(call_func_args("list",["r"]))
+%~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                                      body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")]))]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["j","w"])))
+%~
+%~ replacing_with_var(call_func_args("tuple",["r"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("r","g"))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"),
+%~                        body_stmts( [ assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")])))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["i","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["j","w"]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"))
+%~
+%~ replacing_with_var( body_stmts([assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")]))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice("g","i"),"j"))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice("g","i"),"j"))
+%~
 % Compiled KL-1 for underpaint
 underpaint(GRID_01,OBJ_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
@@ -3292,24 +5644,35 @@ underpaint(GRID_01,OBJ_02,GRID_03) :-
   subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
   mostcolor(GRID_01,BG) ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args("list",["r"]),
-       [assign_targets_value1("r",GRID_01)])) ,
+  list(R,ARG_010) ,
+  generator_exp_elt_generators( ARG_010,
+    [assign_targets_value1(R,GRID_01)],
+    ARG_05) ,
   list(ARG_05,G) ,
-  for_each( call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_06')=OBJ_02),
-    (/*2*/
-      testif( bool_op_values( ['python:And'], [
-                call_func_args(<=,[0,"i"]),
-                call_func_args(<,[0,"h"]),
-                call_func_args(<=,[0,"j"]),
-                call_func_args(<,[0,"w"])])) ->
-        (/*2*/
-          testif(call_func_args(==,[subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"])) ->
-            assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")))) ,
-  assign_var( ARG_07,
-    generator_exp_elt_generators(call_func_args("tuple",["r"]),[assign_targets_value1("r","g")])) ,
-  tuple(ARG_07,GRID_03) ,
+  subscript_value_slice(G,I,ARG_024) ,
+  subscript_value_slice(ARG_024,J,ARG_023) ,
+  compare_ops_left_comparators(eq_token(==),ARG_023,BG,ARG_021) ,
+  body_stmts(
+     [ subscript_value_slice(G,I,ARG_026),
+       subscript_value_slice(ARG_026,J,ARG_025),
+       call(ARG_025="value")],
+     ARG_022) ,
+  if_test_body(ARG_021,ARG_022,ARG_016) ,
+  body_stmts([ARG_016],ARG_011) ,
+  if_test_body(
+     [ ops([lt_e_token(<=),lt_token(<)],ARG_017),
+       comparators([I,H],ARG_018),
+       compare_ops_left_comparators(ARG_017,0,ARG_018,ARG_012),
+       ops([lt_e_token(<=),lt_token(<)],ARG_019),
+       comparators([J,W],ARG_020),
+       compare_ops_left_comparators(ARG_019,0,ARG_020,ARG_013),
+       bool_op_values(['python:And'],[ARG_012,ARG_013])], ARG_011,ARG_09) ,
+  body_stmts([ARG_09],ARG_07) ,
+  for_each(call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_06')=OBJ_02),ARG_07) ,
+  tuple(R,ARG_014) ,
+  comprehension_target_iter(R,G,ARG_015) ,
+  generator_exp_elt_generators(ARG_014,[ARG_015],ARG_08) ,
+  tuple(ARG_08,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "hupscale",
@@ -3334,24 +5697,59 @@ underpaint(GRID_01,OBJ_02,GRID_03) :-
 %~                                          assign_targets_value(["g"],bin_op_left_right(add_token(+),"g",tuple_elts(["r"])))])),
 %~                          return_value("g")])))
 %~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["r"],call_func("tuple")),
+%~                                   for_target_iter_body( "value",
+%~                                     ROW_04,
+%~                                     body_stmts( [ assign_targets_value( ["r"],
+%~                                                     bin_op_left_right( add_token(+),
+%~                                                       "r",
+%~                                                       call_func_args( "tuple", [
+%~                                                         generator_exp_elt_generators( "value", [
+%~                                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])),
+%~                                   assign_targets_value(["g"],bin_op_left_right(add_token(+),"g",tuple_elts(["r"])))]))
+%~
+%~ replacing_with_var( for_target_iter_body( "value",
+%~                       ROW_04,
+%~                       body_stmts( [ assign_targets_value( ["r"],
+%~                                       bin_op_left_right( add_token(+),
+%~                                         "r",
+%~                                         call_func_args( "tuple", [
+%~                                           generator_exp_elt_generators( "value", [
+%~                                             comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["r"],
+%~                                     bin_op_left_right( add_token(+),
+%~                                       "r",
+%~                                       call_func_args( "tuple", [
+%~                                         generator_exp_elt_generators( "value", [
+%~                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))]))
+%~
+%~ replacing_with_var(make_new("tuple","r"))
+%~
+%~ replacing_with_var(comprehension_target_iter("num",call_func_args("range",[FACTOR_02])))
+%~
+%~ replacing_with_var(call_func_args("range",[FACTOR_02]))
+%~
 % Compiled KL-1 for hupscale
 hupscale(GRID_01,FACTOR_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' upscale grid horizontally ') ,
-  make_new("tuple","g") ,
-  for_each( call(ROW_04=GRID_01),
-    ( make_new("tuple","r")  ,
-      for_each( call(VALUE_05=ROW_04), [
-        assign_var( ARG_08,
-          elt_generator( v1,
-            VALUE_05,
-            [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
-        tuple(ARG_08,ARG_06),
-        call_op(+,R,ARG_06,R)]) ,
-      [ assign_targets_value([ARG_09],["r"]),
-        tuple_elts(ARG_09,ARG_07),
-        call_op(+,G,ARG_07,G)])) ,
-  call(GRID_03="g") ,
+  make_new("tuple",G) ,
+  body_stmts(
+     [ range(FACTOR_02,ARG_013),
+       comprehension_target_iter("num",ARG_013,ARG_012),
+       generator_exp_elt_generators("value",[ARG_012],ARG_011),
+       tuple(ARG_011,ARG_010),
+       call([op_call(add_token(+,R,ARG_010,R))])],
+     ARG_08) ,
+  for_target_iter_body("value",ROW_04,ARG_08,ARG_06) ,
+  make_new("tuple",R,ARG_09) ,
+  body_stmts(
+     [ ARG_09, ARG_06,tuple_elts(R,ARG_07),
+       call([op_call(add_token(+,G,ARG_07,G))])],
+     ARG_05) ,
+  for_each(call(ROW_04=GRID_01),ARG_05) ,
+  call(GRID_03=G) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "vupscale",
@@ -3372,19 +5770,31 @@ hupscale(GRID_01,FACTOR_02,GRID_03) :-
 %~                                                  comprehension_target_iter("num",call_func_args("range",["factor"]))])])))])),
 %~                          return_value("g")])))
 %~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["g"],
+%~                                     bin_op_left_right( add_token(+),
+%~                                       "g",
+%~                                       call_func_args( "tuple", [
+%~                                         generator_exp_elt_generators( ROW_04, [
+%~                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))]))
+%~
+%~ replacing_with_var(comprehension_target_iter("num",call_func_args("range",[FACTOR_02])))
+%~
+%~ replacing_with_var(call_func_args("range",[FACTOR_02]))
+%~
 % Compiled KL-1 for vupscale
 vupscale(GRID_01,FACTOR_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' upscale grid vertically ') ,
-  make_new("tuple","g") ,
-  for_each( call(ROW_04=GRID_01), [
-    assign_var( ARG_06,
-      elt_generator( v1,
-        ROW_04,
-        [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
-    tuple(ARG_06,ARG_05),
-    call_op(+,G,ARG_05,G)]) ,
-  call(GRID_03="g") ,
+  make_new("tuple",G) ,
+  body_stmts(
+     [ range(FACTOR_02,ARG_09),
+       comprehension_target_iter("num",ARG_09,ARG_08),
+       generator_exp_elt_generators(ROW_04,[ARG_08],ARG_07),
+       tuple(ARG_07,ARG_06),
+       call([op_call(add_token(+,G,ARG_06,G))])],
+     ARG_05) ,
+  for_each(call(ROW_04=GRID_01),ARG_05) ,
+  call(GRID_03=G) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "upscale",
@@ -3441,52 +5851,280 @@ vupscale(GRID_01,FACTOR_02,GRID_03) :-
 %~                                                                  call_func_args("frozenset",["o"]),
 %~                                                                  tuple_elts(["di_inv","dj_inv"])]))]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body(
+%~                                             compare_ops_left_comparators(eq_token(==),call_func_args("len",[ELEMENT_01]),0),
+%~                                             body_stmts([return_value(call_func("frozenset"))])),
+%~                                          assign_targets_value( [tuple_elts(["di_inv","dj_inv"])],
+%~                                            call_func_args("ulcorner",[ELEMENT_01])),
+%~                                          assign_targets_value( [tuple_elts(["di","dj"])],
+%~                                            tuple_elts([unary_op_operand(us_ub_token(-),"di_inv"),unary_op_operand(us_ub_token(-),"dj_inv")])),
+%~                                          assign_targets_value( ["normed_obj"],
+%~                                            call_func_args("shift",[ELEMENT_01,tuple_elts(["di","dj"])])),
+%~                                          assign_targets_value(["o"],call_func("set")),
+%~                                          for_target_iter_body(
+%~                                             tuple_elts(["value",tuple_elts(["i","j"])]),
+%~                                             "normed_obj",
+%~                                             body_stmts( [ for_target_iter_body( "io",
+%~                                                             call_func_args("range",[FACTOR_02]),
+%~                                                             body_stmts( [ for_target_iter_body( "jo",
+%~                                                                             call_func_args("range",[FACTOR_02]),
+%~                                                                             body_stmts( [ expr_value( call_func_args(
+%~                                                                                                          qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                                                                                          [ tuple_elts( [ "value",
+%~                                                                                                                          tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                                                                                        bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])]))]))]))])),
+%~                                          return_value( call_func_args( "shift", [
+%~                                                          call_func_args("frozenset",["o"]),
+%~                                                          tuple_elts(["di_inv","dj_inv"])]))]))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["g"],call_func("tuple")),
+%~                                   for_target_iter_body( "row",
+%~                                     ELEMENT_01,
+%~                                     body_stmts( [ assign_targets_value(["upscaled_row"],call_func("tuple")),
+%~                                                   for_target_iter_body( "value",
+%~                                                     "row",
+%~                                                     body_stmts( [ assign_targets_value( ["upscaled_row"],
+%~                                                                     bin_op_left_right( add_token(+),
+%~                                                                       "upscaled_row",
+%~                                                                       call_func_args( "tuple", [
+%~                                                                         generator_exp_elt_generators( "value", [
+%~                                                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])),
+%~                                                   assign_targets_value( ["g"],
+%~                                                     bin_op_left_right( add_token(+),
+%~                                                       "g",
+%~                                                       call_func_args( "tuple", [
+%~                                                         generator_exp_elt_generators( "upscaled_row", [
+%~                                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])),
+%~                                   return_value("g")]))
+%~
+%~ replacing_with_var(call_func_args("isinstance",[ELEMENT_01,"tuple"]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators(eq_token(==),call_func_args("len",[ELEMENT_01]),0),
+%~                        body_stmts([return_value(call_func("frozenset"))])))
+%~
+%~ replacing_with_var( for_target_iter_body(
+%~                        tuple_elts(["value",tuple_elts(["i","j"])]),
+%~                        "normed_obj",
+%~                        body_stmts( [ for_target_iter_body( "io",
+%~                                        call_func_args("range",[FACTOR_02]),
+%~                                        body_stmts( [ for_target_iter_body( "jo",
+%~                                                        call_func_args("range",[FACTOR_02]),
+%~                                                        body_stmts( [ expr_value( call_func_args(
+%~                                                                                     qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                                                                     [ tuple_elts( [ "value",
+%~                                                                                                     tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                                                                   bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])]))]))]))])))
+%~
+%~ replacing_with_var( return_value( call_func_args( "shift", [
+%~                                     call_func_args("frozenset",["o"]),
+%~                                     tuple_elts(["di_inv","dj_inv"])])))
+%~
+%~ replacing_with_var( for_target_iter_body( "row",
+%~                       ELEMENT_01,
+%~                       body_stmts( [ assign_targets_value(["upscaled_row"],call_func("tuple")),
+%~                                     for_target_iter_body( "value",
+%~                                       "row",
+%~                                       body_stmts( [ assign_targets_value( ["upscaled_row"],
+%~                                                       bin_op_left_right( add_token(+),
+%~                                                         "upscaled_row",
+%~                                                         call_func_args( "tuple", [
+%~                                                           generator_exp_elt_generators( "value", [
+%~                                                             comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])),
+%~                                     assign_targets_value( ["g"],
+%~                                       bin_op_left_right( add_token(+),
+%~                                         "g",
+%~                                         call_func_args( "tuple", [
+%~                                           generator_exp_elt_generators( "upscaled_row", [
+%~                                             comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])))
+%~
+%~ replacing_with_var(return_value("g"))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),call_func_args("len",[ELEMENT_01]),0))
+%~
+%~ replacing_with_var(body_stmts([return_value(call_func("frozenset"))]))
+%~
+%~ replacing_with_var(tuple_elts(["value",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var( body_stmts( [ for_target_iter_body( "io",
+%~                                     call_func_args("range",[FACTOR_02]),
+%~                                     body_stmts( [ for_target_iter_body( "jo",
+%~                                                     call_func_args("range",[FACTOR_02]),
+%~                                                     body_stmts( [ expr_value( call_func_args(
+%~                                                                                  qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                                                                  [ tuple_elts( [ "value",
+%~                                                                                                  tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                                                                bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])]))]))]))]))
+%~
+%~ replacing_with_var( call_func_args( "shift", [
+%~                       call_func_args("frozenset",["o"]),
+%~                       tuple_elts(["di_inv","dj_inv"])]))
+%~
+%~ replacing_with_var(make_new("set","o"))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["upscaled_row"],call_func("tuple")),
+%~                                   for_target_iter_body( "value",
+%~                                     "row",
+%~                                     body_stmts( [ assign_targets_value( ["upscaled_row"],
+%~                                                     bin_op_left_right( add_token(+),
+%~                                                       "upscaled_row",
+%~                                                       call_func_args( "tuple", [
+%~                                                         generator_exp_elt_generators( "value", [
+%~                                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])),
+%~                                   assign_targets_value( ["g"],
+%~                                     bin_op_left_right( add_token(+),
+%~                                       "g",
+%~                                       call_func_args( "tuple", [
+%~                                         generator_exp_elt_generators( "upscaled_row", [
+%~                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))]))
+%~
+%~ replacing_with_var(make_new("tuple","g"))
+%~
+%~ replacing_with_var(call_func_args("len",[ELEMENT_01]))
+%~
+%~ replacing_with_var(return_value(call_func("frozenset")))
+%~
+%~ replacing_with_var( for_target_iter_body( "io",
+%~                       call_func_args("range",[FACTOR_02]),
+%~                       body_stmts( [ for_target_iter_body( "jo",
+%~                                       call_func_args("range",[FACTOR_02]),
+%~                                       body_stmts( [ expr_value( call_func_args(
+%~                                                                    qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                                                    [ tuple_elts( [ "value",
+%~                                                                                    tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                                                  bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])]))]))])))
+%~
+%~ replacing_with_var( for_target_iter_body( "value",
+%~                       "row",
+%~                       body_stmts( [ assign_targets_value( ["upscaled_row"],
+%~                                       bin_op_left_right( add_token(+),
+%~                                         "upscaled_row",
+%~                                         call_func_args( "tuple", [
+%~                                           generator_exp_elt_generators( "value", [
+%~                                             comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))])))
+%~
+%~ replacing_with_var(call_func("frozenset"))
+%~
+%~ replacing_with_var(call_func_args("range",[FACTOR_02]))
+%~
+%~ replacing_with_var( body_stmts( [ for_target_iter_body( "jo",
+%~                                     call_func_args("range",[FACTOR_02]),
+%~                                     body_stmts( [ expr_value( call_func_args(
+%~                                                                  qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                                                  [ tuple_elts( [ "value",
+%~                                                                                  tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                                                bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])]))]))]))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["upscaled_row"],
+%~                                     bin_op_left_right( add_token(+),
+%~                                       "upscaled_row",
+%~                                       call_func_args( "tuple", [
+%~                                         generator_exp_elt_generators( "value", [
+%~                                           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])])))]))
+%~
+%~ replacing_with_var(make_new("tuple","upscaled_row"))
+%~
+%~ replacing_with_var( for_target_iter_body( "jo",
+%~                       call_func_args("range",[FACTOR_02]),
+%~                       body_stmts( [ expr_value( call_func_args(
+%~                                                    qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                                    [ tuple_elts( [ "value",
+%~                                                                    tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                                  bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])]))])))
+%~
+%~ replacing_with_var(call_func_args("range",[FACTOR_02]))
+%~
+%~ replacing_with_var( body_stmts( [ expr_value( call_func_args(
+%~                                                  qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                                  [ tuple_elts( [ "value",
+%~                                                                  tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                                bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])]))]))
+%~
+%~ replacing_with_var(comprehension_target_iter("num",call_func_args("range",[FACTOR_02])))
+%~
+%~ replacing_with_var( expr_value( call_func_args(
+%~                                    qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
+%~                                    [ tuple_elts( [ "value",
+%~                                                    tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"i",FACTOR_02),"io"),
+%~                                                                  bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"j",FACTOR_02),"jo")])])])))
+%~
+%~ replacing_with_var(call_func_args("range",[FACTOR_02]))
+%~
+%~ replacing_with_var(boxed_attribute_value("add"))
+%~
+%~ replacing_with_var(comprehension_target_iter("num",call_func_args("range",[FACTOR_02])))
+%~
+%~ replacing_with_var(call_func_args("range",[FACTOR_02]))
+%~
 % Compiled KL-1 for upscale
 upscale(ELEMENT_01,FACTOR_02,ELEMENT_03) :-
   willBeType(ELEMENT_03,'Element') ,
   comment(' upscale object or grid ') ,
+  len(ELEMENT_01,ARG_025) ,
+  compare_ops_left_comparators(eq_token(==),ARG_025,0,ARG_014) ,
+  make_new("frozenset",ARG_030) ,
+  return_value(ARG_030,ARG_026) ,
+  body_stmts([ARG_026],ARG_015) ,
+  if_test_body(ARG_014,ARG_015,ARG_07) ,
+  into_tuple(I,J,ARG_017) ,
+  tuple_elts(VALUE,ARG_017,ARG_016) ,
+  range(FACTOR_02,ARG_031) ,
+  range(FACTOR_02,ARG_038) ,
+  call([op_call(mult_token(*,I,FACTOR_02,ARG_051))]) ,
+  call([op_call(add_token(+,ARG_051,IO,ARG_048))]) ,
+  call([op_call(mult_token(*,J,FACTOR_02,ARG_052))]) ,
+  call([op_call(add_token(+,ARG_052,JO,ARG_049))]) ,
+  tuple_elts(ARG_048,ARG_049,ARG_045) ,
+  tuple_elts(VALUE,ARG_045,ARG_043) ,
+  call( [ op_call( [ boxed_attribute_value("add",ARG_046),
+                     qualified_identifier_identifiers([O,ARG_046],ARG_043,ARG_042)])]) ,
+  body_stmts([ARG_042],ARG_039) ,
+  for_target_iter_body(JO,ARG_038,ARG_039,ARG_036) ,
+  body_stmts([ARG_036],ARG_032) ,
+  for_target_iter_body(IO,ARG_031,ARG_032,ARG_027) ,
+  body_stmts([ARG_027],ARG_018) ,
+  for_target_iter_body(ARG_016,"normed_obj",ARG_018,ARG_08) ,
+  frozenset(O,ARG_020) ,
+  into_tuple("di_inv","dj_inv",ARG_021) ,
+  shift(ARG_020,ARG_021,ARG_019) ,
+  return_value(ARG_019,ARG_09) ,
+  make_new("set",O,ARG_022) ,
+  orelse_else_stmts(
+     [ ARG_07,
+       into_tuple("di_inv","dj_inv",ARG_010),
+       ulcorner(ELEMENT_01,ARG_010),
+       unary_op_operand(us_ub_token(-),"di_inv",DI),
+       unary_op_operand(us_ub_token(-),"dj_inv",DJ),
+       into_tuple(DI,DJ,ARG_011),
+       shift(ELEMENT_01,ARG_011,NORMED_OBJ), ARG_022,ARG_08,ARG_09],
+     ARG_04) ,
   (/*2*/
-    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
-      ( make_new("tuple","g")  ,
-        for_each( call(ROW_04=ELEMENT_01),
-          ( make_new("tuple","upscaled_row")  ,
-            for_each( call(VALUE_05=ROW_04), [
-              assign_var( ARG_015,
-                elt_generator( v1,
-                  VALUE_05,
-                  [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
-              tuple(ARG_015,ARG_013),
-              call_op(+,UPSCALED_ROW,ARG_013,UPSCALED_ROW)]) ,
-            [ assign_var( ARG_016,
-                elt_generator( v1,
-                  "upscaled_row",
-                  [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
-              tuple(ARG_016,ARG_014),
-              call_op(+,G,ARG_014,G)])) ,
-        call(ELEMENT_03="g") ,
-        exit_proc(ELEMENT_03)) ;
-    ( (/*2*/
-        testif(call_func_args(==,[call_func_args("len",[ELEMENT_01]),0])) ->
-          make_new("frozenset",ELEMENT_03),exit_proc(ELEMENT_03))  ,
-      call(into_tuple("di_inv","dj_inv",ARG_06)) ,
-      ulcorner(ELEMENT_01,ARG_06) ,
-      [call_op(-,DI_INV,DI)] ,
-      [call_op(-,DJ_INV,DJ)] ,
-      call(into_tuple("di","dj",ARG_07)) ,
-      shift(ELEMENT_01,ARG_07,NORMED_OBJ) ,
-      make_new("set","o") ,
-      for_each( call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_08')="normed_obj"),
-        for_each( [range(FACTOR_02,IO_09)],
-          for_each( [range(FACTOR_02,JO_010)],
-            expr_value( call_func_args( "add", [
-                          "o",
-                          tuple_elts( [ "value",
-                                        tuple_elts( [ call_func_args(+,[call_func_args(*,["i",FACTOR_02]),IO_09]),
-                                                      call_func_args(+,[call_func_args(*,["j",FACTOR_02]),JO_010])])])]))))) ,
-      [frozenset(O,ARG_011)] ,
-      call(into_tuple("di_inv","dj_inv",ARG_012)) ,
-      shift(ARG_011,ARG_012,ELEMENT_03) ,
-      exit_proc(ELEMENT_03))).
+    [ body_stmts(
+         [ range(FACTOR_02,ARG_050),
+           comprehension_target_iter("num",ARG_050,ARG_047),
+           generator_exp_elt_generators(VALUE,[ARG_047],ARG_040),
+           tuple(ARG_040,ARG_037),
+           call([op_call(add_token(+,UPSCALED_ROW,ARG_037,UPSCALED_ROW))])],
+         ARG_033),
+      for_target_iter_body(VALUE,"row",ARG_033,ARG_028),
+      make_new(TUPLE,"upscaled_row",ARG_034),
+      body_stmts(
+         [ ARG_034,
+           ARG_028,
+           range(FACTOR_02,ARG_044),
+           comprehension_target_iter("num",ARG_044,ARG_041),
+           generator_exp_elt_generators("upscaled_row",[ARG_041],ARG_035),
+           tuple(ARG_035,ARG_029),
+           call([op_call(add_token(+,G,ARG_029,G))])],
+         ARG_023),
+      for_target_iter_body("row",ELEMENT_01,ARG_023,ARG_012),
+      return_value(G,ARG_013),
+      make_new(TUPLE,G,ARG_024),
+      body_stmts([ARG_024,ARG_012,ARG_013],ARG_05),
+      [ isinstance(ELEMENT_01,TUPLE,ARG_06),
+        testif(ARG_06)] ->
+        ARG_05] ;
+    ARG_04).
 %~ % Universal AST Pass #0
 %~ def( "downscale",
 %~   function_type_body(
@@ -3519,6 +6157,70 @@ upscale(ELEMENT_01,FACTOR_02,ELEMENT_03) :-
 %~                                                             bin_op_left_right(add_token(+),"dsg",tuple_elts([subscript_value_slice("g","i")])))]))])),
 %~                          return_value("dsg")])))
 %~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["r"],call_func("tuple")),
+%~                                   for_target_iter_body( "j",
+%~                                     call_func_args("range",["w"]),
+%~                                     body_stmts( [ if_test_body(
+%~                                                      compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),"j",FACTOR_02),0),
+%~                                                      body_stmts( [ assign_targets_value( ["r"],
+%~                                                                      bin_op_left_right( add_token(+),
+%~                                                                        "r",
+%~                                                                        tuple_elts([subscript_value_slice(subscript_value_slice(GRID_01,I_05),"j")])))]))])),
+%~                                   assign_targets_value(["g"],bin_op_left_right(add_token(+),"g",tuple_elts(["r"])))]))
+%~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),I_07,FACTOR_02),0),
+%~                                      body_stmts( [ assign_targets_value( ["dsg"],
+%~                                                      bin_op_left_right(add_token(+),"dsg",tuple_elts([subscript_value_slice("g",I_07)])))]))]))
+%~
+%~ replacing_with_var( for_target_iter_body( "j",
+%~                       call_func_args("range",["w"]),
+%~                       body_stmts( [ if_test_body(
+%~                                        compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),"j",FACTOR_02),0),
+%~                                        body_stmts( [ assign_targets_value( ["r"],
+%~                                                        bin_op_left_right( add_token(+),
+%~                                                          "r",
+%~                                                          tuple_elts([subscript_value_slice(subscript_value_slice(GRID_01,I_05),"j")])))]))])))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),I_07,FACTOR_02),0),
+%~                        body_stmts( [ assign_targets_value( ["dsg"],
+%~                                        bin_op_left_right(add_token(+),"dsg",tuple_elts([subscript_value_slice("g",I_07)])))])))
+%~
+%~ replacing_with_var(call_func_args("range",["w"]))
+%~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),"j",FACTOR_02),0),
+%~                                      body_stmts( [ assign_targets_value( ["r"],
+%~                                                      bin_op_left_right( add_token(+),
+%~                                                        "r",
+%~                                                        tuple_elts([subscript_value_slice(subscript_value_slice(GRID_01,I_05),"j")])))]))]))
+%~
+%~ replacing_with_var(make_new("tuple","r"))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),I_07,FACTOR_02),0))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["dsg"],
+%~                                     bin_op_left_right(add_token(+),"dsg",tuple_elts([subscript_value_slice("g",I_07)])))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),"j",FACTOR_02),0),
+%~                        body_stmts( [ assign_targets_value( ["r"],
+%~                                        bin_op_left_right( add_token(+),
+%~                                          "r",
+%~                                          tuple_elts([subscript_value_slice(subscript_value_slice(GRID_01,I_05),"j")])))])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),"j",FACTOR_02),0))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["r"],
+%~                                     bin_op_left_right( add_token(+),
+%~                                       "r",
+%~                                       tuple_elts([subscript_value_slice(subscript_value_slice(GRID_01,I_05),"j")])))]))
+%~
+%~ replacing_with_var(call_func_args(mod_token('%'),[I_07,FACTOR_02]))
+%~
+%~ replacing_with_var(call_func_args(mod_token('%'),["j",FACTOR_02]))
+%~
 % Compiled KL-1 for downscale
 downscale(GRID_01,FACTOR_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
@@ -3526,27 +6228,38 @@ downscale(GRID_01,FACTOR_02,GRID_03) :-
   len(GRID_01,H) ,
   subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
-  make_new("tuple","g") ,
-  for_each( [range(H,I_05)],
-    ( make_new("tuple","r")  ,
-      for_each( [range(W,J_06)],
-        (/*2*/
-          testif(call_func_args(==,[call_func_args('%',[J_06,FACTOR_02]),0])) ->
-            [ subscript_value_slice(subscript_value_slice(GRID_01,I_05),J_06,ARG_011),
-              tuple_elts(ARG_011,ARG_08),
-              call_op(+,R,ARG_08,R)])) ,
-      [ assign_targets_value([ARG_012],["r"]),
-        tuple_elts(ARG_012,ARG_09),
-        call_op(+,G,ARG_09,G)])) ,
+  make_new("tuple",G) ,
+  range(W,ARG_012) ,
+  call([op_call(mod_token('%',J,FACTOR_02,ARG_024))]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_024,0,ARG_019) ,
+  body_stmts(
+     [ subscript_value_slice(GRID_01,I_05,ARG_026),
+       subscript_value_slice(ARG_026,J,ARG_025),
+       tuple_elts(ARG_025,ARG_023),
+       call([op_call(add_token(+,R,ARG_023,R))])],
+     ARG_020) ,
+  if_test_body(ARG_019,ARG_020,ARG_017) ,
+  body_stmts([ARG_017],ARG_013) ,
+  for_target_iter_body(J,ARG_012,ARG_013,ARG_09) ,
+  make_new("tuple",R,ARG_014) ,
+  body_stmts(
+     [ ARG_014, ARG_09,tuple_elts(R,ARG_010),
+       call([op_call(add_token(+,G,ARG_010,G))])],
+     ARG_06) ,
+  for_each([range(H,I_05)],ARG_06) ,
   len(G,H) ,
-  make_new("tuple","dsg") ,
-  for_each( [range(H,I_07)],
-    (/*2*/
-      testif(call_func_args(==,[call_func_args('%',[I_07,FACTOR_02]),0])) ->
-        [ subscript_value_slice("g",I_07,ARG_013),
-          tuple_elts(ARG_013,ARG_010),
-          call_op(+,DSG,ARG_010,DSG)])) ,
-  call(GRID_03="dsg") ,
+  make_new("tuple",DSG) ,
+  call([op_call(mod_token('%',I_07,FACTOR_02,ARG_021))]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_021,0,ARG_015) ,
+  body_stmts(
+     [ subscript_value_slice(G,I_07,ARG_022),
+       tuple_elts(ARG_022,ARG_018),
+       call([op_call(add_token(+,DSG,ARG_018,DSG))])],
+     ARG_016) ,
+  if_test_body(ARG_015,ARG_016,ARG_011) ,
+  body_stmts([ARG_011],ARG_08) ,
+  for_each([range(H,I_07)],ARG_08) ,
+  call(GRID_03=DSG) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "hconcat",
@@ -3558,15 +6271,24 @@ downscale(GRID_01,FACTOR_02,GRID_03) :-
 %~                                             bin_op_left_right(add_token(+),"i","j"),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("zip",["a","b"]))])]))])))
 %~
+%~ replacing_with_var(bin_op_left_right(add_token(+),"i","j"))
+%~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args("zip",[A_01,B_02])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var(call_func_args("zip",[A_01,B_02]))
+%~
 % Compiled KL-1 for hconcat
 hconcat(A_01,B_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' concatenate two grids horizontally ') ,
-  assign_var( ARG_04,
-    generator_exp_elt_generators(
-       call_func_args(+,["i","j"]),
-       [ assign_targets_value1( tuple_elts(["i","j"]),
-           call_func_args("zip",[A_01,B_02]))])) ,
+  call([op_call(add_token(+,I,J,ARG_05))]) ,
+  into_tuple(I,J,ARG_07) ,
+  zip(A_01,B_02,ARG_08) ,
+  comprehension_target_iter(ARG_07,ARG_08,ARG_06) ,
+  generator_exp_elt_generators(ARG_05,[ARG_06],ARG_04) ,
   tuple(ARG_04,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
@@ -3580,7 +6302,7 @@ hconcat(A_01,B_02,GRID_03) :-
 vconcat(A_01,B_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' concatenate two grids vertically ') ,
-  call_op(+,A_01,B_02,GRID_03) ,
+  call([op_call(add_token(+,A_01,B_02,GRID_03))]) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "subgrid",
@@ -3629,29 +6351,44 @@ subgrid(PATCH_01,GRID_02,GRID_03) :-
 %~                                               tuple_elts(["h","w"])]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",["n"]))])]))])))
 %~
+%~ replacing_with_var( call_func_args( mod_token('%'), [
+%~                       call_func_args("len",[subscript_value_slice(GRID_01,0)]),
+%~                       N_02]))
+%~
+%~ replacing_with_var( call_func_args( "crop", [
+%~                       GRID_01,
+%~                       tuple_elts( [ 0,
+%~                                     bin_op_left_right( add_token(+),
+%~                                       bin_op_left_right(mult_token(*),"w","i"),
+%~                                       bin_op_left_right(mult_token(*),"i","offset"))]),
+%~                       tuple_elts(["h","w"])]))
+%~
+%~ replacing_with_var(comprehension_target_iter("i",call_func_args("range",[N_02])))
+%~
+%~ replacing_with_var(call_func_args("range",[N_02]))
+%~
 % Compiled KL-1 for hsplit
 hsplit(GRID_01,N_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' split grid horizontally ') ,
   len(GRID_01,H) ,
-  subscript_value_slice(GRID_01,0,ARG_07) ,
-  len(ARG_07,ARG_05) ,
-  call_op(//,ARG_05,N_02,W) ,
-  subscript_value_slice(GRID_01,0,ARG_09) ,
-  len(ARG_09,ARG_08) ,
-  call_op('%',ARG_08,N_02,ARG_06) ,
-  call_op('!=',ARG_06,0,OFFSET) ,
-  assign_var( ARG_04,
-    generator_exp_elt_generators(
-       call_func_args( "crop", [
-         GRID_01,
-         tuple_elts( [ 0,
-                       call_func_args( +, [
-                         call_func_args(*,["w","i"]),
-                         call_func_args(*,["i","offset"])])]),
-         tuple_elts(["h","w"])]),
-       [ assign_targets_value1("i",call_func_args("range",[N_02]))])) ,
-  tuple(ARG_04,TUPLE_03) ,
+  subscript_value_slice(GRID_01,0,ARG_06) ,
+  len(ARG_06,ARG_04) ,
+  call([op_call(floor_div_token(//,ARG_04,N_02,W))]) ,
+  subscript_value_slice(GRID_01,0,ARG_013) ,
+  len(ARG_013,ARG_08) ,
+  call([op_call(mod_token('%',ARG_08,N_02,ARG_07))]) ,
+  compare_ops_left_comparators(not_eq_token('!='),ARG_07,0,OFFSET) ,
+  call([op_call(mult_token(*,W,I,ARG_016))]) ,
+  call([op_call(mult_token(*,I,OFFSET,ARG_017))]) ,
+  call([op_call(add_token(+,ARG_016,ARG_017,ARG_014))]) ,
+  tuple_elts(0,ARG_014,ARG_010) ,
+  into_tuple(H,W,ARG_011) ,
+  crop(GRID_01,ARG_010,ARG_011,ARG_09) ,
+  range(N_02,ARG_015) ,
+  comprehension_target_iter(I,ARG_015,ARG_012) ,
+  generator_exp_elt_generators(ARG_09,[ARG_012],ARG_05) ,
+  tuple(ARG_05,TUPLE_03) ,
   exit_proc(TUPLE_03).
 %~ % Universal AST Pass #0
 %~ def( "vsplit",
@@ -3677,28 +6414,39 @@ hsplit(GRID_01,N_02,TUPLE_03) :-
 %~                                               tuple_elts(["h","w"])]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",["n"]))])]))])))
 %~
+%~ replacing_with_var( call_func_args(mod_token('%'),[call_func_args("len",[GRID_01]),N_02]))
+%~
+%~ replacing_with_var( call_func_args( "crop", [
+%~                       GRID_01,
+%~                       tuple_elts( [ bin_op_left_right(add_token(+),bin_op_left_right(mult_token(*),"h","i"),bin_op_left_right(mult_token(*),"i","offset")),
+%~                                     0]),
+%~                       tuple_elts(["h","w"])]))
+%~
+%~ replacing_with_var(comprehension_target_iter("i",call_func_args("range",[N_02])))
+%~
+%~ replacing_with_var(call_func_args("range",[N_02]))
+%~
 % Compiled KL-1 for vsplit
 vsplit(GRID_01,N_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' split grid vertically ') ,
-  len(GRID_01,ARG_06) ,
-  call_op(//,ARG_06,N_02,H) ,
-  subscript_value_slice(GRID_01,0,ARG_04) ,
-  len(ARG_04,W) ,
+  len(GRID_01,ARG_04) ,
+  call([op_call(floor_div_token(//,ARG_04,N_02,H))]) ,
+  subscript_value_slice(GRID_01,0,ARG_05) ,
+  len(ARG_05,W) ,
   len(GRID_01,ARG_08) ,
-  call_op('%',ARG_08,N_02,ARG_07) ,
-  call_op('!=',ARG_07,0,OFFSET) ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args( "crop", [
-         GRID_01,
-         tuple_elts( [ call_func_args( +, [
-                         call_func_args(*,["h","i"]),
-                         call_func_args(*,["i","offset"])]),
-                       0]),
-         tuple_elts(["h","w"])]),
-       [ assign_targets_value1("i",call_func_args("range",[N_02]))])) ,
-  tuple(ARG_05,TUPLE_03) ,
+  call([op_call(mod_token('%',ARG_08,N_02,ARG_07))]) ,
+  compare_ops_left_comparators(not_eq_token('!='),ARG_07,0,OFFSET) ,
+  call([op_call(mult_token(*,H,I,ARG_015))]) ,
+  call([op_call(mult_token(*,I,OFFSET,ARG_016))]) ,
+  call([op_call(add_token(+,ARG_015,ARG_016,ARG_013))]) ,
+  tuple_elts(ARG_013,0,ARG_010) ,
+  into_tuple(H,W,ARG_011) ,
+  crop(GRID_01,ARG_010,ARG_011,ARG_09) ,
+  range(N_02,ARG_014) ,
+  comprehension_target_iter(I,ARG_014,ARG_012) ,
+  generator_exp_elt_generators(ARG_09,[ARG_012],ARG_06) ,
+  tuple(ARG_06,TUPLE_03) ,
   exit_proc(TUPLE_03).
 %~ % Universal AST Pass #0
 %~ def( "cellwise",
@@ -3725,6 +6473,50 @@ vsplit(GRID_01,N_02,TUPLE_03) :-
 %~                                            bin_op_left_right(add_token(+),"resulting_grid",tuple_elts(["row"])))])),
 %~                          return_value("resulting_grid")])))
 %~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["row"],call_func("tuple")),
+%~                                   for_target_iter_body( "j",
+%~                                     call_func_args("range",["w"]),
+%~                                     body_stmts( [ assign_targets_value( ["a_value"],
+%~                                                     subscript_value_slice(subscript_value_slice(A_01,I_06),"j")),
+%~                                                   assign_targets_value( ["value"],
+%~                                                     if_exp_test_body_orelse(
+%~                                                        compare_ops_left_comparators( eq_token(==),
+%~                                                          "a_value",
+%~                                                          subscript_value_slice(subscript_value_slice(B_02,I_06),"j")), "a_value",FALLBACK_03)),
+%~                                                   assign_targets_value(["row"],bin_op_left_right(add_token(+),"row",tuple_elts(["value"])))])),
+%~                                   assign_targets_value( ["resulting_grid"],
+%~                                     bin_op_left_right(add_token(+),"resulting_grid",tuple_elts(["row"])))]))
+%~
+%~ replacing_with_var( for_target_iter_body( "j",
+%~                       call_func_args("range",["w"]),
+%~                       body_stmts( [ assign_targets_value( ["a_value"],
+%~                                       subscript_value_slice(subscript_value_slice(A_01,I_06),"j")),
+%~                                     assign_targets_value( ["value"],
+%~                                       if_exp_test_body_orelse(
+%~                                          compare_ops_left_comparators( eq_token(==),
+%~                                            "a_value",
+%~                                            subscript_value_slice(subscript_value_slice(B_02,I_06),"j")), "a_value",FALLBACK_03)),
+%~                                     assign_targets_value(["row"],bin_op_left_right(add_token(+),"row",tuple_elts(["value"])))])))
+%~
+%~ replacing_with_var(call_func_args("range",["w"]))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["a_value"],
+%~                                     subscript_value_slice(subscript_value_slice(A_01,I_06),"j")),
+%~                                   assign_targets_value( ["value"],
+%~                                     if_exp_test_body_orelse(
+%~                                        compare_ops_left_comparators( eq_token(==),
+%~                                          "a_value",
+%~                                          subscript_value_slice(subscript_value_slice(B_02,I_06),"j")), "a_value",FALLBACK_03)),
+%~                                   assign_targets_value(["row"],bin_op_left_right(add_token(+),"row",tuple_elts(["value"])))]))
+%~
+%~ replacing_with_var(make_new("tuple","row"))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       "a_value",
+%~                       subscript_value_slice(subscript_value_slice(B_02,I_06),"j")))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice(B_02,I_06),"j"))
+%~
 % Compiled KL-1 for cellwise
 cellwise(A_01,B_02,FALLBACK_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
@@ -3733,23 +6525,26 @@ cellwise(A_01,B_02,FALLBACK_03,GRID_04) :-
   subscript_value_slice(A_01,0,ARG_05) ,
   len(ARG_05,W) ,
   make_new("tuple","resulting_grid") ,
-  for_each( [range(H,I_06)],
-    ( make_new("tuple","row")  ,
-      for_each( [range(W,J_07)],
-        ( [subscript_value_slice(A_01,I_06,ARG_08)]  ,
-          subscript_value_slice(ARG_08,J_07,A_VALUE) ,
-          (/*2*/
-            testif( call_func_args( ==, [
-                      "a_value",
-                      subscript_value_slice(subscript_value_slice(B_02,I_06),J_07)])) ->
-              call("value"="a_value") ;
-            call("value"=FALLBACK_03)) ,
-          [ assign_targets_value([ARG_011],["value"]),
-            tuple_elts(ARG_011,ARG_09),
-            call_op(+,ROW,ARG_09,ROW)])) ,
-      [ assign_targets_value([ARG_012],["row"]),
-        tuple_elts(ARG_012,ARG_010),
-        call_op(+,RESULTING_GRID,ARG_010,RESULTING_GRID)])) ,
+  range(W,ARG_010) ,
+  body_stmts(
+     [ subscript_value_slice(A_01,I_06,ARG_013),
+       subscript_value_slice(ARG_013,J,A_VALUE),
+       (/*2*/
+         [ subscript_value_slice(B_02,I_06,ARG_017),
+           subscript_value_slice(ARG_017,J,ARG_016),
+           compare_ops_left_comparators(eq_token(==),"a_value",ARG_016,ARG_015),
+           testif(ARG_015)] ->
+           call(FALLBACK_03="a_value")),
+       tuple_elts(VALUE,ARG_014),
+       call([op_call(add_token(+,ROW,ARG_014,ROW))])],
+     ARG_011) ,
+  for_target_iter_body(J,ARG_010,ARG_011,ARG_08) ,
+  make_new("tuple",ROW,ARG_012) ,
+  body_stmts(
+     [ ARG_012, ARG_08,tuple_elts(ROW,ARG_09),
+       call([op_call(add_token(+,RESULTING_GRID,ARG_09,RESULTING_GRID))])],
+     ARG_07) ,
+  for_each([range(H,I_06)],ARG_07) ,
   call(GRID_04="resulting_grid") ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
@@ -3767,17 +6562,32 @@ cellwise(A_01,B_02,FALLBACK_03,GRID_04) :-
 %~                                                  [comprehension_target_iter("v","r")])]),
 %~                                             [comprehension_target_iter("r","grid")])]))])))
 %~
+%~ replacing_with_var( call_func_args( "tuple", [
+%~                       generator_exp_elt_generators(
+%~                          if_exp_test_body_orelse(compare_ops_left_comparators(eq_token(==),"v",REPLACEE_02),REPLACER_03,"v"),
+%~                          [comprehension_target_iter("v","r")])]))
+%~
+%~ replacing_with_var( if_exp_test_body_orelse(compare_ops_left_comparators(eq_token(==),"v",REPLACEE_02),REPLACER_03,"v"))
+%~
+%~ replacing_with_var(comprehension_target_iter("v","r"))
+%~
+%~ replacing_with_var(call_func_args(==,["v",REPLACEE_02]))
+%~
 % Compiled KL-1 for replace
 replace(GRID_01,REPLACEE_02,REPLACER_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' color substitution ') ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args( "tuple", [
-         generator_exp_elt_generators(
-            if_exp_test_body_orelse(call_func_args(==,["v",REPLACEE_02]),REPLACER_03,"v"),
-            [assign_targets_value1("v","r")])]),
-       [assign_targets_value1("r",GRID_01)])) ,
+  (/*2*/
+    [ call([op_call(op_call(==,V,REPLACEE_02,ARG_010))]),
+      testif(ARG_010)] ->
+      true ;
+    call(REPLACER_03=V)) ,
+  comprehension_target_iter(V,"r",ARG_09) ,
+  generator_exp_elt_generators(REPLACER_03,[ARG_09],ARG_07) ,
+  tuple(ARG_07,ARG_06) ,
+  generator_exp_elt_generators( ARG_06,
+    [assign_targets_value1("r",GRID_01)],
+    ARG_05) ,
   tuple(ARG_05,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
@@ -3800,24 +6610,52 @@ replace(GRID_01,REPLACEE_02,REPLACER_03,GRID_04) :-
 %~                                                  [comprehension_target_iter("v","r")])]),
 %~                                             [comprehension_target_iter("r","grid")])]))])))
 %~
+%~ replacing_with_var( call_func_args( "tuple", [
+%~                       generator_exp_elt_generators(
+%~                          if_exp_test_body_orelse(
+%~                             bool_op_values( ['python:And'], [
+%~                               compare_ops_left_comparators(not_eq_token('!='),"v",A_02),
+%~                               compare_ops_left_comparators(not_eq_token('!='),"v",B_03)]),
+%~                             "v",
+%~                             subscript_value_slice(
+%~                                dict_keys_values([A_02,B_03],[B_03,A_02]),
+%~                                "v")),
+%~                          [comprehension_target_iter("v","r")])]))
+%~
+%~ replacing_with_var( if_exp_test_body_orelse(
+%~                        bool_op_values( ['python:And'], [
+%~                          compare_ops_left_comparators(not_eq_token('!='),"v",A_02),
+%~                          compare_ops_left_comparators(not_eq_token('!='),"v",B_03)]),
+%~                        "v",
+%~                        subscript_value_slice(
+%~                           dict_keys_values([A_02,B_03],[B_03,A_02]),
+%~                           "v")))
+%~
+%~ replacing_with_var(comprehension_target_iter("v","r"))
+%~
+%~ replacing_with_var(call_func_args('!=',["v",A_02]))
+%~
+%~ replacing_with_var(call_func_args('!=',["v",B_03]))
+%~
 % Compiled KL-1 for switch
 switch(GRID_01,A_02,B_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' color switching ') ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args( "tuple", [
-         generator_exp_elt_generators(
-            if_exp_test_body_orelse(
-               bool_op_values( ['python:And'], [
-                 call_func_args('!=',["v",A_02]),
-                 call_func_args('!=',["v",B_03])]),
-               "v",
-               subscript_value_slice(
-                  dict_keys_values([A_02,B_03],[B_03,A_02]),
-                  "v")),
-            [assign_targets_value1("v","r")])]),
-       [assign_targets_value1("r",GRID_01)])) ,
+  (/*2*/
+    testif( [ call([op_call(op_call('!=',V,A_02,ARG_011))]),
+              call([op_call(op_call('!=',V,B_03,ARG_012))]),
+              bool_op_values(['python:And'],[ARG_011,ARG_012])]) ->
+      true ;
+    [ dict_keys_values( [A_02,B_03],
+        [B_03,A_02],
+        ARG_010),
+      subscript_value_slice(ARG_010,V,V)]) ,
+  comprehension_target_iter(V,"r",ARG_09) ,
+  generator_exp_elt_generators(V,[ARG_09],ARG_07) ,
+  tuple(ARG_07,ARG_06) ,
+  generator_exp_elt_generators( ARG_06,
+    [assign_targets_value1("r",GRID_01)],
+    ARG_05) ,
   tuple(ARG_05,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
@@ -3836,14 +6674,15 @@ switch(GRID_01,A_02,B_03,GRID_04) :-
 center(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' center of the patch ') ,
-  assign_targets_value( [ARG_03], [
-    call_func_args( +, [
-      call_func_args("uppermost",[PATCH_01]),
-      call_func_args(//,[call_func_args("height",[PATCH_01]),2])]),
-    call_func_args( +, [
-      call_func_args("leftmost",[PATCH_01]),
-      call_func_args(//,[call_func_args("width",[PATCH_01]),2])])]) ,
-  tuple_elts(ARG_03,INTEGERTUPLE_02) ,
+  uppermost(PATCH_01,ARG_05) ,
+  height(PATCH_01,ARG_09) ,
+  call([op_call(floor_div_token(//,ARG_09,2,ARG_06))]) ,
+  call([op_call(add_token(+,ARG_05,ARG_06,ARG_03))]) ,
+  leftmost(PATCH_01,ARG_07) ,
+  width(PATCH_01,ARG_010) ,
+  call([op_call(floor_div_token(//,ARG_010,2,ARG_08))]) ,
+  call([op_call(add_token(+,ARG_07,ARG_08,ARG_04))]) ,
+  tuple_elts(ARG_03,ARG_04,INTEGERTUPLE_02) ,
   exit_proc(INTEGERTUPLE_02).
 %~ % Universal AST Pass #0
 %~ def( "position",
@@ -3874,40 +6713,169 @@ center(PATCH_01,INTEGERTUPLE_02) :-
 %~                                                                                                     body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
 %~                                                                                                                                               if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))]))]))]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             compare_ops_left_comparators(eq_token(==),"ja","jb"),
+%~                                             body_stmts( [ return_value( tuple_elts( [ if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ia","ib"),1,unary_op_operand(us_ub_token(-),1)),
+%~                                                                                       0]))]),
+%~                                             orelse_else_stmts( [ if_test_body_orelse(
+%~                                                                     compare_ops_left_comparators(lt_token(<),"ia","ib"),
+%~                                                                     body_stmts( [ return_value( tuple_elts( [ 1,
+%~                                                                                                               if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]),
+%~                                                                     orelse_else_stmts( [ if_test_body(
+%~                                                                                             compare_ops_left_comparators(gt_token(>),"ia","ib"),
+%~                                                                                             body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                                                                                                       if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))]))]))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ 0,
+%~                                                               if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"ia","ib"))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        compare_ops_left_comparators(eq_token(==),"ja","jb"),
+%~                        body_stmts( [ return_value( tuple_elts( [ if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ia","ib"),1,unary_op_operand(us_ub_token(-),1)),
+%~                                                                  0]))]),
+%~                        orelse_else_stmts( [ if_test_body_orelse(
+%~                                                compare_ops_left_comparators(lt_token(<),"ia","ib"),
+%~                                                body_stmts( [ return_value( tuple_elts( [ 1,
+%~                                                                                          if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]),
+%~                                                orelse_else_stmts( [ if_test_body(
+%~                                                                        compare_ops_left_comparators(gt_token(>),"ia","ib"),
+%~                                                                        body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                                                                                  if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))]))])))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ 0,
+%~                                                 if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"ja","jb"))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ia","ib"),1,unary_op_operand(us_ub_token(-),1)),
+%~                                                               0]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             compare_ops_left_comparators(lt_token(<),"ia","ib"),
+%~                                             body_stmts( [ return_value( tuple_elts( [ 1,
+%~                                                                                       if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]),
+%~                                             orelse_else_stmts( [ if_test_body(
+%~                                                                     compare_ops_left_comparators(gt_token(>),"ia","ib"),
+%~                                                                     body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                                                                               if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))]))]))
+%~
+%~ replacing_with_var( tuple_elts( [ 0,
+%~                                   if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ia","ib"),1,unary_op_operand(us_ub_token(-),1)),
+%~                                                 0])))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        compare_ops_left_comparators(lt_token(<),"ia","ib"),
+%~                        body_stmts( [ return_value( tuple_elts( [ 1,
+%~                                                                  if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]),
+%~                        orelse_else_stmts( [ if_test_body(
+%~                                                compare_ops_left_comparators(gt_token(>),"ia","ib"),
+%~                                                body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                                                          if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))])))
+%~
+%~ replacing_with_var( tuple_elts( [ if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ia","ib"),1,unary_op_operand(us_ub_token(-),1)),
+%~                                   0]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"ia","ib"))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ 1,
+%~                                                               if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body(
+%~                                             compare_ops_left_comparators(gt_token(>),"ia","ib"),
+%~                                             body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                                                       if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"ja","jb"))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ 1,
+%~                                                 if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))])))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators(gt_token(>),"ia","ib"),
+%~                        body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                                  if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"ia","ib"))
+%~
+%~ replacing_with_var( tuple_elts( [ 1,
+%~                                   if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_token(>),"ia","ib"))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                               if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))
+%~
+%~ replacing_with_var( return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                                 if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"ja","jb"))
+%~
+%~ replacing_with_var( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
+%~                                   if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"ja","jb"))
+%~
 % Compiled KL-1 for position
 position(A_01,B_02,INTEGERTUPLE_03) :-
   willBeType(INTEGERTUPLE_03,'IntegerTuple') ,
   comment(' relative position between two patches ') ,
   toindices(A_01,ARG_04) ,
-  call(into_tuple("ia","ja",ARG_05)) ,
+  into_tuple(IA,JA,ARG_05) ,
   center(ARG_04,ARG_05) ,
   toindices(B_02,ARG_06) ,
-  call(into_tuple("ib","jb",ARG_07)) ,
+  into_tuple(IB,JB,ARG_07) ,
   center(ARG_06,ARG_07) ,
-  ( testif(call_func_args(==,["ia","ib"])) ->
-      ( assign_targets_value( [ARG_08], [
-          0,
-          if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])  ,
-        tuple_elts(ARG_08,INTEGERTUPLE_03) ,
-        exit_proc(INTEGERTUPLE_03))  ;
-    testif(call_func_args(==,["ja","jb"])) ->
-      ( assign_targets_value( [ARG_09], [
-          if_exp_test_body_orelse(call_func_args(<,["ia","ib"]),1,call_func_args(-,[1])),
-          0])  ,
-        tuple_elts(ARG_09,INTEGERTUPLE_03) ,
-        exit_proc(INTEGERTUPLE_03)) ;
-    testif(call_func_args(<,["ia","ib"])) ->
-      ( assign_targets_value( [ARG_010], [
-          1,
-          if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])  ,
-        tuple_elts(ARG_010,INTEGERTUPLE_03) ,
-        exit_proc(INTEGERTUPLE_03)) ;
-    testif(call_func_args(>,["ia","ib"])) ->
-      ( assign_targets_value( [ARG_011], [
-          call_func_args(-,[1]),
-          if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])  ,
-        tuple_elts(ARG_011,INTEGERTUPLE_03) ,
-        exit_proc(INTEGERTUPLE_03))).
+  compare_ops_left_comparators(eq_token(==),JA,JB,ARG_013) ,
+  (/*2*/
+    [ compare_ops_left_comparators(lt_token(<),IA,IB,ARG_028),
+      testif(ARG_028)] ->
+      call(ARG_021=1) ;
+    [ unary_op_operand(us_ub_token(-),1,ARG_021)]) ,
+  tuple_elts(ARG_021,0,ARG_020) ,
+  return_value(ARG_020,ARG_018) ,
+  body_stmts([ARG_018],ARG_014) ,
+  compare_ops_left_comparators(lt_token(<),IA,IB,ARG_022) ,
+  (/*2*/
+    [ compare_ops_left_comparators(lt_token(<),JA,JB,ARG_034),
+      testif(ARG_034)] ->
+      call(ARG_030=1) ;
+    [ unary_op_operand(us_ub_token(-),1,ARG_030)]) ,
+  tuple_elts(1,ARG_030,ARG_029) ,
+  return_value(ARG_029,ARG_026) ,
+  body_stmts([ARG_026],ARG_023) ,
+  compare_ops_left_comparators(gt_token(>),IA,IB,ARG_031) ,
+  unary_op_operand(us_ub_token(-),1,ARG_036) ,
+  (/*2*/
+    [ compare_ops_left_comparators(lt_token(<),JA,JB,ARG_038),
+      testif(ARG_038)] ->
+      call(ARG_037=1) ;
+    [ unary_op_operand(us_ub_token(-),1,ARG_037)]) ,
+  tuple_elts(ARG_036,ARG_037,ARG_035) ,
+  return_value(ARG_035,ARG_033) ,
+  body_stmts([ARG_033],ARG_032) ,
+  if_test_body(ARG_031,ARG_032,ARG_027) ,
+  orelse_else_stmts([ARG_027],ARG_024) ,
+  if_test_body_orelse(ARG_022,ARG_023,ARG_024,ARG_019) ,
+  orelse_else_stmts([ARG_019],ARG_015) ,
+  if_test_body_orelse(ARG_013,ARG_014,ARG_015,ARG_011) ,
+  orelse_else_stmts([ARG_011],ARG_08) ,
+  (/*2*/
+    [ (/*2*/
+        [ compare_ops_left_comparators(lt_token(<),JA,JB,ARG_025),
+          testif(ARG_025)] ->
+          call(ARG_017=1) ;
+        [ unary_op_operand(us_ub_token(-),1,ARG_017)]),
+      tuple_elts(0,ARG_017,ARG_016),
+      return_value(ARG_016,ARG_012),
+      body_stmts([ARG_012],ARG_09),
+      [ compare_ops_left_comparators(eq_token(==),IA,IB,ARG_010),
+        testif(ARG_010)] ->
+        ARG_09] ;
+    ARG_08).
 %~ % Universal AST Pass #0
 %~ def( "index",
 %~   function_type_body(
@@ -3929,26 +6897,54 @@ position(A_01,B_02,INTEGERTUPLE_03) :-
 %~                             body_stmts([return_value(none_literal_value_token('None','None'))])),
 %~                          return_value( subscript_value_slice(subscript_value_slice("grid",subscript_value_slice("loc",0)),subscript_value_slice("loc",1)))])))
 %~
+%~ replacing_with_var(body_stmts([return_value(none_literal_value_token('None','None'))]))
+%~
+%~ replacing_with_var( unary_op_operand( ['python:Not'],
+%~                       bool_op_values( ['python:And'], [
+%~                         compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                         compare_ops_left_comparators(
+%~                            ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])))
+%~
+%~ replacing_with_var(return_value(none_literal_value_token('None','None')))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["j","w"])))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["i","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["j","w"]))
+%~
 % Compiled KL-1 for index
 index(GRID_01,LOC_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' color at location ') ,
-  from_tuple(LOC_02,"i","j") ,
+  from_tuple(LOC_02,I,J) ,
   len(GRID_01,H) ,
   subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
   (/*2*/
-    testif( call_func_args( 'python:Not', [
-              bool_op_values( ['python:And'], [
-                call_func_args(<=,[0,"i"]),
-                call_func_args(<,[0,"h"]),
-                call_func_args(<=,[0,"j"]),
-                call_func_args(<,[0,"w"])])])) ->
-      assign_var(INTEGER_03,none_literal_value_token('None','None')),exit_proc(INTEGER_03)) ,
-  subscript_value_slice(LOC_02,0,ARG_07) ,
-  subscript_value_slice(GRID_01,ARG_07,ARG_05) ,
-  subscript_value_slice(LOC_02,1,ARG_06) ,
-  subscript_value_slice(ARG_05,ARG_06,INTEGER_03) ,
+    [ return_value(none_literal_value_token('None','None'),ARG_09),
+      body_stmts([ARG_09],ARG_05),
+      [ unary_op_operand( ['python:Not'],
+          [ ops([lt_e_token(<=),lt_token(<)],ARG_013),
+            comparators([I,H],ARG_014),
+            compare_ops_left_comparators(ARG_013,0,ARG_014,ARG_010),
+            ops([lt_e_token(<=),lt_token(<)],ARG_015),
+            comparators([J,W],ARG_016),
+            compare_ops_left_comparators(ARG_015,0,ARG_016,ARG_011),
+            bool_op_values(['python:And'],[ARG_010,ARG_011])],
+          ARG_06),
+        testif(ARG_06)] ->
+        ARG_05]) ,
+  subscript_value_slice(LOC_02,0,ARG_012) ,
+  subscript_value_slice(GRID_01,ARG_012,ARG_07) ,
+  subscript_value_slice(LOC_02,1,ARG_08) ,
+  subscript_value_slice(ARG_07,ARG_08,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
 %~ def( "canvas",
@@ -3965,17 +6961,31 @@ index(GRID_01,LOC_02,INTEGER_03) :-
 %~                                                 comprehension_target_iter("j",call_func_args("range",[subscript_value_slice("dimensions",1)]))])]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",[subscript_value_slice("dimensions",0)]))])]))])))
 %~
+%~ replacing_with_var( call_func_args( "tuple", [
+%~                       generator_exp_elt_generators( VALUE_01, [
+%~                         comprehension_target_iter("j",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,1)]))])]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,0)])))
+%~
+%~ replacing_with_var(call_func_args("range",[subscript_value_slice(DIMENSIONS_02,0)]))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,1)])))
+%~
+%~ replacing_with_var(call_func_args("range",[subscript_value_slice(DIMENSIONS_02,1)]))
+%~
 % Compiled KL-1 for canvas
 canvas(VALUE_01,DIMENSIONS_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' grid construction ') ,
-  assign_var( ARG_04,
-    generator_exp_elt_generators(
-       call_func_args( "tuple", [
-         elt_generator( v1,
-           VALUE_01,
-           [ assign_targets_value1("j",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,1)]))])]),
-       [ assign_targets_value1("i",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,0)]))])) ,
+  subscript_value_slice(DIMENSIONS_02,1,ARG_012) ,
+  range(ARG_012,ARG_011) ,
+  comprehension_target_iter("j",ARG_011,ARG_010) ,
+  generator_exp_elt_generators(VALUE_01,[ARG_010],ARG_06) ,
+  tuple(ARG_06,ARG_05) ,
+  subscript_value_slice(DIMENSIONS_02,0,ARG_09) ,
+  range(ARG_09,ARG_08) ,
+  comprehension_target_iter("i",ARG_08,ARG_07) ,
+  generator_exp_elt_generators(ARG_05,[ARG_07],ARG_04) ,
   tuple(ARG_04,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
@@ -3989,15 +6999,24 @@ canvas(VALUE_01,DIMENSIONS_02,GRID_03) :-
 %~                                                      call_func_args("llcorner",["patch"]),
 %~                                                      call_func_args("lrcorner",["patch"])])]))])))
 %~
+%~ replacing_with_var(call_func_args("ulcorner",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("urcorner",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("llcorner",[PATCH_01]))
+%~
+%~ replacing_with_var(call_func_args("lrcorner",[PATCH_01]))
+%~
 % Compiled KL-1 for corners
 corners(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices of corners ') ,
-  assign_var( ARG_03,
-    set_elts( [ call_func_args("ulcorner",[PATCH_01]),
-                call_func_args("urcorner",[PATCH_01]),
-                call_func_args("llcorner",[PATCH_01]),
-                call_func_args("lrcorner",[PATCH_01])])) ,
+  ulcorner(PATCH_01,ARG_04) ,
+  urcorner(PATCH_01,ARG_05) ,
+  llcorner(PATCH_01,ARG_06) ,
+  lrcorner(PATCH_01,ARG_07) ,
+  set_elts( [ARG_04,ARG_05,ARG_06,ARG_07],
+    ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -4051,59 +7070,346 @@ corners(PATCH_01,INDICES_02) :-
 %~                                                                                                                                           unary_op_operand(us_ub_token(-),1)])]))])]))]))]))]))])),
 %~                          return_value(call_func("frozenset"))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             compare_ops_left_comparators(eq_token(==),"aj","bj"),
+%~                                             body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                           generator_exp_elt_generators( tuple_elts(["i","aj"]), [
+%~                                                                             comprehension_target_iter("i",call_func_args("range",["si","ei"]))])]))]),
+%~                                             orelse_else_stmts( [ if_test_body_orelse(
+%~                                                                     compare_ops_left_comparators( eq_token(==),
+%~                                                                       bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                                                       bin_op_left_right(sub_token(-),"bj","aj")),
+%~                                                                     body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                                                   generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                                                     comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                                                       call_func_args( "zip", [
+%~                                                                                                         call_func_args("range",["si","ei"]),
+%~                                                                                                         call_func_args("range",["sj","ej"])]))])]))]),
+%~                                                                     orelse_else_stmts( [ if_test_body(
+%~                                                                                             compare_ops_left_comparators( eq_token(==),
+%~                                                                                               bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                                                                               bin_op_left_right(sub_token(-),"aj","bj")),
+%~                                                                                             body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                                                                           generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                                                                             comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                                                                               call_func_args( "zip", [
+%~                                                                                                                                 call_func_args("range",["si","ei"]),
+%~                                                                                                                                 call_func_args( "range", [
+%~                                                                                                                                   bin_op_left_right(sub_token(-),"ej",1),
+%~                                                                                                                                   bin_op_left_right(sub_token(-),"sj",1),
+%~                                                                                                                                   unary_op_operand(us_ub_token(-),1)])]))])]))]))]))]))]))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators( tuple_elts(["ai","j"]), [
+%~                                                     comprehension_target_iter("j",call_func_args("range",["sj","ej"]))])]))]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"ai","bi"))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        compare_ops_left_comparators(eq_token(==),"aj","bj"),
+%~                        body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                      generator_exp_elt_generators( tuple_elts(["i","aj"]), [
+%~                                                        comprehension_target_iter("i",call_func_args("range",["si","ei"]))])]))]),
+%~                        orelse_else_stmts( [ if_test_body_orelse(
+%~                                                compare_ops_left_comparators( eq_token(==),
+%~                                                  bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                                  bin_op_left_right(sub_token(-),"bj","aj")),
+%~                                                body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                              generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                                comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                                  call_func_args( "zip", [
+%~                                                                                    call_func_args("range",["si","ei"]),
+%~                                                                                    call_func_args("range",["sj","ej"])]))])]))]),
+%~                                                orelse_else_stmts( [ if_test_body(
+%~                                                                        compare_ops_left_comparators( eq_token(==),
+%~                                                                          bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                                                          bin_op_left_right(sub_token(-),"aj","bj")),
+%~                                                                        body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                                                      generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                                                        comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                                                          call_func_args( "zip", [
+%~                                                                                                            call_func_args("range",["si","ei"]),
+%~                                                                                                            call_func_args( "range", [
+%~                                                                                                              bin_op_left_right(sub_token(-),"ej",1),
+%~                                                                                                              bin_op_left_right(sub_token(-),"sj",1),
+%~                                                                                                              unary_op_operand(us_ub_token(-),1)])]))])]))]))]))])))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators( tuple_elts(["ai","j"]), [
+%~                                       comprehension_target_iter("j",call_func_args("range",["sj","ej"]))])])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(eq_token(==),"aj","bj"))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators( tuple_elts(["i","aj"]), [
+%~                                                     comprehension_target_iter("i",call_func_args("range",["si","ei"]))])]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body_orelse(
+%~                                             compare_ops_left_comparators( eq_token(==),
+%~                                               bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                               bin_op_left_right(sub_token(-),"bj","aj")),
+%~                                             body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                           generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                             comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                               call_func_args( "zip", [
+%~                                                                                 call_func_args("range",["si","ei"]),
+%~                                                                                 call_func_args("range",["sj","ej"])]))])]))]),
+%~                                             orelse_else_stmts( [ if_test_body(
+%~                                                                     compare_ops_left_comparators( eq_token(==),
+%~                                                                       bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                                                       bin_op_left_right(sub_token(-),"aj","bj")),
+%~                                                                     body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                                                   generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                                                     comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                                                       call_func_args( "zip", [
+%~                                                                                                         call_func_args("range",["si","ei"]),
+%~                                                                                                         call_func_args( "range", [
+%~                                                                                                           bin_op_left_right(sub_token(-),"ej",1),
+%~                                                                                                           bin_op_left_right(sub_token(-),"sj",1),
+%~                                                                                                           unary_op_operand(us_ub_token(-),1)])]))])]))]))]))]))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators( tuple_elts(["ai","j"]), [
+%~                         comprehension_target_iter("j",call_func_args("range",["sj","ej"]))])]))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators( tuple_elts(["i","aj"]), [
+%~                                       comprehension_target_iter("i",call_func_args("range",["si","ei"]))])])))
+%~
+%~ replacing_with_var( if_test_body_orelse(
+%~                        compare_ops_left_comparators( eq_token(==),
+%~                          bin_op_left_right(sub_token(-),"bi","ai"),
+%~                          bin_op_left_right(sub_token(-),"bj","aj")),
+%~                        body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                      generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                        comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                          call_func_args( "zip", [
+%~                                                            call_func_args("range",["si","ei"]),
+%~                                                            call_func_args("range",["sj","ej"])]))])]))]),
+%~                        orelse_else_stmts( [ if_test_body(
+%~                                                compare_ops_left_comparators( eq_token(==),
+%~                                                  bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                                  bin_op_left_right(sub_token(-),"aj","bj")),
+%~                                                body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                              generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                                comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                                  call_func_args( "zip", [
+%~                                                                                    call_func_args("range",["si","ei"]),
+%~                                                                                    call_func_args( "range", [
+%~                                                                                      bin_op_left_right(sub_token(-),"ej",1),
+%~                                                                                      bin_op_left_right(sub_token(-),"sj",1),
+%~                                                                                      unary_op_operand(us_ub_token(-),1)])]))])]))]))])))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators( tuple_elts(["i","aj"]), [
+%~                         comprehension_target_iter("i",call_func_args("range",["si","ei"]))])]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       bin_op_left_right(sub_token(-),"bi","ai"),
+%~                       bin_op_left_right(sub_token(-),"bj","aj")))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                     comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                       call_func_args( "zip", [
+%~                                                         call_func_args("range",["si","ei"]),
+%~                                                         call_func_args("range",["sj","ej"])]))])]))]))
+%~
+%~ replacing_with_var( orelse_else_stmts( [ if_test_body(
+%~                                             compare_ops_left_comparators( eq_token(==),
+%~                                               bin_op_left_right(sub_token(-),"bi","ai"),
+%~                                               bin_op_left_right(sub_token(-),"aj","bj")),
+%~                                             body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                                           generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                                             comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                                               call_func_args( "zip", [
+%~                                                                                 call_func_args("range",["si","ei"]),
+%~                                                                                 call_func_args( "range", [
+%~                                                                                   bin_op_left_right(sub_token(-),"ej",1),
+%~                                                                                   bin_op_left_right(sub_token(-),"sj",1),
+%~                                                                                   unary_op_operand(us_ub_token(-),1)])]))])]))]))]))
+%~
+%~ replacing_with_var(tuple_elts(["ai","j"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("j",call_func_args("range",["sj","ej"])))
+%~
+%~ replacing_with_var(bin_op_left_right(sub_token(-),"bi","ai"))
+%~
+%~ replacing_with_var(bin_op_left_right(sub_token(-),"bj","aj"))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                       comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                         call_func_args( "zip", [
+%~                                           call_func_args("range",["si","ei"]),
+%~                                           call_func_args("range",["sj","ej"])]))])])))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        compare_ops_left_comparators( eq_token(==),
+%~                          bin_op_left_right(sub_token(-),"bi","ai"),
+%~                          bin_op_left_right(sub_token(-),"aj","bj")),
+%~                        body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                      generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                        comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                          call_func_args( "zip", [
+%~                                                            call_func_args("range",["si","ei"]),
+%~                                                            call_func_args( "range", [
+%~                                                              bin_op_left_right(sub_token(-),"ej",1),
+%~                                                              bin_op_left_right(sub_token(-),"sj",1),
+%~                                                              unary_op_operand(us_ub_token(-),1)])]))])]))])))
+%~
+%~ replacing_with_var(call_func_args("range",["sj","ej"]))
+%~
+%~ replacing_with_var(tuple_elts(["i","aj"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("i",call_func_args("range",["si","ei"])))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                         comprehension_target_iter( tuple_elts(["i","j"]),
+%~                           call_func_args( "zip", [
+%~                             call_func_args("range",["si","ei"]),
+%~                             call_func_args("range",["sj","ej"])]))])]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators( eq_token(==),
+%~                       bin_op_left_right(sub_token(-),"bi","ai"),
+%~                       bin_op_left_right(sub_token(-),"aj","bj")))
+%~
+%~ replacing_with_var( body_stmts( [ return_value( call_func_args( "frozenset", [
+%~                                                   generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                                     comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                                       call_func_args( "zip", [
+%~                                                         call_func_args("range",["si","ei"]),
+%~                                                         call_func_args( "range", [
+%~                                                           bin_op_left_right(sub_token(-),"ej",1),
+%~                                                           bin_op_left_right(sub_token(-),"sj",1),
+%~                                                           unary_op_operand(us_ub_token(-),1)])]))])]))]))
+%~
+%~ replacing_with_var(call_func_args("range",["si","ei"]))
+%~
+%~ replacing_with_var(bin_op_left_right(sub_token(-),"bi","ai"))
+%~
+%~ replacing_with_var(bin_op_left_right(sub_token(-),"aj","bj"))
+%~
+%~ replacing_with_var( return_value( call_func_args( "frozenset", [
+%~                                     generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                                       comprehension_target_iter( tuple_elts(["i","j"]),
+%~                                         call_func_args( "zip", [
+%~                                           call_func_args("range",["si","ei"]),
+%~                                           call_func_args( "range", [
+%~                                             bin_op_left_right(sub_token(-),"ej",1),
+%~                                             bin_op_left_right(sub_token(-),"sj",1),
+%~                                             unary_op_operand(us_ub_token(-),1)])]))])])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args( "zip", [
+%~                         call_func_args("range",["si","ei"]),
+%~                         call_func_args("range",["sj","ej"])])))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       generator_exp_elt_generators( tuple_elts(["i","j"]), [
+%~                         comprehension_target_iter( tuple_elts(["i","j"]),
+%~                           call_func_args( "zip", [
+%~                             call_func_args("range",["si","ei"]),
+%~                             call_func_args( "range", [
+%~                               bin_op_left_right(sub_token(-),"ej",1),
+%~                               bin_op_left_right(sub_token(-),"sj",1),
+%~                               unary_op_operand(us_ub_token(-),1)])]))])]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( call_func_args( "zip", [
+%~                       call_func_args("range",["si","ei"]),
+%~                       call_func_args("range",["sj","ej"])]))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter( tuple_elts(["i","j"]),
+%~                       call_func_args( "zip", [
+%~                         call_func_args("range",["si","ei"]),
+%~                         call_func_args( "range", [
+%~                           bin_op_left_right(sub_token(-),"ej",1),
+%~                           bin_op_left_right(sub_token(-),"sj",1),
+%~                           unary_op_operand(us_ub_token(-),1)])])))
+%~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( call_func_args( "zip", [
+%~                       call_func_args("range",["si","ei"]),
+%~                       call_func_args( "range", [
+%~                         bin_op_left_right(sub_token(-),"ej",1),
+%~                         bin_op_left_right(sub_token(-),"sj",1),
+%~                         unary_op_operand(us_ub_token(-),1)])]))
+%~
 % Compiled KL-1 for connect
 connect(A_01,B_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' line between two points ') ,
-  from_tuple(A_01,"ai","aj") ,
-  from_tuple(B_02,"bi","bj") ,
+  from_tuple(A_01,AI,AJ) ,
+  from_tuple(B_02,BI,BJ) ,
   min(AI,BI,SI) ,
-  max(AI,BI,ARG_08) ,
-  call_op(+,ARG_08,1,EI) ,
+  max(AI,BI,ARG_04) ,
+  call([op_call(add_token(+,ARG_04,1,EI))]) ,
   min(AJ,BJ,SJ) ,
-  max(AJ,BJ,ARG_09) ,
-  call_op(+,ARG_09,1,EJ) ,
-  ( testif(call_func_args(==,["ai","bi"])) ->
-      ( assign_var( ARG_04,
-          elt_generator( v1,
-            tuple_elts(["ai","j"]),
-            [ assign_targets_value1("j",call_func_args("range",["sj","ej"]))]))  ,
-        frozenset(ARG_04,INDICES_03) ,
-        exit_proc(INDICES_03))  ;
-    testif(call_func_args(==,["aj","bj"])) ->
-      ( assign_var( ARG_05,
-          elt_generator( v1,
-            tuple_elts(["i","aj"]),
-            [ assign_targets_value1("i",call_func_args("range",["si","ei"]))]))  ,
-        frozenset(ARG_05,INDICES_03) ,
-        exit_proc(INDICES_03)) ;
-    testif( call_func_args( ==, [
-              call_func_args(-,["bi","ai"]),
-              call_func_args(-,["bj","aj"])])) ->
-      ( assign_var( ARG_06,
-          elt_generator( v1,
-            tuple_elts(["i","j"]),
-            [ assign_targets_value1( tuple_elts(["i","j"]),
-                call_func_args( "zip", [
-                  call_func_args("range",["si","ei"]),
-                  call_func_args("range",["sj","ej"])]))]))  ,
-        frozenset(ARG_06,INDICES_03) ,
-        exit_proc(INDICES_03)) ;
-    testif( call_func_args( ==, [
-              call_func_args(-,["bi","ai"]),
-              call_func_args(-,["aj","bj"])])) ->
-      ( assign_var( ARG_07,
-          elt_generator( v1,
-            tuple_elts(["i","j"]),
-            [ assign_targets_value1( tuple_elts(["i","j"]),
-                call_func_args( "zip", [
-                  call_func_args("range",["si","ei"]),
-                  call_func_args( "range", [
-                    call_func_args(-,["ej",1]),
-                    call_func_args(-,["sj",1]),
-                    call_func_args(-,[1])])]))]))  ,
-        frozenset(ARG_07,INDICES_03) ,
-        exit_proc(INDICES_03))) ,
+  max(AJ,BJ,ARG_05) ,
+  call([op_call(add_token(+,ARG_05,1,EJ))]) ,
+  compare_ops_left_comparators(eq_token(==),AJ,BJ,ARG_011) ,
+  into_tuple(I,AJ,ARG_030) ,
+  range(SI,EI,ARG_036) ,
+  comprehension_target_iter(I,ARG_036,ARG_031) ,
+  generator_exp_elt_generators(ARG_030,[ARG_031],ARG_019) ,
+  frozenset(ARG_019,ARG_018) ,
+  return_value(ARG_018,ARG_016) ,
+  body_stmts([ARG_016],ARG_012) ,
+  call([op_call(sub_token(-,BI,AI,ARG_025))]) ,
+  call([op_call(sub_token(-,BJ,AJ,ARG_026))]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_025,ARG_026,ARG_020) ,
+  into_tuple(I,J,ARG_040) ,
+  into_tuple(I,J,ARG_044) ,
+  range(SI,EI,ARG_046) ,
+  range(SJ,EJ,ARG_047) ,
+  zip(ARG_046,ARG_047,ARG_045) ,
+  comprehension_target_iter(ARG_044,ARG_045,ARG_041) ,
+  generator_exp_elt_generators(ARG_040,[ARG_041],ARG_033) ,
+  frozenset(ARG_033,ARG_032) ,
+  return_value(ARG_032,ARG_027) ,
+  body_stmts([ARG_027],ARG_021) ,
+  call([op_call(sub_token(-,BI,AI,ARG_037))]) ,
+  call([op_call(sub_token(-,AJ,BJ,ARG_038))]) ,
+  compare_ops_left_comparators(eq_token(==),ARG_037,ARG_038,ARG_034) ,
+  into_tuple(I,J,ARG_048) ,
+  into_tuple(I,J,ARG_050) ,
+  range(SI,EI,ARG_052) ,
+  call([op_call(sub_token(-,EJ,1,ARG_054))]) ,
+  call([op_call(sub_token(-,SJ,1,ARG_055))]) ,
+  unary_op_operand(us_ub_token(-),1,ARG_056) ,
+  range(ARG_054,ARG_055,ARG_056,ARG_053) ,
+  zip(ARG_052,ARG_053,ARG_051) ,
+  comprehension_target_iter(ARG_050,ARG_051,ARG_049) ,
+  generator_exp_elt_generators(ARG_048,[ARG_049],ARG_043) ,
+  frozenset(ARG_043,ARG_042) ,
+  return_value(ARG_042,ARG_039) ,
+  body_stmts([ARG_039],ARG_035) ,
+  if_test_body(ARG_034,ARG_035,ARG_028) ,
+  orelse_else_stmts([ARG_028],ARG_022) ,
+  if_test_body_orelse(ARG_020,ARG_021,ARG_022,ARG_017) ,
+  orelse_else_stmts([ARG_017],ARG_013) ,
+  if_test_body_orelse(ARG_011,ARG_012,ARG_013,ARG_09) ,
+  orelse_else_stmts([ARG_09],ARG_06) ,
+  (/*2*/
+    [ into_tuple(AI,J,ARG_023),
+      range(SJ,EJ,ARG_029),
+      comprehension_target_iter(J,ARG_029,ARG_024),
+      generator_exp_elt_generators(ARG_023,[ARG_024],ARG_015),
+      frozenset(ARG_015,ARG_014),
+      return_value(ARG_014,ARG_010),
+      body_stmts([ARG_010],ARG_07),
+      [ compare_ops_left_comparators(eq_token(==),AI,BI,ARG_08),
+        testif(ARG_08)] ->
+        ARG_07] ;
+    ARG_06) ,
   make_new("frozenset",INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
@@ -4137,14 +7443,29 @@ cover(GRID_01,PATCH_02,GRID_03) :-
 %~                                             subscript_value_slice("r",slice_lower_upper(1,unary_op_operand(us_ub_token(-),1))),
 %~                                             [ comprehension_target_iter("r",subscript_value_slice("grid",slice_lower_upper(1,unary_op_operand(us_ub_token(-),1))))])]))])))
 %~
+%~ replacing_with_var(subscript_value_slice("r",slice_lower_upper(1,unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var( comprehension_target_iter( "r",
+%~                       subscript_value_slice(GRID_01,slice_lower_upper(1,unary_op_operand(us_ub_token(-),1)))))
+%~
+%~ replacing_with_var(subscript_value_slice(GRID_01,slice_lower_upper(1,unary_op_operand(us_ub_token(-),1))))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
+%~ replacing_with_var(unary_op_operand(us_ub_token(-),1))
+%~
 % Compiled KL-1 for trim
 trim(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' trim border of grid ') ,
-  assign_var( ARG_03,
-    generator_exp_elt_generators(
-       subscript_value_slice("r",slice_lower_upper(1,call_func_args(-,[1]))),
-       [ assign_targets_value1("r",subscript_value_slice(GRID_01,slice_lower_upper(1,call_func_args(-,[1]))))])) ,
+  unary_op_operand(us_ub_token(-),1,ARG_09) ,
+  slice_lower_upper(1,ARG_09,ARG_05) ,
+  subscript_value_slice(R,ARG_05,ARG_04) ,
+  unary_op_operand(us_ub_token(-),1,ARG_010) ,
+  slice_lower_upper(1,ARG_010,ARG_08) ,
+  subscript_value_slice(GRID_01,ARG_08,ARG_07) ,
+  comprehension_target_iter(R,ARG_07,ARG_06) ,
+  generator_exp_elt_generators(ARG_04,[ARG_06],ARG_03) ,
   tuple(ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -4174,12 +7495,15 @@ move(GRID_01,OBJ_02,OFFSET_03,GRID_04) :-
 %~                          return_value( subscript_value_slice( "grid",
 %~                                          slice_upper(bin_op_left_right(floor_div_token(//),call_func_args("len",["grid"]),2))))])))
 %~
+%~ replacing_with_var(bin_op_left_right(floor_div_token(//),call_func_args("len",[GRID_01]),2))
+%~
 % Compiled KL-1 for tophalf
 tophalf(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' upper half of grid ') ,
-  assign_var( ARG_03,
-    slice_upper(call_func_args(//,[call_func_args("len",[GRID_01]),2]))) ,
+  len(GRID_01,ARG_05) ,
+  call([op_call(floor_div_token(//,ARG_05,2,ARG_04))]) ,
+  slice_upper(ARG_04,ARG_03) ,
   subscript_value_slice(GRID_01,ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -4192,14 +7516,20 @@ tophalf(GRID_01,GRID_02) :-
 %~                                                         bin_op_left_right(floor_div_token(//),call_func_args("len",["grid"]),2),
 %~                                                         bin_op_left_right(mod_token('%'),call_func_args("len",["grid"]),2)))))])))
 %~
+%~ replacing_with_var( bin_op_left_right( add_token(+),
+%~                       bin_op_left_right(floor_div_token(//),call_func_args("len",[GRID_01]),2),
+%~                       bin_op_left_right(mod_token('%'),call_func_args("len",[GRID_01]),2)))
+%~
 % Compiled KL-1 for bottomhalf
 bottomhalf(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' lower half of grid ') ,
-  assign_var( ARG_03,
-    slice_lower( call_func_args( +, [
-                   call_func_args(//,[call_func_args("len",[GRID_01]),2]),
-                   call_func_args('%',[call_func_args("len",[GRID_01]),2])]))) ,
+  len(GRID_01,ARG_07) ,
+  call([op_call(floor_div_token(//,ARG_07,2,ARG_05))]) ,
+  len(GRID_01,ARG_08) ,
+  call([op_call(mod_token('%',ARG_08,2,ARG_06))]) ,
+  call([op_call(add_token(+,ARG_05,ARG_06,ARG_04))]) ,
+  slice_lower(ARG_04,ARG_03) ,
   subscript_value_slice(GRID_01,ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -4242,14 +7572,21 @@ righthalf(GRID_01,GRID_02) :-
 %~                                             tuple_elts(["i",subscript_value_slice("location",1)]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",[30]))])]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i",subscript_value_slice(LOCATION_01,1)]))
+%~
+%~ replacing_with_var(comprehension_target_iter("i",call_func_args("range",[30])))
+%~
+%~ replacing_with_var(call_func_args("range",[30]))
+%~
 % Compiled KL-1 for vfrontier
 vfrontier(LOCATION_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' vertical frontier ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      tuple_elts(["i",subscript_value_slice(LOCATION_01,1)]),
-      [ assign_targets_value1("i",call_func_args("range",[30]))])) ,
+  subscript_value_slice(LOCATION_01,1,ARG_05) ,
+  tuple_elts(I,ARG_05,ARG_04) ,
+  range(30,ARG_07) ,
+  comprehension_target_iter(I,ARG_07,ARG_06) ,
+  generator_exp_elt_generators(ARG_04,[ARG_06],ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -4262,14 +7599,21 @@ vfrontier(LOCATION_01,INDICES_02) :-
 %~                                             tuple_elts([subscript_value_slice("location",0),"j"]),
 %~                                             [ comprehension_target_iter("j",call_func_args("range",[30]))])]))])))
 %~
+%~ replacing_with_var(tuple_elts([subscript_value_slice(LOCATION_01,0),"j"]))
+%~
+%~ replacing_with_var(comprehension_target_iter("j",call_func_args("range",[30])))
+%~
+%~ replacing_with_var(call_func_args("range",[30]))
+%~
 % Compiled KL-1 for hfrontier
 hfrontier(LOCATION_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' horizontal frontier ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      tuple_elts([subscript_value_slice(LOCATION_01,0),"j"]),
-      [ assign_targets_value1("j",call_func_args("range",[30]))])) ,
+  subscript_value_slice(LOCATION_01,0,ARG_05) ,
+  tuple_elts(ARG_05,J,ARG_04) ,
+  range(30,ARG_07) ,
+  comprehension_target_iter(J,ARG_07,ARG_06) ,
+  generator_exp_elt_generators(ARG_04,[ARG_06],ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -4285,21 +7629,33 @@ hfrontier(LOCATION_01,INDICES_02) :-
 %~                                            comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])),
 %~                                            comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))])]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)])))
+%~
+%~ replacing_with_var(call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))
+%~
 % Compiled KL-1 for backdrop
 backdrop(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices in bounding box of patch ') ,
   toindices(PATCH_01,INDICES) ,
-  call(into_tuple("si","sj",ARG_03)) ,
+  into_tuple(SI,SJ,ARG_03) ,
   ulcorner(INDICES,ARG_03) ,
-  call(into_tuple("ei","ej",ARG_04)) ,
+  into_tuple(EI,EJ,ARG_04) ,
   lrcorner(PATCH_01,ARG_04) ,
-  assign_targets_value( [ARG_05], [
-    generator_exp_elt_generator_1( "i",
-      assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))),
-    generator_exp_elt_generator_1( "j",
-      assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))),
-    elt_generator(v1,tuple_elts([]),[])]) ,
+  into_tuple(I,J,ARG_06) ,
+  call([op_call(add_token(+,EI,1,ARG_010))]) ,
+  range(SI,ARG_010,ARG_09) ,
+  comprehension_target_iter(I,ARG_09,ARG_07) ,
+  call([op_call(add_token(+,EJ,1,ARG_012))]) ,
+  range(SJ,ARG_012,ARG_011) ,
+  comprehension_target_iter(J,ARG_011,ARG_08) ,
+  generator_exp_elt_generators(ARG_06,[ARG_07,ARG_08],ARG_05) ,
   frozenset(ARG_05,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -4317,7 +7673,7 @@ delta(PATCH_01,INDICES_02) :-
   comment(' indices in bounding box but not part of patch ') ,
   backdrop(PATCH_01,ARG_03) ,
   toindices(PATCH_01,ARG_04) ,
-  call_op(-,ARG_03,ARG_04,INDICES_02) ,
+  call([op_call(sub_token(-,ARG_03,ARG_04,INDICES_02))]) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "gravitate",
@@ -4350,38 +7706,84 @@ delta(PATCH_01,INDICES_02) :-
 %~                                             call_func_args("shift",["source",tuple_elts(["i","j"])]))])),
 %~                          return_value( tuple_elts([bin_op_left_right(sub_token(-),"gi","i"),bin_op_left_right(sub_token(-),"gj","j")]))])))
 %~
+%~ replacing_with_var( orelse_else_stmts( [ assign_targets_value( ["j"],
+%~                                            if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"sj","dj"),1,unary_op_operand(us_ub_token(-),1)))]))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["i"],
+%~                                     if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"si","di"),1,unary_op_operand(us_ub_token(-),1)))]))
+%~
+%~ replacing_with_var(call_func_args("vmatching",[SOURCE_01,DESTINATION_02]))
+%~
+%~ replacing_with_var( body_stmts( [ aug_assign_op_value_target(add_token(+),1,"c"),
+%~                                   aug_assign_op_value_target(add_token(+),"i","gi"),
+%~                                   aug_assign_op_value_target(add_token(+),"j","gj"),
+%~                                   assign_targets_value( [SOURCE_01],
+%~                                     call_func_args("shift",[SOURCE_01,tuple_elts(["i","j"])]))]))
+%~
+%~ replacing_with_var( unary_op_operand( ['python:Not'],
+%~                       call_func_args("adjacent",[SOURCE_01,DESTINATION_02])))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"c",42))
+%~
+%~ replacing_with_var(aug_assign_op_value_target(add_token(+),1,"c"))
+%~
+%~ replacing_with_var(aug_assign_op_value_target(add_token(+),"i","gi"))
+%~
+%~ replacing_with_var(aug_assign_op_value_target(add_token(+),"j","gj"))
+%~
+%~ replacing_with_var(call_func_args("adjacent",[SOURCE_01,DESTINATION_02]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"sj","dj"))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(lt_token(<),"si","di"))
+%~
 % Compiled KL-1 for gravitate
 gravitate(SOURCE_01,DESTINATION_02,INTEGERTUPLE_03) :-
   willBeType(INTEGERTUPLE_03,'IntegerTuple') ,
   comment(' direction to move source until adjacent to destination ') ,
-  call(into_tuple("si","sj",ARG_04)) ,
+  into_tuple(SI,SJ,ARG_04) ,
   center(SOURCE_01,ARG_04) ,
-  call(into_tuple("di","dj",ARG_05)) ,
+  into_tuple(DI,DJ,ARG_05) ,
   center(DESTINATION_02,ARG_05) ,
-  call("i"=0) ,
-  call("j"=0) ,
-  ( testif(call_func_args("vmatching",[SOURCE_01,DESTINATION_02])) ->
-      testif(call_func_args(<,["si","di"]))->call("i"=1);[call_op(-,1,I)]  ;
-    testif(call_func_args(<,["sj","dj"])) ->
-      call("j"=1) ;
-    [call_op(-,1,J)]) ,
-  call("gi"="i") ,
-  call("gj"="j") ,
+  call(I=0) ,
+  call(J=0) ,
+  orelse_else_stmts(
+     [ (/*2*/
+         [ compare_ops_left_comparators(lt_token(<),SJ,DJ,ARG_019),
+           testif(ARG_019)] ->
+           call(J=1) ;
+         [ unary_op_operand(us_ub_token(-),1,J)])],
+     ARG_06) ,
+  (/*2*/
+    [ body_stmts(
+         [ (/*2*/
+             [ compare_ops_left_comparators(lt_token(<),SI,DI,ARG_020),
+               testif(ARG_020)] ->
+               call(I=1) ;
+             [ unary_op_operand(us_ub_token(-),1,I)])],
+         ARG_07),
+      [ vmatching(SOURCE_01,DESTINATION_02,ARG_08),
+        testif(ARG_08)] ->
+        ARG_07] ;
+    ARG_06) ,
   call("c"=0) ,
+  aug_assign_op_value_target(add_token(+),1,"c",ARG_014) ,
+  aug_assign_op_value_target(add_token(+),I,I,ARG_015) ,
+  aug_assign_op_value_target(add_token(+),J,J,ARG_016) ,
+  body_stmts(
+     [ ARG_014, ARG_015,ARG_016,
+       into_tuple(I,J,ARG_017),
+       shift(SOURCE_01,ARG_017,SOURCE_01)],
+     ARG_09) ,
   while_test_body(
-     bool_op_values( ['python:And'], [
-       call_func_args( 'python:Not', [
-         call_func_args("adjacent",[SOURCE_01,DESTINATION_02])]),
-       call_func_args(<,["c",42])]),
-     ( aug_assign_op_value_target(add_token(+),1,"c")  ,
-       aug_assign_op_value_target(add_token(+),"i","gi") ,
-       aug_assign_op_value_target(add_token(+),"j","gj") ,
-       call(into_tuple("i","j",ARG_06)) ,
-       shift(SOURCE_01,ARG_06,SOURCE_01))) ,
-  assign_targets_value( [ARG_07], [
-    call_func_args(-,["gi","i"]),
-    call_func_args(-,["gj","j"])]) ,
-  tuple_elts(ARG_07,INTEGERTUPLE_03) ,
+     [ adjacent(SOURCE_01,DESTINATION_02,ARG_018),
+       unary_op_operand(['python:Not'],ARG_018,ARG_010),
+       compare_ops_left_comparators(lt_token(<),"c",42,ARG_011),
+       bool_op_values(['python:And'],[ARG_010,ARG_011])],
+     ARG_09) ,
+  call([op_call(sub_token(-,GI,I,ARG_012))]) ,
+  call([op_call(sub_token(-,GJ,J,ARG_013))]) ,
+  tuple_elts(ARG_012,ARG_013,INTEGERTUPLE_03) ,
   exit_proc(INTEGERTUPLE_03).
 %~ % Universal AST Pass #0
 %~ def( "inbox",
@@ -4414,42 +7816,70 @@ gravitate(SOURCE_01,DESTINATION_02,INTEGERTUPLE_03) :-
 %~                                comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))]))),
 %~                          return_value(call_func_args("frozenset",[bin_op_left_right(bit_or_token('|'),"vlines","hlines")]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i","sj"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["i","ej"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["si","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["ei","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)])))
+%~
+%~ replacing_with_var(call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))
+%~
 % Compiled KL-1 for inbox
 inbox(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' inbox for patch ') ,
-  uppermost(PATCH_01,ARG_04) ,
-  call_op(+,ARG_04,1,AI) ,
-  leftmost(PATCH_01,ARG_05) ,
-  call_op(+,ARG_05,1,AJ) ,
-  lowermost(PATCH_01,ARG_06) ,
-  call_op(-,ARG_06,1,BI) ,
-  rightmost(PATCH_01,ARG_07) ,
-  call_op(-,ARG_07,1,BJ) ,
+  uppermost(PATCH_01,ARG_03) ,
+  call([op_call(add_token(+,ARG_03,1,AI))]) ,
+  leftmost(PATCH_01,ARG_04) ,
+  call([op_call(add_token(+,ARG_04,1,AJ))]) ,
+  lowermost(PATCH_01,ARG_05) ,
+  call([op_call(sub_token(-,ARG_05,1,BI))]) ,
+  rightmost(PATCH_01,ARG_06) ,
+  call([op_call(sub_token(-,ARG_06,1,BJ))]) ,
   min(AI,BI,SI) ,
   min(AJ,BJ,SJ) ,
   max(AI,BI,EI) ,
   max(AJ,BJ,EJ) ,
-  assign_var( ARG_08,
-    elt_generator( v2,
-      tuple_elts(["i","sj"]),
-      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
-  assign_var( ARG_09,
-    elt_generator( v2,
-      tuple_elts(["i","ej"]),
-      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
-  call_op('|',ARG_08,ARG_09,VLINES) ,
-  assign_var( ARG_010,
-    elt_generator( v2,
-      tuple_elts(["si","j"]),
-      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
-  assign_var( ARG_011,
-    elt_generator( v2,
-      tuple_elts(["ei","j"]),
-      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
-  call_op('|',ARG_010,ARG_011,HLINES) ,
-  call_op('|',VLINES,HLINES,ARG_03) ,
-  frozenset(ARG_03,INDICES_02) ,
+  into_tuple(I,SJ,ARG_012) ,
+  call([op_call(add_token(+,EI,1,ARG_021))]) ,
+  range(SI,ARG_021,ARG_020) ,
+  comprehension_target_iter(I,ARG_020,ARG_013) ,
+  set_comp_elt_generators(ARG_012,[ARG_013],ARG_07) ,
+  into_tuple(I,EJ,ARG_014) ,
+  call([op_call(add_token(+,EI,1,ARG_023))]) ,
+  range(SI,ARG_023,ARG_022) ,
+  comprehension_target_iter(I,ARG_022,ARG_015) ,
+  set_comp_elt_generators(ARG_014,[ARG_015],ARG_08) ,
+  call([op_call(bit_or_token('|',ARG_07,ARG_08,VLINES))]) ,
+  into_tuple(SI,J,ARG_016) ,
+  call([op_call(add_token(+,EJ,1,ARG_025))]) ,
+  range(SJ,ARG_025,ARG_024) ,
+  comprehension_target_iter(J,ARG_024,ARG_017) ,
+  set_comp_elt_generators(ARG_016,[ARG_017],ARG_09) ,
+  into_tuple(EI,J,ARG_018) ,
+  call([op_call(add_token(+,EJ,1,ARG_027))]) ,
+  range(SJ,ARG_027,ARG_026) ,
+  comprehension_target_iter(J,ARG_026,ARG_019) ,
+  set_comp_elt_generators(ARG_018,[ARG_019],ARG_010) ,
+  call([op_call(bit_or_token('|',ARG_09,ARG_010,HLINES))]) ,
+  call([op_call(bit_or_token('|',VLINES,HLINES,ARG_011))]) ,
+  frozenset(ARG_011,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "outbox",
@@ -4482,42 +7912,70 @@ inbox(PATCH_01,INDICES_02) :-
 %~                                comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))]))),
 %~                          return_value(call_func_args("frozenset",[bin_op_left_right(bit_or_token('|'),"vlines","hlines")]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i","sj"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["i","ej"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["si","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["ei","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)])))
+%~
+%~ replacing_with_var(call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))
+%~
 % Compiled KL-1 for outbox
 outbox(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' outbox for patch ') ,
-  uppermost(PATCH_01,ARG_04) ,
-  call_op(-,ARG_04,1,AI) ,
-  leftmost(PATCH_01,ARG_05) ,
-  call_op(-,ARG_05,1,AJ) ,
-  lowermost(PATCH_01,ARG_06) ,
-  call_op(+,ARG_06,1,BI) ,
-  rightmost(PATCH_01,ARG_07) ,
-  call_op(+,ARG_07,1,BJ) ,
+  uppermost(PATCH_01,ARG_03) ,
+  call([op_call(sub_token(-,ARG_03,1,AI))]) ,
+  leftmost(PATCH_01,ARG_04) ,
+  call([op_call(sub_token(-,ARG_04,1,AJ))]) ,
+  lowermost(PATCH_01,ARG_05) ,
+  call([op_call(add_token(+,ARG_05,1,BI))]) ,
+  rightmost(PATCH_01,ARG_06) ,
+  call([op_call(add_token(+,ARG_06,1,BJ))]) ,
   min(AI,BI,SI) ,
   min(AJ,BJ,SJ) ,
   max(AI,BI,EI) ,
   max(AJ,BJ,EJ) ,
-  assign_var( ARG_08,
-    elt_generator( v2,
-      tuple_elts(["i","sj"]),
-      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
-  assign_var( ARG_09,
-    elt_generator( v2,
-      tuple_elts(["i","ej"]),
-      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
-  call_op('|',ARG_08,ARG_09,VLINES) ,
-  assign_var( ARG_010,
-    elt_generator( v2,
-      tuple_elts(["si","j"]),
-      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
-  assign_var( ARG_011,
-    elt_generator( v2,
-      tuple_elts(["ei","j"]),
-      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
-  call_op('|',ARG_010,ARG_011,HLINES) ,
-  call_op('|',VLINES,HLINES,ARG_03) ,
-  frozenset(ARG_03,INDICES_02) ,
+  into_tuple(I,SJ,ARG_012) ,
+  call([op_call(add_token(+,EI,1,ARG_021))]) ,
+  range(SI,ARG_021,ARG_020) ,
+  comprehension_target_iter(I,ARG_020,ARG_013) ,
+  set_comp_elt_generators(ARG_012,[ARG_013],ARG_07) ,
+  into_tuple(I,EJ,ARG_014) ,
+  call([op_call(add_token(+,EI,1,ARG_023))]) ,
+  range(SI,ARG_023,ARG_022) ,
+  comprehension_target_iter(I,ARG_022,ARG_015) ,
+  set_comp_elt_generators(ARG_014,[ARG_015],ARG_08) ,
+  call([op_call(bit_or_token('|',ARG_07,ARG_08,VLINES))]) ,
+  into_tuple(SI,J,ARG_016) ,
+  call([op_call(add_token(+,EJ,1,ARG_025))]) ,
+  range(SJ,ARG_025,ARG_024) ,
+  comprehension_target_iter(J,ARG_024,ARG_017) ,
+  set_comp_elt_generators(ARG_016,[ARG_017],ARG_09) ,
+  into_tuple(EI,J,ARG_018) ,
+  call([op_call(add_token(+,EJ,1,ARG_027))]) ,
+  range(SJ,ARG_027,ARG_026) ,
+  comprehension_target_iter(J,ARG_026,ARG_019) ,
+  set_comp_elt_generators(ARG_018,[ARG_019],ARG_010) ,
+  call([op_call(bit_or_token('|',ARG_09,ARG_010,HLINES))]) ,
+  call([op_call(bit_or_token('|',VLINES,HLINES,ARG_011))]) ,
+  frozenset(ARG_011,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "box",
@@ -4546,38 +8004,66 @@ outbox(PATCH_01,INDICES_02) :-
 %~                                comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))]))),
 %~                          return_value(call_func_args("frozenset",[bin_op_left_right(bit_or_token('|'),"vlines","hlines")]))])))
 %~
+%~ replacing_with_var(tuple_elts(["i","sj"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["i","ej"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["si","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)])))
+%~
+%~ replacing_with_var(tuple_elts(["ei","j"]))
+%~
+%~ replacing_with_var( comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)])))
+%~
+%~ replacing_with_var(call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))
+%~
+%~ replacing_with_var(call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))
+%~
 % Compiled KL-1 for box
 box(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' outline of patch ') ,
-  call(into_tuple("ai","aj",ARG_03)) ,
+  into_tuple(AI,AJ,ARG_03) ,
   ulcorner(PATCH_01,ARG_03) ,
-  call(into_tuple("bi","bj",ARG_04)) ,
+  into_tuple(BI,BJ,ARG_04) ,
   lrcorner(PATCH_01,ARG_04) ,
   min(AI,BI,SI) ,
   min(AJ,BJ,SJ) ,
   max(AI,BI,EI) ,
   max(AJ,BJ,EJ) ,
-  assign_var( ARG_06,
-    elt_generator( v2,
-      tuple_elts(["i","sj"]),
-      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
-  assign_var( ARG_07,
-    elt_generator( v2,
-      tuple_elts(["i","ej"]),
-      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
-  call_op('|',ARG_06,ARG_07,VLINES) ,
-  assign_var( ARG_08,
-    elt_generator( v2,
-      tuple_elts(["si","j"]),
-      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
-  assign_var( ARG_09,
-    elt_generator( v2,
-      tuple_elts(["ei","j"]),
-      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
-  call_op('|',ARG_08,ARG_09,HLINES) ,
-  call_op('|',VLINES,HLINES,ARG_05) ,
-  frozenset(ARG_05,INDICES_02) ,
+  into_tuple(I,SJ,ARG_010) ,
+  call([op_call(add_token(+,EI,1,ARG_019))]) ,
+  range(SI,ARG_019,ARG_018) ,
+  comprehension_target_iter(I,ARG_018,ARG_011) ,
+  set_comp_elt_generators(ARG_010,[ARG_011],ARG_05) ,
+  into_tuple(I,EJ,ARG_012) ,
+  call([op_call(add_token(+,EI,1,ARG_021))]) ,
+  range(SI,ARG_021,ARG_020) ,
+  comprehension_target_iter(I,ARG_020,ARG_013) ,
+  set_comp_elt_generators(ARG_012,[ARG_013],ARG_06) ,
+  call([op_call(bit_or_token('|',ARG_05,ARG_06,VLINES))]) ,
+  into_tuple(SI,J,ARG_014) ,
+  call([op_call(add_token(+,EJ,1,ARG_023))]) ,
+  range(SJ,ARG_023,ARG_022) ,
+  comprehension_target_iter(J,ARG_022,ARG_015) ,
+  set_comp_elt_generators(ARG_014,[ARG_015],ARG_07) ,
+  into_tuple(EI,J,ARG_016) ,
+  call([op_call(add_token(+,EJ,1,ARG_025))]) ,
+  range(SJ,ARG_025,ARG_024) ,
+  comprehension_target_iter(J,ARG_024,ARG_017) ,
+  set_comp_elt_generators(ARG_016,[ARG_017],ARG_08) ,
+  call([op_call(bit_or_token('|',ARG_07,ARG_08,HLINES))]) ,
+  call([op_call(bit_or_token('|',VLINES,HLINES,ARG_09))]) ,
+  frozenset(ARG_09,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "shoot",
@@ -4600,14 +8086,15 @@ box(PATCH_01,INDICES_02) :-
 shoot(START_01,DIRECTION_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' line from starting point and direction ') ,
-  assign_targets_value( [ARG_05], [
-    call_func_args( +, [
-      subscript_value_slice(START_01,0),
-      call_func_args(*,[42,subscript_value_slice(DIRECTION_02,0)])]),
-    call_func_args( +, [
-      subscript_value_slice(START_01,1),
-      call_func_args(*,[42,subscript_value_slice(DIRECTION_02,1)])])]) ,
-  tuple_elts(ARG_05,ARG_04) ,
+  subscript_value_slice(START_01,0,ARG_07) ,
+  subscript_value_slice(DIRECTION_02,0,ARG_011) ,
+  call([op_call(mult_token(*,42,ARG_011,ARG_08))]) ,
+  call([op_call(add_token(+,ARG_07,ARG_08,ARG_05))]) ,
+  subscript_value_slice(START_01,1,ARG_09) ,
+  subscript_value_slice(DIRECTION_02,1,ARG_012) ,
+  call([op_call(mult_token(*,42,ARG_012,ARG_010))]) ,
+  call([op_call(add_token(+,ARG_09,ARG_010,ARG_06))]) ,
+  tuple_elts(ARG_05,ARG_06,ARG_04) ,
   connect(START_01,ARG_04,INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
@@ -4650,39 +8137,205 @@ shoot(START_01,DIRECTION_02,INDICES_03) :-
 %~                                                                                         [tuple_elts(["i","j"])]))]))]))])),
 %~                          return_value(call_func_args("frozenset",["occs"]))])))
 %~
+%~ replacing_with_var( body_stmts( [ for_target_iter_body( "j",
+%~                                     call_func_args("range",["w2"]),
+%~                                     body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(true),'True')),
+%~                                                   for_target_iter_body(
+%~                                                      tuple_elts(["v",tuple_elts(["a","b"])]),
+%~                                                      call_func_args("shift",["normed",tuple_elts([I_08,"j"])]),
+%~                                                      body_stmts( [ if_test_body(
+%~                                                                       unary_op_operand( ['python:Not'],
+%~                                                                         bool_op_values( ['python:And'], [
+%~                                                                           compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])),
+%~                                                                           compare_ops_left_comparators(
+%~                                                                              ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["b","w"])),
+%~                                                                           compare_ops_left_comparators( eq_token(==),
+%~                                                                             subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),
+%~                                                                             "v")])),
+%~                                                                       body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')),
+%~                                                                                     ['python:Break']]))])),
+%~                                                   if_test_body( "occurs",
+%~                                                     body_stmts( [ expr_value( call_func_args(
+%~                                                                                  qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
+%~                                                                                  [tuple_elts([I_08,"j"])]))]))]))]))
+%~
+%~ replacing_with_var( for_target_iter_body( "j",
+%~                       call_func_args("range",["w2"]),
+%~                       body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(true),'True')),
+%~                                     for_target_iter_body(
+%~                                        tuple_elts(["v",tuple_elts(["a","b"])]),
+%~                                        call_func_args("shift",["normed",tuple_elts([I_08,"j"])]),
+%~                                        body_stmts( [ if_test_body(
+%~                                                         unary_op_operand( ['python:Not'],
+%~                                                           bool_op_values( ['python:And'], [
+%~                                                             compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])),
+%~                                                             compare_ops_left_comparators(
+%~                                                                ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["b","w"])),
+%~                                                             compare_ops_left_comparators( eq_token(==),
+%~                                                               subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),
+%~                                                               "v")])),
+%~                                                         body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')),
+%~                                                                       ['python:Break']]))])),
+%~                                     if_test_body( "occurs",
+%~                                       body_stmts( [ expr_value( call_func_args(
+%~                                                                    qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
+%~                                                                    [tuple_elts([I_08,"j"])]))]))])))
+%~
+%~ replacing_with_var(call_func_args("range",["w2"]))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(true),'True')),
+%~                                   for_target_iter_body(
+%~                                      tuple_elts(["v",tuple_elts(["a","b"])]),
+%~                                      call_func_args("shift",["normed",tuple_elts([I_08,"j"])]),
+%~                                      body_stmts( [ if_test_body(
+%~                                                       unary_op_operand( ['python:Not'],
+%~                                                         bool_op_values( ['python:And'], [
+%~                                                           compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])),
+%~                                                           compare_ops_left_comparators(
+%~                                                              ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["b","w"])),
+%~                                                           compare_ops_left_comparators( eq_token(==),
+%~                                                             subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),
+%~                                                             "v")])),
+%~                                                       body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')),
+%~                                                                     ['python:Break']]))])),
+%~                                   if_test_body( "occurs",
+%~                                     body_stmts( [ expr_value( call_func_args(
+%~                                                                  qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
+%~                                                                  [tuple_elts([I_08,"j"])]))]))]))
+%~
+%~ replacing_with_var( for_target_iter_body(
+%~                        tuple_elts(["v",tuple_elts(["a","b"])]),
+%~                        call_func_args("shift",["normed",tuple_elts([I_08,"j"])]),
+%~                        body_stmts( [ if_test_body(
+%~                                         unary_op_operand( ['python:Not'],
+%~                                           bool_op_values( ['python:And'], [
+%~                                             compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])),
+%~                                             compare_ops_left_comparators(
+%~                                                ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["b","w"])),
+%~                                             compare_ops_left_comparators( eq_token(==),
+%~                                               subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),
+%~                                               "v")])),
+%~                                         body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')),
+%~                                                       ['python:Break']]))])))
+%~
+%~ replacing_with_var( if_test_body( "occurs",
+%~                       body_stmts( [ expr_value( call_func_args(
+%~                                                    qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
+%~                                                    [tuple_elts([I_08,"j"])]))])))
+%~
+%~ replacing_with_var(tuple_elts(["v",tuple_elts(["a","b"])]))
+%~
+%~ replacing_with_var(call_func_args("shift",["normed",tuple_elts([I_08,"j"])]))
+%~
+%~ replacing_with_var( body_stmts( [ if_test_body(
+%~                                      unary_op_operand( ['python:Not'],
+%~                                        bool_op_values( ['python:And'], [
+%~                                          compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])),
+%~                                          compare_ops_left_comparators(
+%~                                             ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["b","w"])),
+%~                                          compare_ops_left_comparators( eq_token(==),
+%~                                            subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),
+%~                                            "v")])),
+%~                                      body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')),
+%~                                                    ['python:Break']]))]))
+%~
+%~ replacing_with_var( body_stmts( [ expr_value( call_func_args(
+%~                                                  qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
+%~                                                  [tuple_elts([I_08,"j"])]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        unary_op_operand( ['python:Not'],
+%~                          bool_op_values( ['python:And'], [
+%~                            compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])),
+%~                            compare_ops_left_comparators(
+%~                               ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["b","w"])),
+%~                            compare_ops_left_comparators( eq_token(==),
+%~                              subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),
+%~                              "v")])),
+%~                        body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')),
+%~                                      ['python:Break']])))
+%~
+%~ replacing_with_var( expr_value( call_func_args(
+%~                                    qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
+%~                                    [tuple_elts([I_08,"j"])])))
+%~
+%~ replacing_with_var( unary_op_operand( ['python:Not'],
+%~                       bool_op_values( ['python:And'], [
+%~                         compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])),
+%~                         compare_ops_left_comparators(
+%~                            ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["b","w"])),
+%~                         compare_ops_left_comparators( eq_token(==),
+%~                           subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),
+%~                           "v")])))
+%~
+%~ replacing_with_var( body_stmts( [ assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')),
+%~                                   ['python:Break']]))
+%~
+%~ replacing_with_var(boxed_attribute_value("add"))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["a","h"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["b","w"])))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),"v"))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["a","h"]))
+%~
+%~ replacing_with_var(ops([lt_e_token(<=),lt_token(<)]))
+%~
+%~ replacing_with_var(comparators(["b","w"]))
+%~
+%~ replacing_with_var(subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"))
+%~
 % Compiled KL-1 for occurrences
 occurrences(GRID_01,OBJ_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' locations of occurrences of object in grid ') ,
-  make_new("set","occs") ,
+  make_new("set",OCCS) ,
   normalize(OBJ_02,NORMED) ,
   len(GRID_01,H) ,
   subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
-  call(into_tuple("oh","ow",ARG_05)) ,
+  into_tuple(OH,OW,ARG_05) ,
   shape(OBJ_02,ARG_05) ,
-  call_op(-,H,OH,ARG_010) ,
-  call_op(+,ARG_010,1,H2) ,
-  call_op(-,W,OW,ARG_011) ,
-  call_op(+,ARG_011,1,W2) ,
-  for_each( [range(H2,I_06)],
-    for_each( [range(W2,J_07)],
-      ( "occurs"=true  ,
-        for_each(
-           [ call(into_tuple(I_06,J_07,ARG_09)),
-             shift(NORMED,ARG_09,'$VAR'('TUPLE_ELTS([V,TUPLE_ELTS([A,B])])_08'))],
-           (/*2*/
-             testif( call_func_args( 'python:Not', [
-                       bool_op_values( ['python:And'], [
-                         call_func_args(<=,[0,"a"]),
-                         call_func_args(<,[0,"h"]),
-                         call_func_args(<=,[0,"b"]),
-                         call_func_args(<,[0,"w"]),
-                         call_func_args(==,[subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),"v"])])])) ->
-               "occurs"=false,'python:Break')) ,
-        (/*2*/
-          testif("occurs") ->
-            expr_value(call_func_args("add",["occs",tuple_elts([I_06,J_07])])))))) ,
+  call([op_call(sub_token(-,H,OH,ARG_06))]) ,
+  call([op_call(add_token(+,ARG_06,1,H2))]) ,
+  call([op_call(sub_token(-,W,OW,ARG_07))]) ,
+  call([op_call(add_token(+,ARG_07,1,W2))]) ,
+  range(W2,ARG_011) ,
+  into_tuple(A,B,ARG_016) ,
+  tuple_elts(V,ARG_016,ARG_015) ,
+  into_tuple(I_08,J,ARG_018) ,
+  shift(NORMED,ARG_018,ARG_017) ,
+  unary_op_operand( ['python:Not'],
+    [ ops([lt_e_token(<=),lt_token(<)],ARG_030),
+      comparators([A,H],ARG_031),
+      compare_ops_left_comparators(ARG_030,0,ARG_031,ARG_027),
+      ops([lt_e_token(<=),lt_token(<)],ARG_032),
+      comparators([B,W],ARG_033),
+      compare_ops_left_comparators(ARG_032,0,ARG_033,ARG_028),
+      subscript_value_slice(GRID_01,A,ARG_035),
+      subscript_value_slice(ARG_035,B,ARG_034),
+      compare_ops_left_comparators(eq_token(==),ARG_034,V,ARG_029),
+      bool_op_values(['python:And'],[ARG_027,ARG_028,ARG_029])],
+    ARG_024) ,
+  body_stmts(["occurs"=false,'python:Break'],ARG_025) ,
+  if_test_body(ARG_024,ARG_025,ARG_021) ,
+  body_stmts([ARG_021],ARG_019) ,
+  for_target_iter_body(ARG_015,ARG_017,ARG_019,ARG_013) ,
+  into_tuple(I_08,J,ARG_023) ,
+  call( [ op_call( [ boxed_attribute_value("add",ARG_026),
+                     qualified_identifier_identifiers( [OCCS,ARG_026],
+                       ARG_023,
+                       ARG_022)])]) ,
+  body_stmts([ARG_022],ARG_020) ,
+  if_test_body("occurs",ARG_020,ARG_014) ,
+  body_stmts(["occurs"=true,ARG_013,ARG_014],ARG_012) ,
+  for_target_iter_body(J,ARG_011,ARG_012,ARG_010) ,
+  body_stmts([ARG_010],ARG_09) ,
+  for_each([range(H2,I_08)],ARG_09) ,
   frozenset(OCCS,INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
@@ -4725,6 +8378,60 @@ occurrences(GRID_01,OBJ_02,INDICES_03) :-
 %~                                 [comprehension_target_iter("j","column_indices")])])),
 %~                          return_value(bin_op_left_right(bit_or_token('|'),"hfrontiers","vfrontiers"))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+%~                       call_func_args("enumerate",[GRID_01]),
+%~                       [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1)]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["j","c"]),
+%~                       call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]),
+%~                       [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1)]))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       set_comp_elt_generators(
+%~                          tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
+%~                                        tuple_elts(["i","j"])]),
+%~                          [ comprehension_target_iter("j",call_func_args("range",["w"]))])]))
+%~
+%~ replacing_with_var(comprehension_target_iter("i","row_indices"))
+%~
+%~ replacing_with_var( call_func_args( "frozenset", [
+%~                       set_comp_elt_generators(
+%~                          tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
+%~                                        tuple_elts(["i","j"])]),
+%~                          [ comprehension_target_iter("i",call_func_args("range",["h"]))])]))
+%~
+%~ replacing_with_var(comprehension_target_iter("j","column_indices"))
+%~
+%~ replacing_with_var(tuple_elts(["i","r"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[GRID_01]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1))
+%~
+%~ replacing_with_var(tuple_elts(["j","c"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1))
+%~
+%~ replacing_with_var(call_func_args("len",[call_func_args("set",["r"])]))
+%~
+%~ replacing_with_var(call_func_args("len",[call_func_args("set",["c"])]))
+%~
+%~ replacing_with_var( tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
+%~                                   tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var(comprehension_target_iter("j",call_func_args("range",["w"])))
+%~
+%~ replacing_with_var( tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
+%~                                   tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var(comprehension_target_iter("i",call_func_args("range",["h"])))
+%~
+%~ replacing_with_var(call_func_args("range",["w"]))
+%~
+%~ replacing_with_var(call_func_args("range",["h"]))
+%~
 % Compiled KL-1 for frontiers
 frontiers(GRID_01,OBJECTS_02) :-
   willBeType(OBJECTS_02,'Objects') ,
@@ -4732,39 +8439,46 @@ frontiers(GRID_01,OBJECTS_02) :-
   len(GRID_01,H) ,
   subscript_value_slice(GRID_01,0,ARG_03) ,
   len(ARG_03,W) ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      "i",
-      [ comprehension_target_iter_ifs( tuple_elts(["i","r"]),
-          call_func_args("enumerate",[GRID_01]),
-          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["r"])]),1])])])) ,
+  into_tuple(I,R,ARG_016) ,
+  enumerate(GRID_01,ARG_017) ,
+  set(R,ARG_024) ,
+  len(ARG_024,ARG_023) ,
+  compare_ops_left_comparators(eq_token(==),ARG_023,1,ARG_018) ,
+  comprehension_target_iter_ifs(ARG_016,ARG_017,[ARG_018],ARG_08) ,
+  generator_exp_elt_generators(I,[ARG_08],ARG_04) ,
   tuple(ARG_04,ROW_INDICES) ,
-  assign_var( ARG_05,
-    elt_generator( v1,
-      "j",
-      [ comprehension_target_iter_ifs( tuple_elts(["j","c"]),
-          call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]),
-          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["c"])]),1])])])) ,
+  into_tuple(J,C,ARG_019) ,
+  dmirror(GRID_01,ARG_021) ,
+  enumerate(ARG_021,ARG_020) ,
+  set(C,ARG_026) ,
+  len(ARG_026,ARG_025) ,
+  compare_ops_left_comparators(eq_token(==),ARG_025,1,ARG_022) ,
+  comprehension_target_iter_ifs(ARG_019,ARG_020,[ARG_022],ARG_09) ,
+  generator_exp_elt_generators(J,[ARG_09],ARG_05) ,
   tuple(ARG_05,COLUMN_INDICES) ,
-  assign_var( ARG_06,
-    set_comp_elt_generators(
-       call_func_args( "frozenset", [
-         elt_generator( v2,
-           tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
-                         tuple_elts(["i","j"])]),
-           [ assign_targets_value1("j",call_func_args("range",["w"]))])]),
-       [assign_targets_value1("i","row_indices")])) ,
+  subscript_value_slice(GRID_01,I,ARG_035) ,
+  subscript_value_slice(ARG_035,J,ARG_028) ,
+  into_tuple(I,J,ARG_029) ,
+  tuple_elts(ARG_028,ARG_029,ARG_027) ,
+  range(W,ARG_036) ,
+  comprehension_target_iter(J,ARG_036,ARG_030) ,
+  set_comp_elt_generators(ARG_027,[ARG_030],ARG_011) ,
+  frozenset(ARG_011,ARG_010) ,
+  comprehension_target_iter(I,"row_indices",ARG_012) ,
+  set_comp_elt_generators(ARG_010,[ARG_012],ARG_06) ,
   frozenset(ARG_06,HFRONTIERS) ,
-  assign_var( ARG_07,
-    set_comp_elt_generators(
-       call_func_args( "frozenset", [
-         elt_generator( v2,
-           tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
-                         tuple_elts(["i","j"])]),
-           [ assign_targets_value1("i",call_func_args("range",["h"]))])]),
-       [assign_targets_value1("j","column_indices")])) ,
+  subscript_value_slice(GRID_01,I,ARG_037) ,
+  subscript_value_slice(ARG_037,J,ARG_032) ,
+  into_tuple(I,J,ARG_033) ,
+  tuple_elts(ARG_032,ARG_033,ARG_031) ,
+  range(H,ARG_038) ,
+  comprehension_target_iter(I,ARG_038,ARG_034) ,
+  set_comp_elt_generators(ARG_031,[ARG_034],ARG_014) ,
+  frozenset(ARG_014,ARG_013) ,
+  comprehension_target_iter(J,"column_indices",ARG_015) ,
+  set_comp_elt_generators(ARG_013,[ARG_015],ARG_07) ,
   frozenset(ARG_07,VFRONTIERS) ,
-  call_op('|',HFRONTIERS,VFRONTIERS,OBJECTS_02) ,
+  call([op_call(bit_or_token('|',HFRONTIERS,VFRONTIERS,OBJECTS_02))]) ,
   exit_proc(OBJECTS_02).
 %~ % Universal AST Pass #0
 %~ def( "compress",
@@ -4794,35 +8508,88 @@ frontiers(GRID_01,OBJECTS_02) :-
 %~                                                 call_func_args("enumerate",["grid"]),
 %~                                                 [ compare_ops_left_comparators(['python:NotIn'],"i","ri")])])]))])))
 %~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+%~                       call_func_args("enumerate",[GRID_01]),
+%~                       [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1)]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["j","c"]),
+%~                       call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]),
+%~                       [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1)]))
+%~
+%~ replacing_with_var( call_func_args( "tuple", [
+%~                       generator_exp_elt_generators( "v", [
+%~                         comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                           call_func_args("enumerate",["r"]),
+%~                           [ compare_ops_left_comparators(['python:NotIn'],"j","ci")])])]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+%~                       call_func_args("enumerate",[GRID_01]),
+%~                       [ compare_ops_left_comparators(['python:NotIn'],"i","ri")]))
+%~
+%~ replacing_with_var(tuple_elts(["i","r"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[GRID_01]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1))
+%~
+%~ replacing_with_var(tuple_elts(["j","c"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]))
+%~
+%~ replacing_with_var( compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1))
+%~
+%~ replacing_with_var(tuple_elts(["i","r"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",[GRID_01]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(['python:NotIn'],"i","ri"))
+%~
+%~ replacing_with_var(call_func_args("len",[call_func_args("set",["r"])]))
+%~
+%~ replacing_with_var(call_func_args("len",[call_func_args("set",["c"])]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                       call_func_args("enumerate",["r"]),
+%~                       [ compare_ops_left_comparators(['python:NotIn'],"j","ci")]))
+%~
+%~ replacing_with_var(tuple_elts(["j","v"]))
+%~
+%~ replacing_with_var(call_func_args("enumerate",["r"]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(['python:NotIn'],"j","ci"))
+%~
 % Compiled KL-1 for compress
 compress(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' removes frontiers from grid ') ,
-  assign_var( ARG_03,
-    elt_generator( v1,
-      "i",
-      [ comprehension_target_iter_ifs( tuple_elts(["i","r"]),
-          call_func_args("enumerate",[GRID_01]),
-          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["r"])]),1])])])) ,
+  into_tuple(I,R,ARG_011) ,
+  enumerate(GRID_01,ARG_012) ,
+  set(R,ARG_022) ,
+  len(ARG_022,ARG_021) ,
+  compare_ops_left_comparators(eq_token(==),ARG_021,1,ARG_013) ,
+  comprehension_target_iter_ifs(ARG_011,ARG_012,[ARG_013],ARG_06) ,
+  generator_exp_elt_generators(I,[ARG_06],ARG_03) ,
   tuple(ARG_03,RI) ,
-  assign_var( ARG_04,
-    elt_generator( v1,
-      "j",
-      [ comprehension_target_iter_ifs( tuple_elts(["j","c"]),
-          call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]),
-          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["c"])]),1])])])) ,
+  into_tuple(J,C,ARG_014) ,
+  dmirror(GRID_01,ARG_016) ,
+  enumerate(ARG_016,ARG_015) ,
+  set(C,ARG_024) ,
+  len(ARG_024,ARG_023) ,
+  compare_ops_left_comparators(eq_token(==),ARG_023,1,ARG_017) ,
+  comprehension_target_iter_ifs(ARG_014,ARG_015,[ARG_017],ARG_07) ,
+  generator_exp_elt_generators(J,[ARG_07],ARG_04) ,
   tuple(ARG_04,CI) ,
-  assign_var( ARG_05,
-    generator_exp_elt_generators(
-       call_func_args( "tuple", [
-         elt_generator( v1,
-           "v",
-           [ comprehension_target_iter_ifs( tuple_elts(["j","v"]),
-               call_func_args("enumerate",["r"]),
-               [ call_func_args('python:NotIn',["j","ci"])])])]),
-       [ comprehension_target_iter_ifs( tuple_elts(["i","r"]),
-           call_func_args("enumerate",[GRID_01]),
-           [ call_func_args('python:NotIn',["i","ri"])])])) ,
+  into_tuple(J,V,ARG_026) ,
+  enumerate(R,ARG_027) ,
+  compare_ops_left_comparators(['python:NotIn'],J,CI,ARG_028) ,
+  comprehension_target_iter_ifs(ARG_026,ARG_027,[ARG_028],ARG_025) ,
+  generator_exp_elt_generators(V,[ARG_025],ARG_09) ,
+  tuple(ARG_09,ARG_08) ,
+  into_tuple(I,R,ARG_018) ,
+  enumerate(GRID_01,ARG_019) ,
+  compare_ops_left_comparators(['python:NotIn'],I,RI,ARG_020) ,
+  comprehension_target_iter_ifs(ARG_018,ARG_019,[ARG_020],ARG_010) ,
+  generator_exp_elt_generators(ARG_08,[ARG_010],ARG_05) ,
   tuple(ARG_05,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -4853,27 +8620,80 @@ compress(GRID_01,GRID_02) :-
 %~                                             body_stmts([return_value("p")]))])),
 %~                          return_value("w")])))
 %~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["offsetted"],
+%~                                     call_func_args( "shift", [
+%~                                       "normalized",
+%~                                       tuple_elts([0,unary_op_operand(us_ub_token(-),P_03)])])),
+%~                                   assign_targets_value( ["pruned"],
+%~                                     call_func_args( "frozenset", [
+%~                                       set_comp_elt_generators(
+%~                                          tuple_elts(["c",tuple_elts(["i","j"])]),
+%~                                          [ comprehension_target_iter_ifs(
+%~                                               tuple_elts(["c",tuple_elts(["i","j"])]),
+%~                                               "offsetted",
+%~                                               [ compare_ops_left_comparators(gt_e_token(>=),"j",0)])])])),
+%~                                   if_test_body(
+%~                                      call_func_args(
+%~                                         qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
+%~                                         ["normalized"]),
+%~                                      body_stmts([return_value(P_03)]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        call_func_args(
+%~                           qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
+%~                           ["normalized"]),
+%~                        body_stmts([return_value(P_03)])))
+%~
+%~ replacing_with_var( call_func_args(
+%~                        qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
+%~                        ["normalized"]))
+%~
+%~ replacing_with_var(body_stmts([return_value(P_03)]))
+%~
+%~ replacing_with_var(boxed_attribute_value("issubset"))
+%~
+%~ replacing_with_var(tuple_elts(["c",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs(
+%~                        tuple_elts(["c",tuple_elts(["i","j"])]),
+%~                        "offsetted",
+%~                        [ compare_ops_left_comparators(gt_e_token(>=),"j",0)]))
+%~
+%~ replacing_with_var(tuple_elts(["c",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_e_token(>=),"j",0))
+%~
 % Compiled KL-1 for hperiod
 hperiod(OBJ_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' horizontal periodicity ') ,
   normalize(OBJ_01,NORMALIZED) ,
   width(NORMALIZED,W) ,
-  for_each( [range(1,W,P_03)],
-    ( [ assign_targets_value([ARG_06],[0,call_func_args(-,[P_03])]),
-        tuple_elts(ARG_06,ARG_04)]  ,
-      shift(NORMALIZED,ARG_04,OFFSETTED) ,
-      assign_var( ARG_05,
-        set_comp_elt_generators_ifs(
-           tuple_elts(["c",tuple_elts(["i","j"])]),
-           tuple_elts(["c",tuple_elts(["i","j"])]),
-           "offsetted",
-           [ call_func_args(>=,["j",0])])) ,
-      frozenset(ARG_05,PRUNED) ,
-      (/*2*/
-        testif(call_func_args("issubset",["pruned","normalized"])) ->
-          call(INTEGER_02=P_03),exit_proc(INTEGER_02)))) ,
-  call(INTEGER_02="w") ,
+  call( [ op_call( [ boxed_attribute_value("issubset",ARG_011),
+                     qualified_identifier_identifiers( [PRUNED,ARG_011],
+                       NORMALIZED,
+                       ARG_08)])]) ,
+  body_stmts(
+     [ call(INTEGER_02=P_03),
+       exit_proc(INTEGER_02)],
+     ARG_09) ,
+  if_test_body(ARG_08,ARG_09,ARG_05) ,
+  body_stmts(
+     [ unary_op_operand(us_ub_token(-),P_03,ARG_010),
+       tuple_elts(0,ARG_010,ARG_06),
+       shift(NORMALIZED,ARG_06,OFFSETTED),
+       into_tuple(I,J,ARG_013),
+       tuple_elts(C,ARG_013,ARG_012),
+       into_tuple(I,J,ARG_016),
+       tuple_elts(C,ARG_016,ARG_015),
+       compare_ops_left_comparators(gt_e_token(>=),J,0,ARG_017),
+       comprehension_target_iter_ifs(ARG_015,OFFSETTED,[ARG_017],ARG_014),
+       set_comp_elt_generators(ARG_012,[ARG_014],ARG_07),
+       frozenset(ARG_07,PRUNED),
+       ARG_05],
+     ARG_04) ,
+  for_each([range(1,W,P_03)],ARG_04) ,
+  call(INTEGER_02=W) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "vperiod",
@@ -4903,32 +8723,84 @@ hperiod(OBJ_01,INTEGER_02) :-
 %~                                             body_stmts([return_value("p")]))])),
 %~                          return_value("h")])))
 %~
+%~ replacing_with_var( body_stmts( [ assign_targets_value( ["offsetted"],
+%~                                     call_func_args( "shift", [
+%~                                       "normalized",
+%~                                       tuple_elts([unary_op_operand(us_ub_token(-),P_03),0])])),
+%~                                   assign_targets_value( ["pruned"],
+%~                                     call_func_args( "frozenset", [
+%~                                       set_comp_elt_generators(
+%~                                          tuple_elts(["c",tuple_elts(["i","j"])]),
+%~                                          [ comprehension_target_iter_ifs(
+%~                                               tuple_elts(["c",tuple_elts(["i","j"])]),
+%~                                               "offsetted",
+%~                                               [ compare_ops_left_comparators(gt_e_token(>=),"i",0)])])])),
+%~                                   if_test_body(
+%~                                      call_func_args(
+%~                                         qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
+%~                                         ["normalized"]),
+%~                                      body_stmts([return_value(P_03)]))]))
+%~
+%~ replacing_with_var( if_test_body(
+%~                        call_func_args(
+%~                           qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
+%~                           ["normalized"]),
+%~                        body_stmts([return_value(P_03)])))
+%~
+%~ replacing_with_var( call_func_args(
+%~                        qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
+%~                        ["normalized"]))
+%~
+%~ replacing_with_var(body_stmts([return_value(P_03)]))
+%~
+%~ replacing_with_var(boxed_attribute_value("issubset"))
+%~
+%~ replacing_with_var(tuple_elts(["c",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var( comprehension_target_iter_ifs(
+%~                        tuple_elts(["c",tuple_elts(["i","j"])]),
+%~                        "offsetted",
+%~                        [ compare_ops_left_comparators(gt_e_token(>=),"i",0)]))
+%~
+%~ replacing_with_var(tuple_elts(["c",tuple_elts(["i","j"])]))
+%~
+%~ replacing_with_var(compare_ops_left_comparators(gt_e_token(>=),"i",0))
+%~
 % Compiled KL-1 for vperiod
 vperiod(OBJ_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' vertical periodicity ') ,
   normalize(OBJ_01,NORMALIZED) ,
   height(NORMALIZED,H) ,
-  for_each( [range(1,H,P_03)],
-    ( [ assign_targets_value([ARG_06],[call_func_args(-,[P_03]),0]),
-        tuple_elts(ARG_06,ARG_04)]  ,
-      shift(NORMALIZED,ARG_04,OFFSETTED) ,
-      assign_var( ARG_05,
-        set_comp_elt_generators_ifs(
-           tuple_elts(["c",tuple_elts(["i","j"])]),
-           tuple_elts(["c",tuple_elts(["i","j"])]),
-           "offsetted",
-           [ call_func_args(>=,["i",0])])) ,
-      frozenset(ARG_05,PRUNED) ,
-      (/*2*/
-        testif(call_func_args("issubset",["pruned","normalized"])) ->
-          call(INTEGER_02=P_03),exit_proc(INTEGER_02)))) ,
-  call(INTEGER_02="h") ,
+  call( [ op_call( [ boxed_attribute_value("issubset",ARG_011),
+                     qualified_identifier_identifiers( [PRUNED,ARG_011],
+                       NORMALIZED,
+                       ARG_08)])]) ,
+  body_stmts(
+     [ call(INTEGER_02=P_03),
+       exit_proc(INTEGER_02)],
+     ARG_09) ,
+  if_test_body(ARG_08,ARG_09,ARG_05) ,
+  body_stmts(
+     [ unary_op_operand(us_ub_token(-),P_03,ARG_010),
+       tuple_elts(ARG_010,0,ARG_06),
+       shift(NORMALIZED,ARG_06,OFFSETTED),
+       into_tuple(I,J,ARG_013),
+       tuple_elts(C,ARG_013,ARG_012),
+       into_tuple(I,J,ARG_016),
+       tuple_elts(C,ARG_016,ARG_015),
+       compare_ops_left_comparators(gt_e_token(>=),I,0,ARG_017),
+       comprehension_target_iter_ifs(ARG_015,OFFSETTED,[ARG_017],ARG_014),
+       set_comp_elt_generators(ARG_012,[ARG_014],ARG_07),
+       frozenset(ARG_07,PRUNED),
+       ARG_05],
+     ARG_04) ,
+  for_each([range(1,H,P_03)],ARG_04) ,
+  call(INTEGER_02=H) ,
   exit_proc(INTEGER_02).
+true.
 
-  % 33,639,061 inferences, 4.911 CPU in 4.911 seconds (100% CPU, 6849380 Lips)
-
-
+114 ?-
 
 
 

@@ -492,7 +492,7 @@ compile_block(PF,PASS,RET,Cmpd,OUT):- cmpd(Cmpd),
   within_arg(Cmpd,Arg),needs_eval(Arg),Arg\=op_call(_),Arg\=assign_targets_value(_,_),
   py_gensym('ARG_',VarName),string_to_var(VarName,VAR),
   subst001C(Cmpd,Arg,VAR,NewCmpd))),
-  pp(yellow,replacing_with_var(Arg)),
+  in_cmt(pp(yellow,replacing_with_var(Arg))),
   NewCmpd\==Cmpd,!,
   compile_block(PF,PASS,RET,[assign_targets_value(VAR,Arg),NewCmpd],OUT).
 
