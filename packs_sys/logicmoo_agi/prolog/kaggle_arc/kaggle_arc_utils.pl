@@ -19,8 +19,8 @@ with_tty_true(Goal):- with_set_stream(current_output,tty(true),Goal).
 
 
 nb_subst(Obj,New,Old):-
-  get_setarg_p1(nb_setarg,Found,Obj,P1),Found=@=Old,!,
-  p2_call(P1,New),!,nb_subst(Obj,New,Old).
+  get_setarg_p1(nb_setarg,Found,Obj,P1),Found=@=Old,
+  p1_call(P1,New),!,nb_subst(Obj,New,Old).
 nb_subst(_Obj,_New,_Old).
 
 system:any_arc_files(Some):- is_list(Some),!, Some\==[],maplist(any_arc_files,Some).
@@ -99,7 +99,7 @@ my_list_to_set([E|List],P2, Set):- select(C,List,Rest), p2_call(P2, E,C), !, my_
 my_list_to_set([E|List],P2, [E|Set]):-!, my_list_to_set(List,P2, Set).
 my_list_to_set([],_,[]).
 
-my_list_to_set_cmp([E|List],C3, Set):- select(C,List,Rest), p2_call(C3,R,E,C), 
+my_list_to_set_cmp([E|List],C3, Set):- select(C,List,Rest), call(C3,R,E,C), 
    R== (=), my_list_to_set_cmp([C|Rest],C3, Set),!.
   my_list_to_set_cmp([E|List],C3, [E|Set]):-!, my_list_to_set_cmp(List,C3, Set).
 my_list_to_set_cmp([],_,[]).
@@ -228,7 +228,7 @@ mapg_list(P1,Grid):- p1_call(P1,Grid),!.
 
 
 maplist_ignore(_3,H,I,J):- (H==[];I==[],J==[]),!,(ignore(H=[]),ignore(I=[]),ignore(J=[])).
-maplist_ignore(P3,H,I,J):- \+ is_list(H),!, ignore(p2_call(P3,H,I,J)).
+maplist_ignore(P3,H,I,J):- \+ is_list(H),!, ignore(p2_call(call(P3,H),I,J)).
 maplist_ignore(P3,[H|Grid],[I|GridN],[J|GridO]):- maplist_ignore(P3,H,I,J), !,maplist_ignore(P3,Grid,GridN,GridO).
 
 maplist_ignore(_2,H,I):- (H==[];I==[]),!,(ignore(H=[]),ignore(I=[])).
@@ -241,12 +241,14 @@ p1_call((P1;Q1),E):- must_be(callable,P1),!, (p1_call(P1,E);p1_call(Q1,E)).
 p1_call((P1,Q1),E):- must_be(callable,P1),!, (p1_call(P1,E),p1_call(Q1,E)).
 p1_call(or(P1,Q1),E):- must_be(callable,P1),!, (p1_call(P1,E);p1_call(Q1,E)).
 p1_call(and(P1,Q1),E):- must_be(callable,P1),!, (p1_call(P1,E),p1_call(Q1,E)).
-p1_call(not(not(P1)),E):- !, p1_call(P1,E).
+p1_call(not(not(P1)),E):- !, \+ \+ p1_call(P1,E).
 p1_call(not(P1),E):- !, not(p1_call(P1,E)).
 p1_call(once(P1),E):- !, once(p1_call(P1,E)).
 p1_call(chk(P1),E):- !, \+ \+ (p1_call(P1,E)).
 p1_call( \+ (P1),E):- !, \+ p1_call(P1,E).
 p1_call(P1,E):- !, call(P1,E).
+
+chk(X,E):- \+ \+ call(X,E).
 
 p2_call_p2(P2a,P2b,A,B):- p2_call(P2a,A,M),p2_call(P2b,M,B).
 
@@ -290,7 +292,8 @@ my_maplist(P2,G1,L2):- into_mlist(G1,L1),!, with_group(L1,maplist(P2,L1,L2)).
 my_maplist(P1,G1):- into_mlist(G1,L1), !, with_group(L1,maplist(P1,L1)).
 
 
-my_include(P1,[H|L],O):- (p2_call(p1_call(P1),H,HH)*->(my_include(P1,L,I),O=[HH|I]);my_include(P1,L,O)).
+my_include(P1,L,I):- include(p1_call(P1),L,I).
+%my_include(P1,[H|L],O):- (p2_call(p1_call(P1),H,HH)*->(my_include(P1,L,I),O=[HH|I]);my_include(P1,L,O)).
 my_include(_,_,[]).
 
 %my_exclude(P1,I,O):- my_include(not(P1),I,O).

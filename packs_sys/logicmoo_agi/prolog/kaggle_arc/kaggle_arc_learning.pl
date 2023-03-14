@@ -336,7 +336,7 @@ learn_rule_o(in_in,_InVM,_OutVM):- !.
 
 learn_rule_o(Mode,InVM,OutVM):- is_vm_map(InVM),is_vm_map(OutVM),!,
  in_out = Mode,
- my_maplist(must_det_ll,[
+ must_det_ll((
   InGrid = InVM.start_grid, InObjsOriginal = InVM.objs,  
   OutGrid = OutVM.start_grid, OutObjsOriginal = OutVM.objs,
   ignore(InVM.target_grid = OutGrid),
@@ -348,6 +348,11 @@ learn_rule_o(Mode,InObjsOriginal,OutObjsOriginal):-
   into_grid(OutObjsOriginal,OutGrid),*/
   my_maplist(simplify_for_matching(lhs),InObjsOriginal,InObjs),
   my_maplist(simplify_for_matching(rhs),OutObjsOriginal,OutObjs),
+  warn_skip(((learn_rule_o(InObjs,InObjsOriginal,InGrid,OutObjs,OutObjsOriginal,OutGrid)))))).
+
+
+learn_rule_o(Mode,InObjs,InObjsOriginal,InGrid,OutObjs,OutObjsOriginal,OutGrid):-
+ must_det_ll((
  % OutObjsOriginal=OutObjs,
  % extract_vm_props(InVM,InProps),     
  % extract_vm_props(OutVM,OutProps), 
@@ -365,7 +370,7 @@ learn_rule_o(Mode,InObjsOriginal,OutObjsOriginal):-
   if_learn_ok(confirm_reproduction(InObjs,InObjsOriginal,InGrid)),!,
   if_learn_ok(confirm_reproduction(OutObjs,OutObjsOriginal,OutGrid)),!,
   confirm_learned(InGrid,OutGrid),!,
-  nop(show_proof(InGrid,OutGrid))]),!.
+  nop(show_proof(InGrid,OutGrid)))),!.
   
 
 is_reproduction_obj(O):- \+ is_object(O),!.
@@ -731,7 +736,10 @@ fix_group(AG00,AG):-
   maybe_exclude_whole(AG1,AG2),
  filter_redundant(AG2,AG).
  
-learn_group_mapping1(AG00,BG00):-   
+learn_group_mapping1(AG00,BG00):-
+ wdmsg(warn_unused(learn_group_mapping_now1(AG00,BG00))).
+
+learn_group_mapping_now1(AG00,BG00):-
   fix_groups(AG00,BG00,AG,BG),
   %forall(member(A,AG), forall(member(B,BG), save_rule2(in,"each I<-->O",A,B))),
   save_rule2(in,"all I<-->O",AG,BG),!,  
@@ -750,9 +758,10 @@ learn_group_mapping1(AG00,BG00):-
      save_rule1(IO_DIR,"In -> ordered Out",[A],Objs)))).
 
      
-
-
 learn_group_mapping(AG00,BG00):-
+  warn_skip(learn_group_mapping_now(AG00,BG00)).
+
+learn_group_mapping_now(AG00,BG00):-
   %ignore(learn_group_mapping1(AG00,BG00)),
   fix_groups(AG00,BG00,AG,BG),
  
@@ -847,7 +856,7 @@ try_each_using_training(In,ExpectedOut,Rules,Keeper,OurOut):-
   classify_rules(In,ExpectedOut,Rules,Keeper,Rejected,Unknown),
    my_maplist(length,[In,Rules,Keeper,Rejected,Unknown],[InC,RulesC|Nums]),
    Pos is InC*RulesC,
-   fpp_wcg(in_rules_times_keepers_rejected_unknown=[InC,RulesC,Pos|Nums]),!,
+   pp_wcg(in_rules_times_keepers_rejected_unknown=[InC,RulesC,Pos|Nums]),!,
    %nop(pp_wcg(Awesome=Keeper)), nop(pp_wcg(rejected=Rejected)), nop(my_maplist(writeln,Unknown)), 
    wno_must(o_globalpoints(Keeper,GPs)),
    points_to_grid(GPs,OurOut))),!,
@@ -1191,10 +1200,11 @@ save_rule2(IO_DIR,TITLE,AL,BL):-
   skip_rule(IO_DIR,"All background objects "+ TITLE,AL,BL).
 
 save_rule2(IO_DIR,TITLE,IP,OP):- 
+ arcST,
  ip_op_debug_info(IP,OP,LOCK),
  if_t(once(true;is_fg_object(IP);is_fg_object(OP)),
  (must_det_ll((
-  print_grouped_props(save_rule2,[IP,OP]),
+  print_grouped_props1(save_rule2,[IP,OP]),
  assert_showed_mapping(IP,OP),
  make_rule_l2r_objs(Dir,[],IP,OP,II,OO,Mid), 
  %save_learnt_rule(arc_cache:object_to_object(TITLE,lhs(II),rhs(OO),Mid,LOCK),oneTwo,twoOne),
@@ -2044,6 +2054,7 @@ ensure_group_prop(Prop):- var(Prop),!,group_prop(Prop).
 ensure_group_prop(_).
 
 
+
 %pp(O):- nl_if_needed,print(O),nl.
 use_test_associatable_group_real(In,SolutionO):- 
  must_det_ll((
@@ -2053,7 +2064,11 @@ use_test_associatable_group_real(In,SolutionO):-
  w_section(use_test_associatable_group_real,
     print_side_by_side(use_test_associatable_group_real,In2,SolutionO)).
 
-use_test_associatable_group(I,O):- 
+
+use_test_associatable_group(I,O):-
+  warn_skip(((use_test_associatable_group_now(I,O)))),!.
+
+use_test_associatable_group(I,O):-
   use_test_associatable_group_real(I,O),
   nop(print_side_by_side(real_associatable_group,I,O)).
 
@@ -2118,6 +2133,7 @@ need_object(B):-
   pp_wcg(L2\=@=L))),
   (L2\=@=L). %->writeln(need_object(B));(writeln(not_need_object(B)),fail)).
   
+show_safe_assumed_mapped:- warn_skip(((show_safe_assumed_mapped))),!.
 
 show_safe_assumed_mapped:-
 % pp_wcg(show_safe_assumed_mapped),

@@ -1,19 +1,19 @@
 
 
+
+
 %~ % Universal AST Pass #0
 %~ def( "identity",
 %~   function_type_body(
 %~      function_type_arguments_returns([argument_name("x")],[argument_type("Any")]),
 %~      block_statements([expr_value(string_value(' identity function ')),return_value("x")])))
 %~
-%~ % Body Pass #1
-%~ comment(' identity function '),call(ANY_02=X_01),exit_proc(ANY_02)
-%~
 % Compiled KL-1 for identity
 identity(X_01,ANY_02) :-
   willBeType(ANY_02,'Any') ,
   comment(' identity function ') ,
-  exit_proc(X_01).
+  call(ANY_02=X_01) ,
+  exit_proc(ANY_02).
 %~ % Universal AST Pass #0
 %~ def( "add",
 %~   function_type_body(
@@ -42,66 +42,34 @@ identity(X_01,ANY_02) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(add_token(+),subscript_value_slice("a",1),"b")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' addition ')  ,
-%~   if_test_body_orelse(
-%~      bool_op_values( ['python:And'], [
-%~        call_func_args(isinstance,[A_01,int]),
-%~        call_func_args(isinstance,[B_02,int])]),
-%~      [call(+,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              bool_op_values( ['python:And'], [
-%~                                call_func_args(isinstance,[A_01,tuple]),
-%~                                call_func_args(isinstance,[B_02,tuple])]),
-%~                              (/*2*/
-%~                                assign_targets_value( [NUMERICAL_03],
-%~                                  tuple_elts( [ call_func_args(+,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-%~                                                call_func_args(+,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-%~                                exit_proc(NUMERICAL_03)),
-%~                              orelse_else_stmts( [ if_test_body(
-%~                                                      bool_op_values( ['python:And'], [
-%~                                                        call_func_args(isinstance,[A_01,int]),
-%~                                                        call_func_args(isinstance,[B_02,tuple])]),
-%~                                                      (/*2*/
-%~                                                        assign_targets_value( [NUMERICAL_03],
-%~                                                          tuple_elts( [ call_func_args(+,[A_01,subscript_value_slice(B_02,0)]),
-%~                                                                        call_func_args(+,[A_01,subscript_value_slice(B_02,1)])])) ,
-%~                                                        exit_proc(NUMERICAL_03)))]))])) ,
-%~   assign_targets_value( [NUMERICAL_03],
-%~     tuple_elts( [ call_func_args(+,[subscript_value_slice(A_01,0),B_02]),
-%~                   call_func_args(+,[subscript_value_slice(A_01,1),B_02])])) ,
-%~   exit_proc(NUMERICAL_03))
-%~
 % Compiled KL-1 for add
 add(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' addition ') ,
-  if_test_body_orelse(
-     bool_op_values( ['python:And'], [
-       call_func_args(isinstance,[A_01,int]),
-       call_func_args(isinstance,[B_02,int])]),
-     [call(+,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             bool_op_values( ['python:And'], [
-                               call_func_args(isinstance,[A_01,tuple]),
-                               call_func_args(isinstance,[B_02,tuple])]),
-                             (/*2*/
-                               assign_targets_value( [NUMERICAL_03],
-                                 tuple_elts( [ call_func_args(+,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-                                               call_func_args(+,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-                               exit_proc(NUMERICAL_03)),
-                             orelse_else_stmts( [ if_test_body(
-                                                     bool_op_values( ['python:And'], [
-                                                       call_func_args(isinstance,[A_01,int]),
-                                                       call_func_args(isinstance,[B_02,tuple])]),
-                                                     (/*2*/
-                                                       assign_targets_value( [NUMERICAL_03],
-                                                         tuple_elts( [ call_func_args(+,[A_01,subscript_value_slice(B_02,0)]),
-                                                                       call_func_args(+,[A_01,subscript_value_slice(B_02,1)])])) ,
-                                                       exit_proc(NUMERICAL_03)))]))])) ,
-  assign_targets_value( [NUMERICAL_03],
-    tuple_elts( [ call_func_args(+,[subscript_value_slice(A_01,0),B_02]),
-                  call_func_args(+,[subscript_value_slice(A_01,1),B_02])])) ,
+  ( testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,int])])) ->
+      [call_op(+,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,tuple]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_04], [
+          call_func_args(+,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
+          call_func_args(+,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_04,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03)) ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_05], [
+          call_func_args(+,[A_01,subscript_value_slice(B_02,0)]),
+          call_func_args(+,[A_01,subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_05,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03))) ,
+  assign_targets_value( [ARG_06], [
+    call_func_args(+,[subscript_value_slice(A_01,0),B_02]),
+    call_func_args(+,[subscript_value_slice(A_01,1),B_02])]) ,
+  tuple_elts(ARG_06,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "subtract",
@@ -131,66 +99,34 @@ add(A_01,B_02,NUMERICAL_03) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(sub_token(-),subscript_value_slice("a",1),"b")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' subtraction ')  ,
-%~   if_test_body_orelse(
-%~      bool_op_values( ['python:And'], [
-%~        call_func_args(isinstance,[A_01,int]),
-%~        call_func_args(isinstance,[B_02,int])]),
-%~      [call(-,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              bool_op_values( ['python:And'], [
-%~                                call_func_args(isinstance,[A_01,tuple]),
-%~                                call_func_args(isinstance,[B_02,tuple])]),
-%~                              (/*2*/
-%~                                assign_targets_value( [NUMERICAL_03],
-%~                                  tuple_elts( [ call_func_args(-,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-%~                                                call_func_args(-,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-%~                                exit_proc(NUMERICAL_03)),
-%~                              orelse_else_stmts( [ if_test_body(
-%~                                                      bool_op_values( ['python:And'], [
-%~                                                        call_func_args(isinstance,[A_01,int]),
-%~                                                        call_func_args(isinstance,[B_02,tuple])]),
-%~                                                      (/*2*/
-%~                                                        assign_targets_value( [NUMERICAL_03],
-%~                                                          tuple_elts( [ call_func_args(-,[A_01,subscript_value_slice(B_02,0)]),
-%~                                                                        call_func_args(-,[A_01,subscript_value_slice(B_02,1)])])) ,
-%~                                                        exit_proc(NUMERICAL_03)))]))])) ,
-%~   assign_targets_value( [NUMERICAL_03],
-%~     tuple_elts( [ call_func_args(-,[subscript_value_slice(A_01,0),B_02]),
-%~                   call_func_args(-,[subscript_value_slice(A_01,1),B_02])])) ,
-%~   exit_proc(NUMERICAL_03))
-%~
 % Compiled KL-1 for subtract
 subtract(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' subtraction ') ,
-  if_test_body_orelse(
-     bool_op_values( ['python:And'], [
-       call_func_args(isinstance,[A_01,int]),
-       call_func_args(isinstance,[B_02,int])]),
-     [call(-,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             bool_op_values( ['python:And'], [
-                               call_func_args(isinstance,[A_01,tuple]),
-                               call_func_args(isinstance,[B_02,tuple])]),
-                             (/*2*/
-                               assign_targets_value( [NUMERICAL_03],
-                                 tuple_elts( [ call_func_args(-,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-                                               call_func_args(-,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-                               exit_proc(NUMERICAL_03)),
-                             orelse_else_stmts( [ if_test_body(
-                                                     bool_op_values( ['python:And'], [
-                                                       call_func_args(isinstance,[A_01,int]),
-                                                       call_func_args(isinstance,[B_02,tuple])]),
-                                                     (/*2*/
-                                                       assign_targets_value( [NUMERICAL_03],
-                                                         tuple_elts( [ call_func_args(-,[A_01,subscript_value_slice(B_02,0)]),
-                                                                       call_func_args(-,[A_01,subscript_value_slice(B_02,1)])])) ,
-                                                       exit_proc(NUMERICAL_03)))]))])) ,
-  assign_targets_value( [NUMERICAL_03],
-    tuple_elts( [ call_func_args(-,[subscript_value_slice(A_01,0),B_02]),
-                  call_func_args(-,[subscript_value_slice(A_01,1),B_02])])) ,
+  ( testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,int])])) ->
+      [call_op(-,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,tuple]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_04], [
+          call_func_args(-,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
+          call_func_args(-,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_04,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03)) ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_05], [
+          call_func_args(-,[A_01,subscript_value_slice(B_02,0)]),
+          call_func_args(-,[A_01,subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_05,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03))) ,
+  assign_targets_value( [ARG_06], [
+    call_func_args(-,[subscript_value_slice(A_01,0),B_02]),
+    call_func_args(-,[subscript_value_slice(A_01,1),B_02])]) ,
+  tuple_elts(ARG_06,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "multiply",
@@ -220,66 +156,34 @@ subtract(A_01,B_02,NUMERICAL_03) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(mult_token(*),subscript_value_slice("a",1),"b")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' multiplication ')  ,
-%~   if_test_body_orelse(
-%~      bool_op_values( ['python:And'], [
-%~        call_func_args(isinstance,[A_01,int]),
-%~        call_func_args(isinstance,[B_02,int])]),
-%~      [call(*,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              bool_op_values( ['python:And'], [
-%~                                call_func_args(isinstance,[A_01,tuple]),
-%~                                call_func_args(isinstance,[B_02,tuple])]),
-%~                              (/*2*/
-%~                                assign_targets_value( [NUMERICAL_03],
-%~                                  tuple_elts( [ call_func_args(*,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-%~                                                call_func_args(*,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-%~                                exit_proc(NUMERICAL_03)),
-%~                              orelse_else_stmts( [ if_test_body(
-%~                                                      bool_op_values( ['python:And'], [
-%~                                                        call_func_args(isinstance,[A_01,int]),
-%~                                                        call_func_args(isinstance,[B_02,tuple])]),
-%~                                                      (/*2*/
-%~                                                        assign_targets_value( [NUMERICAL_03],
-%~                                                          tuple_elts( [ call_func_args(*,[A_01,subscript_value_slice(B_02,0)]),
-%~                                                                        call_func_args(*,[A_01,subscript_value_slice(B_02,1)])])) ,
-%~                                                        exit_proc(NUMERICAL_03)))]))])) ,
-%~   assign_targets_value( [NUMERICAL_03],
-%~     tuple_elts( [ call_func_args(*,[subscript_value_slice(A_01,0),B_02]),
-%~                   call_func_args(*,[subscript_value_slice(A_01,1),B_02])])) ,
-%~   exit_proc(NUMERICAL_03))
-%~
 % Compiled KL-1 for multiply
 multiply(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' multiplication ') ,
-  if_test_body_orelse(
-     bool_op_values( ['python:And'], [
-       call_func_args(isinstance,[A_01,int]),
-       call_func_args(isinstance,[B_02,int])]),
-     [call(*,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             bool_op_values( ['python:And'], [
-                               call_func_args(isinstance,[A_01,tuple]),
-                               call_func_args(isinstance,[B_02,tuple])]),
-                             (/*2*/
-                               assign_targets_value( [NUMERICAL_03],
-                                 tuple_elts( [ call_func_args(*,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-                                               call_func_args(*,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-                               exit_proc(NUMERICAL_03)),
-                             orelse_else_stmts( [ if_test_body(
-                                                     bool_op_values( ['python:And'], [
-                                                       call_func_args(isinstance,[A_01,int]),
-                                                       call_func_args(isinstance,[B_02,tuple])]),
-                                                     (/*2*/
-                                                       assign_targets_value( [NUMERICAL_03],
-                                                         tuple_elts( [ call_func_args(*,[A_01,subscript_value_slice(B_02,0)]),
-                                                                       call_func_args(*,[A_01,subscript_value_slice(B_02,1)])])) ,
-                                                       exit_proc(NUMERICAL_03)))]))])) ,
-  assign_targets_value( [NUMERICAL_03],
-    tuple_elts( [ call_func_args(*,[subscript_value_slice(A_01,0),B_02]),
-                  call_func_args(*,[subscript_value_slice(A_01,1),B_02])])) ,
+  ( testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,int])])) ->
+      [call_op(*,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,tuple]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_04], [
+          call_func_args(*,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
+          call_func_args(*,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_04,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03)) ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_05], [
+          call_func_args(*,[A_01,subscript_value_slice(B_02,0)]),
+          call_func_args(*,[A_01,subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_05,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03))) ,
+  assign_targets_value( [ARG_06], [
+    call_func_args(*,[subscript_value_slice(A_01,0),B_02]),
+    call_func_args(*,[subscript_value_slice(A_01,1),B_02])]) ,
+  tuple_elts(ARG_06,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "divide",
@@ -309,66 +213,34 @@ multiply(A_01,B_02,NUMERICAL_03) :-
 %~                          return_value( tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice("a",0),"b"),
 %~                                                      bin_op_left_right(floor_div_token(//),subscript_value_slice("a",1),"b")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' floor division ')  ,
-%~   if_test_body_orelse(
-%~      bool_op_values( ['python:And'], [
-%~        call_func_args(isinstance,[A_01,int]),
-%~        call_func_args(isinstance,[B_02,int])]),
-%~      [call(//,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              bool_op_values( ['python:And'], [
-%~                                call_func_args(isinstance,[A_01,tuple]),
-%~                                call_func_args(isinstance,[B_02,tuple])]),
-%~                              (/*2*/
-%~                                assign_targets_value( [NUMERICAL_03],
-%~                                  tuple_elts( [ call_func_args(//,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-%~                                                call_func_args(//,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-%~                                exit_proc(NUMERICAL_03)),
-%~                              orelse_else_stmts( [ if_test_body(
-%~                                                      bool_op_values( ['python:And'], [
-%~                                                        call_func_args(isinstance,[A_01,int]),
-%~                                                        call_func_args(isinstance,[B_02,tuple])]),
-%~                                                      (/*2*/
-%~                                                        assign_targets_value( [NUMERICAL_03],
-%~                                                          tuple_elts( [ call_func_args(//,[A_01,subscript_value_slice(B_02,0)]),
-%~                                                                        call_func_args(//,[A_01,subscript_value_slice(B_02,1)])])) ,
-%~                                                        exit_proc(NUMERICAL_03)))]))])) ,
-%~   assign_targets_value( [NUMERICAL_03],
-%~     tuple_elts( [ call_func_args(//,[subscript_value_slice(A_01,0),B_02]),
-%~                   call_func_args(//,[subscript_value_slice(A_01,1),B_02])])) ,
-%~   exit_proc(NUMERICAL_03))
-%~
 % Compiled KL-1 for divide
 divide(A_01,B_02,NUMERICAL_03) :-
   willBeType(NUMERICAL_03,'Numerical') ,
   comment(' floor division ') ,
-  if_test_body_orelse(
-     bool_op_values( ['python:And'], [
-       call_func_args(isinstance,[A_01,int]),
-       call_func_args(isinstance,[B_02,int])]),
-     [call(//,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             bool_op_values( ['python:And'], [
-                               call_func_args(isinstance,[A_01,tuple]),
-                               call_func_args(isinstance,[B_02,tuple])]),
-                             (/*2*/
-                               assign_targets_value( [NUMERICAL_03],
-                                 tuple_elts( [ call_func_args(//,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
-                                               call_func_args(//,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])) ,
-                               exit_proc(NUMERICAL_03)),
-                             orelse_else_stmts( [ if_test_body(
-                                                     bool_op_values( ['python:And'], [
-                                                       call_func_args(isinstance,[A_01,int]),
-                                                       call_func_args(isinstance,[B_02,tuple])]),
-                                                     (/*2*/
-                                                       assign_targets_value( [NUMERICAL_03],
-                                                         tuple_elts( [ call_func_args(//,[A_01,subscript_value_slice(B_02,0)]),
-                                                                       call_func_args(//,[A_01,subscript_value_slice(B_02,1)])])) ,
-                                                       exit_proc(NUMERICAL_03)))]))])) ,
-  assign_targets_value( [NUMERICAL_03],
-    tuple_elts( [ call_func_args(//,[subscript_value_slice(A_01,0),B_02]),
-                  call_func_args(//,[subscript_value_slice(A_01,1),B_02])])) ,
+  ( testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,int])])) ->
+      [call_op(//,A_01,B_02,NUMERICAL_03)],exit_proc(NUMERICAL_03)  ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,tuple]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_04], [
+          call_func_args(//,[subscript_value_slice(A_01,0),subscript_value_slice(B_02,0)]),
+          call_func_args(//,[subscript_value_slice(A_01,1),subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_04,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03)) ;
+    testif( bool_op_values( ['python:And'], [
+              call_func_args(isinstance,[A_01,int]),
+              call_func_args(isinstance,[B_02,tuple])])) ->
+      ( assign_targets_value( [ARG_05], [
+          call_func_args(//,[A_01,subscript_value_slice(B_02,0)]),
+          call_func_args(//,[A_01,subscript_value_slice(B_02,1)])])  ,
+        tuple_elts(ARG_05,NUMERICAL_03) ,
+        exit_proc(NUMERICAL_03))) ,
+  assign_targets_value( [ARG_06], [
+    call_func_args(//,[subscript_value_slice(A_01,0),B_02]),
+    call_func_args(//,[subscript_value_slice(A_01,1),B_02])]) ,
+  tuple_elts(ARG_06,NUMERICAL_03) ,
   exit_proc(NUMERICAL_03).
 %~ % Universal AST Pass #0
 %~ def( "invert",
@@ -381,26 +253,17 @@ divide(A_01,B_02,NUMERICAL_03) :-
 %~                                           tuple_elts( [ unary_op_operand(us_ub_token(-),subscript_value_slice("n",0)),
 %~                                                         unary_op_operand(us_ub_token(-),subscript_value_slice("n",1))])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' inversion with respect to addition ')  ,
-%~   assign_targets_value( [NUMERICAL_02],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[N_01,int])],
-%~        call_func_args(-,[N_01]),
-%~        tuple_elts( [ call_func_args(-,[subscript_value_slice(N_01,0)]),
-%~                      call_func_args(-,[subscript_value_slice(N_01,1)])]))) ,
-%~   exit_proc(NUMERICAL_02))
-%~
 % Compiled KL-1 for invert
 invert(N_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' inversion with respect to addition ') ,
-  assign_targets_value( [NUMERICAL_02],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[N_01,int])],
-       call_func_args(-,[N_01]),
-       tuple_elts( [ call_func_args(-,[subscript_value_slice(N_01,0)]),
-                     call_func_args(-,[subscript_value_slice(N_01,1)])]))) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[N_01,int])]) ->
+      [call_op(-,N_01,NUMERICAL_02)] ;
+    [ assign_targets_value( [ARG_03], [
+        call_func_args(-,[subscript_value_slice(N_01,0)]),
+        call_func_args(-,[subscript_value_slice(N_01,1)])]),
+      tuple_elts(ARG_03,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "even",
@@ -409,18 +272,12 @@ invert(N_01,NUMERICAL_02) :-
 %~      block_statements( [ expr_value(string_value(' evenness ')),
 %~                          return_value(compare_ops_left_comparators(eq_token(==),bin_op_left_right(mod_token('%'),"n",2),0))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' evenness ')  ,
-%~   [ call('%',N_01,2,ARG_03),
-%~     call(==,ARG_03,0,BOOLEAN_02)] ,
-%~   exit_proc(BOOLEAN_02))
-%~
 % Compiled KL-1 for even
 even(N_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' evenness ') ,
-  call('%',N_01,2,ARG_03) ,
-  call(==,ARG_03,0,BOOLEAN_02) ,
+  call_op('%',N_01,2,ARG_03) ,
+  call_op(==,ARG_03,0,BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "double",
@@ -433,26 +290,17 @@ even(N_01,BOOLEAN_02) :-
 %~                                           tuple_elts( [ bin_op_left_right(mult_token(*),subscript_value_slice("n",0),2),
 %~                                                         bin_op_left_right(mult_token(*),subscript_value_slice("n",1),2)])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' scaling by two ')  ,
-%~   assign_targets_value( [NUMERICAL_02],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[N_01,int])],
-%~        call_func_args(*,[N_01,2]),
-%~        tuple_elts( [ call_func_args(*,[subscript_value_slice(N_01,0),2]),
-%~                      call_func_args(*,[subscript_value_slice(N_01,1),2])]))) ,
-%~   exit_proc(NUMERICAL_02))
-%~
 % Compiled KL-1 for double
 double(N_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' scaling by two ') ,
-  assign_targets_value( [NUMERICAL_02],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[N_01,int])],
-       call_func_args(*,[N_01,2]),
-       tuple_elts( [ call_func_args(*,[subscript_value_slice(N_01,0),2]),
-                     call_func_args(*,[subscript_value_slice(N_01,1),2])]))) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[N_01,int])]) ->
+      [call_op(*,N_01,2,NUMERICAL_02)] ;
+    [ assign_targets_value( [ARG_03], [
+        call_func_args(*,[subscript_value_slice(N_01,0),2]),
+        call_func_args(*,[subscript_value_slice(N_01,1),2])]),
+      tuple_elts(ARG_03,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "halve",
@@ -465,26 +313,17 @@ double(N_01,NUMERICAL_02) :-
 %~                                           tuple_elts( [ bin_op_left_right(floor_div_token(//),subscript_value_slice("n",0),2),
 %~                                                         bin_op_left_right(floor_div_token(//),subscript_value_slice("n",1),2)])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' scaling by one half ')  ,
-%~   assign_targets_value( [NUMERICAL_02],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[N_01,int])],
-%~        call_func_args(//,[N_01,2]),
-%~        tuple_elts( [ call_func_args(//,[subscript_value_slice(N_01,0),2]),
-%~                      call_func_args(//,[subscript_value_slice(N_01,1),2])]))) ,
-%~   exit_proc(NUMERICAL_02))
-%~
 % Compiled KL-1 for halve
 halve(N_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' scaling by one half ') ,
-  assign_targets_value( [NUMERICAL_02],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[N_01,int])],
-       call_func_args(//,[N_01,2]),
-       tuple_elts( [ call_func_args(//,[subscript_value_slice(N_01,0),2]),
-                     call_func_args(//,[subscript_value_slice(N_01,1),2])]))) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[N_01,int])]) ->
+      [call_op(//,N_01,2,NUMERICAL_02)] ;
+    [ assign_targets_value( [ARG_03], [
+        call_func_args(//,[subscript_value_slice(N_01,0),2]),
+        call_func_args(//,[subscript_value_slice(N_01,1),2])]),
+      tuple_elts(ARG_03,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "flip",
@@ -492,11 +331,6 @@ halve(N_01,NUMERICAL_02) :-
 %~      function_type_arguments_returns([argument_name("b")],[argument_type("Boolean")]),
 %~      block_statements( [ expr_value(string_value(' logical not ')),
 %~                          return_value(unary_op_operand(['python:Not'],"b"))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' logical not ')  ,
-%~   ['python:Not'(B_01,BOOLEAN_02)] ,
-%~   exit_proc(BOOLEAN_02))
 %~
 % Compiled KL-1 for flip
 flip(B_01,BOOLEAN_02) :-
@@ -514,16 +348,11 @@ flip(B_01,BOOLEAN_02) :-
 %~      block_statements( [ expr_value(string_value(' equality ')),
 %~                          return_value(compare_ops_left_comparators(eq_token(==),"a","b"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' equality ')  ,
-%~   [call(==,A_01,B_02,BOOLEAN_03)] ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for equality
 equality(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' equality ') ,
-  call(==,A_01,B_02,BOOLEAN_03) ,
+  call_op(==,A_01,B_02,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "contained",
@@ -535,18 +364,11 @@ equality(A_01,B_02,BOOLEAN_03) :-
 %~      block_statements( [ expr_value(string_value(' element of ')),
 %~                          return_value(compare_ops_left_comparators(['python:In'],"value","container"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' element of ')  ,
-%~   assign_targets_value( [BOOLEAN_03],
-%~     compare_ops_left_comparators(['python:In'],VALUE_01,CONTAINER_02)) ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for contained
 contained(VALUE_01,CONTAINER_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' element of ') ,
-  assign_targets_value( [BOOLEAN_03],
-    compare_ops_left_comparators(['python:In'],VALUE_01,CONTAINER_02)) ,
+  'python:In'(VALUE_01,CONTAINER_02,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "combine",
@@ -560,22 +382,13 @@ contained(VALUE_01,CONTAINER_02,BOOLEAN_03) :-
 %~                                           call_func_args("type",["a"]),
 %~                                           [ tuple_elts([starred_value("a"),starred_value("b")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' union ')  ,
-%~   [type(A_01,CC_04)] ,
-%~   assign_targets_value( [ARG_05],
-%~     tuple_elts([starred_value(A_01),starred_value(B_02)])) ,
-%~   call(CC_04,ARG_05,CONTAINER_03) ,
-%~   exit_proc(CONTAINER_03))
-%~
 % Compiled KL-1 for combine
 combine(A_01,B_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' union ') ,
-  type(A_01,CC_04) ,
-  assign_targets_value( [ARG_05],
-    tuple_elts([starred_value(A_01),starred_value(B_02)])) ,
-  call(CC_04,ARG_05,CONTAINER_03) ,
+  starred_value(B_02,ARG_05) ,
+  tuple_elts(ARG_05,ARG_04) ,
+  call_op(call_func_args("type",[A_01],ARG_04,CONTAINER_03)) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "intersection",
@@ -587,16 +400,11 @@ combine(A_01,B_02,CONTAINER_03) :-
 %~      block_statements( [ expr_value(string_value(' returns the intersection of two containers ')),
 %~                          return_value(bin_op_left_right(bit_and_token(&),"a","b"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' returns the intersection of two containers ')  ,
-%~   [call(&,A_01,B_02,FROZENSET_03)] ,
-%~   exit_proc(FROZENSET_03))
-%~
 % Compiled KL-1 for intersection
 intersection(A_01,B_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' returns the intersection of two containers ') ,
-  call(&,A_01,B_02,FROZENSET_03) ,
+  call_op(&,A_01,B_02,FROZENSET_03) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
 %~ def( "difference",
@@ -608,16 +416,11 @@ intersection(A_01,B_02,FROZENSET_03) :-
 %~      block_statements( [ expr_value(string_value(' set difference ')),
 %~                          return_value(bin_op_left_right(sub_token(-),"a","b"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' set difference ')  ,
-%~   [call(-,A_01,B_02,FROZENSET_03)] ,
-%~   exit_proc(FROZENSET_03))
-%~
 % Compiled KL-1 for difference
 difference(A_01,B_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' set difference ') ,
-  call(-,A_01,B_02,FROZENSET_03) ,
+  call_op(-,A_01,B_02,FROZENSET_03) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
 %~ def( "dedupe",
@@ -626,42 +429,22 @@ difference(A_01,B_02,FROZENSET_03) :-
 %~      block_statements( [ expr_value(string_value(' remove duplicates ')),
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators( "e", [
-%~                                            comprehension_ifs_target_iter(
-%~                                               [ compare_ops_left_comparators( eq_token(==),
-%~                                                   call_func_args(qualified_identifier_identifiers(["tup",boxed_attribute_value("index")]),["e"]),
-%~                                                   "i")],
-%~                                               tuple_elts(["i","e"]),
-%~                                               call_func_args("enumerate",["tup"]))])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' remove duplicates ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( "e", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args( ==, [
-%~              call_func_args(
-%~                 qualified_identifier_identifiers([TUP_01,boxed_attribute_value("index")]),
-%~                 ["e"]),
-%~              "i"])],
-%~          tuple_elts(["i","e"]),
-%~          call_func_args("enumerate",[TUP_01]))])) ,
-%~   tuple(ARG_03,TUPLE_02) ,
-%~   exit_proc(TUPLE_02))
+%~                                            comprehension_target_iter_ifs( tuple_elts(["i","e"]),
+%~                                              call_func_args("enumerate",["tup"]),
+%~                                              [ compare_ops_left_comparators( eq_token(==),
+%~                                                  call_func_args(qualified_identifier_identifiers(["tup",boxed_attribute_value("index")]),["e"]),
+%~                                                  "i")])])]))])))
 %~
 % Compiled KL-1 for dedupe
 dedupe(TUP_01,TUPLE_02) :-
   willBeType(TUPLE_02,'Tuple') ,
   comment(' remove duplicates ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( E, [
-      comprehension_ifs_target_iter(
-         [ call_func_args( ==, [
-             call_func_args(
-                qualified_identifier_identifiers([TUP_01,boxed_attribute_value("index")]),
-                [E]),
-             I])],
-         tuple_elts([I,E]),
-         call_func_args("enumerate",[TUP_01]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "e",
+      [ comprehension_target_iter_ifs( tuple_elts(["i","e"]),
+          call_func_args("enumerate",[TUP_01]),
+          [ call_func_args(==,[call_func_args("index",[TUP_01,"e"]),"i"])])])) ,
   tuple(ARG_03,TUPLE_02) ,
   exit_proc(TUPLE_02).
 %~ % Universal AST Pass #0
@@ -675,18 +458,11 @@ dedupe(TUP_01,TUPLE_02) :-
 %~                          return_value( call_func_args( "tuple", [
 %~                                          call_func_args_keywords("sorted",["container"],[keyword_value("compfunc")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' order container by custom key ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     call_func_args_keywords("sorted",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
-%~   tuple(ARG_04,TUPLE_03) ,
-%~   exit_proc(TUPLE_03))
-%~
 % Compiled KL-1 for order
 order(CONTAINER_01,COMPFUNC_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' order container by custom key ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     call_func_args_keywords("sorted",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
   tuple(ARG_04,TUPLE_03) ,
   exit_proc(TUPLE_03).
@@ -701,21 +477,14 @@ order(CONTAINER_01,COMPFUNC_02,TUPLE_03) :-
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators("item",[comprehension_target_iter("i",call_func_args("range",["num"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' repetition of item within vector ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( ITEM_01, [
-%~       comprehension_target_iter("i",call_func_args("range",[NUM_02]))])) ,
-%~   tuple(ARG_04,TUPLE_03) ,
-%~   exit_proc(TUPLE_03))
-%~
 % Compiled KL-1 for repeat
 repeat(ITEM_01,NUM_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' repetition of item within vector ') ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( ITEM_01, [
-      comprehension_target_iter("i",call_func_args("range",[NUM_02]))])) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      ITEM_01,
+      [ assign_targets_value1("i",call_func_args("range",[NUM_02]))])) ,
   tuple(ARG_04,TUPLE_03) ,
   exit_proc(TUPLE_03).
 %~ % Universal AST Pass #0
@@ -728,16 +497,11 @@ repeat(ITEM_01,NUM_02,TUPLE_03) :-
 %~      block_statements( [ expr_value(string_value(' greater ')),
 %~                          return_value(compare_ops_left_comparators(gt_token(>),"a","b"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' greater ')  ,
-%~   [call(>,A_01,B_02,BOOLEAN_03)] ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for greater
 greater(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' greater ') ,
-  call(>,A_01,B_02,BOOLEAN_03) ,
+  call_op(>,A_01,B_02,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "size",
@@ -745,9 +509,6 @@ greater(A_01,B_02,BOOLEAN_03) :-
 %~      function_type_arguments_returns([argument_name("container")],[argument_type("Integer")]),
 %~      block_statements( [ expr_value(string_value(' cardinality ')),
 %~                          return_value(call_func_args("len",["container"]))])))
-%~
-%~ % Body Pass #1
-%~ comment(' cardinality '),len(CONTAINER_01,INTEGER_02),exit_proc(INTEGER_02)
 %~
 % Compiled KL-1 for size
 size(CONTAINER_01,INTEGER_02) :-
@@ -766,26 +527,16 @@ size(CONTAINER_01,INTEGER_02) :-
 %~                                               comprehension_target_iter("c","containers"),
 %~                                               comprehension_target_iter("e","c")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' merging ')  ,
-%~   [type(CONTAINERS_01,CC_03)] ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( "e", [
-%~       comprehension_target_iter("c",CONTAINERS_01),
-%~       comprehension_target_iter("e","c")])) ,
-%~   call(CC_03,ARG_04,CONTAINER_02) ,
-%~   exit_proc(CONTAINER_02))
-%~
 % Compiled KL-1 for merge
 merge(CONTAINERS_01,CONTAINER_02) :-
   willBeType(CONTAINER_02,'Container') ,
   comment(' merging ') ,
-  type(CONTAINERS_01,CC_03) ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( "e", [
-      comprehension_target_iter("c",CONTAINERS_01),
-      comprehension_target_iter("e","c")])) ,
-  call(CC_03,ARG_04,CONTAINER_02) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "e",
+      [ assign_targets_value1("c",CONTAINERS_01),
+        assign_targets_value1("e","c")])) ,
+  call_op(call_func_args("type",[CONTAINERS_01],ARG_03,CONTAINER_02)) ,
   exit_proc(CONTAINER_02).
 %~ % Universal AST Pass #0
 %~ def( "maximum",
@@ -794,17 +545,11 @@ merge(CONTAINERS_01,CONTAINER_02) :-
 %~      block_statements( [ expr_value(string_value(' maximum ')),
 %~                          return_value(call_func_args_keywords("max",["container"],[keyword_value(0)]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' maximum ')  ,
-%~   assign_targets_value( [INTEGER_02],
-%~     call_func_args_keywords("max",[CONTAINER_01],[keyword_value(0)])) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for maximum
 maximum(CONTAINER_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' maximum ') ,
-  assign_targets_value( [INTEGER_02],
+  assign_var( INTEGER_02,
     call_func_args_keywords("max",[CONTAINER_01],[keyword_value(0)])) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -814,17 +559,11 @@ maximum(CONTAINER_01,INTEGER_02) :-
 %~      block_statements( [ expr_value(string_value(' minimum ')),
 %~                          return_value(call_func_args_keywords("min",["container"],[keyword_value(0)]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' minimum ')  ,
-%~   assign_targets_value( [INTEGER_02],
-%~     call_func_args_keywords("min",[CONTAINER_01],[keyword_value(0)])) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for minimum
 minimum(CONTAINER_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' minimum ') ,
-  assign_targets_value( [INTEGER_02],
+  assign_var( INTEGER_02,
     call_func_args_keywords("min",[CONTAINER_01],[keyword_value(0)])) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -838,26 +577,16 @@ minimum(CONTAINER_01,INTEGER_02) :-
 %~                          return_value( call_func_args( "compfunc", [
 %~                                          call_func_args_keywords("max",["container"],[keyword_value("compfunc"),keyword_value(0)])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' maximum by custom function ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     call_func_args_keywords( "max",
-%~       [CONTAINER_01],
-%~       [ keyword_value(COMPFUNC_02),
-%~         keyword_value(0)])) ,
-%~   call(COMPFUNC_02,ARG_04,INTEGER_03) ,
-%~   exit_proc(INTEGER_03))
-%~
 % Compiled KL-1 for valmax
 valmax(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' maximum by custom function ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     call_func_args_keywords( "max",
       [CONTAINER_01],
       [ keyword_value(COMPFUNC_02),
         keyword_value(0)])) ,
-  call(COMPFUNC_02,ARG_04,INTEGER_03) ,
+  call_op(COMPFUNC_02,ARG_04,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
 %~ def( "valmin",
@@ -870,26 +599,16 @@ valmax(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
 %~                          return_value( call_func_args( "compfunc", [
 %~                                          call_func_args_keywords("min",["container"],[keyword_value("compfunc"),keyword_value(0)])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' minimum by custom function ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     call_func_args_keywords( "min",
-%~       [CONTAINER_01],
-%~       [ keyword_value(COMPFUNC_02),
-%~         keyword_value(0)])) ,
-%~   call(COMPFUNC_02,ARG_04,INTEGER_03) ,
-%~   exit_proc(INTEGER_03))
-%~
 % Compiled KL-1 for valmin
 valmin(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' minimum by custom function ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     call_func_args_keywords( "min",
       [CONTAINER_01],
       [ keyword_value(COMPFUNC_02),
         keyword_value(0)])) ,
-  call(COMPFUNC_02,ARG_04,INTEGER_03) ,
+  call_op(COMPFUNC_02,ARG_04,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
 %~ def( "argmax",
@@ -901,17 +620,11 @@ valmin(CONTAINER_01,COMPFUNC_02,INTEGER_03) :-
 %~      block_statements( [ expr_value(string_value(' largest item by custom order ')),
 %~                          return_value(call_func_args_keywords("max",["container"],[keyword_value("compfunc")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' largest item by custom order ')  ,
-%~   assign_targets_value( [ANY_03],
-%~     call_func_args_keywords("max",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
-%~   exit_proc(ANY_03))
-%~
 % Compiled KL-1 for argmax
 argmax(CONTAINER_01,COMPFUNC_02,ANY_03) :-
   willBeType(ANY_03,'Any') ,
   comment(' largest item by custom order ') ,
-  assign_targets_value( [ANY_03],
+  assign_var( ANY_03,
     call_func_args_keywords("max",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
   exit_proc(ANY_03).
 %~ % Universal AST Pass #0
@@ -924,17 +637,11 @@ argmax(CONTAINER_01,COMPFUNC_02,ANY_03) :-
 %~      block_statements( [ expr_value(string_value(' smallest item by custom order ')),
 %~                          return_value(call_func_args_keywords("min",["container"],[keyword_value("compfunc")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' smallest item by custom order ')  ,
-%~   assign_targets_value( [ANY_03],
-%~     call_func_args_keywords("min",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
-%~   exit_proc(ANY_03))
-%~
 % Compiled KL-1 for argmin
 argmin(CONTAINER_01,COMPFUNC_02,ANY_03) :-
   willBeType(ANY_03,'Any') ,
   comment(' smallest item by custom order ') ,
-  assign_targets_value( [ANY_03],
+  assign_var( ANY_03,
     call_func_args_keywords("min",[CONTAINER_01],[keyword_value(COMPFUNC_02)])) ,
   exit_proc(ANY_03).
 %~ % Universal AST Pass #0
@@ -946,22 +653,14 @@ argmin(CONTAINER_01,COMPFUNC_02,ANY_03) :-
 %~                                          [ call_func_args("set",["container"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["container",boxed_attribute_value("count")]))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' most common item ')  ,
-%~   assign_targets_value( [ANY_02],
-%~     call_func_args_keywords( "max",
-%~       [ call_func_args("set",[CONTAINER_01])],
-%~       [ keyword_value(qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")]))])) ,
-%~   exit_proc(ANY_02))
-%~
 % Compiled KL-1 for mostcommon
 mostcommon(CONTAINER_01,ANY_02) :-
   willBeType(ANY_02,'Any') ,
   comment(' most common item ') ,
-  assign_targets_value( [ANY_02],
+  assign_var( ANY_02,
     call_func_args_keywords( "max",
       [ call_func_args("set",[CONTAINER_01])],
-      [ keyword_value(qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")]))])) ,
+      [keyword_value(["count",CONTAINER_01])])) ,
   exit_proc(ANY_02).
 %~ % Universal AST Pass #0
 %~ def( "leastcommon",
@@ -972,22 +671,14 @@ mostcommon(CONTAINER_01,ANY_02) :-
 %~                                          [ call_func_args("set",["container"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["container",boxed_attribute_value("count")]))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' least common item ')  ,
-%~   assign_targets_value( [ANY_02],
-%~     call_func_args_keywords( "min",
-%~       [ call_func_args("set",[CONTAINER_01])],
-%~       [ keyword_value(qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")]))])) ,
-%~   exit_proc(ANY_02))
-%~
 % Compiled KL-1 for leastcommon
 leastcommon(CONTAINER_01,ANY_02) :-
   willBeType(ANY_02,'Any') ,
   comment(' least common item ') ,
-  assign_targets_value( [ANY_02],
+  assign_var( ANY_02,
     call_func_args_keywords( "min",
       [ call_func_args("set",[CONTAINER_01])],
-      [ keyword_value(qualified_identifier_identifiers([CONTAINER_01,boxed_attribute_value("count")]))])) ,
+      [keyword_value(["count",CONTAINER_01])])) ,
   exit_proc(ANY_02).
 %~ % Universal AST Pass #0
 %~ def( "initset",
@@ -996,17 +687,11 @@ leastcommon(CONTAINER_01,ANY_02) :-
 %~      block_statements( [ expr_value(string_value(' initialize container ')),
 %~                          return_value(call_func_args("frozenset",[set_elts(["value"])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' initialize container ')  ,
-%~   assign_targets_value([ARG_03],set_elts([VALUE_01])) ,
-%~   frozenset(ARG_03,FROZENSET_02) ,
-%~   exit_proc(FROZENSET_02))
-%~
 % Compiled KL-1 for initset
 initset(VALUE_01,FROZENSET_02) :-
   willBeType(FROZENSET_02,'FrozenSet') ,
   comment(' initialize container ') ,
-  assign_targets_value([ARG_03],set_elts([VALUE_01])) ,
+  assign_var(ARG_03,set_elts([VALUE_01])) ,
   frozenset(ARG_03,FROZENSET_02) ,
   exit_proc(FROZENSET_02).
 %~ % Universal AST Pass #0
@@ -1019,17 +704,11 @@ initset(VALUE_01,FROZENSET_02) :-
 %~      block_statements( [ expr_value(string_value(' logical and ')),
 %~                          return_value(bool_op_values(['python:And'],["a","b"]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' logical and ')  ,
-%~   assign_targets_value( [BOOLEAN_03],
-%~     bool_op_values(['python:And'],[A_01,B_02])) ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for both
 both(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' logical and ') ,
-  assign_targets_value( [BOOLEAN_03],
+  assign_var( BOOLEAN_03,
     bool_op_values(['python:And'],[A_01,B_02])) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
@@ -1042,18 +721,11 @@ both(A_01,B_02,BOOLEAN_03) :-
 %~      block_statements( [ expr_value(string_value(' logical or ')),
 %~                          return_value(bool_op_values(['python:Or'],["a","b"]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' logical or ')  ,
-%~   assign_targets_value( [BOOLEAN_03],
-%~     bool_op_values(['python:Or'],[A_01,B_02])) ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for either
 either(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' logical or ') ,
-  assign_targets_value( [BOOLEAN_03],
-    bool_op_values(['python:Or'],[A_01,B_02])) ,
+  assign_var(BOOLEAN_03,bool_op_values(['python:Or'],[A_01,B_02])) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "increment",
@@ -1066,26 +738,17 @@ either(A_01,B_02,BOOLEAN_03) :-
 %~                                           tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice("x",0),1),
 %~                                                         bin_op_left_right(add_token(+),subscript_value_slice("x",1),1)])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' incrementing ')  ,
-%~   assign_targets_value( [NUMERICAL_02],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[X_01,int])],
-%~        call_func_args(+,[X_01,1]),
-%~        tuple_elts( [ call_func_args(+,[subscript_value_slice(X_01,0),1]),
-%~                      call_func_args(+,[subscript_value_slice(X_01,1),1])]))) ,
-%~   exit_proc(NUMERICAL_02))
-%~
 % Compiled KL-1 for increment
 increment(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' incrementing ') ,
-  assign_targets_value( [NUMERICAL_02],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[X_01,int])],
-       call_func_args(+,[X_01,1]),
-       tuple_elts( [ call_func_args(+,[subscript_value_slice(X_01,0),1]),
-                     call_func_args(+,[subscript_value_slice(X_01,1),1])]))) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[X_01,int])]) ->
+      [call_op(+,X_01,1,NUMERICAL_02)] ;
+    [ assign_targets_value( [ARG_03], [
+        call_func_args(+,[subscript_value_slice(X_01,0),1]),
+        call_func_args(+,[subscript_value_slice(X_01,1),1])]),
+      tuple_elts(ARG_03,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "decrement",
@@ -1098,26 +761,17 @@ increment(X_01,NUMERICAL_02) :-
 %~                                           tuple_elts( [ bin_op_left_right(sub_token(-),subscript_value_slice("x",0),1),
 %~                                                         bin_op_left_right(sub_token(-),subscript_value_slice("x",1),1)])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' decrementing ')  ,
-%~   assign_targets_value( [NUMERICAL_02],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[X_01,int])],
-%~        call_func_args(-,[X_01,1]),
-%~        tuple_elts( [ call_func_args(-,[subscript_value_slice(X_01,0),1]),
-%~                      call_func_args(-,[subscript_value_slice(X_01,1),1])]))) ,
-%~   exit_proc(NUMERICAL_02))
-%~
 % Compiled KL-1 for decrement
 decrement(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' decrementing ') ,
-  assign_targets_value( [NUMERICAL_02],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[X_01,int])],
-       call_func_args(-,[X_01,1]),
-       tuple_elts( [ call_func_args(-,[subscript_value_slice(X_01,0),1]),
-                     call_func_args(-,[subscript_value_slice(X_01,1),1])]))) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[X_01,int])]) ->
+      [call_op(-,X_01,1,NUMERICAL_02)] ;
+    [ assign_targets_value( [ARG_03], [
+        call_func_args(-,[subscript_value_slice(X_01,0),1]),
+        call_func_args(-,[subscript_value_slice(X_01,1),1])]),
+      tuple_elts(ARG_03,NUMERICAL_02)]) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "crement",
@@ -1148,68 +802,37 @@ decrement(X_01,NUMERICAL_02) :-
 %~                                                            bin_op_left_right(add_token(+),subscript_value_slice("x",1),1),
 %~                                                            bin_op_left_right(sub_token(-),subscript_value_slice("x",1),1)))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' incrementing positive and decrementing negative ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[X_01,int])],
-%~      (/*2*/
-%~        assign_targets_value( [NUMERICAL_02],
-%~          if_exp_test_body_orelse(
-%~             call_func_args(==,[X_01,0]),
-%~             0,
-%~             if_exp_test_body_orelse(
-%~                call_func_args(>,[X_01,0]),
-%~                call_func_args(+,[X_01,1]),
-%~                call_func_args(-,[X_01,1])))) ,
-%~        exit_proc(NUMERICAL_02))) ,
-%~   assign_targets_value( [NUMERICAL_02],
-%~     tuple_elts( [ if_exp_test_body_orelse(
-%~                      call_func_args(==,[subscript_value_slice(X_01,0),0]),
-%~                      0,
-%~                      if_exp_test_body_orelse(
-%~                         call_func_args(>,[subscript_value_slice(X_01,0),0]),
-%~                         call_func_args(+,[subscript_value_slice(X_01,0),1]),
-%~                         call_func_args(-,[subscript_value_slice(X_01,0),1]))),
-%~                   if_exp_test_body_orelse(
-%~                      call_func_args(==,[subscript_value_slice(X_01,1),0]),
-%~                      0,
-%~                      if_exp_test_body_orelse(
-%~                         call_func_args(>,[subscript_value_slice(X_01,1),0]),
-%~                         call_func_args(+,[subscript_value_slice(X_01,1),1]),
-%~                         call_func_args(-,[subscript_value_slice(X_01,1),1])))])) ,
-%~   exit_proc(NUMERICAL_02))
-%~
 % Compiled KL-1 for crement
 crement(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' incrementing positive and decrementing negative ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[X_01,int])],
-     (/*2*/
-       assign_targets_value( [NUMERICAL_02],
-         if_exp_test_body_orelse(
-            call_func_args(==,[X_01,0]),
-            0,
-            if_exp_test_body_orelse(
-               call_func_args(>,[X_01,0]),
-               call_func_args(+,[X_01,1]),
-               call_func_args(-,[X_01,1])))) ,
-       exit_proc(NUMERICAL_02))) ,
-  assign_targets_value( [NUMERICAL_02],
-    tuple_elts( [ if_exp_test_body_orelse(
-                     call_func_args(==,[subscript_value_slice(X_01,0),0]),
-                     0,
-                     if_exp_test_body_orelse(
-                        call_func_args(>,[subscript_value_slice(X_01,0),0]),
-                        call_func_args(+,[subscript_value_slice(X_01,0),1]),
-                        call_func_args(-,[subscript_value_slice(X_01,0),1]))),
-                  if_exp_test_body_orelse(
-                     call_func_args(==,[subscript_value_slice(X_01,1),0]),
-                     0,
-                     if_exp_test_body_orelse(
-                        call_func_args(>,[subscript_value_slice(X_01,1),0]),
-                        call_func_args(+,[subscript_value_slice(X_01,1),1]),
-                        call_func_args(-,[subscript_value_slice(X_01,1),1])))])) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[X_01,int])]) ->
+      (/*2*/
+        (/*2*/
+          testif(call_func_args(==,[X_01,0])) ->
+            call(NUMERICAL_02=0) ;
+          [ (/*2*/
+              testif(call_func_args(>,[X_01,0])) ->
+                [call_op(+,X_01,1,NUMERICAL_02)] ;
+              [call_op(-,X_01,1,NUMERICAL_02)])]) ,
+        exit_proc(NUMERICAL_02))) ,
+  assign_targets_value( [ARG_03], [
+    if_exp_test_body_orelse(
+       call_func_args(==,[subscript_value_slice(X_01,0),0]),
+       0,
+       if_exp_test_body_orelse(
+          call_func_args(>,[subscript_value_slice(X_01,0),0]),
+          call_func_args(+,[subscript_value_slice(X_01,0),1]),
+          call_func_args(-,[subscript_value_slice(X_01,0),1]))),
+    if_exp_test_body_orelse(
+       call_func_args(==,[subscript_value_slice(X_01,1),0]),
+       0,
+       if_exp_test_body_orelse(
+          call_func_args(>,[subscript_value_slice(X_01,1),0]),
+          call_func_args(+,[subscript_value_slice(X_01,1),1]),
+          call_func_args(-,[subscript_value_slice(X_01,1),1])))]) ,
+  tuple_elts(ARG_03,NUMERICAL_02) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "sign",
@@ -1233,54 +856,33 @@ crement(X_01,NUMERICAL_02) :-
 %~                                                         if_exp_test_body_orelse(
 %~                                                            compare_ops_left_comparators(gt_token(>),subscript_value_slice("x",1),0), 1,unary_op_operand(us_ub_token(-),1)))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' sign ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[X_01,int])],
-%~      (/*2*/
-%~        assign_targets_value( [NUMERICAL_02],
-%~          if_exp_test_body_orelse(
-%~             call_func_args(==,[X_01,0]),
-%~             0,
-%~             if_exp_test_body_orelse(call_func_args(>,[X_01,0]),1,call_func_args(-,[1])))) ,
-%~        exit_proc(NUMERICAL_02))) ,
-%~   assign_targets_value( [NUMERICAL_02],
-%~     tuple_elts( [ if_exp_test_body_orelse(
-%~                      call_func_args(==,[subscript_value_slice(X_01,0),0]),
-%~                      0,
-%~                      if_exp_test_body_orelse(
-%~                         call_func_args(>,[subscript_value_slice(X_01,0),0]), 1,call_func_args(-,[1]))),
-%~                   if_exp_test_body_orelse(
-%~                      call_func_args(==,[subscript_value_slice(X_01,1),0]),
-%~                      0,
-%~                      if_exp_test_body_orelse(
-%~                         call_func_args(>,[subscript_value_slice(X_01,1),0]), 1,call_func_args(-,[1])))])) ,
-%~   exit_proc(NUMERICAL_02))
-%~
 % Compiled KL-1 for sign
 sign(X_01,NUMERICAL_02) :-
   willBeType(NUMERICAL_02,'Numerical') ,
   comment(' sign ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[X_01,int])],
-     (/*2*/
-       assign_targets_value( [NUMERICAL_02],
-         if_exp_test_body_orelse(
-            call_func_args(==,[X_01,0]),
-            0,
-            if_exp_test_body_orelse(call_func_args(>,[X_01,0]),1,call_func_args(-,[1])))) ,
-       exit_proc(NUMERICAL_02))) ,
-  assign_targets_value( [NUMERICAL_02],
-    tuple_elts( [ if_exp_test_body_orelse(
-                     call_func_args(==,[subscript_value_slice(X_01,0),0]),
-                     0,
-                     if_exp_test_body_orelse(
-                        call_func_args(>,[subscript_value_slice(X_01,0),0]), 1,call_func_args(-,[1]))),
-                  if_exp_test_body_orelse(
-                     call_func_args(==,[subscript_value_slice(X_01,1),0]),
-                     0,
-                     if_exp_test_body_orelse(
-                        call_func_args(>,[subscript_value_slice(X_01,1),0]), 1,call_func_args(-,[1])))])) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[X_01,int])]) ->
+      (/*2*/
+        (/*2*/
+          testif(call_func_args(==,[X_01,0])) ->
+            call(NUMERICAL_02=0) ;
+          [ (/*2*/
+              testif(call_func_args(>,[X_01,0])) ->
+                call(NUMERICAL_02=1) ;
+              [call_op(-,1,NUMERICAL_02)])]) ,
+        exit_proc(NUMERICAL_02))) ,
+  assign_targets_value( [ARG_03], [
+    if_exp_test_body_orelse(
+       call_func_args(==,[subscript_value_slice(X_01,0),0]),
+       0,
+       if_exp_test_body_orelse(
+          call_func_args(>,[subscript_value_slice(X_01,0),0]), 1,call_func_args(-,[1]))),
+    if_exp_test_body_orelse(
+       call_func_args(==,[subscript_value_slice(X_01,1),0]),
+       0,
+       if_exp_test_body_orelse(
+          call_func_args(>,[subscript_value_slice(X_01,1),0]), 1,call_func_args(-,[1])))]) ,
+  tuple_elts(ARG_03,NUMERICAL_02) ,
   exit_proc(NUMERICAL_02).
 %~ % Universal AST Pass #0
 %~ def( "positive",
@@ -1289,14 +891,11 @@ sign(X_01,NUMERICAL_02) :-
 %~      block_statements( [ expr_value(string_value(' positive ')),
 %~                          return_value(compare_ops_left_comparators(gt_token(>),"x",0))])))
 %~
-%~ % Body Pass #1
-%~ comment(' positive '),[call(>,X_01,0,BOOLEAN_02)],exit_proc(BOOLEAN_02)
-%~
 % Compiled KL-1 for positive
 positive(X_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' positive ') ,
-  call(>,X_01,0,BOOLEAN_02) ,
+  call_op(>,X_01,0,BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "toivec",
@@ -1304,11 +903,6 @@ positive(X_01,BOOLEAN_02) :-
 %~      function_type_arguments_returns([argument_name("i")],[argument_type("IntegerTuple")]),
 %~      block_statements( [ expr_value(string_value(' vector pointing vertically ')),
 %~                          return_value(tuple_elts(["i",0]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' vector pointing vertically ')  ,
-%~   call(into_tuple(I_01,0,INTEGERTUPLE_02)) ,
-%~   exit_proc(INTEGERTUPLE_02))
 %~
 % Compiled KL-1 for toivec
 toivec(I_01,INTEGERTUPLE_02) :-
@@ -1322,11 +916,6 @@ toivec(I_01,INTEGERTUPLE_02) :-
 %~      function_type_arguments_returns([argument_name("j")],[argument_type("IntegerTuple")]),
 %~      block_statements( [ expr_value(string_value(' vector pointing horizontally ')),
 %~                          return_value(tuple_elts([0,"j"]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' vector pointing horizontally ')  ,
-%~   call(into_tuple(0,J_01,INTEGERTUPLE_02)) ,
-%~   exit_proc(INTEGERTUPLE_02))
 %~
 % Compiled KL-1 for tojvec
 tojvec(J_01,INTEGERTUPLE_02) :-
@@ -1345,28 +934,19 @@ tojvec(J_01,INTEGERTUPLE_02) :-
 %~                          return_value( call_func_args(
 %~                                           call_func_args("type",["container"]),
 %~                                           [ generator_exp_elt_generators( "e", [
-%~                                               comprehension_ifs_target_iter([call_func_args("condition",["e"])],"e","container")])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' keep elements in container that satisfy condition ')  ,
-%~   [type(CONTAINER_01,CC_04)] ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators( "e", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(CONDITION_02,["e"])], "e",CONTAINER_01)])) ,
-%~   call(CC_04,ARG_05,CONTAINER_03) ,
-%~   exit_proc(CONTAINER_03))
+%~                                               comprehension_target_iter_ifs("e","container",[call_func_args("condition",["e"])])])]))])))
 %~
 % Compiled KL-1 for sfilter
 sfilter(CONTAINER_01,CONDITION_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' keep elements in container that satisfy condition ') ,
-  type(CONTAINER_01,CC_04) ,
-  assign_targets_value( [ARG_05],
-    generator_exp_elt_generators( E, [
-      comprehension_ifs_target_iter(
-         [ call_func_args(CONDITION_02,[E])], E,CONTAINER_01)])) ,
-  call(CC_04,ARG_05,CONTAINER_03) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      "e",
+      [ comprehension_target_iter_ifs( "e",
+          CONTAINER_01,
+          [ call_func_args(CONDITION_02,["e"])])])) ,
+  call_op(call_func_args("type",[CONTAINER_01],ARG_04,CONTAINER_03)) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "mfilter",
@@ -1377,12 +957,6 @@ sfilter(CONTAINER_01,CONDITION_02,CONTAINER_03) :-
 %~         [argument_type("FrozenSet")]),
 %~      block_statements( [ expr_value(string_value(' filter and merge ')),
 %~                          return_value(call_func_args("merge",[call_func_args("sfilter",["container","function"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' filter and merge ')  ,
-%~   [sfilter(CONTAINER_01,FUNCTION_02,ARG_04)] ,
-%~   merge(ARG_04,FROZENSET_03) ,
-%~   exit_proc(FROZENSET_03))
 %~
 % Compiled KL-1 for mfilter
 mfilter(CONTAINER_01,FUNCTION_02,FROZENSET_03) :-
@@ -1401,25 +975,18 @@ mfilter(CONTAINER_01,FUNCTION_02,FROZENSET_03) :-
 %~      block_statements( [ expr_value(string_value(' first element of container that satisfies condition ')),
 %~                          return_value( call_func_args( "next", [
 %~                                          generator_exp_elt_generators( "e", [
-%~                                            comprehension_ifs_target_iter([call_func_args("condition",["e"])],"e","container")])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' first element of container that satisfies condition ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( "e", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(CONDITION_02,["e"])], "e",CONTAINER_01)])) ,
-%~   next(ARG_04,ANY_03) ,
-%~   exit_proc(ANY_03))
+%~                                            comprehension_target_iter_ifs("e","container",[call_func_args("condition",["e"])])])]))])))
 %~
 % Compiled KL-1 for extract
 extract(CONTAINER_01,CONDITION_02,ANY_03) :-
   willBeType(ANY_03,'Any') ,
   comment(' first element of container that satisfies condition ') ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( E, [
-      comprehension_ifs_target_iter(
-         [ call_func_args(CONDITION_02,[E])], E,CONTAINER_01)])) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      "e",
+      [ comprehension_target_iter_ifs( "e",
+          CONTAINER_01,
+          [ call_func_args(CONDITION_02,["e"])])])) ,
   next(ARG_04,ANY_03) ,
   exit_proc(ANY_03).
 %~ % Universal AST Pass #0
@@ -1428,11 +995,6 @@ extract(CONTAINER_01,CONDITION_02,ANY_03) :-
 %~      function_type_arguments_returns([argument_name("container")],[argument_type("Tuple")]),
 %~      block_statements( [ expr_value(string_value(' conversion to tuple ')),
 %~                          return_value(call_func_args("tuple",["container"]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' conversion to tuple ')  ,
-%~   tuple(CONTAINER_01,TUPLE_02) ,
-%~   exit_proc(TUPLE_02))
 %~
 % Compiled KL-1 for totuple
 totuple(CONTAINER_01,TUPLE_02) :-
@@ -1446,12 +1008,6 @@ totuple(CONTAINER_01,TUPLE_02) :-
 %~      function_type_arguments_returns([argument_name("container")],[argument_type("Any")]),
 %~      block_statements( [ expr_value(string_value(' first item of container ')),
 %~                          return_value(call_func_args("next",[call_func_args("iter",["container"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' first item of container ')  ,
-%~   [iter(CONTAINER_01,ARG_03)] ,
-%~   next(ARG_03,ANY_02) ,
-%~   exit_proc(ANY_02))
 %~
 % Compiled KL-1 for first
 first(CONTAINER_01,ANY_02) :-
@@ -1467,18 +1023,13 @@ first(CONTAINER_01,ANY_02) :-
 %~      block_statements( [ expr_value(string_value(' last item of container ')),
 %~                          return_value( subscript_value_slice(call_func_args("max",[call_func_args("enumerate",["container"])]),1))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' last item of container ')  ,
-%~   assign_targets_value( [ANY_02],
-%~     subscript_value_slice(call_func_args("max",[call_func_args("enumerate",[CONTAINER_01])]),1)) ,
-%~   exit_proc(ANY_02))
-%~
 % Compiled KL-1 for last
 last(CONTAINER_01,ANY_02) :-
   willBeType(ANY_02,'Any') ,
   comment(' last item of container ') ,
-  assign_targets_value( [ANY_02],
-    subscript_value_slice(call_func_args("max",[call_func_args("enumerate",[CONTAINER_01])]),1)) ,
+  enumerate(CONTAINER_01,ARG_04) ,
+  max(ARG_04,ARG_03) ,
+  subscript_value_slice(ARG_03,1,ANY_02) ,
   exit_proc(ANY_02).
 %~ % Universal AST Pass #0
 %~ def( "insert",
@@ -1492,24 +1043,15 @@ last(CONTAINER_01,ANY_02) :-
 %~                                           qualified_identifier_identifiers(["container",boxed_attribute_value("union")]),
 %~                                           [ call_func_args("frozenset",[set_elts(["value"])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' insert item into container ')  ,
-%~   assign_targets_value( [CC_04],
-%~     qualified_identifier_identifiers([CONTAINER_02,boxed_attribute_value("union")])) ,
-%~   [ assign_targets_value([ARG_06],set_elts([VALUE_01])),
-%~     frozenset(ARG_06,ARG_05)] ,
-%~   call(CC_04,ARG_05,FROZENSET_03) ,
-%~   exit_proc(FROZENSET_03))
-%~
 % Compiled KL-1 for insert
 insert(VALUE_01,CONTAINER_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' insert item into container ') ,
-  assign_targets_value( [CC_04],
-    qualified_identifier_identifiers([CONTAINER_02,boxed_attribute_value("union")])) ,
-  assign_targets_value([ARG_06],set_elts([VALUE_01])) ,
-  frozenset(ARG_06,ARG_05) ,
-  call(CC_04,ARG_05,FROZENSET_03) ,
+  assign_var(ARG_05,set_elts([VALUE_01])) ,
+  frozenset(ARG_05,ARG_04) ,
+  call_op( qualified_identifier_identifiers(
+              [ CONTAINER_02,
+                boxed_attribute_value("union")], ARG_04,FROZENSET_03)) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
 %~ def( "remove",
@@ -1522,28 +1064,19 @@ insert(VALUE_01,CONTAINER_02,FROZENSET_03) :-
 %~                          return_value( call_func_args(
 %~                                           call_func_args("type",["container"]),
 %~                                           [ generator_exp_elt_generators( "e", [
-%~                                               comprehension_ifs_target_iter([compare_ops_left_comparators(not_eq_token('!='),"e","value")],"e","container")])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' remove item from container ')  ,
-%~   [type(CONTAINER_02,CC_04)] ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators( "e", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args('!=',["e",VALUE_01])], "e",CONTAINER_02)])) ,
-%~   call(CC_04,ARG_05,CONTAINER_03) ,
-%~   exit_proc(CONTAINER_03))
+%~                                               comprehension_target_iter_ifs("e","container",[compare_ops_left_comparators(not_eq_token('!='),"e","value")])])]))])))
 %~
 % Compiled KL-1 for remove
 remove(VALUE_01,CONTAINER_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' remove item from container ') ,
-  type(CONTAINER_02,CC_04) ,
-  assign_targets_value( [ARG_05],
-    generator_exp_elt_generators( E, [
-      comprehension_ifs_target_iter(
-         [ call_func_args('!=',[E,VALUE_01])], E,CONTAINER_02)])) ,
-  call(CC_04,ARG_05,CONTAINER_03) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      "e",
+      [ comprehension_target_iter_ifs( "e",
+          CONTAINER_02,
+          [ call_func_args('!=',["e",VALUE_01])])])) ,
+  call_op(call_func_args("type",[CONTAINER_02],ARG_04,CONTAINER_03)) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "other",
@@ -1554,12 +1087,6 @@ remove(VALUE_01,CONTAINER_02,CONTAINER_03) :-
 %~         [argument_type("Any")]),
 %~      block_statements( [ expr_value(string_value(' other value in the container ')),
 %~                          return_value(call_func_args("first",[call_func_args("remove",["value","container"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' other value in the container ')  ,
-%~   [remove(VALUE_02,CONTAINER_01,ARG_04)] ,
-%~   first(ARG_04,ANY_03) ,
-%~   exit_proc(ANY_03))
 %~
 % Compiled KL-1 for other
 other(CONTAINER_01,VALUE_02,ANY_03) :-
@@ -1577,12 +1104,6 @@ other(CONTAINER_01,VALUE_02,ANY_03) :-
 %~      block_statements( [ expr_value(string_value(' range ')),
 %~                          return_value(call_func_args("tuple",[call_func_args("range",["start","stop","step"])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' range ')  ,
-%~   [range(START_01,STOP_02,STEP_03,ARG_05)] ,
-%~   tuple(ARG_05,TUPLE_04) ,
-%~   exit_proc(TUPLE_04))
-%~
 % Compiled KL-1 for interval
 interval(START_01,STOP_02,STEP_03,TUPLE_04) :-
   willBeType(TUPLE_04,'Tuple') ,
@@ -1599,11 +1120,6 @@ interval(START_01,STOP_02,STEP_03,TUPLE_04) :-
 %~         [argument_type("IntegerTuple")]),
 %~      block_statements( [ expr_value(string_value(' constructs a tuple ')),
 %~                          return_value(tuple_elts(["a","b"]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' constructs a tuple ')  ,
-%~   call(into_tuple(A_01,B_02,INTEGERTUPLE_03)) ,
-%~   exit_proc(INTEGERTUPLE_03))
 %~
 % Compiled KL-1 for astuple
 astuple(A_01,B_02,INTEGERTUPLE_03) :-
@@ -1624,23 +1140,14 @@ astuple(A_01,B_02,INTEGERTUPLE_03) :-
 %~                                            comprehension_target_iter("j","b"),
 %~                                            comprehension_target_iter("i","a")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' cartesian product ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( tuple_elts(["i","j"]), [
-%~       comprehension_target_iter("j",B_02),
-%~       comprehension_target_iter("i",A_01)])) ,
-%~   frozenset(ARG_04,FROZENSET_03) ,
-%~   exit_proc(FROZENSET_03))
-%~
 % Compiled KL-1 for product
 product(A_01,B_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' cartesian product ') ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( tuple_elts([I,J]), [
-      comprehension_target_iter(J,B_02),
-      comprehension_target_iter(I,A_01)])) ,
+  assign_targets_value( [ARG_04], [
+    generator_exp_elt_generator_1("i",assign_targets_value1("j",B_02)),
+    generator_exp_elt_generator_1("j",assign_targets_value1("i",A_01)),
+    elt_generator(v1,tuple_elts([]),[])]) ,
   frozenset(ARG_04,FROZENSET_03) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
@@ -1652,12 +1159,6 @@ product(A_01,B_02,FROZENSET_03) :-
 %~         [argument_type("TupleTuple")]),
 %~      block_statements( [ expr_value(string_value(' zipping of two tuples ')),
 %~                          return_value(call_func_args("tuple",[call_func_args("zip",["a","b"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' zipping of two tuples ')  ,
-%~   [zip(A_01,B_02,ARG_04)] ,
-%~   tuple(ARG_04,TUPLETUPLE_03) ,
-%~   exit_proc(TUPLETUPLE_03))
 %~
 % Compiled KL-1 for pair
 pair(A_01,B_02,TUPLETUPLE_03) :-
@@ -1675,18 +1176,13 @@ pair(A_01,B_02,TUPLETUPLE_03) :-
 %~      block_statements( [ expr_value(string_value(' if else branching ')),
 %~                          return_value(if_exp_test_body_orelse("condition","a","b"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' if else branching ')  ,
-%~   assign_targets_value( [ANY_04],
-%~     if_exp_test_body_orelse(CONDITION_01,A_02,B_03)) ,
-%~   exit_proc(ANY_04))
-%~
 % Compiled KL-1 for branch
 branch(CONDITION_01,A_02,B_03,ANY_04) :-
   willBeType(ANY_04,'Any') ,
   comment(' if else branching ') ,
-  assign_targets_value( [ANY_04],
-    if_exp_test_body_orelse(CONDITION_01,A_02,B_03)) ,
+  (/*2*/
+    testif(CONDITION_01)->call(ANY_04=A_02) ;
+    call(ANY_04=B_03)) ,
   exit_proc(ANY_04).
 %~ % Universal AST Pass #0
 %~ def( "compose",
@@ -1699,20 +1195,13 @@ branch(CONDITION_01,A_02,B_03,ANY_04) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts(call_func_args("outer",[call_func_args("inner",["x"])]))))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' function composition ')  ,
-%~   assign_targets_value( [CALLABLE_03],
-%~     lambda_args_body( arguments_args([argument_name("x")]),
-%~       call_func_args(OUTER_01,[call_func_args(INNER_02,["x"])]))) ,
-%~   exit_proc(CALLABLE_03))
-%~
 % Compiled KL-1 for compose
 compose(OUTER_01,INNER_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' function composition ') ,
-  assign_targets_value( [CALLABLE_03],
-    lambda_args_body( arguments_args([argument_name(X)]),
-      call_func_args(OUTER_01,[call_func_args(INNER_02,[X])]))) ,
+  assign_var( CALLABLE_03,
+    lambda_args_body( arguments_args([argument_name("x")]),
+      call_func_args(OUTER_01,[call_func_args(INNER_02,["x"])]))) ,
   exit_proc(CALLABLE_03).
 %~ % Universal AST Pass #0
 %~ def( "chain",
@@ -1724,22 +1213,14 @@ compose(OUTER_01,INNER_02,CALLABLE_03) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts(call_func_args("h",[call_func_args("g",[call_func_args("f",["x"])])]))))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' function composition with three functions ')  ,
-%~   assign_targets_value( [CALLABLE_04],
-%~     lambda_args_body( arguments_args([argument_name("x")]),
-%~       call_func_args( H_01, [
-%~         call_func_args(G_02,[call_func_args(F_03,["x"])])]))) ,
-%~   exit_proc(CALLABLE_04))
-%~
 % Compiled KL-1 for chain
 chain(H_01,G_02,F_03,CALLABLE_04) :-
   willBeType(CALLABLE_04,'Callable') ,
   comment(' function composition with three functions ') ,
-  assign_targets_value( [CALLABLE_04],
-    lambda_args_body( arguments_args([argument_name(X)]),
+  assign_var( CALLABLE_04,
+    lambda_args_body( arguments_args([argument_name("x")]),
       call_func_args( H_01, [
-        call_func_args(G_02,[call_func_args(F_03,[X])])]))) ,
+        call_func_args(G_02,[call_func_args(F_03,["x"])])]))) ,
   exit_proc(CALLABLE_04).
 %~ % Universal AST Pass #0
 %~ def( "matcher",
@@ -1752,20 +1233,13 @@ chain(H_01,G_02,F_03,CALLABLE_04) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts(compare_ops_left_comparators(eq_token(==),call_func_args("function",["x"]),"target"))))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' construction of equality function ')  ,
-%~   assign_targets_value( [CALLABLE_03],
-%~     lambda_args_body( arguments_args([argument_name("x")]),
-%~       call_func_args(==,[call_func_args(FUNCTION_01,["x"]),TARGET_02]))) ,
-%~   exit_proc(CALLABLE_03))
-%~
 % Compiled KL-1 for matcher
 matcher(FUNCTION_01,TARGET_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' construction of equality function ') ,
-  assign_targets_value( [CALLABLE_03],
-    lambda_args_body( arguments_args([argument_name(X)]),
-      call_func_args(==,[call_func_args(FUNCTION_01,[X]),TARGET_02]))) ,
+  assign_var( CALLABLE_03,
+    lambda_args_body( arguments_args([argument_name("x")]),
+      call_func_args(==,[call_func_args(FUNCTION_01,["x"]),TARGET_02]))) ,
   exit_proc(CALLABLE_03).
 %~ % Universal AST Pass #0
 %~ def( "rbind",
@@ -1792,62 +1266,33 @@ matcher(FUNCTION_01,TARGET_02,CALLABLE_03) :-
 %~                                                                                           arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
 %~                                                                                           body_stmts(call_func_args("function",["x","y","z","fixed"]))))]))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' fix the rightmost argument ')  ,
-%~   assign_targets_value( ["n"],
-%~     qualified_identifier_identifiers( [ FUNCTION_01,
-%~                                         boxed_attribute_value("__code__"),
-%~                                         boxed_attribute_value("co_argcount")])) ,
-%~   if_test_body_orelse(
-%~      call_func_args(==,["n",2]),
-%~      (/*2*/
-%~        assign_targets_value( [CALLABLE_03],
-%~          lambda_args_body( arguments_args([argument_name("x")]),
-%~            call_func_args(FUNCTION_01,["x",FIXED_02]))) ,
-%~        exit_proc(CALLABLE_03)),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              call_func_args(==,["n",3]),
-%~                              (/*2*/
-%~                                assign_targets_value( [CALLABLE_03],
-%~                                  lambda_args_body(
-%~                                     arguments_args([argument_name("x"),argument_name("y")]),
-%~                                     call_func_args(FUNCTION_01,["x","y",FIXED_02]))) ,
-%~                                exit_proc(CALLABLE_03)),
-%~                              orelse_else_stmts( [ assign_targets_value( [CALLABLE_03],
-%~                                                     lambda_args_body(
-%~                                                        arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
-%~                                                        call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))),
-%~                                                   exit_proc(CALLABLE_03)]))])))
-%~
 % Compiled KL-1 for rbind
 rbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' fix the rightmost argument ') ,
-  assign_targets_value( [N],
+  assign_var( "n",
     qualified_identifier_identifiers( [ FUNCTION_01,
                                         boxed_attribute_value("__code__"),
                                         boxed_attribute_value("co_argcount")])) ,
-  if_test_body_orelse(
-     call_func_args(==,[N,2]),
-     (/*2*/
-       assign_targets_value( [CALLABLE_03],
-         lambda_args_body( arguments_args([argument_name(X)]),
-           call_func_args(FUNCTION_01,[X,FIXED_02]))) ,
-       exit_proc(CALLABLE_03)),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             call_func_args(==,[N,3]),
-                             (/*2*/
-                               assign_targets_value( [CALLABLE_03],
-                                 lambda_args_body(
-                                    arguments_args([argument_name(X),argument_name(Y)]),
-                                    call_func_args(FUNCTION_01,[X,Y,FIXED_02]))) ,
-                               exit_proc(CALLABLE_03)),
-                             orelse_else_stmts( [ assign_targets_value( [CALLABLE_03],
-                                                    lambda_args_body(
-                                                       arguments_args( [ argument_name(X), argument_name(Y),argument_name(Z)]),
-                                                       call_func_args( FUNCTION_01, [
-                                                         X, Y,Z,FIXED_02]))),
-                                                  exit_proc(CALLABLE_03)]))])).
+  ( testif(call_func_args(==,["n",2])) ->
+      (/*2*/
+        assign_var( CALLABLE_03,
+          lambda_args_body( arguments_args([argument_name("x")]),
+            call_func_args(FUNCTION_01,["x",FIXED_02]))) ,
+        exit_proc(CALLABLE_03))  ;
+    testif(call_func_args(==,["n",3])) ->
+      (/*2*/
+        assign_var( CALLABLE_03,
+          lambda_args_body(
+             arguments_args([argument_name("x"),argument_name("y")]),
+             call_func_args(FUNCTION_01,["x","y",FIXED_02]))) ,
+        exit_proc(CALLABLE_03)) ;
+    (/*2*/
+      assign_var( CALLABLE_03,
+        lambda_args_body(
+           arguments_args([argument_name("x"),argument_name("y"),argument_name("z")]),
+           call_func_args(FUNCTION_01,["x","y","z",FIXED_02]))) ,
+      exit_proc(CALLABLE_03))).
 %~ % Universal AST Pass #0
 %~ def( "lbind",
 %~   function_type_body(
@@ -1873,62 +1318,33 @@ rbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
 %~                                                                                           arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
 %~                                                                                           body_stmts(call_func_args("function",["fixed","y","z","a"]))))]))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' fix the leftmost argument ')  ,
-%~   assign_targets_value( ["n"],
-%~     qualified_identifier_identifiers( [ FUNCTION_01,
-%~                                         boxed_attribute_value("__code__"),
-%~                                         boxed_attribute_value("co_argcount")])) ,
-%~   if_test_body_orelse(
-%~      call_func_args(==,["n",2]),
-%~      (/*2*/
-%~        assign_targets_value( [CALLABLE_03],
-%~          lambda_args_body( arguments_args([argument_name("y")]),
-%~            call_func_args(FUNCTION_01,[FIXED_02,"y"]))) ,
-%~        exit_proc(CALLABLE_03)),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              call_func_args(==,["n",3]),
-%~                              (/*2*/
-%~                                assign_targets_value( [CALLABLE_03],
-%~                                  lambda_args_body(
-%~                                     arguments_args([argument_name("y"),argument_name("z")]),
-%~                                     call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))) ,
-%~                                exit_proc(CALLABLE_03)),
-%~                              orelse_else_stmts( [ assign_targets_value( [CALLABLE_03],
-%~                                                     lambda_args_body(
-%~                                                        arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
-%~                                                        call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))),
-%~                                                   exit_proc(CALLABLE_03)]))])))
-%~
 % Compiled KL-1 for lbind
 lbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' fix the leftmost argument ') ,
-  assign_targets_value( [N],
+  assign_var( "n",
     qualified_identifier_identifiers( [ FUNCTION_01,
                                         boxed_attribute_value("__code__"),
                                         boxed_attribute_value("co_argcount")])) ,
-  if_test_body_orelse(
-     call_func_args(==,[N,2]),
-     (/*2*/
-       assign_targets_value( [CALLABLE_03],
-         lambda_args_body( arguments_args([argument_name(Y)]),
-           call_func_args(FUNCTION_01,[FIXED_02,Y]))) ,
-       exit_proc(CALLABLE_03)),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             call_func_args(==,[N,3]),
-                             (/*2*/
-                               assign_targets_value( [CALLABLE_03],
-                                 lambda_args_body(
-                                    arguments_args([argument_name(Y),argument_name(Z)]),
-                                    call_func_args(FUNCTION_01,[FIXED_02,Y,Z]))) ,
-                               exit_proc(CALLABLE_03)),
-                             orelse_else_stmts( [ assign_targets_value( [CALLABLE_03],
-                                                    lambda_args_body(
-                                                       arguments_args( [ argument_name(Y), argument_name(Z),argument_name(A)]),
-                                                       call_func_args( FUNCTION_01, [
-                                                         FIXED_02, Y,Z,A]))),
-                                                  exit_proc(CALLABLE_03)]))])).
+  ( testif(call_func_args(==,["n",2])) ->
+      (/*2*/
+        assign_var( CALLABLE_03,
+          lambda_args_body( arguments_args([argument_name("y")]),
+            call_func_args(FUNCTION_01,[FIXED_02,"y"]))) ,
+        exit_proc(CALLABLE_03))  ;
+    testif(call_func_args(==,["n",3])) ->
+      (/*2*/
+        assign_var( CALLABLE_03,
+          lambda_args_body(
+             arguments_args([argument_name("y"),argument_name("z")]),
+             call_func_args(FUNCTION_01,[FIXED_02,"y","z"]))) ,
+        exit_proc(CALLABLE_03)) ;
+    (/*2*/
+      assign_var( CALLABLE_03,
+        lambda_args_body(
+           arguments_args([argument_name("y"),argument_name("z"),argument_name("a")]),
+           call_func_args(FUNCTION_01,[FIXED_02,"y","z","a"]))) ,
+      exit_proc(CALLABLE_03))).
 %~ % Universal AST Pass #0
 %~ def( "power",
 %~   function_type_body(
@@ -1942,25 +1358,17 @@ lbind(FUNCTION_01,FIXED_02,CALLABLE_03) :-
 %~                                          "function",
 %~                                          call_func_args("power",["function",bin_op_left_right(sub_token(-),"n",1)])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' power of function ')  ,
-%~   if_test_body(
-%~      call_func_args(==,[N_02,1]),
-%~      call(CALLABLE_03=FUNCTION_01),exit_proc(CALLABLE_03)) ,
-%~   [ call(-,N_02,1,ARG_05),
-%~     power(FUNCTION_01,ARG_05,ARG_04)] ,
-%~   compose(FUNCTION_01,ARG_04,CALLABLE_03) ,
-%~   exit_proc(CALLABLE_03))
-%~
 % Compiled KL-1 for power
 power(FUNCTION_01,N_02,CALLABLE_03) :-
   willBeType(CALLABLE_03,'Callable') ,
   comment(' power of function ') ,
-  if_test_body(call_func_args(==,[N_02,1]),(true,exit_proc(FUNCTION_01))) ,
-  call(-,N_02,1,ARG_05) ,
+  (/*2*/
+    testif(call_func_args(==,[N_02,1])) ->
+      call(CALLABLE_03=FUNCTION_01),exit_proc(CALLABLE_03)) ,
+  call_op(-,N_02,1,ARG_05) ,
   power(FUNCTION_01,ARG_05,ARG_04) ,
-  compose(FUNCTION_01,ARG_04,FUNCTION_01) ,
-  exit_proc(FUNCTION_01).
+  compose(FUNCTION_01,ARG_04,CALLABLE_03) ,
+  exit_proc(CALLABLE_03).
 %~ % Universal AST Pass #0
 %~ def( "fork",
 %~   function_type_body(
@@ -1971,24 +1379,15 @@ power(FUNCTION_01,N_02,CALLABLE_03) :-
 %~                          return_value( lambda_args_body( arguments_args([argument_name("x")]),
 %~                                          body_stmts( call_func_args("outer",[call_func_args("a",["x"]),call_func_args("b",["x"])]))))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' creates a wrapper function ')  ,
-%~   assign_targets_value( [CALLABLE_04],
-%~     lambda_args_body( arguments_args([argument_name("x")]),
-%~       call_func_args( OUTER_01, [
-%~         call_func_args(A_02,["x"]),
-%~         call_func_args(B_03,["x"])]))) ,
-%~   exit_proc(CALLABLE_04))
-%~
 % Compiled KL-1 for fork
 fork(OUTER_01,A_02,B_03,CALLABLE_04) :-
   willBeType(CALLABLE_04,'Callable') ,
   comment(' creates a wrapper function ') ,
-  assign_targets_value( [CALLABLE_04],
-    lambda_args_body( arguments_args([argument_name(X)]),
+  assign_var( CALLABLE_04,
+    lambda_args_body( arguments_args([argument_name("x")]),
       call_func_args( OUTER_01, [
-        call_func_args(A_02,[X]),
-        call_func_args(B_03,[X])]))) ,
+        call_func_args(A_02,["x"]),
+        call_func_args(B_03,["x"])]))) ,
   exit_proc(CALLABLE_04).
 %~ % Universal AST Pass #0
 %~ def( "apply",
@@ -2004,26 +1403,15 @@ fork(OUTER_01,A_02,B_03,CALLABLE_04) :-
 %~                                                call_func_args("function",["e"]),
 %~                                                [comprehension_target_iter("e","container")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' apply function to each item in container ')  ,
-%~   [type(CONTAINER_02,CC_04)] ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args(FUNCTION_01,["e"]),
-%~        [comprehension_target_iter("e",CONTAINER_02)])) ,
-%~   call(CC_04,ARG_05,CONTAINER_03) ,
-%~   exit_proc(CONTAINER_03))
-%~
 % Compiled KL-1 for apply
 apply(FUNCTION_01,CONTAINER_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' apply function to each item in container ') ,
-  type(CONTAINER_02,CC_04) ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_04,
     generator_exp_elt_generators(
-       call_func_args(FUNCTION_01,[E]),
-       [comprehension_target_iter(E,CONTAINER_02)])) ,
-  call(CC_04,ARG_05,CONTAINER_03) ,
+       call_func_args(FUNCTION_01,["e"]),
+       [assign_targets_value1("e",CONTAINER_02)])) ,
+  call_op(call_func_args("type",[CONTAINER_02],ARG_04,CONTAINER_03)) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "rapply",
@@ -2039,26 +1427,15 @@ apply(FUNCTION_01,CONTAINER_02,CONTAINER_03) :-
 %~                                                call_func_args("function",["value"]),
 %~                                                [comprehension_target_iter("function","functions")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' apply each function in container to value ')  ,
-%~   [type(FUNCTIONS_01,CC_04)] ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args("function",[VALUE_02]),
-%~        [comprehension_target_iter("function",FUNCTIONS_01)])) ,
-%~   call(CC_04,ARG_05,CONTAINER_03) ,
-%~   exit_proc(CONTAINER_03))
-%~
 % Compiled KL-1 for rapply
 rapply(FUNCTIONS_01,VALUE_02,CONTAINER_03) :-
   willBeType(CONTAINER_03,'Container') ,
   comment(' apply each function in container to value ') ,
-  type(FUNCTIONS_01,CC_04) ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_04,
     generator_exp_elt_generators(
        call_func_args("function",[VALUE_02]),
-       [comprehension_target_iter("function",FUNCTIONS_01)])) ,
-  call(CC_04,ARG_05,CONTAINER_03) ,
+       [assign_targets_value1("function",FUNCTIONS_01)])) ,
+  call_op(call_func_args("type",[FUNCTIONS_01],ARG_04,CONTAINER_03)) ,
   exit_proc(CONTAINER_03).
 %~ % Universal AST Pass #0
 %~ def( "mapply",
@@ -2069,12 +1446,6 @@ rapply(FUNCTIONS_01,VALUE_02,CONTAINER_03) :-
 %~         [argument_type("FrozenSet")]),
 %~      block_statements( [ expr_value(string_value(' apply and merge ')),
 %~                          return_value(call_func_args("merge",[call_func_args("apply",["function","container"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' apply and merge ')  ,
-%~   [apply(FUNCTION_01,CONTAINER_02,ARG_04)] ,
-%~   merge(ARG_04,FROZENSET_03) ,
-%~   exit_proc(FROZENSET_03))
 %~
 % Compiled KL-1 for mapply
 mapply(FUNCTION_01,CONTAINER_02,FROZENSET_03) :-
@@ -2095,24 +1466,14 @@ mapply(FUNCTION_01,CONTAINER_02,FROZENSET_03) :-
 %~                                             call_func_args("function",["i","j"]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("zip",["a","b"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' apply function on two vectors ')  ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args(FUNCTION_01,["i","j"]),
-%~        [ comprehension_target_iter( tuple_elts(["i","j"]),
-%~            call_func_args("zip",[A_02,B_03]))])) ,
-%~   tuple(ARG_05,TUPLE_04) ,
-%~   exit_proc(TUPLE_04))
-%~
 % Compiled KL-1 for papply
 papply(FUNCTION_01,A_02,B_03,TUPLE_04) :-
   willBeType(TUPLE_04,'Tuple') ,
   comment(' apply function on two vectors ') ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
-       call_func_args(FUNCTION_01,[I,J]),
-       [ comprehension_target_iter( tuple_elts([I,J]),
+       call_func_args(FUNCTION_01,["i","j"]),
+       [ assign_targets_value1( tuple_elts(["i","j"]),
            call_func_args("zip",[A_02,B_03]))])) ,
   tuple(ARG_05,TUPLE_04) ,
   exit_proc(TUPLE_04).
@@ -2124,12 +1485,6 @@ papply(FUNCTION_01,A_02,B_03,TUPLE_04) :-
 %~         [argument_type("Tuple")]),
 %~      block_statements( [ expr_value(string_value(' apply function on two vectors and merge ')),
 %~                          return_value(call_func_args("merge",[call_func_args("papply",["function","a","b"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' apply function on two vectors and merge ')  ,
-%~   [papply(FUNCTION_01,A_02,B_03,ARG_05)] ,
-%~   merge(ARG_05,TUPLE_04) ,
-%~   exit_proc(TUPLE_04))
 %~
 % Compiled KL-1 for mpapply
 mpapply(FUNCTION_01,A_02,B_03,TUPLE_04) :-
@@ -2151,25 +1506,15 @@ mpapply(FUNCTION_01,A_02,B_03,TUPLE_04) :-
 %~                                             [ comprehension_target_iter("j","b"),
 %~                                               comprehension_target_iter("i","a")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' apply function on cartesian product ')  ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args(FUNCTION_01,["i","j"]),
-%~        [ comprehension_target_iter("j",B_03),
-%~          comprehension_target_iter("i",A_02)])) ,
-%~   frozenset(ARG_05,FROZENSET_04) ,
-%~   exit_proc(FROZENSET_04))
-%~
 % Compiled KL-1 for prapply
 prapply(FUNCTION_01,A_02,B_03,FROZENSET_04) :-
   willBeType(FROZENSET_04,'FrozenSet') ,
   comment(' apply function on cartesian product ') ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
-       call_func_args(FUNCTION_01,[I,J]),
-       [ comprehension_target_iter(J,B_03),
-         comprehension_target_iter(I,A_02)])) ,
+       call_func_args(FUNCTION_01,["i","j"]),
+       [ assign_targets_value1("j",B_03),
+         assign_targets_value1("i",A_02)])) ,
   frozenset(ARG_05,FROZENSET_04) ,
   exit_proc(FROZENSET_04).
 %~ % Universal AST Pass #0
@@ -2188,38 +1533,23 @@ prapply(FUNCTION_01,A_02,B_03,FROZENSET_04) :-
 %~                                          [ call_func_args("set",["values"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' most common color ')  ,
-%~   assign_targets_value( ["values"],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-%~        list_comp_elt_generators( "v", [
-%~          comprehension_target_iter("r",ELEMENT_01),
-%~          comprehension_target_iter("v","r")]),
-%~        list_comp_elt_generators( "v", [
-%~          comprehension_target_iter(tuple_elts(["v","_"]),ELEMENT_01)]))) ,
-%~   assign_targets_value( [INTEGER_02],
-%~     call_func_args_keywords( "max",
-%~       [ call_func_args("set",["values"])],
-%~       [ keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))])) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for mostcolor
 mostcolor(ELEMENT_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' most common color ') ,
-  assign_targets_value( [VALUES],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-       list_comp_elt_generators( V, [
-         comprehension_target_iter("r",ELEMENT_01),
-         comprehension_target_iter(V,"r")]),
-       list_comp_elt_generators( V, [
-         comprehension_target_iter(tuple_elts([V,"_"]),ELEMENT_01)]))) ,
-  assign_targets_value( [INTEGER_02],
+  (/*2*/
+    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
+      assign_var( "values",
+        list_comp_elt_generators( "v", [
+          assign_targets_value1("r",ELEMENT_01),
+          assign_targets_value1("v","r")])) ;
+    assign_var( "values",
+      list_comp_elt_generators( "v", [
+        assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)]))) ,
+  assign_var( INTEGER_02,
     call_func_args_keywords( "max",
-      [ call_func_args("set",[VALUES])],
-      [ keyword_value(qualified_identifier_identifiers([VALUES,boxed_attribute_value("count")]))])) ,
+      [ call_func_args("set",["values"])],
+      [keyword_value(["count","values"])])) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "leastcolor",
@@ -2237,38 +1567,23 @@ mostcolor(ELEMENT_01,INTEGER_02) :-
 %~                                          [ call_func_args("set",["values"])],
 %~                                          [ keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' least common color ')  ,
-%~   assign_targets_value( ["values"],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-%~        list_comp_elt_generators( "v", [
-%~          comprehension_target_iter("r",ELEMENT_01),
-%~          comprehension_target_iter("v","r")]),
-%~        list_comp_elt_generators( "v", [
-%~          comprehension_target_iter(tuple_elts(["v","_"]),ELEMENT_01)]))) ,
-%~   assign_targets_value( [INTEGER_02],
-%~     call_func_args_keywords( "min",
-%~       [ call_func_args("set",["values"])],
-%~       [ keyword_value(qualified_identifier_identifiers(["values",boxed_attribute_value("count")]))])) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for leastcolor
 leastcolor(ELEMENT_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' least common color ') ,
-  assign_targets_value( [VALUES],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-       list_comp_elt_generators( V, [
-         comprehension_target_iter("r",ELEMENT_01),
-         comprehension_target_iter(V,"r")]),
-       list_comp_elt_generators( V, [
-         comprehension_target_iter(tuple_elts([V,"_"]),ELEMENT_01)]))) ,
-  assign_targets_value( [INTEGER_02],
+  (/*2*/
+    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
+      assign_var( "values",
+        list_comp_elt_generators( "v", [
+          assign_targets_value1("r",ELEMENT_01),
+          assign_targets_value1("v","r")])) ;
+    assign_var( "values",
+      list_comp_elt_generators( "v", [
+        assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)]))) ,
+  assign_var( INTEGER_02,
     call_func_args_keywords( "min",
-      [ call_func_args("set",[VALUES])],
-      [ keyword_value(qualified_identifier_identifiers([VALUES,boxed_attribute_value("count")]))])) ,
+      [ call_func_args("set",["values"])],
+      [keyword_value(["count","values"])])) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "height",
@@ -2287,34 +1602,20 @@ leastcolor(ELEMENT_01,INTEGER_02) :-
 %~                                            call_func_args("uppermost",["piece"])),
 %~                                          1))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' height of grid or patch ')  ,
-%~   if_test_body(
-%~      call_func_args(==,[call_func_args("len",[PIECE_01]),0]),
-%~      call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[PIECE_01,tuple])],
-%~      len(PIECE_01,INTEGER_02),exit_proc(INTEGER_02)) ,
-%~   [ lowermost(PIECE_01,ARG_04),
-%~     uppermost(PIECE_01,ARG_05),
-%~     call(-,ARG_04,ARG_05,ARG_03),
-%~     call(+,ARG_03,1,INTEGER_02)] ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for height
 height(PIECE_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' height of grid or patch ') ,
-  if_test_body(
-     call_func_args(==,[call_func_args("len",[PIECE_01]),0]),
-     call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
-  if_test_body(
-     [ call_func_args(isinstance,[PIECE_01,tuple])],
-     len(PIECE_01,INTEGER_02),exit_proc(INTEGER_02)) ,
+  (/*2*/
+    testif(call_func_args(==,[call_func_args("len",[PIECE_01]),0])) ->
+      call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
+      len(PIECE_01,INTEGER_02),exit_proc(INTEGER_02)) ,
   lowermost(PIECE_01,ARG_04) ,
   uppermost(PIECE_01,ARG_05) ,
-  call(-,ARG_04,ARG_05,ARG_03) ,
-  call(+,ARG_03,1,INTEGER_02) ,
+  call_op(-,ARG_04,ARG_05,ARG_03) ,
+  call_op(+,ARG_03,1,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "width",
@@ -2333,38 +1634,22 @@ height(PIECE_01,INTEGER_02) :-
 %~                                            call_func_args("leftmost",["piece"])),
 %~                                          1))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' width of grid or patch ')  ,
-%~   if_test_body(
-%~      call_func_args(==,[call_func_args("len",[PIECE_01]),0]),
-%~      call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[PIECE_01,tuple])],
-%~      ( assign_targets_value([ARG_03],subscript_value_slice(PIECE_01,0))  ,
-%~        len(ARG_03,INTEGER_02) ,
-%~        exit_proc(INTEGER_02))) ,
-%~   [ rightmost(PIECE_01,ARG_05),
-%~     leftmost(PIECE_01,ARG_06),
-%~     call(-,ARG_05,ARG_06,ARG_04),
-%~     call(+,ARG_04,1,INTEGER_02)] ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for width
 width(PIECE_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' width of grid or patch ') ,
-  if_test_body(
-     call_func_args(==,[call_func_args("len",[PIECE_01]),0]),
-     call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
-  if_test_body(
-     [ call_func_args(isinstance,[PIECE_01,tuple])],
-     ( assign_targets_value([ARG_03],subscript_value_slice(PIECE_01,0))  ,
-       len(ARG_03,INTEGER_02) ,
-       exit_proc(INTEGER_02))) ,
+  (/*2*/
+    testif(call_func_args(==,[call_func_args("len",[PIECE_01]),0])) ->
+      call(INTEGER_02=0),exit_proc(INTEGER_02)) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
+      ( [subscript_value_slice(PIECE_01,0,ARG_03)]  ,
+        len(ARG_03,INTEGER_02) ,
+        exit_proc(INTEGER_02))) ,
   rightmost(PIECE_01,ARG_05) ,
   leftmost(PIECE_01,ARG_06) ,
-  call(-,ARG_05,ARG_06,ARG_04) ,
-  call(+,ARG_04,1,INTEGER_02) ,
+  call_op(-,ARG_05,ARG_06,ARG_04) ,
+  call_op(+,ARG_04,1,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "shape",
@@ -2373,20 +1658,14 @@ width(PIECE_01,INTEGER_02) :-
 %~      block_statements( [ expr_value(string_value(' height and width of grid or patch ')),
 %~                          return_value( tuple_elts([call_func_args("height",["piece"]),call_func_args("width",["piece"])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' height and width of grid or patch ')  ,
-%~   assign_targets_value( [INTEGERTUPLE_02],
-%~     tuple_elts( [ call_func_args("height",[PIECE_01]),
-%~                   call_func_args("width",[PIECE_01])])) ,
-%~   exit_proc(INTEGERTUPLE_02))
-%~
 % Compiled KL-1 for shape
 shape(PIECE_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' height and width of grid or patch ') ,
-  assign_targets_value( [INTEGERTUPLE_02],
-    tuple_elts( [ call_func_args("height",[PIECE_01]),
-                  call_func_args("width",[PIECE_01])])) ,
+  assign_targets_value( [ARG_03], [
+    call_func_args("height",[PIECE_01]),
+    call_func_args("width",[PIECE_01])]) ,
+  tuple_elts(ARG_03,INTEGERTUPLE_02) ,
   exit_proc(INTEGERTUPLE_02).
 %~ % Universal AST Pass #0
 %~ def( "portrait",
@@ -2397,20 +1676,13 @@ shape(PIECE_01,INTEGERTUPLE_02) :-
 %~                                          call_func_args("height",["piece"]),
 %~                                          call_func_args("width",["piece"])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether height is greater than width ')  ,
-%~   [ height(PIECE_01,ARG_03),
-%~     width(PIECE_01,ARG_04),
-%~     call(>,ARG_03,ARG_04,BOOLEAN_02)] ,
-%~   exit_proc(BOOLEAN_02))
-%~
 % Compiled KL-1 for portrait
 portrait(PIECE_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether height is greater than width ') ,
   height(PIECE_01,ARG_03) ,
   width(PIECE_01,ARG_04) ,
-  call(>,ARG_03,ARG_04,BOOLEAN_02) ,
+  call_op(>,ARG_03,ARG_04,BOOLEAN_02) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "colorcount",
@@ -2433,43 +1705,22 @@ portrait(PIECE_01,BOOLEAN_02) :-
 %~                                             compare_ops_left_comparators(eq_token(==),"v","value"),
 %~                                             [ comprehension_target_iter(tuple_elts(["v","_"]),"element")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' number of cells with color ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-%~      ( assign_targets_value( [ARG_04],
-%~          generator_exp_elt_generators(
-%~             call_func_args(
-%~                qualified_identifier_identifiers(["row",boxed_attribute_value("count")]),
-%~                [VALUE_02]),
-%~             [comprehension_target_iter("row",ELEMENT_01)]))  ,
-%~        sum(ARG_04,INTEGER_03) ,
-%~        exit_proc(INTEGER_03))) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args(==,["v",VALUE_02]),
-%~        [ comprehension_target_iter(tuple_elts(["v","_"]),ELEMENT_01)])) ,
-%~   sum(ARG_05,INTEGER_03) ,
-%~   exit_proc(INTEGER_03))
-%~
 % Compiled KL-1 for colorcount
 colorcount(ELEMENT_01,VALUE_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' number of cells with color ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-     ( assign_targets_value( [ARG_04],
-         generator_exp_elt_generators(
-            call_func_args(
-               qualified_identifier_identifiers(["row",boxed_attribute_value("count")]),
-               [VALUE_02]),
-            [comprehension_target_iter("row",ELEMENT_01)]))  ,
-       sum(ARG_04,INTEGER_03) ,
-       exit_proc(INTEGER_03))) ,
-  assign_targets_value( [ARG_05],
+  (/*2*/
+    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
+      ( assign_var( ARG_04,
+          generator_exp_elt_generators(
+             call_func_args("count",["row",VALUE_02]),
+             [assign_targets_value1("row",ELEMENT_01)]))  ,
+        sum(ARG_04,INTEGER_03) ,
+        exit_proc(INTEGER_03))) ,
+  assign_var( ARG_05,
     generator_exp_elt_generators(
-       call_func_args(==,[V,VALUE_02]),
-       [ comprehension_target_iter(tuple_elts([V,"_"]),ELEMENT_01)])) ,
+       call_func_args(==,["v",VALUE_02]),
+       [ assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)])) ,
   sum(ARG_05,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
@@ -2482,32 +1733,24 @@ colorcount(ELEMENT_01,VALUE_02,INTEGER_03) :-
 %~      block_statements( [ expr_value(string_value(' filter objects by color ')),
 %~                          return_value( call_func_args( "frozenset", [
 %~                                          generator_exp_elt_generators( "obj", [
-%~                                            comprehension_ifs_target_iter(
-%~                                               [ compare_ops_left_comparators( eq_token(==),
-%~                                                   subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
-%~                                                   "value")], "obj","objs")])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' filter objects by color ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( "obj", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args( ==, [
-%~              subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
-%~              VALUE_02])], "obj",OBJS_01)])) ,
-%~   frozenset(ARG_04,OBJECTS_03) ,
-%~   exit_proc(OBJECTS_03))
+%~                                            comprehension_target_iter_ifs( "obj",
+%~                                              "objs",
+%~                                              [ compare_ops_left_comparators( eq_token(==),
+%~                                                  subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
+%~                                                  "value")])])]))])))
 %~
 % Compiled KL-1 for colorfilter
 colorfilter(OBJS_01,VALUE_02,OBJECTS_03) :-
   willBeType(OBJECTS_03,'Objects') ,
   comment(' filter objects by color ') ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( OBJ, [
-      comprehension_ifs_target_iter(
-         [ call_func_args( ==, [
-             subscript_value_slice(call_func_args("next",[call_func_args("iter",[OBJ])]),0),
-             VALUE_02])], OBJ,OBJS_01)])) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      "obj",
+      [ comprehension_target_iter_ifs( "obj",
+          OBJS_01,
+          [ call_func_args( ==, [
+              subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0),
+              VALUE_02])])])) ,
   frozenset(ARG_04,OBJECTS_03) ,
   exit_proc(OBJECTS_03).
 %~ % Universal AST Pass #0
@@ -2520,26 +1763,20 @@ colorfilter(OBJS_01,VALUE_02,OBJECTS_03) :-
 %~      block_statements( [ expr_value(string_value(' filter items by size ')),
 %~                          return_value( call_func_args( "frozenset", [
 %~                                          generator_exp_elt_generators( "item", [
-%~                                            comprehension_ifs_target_iter(
-%~                                               [ compare_ops_left_comparators(eq_token(==),call_func_args("len",["item"]),"n")], "item","container")])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' filter items by size ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( "item", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(==,[call_func_args("len",["item"]),N_02])], "item",CONTAINER_01)])) ,
-%~   frozenset(ARG_04,FROZENSET_03) ,
-%~   exit_proc(FROZENSET_03))
+%~                                            comprehension_target_iter_ifs( "item",
+%~                                              "container",
+%~                                              [ compare_ops_left_comparators(eq_token(==),call_func_args("len",["item"]),"n")])])]))])))
 %~
 % Compiled KL-1 for sizefilter
 sizefilter(CONTAINER_01,N_02,FROZENSET_03) :-
   willBeType(FROZENSET_03,'FrozenSet') ,
   comment(' filter items by size ') ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( ITEM, [
-      comprehension_ifs_target_iter(
-         [ call_func_args(==,[call_func_args("len",[ITEM]),N_02])], ITEM,CONTAINER_01)])) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      "item",
+      [ comprehension_target_iter_ifs( "item",
+          CONTAINER_01,
+          [ call_func_args(==,[call_func_args("len",["item"]),N_02])])])) ,
   frozenset(ARG_04,FROZENSET_03) ,
   exit_proc(FROZENSET_03).
 %~ % Universal AST Pass #0
@@ -2553,26 +1790,17 @@ sizefilter(CONTAINER_01,N_02,FROZENSET_03) :-
 %~                                            comprehension_target_iter( "j",
 %~                                              call_func_args("range",[call_func_args("len",[subscript_value_slice("grid",0)])]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' indices of all grid cells ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( tuple_elts(["i","j"]), [
-%~       comprehension_target_iter("i",call_func_args("range",[call_func_args("len",[GRID_01])])),
-%~       comprehension_target_iter( "j",
-%~         call_func_args("range",[call_func_args("len",[subscript_value_slice(GRID_01,0)])]))])) ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for asindices
 asindices(GRID_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices of all grid cells ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( tuple_elts([I,J]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[call_func_args("len",[GRID_01])])),
-      comprehension_target_iter( J,
-        call_func_args("range",[call_func_args("len",[subscript_value_slice(GRID_01,0)])]))])) ,
+  assign_targets_value( [ARG_03], [
+    generator_exp_elt_generator_1( "i",
+      assign_targets_value1("i",call_func_args("range",[call_func_args("len",[GRID_01])]))),
+    generator_exp_elt_generator_1( "j",
+      assign_targets_value1( "j",
+        call_func_args("range",[call_func_args("len",[subscript_value_slice(GRID_01,0)])]))),
+    elt_generator(v1,tuple_elts([]),[])]) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -2586,35 +1814,22 @@ asindices(GRID_01,INDICES_02) :-
 %~                          return_value( call_func_args( "frozenset", [
 %~                                          generator_exp_elt_generators( tuple_elts(["i","j"]), [
 %~                                            comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",["grid"])),
-%~                                            comprehension_ifs_target_iter(
-%~                                               [ compare_ops_left_comparators(eq_token(==),"v","value")],
-%~                                               tuple_elts(["j","v"]),
-%~                                               call_func_args("enumerate",["r"]))])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' indices of all grid cells with value ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( tuple_elts(["i","j"]), [
-%~       comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])),
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(==,["v",VALUE_02])],
-%~          tuple_elts(["j","v"]),
-%~          call_func_args("enumerate",["r"]))])) ,
-%~   frozenset(ARG_04,INDICES_03) ,
-%~   exit_proc(INDICES_03))
+%~                                            comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                                              call_func_args("enumerate",["r"]),
+%~                                              [ compare_ops_left_comparators(eq_token(==),"v","value")])])]))])))
 %~
 % Compiled KL-1 for ofcolor
 ofcolor(GRID_01,VALUE_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' indices of all grid cells with value ') ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( tuple_elts([I,J]), [
-      comprehension_target_iter( tuple_elts([I,R]),
-        call_func_args("enumerate",[GRID_01])),
-      comprehension_ifs_target_iter(
-         [ call_func_args(==,[V,VALUE_02])],
-         tuple_elts([J,V]),
-         call_func_args("enumerate",[R]))])) ,
+  assign_targets_value( [ARG_04], [
+    generator_exp_elt_generator_1( "i",
+      assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
+    generator_exp_elt_generator_1( "j",
+      comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+        call_func_args("enumerate",["r"]),
+        [ call_func_args(==,["v",VALUE_02])])),
+    elt_generator(v1,tuple_elts([]),[])]) ,
   frozenset(ARG_04,INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
@@ -2627,21 +1842,12 @@ ofcolor(GRID_01,VALUE_02,INDICES_03) :-
 %~                                            "min",
 %~                                            call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' index of upper left corner ')  ,
-%~   [ assign_targets_value( [ARG_05],
-%~       starred_value(call_func_args("toindices",[PATCH_01]))),
-%~     zip(ARG_05,ARG_04),
-%~     map(MIN,ARG_04,ARG_03)] ,
-%~   tuple(ARG_03,INTEGERTUPLE_02) ,
-%~   exit_proc(INTEGERTUPLE_02))
-%~
 % Compiled KL-1 for ulcorner
 ulcorner(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' index of upper left corner ') ,
-  assign_targets_value( [ARG_05],
-    starred_value(call_func_args("toindices",[PATCH_01]))) ,
+  toindices(PATCH_01,ARG_06) ,
+  starred_value(ARG_06,ARG_05) ,
   zip(ARG_05,ARG_04) ,
   map(MIN,ARG_04,ARG_03) ,
   tuple(ARG_03,INTEGERTUPLE_02) ,
@@ -2662,36 +1868,19 @@ ulcorner(PATCH_01,INTEGERTUPLE_02) :-
 %~                                            call_func_args( "enumerate", [
 %~                                              call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' index of upper right corner ')  ,
-%~   [ assign_targets_value( [ARG_04],
-%~       lambda_args_body( arguments_args([argument_name("ix")]),
-%~         call_func_args(
-%~            subscript_value_slice(
-%~               dict_keys_values([0,1],["min","max"]),
-%~               subscript_value_slice("ix",0)),
-%~            [subscript_value_slice("ix",1)]))),
-%~     assign_targets_value( [ARG_07],
-%~       starred_value(call_func_args("toindices",[PATCH_01]))),
-%~     zip(ARG_07,ARG_06),
-%~     enumerate(ARG_06,ARG_05),
-%~     map(ARG_04,ARG_05,ARG_03)] ,
-%~   tuple(ARG_03,INTEGERTUPLE_02) ,
-%~   exit_proc(INTEGERTUPLE_02))
-%~
 % Compiled KL-1 for urcorner
 urcorner(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' index of upper right corner ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     lambda_args_body( arguments_args([argument_name("ix")]),
       call_func_args(
          subscript_value_slice(
             dict_keys_values([0,1],["min","max"]),
             subscript_value_slice("ix",0)),
          [subscript_value_slice("ix",1)]))) ,
-  assign_targets_value( [ARG_07],
-    starred_value(call_func_args("toindices",[PATCH_01]))) ,
+  toindices(PATCH_01,ARG_08) ,
+  starred_value(ARG_08,ARG_07) ,
   zip(ARG_07,ARG_06) ,
   enumerate(ARG_06,ARG_05) ,
   map(ARG_04,ARG_05,ARG_03) ,
@@ -2713,36 +1902,19 @@ urcorner(PATCH_01,INTEGERTUPLE_02) :-
 %~                                            call_func_args( "enumerate", [
 %~                                              call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' index of lower left corner ')  ,
-%~   [ assign_targets_value( [ARG_04],
-%~       lambda_args_body( arguments_args([argument_name("ix")]),
-%~         call_func_args(
-%~            subscript_value_slice(
-%~               dict_keys_values([0,1],["max","min"]),
-%~               subscript_value_slice("ix",0)),
-%~            [subscript_value_slice("ix",1)]))),
-%~     assign_targets_value( [ARG_07],
-%~       starred_value(call_func_args("toindices",[PATCH_01]))),
-%~     zip(ARG_07,ARG_06),
-%~     enumerate(ARG_06,ARG_05),
-%~     map(ARG_04,ARG_05,ARG_03)] ,
-%~   tuple(ARG_03,INTEGERTUPLE_02) ,
-%~   exit_proc(INTEGERTUPLE_02))
-%~
 % Compiled KL-1 for llcorner
 llcorner(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' index of lower left corner ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     lambda_args_body( arguments_args([argument_name("ix")]),
       call_func_args(
          subscript_value_slice(
             dict_keys_values([0,1],["max","min"]),
             subscript_value_slice("ix",0)),
          [subscript_value_slice("ix",1)]))) ,
-  assign_targets_value( [ARG_07],
-    starred_value(call_func_args("toindices",[PATCH_01]))) ,
+  toindices(PATCH_01,ARG_08) ,
+  starred_value(ARG_08,ARG_07) ,
   zip(ARG_07,ARG_06) ,
   enumerate(ARG_06,ARG_05) ,
   map(ARG_04,ARG_05,ARG_03) ,
@@ -2758,21 +1930,12 @@ llcorner(PATCH_01,INTEGERTUPLE_02) :-
 %~                                            "max",
 %~                                            call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' index of lower right corner ')  ,
-%~   [ assign_targets_value( [ARG_05],
-%~       starred_value(call_func_args("toindices",[PATCH_01]))),
-%~     zip(ARG_05,ARG_04),
-%~     map(MAX,ARG_04,ARG_03)] ,
-%~   tuple(ARG_03,INTEGERTUPLE_02) ,
-%~   exit_proc(INTEGERTUPLE_02))
-%~
 % Compiled KL-1 for lrcorner
 lrcorner(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' index of lower right corner ') ,
-  assign_targets_value( [ARG_05],
-    starred_value(call_func_args("toindices",[PATCH_01]))) ,
+  toindices(PATCH_01,ARG_06) ,
+  starred_value(ARG_06,ARG_05) ,
   zip(ARG_05,ARG_04) ,
   map(MAX,ARG_04,ARG_03) ,
   tuple(ARG_03,INTEGERTUPLE_02) ,
@@ -2794,36 +1957,18 @@ lrcorner(PATCH_01,INTEGERTUPLE_02) :-
 %~                                                   slice_lower_upper( subscript_value_slice("start",0),
 %~                                                     bin_op_left_right(add_token(+),subscript_value_slice("start",0),subscript_value_slice("dims",0)))))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' subgrid specified by start and dimension ')  ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        subscript_value_slice( "r",
-%~          slice_lower_upper( subscript_value_slice(START_02,1),
-%~            call_func_args( +, [
-%~              subscript_value_slice(START_02,1),
-%~              subscript_value_slice(DIMS_03,1)]))),
-%~        [ comprehension_target_iter( "r",
-%~            subscript_value_slice( GRID_01,
-%~              slice_lower_upper( subscript_value_slice(START_02,0),
-%~                call_func_args( +, [
-%~                  subscript_value_slice(START_02,0),
-%~                  subscript_value_slice(DIMS_03,0)]))))])) ,
-%~   tuple(ARG_05,GRID_04) ,
-%~   exit_proc(GRID_04))
-%~
 % Compiled KL-1 for crop
 crop(GRID_01,START_02,DIMS_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' subgrid specified by start and dimension ') ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
        subscript_value_slice( "r",
          slice_lower_upper( subscript_value_slice(START_02,1),
            call_func_args( +, [
              subscript_value_slice(START_02,1),
              subscript_value_slice(DIMS_03,1)]))),
-       [ comprehension_target_iter( "r",
+       [ assign_targets_value1( "r",
            subscript_value_slice( GRID_01,
              slice_lower_upper( subscript_value_slice(START_02,0),
                call_func_args( +, [
@@ -2848,40 +1993,25 @@ crop(GRID_01,START_02,DIMS_03,GRID_04) :-
 %~                                                             comprehension_target_iter(tuple_elts(["value","index"]),"patch")])]))])),
 %~                          return_value("patch")])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' indices of object cells ')  ,
-%~   if_test_body(
-%~      call_func_args(==,[call_func_args("len",[PATCH_01]),0]),
-%~      assign_targets_value([INDICES_02],call_func("frozenset")),exit_proc(INDICES_02)) ,
-%~   if_test_body(
-%~      [ call_func_args( isinstance, [
-%~          subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
-%~          tuple])],
-%~      ( assign_targets_value( [ARG_03],
-%~          generator_exp_elt_generators( "index", [
-%~            comprehension_target_iter(tuple_elts(["value","index"]),PATCH_01)]))  ,
-%~        frozenset(ARG_03,INDICES_02) ,
-%~        exit_proc(INDICES_02))) ,
-%~   call(INDICES_02=PATCH_01) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for toindices
 toindices(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices of object cells ') ,
-  if_test_body(
-     call_func_args(==,[call_func_args("len",[PATCH_01]),0]),
-     assign_targets_value([PATCH_01],call_func("frozenset")),exit_proc(PATCH_01)) ,
-  if_test_body(
-     [ call_func_args( isinstance, [
-         subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
-         tuple])],
-     ( assign_targets_value( [ARG_03],
-         generator_exp_elt_generators( INDEX, [
-           comprehension_target_iter(tuple_elts([VALUE,INDEX]),PATCH_01)]))  ,
-       frozenset(ARG_03,PATCH_01) ,
-       exit_proc(PATCH_01))) ,
-  exit_proc(PATCH_01).
+  (/*2*/
+    testif(call_func_args(==,[call_func_args("len",[PATCH_01]),0])) ->
+      make_new("frozenset",INDICES_02),exit_proc(INDICES_02)) ,
+  (/*2*/
+    testif( [ call_func_args( isinstance, [
+                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
+                tuple])]) ->
+      ( assign_var( ARG_03,
+          elt_generator( v1,
+            "index",
+            [ assign_targets_value1(tuple_elts(["value","index"]),PATCH_01)]))  ,
+        frozenset(ARG_03,INDICES_02) ,
+        exit_proc(INDICES_02))) ,
+  call(INDICES_02=PATCH_01) ,
+  exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "recolor",
 %~   function_type_body(
@@ -2894,21 +2024,14 @@ toindices(PATCH_01,INDICES_02) :-
 %~                                          generator_exp_elt_generators( tuple_elts(["value","index"]), [
 %~                                            comprehension_target_iter("index",call_func_args("toindices",["patch"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' recolor patch ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( tuple_elts([VALUE_01,"index"]), [
-%~       comprehension_target_iter("index",call_func_args("toindices",[PATCH_02]))])) ,
-%~   frozenset(ARG_04,OBJECT_03) ,
-%~   exit_proc(OBJECT_03))
-%~
 % Compiled KL-1 for recolor
 recolor(VALUE_01,PATCH_02,OBJECT_03) :-
   willBeType(OBJECT_03,'Object') ,
   comment(' recolor patch ') ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( tuple_elts([VALUE_01,INDEX]), [
-      comprehension_target_iter(INDEX,call_func_args("toindices",[PATCH_02]))])) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      tuple_elts([VALUE_01,"index"]),
+      [ assign_targets_value1("index",call_func_args("toindices",[PATCH_02]))])) ,
   frozenset(ARG_04,OBJECT_03) ,
   exit_proc(OBJECT_03).
 %~ % Universal AST Pass #0
@@ -2934,51 +2057,26 @@ recolor(VALUE_01,PATCH_02,OBJECT_03) :-
 %~                                             tuple_elts([bin_op_left_right(add_token(+),"i","di"),bin_op_left_right(add_token(+),"j","dj")]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"patch")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' shift patch ')  ,
-%~   from_tuple(DIRECTIONS_02,"di","dj") ,
-%~   if_test_body(
-%~      [ call_func_args( isinstance, [
-%~          subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
-%~          tuple])],
-%~      ( assign_targets_value( [ARG_04],
-%~          generator_exp_elt_generators(
-%~             tuple_elts( [ "value",
-%~                           tuple_elts([call_func_args(+,["i","di"]),call_func_args(+,["j","dj"])])]),
-%~             [ comprehension_target_iter(tuple_elts(["value",tuple_elts(["i","j"])]),PATCH_01)]))  ,
-%~        frozenset(ARG_04,PATCH_03) ,
-%~        exit_proc(PATCH_03))) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        tuple_elts([call_func_args(+,["i","di"]),call_func_args(+,["j","dj"])]),
-%~        [ comprehension_target_iter(tuple_elts(["i","j"]),PATCH_01)])) ,
-%~   frozenset(ARG_05,PATCH_03) ,
-%~   exit_proc(PATCH_03))
-%~
 % Compiled KL-1 for shift
 shift(PATCH_01,DIRECTIONS_02,PATCH_03) :-
   willBeType(PATCH_03,'Patch') ,
   comment(' shift patch ') ,
-  from_tuple(DIRECTIONS_02,DI,DJ) ,
-  if_test_body(
-     [ call_func_args( isinstance, [
-         subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
-         tuple])],
-     ( assign_targets_value( [ARG_04],
-         generator_exp_elt_generators(
-            tuple_elts( [ VALUE,
-                          tuple_elts( [ call_func_args(+,[I,DI]),
-                                        call_func_args(+,[J,DJ])])]),
-            [ comprehension_target_iter(
-                 tuple_elts([VALUE,tuple_elts([I,J])]),
-                 PATCH_01)]))  ,
-       frozenset(ARG_04,PATCH_03) ,
-       exit_proc(PATCH_03))) ,
-  assign_targets_value( [ARG_05],
-    generator_exp_elt_generators(
-       tuple_elts( [ call_func_args(+,[I,DI]),
-                     call_func_args(+,[J,DJ])]),
-       [ comprehension_target_iter(tuple_elts([I,J]),PATCH_01)])) ,
+  from_tuple(DIRECTIONS_02,"di","dj") ,
+  (/*2*/
+    testif( [ call_func_args( isinstance, [
+                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PATCH_01])]),1),
+                tuple])]) ->
+      ( assign_var( ARG_04,
+          elt_generator( v1,
+            tuple_elts( [ "value",
+                          tuple_elts([call_func_args(+,["i","di"]),call_func_args(+,["j","dj"])])]),
+            [ assign_targets_value1(tuple_elts(["value",tuple_elts(["i","j"])]),PATCH_01)]))  ,
+        frozenset(ARG_04,PATCH_03) ,
+        exit_proc(PATCH_03))) ,
+  assign_var( ARG_05,
+    elt_generator( v1,
+      tuple_elts([call_func_args(+,["i","di"]),call_func_args(+,["j","dj"])]),
+      [ assign_targets_value1(tuple_elts(["i","j"]),PATCH_01)])) ,
   frozenset(ARG_05,PATCH_03) ,
   exit_proc(PATCH_03).
 %~ % Universal AST Pass #0
@@ -2991,21 +2089,14 @@ shift(PATCH_01,DIRECTIONS_02,PATCH_03) :-
 %~                                          tuple_elts( [ unary_op_operand(us_ub_token(-),call_func_args("uppermost",["patch"])),
 %~                                                        unary_op_operand(us_ub_token(-),call_func_args("leftmost",["patch"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' moves upper left corner to origin ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     tuple_elts( [ call_func_args(-,[call_func_args("uppermost",[PATCH_01])]),
-%~                   call_func_args(-,[call_func_args("leftmost",[PATCH_01])])])) ,
-%~   shift(PATCH_01,ARG_03,PATCH_02) ,
-%~   exit_proc(PATCH_02))
-%~
 % Compiled KL-1 for normalize
 normalize(PATCH_01,PATCH_02) :-
   willBeType(PATCH_02,'Patch') ,
   comment(' moves upper left corner to origin ') ,
-  assign_targets_value( [ARG_03],
-    tuple_elts( [ call_func_args(-,[call_func_args("uppermost",[PATCH_01])]),
-                  call_func_args(-,[call_func_args("leftmost",[PATCH_01])])])) ,
+  assign_targets_value( [ARG_04], [
+    call_func_args(-,[call_func_args("uppermost",[PATCH_01])]),
+    call_func_args(-,[call_func_args("leftmost",[PATCH_01])])]) ,
+  tuple_elts(ARG_04,ARG_03) ,
   shift(PATCH_01,ARG_03,PATCH_02) ,
   exit_proc(PATCH_02).
 %~ % Universal AST Pass #0
@@ -3023,25 +2114,11 @@ normalize(PATCH_01,PATCH_02) :-
 %~                                                      tuple_elts( [ subscript_value_slice("loc",0),
 %~                                                                    bin_op_left_right(add_token(+),subscript_value_slice("loc",1),1)])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' directly adjacent indices ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     set_elts( [ tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
-%~                               subscript_value_slice(LOC_01,1)]),
-%~                 tuple_elts( [ call_func_args(+,[subscript_value_slice(LOC_01,0),1]),
-%~                               subscript_value_slice(LOC_01,1)]),
-%~                 tuple_elts( [ subscript_value_slice(LOC_01,0),
-%~                               call_func_args(-,[subscript_value_slice(LOC_01,1),1])]),
-%~                 tuple_elts( [ subscript_value_slice(LOC_01,0),
-%~                               call_func_args(+,[subscript_value_slice(LOC_01,1),1])])])) ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for dneighbors
 dneighbors(LOC_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' directly adjacent indices ') ,
-  assign_targets_value( [ARG_03],
+  assign_var( ARG_03,
     set_elts( [ tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
                               subscript_value_slice(LOC_01,1)]),
                 tuple_elts( [ call_func_args(+,[subscript_value_slice(LOC_01,0),1]),
@@ -3067,25 +2144,11 @@ dneighbors(LOC_01,INDICES_02) :-
 %~                                                      tuple_elts( [ bin_op_left_right(add_token(+),subscript_value_slice("loc",0),1),
 %~                                                                    bin_op_left_right(add_token(+),subscript_value_slice("loc",1),1)])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' diagonally adjacent indices ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     set_elts( [ tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
-%~                               call_func_args(-,[subscript_value_slice(LOC_01,1),1])]),
-%~                 tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
-%~                               call_func_args(+,[subscript_value_slice(LOC_01,1),1])]),
-%~                 tuple_elts( [ call_func_args(+,[subscript_value_slice(LOC_01,0),1]),
-%~                               call_func_args(-,[subscript_value_slice(LOC_01,1),1])]),
-%~                 tuple_elts( [ call_func_args(+,[subscript_value_slice(LOC_01,0),1]),
-%~                               call_func_args(+,[subscript_value_slice(LOC_01,1),1])])])) ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for ineighbors
 ineighbors(LOC_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' diagonally adjacent indices ') ,
-  assign_targets_value( [ARG_03],
+  assign_var( ARG_03,
     set_elts( [ tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
                               call_func_args(-,[subscript_value_slice(LOC_01,1),1])]),
                 tuple_elts( [ call_func_args(-,[subscript_value_slice(LOC_01,0),1]),
@@ -3105,20 +2168,13 @@ ineighbors(LOC_01,INDICES_02) :-
 %~                                          call_func_args("dneighbors",["loc"]),
 %~                                          call_func_args("ineighbors",["loc"])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' adjacent indices ')  ,
-%~   [ dneighbors(LOC_01,ARG_03),
-%~     ineighbors(LOC_01,ARG_04),
-%~     call('|',ARG_03,ARG_04,INDICES_02)] ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for neighbors
 neighbors(LOC_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' adjacent indices ') ,
   dneighbors(LOC_01,ARG_03) ,
   ineighbors(LOC_01,ARG_04) ,
-  call('|',ARG_03,ARG_04,INDICES_02) ,
+  call_op('|',ARG_03,ARG_04,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "objects",
@@ -3166,144 +2222,70 @@ neighbors(LOC_01,INDICES_02) :-
 %~                                                                                            expr_value( call_func_args(
 %~                                                                                                           qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
 %~                                                                                                           ["cand"])),
-%~                                                                                            aug_assign_op_target_value( bit_or_token('|'),
-%~                                                                                              "neighborhood",
+%~                                                                                            aug_assign_op_value_target( bit_or_token('|'),
 %~                                                                                              set_comp_elt_generators( tuple_elts(["i","j"]), [
-%~                                                                                                comprehension_ifs_target_iter(
-%~                                                                                                   [ bool_op_values( ['python:And'], [
-%~                                                                                                       compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
-%~                                                                                                       compare_ops_left_comparators(
-%~                                                                                                          ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])],
-%~                                                                                                   tuple_elts(["i","j"]),
-%~                                                                                                   call_func_args("diagfun",["cand"]))]))]))])),
+%~                                                                                                comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                                                                                  call_func_args("diagfun",["cand"]),
+%~                                                                                                  [ bool_op_values( ['python:And'], [
+%~                                                                                                      compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                                                                      compare_ops_left_comparators(
+%~                                                                                                         ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])]),
+%~                                                                                              "neighborhood")]))])),
 %~                                                           assign_targets_value(["cands"],bin_op_left_right(sub_token(-),"neighborhood","occupied"))])),
 %~                                          expr_value( call_func_args(
 %~                                                         qualified_identifier_identifiers(["objs",boxed_attribute_value("add")]),
 %~                                                         [ call_func_args("frozenset",["obj"])]))])),
 %~                          return_value(call_func_args("frozenset",["objs"]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' objects occurring on the grid ')  ,
-%~   assign_targets_value( ["bg"],
-%~     if_exp_test_body_orelse( WITHOUT_BG_04,
-%~       call_func_args("mostcolor",[GRID_01]),
-%~       none_literal_value_token('None','None'))) ,
-%~   assign_targets_value(["objs"],call_func("set")) ,
-%~   assign_targets_value(["occupied"],call_func("set")) ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_06],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_06,W) ,
-%~   asindices(GRID_01,UNVISITED) ,
-%~   assign_targets_value(["diagfun"],if_exp_test_body_orelse(DIAGONAL_03,"neighbors","dneighbors")) ,
-%~   for_target_iter_body( "loc",
-%~     "unvisited",
-%~     ( if_test_body(compare_ops_left_comparators(['python:In'],"loc","occupied"),'python:Continue')  ,
-%~       assign_targets_value( ["val"],
-%~         subscript_value_slice(
-%~            subscript_value_slice(GRID_01,subscript_value_slice("loc",0)),
-%~            subscript_value_slice("loc",1))) ,
-%~       if_test_body(call_func_args(==,["val","bg"]),'python:Continue') ,
-%~       assign_targets_value(["obj"],set_elts([tuple_elts(["val","loc"])])) ,
-%~       assign_targets_value(["cands"],set_elts(["loc"])) ,
-%~       while_test_body(
-%~          call_func_args(>,[call_func_args("len",["cands"]),0]),
-%~          ( assign_targets_value(["neighborhood"],call_func("set"))  ,
-%~            for_target_iter_body( "cand",
-%~              "cands",
-%~              (/*2*/
-%~                assign_targets_value( ["v"],
-%~                  subscript_value_slice(
-%~                     subscript_value_slice(GRID_01,subscript_value_slice("cand",0)),
-%~                     subscript_value_slice("cand",1))) ,
-%~                if_test_body(
-%~                   if_exp_test_body_orelse( UNIVALUED_02,
-%~                     call_func_args(==,["val","v"]),
-%~                     call_func_args('!=',["v","bg"])),
-%~                   ( expr_value( call_func_args(
-%~                                    qualified_identifier_identifiers(["obj",boxed_attribute_value("add")]),
-%~                                    [tuple_elts(["v","cand"])]))  ,
-%~                     expr_value( call_func_args(
-%~                                    qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
-%~                                    ["cand"])) ,
-%~                     aug_assign_op_target_value( bit_or_token('|'),
-%~                       "neighborhood",
-%~                       set_comp_elt_generators( tuple_elts(["i","j"]), [
-%~                         comprehension_ifs_target_iter(
-%~                            [ bool_op_values( ['python:And'], [
-%~                                call_func_args(<=,[0,"i"]),
-%~                                call_func_args(<,[0,"h"]),
-%~                                call_func_args(<=,[0,"j"]),
-%~                                call_func_args(<,[0,"w"])])],
-%~                            tuple_elts(["i","j"]),
-%~                            call_func_args("diagfun",["cand"]))])))))) ,
-%~            [call(-,NEIGHBORHOOD,OCCUPIED,CANDS)])) ,
-%~       expr_value( call_func_args(
-%~                      qualified_identifier_identifiers(["objs",boxed_attribute_value("add")]),
-%~                      [ call_func_args("frozenset",["obj"])])))) ,
-%~   frozenset(OBJS,OBJECTS_05) ,
-%~   exit_proc(OBJECTS_05))
-%~
 % Compiled KL-1 for objects
 objects(GRID_01,UNIVALUED_02,DIAGONAL_03,WITHOUT_BG_04,OBJECTS_05) :-
   willBeType(OBJECTS_05,'Objects') ,
   comment(' objects occurring on the grid ') ,
-  assign_targets_value( [BG],
-    if_exp_test_body_orelse( WITHOUT_BG_04,
-      call_func_args("mostcolor",[GRID_01]),
-      none_literal_value_token('None','None'))) ,
-  assign_targets_value(["objs"],call_func("set")) ,
-  assign_targets_value(["occupied"],call_func("set")) ,
+  (/*2*/
+    testif(WITHOUT_BG_04)->[mostcolor(GRID_01,BG)] ;
+    assign_var("bg",none_literal_value_token('None','None'))) ,
+  make_new("set","objs") ,
+  make_new("set","occupied") ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_06],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_06) ,
   len(ARG_06,W) ,
   asindices(GRID_01,UNVISITED) ,
-  assign_targets_value(["diagfun"],if_exp_test_body_orelse(DIAGONAL_03,"neighbors","dneighbors")) ,
-  for_target_iter_body( LOC,
-    "unvisited",
-    ( if_test_body(compare_ops_left_comparators(['python:In'],LOC,"occupied"),'python:Continue')  ,
-      assign_targets_value( [VAL],
-        subscript_value_slice(
-           subscript_value_slice(GRID_01,subscript_value_slice(LOC,0)),
-           subscript_value_slice(LOC,1))) ,
-      if_test_body(call_func_args(==,[VAL,BG]),'python:Continue') ,
-      assign_targets_value( [OBJ],
-        set_elts([tuple_elts([VAL,LOC])])) ,
-      assign_targets_value([CANDS],set_elts([LOC])) ,
+  testif(DIAGONAL_03)->call("diagfun"="neighbors");call("diagfun"="dneighbors") ,
+  for_each( call(LOC_07="unvisited"),
+    ( testif(call_func_args('python:In',[LOC_07,"occupied"]))->'python:Continue';true  ,
+      [ subscript_value_slice(LOC_07,0,ARG_013),
+        subscript_value_slice(GRID_01,ARG_013,ARG_08)] ,
+      [subscript_value_slice(LOC_07,1,ARG_09)] ,
+      subscript_value_slice(ARG_08,ARG_09,VAL) ,
+      testif(call_func_args(==,["val","bg"]))->'python:Continue';true ,
+      assign_var("obj",set_elts([tuple_elts(["val",LOC_07])])) ,
+      assign_var("cands",set_elts([LOC_07])) ,
       while_test_body(
-         call_func_args(>,[call_func_args("len",[CANDS]),0]),
-         ( assign_targets_value(["neighborhood"],call_func("set"))  ,
-           for_target_iter_body( CAND,
-             CANDS,
-             (/*2*/
-               assign_targets_value( [V],
-                 subscript_value_slice(
-                    subscript_value_slice(GRID_01,subscript_value_slice(CAND,0)),
-                    subscript_value_slice(CAND,1))) ,
-               if_test_body(
-                  if_exp_test_body_orelse( UNIVALUED_02,
-                    call_func_args(==,[VAL,V]),
-                    call_func_args('!=',[V,BG])),
-                  ( expr_value( call_func_args(
-                                   qualified_identifier_identifiers([OBJ,boxed_attribute_value("add")]),
-                                   [tuple_elts([V,CAND])]))  ,
-                    expr_value( call_func_args(
-                                   qualified_identifier_identifiers(["occupied",boxed_attribute_value("add")]),
-                                   [CAND])) ,
-                    aug_assign_op_target_value( bit_or_token('|'),
-                      "neighborhood",
-                      set_comp_elt_generators( tuple_elts([I,J]), [
-                        comprehension_ifs_target_iter(
-                           [ bool_op_values( ['python:And'], [
-                               call_func_args(<=,[0,I]),
-                               call_func_args(<,[0,H]),
-                               call_func_args(<=,[0,J]),
-                               call_func_args(<,[0,W])])],
-                           tuple_elts([I,J]),
-                           call_func_args("diagfun",[CAND]))])))))) ,
-           [call(-,NEIGHBORHOOD,OCCUPIED,CANDS)])) ,
-      expr_value( call_func_args(
-                     qualified_identifier_identifiers(["objs",boxed_attribute_value("add")]),
-                     [ call_func_args("frozenset",[OBJ])])))) ,
+         call_func_args(>,[call_func_args("len",["cands"]),0]),
+         ( make_new("set","neighborhood")  ,
+           for_each( call(CAND_010="cands"),
+             ( [ subscript_value_slice(CAND_010,0,ARG_014),
+                 subscript_value_slice(GRID_01,ARG_014,ARG_011)]  ,
+               [subscript_value_slice(CAND_010,1,ARG_012)] ,
+               subscript_value_slice(ARG_011,ARG_012,V) ,
+               (/*2*/
+                 testif( if_exp_test_body_orelse( UNIVALUED_02,
+                           call_func_args(==,["val","v"]),
+                           call_func_args('!=',["v","bg"]))) ->
+                   ( expr_value(call_func_args("add",["obj",tuple_elts(["v",CAND_010])]))  ,
+                     expr_value(call_func_args("add",["occupied",CAND_010])) ,
+                     aug_assign_op_value_target( bit_or_token('|'),
+                       set_comp_elt_generators_ifs( tuple_elts(["i","j"]),
+                         tuple_elts(["i","j"]),
+                         call_func_args("diagfun",[CAND_010]),
+                         [ bool_op_values( ['python:And'], [
+                             call_func_args(<=,[0,"i"]),
+                             call_func_args(<,[0,"h"]),
+                             call_func_args(<=,[0,"j"]),
+                             call_func_args(<,[0,"w"])])]),
+                       "neighborhood"))))) ,
+           [call_op(-,NEIGHBORHOOD,OCCUPIED,CANDS)])) ,
+      expr_value(call_func_args("add",["objs",call_func_args("frozenset",["obj"])])))) ,
   frozenset(OBJS,OBJECTS_05) ,
   exit_proc(OBJECTS_05).
 %~ % Universal AST Pass #0
@@ -3317,44 +2299,26 @@ objects(GRID_01,UNIVALUED_02,DIAGONAL_03,WITHOUT_BG_04,OBJECTS_05) :-
 %~                                               generator_exp_elt_generators(
 %~                                                  tuple_elts(["v",tuple_elts(["i","j"])]),
 %~                                                  [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",["grid"])),
-%~                                                    comprehension_ifs_target_iter(
-%~                                                       [ compare_ops_left_comparators(eq_token(==),"v","value")],
-%~                                                       tuple_elts(["j","v"]),
-%~                                                       call_func_args("enumerate",["r"]))])]),
+%~                                                    comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                                                      call_func_args("enumerate",["r"]),
+%~                                                      [ compare_ops_left_comparators(eq_token(==),"v","value")])])]),
 %~                                             [ comprehension_target_iter("value",call_func_args("palette",["grid"]))])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' each cell with the same value part of the same object ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "frozenset", [
-%~          generator_exp_elt_generators(
-%~             tuple_elts(["v",tuple_elts(["i","j"])]),
-%~             [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])),
-%~               comprehension_ifs_target_iter(
-%~                  [ call_func_args(==,["v","value"])],
-%~                  tuple_elts(["j","v"]),
-%~                  call_func_args("enumerate",["r"]))])]),
-%~        [ comprehension_target_iter("value",call_func_args("palette",[GRID_01]))])) ,
-%~   frozenset(ARG_03,OBJECTS_02) ,
-%~   exit_proc(OBJECTS_02))
 %~
 % Compiled KL-1 for partition
 partition(GRID_01,OBJECTS_02) :-
   willBeType(OBJECTS_02,'Objects') ,
   comment(' each cell with the same value part of the same object ') ,
-  assign_targets_value( [ARG_03],
+  assign_var( ARG_03,
     generator_exp_elt_generators(
        call_func_args( "frozenset", [
-         generator_exp_elt_generators(
-            tuple_elts([V,tuple_elts([I,J])]),
-            [ comprehension_target_iter( tuple_elts([I,R]),
-                call_func_args("enumerate",[GRID_01])),
-              comprehension_ifs_target_iter(
-                 [ call_func_args(==,[V,VALUE])],
-                 tuple_elts([J,V]),
-                 call_func_args("enumerate",[R]))])]),
-       [ comprehension_target_iter(VALUE,call_func_args("palette",[GRID_01]))])) ,
+         generator_exp_elt_generator_1( "v",
+           assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
+         generator_exp_elt_generator_1( tuple_elts(["i","j"]),
+           comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+             call_func_args("enumerate",["r"]),
+             [ call_func_args(==,["v","value"])])),
+         elt_generator(v1,tuple_elts([]),[])]),
+       [ assign_targets_value1("value",call_func_args("palette",[GRID_01]))])) ,
   frozenset(ARG_03,OBJECTS_02) ,
   exit_proc(OBJECTS_02).
 %~ % Universal AST Pass #0
@@ -3368,50 +2332,29 @@ partition(GRID_01,OBJECTS_02) :-
 %~                                               generator_exp_elt_generators(
 %~                                                  tuple_elts(["v",tuple_elts(["i","j"])]),
 %~                                                  [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",["grid"])),
-%~                                                    comprehension_ifs_target_iter(
-%~                                                       [ compare_ops_left_comparators(eq_token(==),"v","value")],
-%~                                                       tuple_elts(["j","v"]),
-%~                                                       call_func_args("enumerate",["r"]))])]),
+%~                                                    comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                                                      call_func_args("enumerate",["r"]),
+%~                                                      [ compare_ops_left_comparators(eq_token(==),"v","value")])])]),
 %~                                             [ comprehension_target_iter( "value",
 %~                                                 bin_op_left_right( sub_token(-),
 %~                                                   call_func_args("palette",["grid"]),
 %~                                                   set_elts([call_func_args("mostcolor",["grid"])])))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' each cell with the same value part of the same object without background ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "frozenset", [
-%~          generator_exp_elt_generators(
-%~             tuple_elts(["v",tuple_elts(["i","j"])]),
-%~             [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])),
-%~               comprehension_ifs_target_iter(
-%~                  [ call_func_args(==,["v","value"])],
-%~                  tuple_elts(["j","v"]),
-%~                  call_func_args("enumerate",["r"]))])]),
-%~        [ comprehension_target_iter( "value",
-%~            call_func_args( -, [
-%~              call_func_args("palette",[GRID_01]),
-%~              set_elts([call_func_args("mostcolor",[GRID_01])])]))])) ,
-%~   frozenset(ARG_03,OBJECTS_02) ,
-%~   exit_proc(OBJECTS_02))
-%~
 % Compiled KL-1 for fgpartition
 fgpartition(GRID_01,OBJECTS_02) :-
   willBeType(OBJECTS_02,'Objects') ,
   comment(' each cell with the same value part of the same object without background ') ,
-  assign_targets_value( [ARG_03],
+  assign_var( ARG_03,
     generator_exp_elt_generators(
        call_func_args( "frozenset", [
-         generator_exp_elt_generators(
-            tuple_elts([V,tuple_elts([I,J])]),
-            [ comprehension_target_iter( tuple_elts([I,R]),
-                call_func_args("enumerate",[GRID_01])),
-              comprehension_ifs_target_iter(
-                 [ call_func_args(==,[V,VALUE])],
-                 tuple_elts([J,V]),
-                 call_func_args("enumerate",[R]))])]),
-       [ comprehension_target_iter( VALUE,
+         generator_exp_elt_generator_1( "v",
+           assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
+         generator_exp_elt_generator_1( tuple_elts(["i","j"]),
+           comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+             call_func_args("enumerate",["r"]),
+             [ call_func_args(==,["v","value"])])),
+         elt_generator(v1,tuple_elts([]),[])]),
+       [ assign_targets_value1( "value",
            call_func_args( -, [
              call_func_args("palette",[GRID_01]),
              set_elts([call_func_args("mostcolor",[GRID_01])])]))])) ,
@@ -3426,23 +2369,14 @@ fgpartition(GRID_01,OBJECTS_02) :-
 %~                                          generator_exp_elt_generators( "i", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' row index of uppermost occupied cell ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( "i", [
-%~       comprehension_target_iter( tuple_elts(["i","j"]),
-%~         call_func_args("toindices",[PATCH_01]))])) ,
-%~   min(ARG_03,INTEGER_02) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for uppermost
 uppermost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' row index of uppermost occupied cell ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( I, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[PATCH_01]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "i",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
   min(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -3454,23 +2388,14 @@ uppermost(PATCH_01,INTEGER_02) :-
 %~                                          generator_exp_elt_generators( "i", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' row index of lowermost occupied cell ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( "i", [
-%~       comprehension_target_iter( tuple_elts(["i","j"]),
-%~         call_func_args("toindices",[PATCH_01]))])) ,
-%~   max(ARG_03,INTEGER_02) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for lowermost
 lowermost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' row index of lowermost occupied cell ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( I, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[PATCH_01]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "i",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
   max(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -3482,23 +2407,14 @@ lowermost(PATCH_01,INTEGER_02) :-
 %~                                          generator_exp_elt_generators( "j", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' column index of leftmost occupied cell ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( "j", [
-%~       comprehension_target_iter( tuple_elts(["i","j"]),
-%~         call_func_args("toindices",[PATCH_01]))])) ,
-%~   min(ARG_03,INTEGER_02) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for leftmost
 leftmost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' column index of leftmost occupied cell ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( J, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[PATCH_01]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "j",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
   min(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -3510,23 +2426,14 @@ leftmost(PATCH_01,INTEGER_02) :-
 %~                                          generator_exp_elt_generators( "j", [
 %~                                            comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["patch"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' column index of rightmost occupied cell ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( "j", [
-%~       comprehension_target_iter( tuple_elts(["i","j"]),
-%~         call_func_args("toindices",[PATCH_01]))])) ,
-%~   max(ARG_03,INTEGER_02) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for rightmost
 rightmost(PATCH_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' column index of rightmost occupied cell ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( J, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[PATCH_01]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "j",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[PATCH_01]))])) ,
   max(ARG_03,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
@@ -3547,44 +2454,26 @@ rightmost(PATCH_01,INTEGER_02) :-
 %~                                               call_func_args("height",["piece"]),
 %~                                               call_func_args("width",["piece"]))])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether the piece forms a square ')  ,
-%~   assign_targets_value( [BOOLEAN_02],
-%~     if_exp_test_body_orelse(
-%~        [ call_func_args(isinstance,[PIECE_01,tuple])],
-%~        call_func_args( ==, [
-%~          call_func_args("len",[PIECE_01]),
-%~          call_func_args("len",[subscript_value_slice(PIECE_01,0)])]),
-%~        bool_op_values( ['python:And'], [
-%~          call_func_args( ==, [
-%~            call_func_args( *, [
-%~              call_func_args("height",[PIECE_01]),
-%~              call_func_args("width",[PIECE_01])]),
-%~            call_func_args("len",[PIECE_01])]),
-%~          call_func_args( ==, [
-%~            call_func_args("height",[PIECE_01]),
-%~            call_func_args("width",[PIECE_01])])]))) ,
-%~   exit_proc(BOOLEAN_02))
-%~
 % Compiled KL-1 for square
 square(PIECE_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether the piece forms a square ') ,
-  assign_targets_value( [BOOLEAN_02],
-    if_exp_test_body_orelse(
-       [ call_func_args(isinstance,[PIECE_01,tuple])],
-       call_func_args( ==, [
-         call_func_args("len",[PIECE_01]),
-         call_func_args("len",[subscript_value_slice(PIECE_01,0)])]),
-       bool_op_values( ['python:And'], [
-         call_func_args( ==, [
-           call_func_args( *, [
-             call_func_args("height",[PIECE_01]),
-             call_func_args("width",[PIECE_01])]),
-           call_func_args("len",[PIECE_01])]),
-         call_func_args( ==, [
-           call_func_args("height",[PIECE_01]),
-           call_func_args("width",[PIECE_01])])]))) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
+      [ len(PIECE_01,ARG_03),
+        subscript_value_slice(PIECE_01,0,ARG_05),
+        len(ARG_05,ARG_04),
+        call_op(==,ARG_03,ARG_04,BOOLEAN_02)] ;
+    assign_var( BOOLEAN_02,
+      bool_op_values( ['python:And'], [
+        call_func_args( ==, [
+          call_func_args( *, [
+            call_func_args("height",[PIECE_01]),
+            call_func_args("width",[PIECE_01])]),
+          call_func_args("len",[PIECE_01])]),
+        call_func_args( ==, [
+          call_func_args("height",[PIECE_01]),
+          call_func_args("width",[PIECE_01])])]))) ,
   exit_proc(BOOLEAN_02).
 %~ % Universal AST Pass #0
 %~ def( "vline",
@@ -3597,21 +2486,11 @@ square(PIECE_01,BOOLEAN_02) :-
 %~                                            call_func_args("len",["patch"])),
 %~                                          compare_ops_left_comparators(eq_token(==),call_func_args("width",["patch"]),1)]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether the piece forms a vertical line ')  ,
-%~   assign_targets_value( [BOOLEAN_02],
-%~     bool_op_values( ['python:And'], [
-%~       call_func_args( ==, [
-%~         call_func_args("height",[PATCH_01]),
-%~         call_func_args("len",[PATCH_01])]),
-%~       call_func_args(==,[call_func_args("width",[PATCH_01]),1])])) ,
-%~   exit_proc(BOOLEAN_02))
-%~
 % Compiled KL-1 for vline
 vline(PATCH_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether the piece forms a vertical line ') ,
-  assign_targets_value( [BOOLEAN_02],
+  assign_var( BOOLEAN_02,
     bool_op_values( ['python:And'], [
       call_func_args( ==, [
         call_func_args("height",[PATCH_01]),
@@ -3629,21 +2508,11 @@ vline(PATCH_01,BOOLEAN_02) :-
 %~                                            call_func_args("len",["patch"])),
 %~                                          compare_ops_left_comparators(eq_token(==),call_func_args("height",["patch"]),1)]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether the piece forms a horizontal line ')  ,
-%~   assign_targets_value( [BOOLEAN_02],
-%~     bool_op_values( ['python:And'], [
-%~       call_func_args( ==, [
-%~         call_func_args("width",[PATCH_01]),
-%~         call_func_args("len",[PATCH_01])]),
-%~       call_func_args(==,[call_func_args("height",[PATCH_01]),1])])) ,
-%~   exit_proc(BOOLEAN_02))
-%~
 % Compiled KL-1 for hline
 hline(PATCH_01,BOOLEAN_02) :-
   willBeType(BOOLEAN_02,'Boolean') ,
   comment(' whether the piece forms a horizontal line ') ,
-  assign_targets_value( [BOOLEAN_02],
+  assign_var( BOOLEAN_02,
     bool_op_values( ['python:And'], [
       call_func_args( ==, [
         call_func_args("width",[PATCH_01]),
@@ -3669,38 +2538,23 @@ hline(PATCH_01,BOOLEAN_02) :-
 %~                                                  comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["b"]))])]))]),
 %~                                          0))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether there exists a row for which both patches have cells ')  ,
-%~   [ assign_targets_value( [ARG_08],
-%~       generator_exp_elt_generators( "i", [
-%~         comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])),
-%~     set(ARG_08,ARG_06),
-%~     assign_targets_value( [ARG_09],
-%~       generator_exp_elt_generators( "i", [
-%~         comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])),
-%~     set(ARG_09,ARG_07),
-%~     call(&,ARG_06,ARG_07,ARG_05),
-%~     len(ARG_05,ARG_04),
-%~     call(>,ARG_04,0,BOOLEAN_03)] ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for hmatching
 hmatching(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether there exists a row for which both patches have cells ') ,
-  assign_targets_value( [ARG_08],
-    generator_exp_elt_generators( I, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[A_01]))])) ,
+  assign_var( ARG_08,
+    elt_generator( v1,
+      "i",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])) ,
   set(ARG_08,ARG_06) ,
-  assign_targets_value( [ARG_09],
-    generator_exp_elt_generators( I, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[B_02]))])) ,
+  assign_var( ARG_09,
+    elt_generator( v1,
+      "i",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])) ,
   set(ARG_09,ARG_07) ,
-  call(&,ARG_06,ARG_07,ARG_05) ,
+  call_op(&,ARG_06,ARG_07,ARG_05) ,
   len(ARG_05,ARG_04) ,
-  call(>,ARG_04,0,BOOLEAN_03) ,
+  call_op(>,ARG_04,0,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "vmatching",
@@ -3721,38 +2575,23 @@ hmatching(A_01,B_02,BOOLEAN_03) :-
 %~                                                  comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",["b"]))])]))]),
 %~                                          0))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether there exists a column for which both patches have cells ')  ,
-%~   [ assign_targets_value( [ARG_08],
-%~       generator_exp_elt_generators( "j", [
-%~         comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])),
-%~     set(ARG_08,ARG_06),
-%~     assign_targets_value( [ARG_09],
-%~       generator_exp_elt_generators( "j", [
-%~         comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])),
-%~     set(ARG_09,ARG_07),
-%~     call(&,ARG_06,ARG_07,ARG_05),
-%~     len(ARG_05,ARG_04),
-%~     call(>,ARG_04,0,BOOLEAN_03)] ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for vmatching
 vmatching(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether there exists a column for which both patches have cells ') ,
-  assign_targets_value( [ARG_08],
-    generator_exp_elt_generators( J, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[A_01]))])) ,
+  assign_var( ARG_08,
+    elt_generator( v1,
+      "j",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[A_01]))])) ,
   set(ARG_08,ARG_06) ,
-  assign_targets_value( [ARG_09],
-    generator_exp_elt_generators( J, [
-      comprehension_target_iter( tuple_elts([I,J]),
-        call_func_args("toindices",[B_02]))])) ,
+  assign_var( ARG_09,
+    elt_generator( v1,
+      "j",
+      [ assign_targets_value1(tuple_elts(["i","j"]),call_func_args("toindices",[B_02]))])) ,
   set(ARG_09,ARG_07) ,
-  call(&,ARG_06,ARG_07,ARG_05) ,
+  call_op(&,ARG_06,ARG_07,ARG_05) ,
   len(ARG_05,ARG_04) ,
-  call(>,ARG_04,0,BOOLEAN_03) ,
+  call_op(>,ARG_04,0,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "manhattan",
@@ -3770,32 +2609,17 @@ vmatching(A_01,B_02,BOOLEAN_03) :-
 %~                                             [ comprehension_target_iter(tuple_elts(["ai","aj"]),call_func_args("toindices",["a"])),
 %~                                               comprehension_target_iter(tuple_elts(["bi","bj"]),call_func_args("toindices",["b"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' closest manhattan distance between two patches ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators(
-%~        call_func_args( +, [
-%~          call_func_args("abs",[call_func_args(-,["ai","bi"])]),
-%~          call_func_args("abs",[call_func_args(-,["aj","bj"])])]),
-%~        [ comprehension_target_iter(tuple_elts(["ai","aj"]),call_func_args("toindices",[A_01])),
-%~          comprehension_target_iter( tuple_elts(["bi","bj"]),
-%~            call_func_args("toindices",[B_02]))])) ,
-%~   min(ARG_04,INTEGER_03) ,
-%~   exit_proc(INTEGER_03))
-%~
 % Compiled KL-1 for manhattan
 manhattan(A_01,B_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' closest manhattan distance between two patches ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     generator_exp_elt_generators(
        call_func_args( +, [
-         call_func_args("abs",[call_func_args(-,[AI,BI])]),
-         call_func_args("abs",[call_func_args(-,[AJ,BJ])])]),
-       [ comprehension_target_iter( tuple_elts([AI,AJ]),
-           call_func_args("toindices",[A_01])),
-         comprehension_target_iter( tuple_elts([BI,BJ]),
-           call_func_args("toindices",[B_02]))])) ,
+         call_func_args("abs",[call_func_args(-,["ai","bi"])]),
+         call_func_args("abs",[call_func_args(-,["aj","bj"])])]),
+       [ assign_targets_value1(tuple_elts(["ai","aj"]),call_func_args("toindices",[A_01])),
+         assign_targets_value1(tuple_elts(["bi","bj"]),call_func_args("toindices",[B_02]))])) ,
   min(ARG_04,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
@@ -3808,18 +2632,12 @@ manhattan(A_01,B_02,INTEGER_03) :-
 %~      block_statements( [ expr_value(string_value(' whether two patches are adjacent ')),
 %~                          return_value(compare_ops_left_comparators(eq_token(==),call_func_args("manhattan",["a","b"]),1))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether two patches are adjacent ')  ,
-%~   [ manhattan(A_01,B_02,ARG_04),
-%~     call(==,ARG_04,1,BOOLEAN_03)] ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for adjacent
 adjacent(A_01,B_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether two patches are adjacent ') ,
   manhattan(A_01,B_02,ARG_04) ,
-  call(==,ARG_04,1,BOOLEAN_03) ,
+  call_op(==,ARG_04,1,BOOLEAN_03) ,
   exit_proc(BOOLEAN_03).
 %~ % Universal AST Pass #0
 %~ def( "bordering",
@@ -3839,25 +2657,11 @@ adjacent(A_01,B_02,BOOLEAN_03) :-
 %~                                            call_func_args("rightmost",["patch"]),
 %~                                            bin_op_left_right(sub_token(-),call_func_args("len",[subscript_value_slice("grid",0)]),1))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' whether a patch is adjacent to a grid border ')  ,
-%~   assign_targets_value( [BOOLEAN_03],
-%~     bool_op_values( ['python:Or'], [
-%~       call_func_args(==,[call_func_args("uppermost",[PATCH_01]),0]),
-%~       call_func_args(==,[call_func_args("leftmost",[PATCH_01]),0]),
-%~       call_func_args( ==, [
-%~         call_func_args("lowermost",[PATCH_01]),
-%~         call_func_args(-,[call_func_args("len",[GRID_02]),1])]),
-%~       call_func_args( ==, [
-%~         call_func_args("rightmost",[PATCH_01]),
-%~         call_func_args(-,[call_func_args("len",[subscript_value_slice(GRID_02,0)]),1])])])) ,
-%~   exit_proc(BOOLEAN_03))
-%~
 % Compiled KL-1 for bordering
 bordering(PATCH_01,GRID_02,BOOLEAN_03) :-
   willBeType(BOOLEAN_03,'Boolean') ,
   comment(' whether a patch is adjacent to a grid border ') ,
-  assign_targets_value( [BOOLEAN_03],
+  assign_var( BOOLEAN_03,
     bool_op_values( ['python:Or'], [
       call_func_args(==,[call_func_args("uppermost",[PATCH_01]),0]),
       call_func_args(==,[call_func_args("leftmost",[PATCH_01]),0]),
@@ -3879,31 +2683,17 @@ bordering(PATCH_01,GRID_02,BOOLEAN_03) :-
 %~                                              body_stmts( bin_op_left_right(floor_div_token(//),call_func_args("sum",["x"]),call_func_args("len",["patch"])))),
 %~                                            call_func_args("zip",[starred_value(call_func_args("toindices",["patch"]))])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' center of mass ')  ,
-%~   [ assign_targets_value( [ARG_04],
-%~       lambda_args_body( arguments_args([argument_name("x")]),
-%~         call_func_args( //, [
-%~           call_func_args("sum",["x"]),
-%~           call_func_args("len",[PATCH_01])]))),
-%~     assign_targets_value( [ARG_06],
-%~       starred_value(call_func_args("toindices",[PATCH_01]))),
-%~     zip(ARG_06,ARG_05),
-%~     map(ARG_04,ARG_05,ARG_03)] ,
-%~   tuple(ARG_03,INTEGERTUPLE_02) ,
-%~   exit_proc(INTEGERTUPLE_02))
-%~
 % Compiled KL-1 for centerofmass
 centerofmass(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' center of mass ') ,
-  assign_targets_value( [ARG_04],
-    lambda_args_body( arguments_args([argument_name(X)]),
+  assign_var( ARG_04,
+    lambda_args_body( arguments_args([argument_name("x")]),
       call_func_args( //, [
-        call_func_args("sum",[X]),
+        call_func_args("sum",["x"]),
         call_func_args("len",[PATCH_01])]))) ,
-  assign_targets_value( [ARG_06],
-    starred_value(call_func_args("toindices",[PATCH_01]))) ,
+  toindices(PATCH_01,ARG_07) ,
+  starred_value(ARG_07,ARG_06) ,
   zip(ARG_06,ARG_05) ,
   map(ARG_04,ARG_05,ARG_03) ,
   tuple(ARG_03,INTEGERTUPLE_02) ,
@@ -3922,37 +2712,18 @@ centerofmass(PATCH_01,INTEGERTUPLE_02) :-
 %~                          return_value( call_func_args( "frozenset", [
 %~                                          set_comp_elt_generators("v",[comprehension_target_iter(tuple_elts(["v","_"]),"element")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' colors occurring in object or grid ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-%~      ( assign_targets_value( [ARG_03],
-%~          set_comp_elt_generators( "v", [
-%~            comprehension_target_iter("r",ELEMENT_01),
-%~            comprehension_target_iter("v","r")]))  ,
-%~        frozenset(ARG_03,INTEGERSET_02) ,
-%~        exit_proc(INTEGERSET_02))) ,
-%~   assign_targets_value( [ARG_04],
-%~     set_comp_elt_generators( "v", [
-%~       comprehension_target_iter(tuple_elts(["v","_"]),ELEMENT_01)])) ,
-%~   frozenset(ARG_04,INTEGERSET_02) ,
-%~   exit_proc(INTEGERSET_02))
-%~
 % Compiled KL-1 for palette
 palette(ELEMENT_01,INTEGERSET_02) :-
   willBeType(INTEGERSET_02,'IntegerSet') ,
   comment(' colors occurring in object or grid ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-     ( assign_targets_value( [ARG_03],
-         set_comp_elt_generators( V, [
-           comprehension_target_iter("r",ELEMENT_01),
-           comprehension_target_iter(V,"r")]))  ,
-       frozenset(ARG_03,INTEGERSET_02) ,
-       exit_proc(INTEGERSET_02))) ,
-  assign_targets_value( [ARG_04],
-    set_comp_elt_generators( V, [
-      comprehension_target_iter(tuple_elts([V,"_"]),ELEMENT_01)])) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
+      ( assign_var( ARG_03,
+          elt_generator(v2,"v",[assign_targets_value1("r",ELEMENT_01),assign_targets_value1("v","r")]))  ,
+        frozenset(ARG_03,INTEGERSET_02) ,
+        exit_proc(INTEGERSET_02))) ,
+  assign_var( ARG_04,
+    elt_generator(v2,"v",[assign_targets_value1(tuple_elts(["v","_"]),ELEMENT_01)])) ,
   frozenset(ARG_04,INTEGERSET_02) ,
   exit_proc(INTEGERSET_02).
 %~ % Universal AST Pass #0
@@ -3961,12 +2732,6 @@ palette(ELEMENT_01,INTEGERSET_02) :-
 %~      function_type_arguments_returns([argument_name("element")],[argument_type("IntegerSet")]),
 %~      block_statements( [ expr_value(string_value(' number of colors occurring in object or grid ')),
 %~                          return_value(call_func_args("len",[call_func_args("palette",["element"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' number of colors occurring in object or grid ')  ,
-%~   [palette(ELEMENT_01,ARG_03)] ,
-%~   len(ARG_03,INTEGERSET_02) ,
-%~   exit_proc(INTEGERSET_02))
 %~
 % Compiled KL-1 for numcolors
 numcolors(ELEMENT_01,INTEGERSET_02) :-
@@ -3982,18 +2747,13 @@ numcolors(ELEMENT_01,INTEGERSET_02) :-
 %~      block_statements( [ expr_value(string_value(' color of object ')),
 %~                          return_value(subscript_value_slice(call_func_args("next",[call_func_args("iter",["obj"])]),0))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' color of object ')  ,
-%~   assign_targets_value( [INTEGER_02],
-%~     subscript_value_slice(call_func_args("next",[call_func_args("iter",[OBJ_01])]),0)) ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for color
 color(OBJ_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' color of object ') ,
-  assign_targets_value( [INTEGER_02],
-    subscript_value_slice(call_func_args("next",[call_func_args("iter",[OBJ_01])]),0)) ,
+  iter(OBJ_01,ARG_04) ,
+  next(ARG_04,ARG_03) ,
+  subscript_value_slice(ARG_03,0,INTEGER_02) ,
   exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "toobject",
@@ -4010,53 +2770,31 @@ color(OBJ_01,INTEGER_02) :-
 %~                                          generator_exp_elt_generators(
 %~                                             tuple_elts( [ subscript_value_slice(subscript_value_slice("grid","i"),"j"),
 %~                                                           tuple_elts(["i","j"])]),
-%~                                             [ comprehension_ifs_target_iter(
-%~                                                  [ bool_op_values( ['python:And'], [
-%~                                                      compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
-%~                                                      compare_ops_left_comparators(
-%~                                                         ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])],
-%~                                                  tuple_elts(["i","j"]),
-%~                                                  call_func_args("toindices",["patch"]))])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' object from patch and grid ')  ,
-%~   len(GRID_02,H) ,
-%~   assign_targets_value([ARG_04],subscript_value_slice(GRID_02,0)) ,
-%~   len(ARG_04,W) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_02,"i"),"j"),
-%~                      tuple_elts(["i","j"])]),
-%~        [ comprehension_ifs_target_iter(
-%~             [ bool_op_values( ['python:And'], [
-%~                 call_func_args(<=,[0,"i"]),
-%~                 call_func_args(<,[0,"h"]),
-%~                 call_func_args(<=,[0,"j"]),
-%~                 call_func_args(<,[0,"w"])])],
-%~             tuple_elts(["i","j"]),
-%~             call_func_args("toindices",[PATCH_01]))])) ,
-%~   frozenset(ARG_05,OBJECT_03) ,
-%~   exit_proc(OBJECT_03))
+%~                                             [ comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+%~                                                 call_func_args("toindices",["patch"]),
+%~                                                 [ bool_op_values( ['python:And'], [
+%~                                                     compare_ops_left_comparators(ops([lt_e_token(<=),lt_token(<)]),0,comparators(["i","h"])),
+%~                                                     compare_ops_left_comparators(
+%~                                                        ops([lt_e_token(<=),lt_token(<)]), 0,comparators(["j","w"]))])])])]))])))
 %~
 % Compiled KL-1 for toobject
 toobject(PATCH_01,GRID_02,OBJECT_03) :-
   willBeType(OBJECT_03,'Object') ,
   comment(' object from patch and grid ') ,
   len(GRID_02,H) ,
-  assign_targets_value([ARG_04],subscript_value_slice(GRID_02,0)) ,
+  subscript_value_slice(GRID_02,0,ARG_04) ,
   len(ARG_04,W) ,
-  assign_targets_value( [ARG_05],
-    generator_exp_elt_generators(
-       tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_02,I),J),
-                     tuple_elts([I,J])]),
-       [ comprehension_ifs_target_iter(
-            [ bool_op_values( ['python:And'], [
-                call_func_args(<=,[0,I]),
-                call_func_args(<,[0,H]),
-                call_func_args(<=,[0,J]),
-                call_func_args(<,[0,W])])],
-            tuple_elts([I,J]),
-            call_func_args("toindices",[PATCH_01]))])) ,
+  assign_var( ARG_05,
+    elt_generator( v1,
+      tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_02,"i"),"j"),
+                    tuple_elts(["i","j"])]),
+      [ comprehension_target_iter_ifs( tuple_elts(["i","j"]),
+          call_func_args("toindices",[PATCH_01]),
+          [ bool_op_values( ['python:And'], [
+              call_func_args(<=,[0,"i"]),
+              call_func_args(<,[0,"h"]),
+              call_func_args(<=,[0,"j"]),
+              call_func_args(<,[0,"w"])])])])) ,
   frozenset(ARG_05,OBJECT_03) ,
   exit_proc(OBJECT_03).
 %~ % Universal AST Pass #0
@@ -4070,27 +2808,16 @@ toobject(PATCH_01,GRID_02,OBJECT_03) :-
 %~                                             [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",["grid"])),
 %~                                               comprehension_target_iter(tuple_elts(["j","v"]),call_func_args("enumerate",["r"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' conversion of grid to object ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators(
-%~        tuple_elts(["v",tuple_elts(["i","j"])]),
-%~        [ comprehension_target_iter(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01])),
-%~          comprehension_target_iter(tuple_elts(["j","v"]),call_func_args("enumerate",["r"]))])) ,
-%~   frozenset(ARG_03,OBJECT_02) ,
-%~   exit_proc(OBJECT_02))
-%~
 % Compiled KL-1 for asobject
 asobject(GRID_01,OBJECT_02) :-
   willBeType(OBJECT_02,'Object') ,
   comment(' conversion of grid to object ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators(
-       tuple_elts([V,tuple_elts([I,J])]),
-       [ comprehension_target_iter( tuple_elts([I,R]),
-           call_func_args("enumerate",[GRID_01])),
-         comprehension_target_iter( tuple_elts([J,V]),
-           call_func_args("enumerate",[R]))])) ,
+  assign_targets_value( [ARG_03], [
+    generator_exp_elt_generator_1( "v",
+      assign_targets_value1(tuple_elts(["i","r"]),call_func_args("enumerate",[GRID_01]))),
+    generator_exp_elt_generator_1( tuple_elts(["i","j"]),
+      assign_targets_value1(tuple_elts(["j","v"]),call_func_args("enumerate",["r"]))),
+    elt_generator(v1,tuple_elts([]),[])]) ,
   frozenset(ARG_03,OBJECT_02) ,
   exit_proc(OBJECT_02).
 %~ % Universal AST Pass #0
@@ -4104,25 +2831,16 @@ asobject(GRID_01,OBJECT_02) :-
 %~                                              call_func_args( "zip", [
 %~                                                starred_value(subscript_value_slice("grid",slice_step(unary_op_operand(us_ub_token(-),1))))]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' quarter clockwise rotation ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( "row", [
-%~       comprehension_target_iter( "row",
-%~         call_func_args( "zip", [
-%~           starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])) ,
-%~   tuple(ARG_03,GRID_02) ,
-%~   exit_proc(GRID_02))
-%~
 % Compiled KL-1 for rot90
 rot90(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' quarter clockwise rotation ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( "row", [
-      comprehension_target_iter( "row",
-        call_func_args( "zip", [
-          starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "row",
+      [ assign_targets_value1( "row",
+          call_func_args( "zip", [
+            starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])) ,
   tuple(ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -4135,23 +2853,14 @@ rot90(GRID_01,GRID_02) :-
 %~                                             call_func_args("tuple",[subscript_value_slice("row",slice_step(unary_op_operand(us_ub_token(-),1)))]),
 %~                                             [ comprehension_target_iter("row",subscript_value_slice("grid",slice_step(unary_op_operand(us_ub_token(-),1))))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' half rotation ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators(
-%~        call_func_args("tuple",[subscript_value_slice("row",slice_step(call_func_args(-,[1])))]),
-%~        [ comprehension_target_iter("row",subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))])) ,
-%~   tuple(ARG_03,GRID_02) ,
-%~   exit_proc(GRID_02))
-%~
 % Compiled KL-1 for rot180
 rot180(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' half rotation ') ,
-  assign_targets_value( [ARG_03],
+  assign_var( ARG_03,
     generator_exp_elt_generators(
        call_func_args("tuple",[subscript_value_slice("row",slice_step(call_func_args(-,[1])))]),
-       [ comprehension_target_iter("row",subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))])) ,
+       [ assign_targets_value1("row",subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))])) ,
   tuple(ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -4168,32 +2877,19 @@ rot180(GRID_01,GRID_02) :-
 %~                                                      starred_value(subscript_value_slice("grid",slice_step(unary_op_operand(us_ub_token(-),1))))]))])]),
 %~                                           slice_step(unary_op_operand(us_ub_token(-),1))))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' quarter anticlockwise rotation ')  ,
-%~   assign_targets_value( [GRID_02],
-%~     subscript_value_slice(
-%~        call_func_args( "tuple", [
-%~          generator_exp_elt_generators(
-%~             call_func_args("tuple",[subscript_value_slice("row",slice_step(call_func_args(-,[1])))]),
-%~             [ comprehension_target_iter( "row",
-%~                 call_func_args( "zip", [
-%~                   starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])]),
-%~        slice_step(call_func_args(-,[1])))) ,
-%~   exit_proc(GRID_02))
-%~
 % Compiled KL-1 for rot270
 rot270(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' quarter anticlockwise rotation ') ,
-  assign_targets_value( [GRID_02],
-    subscript_value_slice(
-       call_func_args( "tuple", [
-         generator_exp_elt_generators(
-            call_func_args("tuple",[subscript_value_slice("row",slice_step(call_func_args(-,[1])))]),
-            [ comprehension_target_iter( "row",
-                call_func_args( "zip", [
-                  starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])]),
-       slice_step(call_func_args(-,[1])))) ,
+  assign_var( ARG_05,
+    generator_exp_elt_generators(
+       call_func_args("tuple",[subscript_value_slice("row",slice_step(call_func_args(-,[1])))]),
+       [ assign_targets_value1( "row",
+           call_func_args( "zip", [
+             starred_value(subscript_value_slice(GRID_01,slice_step(call_func_args(-,[1]))))]))])) ,
+  tuple(ARG_05,ARG_03) ,
+  assign_var(ARG_04,slice_step(call_func_args(-,[1]))) ,
+  subscript_value_slice(ARG_03,ARG_04,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
 %~ def( "hmirror",
@@ -4220,69 +2916,35 @@ rot270(GRID_01,GRID_02) :-
 %~                                             tuple_elts([bin_op_left_right(sub_token(-),"d","i"),"j"]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"piece")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' mirroring along horizontal ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[PIECE_01,tuple])],
-%~      (/*2*/
-%~        assign_targets_value( [PIECE_02],
-%~          subscript_value_slice(PIECE_01,slice_step(call_func_args(-,[1])))) ,
-%~        exit_proc(PIECE_02))) ,
-%~   [ assign_targets_value( [ARG_05],
-%~       subscript_value_slice(call_func_args("ulcorner",[PIECE_01]),0)),
-%~     assign_targets_value( [ARG_06],
-%~       subscript_value_slice(call_func_args("lrcorner",[PIECE_01]),0)),
-%~     call(+,ARG_05,ARG_06,D)] ,
-%~   if_test_body(
-%~      [ call_func_args( isinstance, [
-%~          subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-%~          tuple])],
-%~      ( assign_targets_value( [ARG_03],
-%~          generator_exp_elt_generators(
-%~             tuple_elts(["v",tuple_elts([call_func_args(-,["d","i"]),"j"])]),
-%~             [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
-%~        frozenset(ARG_03,PIECE_02) ,
-%~        exit_proc(PIECE_02))) ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators(
-%~        tuple_elts([call_func_args(-,["d","i"]),"j"]),
-%~        [ comprehension_target_iter(tuple_elts(["i","j"]),PIECE_01)])) ,
-%~   frozenset(ARG_04,PIECE_02) ,
-%~   exit_proc(PIECE_02))
-%~
 % Compiled KL-1 for hmirror
 hmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along horizontal ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[PIECE_01,tuple])],
-     (/*2*/
-       assign_targets_value( [PIECE_02],
-         subscript_value_slice(PIECE_01,slice_step(call_func_args(-,[1])))) ,
-       exit_proc(PIECE_02))) ,
-  assign_targets_value( [ARG_05],
-    subscript_value_slice(call_func_args("ulcorner",[PIECE_01]),0)) ,
-  assign_targets_value( [ARG_06],
-    subscript_value_slice(call_func_args("lrcorner",[PIECE_01]),0)) ,
-  call(+,ARG_05,ARG_06,D) ,
-  if_test_body(
-     [ call_func_args( isinstance, [
-         subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-         tuple])],
-     ( assign_targets_value( [ARG_03],
-         generator_exp_elt_generators(
-            tuple_elts( [ V,
-                          tuple_elts([call_func_args(-,[D,I]),J])]),
-            [ comprehension_target_iter(
-                 tuple_elts([V,tuple_elts([I,J])]),
-                 PIECE_01)]))  ,
-       frozenset(ARG_03,PIECE_02) ,
-       exit_proc(PIECE_02))) ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators(
-       tuple_elts([call_func_args(-,[D,I]),J]),
-       [ comprehension_target_iter(tuple_elts([I,J]),PIECE_01)])) ,
-  frozenset(ARG_04,PIECE_02) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
+      ( assign_var(ARG_03,slice_step(call_func_args(-,[1])))  ,
+        subscript_value_slice(PIECE_01,ARG_03,PIECE_02) ,
+        exit_proc(PIECE_02))) ,
+  ulcorner(PIECE_01,ARG_08) ,
+  subscript_value_slice(ARG_08,0,ARG_06) ,
+  lrcorner(PIECE_01,ARG_09) ,
+  subscript_value_slice(ARG_09,0,ARG_07) ,
+  call_op(+,ARG_06,ARG_07,D) ,
+  (/*2*/
+    testif( [ call_func_args( isinstance, [
+                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
+                tuple])]) ->
+      ( assign_var( ARG_04,
+          elt_generator( v1,
+            tuple_elts(["v",tuple_elts([call_func_args(-,["d","i"]),"j"])]),
+            [ assign_targets_value1(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
+        frozenset(ARG_04,PIECE_02) ,
+        exit_proc(PIECE_02))) ,
+  assign_var( ARG_05,
+    elt_generator( v1,
+      tuple_elts([call_func_args(-,["d","i"]),"j"]),
+      [ assign_targets_value1(tuple_elts(["i","j"]),PIECE_01)])) ,
+  frozenset(ARG_05,PIECE_02) ,
   exit_proc(PIECE_02).
 %~ % Universal AST Pass #0
 %~ def( "vmirror",
@@ -4312,72 +2974,37 @@ hmirror(PIECE_01,PIECE_02) :-
 %~                                             tuple_elts(["i",bin_op_left_right(sub_token(-),"d","j")]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"piece")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' mirroring along vertical ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[PIECE_01,tuple])],
-%~      ( assign_targets_value( [ARG_03],
-%~          generator_exp_elt_generators(
-%~             subscript_value_slice("row",slice_step(call_func_args(-,[1]))),
-%~             [comprehension_target_iter("row",PIECE_01)]))  ,
-%~        tuple(ARG_03,PIECE_02) ,
-%~        exit_proc(PIECE_02))) ,
-%~   [ assign_targets_value( [ARG_06],
-%~       subscript_value_slice(call_func_args("ulcorner",[PIECE_01]),1)),
-%~     assign_targets_value( [ARG_07],
-%~       subscript_value_slice(call_func_args("lrcorner",[PIECE_01]),1)),
-%~     call(+,ARG_06,ARG_07,D)] ,
-%~   if_test_body(
-%~      [ call_func_args( isinstance, [
-%~          subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-%~          tuple])],
-%~      ( assign_targets_value( [ARG_04],
-%~          generator_exp_elt_generators(
-%~             tuple_elts(["v",tuple_elts(["i",call_func_args(-,["d","j"])])]),
-%~             [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
-%~        frozenset(ARG_04,PIECE_02) ,
-%~        exit_proc(PIECE_02))) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        tuple_elts(["i",call_func_args(-,["d","j"])]),
-%~        [ comprehension_target_iter(tuple_elts(["i","j"]),PIECE_01)])) ,
-%~   frozenset(ARG_05,PIECE_02) ,
-%~   exit_proc(PIECE_02))
-%~
 % Compiled KL-1 for vmirror
 vmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along vertical ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[PIECE_01,tuple])],
-     ( assign_targets_value( [ARG_03],
-         generator_exp_elt_generators(
-            subscript_value_slice("row",slice_step(call_func_args(-,[1]))),
-            [comprehension_target_iter("row",PIECE_01)]))  ,
-       tuple(ARG_03,PIECE_02) ,
-       exit_proc(PIECE_02))) ,
-  assign_targets_value( [ARG_06],
-    subscript_value_slice(call_func_args("ulcorner",[PIECE_01]),1)) ,
-  assign_targets_value( [ARG_07],
-    subscript_value_slice(call_func_args("lrcorner",[PIECE_01]),1)) ,
-  call(+,ARG_06,ARG_07,D) ,
-  if_test_body(
-     [ call_func_args( isinstance, [
-         subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-         tuple])],
-     ( assign_targets_value( [ARG_04],
-         generator_exp_elt_generators(
-            tuple_elts( [ V,
-                          tuple_elts([I,call_func_args(-,[D,J])])]),
-            [ comprehension_target_iter(
-                 tuple_elts([V,tuple_elts([I,J])]),
-                 PIECE_01)]))  ,
-       frozenset(ARG_04,PIECE_02) ,
-       exit_proc(PIECE_02))) ,
-  assign_targets_value( [ARG_05],
-    generator_exp_elt_generators(
-       tuple_elts([I,call_func_args(-,[D,J])]),
-       [ comprehension_target_iter(tuple_elts([I,J]),PIECE_01)])) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
+      ( assign_var( ARG_03,
+          generator_exp_elt_generators(
+             subscript_value_slice("row",slice_step(call_func_args(-,[1]))),
+             [assign_targets_value1("row",PIECE_01)]))  ,
+        tuple(ARG_03,PIECE_02) ,
+        exit_proc(PIECE_02))) ,
+  ulcorner(PIECE_01,ARG_08) ,
+  subscript_value_slice(ARG_08,1,ARG_06) ,
+  lrcorner(PIECE_01,ARG_09) ,
+  subscript_value_slice(ARG_09,1,ARG_07) ,
+  call_op(+,ARG_06,ARG_07,D) ,
+  (/*2*/
+    testif( [ call_func_args( isinstance, [
+                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
+                tuple])]) ->
+      ( assign_var( ARG_04,
+          elt_generator( v1,
+            tuple_elts(["v",tuple_elts(["i",call_func_args(-,["d","j"])])]),
+            [ assign_targets_value1(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
+        frozenset(ARG_04,PIECE_02) ,
+        exit_proc(PIECE_02))) ,
+  assign_var( ARG_05,
+    elt_generator( v1,
+      tuple_elts(["i",call_func_args(-,["d","j"])]),
+      [ assign_targets_value1(tuple_elts(["i","j"]),PIECE_01)])) ,
   frozenset(ARG_05,PIECE_02) ,
   exit_proc(PIECE_02).
 %~ % Universal AST Pass #0
@@ -4405,67 +3032,35 @@ vmirror(PIECE_01,PIECE_02) :-
 %~                                                           bin_op_left_right(add_token(+),bin_op_left_right(sub_token(-),"i","a"),"b")]),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),"piece")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' mirroring along diagonal ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[PIECE_01,tuple])],
-%~      ( [ assign_targets_value([ARG_07],starred_value(PIECE_01)),
-%~          zip(ARG_07,ARG_03)]  ,
-%~        tuple(ARG_03,PIECE_02) ,
-%~        exit_proc(PIECE_02))) ,
-%~   call(into_tuple("a","b",ARG_04)) ,
-%~   ulcorner(PIECE_01,ARG_04) ,
-%~   if_test_body(
-%~      [ call_func_args( isinstance, [
-%~          subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-%~          tuple])],
-%~      ( assign_targets_value( [ARG_05],
-%~          generator_exp_elt_generators(
-%~             tuple_elts( [ "v",
-%~                           tuple_elts( [ call_func_args(+,[call_func_args(-,["j","b"]),"a"]),
-%~                                         call_func_args(+,[call_func_args(-,["i","a"]),"b"])])]),
-%~             [ comprehension_target_iter(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
-%~        frozenset(ARG_05,PIECE_02) ,
-%~        exit_proc(PIECE_02))) ,
-%~   assign_targets_value( [ARG_06],
-%~     generator_exp_elt_generators(
-%~        tuple_elts( [ call_func_args(+,[call_func_args(-,["j","b"]),"a"]),
-%~                      call_func_args(+,[call_func_args(-,["i","a"]),"b"])]),
-%~        [ comprehension_target_iter(tuple_elts(["i","j"]),PIECE_01)])) ,
-%~   frozenset(ARG_06,PIECE_02) ,
-%~   exit_proc(PIECE_02))
-%~
 % Compiled KL-1 for dmirror
 dmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along diagonal ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[PIECE_01,tuple])],
-     ( [ assign_targets_value([ARG_07],starred_value(PIECE_01)),
-         zip(ARG_07,ARG_03)]  ,
-       tuple(ARG_03,PIECE_02) ,
-       exit_proc(PIECE_02))) ,
-  call(into_tuple(A,B,ARG_04)) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
+      ( [ starred_value(PIECE_01,ARG_07),
+          zip(ARG_07,ARG_03)]  ,
+        tuple(ARG_03,PIECE_02) ,
+        exit_proc(PIECE_02))) ,
+  call(into_tuple("a","b",ARG_04)) ,
   ulcorner(PIECE_01,ARG_04) ,
-  if_test_body(
-     [ call_func_args( isinstance, [
-         subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
-         tuple])],
-     ( assign_targets_value( [ARG_05],
-         generator_exp_elt_generators(
-            tuple_elts( [ V,
-                          tuple_elts( [ call_func_args(+,[call_func_args(-,[J,B]),A]),
-                                        call_func_args(+,[call_func_args(-,[I,A]),B])])]),
-            [ comprehension_target_iter(
-                 tuple_elts([V,tuple_elts([I,J])]),
-                 PIECE_01)]))  ,
-       frozenset(ARG_05,PIECE_02) ,
-       exit_proc(PIECE_02))) ,
-  assign_targets_value( [ARG_06],
-    generator_exp_elt_generators(
-       tuple_elts( [ call_func_args(+,[call_func_args(-,[J,B]),A]),
-                     call_func_args(+,[call_func_args(-,[I,A]),B])]),
-       [ comprehension_target_iter(tuple_elts([I,J]),PIECE_01)])) ,
+  (/*2*/
+    testif( [ call_func_args( isinstance, [
+                subscript_value_slice(call_func_args("next",[call_func_args("iter",[PIECE_01])]),1),
+                tuple])]) ->
+      ( assign_var( ARG_05,
+          elt_generator( v1,
+            tuple_elts( [ "v",
+                          tuple_elts( [ call_func_args(+,[call_func_args(-,["j","b"]),"a"]),
+                                        call_func_args(+,[call_func_args(-,["i","a"]),"b"])])]),
+            [ assign_targets_value1(tuple_elts(["v",tuple_elts(["i","j"])]),PIECE_01)]))  ,
+        frozenset(ARG_05,PIECE_02) ,
+        exit_proc(PIECE_02))) ,
+  assign_var( ARG_06,
+    elt_generator( v1,
+      tuple_elts( [ call_func_args(+,[call_func_args(-,["j","b"]),"a"]),
+                    call_func_args(+,[call_func_args(-,["i","a"]),"b"])]),
+      [ assign_targets_value1(tuple_elts(["i","j"]),PIECE_01)])) ,
   frozenset(ARG_06,PIECE_02) ,
   exit_proc(PIECE_02).
 %~ % Universal AST Pass #0
@@ -4482,35 +3077,20 @@ dmirror(PIECE_01,PIECE_02) :-
 %~                                                                               [ comprehension_target_iter("r",subscript_value_slice("piece",slice_step(unary_op_operand(us_ub_token(-),1))))]))])]))])),
 %~                          return_value( call_func_args("vmirror",[call_func_args("dmirror",[call_func_args("vmirror",["piece"])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' mirroring along counterdiagonal ')  ,
-%~   if_test_body(
-%~      [ call_func_args(isinstance,[PIECE_01,tuple])],
-%~      ( [ assign_targets_value( [ARG_05],
-%~            starred_value( generator_exp_elt_generators(
-%~                              subscript_value_slice("r",slice_step(call_func_args(-,[1]))),
-%~                              [ comprehension_target_iter("r",subscript_value_slice(PIECE_01,slice_step(call_func_args(-,[1]))))]))),
-%~          zip(ARG_05,ARG_03)]  ,
-%~        tuple(ARG_03,PIECE_02) ,
-%~        exit_proc(PIECE_02))) ,
-%~   [ vmirror(PIECE_01,ARG_06),
-%~     dmirror(ARG_06,ARG_04)] ,
-%~   vmirror(ARG_04,PIECE_02) ,
-%~   exit_proc(PIECE_02))
-%~
 % Compiled KL-1 for cmirror
 cmirror(PIECE_01,PIECE_02) :-
   willBeType(PIECE_02,'Piece') ,
   comment(' mirroring along counterdiagonal ') ,
-  if_test_body(
-     [ call_func_args(isinstance,[PIECE_01,tuple])],
-     ( [ assign_targets_value( [ARG_05],
-           starred_value( generator_exp_elt_generators(
-                             subscript_value_slice("r",slice_step(call_func_args(-,[1]))),
-                             [ comprehension_target_iter("r",subscript_value_slice(PIECE_01,slice_step(call_func_args(-,[1]))))]))),
-         zip(ARG_05,ARG_03)]  ,
-       tuple(ARG_03,PIECE_02) ,
-       exit_proc(PIECE_02))) ,
+  (/*2*/
+    testif([call_func_args(isinstance,[PIECE_01,tuple])]) ->
+      ( [ assign_var( ARG_07,
+            generator_exp_elt_generators(
+               subscript_value_slice("r",slice_step(call_func_args(-,[1]))),
+               [ assign_targets_value1("r",subscript_value_slice(PIECE_01,slice_step(call_func_args(-,[1]))))])),
+          starred_value(ARG_07,ARG_05),
+          zip(ARG_05,ARG_03)]  ,
+        tuple(ARG_03,PIECE_02) ,
+        exit_proc(PIECE_02))) ,
   vmirror(PIECE_01,ARG_06) ,
   dmirror(ARG_06,ARG_04) ,
   vmirror(ARG_04,PIECE_02) ,
@@ -4541,62 +3121,31 @@ cmirror(PIECE_01,PIECE_02) :-
 %~                                             call_func_args("tuple",["row"]),
 %~                                             [comprehension_target_iter("row","grid_filled")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' fill value at indices ')  ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_05],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_05,W) ,
-%~   assign_targets_value( [ARG_06],
-%~     generator_exp_elt_generators(
-%~        call_func_args("list",["row"]),
-%~        [comprehension_target_iter("row",GRID_01)])) ,
-%~   list(ARG_06,GRID_FILLED) ,
-%~   for_target_iter_body( tuple_elts(["i","j"]),
-%~     call_func_args("toindices",[PATCH_03]),
-%~     if_test_body(
-%~        bool_op_values( ['python:And'], [
-%~          call_func_args(<=,[0,"i"]),
-%~          call_func_args(<,[0,"h"]),
-%~          call_func_args(<=,[0,"j"]),
-%~          call_func_args(<,[0,"w"])]),
-%~        assign_targets_value(
-%~           [ subscript_value_slice(subscript_value_slice("grid_filled","i"),"j")],
-%~           VALUE_02))) ,
-%~   assign_targets_value( [ARG_07],
-%~     generator_exp_elt_generators(
-%~        call_func_args("tuple",["row"]),
-%~        [comprehension_target_iter("row","grid_filled")])) ,
-%~   tuple(ARG_07,GRID_04) ,
-%~   exit_proc(GRID_04))
-%~
 % Compiled KL-1 for fill
 fill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' fill value at indices ') ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_05],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_05) ,
   len(ARG_05,W) ,
-  assign_targets_value( [ARG_06],
+  assign_var( ARG_06,
     generator_exp_elt_generators(
-       call_func_args("list",[ROW]),
-       [comprehension_target_iter(ROW,GRID_01)])) ,
+       call_func_args("list",["row"]),
+       [assign_targets_value1("row",GRID_01)])) ,
   list(ARG_06,GRID_FILLED) ,
-  for_target_iter_body( tuple_elts([I,J]),
-    call_func_args("toindices",[PATCH_03]),
-    if_test_body(
-       bool_op_values( ['python:And'], [
-         call_func_args(<=,[0,I]),
-         call_func_args(<,[0,H]),
-         call_func_args(<=,[0,J]),
-         call_func_args(<,[0,W])]),
-       assign_targets_value(
-          [ subscript_value_slice(subscript_value_slice("grid_filled",I),J)],
-          VALUE_02))) ,
-  assign_targets_value( [ARG_07],
+  for_each( [toindices(PATCH_03,'$VAR'('TUPLE_ELTS([I,J])_07'))],
+    (/*2*/
+      testif( bool_op_values( ['python:And'], [
+                call_func_args(<=,[0,"i"]),
+                call_func_args(<,[0,"h"]),
+                call_func_args(<=,[0,"j"]),
+                call_func_args(<,[0,"w"])])) ->
+        call(subscript_value_slice(subscript_value_slice("grid_filled","i"),"j")=VALUE_02))) ,
+  assign_var( ARG_08,
     generator_exp_elt_generators(
-       call_func_args("tuple",[ROW]),
-       [comprehension_target_iter(ROW,"grid_filled")])) ,
-  tuple(ARG_07,GRID_04) ,
+       call_func_args("tuple",["row"]),
+       [assign_targets_value1("row","grid_filled")])) ,
+  tuple(ARG_08,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
 %~ def( "paint",
@@ -4626,62 +3175,31 @@ fill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
 %~                                             call_func_args("tuple",["row"]),
 %~                                             [comprehension_target_iter("row","grid_painted")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' paint object to grid ')  ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_04,W) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args("list",["row"]),
-%~        [comprehension_target_iter("row",GRID_01)])) ,
-%~   list(ARG_05,GRID_PAINTED) ,
-%~   for_target_iter_body(
-%~      tuple_elts(["value",tuple_elts(["i","j"])]),
-%~      OBJ_02,
-%~      if_test_body(
-%~         bool_op_values( ['python:And'], [
-%~           call_func_args(<=,[0,"i"]),
-%~           call_func_args(<,[0,"h"]),
-%~           call_func_args(<=,[0,"j"]),
-%~           call_func_args(<,[0,"w"])]),
-%~         assign_targets_value([subscript_value_slice(subscript_value_slice("grid_painted","i"),"j")],"value"))) ,
-%~   assign_targets_value( [ARG_06],
-%~     generator_exp_elt_generators(
-%~        call_func_args("tuple",["row"]),
-%~        [comprehension_target_iter("row","grid_painted")])) ,
-%~   tuple(ARG_06,GRID_03) ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for paint
 paint(GRID_01,OBJ_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' paint object to grid ') ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
-       call_func_args("list",[ROW]),
-       [comprehension_target_iter(ROW,GRID_01)])) ,
+       call_func_args("list",["row"]),
+       [assign_targets_value1("row",GRID_01)])) ,
   list(ARG_05,GRID_PAINTED) ,
-  for_target_iter_body(
-     tuple_elts([VALUE,tuple_elts([I,J])]),
-     OBJ_02,
-     if_test_body(
-        bool_op_values( ['python:And'], [
-          call_func_args(<=,[0,I]),
-          call_func_args(<,[0,H]),
-          call_func_args(<=,[0,J]),
-          call_func_args(<,[0,W])]),
-        assign_targets_value(
-           [ subscript_value_slice(subscript_value_slice("grid_painted",I),J)],
-           VALUE))) ,
-  assign_targets_value( [ARG_06],
+  for_each( call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_06')=OBJ_02),
+    (/*2*/
+      testif( bool_op_values( ['python:And'], [
+                call_func_args(<=,[0,"i"]),
+                call_func_args(<,[0,"h"]),
+                call_func_args(<=,[0,"j"]),
+                call_func_args(<,[0,"w"])])) ->
+        assign_targets_value([subscript_value_slice(subscript_value_slice("grid_painted","i"),"j")],"value"))) ,
+  assign_var( ARG_07,
     generator_exp_elt_generators(
-       call_func_args("tuple",[ROW]),
-       [comprehension_target_iter(ROW,"grid_painted")])) ,
-  tuple(ARG_06,GRID_03) ,
+       call_func_args("tuple",["row"]),
+       [assign_targets_value1("row","grid_painted")])) ,
+  tuple(ARG_07,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "underfill",
@@ -4710,66 +3228,32 @@ paint(GRID_01,OBJ_02,GRID_03) :-
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators(call_func_args("tuple",["r"]),[comprehension_target_iter("r","g")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' fill value at indices that are background ')  ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_05],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_05,W) ,
-%~   mostcolor(GRID_01,BG) ,
-%~   assign_targets_value( [ARG_06],
-%~     generator_exp_elt_generators(
-%~        call_func_args("list",["r"]),
-%~        [comprehension_target_iter("r",GRID_01)])) ,
-%~   list(ARG_06,G) ,
-%~   for_target_iter_body( tuple_elts(["i","j"]),
-%~     call_func_args("toindices",[PATCH_03]),
-%~     if_test_body(
-%~        bool_op_values( ['python:And'], [
-%~          call_func_args(<=,[0,"i"]),
-%~          call_func_args(<,[0,"h"]),
-%~          call_func_args(<=,[0,"j"]),
-%~          call_func_args(<,[0,"w"])]),
-%~        if_test_body(
-%~           call_func_args(==,[subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"]),
-%~           assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],VALUE_02)))) ,
-%~   assign_targets_value( [ARG_07],
-%~     generator_exp_elt_generators(call_func_args("tuple",["r"]),[comprehension_target_iter("r","g")])) ,
-%~   tuple(ARG_07,GRID_04) ,
-%~   exit_proc(GRID_04))
-%~
 % Compiled KL-1 for underfill
 underfill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' fill value at indices that are background ') ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_05],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_05) ,
   len(ARG_05,W) ,
   mostcolor(GRID_01,BG) ,
-  assign_targets_value( [ARG_06],
+  assign_var( ARG_06,
     generator_exp_elt_generators(
-       call_func_args("list",[R]),
-       [comprehension_target_iter(R,GRID_01)])) ,
+       call_func_args("list",["r"]),
+       [assign_targets_value1("r",GRID_01)])) ,
   list(ARG_06,G) ,
-  for_target_iter_body( tuple_elts([I,J]),
-    call_func_args("toindices",[PATCH_03]),
-    if_test_body(
-       bool_op_values( ['python:And'], [
-         call_func_args(<=,[0,I]),
-         call_func_args(<,[0,H]),
-         call_func_args(<=,[0,J]),
-         call_func_args(<,[0,W])]),
-       if_test_body(
-          call_func_args( ==, [
-            subscript_value_slice(subscript_value_slice("g",I),J),
-            BG]),
-          assign_targets_value(
-             [ subscript_value_slice(subscript_value_slice("g",I),J)],
-             VALUE_02)))) ,
-  assign_targets_value( [ARG_07],
-    generator_exp_elt_generators(
-       call_func_args("tuple",[R]),
-       [comprehension_target_iter(R,"g")])) ,
-  tuple(ARG_07,GRID_04) ,
+  for_each( [toindices(PATCH_03,'$VAR'('TUPLE_ELTS([I,J])_07'))],
+    (/*2*/
+      testif( bool_op_values( ['python:And'], [
+                call_func_args(<=,[0,"i"]),
+                call_func_args(<,[0,"h"]),
+                call_func_args(<=,[0,"j"]),
+                call_func_args(<,[0,"w"])])) ->
+        (/*2*/
+          testif(call_func_args(==,[subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"])) ->
+            call(subscript_value_slice(subscript_value_slice("g","i"),"j")=VALUE_02)))) ,
+  assign_var( ARG_08,
+    generator_exp_elt_generators(call_func_args("tuple",["r"]),[assign_targets_value1("r","g")])) ,
+  tuple(ARG_08,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
 %~ def( "underpaint",
@@ -4800,68 +3284,32 @@ underfill(GRID_01,VALUE_02,PATCH_03,GRID_04) :-
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators(call_func_args("tuple",["r"]),[comprehension_target_iter("r","g")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' paint object to grid where there is background ')  ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_04,W) ,
-%~   mostcolor(GRID_01,BG) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args("list",["r"]),
-%~        [comprehension_target_iter("r",GRID_01)])) ,
-%~   list(ARG_05,G) ,
-%~   for_target_iter_body(
-%~      tuple_elts(["value",tuple_elts(["i","j"])]),
-%~      OBJ_02,
-%~      if_test_body(
-%~         bool_op_values( ['python:And'], [
-%~           call_func_args(<=,[0,"i"]),
-%~           call_func_args(<,[0,"h"]),
-%~           call_func_args(<=,[0,"j"]),
-%~           call_func_args(<,[0,"w"])]),
-%~         if_test_body(
-%~            call_func_args(==,[subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"]),
-%~            assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")))) ,
-%~   assign_targets_value( [ARG_06],
-%~     generator_exp_elt_generators(call_func_args("tuple",["r"]),[comprehension_target_iter("r","g")])) ,
-%~   tuple(ARG_06,GRID_03) ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for underpaint
 underpaint(GRID_01,OBJ_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' paint object to grid where there is background ') ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
   mostcolor(GRID_01,BG) ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
-       call_func_args("list",[R]),
-       [comprehension_target_iter(R,GRID_01)])) ,
+       call_func_args("list",["r"]),
+       [assign_targets_value1("r",GRID_01)])) ,
   list(ARG_05,G) ,
-  for_target_iter_body(
-     tuple_elts([VALUE,tuple_elts([I,J])]),
-     OBJ_02,
-     if_test_body(
-        bool_op_values( ['python:And'], [
-          call_func_args(<=,[0,I]),
-          call_func_args(<,[0,H]),
-          call_func_args(<=,[0,J]),
-          call_func_args(<,[0,W])]),
-        if_test_body(
-           call_func_args( ==, [
-             subscript_value_slice(subscript_value_slice("g",I),J),
-             BG]),
-           assign_targets_value(
-              [ subscript_value_slice(subscript_value_slice("g",I),J)],
-              VALUE)))) ,
-  assign_targets_value( [ARG_06],
-    generator_exp_elt_generators(
-       call_func_args("tuple",[R]),
-       [comprehension_target_iter(R,"g")])) ,
-  tuple(ARG_06,GRID_03) ,
+  for_each( call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_06')=OBJ_02),
+    (/*2*/
+      testif( bool_op_values( ['python:And'], [
+                call_func_args(<=,[0,"i"]),
+                call_func_args(<,[0,"h"]),
+                call_func_args(<=,[0,"j"]),
+                call_func_args(<,[0,"w"])])) ->
+        (/*2*/
+          testif(call_func_args(==,[subscript_value_slice(subscript_value_slice("g","i"),"j"),"bg"])) ->
+            assign_targets_value([subscript_value_slice(subscript_value_slice("g","i"),"j")],"value")))) ,
+  assign_var( ARG_07,
+    generator_exp_elt_generators(call_func_args("tuple",["r"]),[assign_targets_value1("r","g")])) ,
+  tuple(ARG_07,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "hupscale",
@@ -4886,41 +3334,23 @@ underpaint(GRID_01,OBJ_02,GRID_03) :-
 %~                                          assign_targets_value(["g"],bin_op_left_right(add_token(+),"g",tuple_elts(["r"])))])),
 %~                          return_value("g")])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' upscale grid horizontally ')  ,
-%~   assign_targets_value(["g"],call_func("tuple")) ,
-%~   for_target_iter_body( "row",
-%~     GRID_01,
-%~     ( assign_targets_value(["r"],call_func("tuple"))  ,
-%~       for_target_iter_body( "value",
-%~         "row",
-%~         [ assign_targets_value( [ARG_06],
-%~             generator_exp_elt_generators( "value", [
-%~               comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-%~           tuple(ARG_06,ARG_04),
-%~           call(+,R,ARG_04,R)]) ,
-%~       [ assign_targets_value([ARG_05],tuple_elts(["r"])),
-%~         call(+,G,ARG_05,G)])) ,
-%~   call(GRID_03="g") ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for hupscale
 hupscale(GRID_01,FACTOR_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' upscale grid horizontally ') ,
-  assign_targets_value(["g"],call_func("tuple")) ,
-  for_target_iter_body( "row",
-    GRID_01,
-    ( assign_targets_value([R],call_func("tuple"))  ,
-      for_target_iter_body( "value",
-        "row",
-        [ assign_targets_value( [ARG_06],
-            generator_exp_elt_generators( "value", [
-              comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-          tuple(ARG_06,ARG_04),
-          call(+,R,ARG_04,R)]) ,
-      [ assign_targets_value([ARG_05],tuple_elts([R])),
-        call(+,G,ARG_05,G)])) ,
+  make_new("tuple","g") ,
+  for_each( call(ROW_04=GRID_01),
+    ( make_new("tuple","r")  ,
+      for_each( call(VALUE_05=ROW_04), [
+        assign_var( ARG_08,
+          elt_generator( v1,
+            VALUE_05,
+            [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
+        tuple(ARG_08,ARG_06),
+        call_op(+,R,ARG_06,R)]) ,
+      [ assign_targets_value([ARG_09],["r"]),
+        tuple_elts(ARG_09,ARG_07),
+        call_op(+,G,ARG_07,G)])) ,
   call(GRID_03="g") ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
@@ -4942,31 +3372,18 @@ hupscale(GRID_01,FACTOR_02,GRID_03) :-
 %~                                                  comprehension_target_iter("num",call_func_args("range",["factor"]))])])))])),
 %~                          return_value("g")])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' upscale grid vertically ')  ,
-%~   assign_targets_value(["g"],call_func("tuple")) ,
-%~   for_target_iter_body( "row",
-%~     GRID_01,
-%~     [ assign_targets_value( [ARG_05],
-%~         generator_exp_elt_generators( "row", [
-%~           comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-%~       tuple(ARG_05,ARG_04),
-%~       call(+,G,ARG_04,G)]) ,
-%~   call(GRID_03="g") ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for vupscale
 vupscale(GRID_01,FACTOR_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' upscale grid vertically ') ,
-  assign_targets_value(["g"],call_func("tuple")) ,
-  for_target_iter_body( "row",
-    GRID_01,
-    [ assign_targets_value( [ARG_05],
-        generator_exp_elt_generators( "row", [
-          comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-      tuple(ARG_05,ARG_04),
-      call(+,G,ARG_04,G)]) ,
+  make_new("tuple","g") ,
+  for_each( call(ROW_04=GRID_01), [
+    assign_var( ARG_06,
+      elt_generator( v1,
+        ROW_04,
+        [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
+    tuple(ARG_06,ARG_05),
+    call_op(+,G,ARG_05,G)]) ,
   call(GRID_03="g") ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
@@ -5024,106 +3441,52 @@ vupscale(GRID_01,FACTOR_02,GRID_03) :-
 %~                                                                  call_func_args("frozenset",["o"]),
 %~                                                                  tuple_elts(["di_inv","dj_inv"])]))]))])))
 %~
-%~ % Body Pass #1
-%~ (/*2*/
-%~   comment(' upscale object or grid ') ,
-%~   if_test_body_orelse(
-%~      [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-%~      ( assign_targets_value(["g"],call_func("tuple"))  ,
-%~        for_target_iter_body( "row",
-%~          ELEMENT_01,
-%~          ( assign_targets_value(["upscaled_row"],call_func("tuple"))  ,
-%~            for_target_iter_body( "value",
-%~              "row",
-%~              [ assign_targets_value( [ARG_010],
-%~                  generator_exp_elt_generators( "value", [
-%~                    comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-%~                tuple(ARG_010,ARG_08),
-%~                call(+,UPSCALED_ROW,ARG_08,UPSCALED_ROW)]) ,
-%~            [ assign_targets_value( [ARG_011],
-%~                generator_exp_elt_generators( "upscaled_row", [
-%~                  comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-%~              tuple(ARG_011,ARG_09),
-%~              call(+,G,ARG_09,G)])) ,
-%~        call(ELEMENT_03="g") ,
-%~        exit_proc(ELEMENT_03)),
-%~      orelse_else_stmts( [ if_test_body(
-%~                              call_func_args(==,[call_func_args("len",[ELEMENT_01]),0]),
-%~                              assign_targets_value([ELEMENT_03],call_func("frozenset")),exit_proc(ELEMENT_03)),
-%~                           call(into_tuple("di_inv","dj_inv",ARG_04)),
-%~                           ulcorner(ELEMENT_01,ARG_04),
-%~                           call(-,DI_INV,DI),
-%~                           call(-,DJ_INV,DJ),
-%~                           call(into_tuple("di","dj",ARG_05)),
-%~                           shift(ELEMENT_01,ARG_05,NORMED_OBJ),
-%~                           assign_targets_value(["o"],call_func("set")),
-%~                           for_target_iter_body(
-%~                              tuple_elts(["value",tuple_elts(["i","j"])]),
-%~                              "normed_obj",
-%~                              for_target_iter_body( "io",
-%~                                call_func_args("range",[FACTOR_02]),
-%~                                for_target_iter_body( "jo",
-%~                                  call_func_args("range",[FACTOR_02]),
-%~                                  expr_value( call_func_args(
-%~                                                 qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
-%~                                                 [ tuple_elts( [ "value",
-%~                                                                 tuple_elts( [ call_func_args(+,[call_func_args(*,["i",FACTOR_02]),"io"]),
-%~                                                                               call_func_args(+,[call_func_args(*,["j",FACTOR_02]),"jo"])])])]))))),
-%~                           frozenset(O,ARG_06),
-%~                           call(into_tuple("di_inv","dj_inv",ARG_07)),
-%~                           shift(ARG_06,ARG_07,ELEMENT_03),
-%~                           exit_proc(ELEMENT_03)])))
-%~
 % Compiled KL-1 for upscale
 upscale(ELEMENT_01,FACTOR_02,ELEMENT_03) :-
   willBeType(ELEMENT_03,'Element') ,
   comment(' upscale object or grid ') ,
-  if_test_body_orelse(
-     [ call_func_args(isinstance,[ELEMENT_01,tuple])],
-     ( assign_targets_value(["g"],call_func("tuple"))  ,
-       for_target_iter_body( "row",
-         ELEMENT_01,
-         ( assign_targets_value(["upscaled_row"],call_func("tuple"))  ,
-           for_target_iter_body( VALUE,
-             "row",
-             [ assign_targets_value( [ARG_010],
-                 generator_exp_elt_generators( VALUE, [
-                   comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-               tuple(ARG_010,ARG_08),
-               call(+,UPSCALED_ROW,ARG_08,UPSCALED_ROW)]) ,
-           [ assign_targets_value( [ARG_011],
-               generator_exp_elt_generators( "upscaled_row", [
-                 comprehension_target_iter("num",call_func_args("range",[FACTOR_02]))])),
-             tuple(ARG_011,ARG_09),
-             call(+,G,ARG_09,G)])) ,
-       call(ELEMENT_03="g") ,
-       exit_proc(ELEMENT_03)),
-     orelse_else_stmts( [ if_test_body(
-                             call_func_args(==,[call_func_args("len",[ELEMENT_01]),0]),
-                             assign_targets_value([ELEMENT_03],call_func("frozenset")),exit_proc(ELEMENT_03)),
-                          call(into_tuple(DI_INV,DJ_INV,ARG_04)),
-                          ulcorner(ELEMENT_01,ARG_04),
-                          call(-,DI_INV,DI),
-                          call(-,DJ_INV,DJ),
-                          call(into_tuple(DI,DJ,ARG_05)),
-                          shift(ELEMENT_01,ARG_05,NORMED_OBJ),
-                          assign_targets_value(["o"],call_func("set")),
-                          for_target_iter_body(
-                             tuple_elts([VALUE,tuple_elts([I,J])]),
-                             "normed_obj",
-                             for_target_iter_body( IO,
-                               call_func_args("range",[FACTOR_02]),
-                               for_target_iter_body( JO,
-                                 call_func_args("range",[FACTOR_02]),
-                                 expr_value( call_func_args(
-                                                qualified_identifier_identifiers(["o",boxed_attribute_value("add")]),
-                                                [ tuple_elts( [ VALUE,
-                                                                tuple_elts( [ call_func_args(+,[call_func_args(*,[I,FACTOR_02]),IO]),
-                                                                              call_func_args(+,[call_func_args(*,[J,FACTOR_02]),JO])])])]))))),
-                          frozenset(O,ARG_06),
-                          call(into_tuple(DI_INV,DJ_INV,ARG_07)),
-                          shift(ARG_06,ARG_07,ELEMENT_03),
-                          exit_proc(ELEMENT_03)])).
+  (/*2*/
+    testif([call_func_args(isinstance,[ELEMENT_01,tuple])]) ->
+      ( make_new("tuple","g")  ,
+        for_each( call(ROW_04=ELEMENT_01),
+          ( make_new("tuple","upscaled_row")  ,
+            for_each( call(VALUE_05=ROW_04), [
+              assign_var( ARG_015,
+                elt_generator( v1,
+                  VALUE_05,
+                  [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
+              tuple(ARG_015,ARG_013),
+              call_op(+,UPSCALED_ROW,ARG_013,UPSCALED_ROW)]) ,
+            [ assign_var( ARG_016,
+                elt_generator( v1,
+                  "upscaled_row",
+                  [ assign_targets_value1("num",call_func_args("range",[FACTOR_02]))])),
+              tuple(ARG_016,ARG_014),
+              call_op(+,G,ARG_014,G)])) ,
+        call(ELEMENT_03="g") ,
+        exit_proc(ELEMENT_03)) ;
+    ( (/*2*/
+        testif(call_func_args(==,[call_func_args("len",[ELEMENT_01]),0])) ->
+          make_new("frozenset",ELEMENT_03),exit_proc(ELEMENT_03))  ,
+      call(into_tuple("di_inv","dj_inv",ARG_06)) ,
+      ulcorner(ELEMENT_01,ARG_06) ,
+      [call_op(-,DI_INV,DI)] ,
+      [call_op(-,DJ_INV,DJ)] ,
+      call(into_tuple("di","dj",ARG_07)) ,
+      shift(ELEMENT_01,ARG_07,NORMED_OBJ) ,
+      make_new("set","o") ,
+      for_each( call('$VAR'('TUPLE_ELTS([VALUE,TUPLE_ELTS([I,J])])_08')="normed_obj"),
+        for_each( [range(FACTOR_02,IO_09)],
+          for_each( [range(FACTOR_02,JO_010)],
+            expr_value( call_func_args( "add", [
+                          "o",
+                          tuple_elts( [ "value",
+                                        tuple_elts( [ call_func_args(+,[call_func_args(*,["i",FACTOR_02]),IO_09]),
+                                                      call_func_args(+,[call_func_args(*,["j",FACTOR_02]),JO_010])])])]))))) ,
+      [frozenset(O,ARG_011)] ,
+      call(into_tuple("di_inv","dj_inv",ARG_012)) ,
+      shift(ARG_011,ARG_012,ELEMENT_03) ,
+      exit_proc(ELEMENT_03))).
 %~ % Universal AST Pass #0
 %~ def( "downscale",
 %~   function_type_body(
@@ -5156,63 +3519,33 @@ upscale(ELEMENT_01,FACTOR_02,ELEMENT_03) :-
 %~                                                             bin_op_left_right(add_token(+),"dsg",tuple_elts([subscript_value_slice("g","i")])))]))])),
 %~                          return_value("dsg")])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' downscale grid ')  ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_04,W) ,
-%~   assign_targets_value(["g"],call_func("tuple")) ,
-%~   for_target_iter_body( "i",
-%~     call_func_args("range",["h"]),
-%~     ( assign_targets_value(["r"],call_func("tuple"))  ,
-%~       for_target_iter_body( "j",
-%~         call_func_args("range",["w"]),
-%~         if_test_body(
-%~            call_func_args(==,[call_func_args('%',["j",FACTOR_02]),0]),
-%~            [ assign_targets_value( [ARG_05],
-%~                tuple_elts([subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j")])),
-%~              call(+,R,ARG_05,R)])) ,
-%~       [ assign_targets_value([ARG_06],tuple_elts(["r"])),
-%~         call(+,G,ARG_06,G)])) ,
-%~   len(G,H) ,
-%~   assign_targets_value(["dsg"],call_func("tuple")) ,
-%~   for_target_iter_body( "i",
-%~     call_func_args("range",["h"]),
-%~     if_test_body(
-%~        call_func_args(==,[call_func_args('%',["i",FACTOR_02]),0]),
-%~        [ assign_targets_value([ARG_07],tuple_elts([subscript_value_slice("g","i")])),
-%~          call(+,DSG,ARG_07,DSG)])) ,
-%~   call(GRID_03="dsg") ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for downscale
 downscale(GRID_01,FACTOR_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' downscale grid ') ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
-  assign_targets_value(["g"],call_func("tuple")) ,
-  for_target_iter_body( I,
-    call_func_args("range",[H]),
-    ( assign_targets_value([R],call_func("tuple"))  ,
-      for_target_iter_body( J,
-        call_func_args("range",[W]),
-        if_test_body(
-           call_func_args(==,[call_func_args('%',[J,FACTOR_02]),0]),
-           [ assign_targets_value( [ARG_05],
-               tuple_elts([subscript_value_slice(subscript_value_slice(GRID_01,I),J)])),
-             call(+,R,ARG_05,R)])) ,
-      [ assign_targets_value([ARG_06],tuple_elts([R])),
-        call(+,G,ARG_06,G)])) ,
+  make_new("tuple","g") ,
+  for_each( [range(H,I_05)],
+    ( make_new("tuple","r")  ,
+      for_each( [range(W,J_06)],
+        (/*2*/
+          testif(call_func_args(==,[call_func_args('%',[J_06,FACTOR_02]),0])) ->
+            [ subscript_value_slice(subscript_value_slice(GRID_01,I_05),J_06,ARG_011),
+              tuple_elts(ARG_011,ARG_08),
+              call_op(+,R,ARG_08,R)])) ,
+      [ assign_targets_value([ARG_012],["r"]),
+        tuple_elts(ARG_012,ARG_09),
+        call_op(+,G,ARG_09,G)])) ,
   len(G,H) ,
-  assign_targets_value(["dsg"],call_func("tuple")) ,
-  for_target_iter_body( I,
-    call_func_args("range",[H]),
-    if_test_body(
-       call_func_args(==,[call_func_args('%',[I,FACTOR_02]),0]),
-       [ assign_targets_value([ARG_07],tuple_elts([subscript_value_slice("g",I)])),
-         call(+,DSG,ARG_07,DSG)])) ,
+  make_new("tuple","dsg") ,
+  for_each( [range(H,I_07)],
+    (/*2*/
+      testif(call_func_args(==,[call_func_args('%',[I_07,FACTOR_02]),0])) ->
+        [ subscript_value_slice("g",I_07,ARG_013),
+          tuple_elts(ARG_013,ARG_010),
+          call_op(+,DSG,ARG_010,DSG)])) ,
   call(GRID_03="dsg") ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
@@ -5225,24 +3558,14 @@ downscale(GRID_01,FACTOR_02,GRID_03) :-
 %~                                             bin_op_left_right(add_token(+),"i","j"),
 %~                                             [ comprehension_target_iter(tuple_elts(["i","j"]),call_func_args("zip",["a","b"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' concatenate two grids horizontally ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators(
-%~        call_func_args(+,["i","j"]),
-%~        [ comprehension_target_iter( tuple_elts(["i","j"]),
-%~            call_func_args("zip",[A_01,B_02]))])) ,
-%~   tuple(ARG_04,GRID_03) ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for hconcat
 hconcat(A_01,B_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' concatenate two grids horizontally ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     generator_exp_elt_generators(
-       call_func_args(+,[I,J]),
-       [ comprehension_target_iter( tuple_elts([I,J]),
+       call_func_args(+,["i","j"]),
+       [ assign_targets_value1( tuple_elts(["i","j"]),
            call_func_args("zip",[A_01,B_02]))])) ,
   tuple(ARG_04,GRID_03) ,
   exit_proc(GRID_03).
@@ -5253,16 +3576,11 @@ hconcat(A_01,B_02,GRID_03) :-
 %~      block_statements( [ expr_value(string_value(' concatenate two grids vertically ')),
 %~                          return_value(bin_op_left_right(add_token(+),"a","b"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' concatenate two grids vertically ')  ,
-%~   [call(+,A_01,B_02,GRID_03)] ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for vconcat
 vconcat(A_01,B_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' concatenate two grids vertically ') ,
-  call(+,A_01,B_02,GRID_03) ,
+  call_op(+,A_01,B_02,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
 %~ def( "subgrid",
@@ -5276,13 +3594,6 @@ vconcat(A_01,B_02,GRID_03) :-
 %~                                          "grid",
 %~                                          call_func_args("ulcorner",["patch"]),
 %~                                          call_func_args("shape",["patch"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' smallest subgrid containing object ')  ,
-%~   [ulcorner(PATCH_01,ARG_04)] ,
-%~   [shape(PATCH_01,ARG_05)] ,
-%~   crop(GRID_02,ARG_04,ARG_05,GRID_03) ,
-%~   exit_proc(GRID_03))
 %~
 % Compiled KL-1 for subgrid
 subgrid(PATCH_01,GRID_02,GRID_03) :-
@@ -5318,51 +3629,28 @@ subgrid(PATCH_01,GRID_02,GRID_03) :-
 %~                                               tuple_elts(["h","w"])]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",["n"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' split grid horizontally ')  ,
-%~   len(GRID_01,H) ,
-%~   [ assign_targets_value([ARG_07],subscript_value_slice(GRID_01,0)),
-%~     len(ARG_07,ARG_05),
-%~     call(//,ARG_05,N_02,W)] ,
-%~   [ assign_targets_value([ARG_09],subscript_value_slice(GRID_01,0)),
-%~     len(ARG_09,ARG_08),
-%~     call('%',ARG_08,N_02,ARG_06),
-%~     call('!=',ARG_06,0,OFFSET)] ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "crop", [
-%~          GRID_01,
-%~          tuple_elts( [ 0,
-%~                        call_func_args( +, [
-%~                          call_func_args(*,["w","i"]),
-%~                          call_func_args(*,["i","offset"])])]),
-%~          tuple_elts(["h","w"])]),
-%~        [ comprehension_target_iter("i",call_func_args("range",[N_02]))])) ,
-%~   tuple(ARG_04,TUPLE_03) ,
-%~   exit_proc(TUPLE_03))
-%~
 % Compiled KL-1 for hsplit
 hsplit(GRID_01,N_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' split grid horizontally ') ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_07],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_07) ,
   len(ARG_07,ARG_05) ,
-  call(//,ARG_05,N_02,W) ,
-  assign_targets_value([ARG_09],subscript_value_slice(GRID_01,0)) ,
+  call_op(//,ARG_05,N_02,W) ,
+  subscript_value_slice(GRID_01,0,ARG_09) ,
   len(ARG_09,ARG_08) ,
-  call('%',ARG_08,N_02,ARG_06) ,
-  call('!=',ARG_06,0,OFFSET) ,
-  assign_targets_value( [ARG_04],
+  call_op('%',ARG_08,N_02,ARG_06) ,
+  call_op('!=',ARG_06,0,OFFSET) ,
+  assign_var( ARG_04,
     generator_exp_elt_generators(
        call_func_args( "crop", [
          GRID_01,
          tuple_elts( [ 0,
                        call_func_args( +, [
-                         call_func_args(*,[W,I]),
-                         call_func_args(*,[I,OFFSET])])]),
-         tuple_elts([H,W])]),
-       [ comprehension_target_iter(I,call_func_args("range",[N_02]))])) ,
+                         call_func_args(*,["w","i"]),
+                         call_func_args(*,["i","offset"])])]),
+         tuple_elts(["h","w"])]),
+       [ assign_targets_value1("i",call_func_args("range",[N_02]))])) ,
   tuple(ARG_04,TUPLE_03) ,
   exit_proc(TUPLE_03).
 %~ % Universal AST Pass #0
@@ -5389,49 +3677,27 @@ hsplit(GRID_01,N_02,TUPLE_03) :-
 %~                                               tuple_elts(["h","w"])]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",["n"]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' split grid vertically ')  ,
-%~   [ len(GRID_01,ARG_06),
-%~     call(//,ARG_06,N_02,H)] ,
-%~   assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_04,W) ,
-%~   [ len(GRID_01,ARG_08),
-%~     call('%',ARG_08,N_02,ARG_07),
-%~     call('!=',ARG_07,0,OFFSET)] ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "crop", [
-%~          GRID_01,
-%~          tuple_elts( [ call_func_args( +, [
-%~                          call_func_args(*,["h","i"]),
-%~                          call_func_args(*,["i","offset"])]),
-%~                        0]),
-%~          tuple_elts(["h","w"])]),
-%~        [ comprehension_target_iter("i",call_func_args("range",[N_02]))])) ,
-%~   tuple(ARG_05,TUPLE_03) ,
-%~   exit_proc(TUPLE_03))
-%~
 % Compiled KL-1 for vsplit
 vsplit(GRID_01,N_02,TUPLE_03) :-
   willBeType(TUPLE_03,'Tuple') ,
   comment(' split grid vertically ') ,
   len(GRID_01,ARG_06) ,
-  call(//,ARG_06,N_02,H) ,
-  assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
+  call_op(//,ARG_06,N_02,H) ,
+  subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
   len(GRID_01,ARG_08) ,
-  call('%',ARG_08,N_02,ARG_07) ,
-  call('!=',ARG_07,0,OFFSET) ,
-  assign_targets_value( [ARG_05],
+  call_op('%',ARG_08,N_02,ARG_07) ,
+  call_op('!=',ARG_07,0,OFFSET) ,
+  assign_var( ARG_05,
     generator_exp_elt_generators(
        call_func_args( "crop", [
          GRID_01,
          tuple_elts( [ call_func_args( +, [
-                         call_func_args(*,[H,I]),
-                         call_func_args(*,[I,OFFSET])]),
+                         call_func_args(*,["h","i"]),
+                         call_func_args(*,["i","offset"])]),
                        0]),
-         tuple_elts([H,W])]),
-       [ comprehension_target_iter(I,call_func_args("range",[N_02]))])) ,
+         tuple_elts(["h","w"])]),
+       [ assign_targets_value1("i",call_func_args("range",[N_02]))])) ,
   tuple(ARG_05,TUPLE_03) ,
   exit_proc(TUPLE_03).
 %~ % Universal AST Pass #0
@@ -5459,51 +3725,31 @@ vsplit(GRID_01,N_02,TUPLE_03) :-
 %~                                            bin_op_left_right(add_token(+),"resulting_grid",tuple_elts(["row"])))])),
 %~                          return_value("resulting_grid")])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' cellwise match of two grids ')  ,
-%~   len(A_01,H) ,
-%~   assign_targets_value([ARG_05],subscript_value_slice(A_01,0)) ,
-%~   len(ARG_05,W) ,
-%~   assign_targets_value(["resulting_grid"],call_func("tuple")) ,
-%~   for_target_iter_body( "i",
-%~     call_func_args("range",["h"]),
-%~     ( assign_targets_value(["row"],call_func("tuple"))  ,
-%~       for_target_iter_body( "j",
-%~         call_func_args("range",["w"]),
-%~         ( assign_targets_value(["a_value"],subscript_value_slice(subscript_value_slice(A_01,"i"),"j"))  ,
-%~           assign_targets_value( ["value"],
-%~             if_exp_test_body_orelse(
-%~                call_func_args(==,["a_value",subscript_value_slice(subscript_value_slice(B_02,"i"),"j")]), "a_value",FALLBACK_03)) ,
-%~           [ assign_targets_value([ARG_06],tuple_elts(["value"])),
-%~             call(+,ROW,ARG_06,ROW)])) ,
-%~       [ assign_targets_value([ARG_07],tuple_elts(["row"])),
-%~         call(+,RESULTING_GRID,ARG_07,RESULTING_GRID)])) ,
-%~   call(GRID_04="resulting_grid") ,
-%~   exit_proc(GRID_04))
-%~
 % Compiled KL-1 for cellwise
 cellwise(A_01,B_02,FALLBACK_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' cellwise match of two grids ') ,
   len(A_01,H) ,
-  assign_targets_value([ARG_05],subscript_value_slice(A_01,0)) ,
+  subscript_value_slice(A_01,0,ARG_05) ,
   len(ARG_05,W) ,
-  assign_targets_value(["resulting_grid"],call_func("tuple")) ,
-  for_target_iter_body( "i",
-    call_func_args("range",[H]),
-    ( assign_targets_value([ROW],call_func("tuple"))  ,
-      for_target_iter_body( "j",
-        call_func_args("range",[W]),
-        ( assign_targets_value([A_VALUE],subscript_value_slice(subscript_value_slice(A_01,"i"),"j"))  ,
-          assign_targets_value( [VALUE],
-            if_exp_test_body_orelse(
-               call_func_args( ==, [
-                 A_VALUE,
-                 subscript_value_slice(subscript_value_slice(B_02,"i"),"j")]), A_VALUE,FALLBACK_03)) ,
-          [ assign_targets_value([ARG_06],tuple_elts([VALUE])),
-            call(+,ROW,ARG_06,ROW)])) ,
-      [ assign_targets_value([ARG_07],tuple_elts([ROW])),
-        call(+,RESULTING_GRID,ARG_07,RESULTING_GRID)])) ,
+  make_new("tuple","resulting_grid") ,
+  for_each( [range(H,I_06)],
+    ( make_new("tuple","row")  ,
+      for_each( [range(W,J_07)],
+        ( [subscript_value_slice(A_01,I_06,ARG_08)]  ,
+          subscript_value_slice(ARG_08,J_07,A_VALUE) ,
+          (/*2*/
+            testif( call_func_args( ==, [
+                      "a_value",
+                      subscript_value_slice(subscript_value_slice(B_02,I_06),J_07)])) ->
+              call("value"="a_value") ;
+            call("value"=FALLBACK_03)) ,
+          [ assign_targets_value([ARG_011],["value"]),
+            tuple_elts(ARG_011,ARG_09),
+            call_op(+,ROW,ARG_09,ROW)])) ,
+      [ assign_targets_value([ARG_012],["row"]),
+        tuple_elts(ARG_012,ARG_010),
+        call_op(+,RESULTING_GRID,ARG_010,RESULTING_GRID)])) ,
   call(GRID_04="resulting_grid") ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
@@ -5521,30 +3767,17 @@ cellwise(A_01,B_02,FALLBACK_03,GRID_04) :-
 %~                                                  [comprehension_target_iter("v","r")])]),
 %~                                             [comprehension_target_iter("r","grid")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' color substitution ')  ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "tuple", [
-%~          generator_exp_elt_generators(
-%~             if_exp_test_body_orelse(call_func_args(==,["v",REPLACEE_02]),REPLACER_03,"v"),
-%~             [comprehension_target_iter("v","r")])]),
-%~        [comprehension_target_iter("r",GRID_01)])) ,
-%~   tuple(ARG_05,GRID_04) ,
-%~   exit_proc(GRID_04))
-%~
 % Compiled KL-1 for replace
 replace(GRID_01,REPLACEE_02,REPLACER_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' color substitution ') ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
        call_func_args( "tuple", [
          generator_exp_elt_generators(
-            if_exp_test_body_orelse(
-               call_func_args(==,[V,REPLACEE_02]), REPLACER_03,V),
-            [comprehension_target_iter(V,"r")])]),
-       [comprehension_target_iter("r",GRID_01)])) ,
+            if_exp_test_body_orelse(call_func_args(==,["v",REPLACEE_02]),REPLACER_03,"v"),
+            [assign_targets_value1("v","r")])]),
+       [assign_targets_value1("r",GRID_01)])) ,
   tuple(ARG_05,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
@@ -5567,43 +3800,24 @@ replace(GRID_01,REPLACEE_02,REPLACER_03,GRID_04) :-
 %~                                                  [comprehension_target_iter("v","r")])]),
 %~                                             [comprehension_target_iter("r","grid")])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' color switching ')  ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "tuple", [
-%~          generator_exp_elt_generators(
-%~             if_exp_test_body_orelse(
-%~                bool_op_values( ['python:And'], [
-%~                  call_func_args('!=',["v",A_02]),
-%~                  call_func_args('!=',["v",B_03])]),
-%~                "v",
-%~                subscript_value_slice(
-%~                   dict_keys_values([A_02,B_03],[B_03,A_02]),
-%~                   "v")),
-%~             [comprehension_target_iter("v","r")])]),
-%~        [comprehension_target_iter("r",GRID_01)])) ,
-%~   tuple(ARG_05,GRID_04) ,
-%~   exit_proc(GRID_04))
-%~
 % Compiled KL-1 for switch
 switch(GRID_01,A_02,B_03,GRID_04) :-
   willBeType(GRID_04,'Grid') ,
   comment(' color switching ') ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
        call_func_args( "tuple", [
          generator_exp_elt_generators(
             if_exp_test_body_orelse(
                bool_op_values( ['python:And'], [
-                 call_func_args('!=',[V,A_02]),
-                 call_func_args('!=',[V,B_03])]),
-               V,
+                 call_func_args('!=',["v",A_02]),
+                 call_func_args('!=',["v",B_03])]),
+               "v",
                subscript_value_slice(
                   dict_keys_values([A_02,B_03],[B_03,A_02]),
-                  V)),
-            [comprehension_target_iter(V,"r")])]),
-       [comprehension_target_iter("r",GRID_01)])) ,
+                  "v")),
+            [assign_targets_value1("v","r")])]),
+       [assign_targets_value1("r",GRID_01)])) ,
   tuple(ARG_05,GRID_04) ,
   exit_proc(GRID_04).
 %~ % Universal AST Pass #0
@@ -5618,28 +3832,18 @@ switch(GRID_01,A_02,B_03,GRID_04) :-
 %~                                                        call_func_args("leftmost",["patch"]),
 %~                                                        bin_op_left_right(floor_div_token(//),call_func_args("width",["patch"]),2))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' center of the patch ')  ,
-%~   assign_targets_value( [INTEGERTUPLE_02],
-%~     tuple_elts( [ call_func_args( +, [
-%~                     call_func_args("uppermost",[PATCH_01]),
-%~                     call_func_args(//,[call_func_args("height",[PATCH_01]),2])]),
-%~                   call_func_args( +, [
-%~                     call_func_args("leftmost",[PATCH_01]),
-%~                     call_func_args(//,[call_func_args("width",[PATCH_01]),2])])])) ,
-%~   exit_proc(INTEGERTUPLE_02))
-%~
 % Compiled KL-1 for center
 center(PATCH_01,INTEGERTUPLE_02) :-
   willBeType(INTEGERTUPLE_02,'IntegerTuple') ,
   comment(' center of the patch ') ,
-  assign_targets_value( [INTEGERTUPLE_02],
-    tuple_elts( [ call_func_args( +, [
-                    call_func_args("uppermost",[PATCH_01]),
-                    call_func_args(//,[call_func_args("height",[PATCH_01]),2])]),
-                  call_func_args( +, [
-                    call_func_args("leftmost",[PATCH_01]),
-                    call_func_args(//,[call_func_args("width",[PATCH_01]),2])])])) ,
+  assign_targets_value( [ARG_03], [
+    call_func_args( +, [
+      call_func_args("uppermost",[PATCH_01]),
+      call_func_args(//,[call_func_args("height",[PATCH_01]),2])]),
+    call_func_args( +, [
+      call_func_args("leftmost",[PATCH_01]),
+      call_func_args(//,[call_func_args("width",[PATCH_01]),2])])]) ,
+  tuple_elts(ARG_03,INTEGERTUPLE_02) ,
   exit_proc(INTEGERTUPLE_02).
 %~ % Universal AST Pass #0
 %~ def( "position",
@@ -5670,81 +3874,40 @@ center(PATCH_01,INTEGERTUPLE_02) :-
 %~                                                                                                     body_stmts( [ return_value( tuple_elts( [ unary_op_operand(us_ub_token(-),1),
 %~                                                                                                                                               if_exp_test_body_orelse(compare_ops_left_comparators(lt_token(<),"ja","jb"),1,unary_op_operand(us_ub_token(-),1))]))]))]))]))]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' relative position between two patches ')  ,
-%~   [toindices(A_01,ARG_04)] ,
-%~   call(into_tuple("ia","ja",ARG_05)) ,
-%~   center(ARG_04,ARG_05) ,
-%~   [toindices(B_02,ARG_06)] ,
-%~   call(into_tuple("ib","jb",ARG_07)) ,
-%~   center(ARG_06,ARG_07) ,
-%~   if_test_body_orelse(
-%~      call_func_args(==,["ia","ib"]),
-%~      (/*2*/
-%~        assign_targets_value( [INTEGERTUPLE_03],
-%~          tuple_elts( [ 0,
-%~                        if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])) ,
-%~        exit_proc(INTEGERTUPLE_03)),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              call_func_args(==,["ja","jb"]),
-%~                              (/*2*/
-%~                                assign_targets_value( [INTEGERTUPLE_03],
-%~                                  tuple_elts( [ if_exp_test_body_orelse(call_func_args(<,["ia","ib"]),1,call_func_args(-,[1])),
-%~                                                0])) ,
-%~                                exit_proc(INTEGERTUPLE_03)),
-%~                              orelse_else_stmts( [ if_test_body_orelse(
-%~                                                      call_func_args(<,["ia","ib"]),
-%~                                                      (/*2*/
-%~                                                        assign_targets_value( [INTEGERTUPLE_03],
-%~                                                          tuple_elts( [ 1,
-%~                                                                        if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])) ,
-%~                                                        exit_proc(INTEGERTUPLE_03)),
-%~                                                      orelse_else_stmts( [ if_test_body(
-%~                                                                              call_func_args(>,["ia","ib"]),
-%~                                                                              (/*2*/
-%~                                                                                assign_targets_value( [INTEGERTUPLE_03],
-%~                                                                                  tuple_elts( [ call_func_args(-,[1]),
-%~                                                                                                if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])) ,
-%~                                                                                exit_proc(INTEGERTUPLE_03)))]))]))])))
-%~
 % Compiled KL-1 for position
 position(A_01,B_02,INTEGERTUPLE_03) :-
   willBeType(INTEGERTUPLE_03,'IntegerTuple') ,
   comment(' relative position between two patches ') ,
   toindices(A_01,ARG_04) ,
-  call(into_tuple(IA,JA,ARG_05)) ,
+  call(into_tuple("ia","ja",ARG_05)) ,
   center(ARG_04,ARG_05) ,
   toindices(B_02,ARG_06) ,
-  call(into_tuple(IB,JB,ARG_07)) ,
+  call(into_tuple("ib","jb",ARG_07)) ,
   center(ARG_06,ARG_07) ,
-  if_test_body_orelse(
-     call_func_args(==,[IA,IB]),
-     (/*2*/
-       assign_targets_value( [INTEGERTUPLE_03],
-         tuple_elts( [ 0,
-                       if_exp_test_body_orelse(call_func_args(<,[JA,JB]),1,call_func_args(-,[1]))])) ,
-       exit_proc(INTEGERTUPLE_03)),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             call_func_args(==,[JA,JB]),
-                             (/*2*/
-                               assign_targets_value( [INTEGERTUPLE_03],
-                                 tuple_elts( [ if_exp_test_body_orelse(call_func_args(<,[IA,IB]),1,call_func_args(-,[1])),
-                                               0])) ,
-                               exit_proc(INTEGERTUPLE_03)),
-                             orelse_else_stmts( [ if_test_body_orelse(
-                                                     call_func_args(<,[IA,IB]),
-                                                     (/*2*/
-                                                       assign_targets_value( [INTEGERTUPLE_03],
-                                                         tuple_elts( [ 1,
-                                                                       if_exp_test_body_orelse(call_func_args(<,[JA,JB]),1,call_func_args(-,[1]))])) ,
-                                                       exit_proc(INTEGERTUPLE_03)),
-                                                     orelse_else_stmts( [ if_test_body(
-                                                                             call_func_args(>,[IA,IB]),
-                                                                             (/*2*/
-                                                                               assign_targets_value( [INTEGERTUPLE_03],
-                                                                                 tuple_elts( [ call_func_args(-,[1]),
-                                                                                               if_exp_test_body_orelse(call_func_args(<,[JA,JB]),1,call_func_args(-,[1]))])) ,
-                                                                               exit_proc(INTEGERTUPLE_03)))]))]))])).
+  ( testif(call_func_args(==,["ia","ib"])) ->
+      ( assign_targets_value( [ARG_08], [
+          0,
+          if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])  ,
+        tuple_elts(ARG_08,INTEGERTUPLE_03) ,
+        exit_proc(INTEGERTUPLE_03))  ;
+    testif(call_func_args(==,["ja","jb"])) ->
+      ( assign_targets_value( [ARG_09], [
+          if_exp_test_body_orelse(call_func_args(<,["ia","ib"]),1,call_func_args(-,[1])),
+          0])  ,
+        tuple_elts(ARG_09,INTEGERTUPLE_03) ,
+        exit_proc(INTEGERTUPLE_03)) ;
+    testif(call_func_args(<,["ia","ib"])) ->
+      ( assign_targets_value( [ARG_010], [
+          1,
+          if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])  ,
+        tuple_elts(ARG_010,INTEGERTUPLE_03) ,
+        exit_proc(INTEGERTUPLE_03)) ;
+    testif(call_func_args(>,["ia","ib"])) ->
+      ( assign_targets_value( [ARG_011], [
+          call_func_args(-,[1]),
+          if_exp_test_body_orelse(call_func_args(<,["ja","jb"]),1,call_func_args(-,[1]))])  ,
+        tuple_elts(ARG_011,INTEGERTUPLE_03) ,
+        exit_proc(INTEGERTUPLE_03))).
 %~ % Universal AST Pass #0
 %~ def( "index",
 %~   function_type_body(
@@ -5766,50 +3929,26 @@ position(A_01,B_02,INTEGERTUPLE_03) :-
 %~                             body_stmts([return_value(none_literal_value_token('None','None'))])),
 %~                          return_value( subscript_value_slice(subscript_value_slice("grid",subscript_value_slice("loc",0)),subscript_value_slice("loc",1)))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' color at location ')  ,
-%~   from_tuple(LOC_02,"i","j") ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_04,W) ,
-%~   if_test_body(
-%~      call_func_args( 'python:Not', [
-%~        bool_op_values( ['python:And'], [
-%~          call_func_args(<=,[0,"i"]),
-%~          call_func_args(<,[0,"h"]),
-%~          call_func_args(<=,[0,"j"]),
-%~          call_func_args(<,[0,"w"])])]),
-%~      (/*2*/
-%~        assign_targets_value([INTEGER_03],none_literal_value_token('None','None')) ,
-%~        exit_proc(INTEGER_03))) ,
-%~   assign_targets_value( [INTEGER_03],
-%~     subscript_value_slice(
-%~        subscript_value_slice(GRID_01,subscript_value_slice(LOC_02,0)),
-%~        subscript_value_slice(LOC_02,1))) ,
-%~   exit_proc(INTEGER_03))
-%~
 % Compiled KL-1 for index
 index(GRID_01,LOC_02,INTEGER_03) :-
   willBeType(INTEGER_03,'Integer') ,
   comment(' color at location ') ,
-  from_tuple(LOC_02,I,J) ,
+  from_tuple(LOC_02,"i","j") ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
-  if_test_body(
-     call_func_args( 'python:Not', [
-       bool_op_values( ['python:And'], [
-         call_func_args(<=,[0,I]),
-         call_func_args(<,[0,H]),
-         call_func_args(<=,[0,J]),
-         call_func_args(<,[0,W])])]),
-     (/*2*/
-       assign_targets_value([INTEGER_03],none_literal_value_token('None','None')) ,
-       exit_proc(INTEGER_03))) ,
-  assign_targets_value( [INTEGER_03],
-    subscript_value_slice(
-       subscript_value_slice(GRID_01,subscript_value_slice(LOC_02,0)),
-       subscript_value_slice(LOC_02,1))) ,
+  (/*2*/
+    testif( call_func_args( 'python:Not', [
+              bool_op_values( ['python:And'], [
+                call_func_args(<=,[0,"i"]),
+                call_func_args(<,[0,"h"]),
+                call_func_args(<=,[0,"j"]),
+                call_func_args(<,[0,"w"])])])) ->
+      assign_var(INTEGER_03,none_literal_value_token('None','None')),exit_proc(INTEGER_03)) ,
+  subscript_value_slice(LOC_02,0,ARG_07) ,
+  subscript_value_slice(GRID_01,ARG_07,ARG_05) ,
+  subscript_value_slice(LOC_02,1,ARG_06) ,
+  subscript_value_slice(ARG_05,ARG_06,INTEGER_03) ,
   exit_proc(INTEGER_03).
 %~ % Universal AST Pass #0
 %~ def( "canvas",
@@ -5826,27 +3965,17 @@ index(GRID_01,LOC_02,INTEGER_03) :-
 %~                                                 comprehension_target_iter("j",call_func_args("range",[subscript_value_slice("dimensions",1)]))])]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",[subscript_value_slice("dimensions",0)]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' grid construction ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "tuple", [
-%~          generator_exp_elt_generators( VALUE_01, [
-%~            comprehension_target_iter("j",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,1)]))])]),
-%~        [ comprehension_target_iter("i",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,0)]))])) ,
-%~   tuple(ARG_04,GRID_03) ,
-%~   exit_proc(GRID_03))
-%~
 % Compiled KL-1 for canvas
 canvas(VALUE_01,DIMENSIONS_02,GRID_03) :-
   willBeType(GRID_03,'Grid') ,
   comment(' grid construction ') ,
-  assign_targets_value( [ARG_04],
+  assign_var( ARG_04,
     generator_exp_elt_generators(
        call_func_args( "tuple", [
-         generator_exp_elt_generators( VALUE_01, [
-           comprehension_target_iter("j",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,1)]))])]),
-       [ comprehension_target_iter("i",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,0)]))])) ,
+         elt_generator( v1,
+           VALUE_01,
+           [ assign_targets_value1("j",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,1)]))])]),
+       [ assign_targets_value1("i",call_func_args("range",[subscript_value_slice(DIMENSIONS_02,0)]))])) ,
   tuple(ARG_04,GRID_03) ,
   exit_proc(GRID_03).
 %~ % Universal AST Pass #0
@@ -5860,21 +3989,11 @@ canvas(VALUE_01,DIMENSIONS_02,GRID_03) :-
 %~                                                      call_func_args("llcorner",["patch"]),
 %~                                                      call_func_args("lrcorner",["patch"])])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' indices of corners ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     set_elts( [ call_func_args("ulcorner",[PATCH_01]),
-%~                 call_func_args("urcorner",[PATCH_01]),
-%~                 call_func_args("llcorner",[PATCH_01]),
-%~                 call_func_args("lrcorner",[PATCH_01])])) ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for corners
 corners(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices of corners ') ,
-  assign_targets_value( [ARG_03],
+  assign_var( ARG_03,
     set_elts( [ call_func_args("ulcorner",[PATCH_01]),
                 call_func_args("urcorner",[PATCH_01]),
                 call_func_args("llcorner",[PATCH_01]),
@@ -5932,114 +4051,60 @@ corners(PATCH_01,INDICES_02) :-
 %~                                                                                                                                           unary_op_operand(us_ub_token(-),1)])]))])]))]))]))]))])),
 %~                          return_value(call_func("frozenset"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' line between two points ')  ,
-%~   from_tuple(A_01,"ai","aj") ,
-%~   from_tuple(B_02,"bi","bj") ,
-%~   min(AI,BI,SI) ,
-%~   [ max(AI,BI,ARG_08),
-%~     call(+,ARG_08,1,EI)] ,
-%~   min(AJ,BJ,SJ) ,
-%~   [ max(AJ,BJ,ARG_09),
-%~     call(+,ARG_09,1,EJ)] ,
-%~   if_test_body_orelse(
-%~      call_func_args(==,["ai","bi"]),
-%~      ( assign_targets_value( [ARG_04],
-%~          generator_exp_elt_generators( tuple_elts(["ai","j"]), [
-%~            comprehension_target_iter("j",call_func_args("range",["sj","ej"]))]))  ,
-%~        frozenset(ARG_04,INDICES_03) ,
-%~        exit_proc(INDICES_03)),
-%~      orelse_else_stmts( [ if_test_body_orelse(
-%~                              call_func_args(==,["aj","bj"]),
-%~                              ( assign_targets_value( [ARG_05],
-%~                                  generator_exp_elt_generators( tuple_elts(["i","aj"]), [
-%~                                    comprehension_target_iter("i",call_func_args("range",["si","ei"]))]))  ,
-%~                                frozenset(ARG_05,INDICES_03) ,
-%~                                exit_proc(INDICES_03)),
-%~                              orelse_else_stmts( [ if_test_body_orelse(
-%~                                                      call_func_args( ==, [
-%~                                                        call_func_args(-,["bi","ai"]),
-%~                                                        call_func_args(-,["bj","aj"])]),
-%~                                                      ( assign_targets_value( [ARG_06],
-%~                                                          generator_exp_elt_generators( tuple_elts(["i","j"]), [
-%~                                                            comprehension_target_iter( tuple_elts(["i","j"]),
-%~                                                              call_func_args( "zip", [
-%~                                                                call_func_args("range",["si","ei"]),
-%~                                                                call_func_args("range",["sj","ej"])]))]))  ,
-%~                                                        frozenset(ARG_06,INDICES_03) ,
-%~                                                        exit_proc(INDICES_03)),
-%~                                                      orelse_else_stmts( [ if_test_body(
-%~                                                                              call_func_args( ==, [
-%~                                                                                call_func_args(-,["bi","ai"]),
-%~                                                                                call_func_args(-,["aj","bj"])]),
-%~                                                                              ( assign_targets_value( [ARG_07],
-%~                                                                                  generator_exp_elt_generators( tuple_elts(["i","j"]), [
-%~                                                                                    comprehension_target_iter( tuple_elts(["i","j"]),
-%~                                                                                      call_func_args( "zip", [
-%~                                                                                        call_func_args("range",["si","ei"]),
-%~                                                                                        call_func_args( "range", [
-%~                                                                                          call_func_args(-,["ej",1]),
-%~                                                                                          call_func_args(-,["sj",1]),
-%~                                                                                          call_func_args(-,[1])])]))]))  ,
-%~                                                                                frozenset(ARG_07,INDICES_03) ,
-%~                                                                                exit_proc(INDICES_03)))]))]))])) ,
-%~   assign_targets_value([INDICES_03],call_func("frozenset")) ,
-%~   exit_proc(INDICES_03))
-%~
 % Compiled KL-1 for connect
 connect(A_01,B_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' line between two points ') ,
-  from_tuple(A_01,AI,AJ) ,
-  from_tuple(B_02,BI,BJ) ,
+  from_tuple(A_01,"ai","aj") ,
+  from_tuple(B_02,"bi","bj") ,
   min(AI,BI,SI) ,
   max(AI,BI,ARG_08) ,
-  call(+,ARG_08,1,EI) ,
+  call_op(+,ARG_08,1,EI) ,
   min(AJ,BJ,SJ) ,
   max(AJ,BJ,ARG_09) ,
-  call(+,ARG_09,1,EJ) ,
-  if_test_body_orelse(
-     call_func_args(==,[AI,BI]),
-     ( assign_targets_value( [ARG_04],
-         generator_exp_elt_generators( tuple_elts([AI,J]), [
-           comprehension_target_iter(J,call_func_args("range",[SJ,EJ]))]))  ,
-       frozenset(ARG_04,INDICES_03) ,
-       exit_proc(INDICES_03)),
-     orelse_else_stmts( [ if_test_body_orelse(
-                             call_func_args(==,[AJ,BJ]),
-                             ( assign_targets_value( [ARG_05],
-                                 generator_exp_elt_generators( tuple_elts([I,AJ]), [
-                                   comprehension_target_iter(I,call_func_args("range",[SI,EI]))]))  ,
-                               frozenset(ARG_05,INDICES_03) ,
-                               exit_proc(INDICES_03)),
-                             orelse_else_stmts( [ if_test_body_orelse(
-                                                     call_func_args( ==, [
-                                                       call_func_args(-,[BI,AI]),
-                                                       call_func_args(-,[BJ,AJ])]),
-                                                     ( assign_targets_value( [ARG_06],
-                                                         generator_exp_elt_generators( tuple_elts([I,J]), [
-                                                           comprehension_target_iter( tuple_elts([I,J]),
-                                                             call_func_args( "zip", [
-                                                               call_func_args("range",[SI,EI]),
-                                                               call_func_args("range",[SJ,EJ])]))]))  ,
-                                                       frozenset(ARG_06,INDICES_03) ,
-                                                       exit_proc(INDICES_03)),
-                                                     orelse_else_stmts( [ if_test_body(
-                                                                             call_func_args( ==, [
-                                                                               call_func_args(-,[BI,AI]),
-                                                                               call_func_args(-,[AJ,BJ])]),
-                                                                             ( assign_targets_value( [ARG_07],
-                                                                                 generator_exp_elt_generators( tuple_elts([I,J]), [
-                                                                                   comprehension_target_iter( tuple_elts([I,J]),
-                                                                                     call_func_args( "zip", [
-                                                                                       call_func_args("range",[SI,EI]),
-                                                                                       call_func_args( "range", [
-                                                                                         call_func_args(-,[EJ,1]),
-                                                                                         call_func_args(-,[SJ,1]),
-                                                                                         call_func_args(-,[1])])]))]))  ,
-                                                                               frozenset(ARG_07,INDICES_03) ,
-                                                                               exit_proc(INDICES_03)))]))]))])) ,
-  assign_targets_value([INDICES_03],call_func("frozenset")) ,
+  call_op(+,ARG_09,1,EJ) ,
+  ( testif(call_func_args(==,["ai","bi"])) ->
+      ( assign_var( ARG_04,
+          elt_generator( v1,
+            tuple_elts(["ai","j"]),
+            [ assign_targets_value1("j",call_func_args("range",["sj","ej"]))]))  ,
+        frozenset(ARG_04,INDICES_03) ,
+        exit_proc(INDICES_03))  ;
+    testif(call_func_args(==,["aj","bj"])) ->
+      ( assign_var( ARG_05,
+          elt_generator( v1,
+            tuple_elts(["i","aj"]),
+            [ assign_targets_value1("i",call_func_args("range",["si","ei"]))]))  ,
+        frozenset(ARG_05,INDICES_03) ,
+        exit_proc(INDICES_03)) ;
+    testif( call_func_args( ==, [
+              call_func_args(-,["bi","ai"]),
+              call_func_args(-,["bj","aj"])])) ->
+      ( assign_var( ARG_06,
+          elt_generator( v1,
+            tuple_elts(["i","j"]),
+            [ assign_targets_value1( tuple_elts(["i","j"]),
+                call_func_args( "zip", [
+                  call_func_args("range",["si","ei"]),
+                  call_func_args("range",["sj","ej"])]))]))  ,
+        frozenset(ARG_06,INDICES_03) ,
+        exit_proc(INDICES_03)) ;
+    testif( call_func_args( ==, [
+              call_func_args(-,["bi","ai"]),
+              call_func_args(-,["aj","bj"])])) ->
+      ( assign_var( ARG_07,
+          elt_generator( v1,
+            tuple_elts(["i","j"]),
+            [ assign_targets_value1( tuple_elts(["i","j"]),
+                call_func_args( "zip", [
+                  call_func_args("range",["si","ei"]),
+                  call_func_args( "range", [
+                    call_func_args(-,["ej",1]),
+                    call_func_args(-,["sj",1]),
+                    call_func_args(-,[1])])]))]))  ,
+        frozenset(ARG_07,INDICES_03) ,
+        exit_proc(INDICES_03))) ,
+  make_new("frozenset",INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
 %~ def( "cover",
@@ -6053,13 +4118,6 @@ connect(A_01,B_02,INDICES_03) :-
 %~                                          "grid",
 %~                                          call_func_args("mostcolor",["grid"]),
 %~                                          call_func_args("toindices",["patch"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' remove object from grid ')  ,
-%~   [mostcolor(GRID_01,ARG_04)] ,
-%~   [toindices(PATCH_02,ARG_05)] ,
-%~   fill(GRID_01,ARG_04,ARG_05,GRID_03) ,
-%~   exit_proc(GRID_03))
 %~
 % Compiled KL-1 for cover
 cover(GRID_01,PATCH_02,GRID_03) :-
@@ -6079,25 +4137,14 @@ cover(GRID_01,PATCH_02,GRID_03) :-
 %~                                             subscript_value_slice("r",slice_lower_upper(1,unary_op_operand(us_ub_token(-),1))),
 %~                                             [ comprehension_target_iter("r",subscript_value_slice("grid",slice_lower_upper(1,unary_op_operand(us_ub_token(-),1))))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' trim border of grid ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators(
-%~        subscript_value_slice("r",slice_lower_upper(1,call_func_args(-,[1]))),
-%~        [ comprehension_target_iter( "r",
-%~            subscript_value_slice(GRID_01,slice_lower_upper(1,call_func_args(-,[1]))))])) ,
-%~   tuple(ARG_03,GRID_02) ,
-%~   exit_proc(GRID_02))
-%~
 % Compiled KL-1 for trim
 trim(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' trim border of grid ') ,
-  assign_targets_value( [ARG_03],
+  assign_var( ARG_03,
     generator_exp_elt_generators(
        subscript_value_slice("r",slice_lower_upper(1,call_func_args(-,[1]))),
-       [ comprehension_target_iter( "r",
-           subscript_value_slice(GRID_01,slice_lower_upper(1,call_func_args(-,[1]))))])) ,
+       [ assign_targets_value1("r",subscript_value_slice(GRID_01,slice_lower_upper(1,call_func_args(-,[1]))))])) ,
   tuple(ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -6110,13 +4157,6 @@ trim(GRID_01,GRID_02) :-
 %~                          return_value( call_func_args( "paint", [
 %~                                          call_func_args("cover",["grid","obj"]),
 %~                                          call_func_args("shift",["obj","offset"])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' move object on grid ')  ,
-%~   [cover(GRID_01,OBJ_02,ARG_05)] ,
-%~   [shift(OBJ_02,OFFSET_03,ARG_06)] ,
-%~   paint(ARG_05,ARG_06,GRID_04) ,
-%~   exit_proc(GRID_04))
 %~
 % Compiled KL-1 for move
 move(GRID_01,OBJ_02,OFFSET_03,GRID_04) :-
@@ -6134,20 +4174,13 @@ move(GRID_01,OBJ_02,OFFSET_03,GRID_04) :-
 %~                          return_value( subscript_value_slice( "grid",
 %~                                          slice_upper(bin_op_left_right(floor_div_token(//),call_func_args("len",["grid"]),2))))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' upper half of grid ')  ,
-%~   assign_targets_value( [GRID_02],
-%~     subscript_value_slice( GRID_01,
-%~       slice_upper(call_func_args(//,[call_func_args("len",[GRID_01]),2])))) ,
-%~   exit_proc(GRID_02))
-%~
 % Compiled KL-1 for tophalf
 tophalf(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' upper half of grid ') ,
-  assign_targets_value( [GRID_02],
-    subscript_value_slice( GRID_01,
-      slice_upper(call_func_args(//,[call_func_args("len",[GRID_01]),2])))) ,
+  assign_var( ARG_03,
+    slice_upper(call_func_args(//,[call_func_args("len",[GRID_01]),2]))) ,
+  subscript_value_slice(GRID_01,ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
 %~ def( "bottomhalf",
@@ -6159,24 +4192,15 @@ tophalf(GRID_01,GRID_02) :-
 %~                                                         bin_op_left_right(floor_div_token(//),call_func_args("len",["grid"]),2),
 %~                                                         bin_op_left_right(mod_token('%'),call_func_args("len",["grid"]),2)))))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' lower half of grid ')  ,
-%~   assign_targets_value( [GRID_02],
-%~     subscript_value_slice( GRID_01,
-%~       slice_lower( call_func_args( +, [
-%~                      call_func_args(//,[call_func_args("len",[GRID_01]),2]),
-%~                      call_func_args('%',[call_func_args("len",[GRID_01]),2])])))) ,
-%~   exit_proc(GRID_02))
-%~
 % Compiled KL-1 for bottomhalf
 bottomhalf(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' lower half of grid ') ,
-  assign_targets_value( [GRID_02],
-    subscript_value_slice( GRID_01,
-      slice_lower( call_func_args( +, [
-                     call_func_args(//,[call_func_args("len",[GRID_01]),2]),
-                     call_func_args('%',[call_func_args("len",[GRID_01]),2])])))) ,
+  assign_var( ARG_03,
+    slice_lower( call_func_args( +, [
+                   call_func_args(//,[call_func_args("len",[GRID_01]),2]),
+                   call_func_args('%',[call_func_args("len",[GRID_01]),2])]))) ,
+  subscript_value_slice(GRID_01,ARG_03,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
 %~ def( "lefthalf",
@@ -6184,13 +4208,6 @@ bottomhalf(GRID_01,GRID_02) :-
 %~      function_type_arguments_returns([argument_name("grid")],[argument_type("Grid")]),
 %~      block_statements( [ expr_value(string_value(' left half of grid ')),
 %~                          return_value( call_func_args("rot270",[call_func_args("tophalf",[call_func_args("rot90",["grid"])])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' left half of grid ')  ,
-%~   [ rot90(GRID_01,ARG_04),
-%~     tophalf(ARG_04,ARG_03)] ,
-%~   rot270(ARG_03,GRID_02) ,
-%~   exit_proc(GRID_02))
 %~
 % Compiled KL-1 for lefthalf
 lefthalf(GRID_01,GRID_02) :-
@@ -6206,13 +4223,6 @@ lefthalf(GRID_01,GRID_02) :-
 %~      function_type_arguments_returns([argument_name("grid")],[argument_type("Grid")]),
 %~      block_statements( [ expr_value(string_value(' right half of grid ')),
 %~                          return_value( call_func_args("rot270",[call_func_args("bottomhalf",[call_func_args("rot90",["grid"])])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' right half of grid ')  ,
-%~   [ rot90(GRID_01,ARG_04),
-%~     bottomhalf(ARG_04,ARG_03)] ,
-%~   rot270(ARG_03,GRID_02) ,
-%~   exit_proc(GRID_02))
 %~
 % Compiled KL-1 for righthalf
 righthalf(GRID_01,GRID_02) :-
@@ -6232,23 +4242,14 @@ righthalf(GRID_01,GRID_02) :-
 %~                                             tuple_elts(["i",subscript_value_slice("location",1)]),
 %~                                             [ comprehension_target_iter("i",call_func_args("range",[30]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' vertical frontier ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators(
-%~        tuple_elts(["i",subscript_value_slice(LOCATION_01,1)]),
-%~        [ comprehension_target_iter("i",call_func_args("range",[30]))])) ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for vfrontier
 vfrontier(LOCATION_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' vertical frontier ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators(
-       tuple_elts([I,subscript_value_slice(LOCATION_01,1)]),
-       [ comprehension_target_iter(I,call_func_args("range",[30]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      tuple_elts(["i",subscript_value_slice(LOCATION_01,1)]),
+      [ assign_targets_value1("i",call_func_args("range",[30]))])) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -6261,23 +4262,14 @@ vfrontier(LOCATION_01,INDICES_02) :-
 %~                                             tuple_elts([subscript_value_slice("location",0),"j"]),
 %~                                             [ comprehension_target_iter("j",call_func_args("range",[30]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' horizontal frontier ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators(
-%~        tuple_elts([subscript_value_slice(LOCATION_01,0),"j"]),
-%~        [ comprehension_target_iter("j",call_func_args("range",[30]))])) ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for hfrontier
 hfrontier(LOCATION_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' horizontal frontier ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators(
-       tuple_elts([subscript_value_slice(LOCATION_01,0),J]),
-       [ comprehension_target_iter(J,call_func_args("range",[30]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      tuple_elts([subscript_value_slice(LOCATION_01,0),"j"]),
+      [ assign_targets_value1("j",call_func_args("range",[30]))])) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -6293,36 +4285,21 @@ hfrontier(LOCATION_01,INDICES_02) :-
 %~                                            comprehension_target_iter("i",call_func_args("range",["si",bin_op_left_right(add_token(+),"ei",1)])),
 %~                                            comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' indices in bounding box of patch ')  ,
-%~   toindices(PATCH_01,INDICES) ,
-%~   call(into_tuple("si","sj",ARG_03)) ,
-%~   ulcorner(INDICES,ARG_03) ,
-%~   call(into_tuple("ei","ej",ARG_04)) ,
-%~   lrcorner(PATCH_01,ARG_04) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators( tuple_elts(["i","j"]), [
-%~       comprehension_target_iter("i",call_func_args("range",["si",call_func_args(+,["ei",1])])),
-%~       comprehension_target_iter( "j",
-%~         call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
-%~   frozenset(ARG_05,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for backdrop
 backdrop(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices in bounding box of patch ') ,
   toindices(PATCH_01,INDICES) ,
-  call(into_tuple(SI,SJ,ARG_03)) ,
+  call(into_tuple("si","sj",ARG_03)) ,
   ulcorner(INDICES,ARG_03) ,
-  call(into_tuple(EI,EJ,ARG_04)) ,
+  call(into_tuple("ei","ej",ARG_04)) ,
   lrcorner(PATCH_01,ARG_04) ,
-  assign_targets_value( [ARG_05],
-    generator_exp_elt_generators( tuple_elts([I,J]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[SI,call_func_args(+,[EI,1])])),
-      comprehension_target_iter( J,
-        call_func_args("range",[SJ,call_func_args(+,[EJ,1])]))])) ,
+  assign_targets_value( [ARG_05], [
+    generator_exp_elt_generator_1( "i",
+      assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))),
+    generator_exp_elt_generator_1( "j",
+      assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))),
+    elt_generator(v1,tuple_elts([]),[])]) ,
   frozenset(ARG_05,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -6334,20 +4311,13 @@ backdrop(PATCH_01,INDICES_02) :-
 %~                                          call_func_args("backdrop",["patch"]),
 %~                                          call_func_args("toindices",["patch"])))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' indices in bounding box but not part of patch ')  ,
-%~   [ backdrop(PATCH_01,ARG_03),
-%~     toindices(PATCH_01,ARG_04),
-%~     call(-,ARG_03,ARG_04,INDICES_02)] ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for delta
 delta(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' indices in bounding box but not part of patch ') ,
   backdrop(PATCH_01,ARG_03) ,
   toindices(PATCH_01,ARG_04) ,
-  call(-,ARG_03,ARG_04,INDICES_02) ,
+  call_op(-,ARG_03,ARG_04,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
 %~ def( "gravitate",
@@ -6373,74 +4343,45 @@ delta(PATCH_01,INDICES_02) :-
 %~                             bool_op_values( ['python:And'], [
 %~                               unary_op_operand(['python:Not'],call_func_args("adjacent",["source","destination"])),
 %~                               compare_ops_left_comparators(lt_token(<),"c",42)]),
-%~                             body_stmts( [ aug_assign_op_target_value(add_token(+),"c",1),
-%~                                           aug_assign_op_target_value(add_token(+),"gi","i"),
-%~                                           aug_assign_op_target_value(add_token(+),"gj","j"),
+%~                             body_stmts( [ aug_assign_op_value_target(add_token(+),1,"c"),
+%~                                           aug_assign_op_value_target(add_token(+),"i","gi"),
+%~                                           aug_assign_op_value_target(add_token(+),"j","gj"),
 %~                                           assign_targets_value( ["source"],
 %~                                             call_func_args("shift",["source",tuple_elts(["i","j"])]))])),
 %~                          return_value( tuple_elts([bin_op_left_right(sub_token(-),"gi","i"),bin_op_left_right(sub_token(-),"gj","j")]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' direction to move source until adjacent to destination ')  ,
-%~   call(into_tuple("si","sj",ARG_04)) ,
-%~   center(SOURCE_01,ARG_04) ,
-%~   call(into_tuple("di","dj",ARG_05)) ,
-%~   center(DESTINATION_02,ARG_05) ,
-%~   call("i"=0) ,
-%~   call("j"=0) ,
-%~   if_test_body_orelse(
-%~      call_func_args("vmatching",[SOURCE_01,DESTINATION_02]),
-%~      assign_targets_value( ["i"],
-%~        if_exp_test_body_orelse(call_func_args(<,["si","di"]),1,call_func_args(-,[1]))),
-%~      orelse_else_stmts( [ assign_targets_value( ["j"],
-%~                             if_exp_test_body_orelse(call_func_args(<,["sj","dj"]),1,call_func_args(-,[1])))])) ,
-%~   call("gi"="i") ,
-%~   call("gj"="j") ,
-%~   call("c"=0) ,
-%~   while_test_body(
-%~      bool_op_values( ['python:And'], [
-%~        call_func_args( 'python:Not', [
-%~          call_func_args("adjacent",[SOURCE_01,DESTINATION_02])]),
-%~        call_func_args(<,["c",42])]),
-%~      ( aug_assign_op_target_value(add_token(+),"c",1)  ,
-%~        aug_assign_op_target_value(add_token(+),"gi","i") ,
-%~        aug_assign_op_target_value(add_token(+),"gj","j") ,
-%~        call(into_tuple("i","j",ARG_06)) ,
-%~        shift(SOURCE_01,ARG_06,SOURCE_01))) ,
-%~   assign_targets_value( [INTEGERTUPLE_03],
-%~     tuple_elts([call_func_args(-,["gi","i"]),call_func_args(-,["gj","j"])])) ,
-%~   exit_proc(INTEGERTUPLE_03))
 %~
 % Compiled KL-1 for gravitate
 gravitate(SOURCE_01,DESTINATION_02,INTEGERTUPLE_03) :-
   willBeType(INTEGERTUPLE_03,'IntegerTuple') ,
   comment(' direction to move source until adjacent to destination ') ,
-  call(into_tuple(SI,SJ,ARG_04)) ,
+  call(into_tuple("si","sj",ARG_04)) ,
   center(SOURCE_01,ARG_04) ,
-  call(into_tuple(DI,DJ,ARG_05)) ,
+  call(into_tuple("di","dj",ARG_05)) ,
   center(DESTINATION_02,ARG_05) ,
-  call(I=0) ,
-  call(J=0) ,
-  if_test_body_orelse(
-     call_func_args("vmatching",[SOURCE_01,DESTINATION_02]),
-     assign_targets_value( [I],
-       if_exp_test_body_orelse(call_func_args(<,[SI,DI]),1,call_func_args(-,[1]))),
-     orelse_else_stmts( [ assign_targets_value( [J],
-                            if_exp_test_body_orelse(call_func_args(<,[SJ,DJ]),1,call_func_args(-,[1])))])) ,
-  call(C=0) ,
+  call("i"=0) ,
+  call("j"=0) ,
+  ( testif(call_func_args("vmatching",[SOURCE_01,DESTINATION_02])) ->
+      testif(call_func_args(<,["si","di"]))->call("i"=1);[call_op(-,1,I)]  ;
+    testif(call_func_args(<,["sj","dj"])) ->
+      call("j"=1) ;
+    [call_op(-,1,J)]) ,
+  call("gi"="i") ,
+  call("gj"="j") ,
+  call("c"=0) ,
   while_test_body(
      bool_op_values( ['python:And'], [
        call_func_args( 'python:Not', [
          call_func_args("adjacent",[SOURCE_01,DESTINATION_02])]),
-       call_func_args(<,[C,42])]),
-     ( aug_assign_op_target_value(add_token(+),C,1)  ,
-       aug_assign_op_target_value(add_token(+),I,I) ,
-       aug_assign_op_target_value(add_token(+),J,J) ,
-       call(into_tuple(I,J,ARG_06)) ,
+       call_func_args(<,["c",42])]),
+     ( aug_assign_op_value_target(add_token(+),1,"c")  ,
+       aug_assign_op_value_target(add_token(+),"i","gi") ,
+       aug_assign_op_value_target(add_token(+),"j","gj") ,
+       call(into_tuple("i","j",ARG_06)) ,
        shift(SOURCE_01,ARG_06,SOURCE_01))) ,
-  assign_targets_value( [INTEGERTUPLE_03],
-    tuple_elts( [ call_func_args(-,[I,I]),
-                  call_func_args(-,[J,J])])) ,
+  assign_targets_value( [ARG_07], [
+    call_func_args(-,["gi","i"]),
+    call_func_args(-,["gj","j"])]) ,
+  tuple_elts(ARG_07,INTEGERTUPLE_03) ,
   exit_proc(INTEGERTUPLE_03).
 %~ % Universal AST Pass #0
 %~ def( "inbox",
@@ -6473,73 +4414,41 @@ gravitate(SOURCE_01,DESTINATION_02,INTEGERTUPLE_03) :-
 %~                                comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))]))),
 %~                          return_value(call_func_args("frozenset",[bin_op_left_right(bit_or_token('|'),"vlines","hlines")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' inbox for patch ')  ,
-%~   [ uppermost(PATCH_01,ARG_04),
-%~     call(+,ARG_04,1,AI)] ,
-%~   [ leftmost(PATCH_01,ARG_05),
-%~     call(+,ARG_05,1,AJ)] ,
-%~   [ lowermost(PATCH_01,ARG_06),
-%~     call(-,ARG_06,1,BI)] ,
-%~   [ rightmost(PATCH_01,ARG_07),
-%~     call(-,ARG_07,1,BJ)] ,
-%~   min(AI,BI,SI) ,
-%~   min(AJ,BJ,SJ) ,
-%~   max(AI,BI,EI) ,
-%~   max(AJ,BJ,EJ) ,
-%~   [ assign_targets_value( [ARG_08],
-%~       set_comp_elt_generators( tuple_elts(["i","sj"]), [
-%~         comprehension_target_iter("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])),
-%~     assign_targets_value( [ARG_09],
-%~       set_comp_elt_generators( tuple_elts(["i","ej"]), [
-%~         comprehension_target_iter("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])),
-%~     call('|',ARG_08,ARG_09,VLINES)] ,
-%~   [ assign_targets_value( [ARG_010],
-%~       set_comp_elt_generators( tuple_elts(["si","j"]), [
-%~         comprehension_target_iter("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])),
-%~     assign_targets_value( [ARG_011],
-%~       set_comp_elt_generators( tuple_elts(["ei","j"]), [
-%~         comprehension_target_iter("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])),
-%~     call('|',ARG_010,ARG_011,HLINES)] ,
-%~   [call('|',VLINES,HLINES,ARG_03)] ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for inbox
 inbox(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' inbox for patch ') ,
   uppermost(PATCH_01,ARG_04) ,
-  call(+,ARG_04,1,AI) ,
+  call_op(+,ARG_04,1,AI) ,
   leftmost(PATCH_01,ARG_05) ,
-  call(+,ARG_05,1,AJ) ,
+  call_op(+,ARG_05,1,AJ) ,
   lowermost(PATCH_01,ARG_06) ,
-  call(-,ARG_06,1,BI) ,
+  call_op(-,ARG_06,1,BI) ,
   rightmost(PATCH_01,ARG_07) ,
-  call(-,ARG_07,1,BJ) ,
+  call_op(-,ARG_07,1,BJ) ,
   min(AI,BI,SI) ,
   min(AJ,BJ,SJ) ,
   max(AI,BI,EI) ,
   max(AJ,BJ,EJ) ,
-  assign_targets_value( [ARG_08],
-    set_comp_elt_generators( tuple_elts([I,SJ]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[SI,call_func_args(+,[EI,1])]))])) ,
-  assign_targets_value( [ARG_09],
-    set_comp_elt_generators( tuple_elts([I,EJ]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[SI,call_func_args(+,[EI,1])]))])) ,
-  call('|',ARG_08,ARG_09,VLINES) ,
-  assign_targets_value( [ARG_010],
-    set_comp_elt_generators( tuple_elts([SI,J]), [
-      comprehension_target_iter( J,
-        call_func_args("range",[SJ,call_func_args(+,[EJ,1])]))])) ,
-  assign_targets_value( [ARG_011],
-    set_comp_elt_generators( tuple_elts([EI,J]), [
-      comprehension_target_iter( J,
-        call_func_args("range",[SJ,call_func_args(+,[EJ,1])]))])) ,
-  call('|',ARG_010,ARG_011,HLINES) ,
-  call('|',VLINES,HLINES,ARG_03) ,
+  assign_var( ARG_08,
+    elt_generator( v2,
+      tuple_elts(["i","sj"]),
+      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
+  assign_var( ARG_09,
+    elt_generator( v2,
+      tuple_elts(["i","ej"]),
+      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
+  call_op('|',ARG_08,ARG_09,VLINES) ,
+  assign_var( ARG_010,
+    elt_generator( v2,
+      tuple_elts(["si","j"]),
+      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
+  assign_var( ARG_011,
+    elt_generator( v2,
+      tuple_elts(["ei","j"]),
+      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
+  call_op('|',ARG_010,ARG_011,HLINES) ,
+  call_op('|',VLINES,HLINES,ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -6573,73 +4482,41 @@ inbox(PATCH_01,INDICES_02) :-
 %~                                comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))]))),
 %~                          return_value(call_func_args("frozenset",[bin_op_left_right(bit_or_token('|'),"vlines","hlines")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' outbox for patch ')  ,
-%~   [ uppermost(PATCH_01,ARG_04),
-%~     call(-,ARG_04,1,AI)] ,
-%~   [ leftmost(PATCH_01,ARG_05),
-%~     call(-,ARG_05,1,AJ)] ,
-%~   [ lowermost(PATCH_01,ARG_06),
-%~     call(+,ARG_06,1,BI)] ,
-%~   [ rightmost(PATCH_01,ARG_07),
-%~     call(+,ARG_07,1,BJ)] ,
-%~   min(AI,BI,SI) ,
-%~   min(AJ,BJ,SJ) ,
-%~   max(AI,BI,EI) ,
-%~   max(AJ,BJ,EJ) ,
-%~   [ assign_targets_value( [ARG_08],
-%~       set_comp_elt_generators( tuple_elts(["i","sj"]), [
-%~         comprehension_target_iter("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])),
-%~     assign_targets_value( [ARG_09],
-%~       set_comp_elt_generators( tuple_elts(["i","ej"]), [
-%~         comprehension_target_iter("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])),
-%~     call('|',ARG_08,ARG_09,VLINES)] ,
-%~   [ assign_targets_value( [ARG_010],
-%~       set_comp_elt_generators( tuple_elts(["si","j"]), [
-%~         comprehension_target_iter("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])),
-%~     assign_targets_value( [ARG_011],
-%~       set_comp_elt_generators( tuple_elts(["ei","j"]), [
-%~         comprehension_target_iter("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])),
-%~     call('|',ARG_010,ARG_011,HLINES)] ,
-%~   [call('|',VLINES,HLINES,ARG_03)] ,
-%~   frozenset(ARG_03,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for outbox
 outbox(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' outbox for patch ') ,
   uppermost(PATCH_01,ARG_04) ,
-  call(-,ARG_04,1,AI) ,
+  call_op(-,ARG_04,1,AI) ,
   leftmost(PATCH_01,ARG_05) ,
-  call(-,ARG_05,1,AJ) ,
+  call_op(-,ARG_05,1,AJ) ,
   lowermost(PATCH_01,ARG_06) ,
-  call(+,ARG_06,1,BI) ,
+  call_op(+,ARG_06,1,BI) ,
   rightmost(PATCH_01,ARG_07) ,
-  call(+,ARG_07,1,BJ) ,
+  call_op(+,ARG_07,1,BJ) ,
   min(AI,BI,SI) ,
   min(AJ,BJ,SJ) ,
   max(AI,BI,EI) ,
   max(AJ,BJ,EJ) ,
-  assign_targets_value( [ARG_08],
-    set_comp_elt_generators( tuple_elts([I,SJ]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[SI,call_func_args(+,[EI,1])]))])) ,
-  assign_targets_value( [ARG_09],
-    set_comp_elt_generators( tuple_elts([I,EJ]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[SI,call_func_args(+,[EI,1])]))])) ,
-  call('|',ARG_08,ARG_09,VLINES) ,
-  assign_targets_value( [ARG_010],
-    set_comp_elt_generators( tuple_elts([SI,J]), [
-      comprehension_target_iter( J,
-        call_func_args("range",[SJ,call_func_args(+,[EJ,1])]))])) ,
-  assign_targets_value( [ARG_011],
-    set_comp_elt_generators( tuple_elts([EI,J]), [
-      comprehension_target_iter( J,
-        call_func_args("range",[SJ,call_func_args(+,[EJ,1])]))])) ,
-  call('|',ARG_010,ARG_011,HLINES) ,
-  call('|',VLINES,HLINES,ARG_03) ,
+  assign_var( ARG_08,
+    elt_generator( v2,
+      tuple_elts(["i","sj"]),
+      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
+  assign_var( ARG_09,
+    elt_generator( v2,
+      tuple_elts(["i","ej"]),
+      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
+  call_op('|',ARG_08,ARG_09,VLINES) ,
+  assign_var( ARG_010,
+    elt_generator( v2,
+      tuple_elts(["si","j"]),
+      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
+  assign_var( ARG_011,
+    elt_generator( v2,
+      tuple_elts(["ei","j"]),
+      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
+  call_op('|',ARG_010,ARG_011,HLINES) ,
+  call_op('|',VLINES,HLINES,ARG_03) ,
   frozenset(ARG_03,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -6669,65 +4546,37 @@ outbox(PATCH_01,INDICES_02) :-
 %~                                comprehension_target_iter("j",call_func_args("range",["sj",bin_op_left_right(add_token(+),"ej",1)]))]))),
 %~                          return_value(call_func_args("frozenset",[bin_op_left_right(bit_or_token('|'),"vlines","hlines")]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' outline of patch ')  ,
-%~   call(into_tuple("ai","aj",ARG_03)) ,
-%~   ulcorner(PATCH_01,ARG_03) ,
-%~   call(into_tuple("bi","bj",ARG_04)) ,
-%~   lrcorner(PATCH_01,ARG_04) ,
-%~   min(AI,BI,SI) ,
-%~   min(AJ,BJ,SJ) ,
-%~   max(AI,BI,EI) ,
-%~   max(AJ,BJ,EJ) ,
-%~   [ assign_targets_value( [ARG_06],
-%~       set_comp_elt_generators( tuple_elts(["i","sj"]), [
-%~         comprehension_target_iter("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])),
-%~     assign_targets_value( [ARG_07],
-%~       set_comp_elt_generators( tuple_elts(["i","ej"]), [
-%~         comprehension_target_iter("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])),
-%~     call('|',ARG_06,ARG_07,VLINES)] ,
-%~   [ assign_targets_value( [ARG_08],
-%~       set_comp_elt_generators( tuple_elts(["si","j"]), [
-%~         comprehension_target_iter("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])),
-%~     assign_targets_value( [ARG_09],
-%~       set_comp_elt_generators( tuple_elts(["ei","j"]), [
-%~         comprehension_target_iter("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])),
-%~     call('|',ARG_08,ARG_09,HLINES)] ,
-%~   [call('|',VLINES,HLINES,ARG_05)] ,
-%~   frozenset(ARG_05,INDICES_02) ,
-%~   exit_proc(INDICES_02))
-%~
 % Compiled KL-1 for box
 box(PATCH_01,INDICES_02) :-
   willBeType(INDICES_02,'Indices') ,
   comment(' outline of patch ') ,
-  call(into_tuple(AI,AJ,ARG_03)) ,
+  call(into_tuple("ai","aj",ARG_03)) ,
   ulcorner(PATCH_01,ARG_03) ,
-  call(into_tuple(BI,BJ,ARG_04)) ,
+  call(into_tuple("bi","bj",ARG_04)) ,
   lrcorner(PATCH_01,ARG_04) ,
   min(AI,BI,SI) ,
   min(AJ,BJ,SJ) ,
   max(AI,BI,EI) ,
   max(AJ,BJ,EJ) ,
-  assign_targets_value( [ARG_06],
-    set_comp_elt_generators( tuple_elts([I,SJ]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[SI,call_func_args(+,[EI,1])]))])) ,
-  assign_targets_value( [ARG_07],
-    set_comp_elt_generators( tuple_elts([I,EJ]), [
-      comprehension_target_iter( I,
-        call_func_args("range",[SI,call_func_args(+,[EI,1])]))])) ,
-  call('|',ARG_06,ARG_07,VLINES) ,
-  assign_targets_value( [ARG_08],
-    set_comp_elt_generators( tuple_elts([SI,J]), [
-      comprehension_target_iter( J,
-        call_func_args("range",[SJ,call_func_args(+,[EJ,1])]))])) ,
-  assign_targets_value( [ARG_09],
-    set_comp_elt_generators( tuple_elts([EI,J]), [
-      comprehension_target_iter( J,
-        call_func_args("range",[SJ,call_func_args(+,[EJ,1])]))])) ,
-  call('|',ARG_08,ARG_09,HLINES) ,
-  call('|',VLINES,HLINES,ARG_05) ,
+  assign_var( ARG_06,
+    elt_generator( v2,
+      tuple_elts(["i","sj"]),
+      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
+  assign_var( ARG_07,
+    elt_generator( v2,
+      tuple_elts(["i","ej"]),
+      [ assign_targets_value1("i",call_func_args("range",["si",call_func_args(+,["ei",1])]))])) ,
+  call_op('|',ARG_06,ARG_07,VLINES) ,
+  assign_var( ARG_08,
+    elt_generator( v2,
+      tuple_elts(["si","j"]),
+      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
+  assign_var( ARG_09,
+    elt_generator( v2,
+      tuple_elts(["ei","j"]),
+      [ assign_targets_value1("j",call_func_args("range",["sj",call_func_args(+,["ej",1])]))])) ,
+  call_op('|',ARG_08,ARG_09,HLINES) ,
+  call_op('|',VLINES,HLINES,ARG_05) ,
   frozenset(ARG_05,INDICES_02) ,
   exit_proc(INDICES_02).
 %~ % Universal AST Pass #0
@@ -6747,29 +4596,18 @@ box(PATCH_01,INDICES_02) :-
 %~                                                          subscript_value_slice("start",1),
 %~                                                          bin_op_left_right(mult_token(*),42,subscript_value_slice("direction",1)))])]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' line from starting point and direction ')  ,
-%~   assign_targets_value( [ARG_04],
-%~     tuple_elts( [ call_func_args( +, [
-%~                     subscript_value_slice(START_01,0),
-%~                     call_func_args(*,[42,subscript_value_slice(DIRECTION_02,0)])]),
-%~                   call_func_args( +, [
-%~                     subscript_value_slice(START_01,1),
-%~                     call_func_args(*,[42,subscript_value_slice(DIRECTION_02,1)])])])) ,
-%~   connect(START_01,ARG_04,INDICES_03) ,
-%~   exit_proc(INDICES_03))
-%~
 % Compiled KL-1 for shoot
 shoot(START_01,DIRECTION_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' line from starting point and direction ') ,
-  assign_targets_value( [ARG_04],
-    tuple_elts( [ call_func_args( +, [
-                    subscript_value_slice(START_01,0),
-                    call_func_args(*,[42,subscript_value_slice(DIRECTION_02,0)])]),
-                  call_func_args( +, [
-                    subscript_value_slice(START_01,1),
-                    call_func_args(*,[42,subscript_value_slice(DIRECTION_02,1)])])])) ,
+  assign_targets_value( [ARG_05], [
+    call_func_args( +, [
+      subscript_value_slice(START_01,0),
+      call_func_args(*,[42,subscript_value_slice(DIRECTION_02,0)])]),
+    call_func_args( +, [
+      subscript_value_slice(START_01,1),
+      call_func_args(*,[42,subscript_value_slice(DIRECTION_02,1)])])]) ,
+  tuple_elts(ARG_05,ARG_04) ,
   connect(START_01,ARG_04,INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
@@ -6812,87 +4650,39 @@ shoot(START_01,DIRECTION_02,INDICES_03) :-
 %~                                                                                         [tuple_elts(["i","j"])]))]))]))])),
 %~                          return_value(call_func_args("frozenset",["occs"]))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' locations of occurrences of object in grid ')  ,
-%~   assign_targets_value(["occs"],call_func("set")) ,
-%~   normalize(OBJ_02,NORMED) ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_04,W) ,
-%~   call(into_tuple("oh","ow",ARG_05)) ,
-%~   shape(OBJ_02,ARG_05) ,
-%~   [ call(-,H,OH,ARG_06),
-%~     call(+,ARG_06,1,H2)] ,
-%~   [ call(-,W,OW,ARG_07),
-%~     call(+,ARG_07,1,W2)] ,
-%~   for_target_iter_body( "i",
-%~     call_func_args("range",["h2"]),
-%~     for_target_iter_body( "j",
-%~       call_func_args("range",["w2"]),
-%~       ( assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(true),'True'))  ,
-%~         for_target_iter_body(
-%~            tuple_elts(["v",tuple_elts(["a","b"])]),
-%~            call_func_args("shift",["normed",tuple_elts(["i","j"])]),
-%~            if_test_body(
-%~               call_func_args( 'python:Not', [
-%~                 bool_op_values( ['python:And'], [
-%~                   call_func_args(<=,[0,"a"]),
-%~                   call_func_args(<,[0,"h"]),
-%~                   call_func_args(<=,[0,"b"]),
-%~                   call_func_args(<,[0,"w"]),
-%~                   call_func_args(==,[subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),"v"])])]),
-%~               (/*2*/
-%~                 assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')) ,
-%~                 'python:Break'))) ,
-%~         if_test_body( "occurs",
-%~           expr_value( call_func_args(
-%~                          qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
-%~                          [tuple_elts(["i","j"])])))))) ,
-%~   frozenset(OCCS,INDICES_03) ,
-%~   exit_proc(INDICES_03))
-%~
 % Compiled KL-1 for occurrences
 occurrences(GRID_01,OBJ_02,INDICES_03) :-
   willBeType(INDICES_03,'Indices') ,
   comment(' locations of occurrences of object in grid ') ,
-  assign_targets_value(["occs"],call_func("set")) ,
+  make_new("set","occs") ,
   normalize(OBJ_02,NORMED) ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_04],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_04) ,
   len(ARG_04,W) ,
-  call(into_tuple(OH,OW,ARG_05)) ,
+  call(into_tuple("oh","ow",ARG_05)) ,
   shape(OBJ_02,ARG_05) ,
-  call(-,H,OH,ARG_06) ,
-  call(+,ARG_06,1,H2) ,
-  call(-,W,OW,ARG_07) ,
-  call(+,ARG_07,1,W2) ,
-  for_target_iter_body( I,
-    call_func_args("range",[H2]),
-    for_target_iter_body( J,
-      call_func_args("range",[W2]),
-      ( assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(true),'True'))  ,
-        for_target_iter_body(
-           tuple_elts([V,tuple_elts([A,B])]),
-           call_func_args( "shift", [
-             NORMED,
-             tuple_elts([I,J])]),
-           if_test_body(
-              call_func_args( 'python:Not', [
-                bool_op_values( ['python:And'], [
-                  call_func_args(<=,[0,A]),
-                  call_func_args(<,[0,H]),
-                  call_func_args(<=,[0,B]),
-                  call_func_args(<,[0,W]),
-                  call_func_args( ==, [
-                    subscript_value_slice(subscript_value_slice(GRID_01,A),B),
-                    V])])]),
-              (/*2*/
-                assign_targets_value(["occurs"],boxed_bool_literal_value(bool_value(false),'False')) ,
-                'python:Break'))) ,
-        if_test_body( "occurs",
-          expr_value( call_func_args(
-                         qualified_identifier_identifiers(["occs",boxed_attribute_value("add")]),
-                         [tuple_elts([I,J])])))))) ,
+  call_op(-,H,OH,ARG_010) ,
+  call_op(+,ARG_010,1,H2) ,
+  call_op(-,W,OW,ARG_011) ,
+  call_op(+,ARG_011,1,W2) ,
+  for_each( [range(H2,I_06)],
+    for_each( [range(W2,J_07)],
+      ( "occurs"=true  ,
+        for_each(
+           [ call(into_tuple(I_06,J_07,ARG_09)),
+             shift(NORMED,ARG_09,'$VAR'('TUPLE_ELTS([V,TUPLE_ELTS([A,B])])_08'))],
+           (/*2*/
+             testif( call_func_args( 'python:Not', [
+                       bool_op_values( ['python:And'], [
+                         call_func_args(<=,[0,"a"]),
+                         call_func_args(<,[0,"h"]),
+                         call_func_args(<=,[0,"b"]),
+                         call_func_args(<,[0,"w"]),
+                         call_func_args(==,[subscript_value_slice(subscript_value_slice(GRID_01,"a"),"b"),"v"])])])) ->
+               "occurs"=false,'python:Break')) ,
+        (/*2*/
+          testif("occurs") ->
+            expr_value(call_func_args("add",["occs",tuple_elts([I_06,J_07])])))))) ,
   frozenset(OCCS,INDICES_03) ,
   exit_proc(INDICES_03).
 %~ % Universal AST Pass #0
@@ -6906,17 +4696,15 @@ occurrences(GRID_01,OBJ_02,INDICES_03) :-
 %~                          assign_targets_value( ["row_indices"],
 %~                            call_func_args( "tuple", [
 %~                              generator_exp_elt_generators( "i", [
-%~                                comprehension_ifs_target_iter(
-%~                                   [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1)],
-%~                                   tuple_elts(["i","r"]),
-%~                                   call_func_args("enumerate",["grid"]))])])),
+%~                                comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+%~                                  call_func_args("enumerate",["grid"]),
+%~                                  [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1)])])])),
 %~                          assign_targets_value( ["column_indices"],
 %~                            call_func_args( "tuple", [
 %~                              generator_exp_elt_generators( "j", [
-%~                                comprehension_ifs_target_iter(
-%~                                   [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1)],
-%~                                   tuple_elts(["j","c"]),
-%~                                   call_func_args("enumerate",[call_func_args("dmirror",["grid"])]))])])),
+%~                                comprehension_target_iter_ifs( tuple_elts(["j","c"]),
+%~                                  call_func_args("enumerate",[call_func_args("dmirror",["grid"])]),
+%~                                  [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1)])])])),
 %~                          assign_targets_value( ["hfrontiers"],
 %~                            call_func_args( "frozenset", [
 %~                              set_comp_elt_generators(
@@ -6937,86 +4725,46 @@ occurrences(GRID_01,OBJ_02,INDICES_03) :-
 %~                                 [comprehension_target_iter("j","column_indices")])])),
 %~                          return_value(bin_op_left_right(bit_or_token('|'),"hfrontiers","vfrontiers"))])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' set of frontiers ')  ,
-%~   len(GRID_01,H) ,
-%~   assign_targets_value([ARG_03],subscript_value_slice(GRID_01,0)) ,
-%~   len(ARG_03,W) ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( "i", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["r"])]),1])],
-%~          tuple_elts(["i","r"]),
-%~          call_func_args("enumerate",[GRID_01]))])) ,
-%~   tuple(ARG_04,ROW_INDICES) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators( "j", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["c"])]),1])],
-%~          tuple_elts(["j","c"]),
-%~          call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]))])) ,
-%~   tuple(ARG_05,COLUMN_INDICES) ,
-%~   assign_targets_value( [ARG_06],
-%~     set_comp_elt_generators(
-%~        call_func_args( "frozenset", [
-%~          set_comp_elt_generators(
-%~             tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
-%~                           tuple_elts(["i","j"])]),
-%~             [ comprehension_target_iter("j",call_func_args("range",["w"]))])]),
-%~        [comprehension_target_iter("i","row_indices")])) ,
-%~   frozenset(ARG_06,HFRONTIERS) ,
-%~   assign_targets_value( [ARG_07],
-%~     set_comp_elt_generators(
-%~        call_func_args( "frozenset", [
-%~          set_comp_elt_generators(
-%~             tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
-%~                           tuple_elts(["i","j"])]),
-%~             [ comprehension_target_iter("i",call_func_args("range",["h"]))])]),
-%~        [comprehension_target_iter("j","column_indices")])) ,
-%~   frozenset(ARG_07,VFRONTIERS) ,
-%~   [call('|',HFRONTIERS,VFRONTIERS,OBJECTS_02)] ,
-%~   exit_proc(OBJECTS_02))
-%~
 % Compiled KL-1 for frontiers
 frontiers(GRID_01,OBJECTS_02) :-
   willBeType(OBJECTS_02,'Objects') ,
   comment(' set of frontiers ') ,
   len(GRID_01,H) ,
-  assign_targets_value([ARG_03],subscript_value_slice(GRID_01,0)) ,
+  subscript_value_slice(GRID_01,0,ARG_03) ,
   len(ARG_03,W) ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( I, [
-      comprehension_ifs_target_iter(
-         [ call_func_args(==,[call_func_args("len",[call_func_args("set",[R])]),1])],
-         tuple_elts([I,R]),
-         call_func_args("enumerate",[GRID_01]))])) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      "i",
+      [ comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+          call_func_args("enumerate",[GRID_01]),
+          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["r"])]),1])])])) ,
   tuple(ARG_04,ROW_INDICES) ,
-  assign_targets_value( [ARG_05],
-    generator_exp_elt_generators( J, [
-      comprehension_ifs_target_iter(
-         [ call_func_args(==,[call_func_args("len",[call_func_args("set",[C])]),1])],
-         tuple_elts([J,C]),
-         call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]))])) ,
+  assign_var( ARG_05,
+    elt_generator( v1,
+      "j",
+      [ comprehension_target_iter_ifs( tuple_elts(["j","c"]),
+          call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]),
+          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["c"])]),1])])])) ,
   tuple(ARG_05,COLUMN_INDICES) ,
-  assign_targets_value( [ARG_06],
+  assign_var( ARG_06,
     set_comp_elt_generators(
        call_func_args( "frozenset", [
-         set_comp_elt_generators(
-            tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,I),J),
-                          tuple_elts([I,J])]),
-            [ comprehension_target_iter(J,call_func_args("range",[W]))])]),
-       [comprehension_target_iter(I,"row_indices")])) ,
+         elt_generator( v2,
+           tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
+                         tuple_elts(["i","j"])]),
+           [ assign_targets_value1("j",call_func_args("range",["w"]))])]),
+       [assign_targets_value1("i","row_indices")])) ,
   frozenset(ARG_06,HFRONTIERS) ,
-  assign_targets_value( [ARG_07],
+  assign_var( ARG_07,
     set_comp_elt_generators(
        call_func_args( "frozenset", [
-         set_comp_elt_generators(
-            tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,I),J),
-                          tuple_elts([I,J])]),
-            [ comprehension_target_iter(I,call_func_args("range",[H]))])]),
-       [comprehension_target_iter(J,"column_indices")])) ,
+         elt_generator( v2,
+           tuple_elts( [ subscript_value_slice(subscript_value_slice(GRID_01,"i"),"j"),
+                         tuple_elts(["i","j"])]),
+           [ assign_targets_value1("i",call_func_args("range",["h"]))])]),
+       [assign_targets_value1("j","column_indices")])) ,
   frozenset(ARG_07,VFRONTIERS) ,
-  call('|',HFRONTIERS,VFRONTIERS,OBJECTS_02) ,
+  call_op('|',HFRONTIERS,VFRONTIERS,OBJECTS_02) ,
   exit_proc(OBJECTS_02).
 %~ % Universal AST Pass #0
 %~ def( "compress",
@@ -7026,91 +4774,55 @@ frontiers(GRID_01,OBJECTS_02) :-
 %~                          assign_targets_value( ["ri"],
 %~                            call_func_args( "tuple", [
 %~                              generator_exp_elt_generators( "i", [
-%~                                comprehension_ifs_target_iter(
-%~                                   [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1)],
-%~                                   tuple_elts(["i","r"]),
-%~                                   call_func_args("enumerate",["grid"]))])])),
+%~                                comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+%~                                  call_func_args("enumerate",["grid"]),
+%~                                  [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["r"])]),1)])])])),
 %~                          assign_targets_value( ["ci"],
 %~                            call_func_args( "tuple", [
 %~                              generator_exp_elt_generators( "j", [
-%~                                comprehension_ifs_target_iter(
-%~                                   [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1)],
-%~                                   tuple_elts(["j","c"]),
-%~                                   call_func_args("enumerate",[call_func_args("dmirror",["grid"])]))])])),
+%~                                comprehension_target_iter_ifs( tuple_elts(["j","c"]),
+%~                                  call_func_args("enumerate",[call_func_args("dmirror",["grid"])]),
+%~                                  [ compare_ops_left_comparators(eq_token(==),call_func_args("len",[call_func_args("set",["c"])]),1)])])])),
 %~                          return_value( call_func_args( "tuple", [
 %~                                          generator_exp_elt_generators(
 %~                                             call_func_args( "tuple", [
 %~                                               generator_exp_elt_generators( "v", [
-%~                                                 comprehension_ifs_target_iter(
-%~                                                    [ compare_ops_left_comparators(['python:NotIn'],"j","ci")],
-%~                                                    tuple_elts(["j","v"]),
-%~                                                    call_func_args("enumerate",["r"]))])]),
-%~                                             [ comprehension_ifs_target_iter(
-%~                                                  [ compare_ops_left_comparators(['python:NotIn'],"i","ri")],
-%~                                                  tuple_elts(["i","r"]),
-%~                                                  call_func_args("enumerate",["grid"]))])]))])))
-%~
-%~ % Body Pass #1
-%~ ( comment(' removes frontiers from grid ')  ,
-%~   assign_targets_value( [ARG_03],
-%~     generator_exp_elt_generators( "i", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["r"])]),1])],
-%~          tuple_elts(["i","r"]),
-%~          call_func_args("enumerate",[GRID_01]))])) ,
-%~   tuple(ARG_03,RI) ,
-%~   assign_targets_value( [ARG_04],
-%~     generator_exp_elt_generators( "j", [
-%~       comprehension_ifs_target_iter(
-%~          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["c"])]),1])],
-%~          tuple_elts(["j","c"]),
-%~          call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]))])) ,
-%~   tuple(ARG_04,CI) ,
-%~   assign_targets_value( [ARG_05],
-%~     generator_exp_elt_generators(
-%~        call_func_args( "tuple", [
-%~          generator_exp_elt_generators( "v", [
-%~            comprehension_ifs_target_iter(
-%~               [ compare_ops_left_comparators(['python:NotIn'],"j","ci")],
-%~               tuple_elts(["j","v"]),
-%~               call_func_args("enumerate",["r"]))])]),
-%~        [ comprehension_ifs_target_iter(
-%~             [ compare_ops_left_comparators(['python:NotIn'],"i","ri")],
-%~             tuple_elts(["i","r"]),
-%~             call_func_args("enumerate",[GRID_01]))])) ,
-%~   tuple(ARG_05,GRID_02) ,
-%~   exit_proc(GRID_02))
+%~                                                 comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+%~                                                   call_func_args("enumerate",["r"]),
+%~                                                   [ compare_ops_left_comparators(['python:NotIn'],"j","ci")])])]),
+%~                                             [ comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+%~                                                 call_func_args("enumerate",["grid"]),
+%~                                                 [ compare_ops_left_comparators(['python:NotIn'],"i","ri")])])]))])))
 %~
 % Compiled KL-1 for compress
 compress(GRID_01,GRID_02) :-
   willBeType(GRID_02,'Grid') ,
   comment(' removes frontiers from grid ') ,
-  assign_targets_value( [ARG_03],
-    generator_exp_elt_generators( I, [
-      comprehension_ifs_target_iter(
-         [ call_func_args(==,[call_func_args("len",[call_func_args("set",[R])]),1])],
-         tuple_elts([I,R]),
-         call_func_args("enumerate",[GRID_01]))])) ,
+  assign_var( ARG_03,
+    elt_generator( v1,
+      "i",
+      [ comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+          call_func_args("enumerate",[GRID_01]),
+          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["r"])]),1])])])) ,
   tuple(ARG_03,RI) ,
-  assign_targets_value( [ARG_04],
-    generator_exp_elt_generators( J, [
-      comprehension_ifs_target_iter(
-         [ call_func_args(==,[call_func_args("len",[call_func_args("set",[C])]),1])],
-         tuple_elts([J,C]),
-         call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]))])) ,
+  assign_var( ARG_04,
+    elt_generator( v1,
+      "j",
+      [ comprehension_target_iter_ifs( tuple_elts(["j","c"]),
+          call_func_args("enumerate",[call_func_args("dmirror",[GRID_01])]),
+          [ call_func_args(==,[call_func_args("len",[call_func_args("set",["c"])]),1])])])) ,
   tuple(ARG_04,CI) ,
-  assign_targets_value( [ARG_05],
+  assign_var( ARG_05,
     generator_exp_elt_generators(
        call_func_args( "tuple", [
-         generator_exp_elt_generators( V, [
-           comprehension_ifs_target_iter(
-              [ compare_ops_left_comparators(['python:NotIn'],J,"ci")],
-              tuple_elts([J,V]),
-              call_func_args("enumerate",[R]))])]),
-       [ comprehension_ifs_target_iter(
-            [ compare_ops_left_comparators(['python:NotIn'],I,"ri")],
-            tuple_elts([I,R]),
-            call_func_args("enumerate",[GRID_01]))])) ,
+         elt_generator( v1,
+           "v",
+           [ comprehension_target_iter_ifs( tuple_elts(["j","v"]),
+               call_func_args("enumerate",["r"]),
+               [ call_func_args('python:NotIn',["j","ci"])])])]),
+       [ comprehension_target_iter_ifs( tuple_elts(["i","r"]),
+           call_func_args("enumerate",[GRID_01]),
+           [ call_func_args('python:NotIn',["i","ri"])])])) ,
   tuple(ARG_05,GRID_02) ,
   exit_proc(GRID_02).
 %~ % Universal AST Pass #0
@@ -7130,10 +4842,10 @@ compress(GRID_01,GRID_02) :-
 %~                                            call_func_args( "frozenset", [
 %~                                              set_comp_elt_generators(
 %~                                                 tuple_elts(["c",tuple_elts(["i","j"])]),
-%~                                                 [ comprehension_ifs_target_iter(
-%~                                                      [ compare_ops_left_comparators(gt_e_token(>=),"j",0)],
+%~                                                 [ comprehension_target_iter_ifs(
 %~                                                      tuple_elts(["c",tuple_elts(["i","j"])]),
-%~                                                      "offsetted")])])),
+%~                                                      "offsetted",
+%~                                                      [ compare_ops_left_comparators(gt_e_token(>=),"j",0)])])])),
 %~                                          if_test_body(
 %~                                             call_func_args(
 %~                                                qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
@@ -7141,54 +4853,28 @@ compress(GRID_01,GRID_02) :-
 %~                                             body_stmts([return_value("p")]))])),
 %~                          return_value("w")])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' horizontal periodicity ')  ,
-%~   normalize(OBJ_01,NORMALIZED) ,
-%~   width(NORMALIZED,W) ,
-%~   for_target_iter_body( "p",
-%~     call_func_args("range",[1,"w"]),
-%~     ( assign_targets_value([ARG_03],tuple_elts([0,call_func_args(-,["p"])]))  ,
-%~       shift(NORMALIZED,ARG_03,OFFSETTED) ,
-%~       assign_targets_value( [ARG_04],
-%~         set_comp_elt_generators(
-%~            tuple_elts(["c",tuple_elts(["i","j"])]),
-%~            [ comprehension_ifs_target_iter(
-%~                 [ call_func_args(>=,["j",0])],
-%~                 tuple_elts(["c",tuple_elts(["i","j"])]),
-%~                 "offsetted")])) ,
-%~       frozenset(ARG_04,PRUNED) ,
-%~       if_test_body(
-%~          call_func_args(
-%~             qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
-%~             ["normalized"]),
-%~          call(INTEGER_02="p"),exit_proc(INTEGER_02)))) ,
-%~   call(INTEGER_02="w") ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for hperiod
 hperiod(OBJ_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' horizontal periodicity ') ,
   normalize(OBJ_01,NORMALIZED) ,
   width(NORMALIZED,W) ,
-  for_target_iter_body( W,
-    call_func_args("range",[1,W]),
-    ( assign_targets_value([ARG_03],tuple_elts([0,call_func_args(-,[W])]))  ,
-      shift(NORMALIZED,ARG_03,OFFSETTED) ,
-      assign_targets_value( [ARG_04],
-        set_comp_elt_generators(
-           tuple_elts([C,tuple_elts([I,J])]),
-           [ comprehension_ifs_target_iter(
-                [ call_func_args(>=,[J,0])],
-                tuple_elts([C,tuple_elts([I,J])]),
-                "offsetted")])) ,
-      frozenset(ARG_04,PRUNED) ,
-      if_test_body(
-         call_func_args(
-            qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
-            [NORMALIZED]),
-         true,exit_proc(W)))) ,
-  exit_proc(W).
+  for_each( [range(1,W,P_03)],
+    ( [ assign_targets_value([ARG_06],[0,call_func_args(-,[P_03])]),
+        tuple_elts(ARG_06,ARG_04)]  ,
+      shift(NORMALIZED,ARG_04,OFFSETTED) ,
+      assign_var( ARG_05,
+        set_comp_elt_generators_ifs(
+           tuple_elts(["c",tuple_elts(["i","j"])]),
+           tuple_elts(["c",tuple_elts(["i","j"])]),
+           "offsetted",
+           [ call_func_args(>=,["j",0])])) ,
+      frozenset(ARG_05,PRUNED) ,
+      (/*2*/
+        testif(call_func_args("issubset",["pruned","normalized"])) ->
+          call(INTEGER_02=P_03),exit_proc(INTEGER_02)))) ,
+  call(INTEGER_02="w") ,
+  exit_proc(INTEGER_02).
 %~ % Universal AST Pass #0
 %~ def( "vperiod",
 %~   function_type_body(
@@ -7206,10 +4892,10 @@ hperiod(OBJ_01,INTEGER_02) :-
 %~                                            call_func_args( "frozenset", [
 %~                                              set_comp_elt_generators(
 %~                                                 tuple_elts(["c",tuple_elts(["i","j"])]),
-%~                                                 [ comprehension_ifs_target_iter(
-%~                                                      [ compare_ops_left_comparators(gt_e_token(>=),"i",0)],
+%~                                                 [ comprehension_target_iter_ifs(
 %~                                                      tuple_elts(["c",tuple_elts(["i","j"])]),
-%~                                                      "offsetted")])])),
+%~                                                      "offsetted",
+%~                                                      [ compare_ops_left_comparators(gt_e_token(>=),"i",0)])])])),
 %~                                          if_test_body(
 %~                                             call_func_args(
 %~                                                qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
@@ -7217,60 +4903,30 @@ hperiod(OBJ_01,INTEGER_02) :-
 %~                                             body_stmts([return_value("p")]))])),
 %~                          return_value("h")])))
 %~
-%~ % Body Pass #1
-%~ ( comment(' vertical periodicity ')  ,
-%~   normalize(OBJ_01,NORMALIZED) ,
-%~   height(NORMALIZED,H) ,
-%~   for_target_iter_body( "p",
-%~     call_func_args("range",[1,"h"]),
-%~     ( assign_targets_value([ARG_03],tuple_elts([call_func_args(-,["p"]),0]))  ,
-%~       shift(NORMALIZED,ARG_03,OFFSETTED) ,
-%~       assign_targets_value( [ARG_04],
-%~         set_comp_elt_generators(
-%~            tuple_elts(["c",tuple_elts(["i","j"])]),
-%~            [ comprehension_ifs_target_iter(
-%~                 [ call_func_args(>=,["i",0])],
-%~                 tuple_elts(["c",tuple_elts(["i","j"])]),
-%~                 "offsetted")])) ,
-%~       frozenset(ARG_04,PRUNED) ,
-%~       if_test_body(
-%~          call_func_args(
-%~             qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
-%~             ["normalized"]),
-%~          call(INTEGER_02="p"),exit_proc(INTEGER_02)))) ,
-%~   call(INTEGER_02="h") ,
-%~   exit_proc(INTEGER_02))
-%~
 % Compiled KL-1 for vperiod
 vperiod(OBJ_01,INTEGER_02) :-
   willBeType(INTEGER_02,'Integer') ,
   comment(' vertical periodicity ') ,
   normalize(OBJ_01,NORMALIZED) ,
   height(NORMALIZED,H) ,
-  for_target_iter_body( H,
-    call_func_args("range",[1,H]),
-    ( assign_targets_value([ARG_03],tuple_elts([call_func_args(-,[H]),0]))  ,
-      shift(NORMALIZED,ARG_03,OFFSETTED) ,
-      assign_targets_value( [ARG_04],
-        set_comp_elt_generators(
-           tuple_elts([C,tuple_elts([I,J])]),
-           [ comprehension_ifs_target_iter(
-                [ call_func_args(>=,[I,0])],
-                tuple_elts([C,tuple_elts([I,J])]),
-                "offsetted")])) ,
-      frozenset(ARG_04,PRUNED) ,
-      if_test_body(
-         call_func_args(
-            qualified_identifier_identifiers(["pruned",boxed_attribute_value("issubset")]),
-            [NORMALIZED]),
-         true,exit_proc(H)))) ,
-  exit_proc(H).
-% 41,269,293 inferences, 5.906 CPU in 5.906 seconds (100% CPU, 6988241 Lips)
-   whole_test:   "'dmiles' (12)"  indiv:   "complete"  selected test:    "v('0a2355a6')" .......... (e)xecute:    "uast_test"
- Your menu(?) selection:
+  for_each( [range(1,H,P_03)],
+    ( [ assign_targets_value([ARG_06],[call_func_args(-,[P_03]),0]),
+        tuple_elts(ARG_06,ARG_04)]  ,
+      shift(NORMALIZED,ARG_04,OFFSETTED) ,
+      assign_var( ARG_05,
+        set_comp_elt_generators_ifs(
+           tuple_elts(["c",tuple_elts(["i","j"])]),
+           tuple_elts(["c",tuple_elts(["i","j"])]),
+           "offsetted",
+           [ call_func_args(>=,["i",0])])) ,
+      frozenset(ARG_05,PRUNED) ,
+      (/*2*/
+        testif(call_func_args("issubset",["pruned","normalized"])) ->
+          call(INTEGER_02=P_03),exit_proc(INTEGER_02)))) ,
+  call(INTEGER_02="h") ,
+  exit_proc(INTEGER_02).
 
-
-
+  % 33,639,061 inferences, 4.911 CPU in 4.911 seconds (100% CPU, 6849380 Lips)
 
 
 

@@ -234,6 +234,8 @@ get_bgc(BGC):- get_black(BGC).
 :- nb_delete(grid_bgc).
 :- luser_default(grid_bgc,bgc).
 
+grid_bgc(_IO,BGC):- get_bgc(BGC).
+
 :- export(set_black/1).
 :- decl_pt(set_black(color)).
 set_black(BGC):- var(BGC),!,ignore(nb_delete(grid_black)),luser_linkval(grid_black,BGC),!.

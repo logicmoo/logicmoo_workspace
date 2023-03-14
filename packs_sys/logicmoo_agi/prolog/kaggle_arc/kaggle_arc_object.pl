@@ -452,7 +452,7 @@ make_indiv_object(VM,Overrides,GOPoints,NewObj):-
  must_det_ll((
   make_indiv_object_real(VM,Overrides,GOPoints,NewObj),
   %show_indiv(make_indiv_object,NewObj),
-  itrace)).
+  nop(itrace))).
  %show_indiv_textinfo(NewObj),!.
 
 make_indiv_object_real(VM,Overrides,GOPoints,NewObj):-
@@ -854,19 +854,24 @@ id_shape(ShapeID,Shape):- is_shape_id_for(Shape,ShapeID).
 iv_for(L,Iv):- copy_term(L,CT,_),numbervars(CT,0,_,[attvar(bind),singletons(true)]),term_hash(CT,Fv),
  number(Fv), Iv is (Fv rem 800) + 1,!. % (\+ is_iv_for(Iv,_) -> asserta_if_new(is_iv_for(Iv,L)) ; true).
 
-obj_iv(obj(obj(Obj)),Iv):- !, obj_iv(obj((Obj)),Iv).
+%obj_iv(obj(obj(Obj)),Iv):- !, obj_iv(obj((Obj)),Iv).
 obj_iv(Obj,Iv):- indv_props(Obj,giz(iv(Iv))),!.
+obj_iv(Obj,Iv):- sub_compound(oid(OID),Obj),nonvar(OID),oid_to_iv(OID,Iv),!.
 obj_iv(Obj,Iv):- indv_u_props(Obj,L),iv_for(L,Iv),!.
 obj_iv(Obj,Iv):- globalpoints(Obj,GP),gpoints_to_iv(GP,Iv),!.
+obj_iv(Obj,_Iv):- arcST,pp(Obj),trace.
 
 /*
     kept(giz(g(IO))), kept(giz(testid(TestID))), kept(giz(example_num(Example+Num))),
     kept(giz(testid_example_io(TestID>(Example+Num)*IO))),*/
-obj_gid(Obj,GID):-  indv_props(Obj,giz(gid(GID))),!.
-obj_gid(Obj,GID):-  obj_to_decl_oid(Obj,OID),oid_to_gid(OID,GID),!.
+obj_to_parent_gid(Obj,GID):-  indv_props(Obj,giz(gid(GID))),!.
+obj_to_parent_gid(Obj,GID):-  obj_to_decl_oid(Obj,OID),oid_to_parent_gid(OID,GID),!.
 
-oid_to_gid(OID,GID):- atomic_list_concat(['o',_Glyph,_IV,V,ID,Example,Num,IO],'_',OID), 
+oid_to_parent_gid(OID,GID):- atomic_list_concat(['o',_Glyph,_IV,V,ID,Example,Num,IO],'_',OID), 
  atomic_list_concat([V,ID,Example,Num,IO],'_',GID).
+
+oid_to_iv(OID,IV):- atomic_list_concat(['o',_Glyph,IV|_],'_',OID),!.
+
 
 is_oid(OID):- oid_glyph_object(OID,_,_).
 is_oid(OID):- gid_type_oid(_,_,OID), \+ oid_glyph_object(OID,_,_).
@@ -889,7 +894,7 @@ obj_to_oid(Obj,OID):-  obj_to_decl_oid(Obj,OID),!,
 /*obj_to_oid(Obj,OID):- 
  must_det_ll((
    obj_iv(Obj,Iv), int2glyph(Iv,Glyph), % object_glyph(Obj,Glyph),       
-   obj_gid(Obj,GID), !,
+   obj_to_parent_gid(Obj,GID), !,
    atomic_list_concat(['o',Glyph,Iv,GID],'_',OID),
    assert_object_oid(GID,Obj,Glyph,OID))).
    %assert(oid_glyph_object(OID,Glyph,Obj)))).*/
@@ -899,7 +904,7 @@ assert_object_oid(_TID,Obj,Glyph,OID):-
  must_det_ll((   
    is_object(Obj),
    obj_iv(Obj,Iv), int2glyph(Iv,Glyph), % object_glyph(Obj,Glyph),       
-   obj_gid(Obj,GID),  
+   obj_to_parent_gid(Obj,GID),  
    %(nonvar(GID)->tid_to_gid(TID,GID);true),
 
    if_t((nonvar(OID),var(GID)),
@@ -1051,7 +1056,7 @@ indv_props_list0(Obj,NVL):- is_object(Obj),!,obj_to_propslist(Obj,NVS), combine_
 indv_props_list0(obj(PA),PA):- my_assertion(is_list(PA)).
 %indv_props_list0(OID,List):- is_oid(OID), oid_to_obj(OID,Obj),!,indv_props_list(Obj,List).
 indv_props_list0(OProps,Props):- is_obj_props(OProps),!,Props=OProps.
-indv_props_list0([E|OID],[E|NVL]):- is_prop(E),!,indv_props_list1(OID,NVL).
+indv_props_list0([E|OID],[E|NVL]):- is_prop1(E),!,indv_props_list1(OID,NVL).
 indv_props_list0(Objs,Props):- is_list(Objs),!,my_maplist(indv_props_list0,Objs,Props).
 indv_props_list0(PA,PAP):- is_list(PA),!,PAP=PA.
 indv_props_list0(alone(_OID,PA),PA):- my_assertion(is_list(PA)).
@@ -1059,7 +1064,7 @@ indv_props_list0(Obj,Props):- lock_doing(has_prop_list,Obj,has_prop_list(Obj,Pro
 
 indv_props_list1(Var,Var):- var(Var),!.
 indv_props_list1([],[]):-!.
-indv_props_list1([E|OID],[E|NVL]):- is_prop(E),!,indv_props_list1(OID,NVL).
+indv_props_list1([E|OID],[E|NVL]):- is_prop1(E),!,indv_props_list1(OID,NVL).
 
 has_prop_list(Obj,Props):- findall(Prop,has_prop(Prop,Obj),Props),Props\==[],!.
 
@@ -1147,7 +1152,7 @@ indv_props_for_noteablity(obj(L),Notes):- my_assertion(nonvar(L)),!, include(is_
 
 %indv_props(G,L):- arcST,atrace,into_obj(G,O),is_object(O),indv_props(O).
 
-pmember(E,X):- indv_props(X,E).
+%pmember(E,X):- indv_props(X,E).
 %pmember(E,X):- sub_term(EE,X),nonvar_or_ci(EE),EE=E,ground(E).
 /*pmember(E,L):- is_vm_map(Points),!,E=grid_size(H,V),!,Points.grid_size=grid_size(H,V).
 pmember(E,L):- member(EE,L),(EE=E;(is_list(EE),pmember(E,EE))).
@@ -1637,8 +1642,10 @@ loc2D(Grid,H,V):- is_grid(Grid),!,H=1,V=1.
 loc2D(G,X,Y):- is_group(G),!,mapgroup(loc_term,G,Offsets),sort_safe(Offsets,[loc2D(X,Y)|_]). % lowest loc2D
 %loc2D(Grid,H,V):- is_grid(Grid),!,globalpoints(Grid,Points),!,points_range(Points,LocX,LocY,_,_,_,_), H is LocX, V is LocY.
 loc2D(I,X,Y):- is_object(I), indv_props(I,loc2D(X,Y)),!.
+loc2D(I,X,Y):- sub_compound(I,loc2D(X,Y)).
 loc2D(I,X,Y):- into_obj(I,O), indv_props(O,loc2D(X,Y)),!.
 %loc2D(NT,H,V):- atrace, known_gridoid(NT,G),loc2D(G,H,V).
+    
 
 
 :- decl_pt(prop_g,vis_hv_term(is_object_or_grid,size2D)).
@@ -1658,6 +1665,8 @@ rotSize2D(grav,NT,H,V):-  into_gridoid(NT,G),G\==NT, rotSize2D(grav,G,H,V).
 
 
 %externalize_links(obj_grp(O1L,Grp),[link(C,A),EL|More],[link(C,A),elink(C,Ext)|LMore]):- EL\=elink(_,_),externalize_obj(Obj,Other,Ext),!,externalize_links(obj_grp(O1L,Grp),[EL|More],LMore).
+
+externalize_links(Grp,NewObjs):- Grp==[],!,NewObjs=[].
 externalize_links(Grp,NewObjs):- 
  must_det_ll((is_group_or_objects_list(Grp), 
    maplist(externalize_links(grp(Grp)),Grp,NewObjs))).
@@ -1669,7 +1678,7 @@ externalize_links(grp(Grp),Obj,NewObj):-
    maplist(externalize_links(obj_grp(O1L,Grp)),O1L,NewList), 
    NewObj=obj(NewList).
 
-externalize_links(obj_grp(O1L,Grp),link(C,A),elink(C,Ext)):- !, externalize_obj(obj_grp_link(O1L,Grp,C),A,Ext).
+%externalize_links(obj_grp(O1L,Grp),link(C,A),elink(C,Ext)):- !, externalize_obj(obj_grp_link(O1L,Grp,C),A,Ext).
 externalize_links(obj_grp(_O1L,_Grp),A,A).
 
 externalize_obj(obj_grp_link(O1,_Grp, C),OID2,Ext):- 
@@ -1750,7 +1759,7 @@ rebuild_from_localpoints(Obj,WithPoints,NewObj):-
   remObjects(VM,Obj),
   make_indiv_object(VM,[loc2D(X,Y),globalpoints(GPoints),localpoints(Points)|PropsRetained],GPoints,NewObj))))),
    verify_object(NewObj),
-   assumeAdded(NewObj),
+   assumeAdded(VM,NewObj),
   !.
 
 :- style_check(-singleton).
@@ -1832,7 +1841,7 @@ rebuild_from_globalpoints(Obj,GPoints,NewObj):-
   %ppa(before=Obj),
   remObjects(VM,Obj),
   make_indiv_object(VM,PropsRetained,GPoints,NewObj),
-  assumeAdded(NewObj),
+  assumeAdded(VM,NewObj),
   %ppa(propsRetained=PropsRetained),
   %ppa(after=NewObj),
     verify_object(NewObj))),
@@ -1846,7 +1855,7 @@ is_prop_automatically_rebuilt(Prop):- compound(Prop),functor(Prop,F,_),(atom_con
 is_prop_automatically_rebuilt(Prop):-
  member(Prop,[cc(_),mass(_),mass(_),shape_rep(grav,_),rot2D(_),roll_shape(_),pen(_),grid_rep(_,_),grid_ops(_,_),
               iz(multicolored(_)),iz(chromatic(_,_)),
-              iz(symmetry_type(_)),iz(stype(_)),iz(monochrome),
+              iz(symmetry_type(_,_)),iz(stype(_)),iz(monochrome),
               globalpoints(_),localpoints(_)]),!.
 
 
@@ -2188,7 +2197,7 @@ flipSym_checks(Rot90,GridIn):-
 
 %iz_symmetry(GridIn,H,V,N,R):- N == 2, H==1, 
 iz_symmetry(GridIn,R):-
-  (flipSym_checks(SN,GridIn)*->R=SN;R=symmetry_type(none)).
+  (flipSym_checks(SN,GridIn)*->R=SN;R=symmetry_type(_ALL_TODO,false)).
 
 symmetric_types(Any,QQ):- into_grid(Any,Grid), 
   findall(Q,(flipSym_checks(Q,Grid)),QQ).
@@ -2223,20 +2232,18 @@ grid_call_unbound_p1(P1,[A|B],GridIn,GridOut):- !, grid_call_unbound_p1(P1,A,Gri
 grid_call_unbound_p1(_P1,Call,GridIn,GridOut):- grid_call(Call,GridIn,GridOut).
 
 
-rot_p_plus_trim(symmetry_after(trim_to_rect,P)):- rot_p_plus_full(P).
-rot_p_plus_trim(symmetry_after(trim_outside,P)):-  rot_p_plus_full(P).
-rot_p_plus_trim(symmetry_type(P)):- rot_p_plus_full(P).
+rot_p_plus_trim(symmetry_after(trim_to_rect,P,_)):- rot_p_plus_full(P).
+rot_p_plus_trim(symmetry_after(trim_outside,P,_)):-  rot_p_plus_full(P).
+rot_p_plus_trim(symmetry_type(P,_)):- rot_p_plus_full(P).
 
 %symmetry_after(A,B,I,O):- grid_call_alters(A,I,M), grid_call(B,M,O).
-symmetry_after(A,B,I,O):- grid_call(A,I,M),!,I\=@=M, symmetry_type(B,M,O).
+symmetry_after(A,B,TF,I,O):- grid_call(A,I,M),!,I\=@=M, symmetry_type(B,TF,M,O).
 
-%symmetry_type(full,I,O):- grid_size(I,H,V)
-
-symmetry_type(Var,I,O):- var(Var),!,rot_p_plus_full(Var),symmetry_type(Var,I,O).
-symmetry_type(full,I,O):- !, flipSym_checks(rot90,I),!,symmetry_type(sym_hv,I,O).
-symmetry_type(sym_hv,I,O):- !, flipSym_checks(flipH,I),!,symmetry_type(flipV,I,O).
-symmetry_type(sym_h_xor_v,I,O):- !, (symmetry_type(flipH,I,O) -> ( \+ symmetry_type(flipV,I,O) ) ;   symmetry_type(flipV,I,O)).
-symmetry_type(R,I,O):- grid_call(R,I,O),I=@=O.
+symmetry_type(Var,TF,I,O):- var(Var),!,rot_p_plus_full(Var),symmetry_type(Var,TF,I,O).
+symmetry_type(full,TF,I,O):- !, flipSym_checks(rot90,I),!,symmetry_type(sym_hv,TF,I,O).
+symmetry_type(sym_hv,TF,I,O):- !, flipSym_checks(flipH,I),!,symmetry_type(flipV,TF,I,O).
+symmetry_type(sym_h_xor_v,TF,I,O):- !, (symmetry_type(flipH,TF,I,O) -> ( \+ symmetry_type(flipV,TF,I,O) ) ;   symmetry_type(flipV,TF,I,O)).
+symmetry_type(R,TF,I,O):- grid_call(R,I,O),(I=@=O->TF=true;TF=false).
 
 rot_p_plus_full(sym_hv). rot_p_plus_full(full). rot_p_plus_full(sym_h_xor_v). 
 rot_p_plus_full(P):- rot_p2(P).

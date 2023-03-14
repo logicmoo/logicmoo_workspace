@@ -83,7 +83,7 @@ ensure_usefull(reversed(Step1^_),[reversed(Step2^_)|OPA]):- !, ensure_usefull(St
 ensure_usefull(_,[A|B]):-!, ensure_usefull(A,B).
 
 fix_opa([as_rot(flipD,inverseRot(flipD),grav_unrot180(flipV)), c_r(grav_unrot180(rot90)),
-                                        grav_unrot180(rot90),grid_progress(g(perfect))|More],More):-!.
+                                        grav_unrot180(rot90)|More],More):-!.
 fix_opa([as_rot(flipD,inverseRot(flipD),grav_unrot180(flipV)), c_r(grav_unrot180(rot90)),grav_unrot180(rot90)|More],More):-!.
 fix_opa(More,More).
 
@@ -598,7 +598,7 @@ reduce_grid_pair1(AB,OPS,ARBR):- \+ ground(AB),
 
 reduce_grid_pair1(AB,OPS,ARBR):- reduce_grid_pair111(AB,OPS,ARBR),!.
 
-reduce_grid_pair111(A^B,[grid_progress(g(perfect))|ROPA],AR^BR):-
+reduce_grid_pair111(A^B,ROPA,AR^BR):-
   once((reduce_grid_pass(1,A^A,[A^A],ROPA,AR^AR),
         reduce_grid_pass(1,B^B,[B^B],ROPB,BR^BR))),
   ROPA\==[],

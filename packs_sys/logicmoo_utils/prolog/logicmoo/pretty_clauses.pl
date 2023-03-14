@@ -1341,9 +1341,9 @@ toplevel_pp(ansi).
 %in_pp(html_pre):- on_x_log_fail(httpd_wrapper:http_current_request(_)).
 
 %display_length(X,L):- wots(S,display(X)),atom_length(S,L),!.
-display_length(S,L):- atom(S),!, atom_length(S,L).
 display_length(S,L):- string(S),!, atom_length(S,L).
-display_length(I,L):- with_output_to(string(S),display(I)), atom_length(S,L).
+display_length(S,L):- atom(S),!, atom_length(S,L).
+display_length(I,L):- with_output_to(string(S),display(I)),!,atom_length(S,L).
 
 
 
@@ -1688,9 +1688,9 @@ be_extra(_DONT).
 
 print_to_string11(_,Max,VarOrNill,VarOrNill,Max):- (var(VarOrNill);VarOrNill==[]),!.
 print_to_string11(PS2,I,[H|T],[HH|TT],O):- !, print_to_string11(PS2,I,H,HH,M),print_to_string11(PS2,M,T,TT,O).
-print_to_string11(PS2,Cur,H,HH,Max):- wots(HH,call(PS2,H)), atom_length(HH,Len), Max is max(Cur,Len).
+print_to_string11(PS2,Cur,H,HH,Max):- wots(HH,call(PS2,H)), display_length(HH,Len), Max is max(Cur,Len).
 
-print_using_up(Total,Comma,S):- atom_length(S,Len),Used is Total-Len, write(Comma),print_s_up(S,Used).
+print_using_up(Total,Comma,S):- display_length(S,Len),Used is Total-Len, write(Comma),print_s_up(S,Used).
 
 print_s_up(S,Used):- Used>0, Need1 is floor(Used/2),Need2 is round(Used/2),
   print_n_sp(Need1),write(S),print_n_sp(Need2),!.
@@ -1728,6 +1728,7 @@ pt1(FS,Tab,Term) :-
 
 pt1(_FS,Tab,List) :- is_simple_2x2(List), print_simple_2x2(print,Tab,List),!.
 
+pt1(_, _Tab,Term) :- var(Term),format('~w',[Term]),!.
 %t_l:printing_dict
 %pt1(_FS,_Tab,(NPV)) :- compound(NPV), NPV=..[OP,V,N], OP==(:), atomic(N),
 %  write_q(N), pformat(' '), pformat(OP),pformat(' '), print_tree_unit(V),!.
@@ -1759,6 +1760,12 @@ pt1(_FS,Tab,T) :- % fail,
    max_output(Tab,W120,T),!,
    prefix_spaces(Tab), write_q(T).
    %system_portray(Tab,T),!.
+
+
+pt1(_FS,_Tab,N-V) :- print(N-V),!.
+pt1(_FS,_Tab,N-V) :- !, print(N),write(' - '),print(V).  
+
+
 
 pt1(FS,Tab,List) :- List=[_|_], !,
   prefix_spaces(Tab),pformat_functor('[ '),

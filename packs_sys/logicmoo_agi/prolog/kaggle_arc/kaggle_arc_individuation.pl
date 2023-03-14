@@ -123,7 +123,7 @@ i_to_o_is_none_some_some_in(VM):-
   Library1 = VM.objs,
   gset(VM.objs)=[],
   filter_library(Library1,Library),
-  pp(library=Library),
+  print_grid(library,Library),
   (Library=[_|_]->my_maplist(add_shape_lib(pairs),Library);true),
   OGrid = VM.start_grid,
   OPoints = VM.start_points,
@@ -138,7 +138,8 @@ i_to_o_is_none_some_some_in(VM):-
   globalpoints(RGroup,UsedPoints),
   intersection(OPoints,UsedPoints,_,LeftOver,_),
   gset(VM.lo_points) = LeftOver,
-  pp(objs = VM.objs),
+  %pp(objs = VM.objs),
+  %print_grid(objs, VM.objs),
   %LeftOver = VM.lo_points,
   points_to_grid(VM.h,VM.v,LeftOver,Grid),
   gset(VM.grid)=Grid,
@@ -183,7 +184,7 @@ mono_i_to_o_is_none_some_none_in(VM):-
   Library1 = VM.objs,
   gset(VM.objs)=[],
   filter_library(Library1,Library),
-  pp(library=Library),
+  %pp(library=Library),
   print_grid(library,Library),
   (Library=[_|_]->my_maplist(add_shape_lib(pairs),Library);true),
   OGrid = VM.start_grid,
@@ -202,7 +203,7 @@ mono_i_to_o_is_none_some_none_in(VM):-
   globalpoints(RGroup,UsedPoints),
   intersection(OPoints,UsedPoints,_,LeftOver,_),
   gset(VM.lo_points) = LeftOver,
-  pp(objs = VM.objs),
+  %print_grid(objs, VM.objs),
   %LeftOver = VM.lo_points,
   points_to_grid(VM.h,VM.v,LeftOver,Grid),
   gset(VM.grid)=Grid,
@@ -260,9 +261,9 @@ find_indivizers(F,R):-clause(individuation_macros(F,R),Body),catch(Body,_,fail),
 %find_indivizers(F,is_fti_stepr):- is_fti_stepr(F).
 find_indivizers(F,is_fti_step):- is_fti_step(F), atom(F), current_predicate(F/1).
 find_indivizers(F,is_item):-clause(individuation_macros(F,R),Body),catch(Body,_,fail),member(F,R).
-list_of_indivizers(S):- findall(F,find_indivizers(F,_),LS1),list_to_set(LS1,R),reverse(R,S).
+list_of_indivizers(S):- findall(F+R,find_indivizers(F,R),LS1),predsort(sort_on(arg(2)),LS1,S).
 show_indivizers:- update_changes, list_of_indivizers(L),
- forall(nth_above(800,N,L,E),
+ forall(nth_above(800,N,L,E+_),
   (find_indivizers(E,R),format('~N'),sformat(S,'~t~d~t  ~w:  ~t~w',[N,E,R]),print_menu_cmd1(write(S),E),nl)).
 do_indivizer_number(N):- 
  list_of_indivizers(L),nth_above(800,N,L,E), set_indivs_mode(E),
@@ -445,8 +446,8 @@ maybe_optimize_objects(InC00,OutC00,InCR,OutCR):-
   maybe_fix_group(OutC0,OutCRFGBG),
   mostly_fg_objs(InCRFGBG,InCR),
   mostly_fg_objs(OutCRFGBG,OutCR),
-  show_changes(InC0,InCR),
-  show_changes(OutC0,OutCR))))))),ran_collapsed)),
+  nop((show_changes(InC0,InCR),
+  show_changes(OutC0,OutCR))))))))),ran_collapsed)),
    ((InC00\=@=InCR;OutC00\=@=OutCR),(InCR\==[],OutCR\==[])),!,
   write(S).
 
@@ -490,21 +491,23 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
  (((
   banner_lines(orange), %visible_order(InC,InCR),
  if_t( once(true; \+ nb_current(menu_key,'i')),
+
  w_section(show_individuated_learning,must_det_ll((
    %when_in_html(if_wants_output_for(guess_some_relations,guess_some_relations(InC,OutC))),
    %when_in_html(if_wants_output_for(sort_some_relations,sort_some_relations(InC,OutC))),
-   if_wants_output_for(learn_group_mapping,(sub_var(trn,ID1), learn_group_mapping(InCR,OutCR))),
-   if_wants_output_for(learn_group_mapping_of_tst, (sub_var(tst,ID1),learn_group_mapping(InCR,OutCR))), 
-   if_wants_output_for(show_safe_assumed_mapped, show_safe_assumed_mapped),
+   if_wants_output_for(learn_group_mapping,        if_t(sub_var(trn,ID1), learn_group_mapping(InCR,OutCR))),
+   if_wants_output_for(learn_group_mapping_of_tst, if_t(sub_var(tst,ID1), learn_group_mapping(InCR,OutCR))), 
 
+
+   if_wants_output_for(show_safe_assumed_mapped, show_safe_assumed_mapped),
    if_wants_output_for(show_test_associatable_groups, 
        forall(member(In1,InC),show_test_associatable_groups(ROptions,ID1,In1,GridOut))), 
 
    if_wants_output_for(try_each_using_training,
-     forall(try_each_using_training(InC,GridOut,Rules,OurOut),
+     forall(try_each_using_training(InC,GridOut,RulesUsed,OurOut),
       ignore((
        print_grid(try_each_using_training,OurOut),
-       nop(pp(Rules)),
+       nop(pp(RulesUsed)),
        banner_lines(orange,2))))))))),
 
   banner_lines(orange,4))))))))))))),!.
@@ -532,9 +535,11 @@ arc_spyable_keyboard_key(try_each_using_training,'u').
 
 
 show_test_associatable_groups(ROptions,ID1,InC,GridOut):- 
-  print_grid(show_test_assocs(ROptions,ID1),InC),
+  print_grid(wqs(show_test_assocs(ROptions,ID1)),InC),
   forall(
-    ((use_test_associatable_group(InC,Sols)*-> show_result("Our Learned Sols", Sols,GridOut,_); arcdbg_info(red,warn("No Learned Sols")))),
+    must_det_ll1((use_test_associatable_group(InC,Sols)
+      *-> show_result("Our Learned Sols", Sols,GridOut,_)
+        ; arcdbg_info(red,warn("No Learned Sols")))),
     true).
 
 
@@ -1261,20 +1266,27 @@ nsew_2(VM):-
   nsew_2(VM),!.
 nsew_2(_).
 
+overlapping_points(PointsRest,CantHave):- member(P1,PointsRest),member(P1,CantHave).
 
 % =====================================================================
 is_fti_step(colormass_3).
 % =====================================================================
+%colormass_3(_VM):- !.
 colormass_3(VM):- 
+  globalpoints(VM.objs,CantHave),
   Points = VM.lo_points,
-  select(C-P1,Points,Points1),
+  intersection(CantHave,Points,_RemoveThese,_,KeepThese),
+  select(C-P1,KeepThese,Points1),
   member(Nsew,[s,e]),
   is_adjacent_point(P1,Nsew,P2),
   select(C-P2,Points1,PointsRest),
   FirstTwo = [C-P1,C-P2],
-  all_individuals_near(_SkipVM,Nsew,nsew,C,FirstTwo,PointsRest,LeftOver,GPoints),!,
+  %\+ overlapping_points(FirstTwo,CantHave),
+  all_individuals_near(_SkipVM,Nsew,nsew,C,FirstTwo,PointsRest,LeftOver,GPoints),
+  %\+ overlapping_points(GPoints,CantHave),!,
   append(FirstTwo,GPoints,IndivPoints),
   sort(IndivPoints,IndivPointSet),
+  print_ss(cm3,VM.objs,IndivPointSet),
   length(IndivPointSet,Len),Len>=3,
   \+ (member(C-P3,IndivPointSet),member(C-P4,LeftOver),is_adjacent_point(P3,Card,P4),n_s_e_w(Card)),
   make_indiv_object(VM,[iz(type(colormass)),iz(media(shaped)),birth(colormass_3)],IndivPointSet,NewObj),
@@ -1509,7 +1521,9 @@ to_props_and_globalpoints(ObjL,_Ans,_GOPoints):- is_grid(ObjL),!,fail.
 to_props_and_globalpoints(ObjL,Ans,GOPoints):- get_gpoints_and_props(ObjL,GOPoints,Ans).
 ogs_into_obj_props( OutGrid,AnsProps,Obj):- like_object(AnsProps,OutGrid,Obj),!.
 
-like_object(Ans,Out,ObjO)):- 
+*/
+
+like_object(Ans,Out,ObjO):- 
   get_gpoints_and_props(Ans,GOPoints,Props),
   grid_to_gid(Out,GID),grid_size(Out,GH,GV), 
   make_indiv_object_s(GID,GH,GV,Props,GOPoints,ObjO).
@@ -1519,7 +1533,6 @@ like_object(Ans,Out,obj([f_grid(Grid),grid(Grid)|ObjO])):-
   grid_size(Out,GH,GV),
   grid_to_gid(Out,GID),
   make_indiv_object_s(GID,GH,GV,Props,GOPoints,obj(ObjO)).
-*/
 
 %ogs_into_obj_props(I,GPoints):- localpoints(I,LPoints),loc2D(I,OH,OV),offset_points(OH,OV,LPoints,GPoints).
 
@@ -2201,7 +2214,7 @@ into_fti(ID,ROptions,GridIn0,VM):-
    % Original copies of Grid and point representations
    start_grid:Grid, 
    ngrid:_,
-%=%   rule_dir: ROptions,
+   rule_dir: ROptions,
    start_points:Points, % repaired:[],
    % objects found in grid and object that are reserved to not be found
    objs:[],  robjs:Reserved, % objs_prev:[],

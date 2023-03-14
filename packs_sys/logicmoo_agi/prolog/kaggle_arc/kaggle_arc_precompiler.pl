@@ -8,6 +8,7 @@
 
 
 :- meta_predicate(must_det_ll(0)).
+:- meta_predicate(must_det_ll1(0)).
 :- meta_predicate(must_det_ll_failed(0)).
 :- meta_predicate(must_not_error(0)).
 %:- meta_predicate(must_det_l(0)).
@@ -26,12 +27,13 @@ must_det_ll_maplist(P2,[HA|TA],[HB|TB]):- must_det_ll(call(P2,HA,HB)), must_det_
 must_det_ll_maplist(_,[],[],[]):-!.
 must_det_ll_maplist(P3,[HA|TA],[HB|TB],[HC|TC]):- must_det_ll(call(P3,HA,HB,HC)), must_det_ll_maplist(P3,TA,TB,TC).
 
-must_det_ll(G):- notrace(arc_html),!, ignore(notrace(G)).
-must_det_ll(G):- tracing,!, (call(G)->true;must_det_ll_failed(G)),!.
+must_det_ll(G):- !, once((notrace(G)*->true;must_det_ll_failed(G))).
+must_det_ll(G):- notrace(arc_html),!, ignore(notrace(G)),!.
+must_det_ll(G):- tracing,!, once((call(G)*->true;must_det_ll_failed(G))).
 %must_det_ll(X):- !,must_not_error(X).
 must_det_ll((X,Goal)):- is_trace_call(X),!,call((itrace,Goal)).
 must_det_ll(X):- is_trace_call(X),!,itrace.
-must_det_ll(X):- nb_current(no_must_det_ll,t),!,call(X).
+must_det_ll(X):- nb_current(no_must_det_ll,t),!,call(X),!.
 must_det_ll(X):- \+ callable(X), !, throw(must_det_ll_not_callable(X)).
 must_det_ll((A*->X;Y)):- !,(must_not_error(A)*->must_det_ll(X);must_det_ll(Y)).
 must_det_ll((A->X;Y)):- !,(must_not_error(A)->must_det_ll(X);must_det_ll(Y)).
@@ -40,7 +42,7 @@ must_det_ll(my_maplist(P1,List)):- !, must_det_ll_maplist(P1,List).
 must_det_ll(my_maplist(P2,ListA,ListB)):- !, must_det_ll_maplist(P2,ListA,ListB).
 must_det_ll(my_maplist(P3,ListA,ListB,ListC)):- !, must_det_ll_maplist(P3,ListA,ListB,ListC).
 must_det_ll((X,Cut,Y)):- (Cut==(!)), !, (must_det_ll(X),!,must_det_ll(Y)).
-must_det_ll((X,Y)):- !, (must_det_ll(X),must_det_ll(Y)),!.
+must_det_ll((X,Y)):- !, (must_det_ll(X),!,must_det_ll(Y)).
 %must_det_ll(X):- notrace(catch(X,_,fail)),!.
 must_det_ll(X):- conjuncts_to_list(X,List),List\=[_],!,my_maplist(must_det_ll,List).
 must_det_ll(must_det_ll(X)):- !, must_det_ll(X).
@@ -55,11 +57,13 @@ must_det_ll(\+ (X, \+ Y)):- !, must_det_ll(forall(must_not_error(X),must_not_err
 must_det_ll((X;Y)):- !, ((must_not_error(X);must_not_error(Y))->true;must_det_ll_failed(X;Y)).
 must_det_ll(\+ (X)):- !, (\+ must_not_error(X) -> true ; must_det_ll_failed(\+ X)).
 %must_det_ll((M:Y)):- nonvar(M), !, M:must_det_ll(Y).
-must_det_ll(X):- tracing,!,must_not_error(X).
-must_det_ll(once(A)):- !, once(must_det_ll(A)).
-must_det_ll(X):- 
+must_det_ll(X):- must_det_ll1(X),!.
+
+must_det_ll1(X):- tracing,!,must_not_error(X),!.
+must_det_ll1(once(A)):- !, once(must_det_ll(A)).
+must_det_ll1(X):- 
   strip_module(X,M,P),functor(P,F,A),setup_call_cleanup(nop(trace(M:F/A,+fail)),(must_not_error(X)*->true;must_det_ll_failed(X)),
-    nop(trace(M:F/A,-fail))).
+    nop(trace(M:F/A,-fail))),!.
 
 %must_not_error(G):- must(once(G)).
 
@@ -130,7 +134,7 @@ must_be_free(Nonfree):- arcST,u_dmsg(must_be_free(Nonfree)),
 must_be_nonvar(Nonvar):- nonvar_or_ci(Nonvar),!.
 must_be_nonvar(IsVar):- arcST,u_dmsg(must_be_nonvar(IsVar)),ibreak,fail.
 
-itrace:- !.
+%itrace:- !.
 itrace:- \+ current_prolog_flag(debug,true),!.
 itrace:- if_thread_main(trace),!.
 ibreak:- if_thread_main(((trace,break))).

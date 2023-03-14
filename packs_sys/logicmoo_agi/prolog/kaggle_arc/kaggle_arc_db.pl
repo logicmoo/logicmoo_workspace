@@ -9,6 +9,7 @@
 %:- dynamic(row_mem/34).
 :- dynamic(gid_glyph_oid/3).
 
+%point_atoms :- false.
 point_atoms :- true.
 
 :- dynamic(cindv/3).
@@ -193,7 +194,7 @@ make_default_grid(C,H,V,Grid):- ensure_make_grid(H,V,Grid),set_grid_default(C,Gr
 set_grid_default(C,Grid):- mapgrid(ignore_equal(C),Grid).
 
 make_grid(H,V,Grid):- (H<1;V<1),!,u_dmsg(make_grid(H,V,Grid)),!,
-  with_toplevel_pp(ansi,((write('<pre>'),nop(bt),nop(ibreak)))),!,fail.
+  with_toplevel_pp(ansi,((write('<pre>'),arcST,ibreak))),!,fail.
 make_grid(H,V,Grid):- between(1,40,H),between(1,40,V),  % max_min(H,0,HH,_), max_min(V,0,VV,_), %max_min(HH,32,_,HHH),max_min(VV,32,_,VVV),!,    
    ensure_make_grid(H,V,G),G=Grid.
 

@@ -6,6 +6,46 @@
 */
 :- include(kaggle_arc_header).
 
+
+
+grid2objs(Grid,LisOfLists):- ensure_grid(Grid),
+  localpoints(Grid,LPs),reclump_points(LPs,LisOfLists).
+
+is_adjacent_cpoint(C-P1,Dir,C-P2):- is_adjacent_point(P1,Dir,P2), Dir\==c.
+
+reclump_points(LPs,OUT):- 
+  select(CP1,LPs,LPs1),!,
+  reclump_points(LPs1,[CP1],OUT).
+
+reclump_points([],CPSoFar,[CPSoFar]):-!.
+reclump_points(LPs,CPSoFar,[CPSoFar|OUT]):-
+  member(CP1,CPSoFar), is_adjacent_cpoint(CP1,_Dir,CP2), select(CP2,LPs,LPs1),!,
+  reclump_points(LPs1,[CP2|CPSoFar],OUT).
+reclump_points([CP0|LPs],CPSoFar,[CPSoFar|OUT]):- reclump_points(LPs,[CP0],OUT).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 :- discontiguous stuff_options1/2.
 :- discontiguous stuff_options1/3.
 :- discontiguous stuff_options/2.
@@ -217,6 +257,8 @@ add_stuff_missing(_,_,Each,Target,Result):- add_global_points(Each,Target,Result
 stuff_options1(whatWithType,remove_stuff_matching).
 stuff_options(whatWithType,change_stuff_not_matching).
 stuff_options(whatWithType,add_stuff_missing).
+
+
 
 
 :- include(kaggle_arc_footer).

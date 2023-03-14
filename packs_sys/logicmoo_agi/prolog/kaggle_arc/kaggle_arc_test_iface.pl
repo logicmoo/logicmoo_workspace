@@ -141,7 +141,7 @@ find_tests(F):-
 find_f_tests(F):- quick_test_menu(F).
 find_g_tests(F):- ping_indiv_grid(F).
 %find_g_tests(F):- is_fti_stepr(F).
-%find_g_tests(F):- is_fti_step(F).
+find_g_tests(F):- uses_test_id(F).
 find_g_tests(F):- find_tests(F).
 
 list_of_tests(S):- findall(F,find_f_tests(F),L1),findall(F,find_g_tests(F),L),sort_safe(L,L2),append(L1,L2,L12),list_to_set(L12,S).
@@ -308,6 +308,10 @@ do_menu_key(Name):- atom(Name), atom_length(Name,N), N>=3,do_menu_name(Name).
 do_menu_key(Text):- atom(Text),atom_concat(' ',Text,Text),Text\=='', !,do_menu_key(Text).
 do_menu_key(Text):- atom(Text),atom_concat(Text,' ',Text),Text\=='', !,do_menu_key(Text).
 do_menu_key(Text):- atom(Text),atom_concat(Text,'\r',Text),Text\=='', !,do_menu_key(Text).
+
+
+do_menu_key(OID):- atom(OID),oid_to_obj(OID,Obj),!,show_indiv(Obj).
+
 
 % refering to a Test Suite or Object
 do_menu_key(Key):- ground(Key), Key = (TestID>ExampleNum*_IO),!,set_example_num(ExampleNum),set_current_test(TestID),
@@ -664,7 +668,8 @@ into_test_cmd(Cmd,Cmd).
 %get_pair_cmd(Mode):- luser_getval('cmd',Mode).
 
 % Hides solution grid from code
-kaggle_arc_io_safe(TestID,ExampleNum,IO,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), if_no_peeking((((ExampleNum*IO) \= ((tst+_)*out)))).
+kaggle_arc_io_safe(TestID,ExampleNum,IO,G):- kaggle_arc_io(TestID,ExampleNum,IO,G), 
+  (((((ExampleNum*IO) \= ((tst+_)*out))))).
 
 
 test_grids(TestID,G):- get_pair_mode(entire_suite), !, kaggle_arc_io_safe(TestID,_ExampleNum,_IO,G).
@@ -1359,7 +1364,7 @@ shell_op(G):- tee_op(G).
 
 my_shell_format(F,A):- shell_op((sformat(S,F,A), shell(S))).
 
-warn_skip(Goal):- nop(u_dmsg(warn_skip(Goal))).
+warn_skip(Goal):- u_dmsg(warn_skip(Goal)).
 
 save_supertest(TestID):- is_list(TestID),!,my_maplist(save_supertest,TestID).
 save_supertest(TestID):- ensure_test(TestID), save_supertest(TestID,_File).

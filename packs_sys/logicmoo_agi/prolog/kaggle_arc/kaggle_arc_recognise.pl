@@ -44,7 +44,7 @@ test_ogs_for_ans(PF,TestID,In,Out):- % options: call,step,redo,exit,fail
 
 show_ogs_ans_success(TestID,Answers,In,Out):- 
   print_ss(TestID,In,Out),!,
-  must_det_ll((treeify_props(Answers,R),
+  must_det_ll((treeify_props(show_ogs_ans_success,Answers,R),
   pp(R))),
   forall(member(Ans,Answers),show_answer(Ans,In,Out)),!.
 

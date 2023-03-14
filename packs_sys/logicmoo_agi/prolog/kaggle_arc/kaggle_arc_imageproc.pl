@@ -317,7 +317,7 @@ remove_global_cpoints(Point,Grid,GridO):- point_to_hvc(Point,H,V,IfSame),
                                   Grid=GridO).
 
 %remove_global_cpoints(Point,Grid,GridO):- set_local _points(,Point,Grid,GridO).
-remove_global_cpoints(Point,Grid,Grid):-  nop(u_dmsg(warn(skip(remove_global_points(Point))))).
+remove_global_cpoints(Point,Grid,Grid):-  nop(warn_skip(remove_global_points(Point))).
 
 same_color(IfSame,Old):- \+ \+ IfSame = Old.
 
@@ -335,7 +335,7 @@ pred_global_cpoints(Pred7,Color,[H|T],Grid,GridO):- !, pred_global_cpoints(Pred7
 pred_global_cpoints(Pred7,FG,Point,Grid,GridO):- FG == fg, point_to_hvc(Point,H,V,C), !, hv_c_value_or(Grid,Old,H,V,_), call(Pred7,H,V,C,Old,Grid,GridO).
 pred_global_cpoints(Pred7,Color,Point,Grid,GridO):- point_to_hvc(Point, H,V,_),  hv_c_value_or(Grid,Old,H,V,_),  call(Pred7,H,V,Color,Old,Grid,GridO).
 %pred_global_cpo ints(Pred7,Color,Point,Grid,GridO):- set_local _points(Pred7,,Point,Grid,GridO).
-pred_global_cpoints(Pred7,Color,Point,Grid,Grid):-  nop(u_dmsg(warn(skip(pred_global_points(Pred7,Color,Point))))).
+pred_global_cpoints(Pred7,Color,Point,Grid,Grid):-  nop(warn_skip(((pred_global_points(Pred7,Color,Point))))).
 
 
 
@@ -356,7 +356,7 @@ add_global_cpoints(Color,[H|T],Grid,GridO):- !, add_global_cpoints(Color,H,Grid,
 add_global_cpoints(FG,Point,Grid,GridO):- get_fg_label(FGL), FG == FGL, point_to_hvc(Point, H,V,C), !, replace_global_hvc_point(H,V,C,_,Grid,GridO).
 add_global_cpoints(Color,Point,Grid,GridO):- point_to_hvc(Point, H,V,_),   replace_global_hvc_point(H,V,Color,_,Grid,GridO).
 %add_global_cpoints(Color,Po int,Grid,GridO):- set_local _points(,Point,Grid,GridO).
-add_global_cpoints(Color,Point,Grid,Grid):-  nop(u_dmsg(warn(skip(add_global_points(Color,Point))))).
+add_global_cpoints(Color,Point,Grid,Grid):-  nop(warn_skip(((add_global_points(Color,Point))))).
 
 
 
@@ -372,7 +372,7 @@ set_local_po ints(C,Point,Grid,GridO):- point_t o_hvc(H,V,Old,Point), replace_lo
 set_local_points(Point,Grid,GridO):- replace_local_points(Point,_AnyOldColor,Grid,GridO),!.
 set_local_points(Point,Grid,GridO):- arcST,ignore((rrtrace((replace_local_points(Point,_AnyOldColor,Grid,GridO))),ibreak)),!.
 %set_local_points(Point,Grid,GridO):- set_local_points(,Point,Grid,GridO).
-%set_local_points(Point,Grid,Grid):-  u_dmsg(warn(skip(set_local_points(Point)))).
+%set_local_points(Point,Grid,Grid):-  warn_skip(((set_local_points(Point)))).
 
 
 set_all_fg(C0,Grid,GridO):- color_code(C0,C),get_bgc(X),map_pred(if_not_bgc_then(X,C), Grid, GridO).
@@ -678,22 +678,39 @@ close_color(green,cyan).
 
 grid_size_term(I,size2D(X,Y)):- grid_size(I,X,Y),!.
 
+gsize_member(giz(grid_sz(X,Y)),X,Y).
+gsize_member(grid_size(X,Y),X,Y).
+gsize_member(vis2D(X,Y),X,Y).
+
+
 :- decl_pt(grid_size(prefer_grid,_,_)).
 %grid_size(Points,H,V):- is_vm_map(Points),!,Points.grid_size=grid_size(H,V).
 grid_size(NIL,1,1):- NIL==[],!.
-grid_size(G,H,V):- notrace(is_grid(G)),!,grid_size_nd(G,H,V),!.
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
-grid_size(I,X,Y):- notrace(is_object(I)),indv_props_list(I,L),(member(giz(grid_sz(X,Y)),L);member(grid_size(X,Y),L);member(vis2D(X,Y),L)),!.
+grid_size(GID,H,V):- atom(GID),gid_to_grid(GID,Grid),!,grid_size_nd(Grid,H,V),!.
+grid_size(OID,H,V):- atom(OID),oid_to_parent_gid(OID,GID),grid_size(GID,H,V),!.
+grid_size(I,H,V):- notrace(is_object(I)),indv_props_list(I,L),gsize_member(E,H,V),member(E,L),!.
 %grid_size(G,H,V):- quietly(is_object(G)), !, vis2D(G,H,V).
 grid_size(Points,H,V):- is_points_list(Points),!,points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
 %grid_size(G,H,V):- is_graid(G,GG),!, grid_size(GG,H,V).
-grid_size(G,H,V):- notrace(is_vm_map(G)),H = G.h,V = G.v,!,grid_size_nd(G,H,V),!.
-grid_size(G,X,Y):- notrace(is_group(G)),!,mapgroup(grid_size_term,G,Offsets),sort_safe(Offsets,HighToLow),last(HighToLow,size2D(X,Y)).
+grid_size(G,H,V):- notrace(is_vm_map(G)),H = G.h,V = G.v, !.
+grid_size(G,H,V):- notrace(is_group(G)),mapgroup(grid_size_term,G,Offsets),grid_size_2d(Offsets,H,V),!.
+grid_size(G,H,V):- findall(size2D(H,V),((sub_term(E,G),compound(E),gsize_member(E,H,V))),Offsets),grid_size_2d(Offsets,H,V),!.
 %grid_size([G|G],H,V):- is_list(G), length(G,H),length([G|G],V),!.
-grid_size(Points,H,V):- pmember(grid_size(H,V),Points),ground(H-V),!.
+grid_size(G,H,V):- notrace(is_grid(G)),!,grid_size_nd(G,H,V),!.
 %grid_size([G|G],H,V):- is_list(G),is_list(G), grid_size_nd([G|G],H,V),!.
 %grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
-grid_size(O,30,30):- dmsg(warn(grid_size(O,30,30))),!.
+grid_size(G,H,V):- sub_term(E,G),compound(E),E=giz(gid(GID)),nonvar(GID),grid_size(GID,H,V),!.
+grid_size(G,H,V):- sub_term(E,G),compound(E),E=oid(OID),nonvar(OID),oid_to_parent_gid(OID,GID),grid_size(GID,H,V),!.
+
+grid_size(O,30,30):- arcST,itrace,dmsg(warn(grid_size(O,30,30))),!.
+
+grid_size_2d([size2D(X1,Y1)|Offsets],X,Y):- grid_size_2d(X1,Y1,Offsets,X,Y).
+grid_size_2d(X,Y,[],X,Y):-!.
+grid_size_2d(X1,Y1,[size2D(X2,Y2)|Offsets],X,Y):-
+  max_min(X1,X2,XM,_), max_min(Y1,Y2,YM,_),
+  grid_size_2d(XM,YM,Offsets,X,Y).
+
 
 :- system:import(grid_size/3).
 :- ansi_term:import(grid_size/3).
@@ -702,6 +719,8 @@ grid_size(O,30,30):- dmsg(warn(grid_size(O,30,30))),!.
 %  calc_range(WLoH,WLoV,WHiH,WHiV,WH,WV,Points,LoH,LoV,HiH,HiV,H,V).
 
 calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,Var,WLoH,WLoV,WHiH,WHiV,WH,WV):- plain_var(Var),!.
+calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,size2D(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
+  max_min(WV,IV,V,_),max_min(WH,IH,H,_).
 calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,grid_size(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
   max_min(WV,IV,V,_),max_min(WH,IH,H,_).
 %calc_range_old(WLoH,WLoV,WHiH,WHiV,WH,WV,v_hv(IH,IV),WLoH,WLoV,WHiH,WHiV,H,V):- !,
