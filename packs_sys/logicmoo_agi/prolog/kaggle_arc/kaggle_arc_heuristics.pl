@@ -12,6 +12,177 @@
 :- discontiguous learn_shapelib/7.
 :- discontiguous individuals_from_pair/9.
 
+
+i_pair(WasROptions,GridIn,GridOut):- WasROptions==complete,
+ catch((must_det_ll((
+ check_for_refreshness,
+ ((var(GridIn);var(GridOut))-> current_pair_io(GridIn,GridOut) ; true),
+ maybe_name_the_pair(GridIn,GridOut,PairName),
+ notrace(((((guess_how(HOW,GridIn,GridOut,Stuff1,Stuff2), 
+             guess_how_else(HOW_ELSE,Stuff1,Stuff2,InC,OutC)))))),
+ INDIV = [HOW|HOW_ELSE],
+ show_individuated_pair(PairName,INDIV,GridIn,GridOut,InC,OutC)))),_,fail),!.
+
+i_pair(ROptions,GridIn,GridOut):-
+ must_det_ll((  
+  check_for_refreshness,
+  maybe_name_the_pair(GridIn,GridOut,PairName),
+  individuate_pair(ROptions,GridIn,GridOut,InC,OutC),
+  show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC,OutC))).
+
+
+
+maybe_optimize_objects(InC00,OutC00,InCR,OutCR):-
+ wots(S,
+ w_section(optimize_objects, ((
+ once((must_det_ll((
+  remove_background_only_object(InC00,InC000),
+  remove_background_only_object(OutC00,OutC000),
+ extend_grp_proplist(InC000,InC0),
+ extend_grp_proplist(OutC000,OutC0),
+  maybe_fix_group(InC0,InCRFGBG),
+  maybe_fix_group(OutC0,OutCRFGBG),
+  mostly_fg_objs(InCRFGBG,InCR),
+  mostly_fg_objs(OutCRFGBG,OutCR),
+  nop((show_changes(InC0,InCR),
+  show_changes(OutC0,OutCR))))))))),ran_collapsed)),
+   ((InC00\=@=InCR;OutC00\=@=OutCR),(InCR\==[],OutCR\==[])),!,
+  write(S).
+
+optimize_objects(InC00,OutC00,InC,OutC):-
+  (maybe_optimize_objects(InC00,OutC00,InC,OutC)->true;(InC00=InC,OutC00=OutC)).
+
+
+
+show_individuated_pair(PairName,ROptions,GridIn,GridOfIn,InC,OutC):-  
+  GridIn=@=GridOfIn,!,
+ must_det_ll((
+  into_iog(InC,OutC,IndvS),
+  show_individuated_nonpair(PairName,ROptions,GridIn,GridOfIn,IndvS))).
+
+show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC00,OutC00):- 
+  maybe_optimize_objects(InC00,OutC00,InCR,OutCR),!,
+  show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCR,OutCR),!.
+
+
+show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
+ must_det_ll((
+  grid_to_tid(GridIn,ID1),  grid_to_tid(GridOut,ID2),   
+ w_section(show_individuated_sections,((                          
+  print_side_by_side(red,GridIn,gridIn(ROptions,ID1,PairName),_,GridOut,gridOut(ID2)),
+  as_ngrid(GridIn,GridIn1),as_ngrid(GridOut,GridOut1), xfer_zeros(GridIn1,GridOut1), 
+  print_side_by_side(yellow,GridIn1,ngridIn(ROptions,ID1,PairName),_,GridOut1,ngridOut(ID2)),
+  %trace,
+  grid_size(GridIn,IX,IY),grid_size(GridOut,OX,OY),
+  print_side_by_side(green,print_grid(IX,IY,InCB),before_rm_bg(ROptions,ID1,PairName),_,print_grid(OX,OY,OutCB),before_rm_bg(ID2)),
+  remove_background_only_object(InCB,InC),remove_background_only_object(OutCB,OutC),
+  %pp(InC),
+  print_side_by_side(green,InC,after_rm_bg(ROptions,ID1),_,OutC,objs(ID2)),
+
+  if_t( \+ nb_current(menu_key,'i'),
+((((((
+
+   show_indivs_side_by_side(inputs,InC),
+   show_indivs_side_by_side(outputs,OutC),
+    
+  %w_section(show_io_groups,show_io_groups(green,ROptions,ID1,InC,ID2,OutC)),
+  %show_io_groups(green,ROptions,ID1,InC,ID2,OutC),
+  =(InCR,InC), =(OutCR,OutC),
+    print_side_by_side(green,InC,lhs(ROptions,ID1),_,OutC,rhs(ROptions,ID2)),
+ true))),
+
+ (((
+  banner_lines(orange), %visible_order(InC,InCR),
+ if_t( once(true; \+ nb_current(menu_key,'i')),
+
+ w_section(show_individuated_learning,must_det_ll((
+   %when_in_html(if_wants_output_for(guess_some_relations,guess_some_relations(InC,OutC))),
+   %when_in_html(if_wants_output_for(sort_some_relations,sort_some_relations(InC,OutC))),
+   if_wants_output_for(learn_group_mapping,        if_t(sub_var(trn,ID1), learn_group_mapping(InCR,OutCR))),
+   if_wants_output_for(learn_group_mapping_of_tst, if_t(sub_var(tst,ID1), learn_group_mapping(InCR,OutCR))), 
+
+
+   if_wants_output_for(show_safe_assumed_mapped, show_safe_assumed_mapped),
+   if_wants_output_for(show_test_associatable_groups, 
+       forall(member(In1,InC),show_test_associatable_groups(ROptions,ID1,In1,GridOut))), 
+
+   if_wants_output_for(try_each_using_training,
+     forall(try_each_using_training(InC,GridOut,RulesUsed,OurOut),
+      ignore((
+       print_grid(try_each_using_training,OurOut),
+       nop(pp(RulesUsed)),
+       banner_lines(orange,2))))))))),
+
+  banner_lines(orange,4))))))))))))),!,
+  if_wants_output_for(show_interesting_props,  show_interesting_props(PairName,InC,OutC)),!.
+  
+
+
+
+show_indivs_side_by_side(W,InC):- \+ wants_html,!,
+  print_list_of(show_indiv(W),W,InC).
+show_indivs_side_by_side(W,InC):- show_indivs_side_by_side_html(W,InC).
+
+show_indivs_side_by_side_html(W,InC):-
+  my_maplist(show_indiv_vert(W),InC,Vert),
+  print_table([Vert]).
+
+show_indiv_vert(W,Obj,TD):- wots(TD,show_indiv(W,Obj)).
+  
+
+
+arc_spyable_keyboard_key(detect_pair_hints,'g').
+arc_spyable_keyboard_key(show_interesting_props,'y').
+arc_spyable_keyboard_key(show_safe_assumed_mapped,'j').
+arc_spyable_keyboard_key(learn_group_mapping,'o').
+arc_spyable_keyboard_key(learn_group_mapping_of_tst,'o').
+arc_spyable_keyboard_key(show_test_associatable_groups,'a').
+arc_spyable_keyboard_key(try_each_using_training,'u').
+
+
+show_test_associatable_groups(ROptions,ID1,InC,GridOut):- 
+  print_grid(wqs(show_test_assocs(ROptions,ID1)),InC),
+  forall(
+    must_det_ll1((use_test_associatable_group(InC,Sols)
+      *-> show_result("Our Learned Sols", Sols,GridOut,_)
+        ; arcdbg_info(red,warn("No Learned Sols")))),
+    true).
+
+
+show_group(ID1,InC):-
+ must_det_ll((
+  length(InC,IL),g_display(InC,InCSS),print_side_by_side(len(ID1,IL)=InCSS),print_grid(combined(ID1)=InC))).
+
+show_io_groups(Color,ROptions,ID1,InC0,ID2,OutC0):- 
+ must_det_ll((    
+    banner_lines(Color,3),  
+    visible_order(InC0,InC), 
+    visible_order(OutC0,OutC),    
+    print_side_by_side(Color,InC,lhs(ROptions,ID1),_,OutC,rhs(ROptions,ID2)),
+    banner_lines(Color,2),
+    show_group(lhs(ID1),InC),
+    banner_lines(Color),
+    show_group(rhs(ID2),OutC),   
+    banner_lines(Color,3))),
+ nop((if_t(should_not_be_io_groups(InC,OutC), ( print(InC),print(OutC),ibreak)))).
+
+should_not_be_io_groups(I,O):- I\==[],O\==[],I=@=O.
+
+visible_order_fg(InC0,InC):- is_grid(InC0),!,InC=InC0.
+visible_order_fg(InC00,InC):- is_list(InC00),!,include(is_used_fg_object,InC00,InC0),visible_order(InC0,InC).
+visible_order_fg(InC,InC).
+visible_order(InC0,InC):- is_grid(InC0),!,InC=InC0.
+visible_order(InC0,InC):- is_list(InC0),!, predsort(sort_on(most_visible),InC0,InC).
+visible_order(InC,InC).
+
+most_visible(Obj,LV):- has_prop(pixel2C(_,_,_),Obj),!, LV= (-1)^1000^1000.
+most_visible(Obj,LV):- area(Obj,1), grid_size(Obj,H,V), Area is (H-1)*(V-1), !, LV=Area^1000^1000.
+most_visible(Obj,LV):- area(Obj,Area),cmass(bg,Obj,BGMass), % cmass(fg,Obj,FGMass),
+  findall(_,doing_map_list(_,_,[Obj|_]),L),length(L,Cnt),NCnt is -Cnt, !, %, NCMass is -CMass,
+  LV = Area^BGMass^NCnt.
+most_visible(_Obj,LV):- LV= (-1)^1000^1000.
+
+
 recalc_sizes(VM,[After|TODO]):-
    recalc_sizes(VM),
    nop((set(VM.lo_program) = [After,recalc_sizes|TODO])).

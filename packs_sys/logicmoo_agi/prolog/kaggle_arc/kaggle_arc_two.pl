@@ -295,10 +295,12 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
      
 
        ;arcdbg(warn(unrunable(TestID,ExampleNum,SolutionProgram))))))),
-    print_side_by_side("our grid", InVM.grid, InVM.objs),!,
-    print_list_of("our objs",InVM.objs),
     ppt("END!!!"+Why+TestID+ExampleNum))),!.
 
+/*
+    print_side_by_side("our old grid", InVM.grid, InVM.objs),!,
+    print_list_of("our old objs",InVM.objs),
+*/
 
 :- luser_linkval(test_rules,[rules]).
 :- luser_linkval(pair_rules,[rules]).

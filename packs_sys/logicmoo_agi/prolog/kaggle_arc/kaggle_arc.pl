@@ -5,10 +5,18 @@
   unless permission or license is granted (contact at business@logicmoo.org)
 */
 :- encoding(iso_latin_1).
+:- if((prolog_load_context(module, M),assert(tmp:loading_arc_from(M)))).
+:- module(kaggle_arc,[]).
+:- '$set_source_module'(user).
+:- endif.
+:- multifile(swi_option:option/2).
+:- dynamic(swi_option:option/2).
+:- use_module(library(option)).
+
 :- set_prolog_flag(stream_type_check,false).
 :- set_prolog_flag(never_pp_hook, true).
 %:- set_prolog_flag(xpce,false).
-%:- set_prolog_flag(pce,false).
+%:- set_prolog_flag(pce,false).f
 %:- set_prolog_flag(windows,false).
 %:- set_prolog_flag(gui_tracer,false).
 
@@ -27,8 +35,8 @@
 my_time(Goal):- time(Goal),flush_tee.
 :- export(plain_var/1).
 plain_var(V):- notrace((var(V), \+ attvar(V), \+ get_attr(V,ci,_))).
-catch_log(G):- ignore(catch(notrace(G),E,((u_dmsg(E=G))))).
-catch_nolog(G):- ignore(catch(notrace(G),E,nop(u_dmsg(E=G)))).
+catch_nolog(G):- ignore(catch(notrace(G),E,once(true;nop(u_dmsg(E=G))))).
+catch_log(G):- ignore(catch(notrace(G),E,((writeln(E=G),catch_nolog(ds))))).
 
 get_user_error(UE):- stream_property(UE,file_no(2)),!.
 get_user_error(UE):- stream_property(UE,alias(user_error)),!.
@@ -153,7 +161,7 @@ update_changes:-
     forall(prolog:make_hook(before, Reload),true),
     notrace((ignore(update_changed_files1))),
     print_message(silent, make(reload(Reload))),
-    make:my_maplist(reload_file, Reload),
+    make:maplist(reload_file, Reload),
     print_message(silent, make(done(Reload))),
     forall(prolog:make_hook(after, Reload),true).
 
@@ -320,7 +328,7 @@ is_vm_map(Dict):- is_dict(Dict),!, get_dict(izmap,Dict,true).
 
 
 
-arc_setval(O,List):- is_list(List),!,my_maplist(arc_setval(O),List).
+arc_setval(O,List):- is_list(List),!,maplist(arc_setval(O),List).
 arc_setval(O,Map):- get_map_pairs(Map,_Type,Pairs),!,my_maplist(arc_setval(O),Pairs).
 arc_setval(O,N=V):- !, arc_setval(O,N,V).
 arc_setval(O,N-V):- !, arc_setval(O,N,V).
@@ -717,7 +725,9 @@ ansi_startup:-
 :- luser_default(no_diags,false).
 :- luser_default(no_individuator, f).
 :- luser_default(grid_size_only,true).
-:- luser_default(cmd,test_easy).
+%:- luser_default(cmd,test_easy).
+%:- luser_default(cmd,learn_ilp).
+:- luser_default(cmd,solve_via_scene_change).
 :- luser_default(cmd2,print_all_info_for_test).
 %:- luser_default(cmd2,test_show_grid_objs).
 :- luser_default(use_individuated_cache,true).
@@ -741,11 +751,11 @@ test_run_arcathon:- run_arcathon.
 test_secret_data:- u_dmsg(todo_test_secret_data).
 
 
-save_arcathon_runner:- qsave_program('logicmoo_arcathon_runner',[stand_alone(true),verbose(true),toplevel(run_arcathon),goal(run_arcathon),% class(runtime),
+save_arcathon_runner:- qsave_program('bin/logicmoo_arcathon_runner',[stand_alone(true),verbose(true),toplevel(run_arcathon),goal(run_arcathon),% class(runtime),
                                              class(runtime),obfuscate(true)]).
-save_arcathon_runner_dbg:- qsave_program('logicmoo_arcathon_runner_dbg',[stand_alone(true),verbose(true),toplevel(run_arcathon),goal(run_arcathon),% class(runtime),
+save_arcathon_runner_dbg:- qsave_program('bin/logicmoo_arcathon_runner_dbg',[stand_alone(true),verbose(true),toplevel(run_arcathon),goal(run_arcathon),% class(runtime),
                                              class(development),obfuscate(false)]).
-save_arcathon_runner_devel:- qsave_program('logicmoo_arcathon_runner_devel',[stand_alone(true),verbose(true),goal(demo),class(development),obfuscate(false)]),
+save_arcathon_runner_devel:- qsave_program('bin/logicmoo_arcathon_runner_devel',[stand_alone(true),verbose(true),goal(demo),class(development),obfuscate(false)]),
                              save_arcathon_runner_dbg, save_arcathon_runner.
 test_compile_arcathon:- save_arcathon_runner_devel.
 
@@ -836,16 +846,26 @@ use_gui_debugger:-
 :- set_current_test(v('1d398264')). 
 :- luser_default(task,v('1d398264')). 
 :- luser_default(task,v('37d3e8b2')). 
+
 */
-create_group_dmiles:- must_det_ll((create_group(dmiles,[
-              'e41c6fd3','0a2355a6', 
-              '37d3e8b2','ea32f347',
+create_group_dmiles:- 
+   must_det_ll((create_group(dmiles_nsn,[
+    'e41c6fd3','ea32f347','37d3e8b2','0a2355a6', 'b230c067','a61f2674','d2abd087','08ed6ac7']))),
+  %must_det_ll((create_group(dmiles_nsn2,[
+  % 'a61f2674','0a2355a6', 'a61ba2ce', 'ea32f347', 'a79310a0', '37d3e8b2', 'e41c6fd3', 'b230c067', '0d3d703e', '08ed6ac7']))),
+   must_det_ll((create_group(dmiles,[
+     
+              'e41c6fd3','ea32f347',
+              '37d3e8b2','0a2355a6',
+              'a79310a0','103eff5b',
+              '33b52de3','d2abd087','08ed6ac7',
               '1b60fb0c','1d398264',
               '0d3d703e','626c0bcc',
               '5582e5ca','25d487eb',
               '32e9702f','f8b3ba0a',
               'b230c067','a61ba2ce',
-              '29c11459','a61f2674']))).
+              '29c11459','a61f2674']))),
+  set_current_test('0a2355a6').
 :- initialization(create_group_dmiles).
 %:- noguitracer.
 % :- set_current_test(t('0d3d703e')).  % :- set_current_test(t('5582e5ca')).
@@ -856,4 +876,6 @@ create_group_dmiles:- must_det_ll((create_group(dmiles,[
 %:- demo.
 :- current_prolog_flag(argv,C),(member('-l',C)->initialize;true).
 :- initialization(scan_uses_test_id).
-
+%:- use_module('./induction/h_muarc_alephlib').
+%:- consult('./induction/h_muarc_aleph').
+%:- tmp:loading_arc_from(M),'$set_source_module'(M).

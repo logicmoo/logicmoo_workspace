@@ -468,6 +468,7 @@ c_o(O,A):- is_object(O),O=obj(_),object_color_glyph_short(O,A),!.
 c_ot(_P2,O,A):- var(O),!,A=O.
 %c_ot(P2,O,A):- term_contains_ansi(O),!,A=O.
 c_ot(_P2,O,A):- term_is_ansi(O),!,A=O.
+c_ot(_,giz(O),giz(O)):- !.
 c_ot(P2,O,A):- lock_doing(c_ot,O,call(P2,O,A)),!.
 c_ot(_P2,O,A):- number(O),!,wots(A,bold_print(write(O))).
 c_ot(P2,-O,-A):- !, c_ot(P2,O,A).

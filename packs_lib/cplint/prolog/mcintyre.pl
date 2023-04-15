@@ -153,7 +153,6 @@ details.
 :-meta_predicate setting_mc(:,-).
 
 :-use_module(library(lists)).
-:-use_module(library(rbtrees)).
 :-use_module(library(apply)).
 :-use_module(library(assoc)).
 :-use_module(library(clpr)).
@@ -2642,7 +2641,7 @@ binomial(N,P,_M,X,Pr):-
 /**
  * multinomial(+N:int,+P:list,+M:module,-S:list) is det
  *
- * samples a value from a multinomiaò probability distribution with parameters
+ * samples a value from a multinomial probability distribution with parameters
  * N and P and returns it in S.
  */
 
@@ -2770,40 +2769,42 @@ exponential(Lambda,_M,V):-
 exponential(Lambda,_M,X,V):-
   V is Lambda*exp(-Lambda*X).
 
+
 /**
- * pascal(+R:int,+P:float,+M:module,-Value:int) is det
+ * negative_binomial(+N:int,+P:float,+M:module,-Value:int) is det
  *
- * samples a value from a pascal probability distribution with parameters
+ * samples a value from a negative binomial probability distribution with parameters
  * R and P and returns it in Value.
- * R is the number of failures
+ * N is the number of successes
  * P is the success probability
  */
 
-% R number of failures
+% N number of successes
 % P probability of success
-pascal(R,P,_M,Value):-
-  pascal_int(0,R,P,V0),
+negative_binomial(N,P,_M,Value):-
   random(RandomVal),
-  pascal_prob_(0,R,P,V0,RandomVal,Value).
+  negative_binomial_prob_(0,N,P,0,RandomVal,Value).
 
-pascal_prob_(I,_,_,CurrentProb,RandomVal,I):-
-  RandomVal =< CurrentProb, !.
-pascal_prob_(I,R,P,CurrentProb,RandomVal,V):-
+negative_binomial_prob_(I,_,_,CurrentProb,RandomVal,I1):-
+  RandomVal =< CurrentProb, !,
+  I1 is I - 1.
+negative_binomial_prob_(I,R,P,CurrentProb,RandomVal,V):-
+  negative_binomial_int(I,R,P,V0),
   I1 is I+1,
-  pascal_int(I1,R,P,V0),
   CurrentProb1 is V0 + CurrentProb,
-  pascal_prob_(I1,R,P,CurrentProb1,RandomVal,V).
+  negative_binomial_prob_(I1,R,P,CurrentProb1,RandomVal,V).
 
 /*
-* K number of successes
-* R number of failures
+* N number of successes
+* X number of failures
 * P probability of success
 */
-pascal_int(K,R,P,Value):-
-  KR1 is K+R-1,
-  binomial_coeff(KR1,K,Bin),
-  Value is Bin*(P**K)*(1-P)**R.
+negative_binomial_int(X,N,P,Value):-
+  XN1 is X+N-1,
+  binomial_coeff(XN1,X,Bin),
+  Value is Bin*(P**N)*(1-P)**X.
 
+binomial_coeff(N,K,0):- N < K, !.
 binomial_coeff(N,K,Val):-
   fact(N,1,NF),
   fact(K,1,KF),
@@ -2948,30 +2949,6 @@ set_mc(M:Parameter,Value):-
 setting_mc(M:P,V):-
   M:local_mc_setting(P,V).
 
-extract_vars_list(L,[],V):-
-  rb_new(T),
-  extract_vars_term(L,T,T1),
-  rb_keys(T1,V).
-
-extract_vars_term(Variable, Var0, Var1) :-
-  var(Variable), !,
-  (rb_lookup(Variable, Var0,_) ->
-    Var1 = Var0
-  ;
-    rb_insert(Var0,Variable,1,Var1)
-  ).
-
-extract_vars_term(Term, Var0, Var1) :-
-  Term=..[_F|Args],
-  extract_vars_tree(Args, Var0, Var1).
-
-
-
-extract_vars_tree([], Var, Var).
-
-extract_vars_tree([Term|Tail], Var0, Var1) :-
-  extract_vars_term(Term, Var0, Var),
-  extract_vars_tree(Tail, Var, Var1).
 
 delete_equal([],_,[]).
 
@@ -3105,7 +3082,7 @@ mcintyre_expansion((Head:=Body),Clause) :-
   Head=(H~Distr0), !,
   add_arg(H,Var,H1),
   switch_finite(Distr0,Distr),
-  extract_vars_list([Head,Body],[],VC),
+  term_variables([Head,Body],VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
     generate_clause_distr(H1,Body,[],M,R,Var,Distr,Clause)
@@ -3122,7 +3099,7 @@ mcintyre_expansion((Head :- Body), Clauses):-
   Head = (_;_), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list((Head :- Body),[],VC),
+  term_variables((Head :- Body),VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
     generate_rules(HeadList,Body,HeadList,[],M,R,0,Clauses)
@@ -3140,7 +3117,7 @@ mcintyre_expansion((Head:-Body),Clause) :-
   Distr0=..[D,Var|Pars],
   is_dist(M,D),!,
   Distr=..[D|Pars],
-  extract_vars_list([Head,Body],[],VC0),
+  term_variables([Head,Body],VC0),
   delete_equal(VC0,Var,VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
@@ -3165,7 +3142,7 @@ mcintyre_expansion((Head :- Body), Clauses) :-
   (Head = (H:_);Head = (_::H)), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list((Head :- Body),[],VC),
+  term_variables((Head :- Body),VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
     generate_clause_samp(H,Body,HeadList,[],M,R,0,Clauses)
@@ -3180,7 +3157,7 @@ mcintyre_expansion(Head,Clauses) :-
   Head=(_;_), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list(Head,[],VC),
+  term_variables(Head,VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
     generate_rules_fact(HeadList,HeadList,[],M,R,0,Clauses)
@@ -3197,7 +3174,7 @@ mcintyre_expansion(Head,Clause) :-
   !,
   switch_finite(Distr0,Distr),
   add_arg(H,Var,H1),
-  extract_vars_list(Head,[],VC),
+  term_variables(Head,VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
     generate_clause_distr(H1,true,[],M,R,Var,Distr,Clause)
@@ -3215,7 +3192,7 @@ mcintyre_expansion(Head,Clause) :-
   Distr0=..[D,Var|Pars],
   is_dist(M,D),!,
   Distr=..[D|Pars],
-  extract_vars_list([Head],[],VC0),
+  term_variables([Head],VC0),
   delete_equal(VC0,Var,VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
@@ -3250,7 +3227,7 @@ mcintyre_expansion(Head,Clause) :-
   (Head=(H:_);Head=(_::H)), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list(HeadList,[],VC),
+  term_variables(HeadList,VC),
   get_next_rule_number(M,R),
   (M:local_mc_setting(single_var,true)->
     generate_clause_samp(H,true,HeadList,[],M,R,0,Clause)
@@ -3320,7 +3297,7 @@ is_dist(_M,D):-
     multinomial,
     geometric,
     exponential,
-    pascal,
+    negative_binomial,
     user
     ]),!.
 

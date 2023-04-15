@@ -1,4 +1,3 @@
-
 /*
 
 from typing import (
@@ -285,8 +284,8 @@ l_solve('28bf18c6', IN, OUT) :-
     ].
 l_solve('3af2c5a8', IN, OUT) :-
     [ f(vmirror, IN:'Piece', X1:'Piece'),
-      f(hconcat, IN:'Grid', X1:'Grid', X2:'Grid'),
-      f(hmirror, X2:'Piece', X3:'Piece'),
+      f(hconcat, IN:'Grid', X1:'Grid', X2:'Grid'), 
+      f(hmirror, X2:'Piece', X3:'Piece'),      
       f(vconcat, X2:'Grid', X3:'Grid', OUT:'Grid')
     ].
 l_solve('44f52bb0', IN, OUT) :-

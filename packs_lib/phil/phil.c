@@ -48,9 +48,11 @@ int Regularized;        // 1 if regularization is enabled otherwise 0
 //FILE*expectationsFile0;
 
 // ++++++++++ Common declaration util functions for Gradient descent and EM +++++++++++++++
+void printMessage(FILE *fp, char* message); // print a message in a file to debug the code
 node *new_node(double val, char type[]);
 node *add_sibling(node *n, double val, char type[]);
 node *add_child(node *n, double val, char type[]);
+void free_nodes (node **nodes_ex, int lenNodes);
 void construct_leaves_node(node **leaves_node, int lenRules);
 void printAC(node *root, char *Choice);
 double randInRange(double min, double max);
@@ -103,6 +105,12 @@ static foreign_t pl_emphil(term_t Nodes, term_t Params, term_t RegParams, term_t
 static foreign_t pl_forward(term_t Circuit, term_t Parameters, term_t NR1, term_t Output);
 
 // ++++++++++ Common util functions for Gradient descent and EM +++++++++++++++
+
+void printMessage(FILE *fp, char* message){
+  fp = fopen("debug.txt", "a");
+  fprintf(fp, "%s", message);
+  fclose(fp); 
+}
 node *new_node(double val, char type[])
 {
   node *new_node = malloc(sizeof(node));
@@ -139,6 +147,16 @@ node *add_child(node *n, double val, char type[])
     return add_sibling(n->child, val, type);
   else
     return (n->child = new_node(val, type));
+}
+
+// Free all aritmetic circuits
+void free_nodes (node **nodes_ex, int lenNodes)
+{
+  for (int i = 0; i < lenNodes; i++)
+  {
+    free(nodes_ex[i]);
+  }
+  free(nodes_ex);
 }
 
 void printTree(node *root, FILE *f)
@@ -241,8 +259,8 @@ void construct_leaves_node(node **leaves_node, int lenRules)
 // Converts an arithmetic circuit (a term prolog) into n-aries tree in C
 node *convertACToTree(term_t AC)
 {
-  int ret, ind, arity, i, j, lenNodes1;
-  size_t lenNodes;
+  int ret, ind, j, lenNodes1;
+  size_t lenNodes, arity, i;
   atom_t name;
   char *type;
   term_t current_term, current_List_term, temp_term;
@@ -658,16 +676,18 @@ int getTrees(term_t Nodes, node ***nodes_ex, int *lenNodes)
 // ++++++++++++++++++++++++ Gradient descent functions  ++++++++++++++++++++++++++
 
 // Creates if it does not exist the directory for the dataset and also create the necessary files
-void openFilesGD(char *statisticsFolder, FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls)
+void openFilesGD(char *statisticsFolder_base, FILE **probsFile, FILE **weightsFile, FILE **Moments0File, FILE **Moments1File, FILE **lls)
 {
   struct stat st = {0};
+  char statisticsFolder[MaxName];
   char statisticsFolder2[MaxName];
   char nameFileProbs[MaxName] = "./";
   char nameFileWeights[MaxName] = "./";
   char nameFileClls[MaxName] = "./";
   char nameFileMoments0[MaxName] = "./";
   char nameFileMoments1[MaxName] = "./";
-  strcpy(statisticsFolder2, statisticsFolder);
+  strcpy(statisticsFolder2, statisticsFolder_base);
+  strcpy(statisticsFolder, statisticsFolder_base);
   strcat(statisticsFolder, "_Statistics/GD");
   // create the directory to save information
   if (stat(statisticsFolder, &st) == -1)
@@ -1202,18 +1222,26 @@ double dphil(node **Nodes, int lenNodes, int MaxIteration, double Probabilities[
 
 // ++++++++++++++++++++++++ Expectation Maximization functions  ++++++++++++++++++++++++++
 
+
 // Creates if it does not exist the directory for the dataset and also create the necessary files
-void openFilesEM(char *statisticsFolder, FILE **probsFile, FILE **expectationsFile, FILE **expectationsFile0, FILE **countsFile, FILE **lls)
+void openFilesEM(char *statisticsFolder_base, FILE **probsFile, FILE **expectationsFile, FILE **expectationsFile0, FILE **countsFile, FILE **lls)
 {
+  // FILE *fp;
+  // printMessage(fp,"Enter in openFilesEM\n");
+  //const char * em_stat_folder = "_Statistics/EM";
+  //static const char em_stat_folder[] = "_Statistics/EM";
   struct stat st = {0};
+  char statisticsFolder[MaxName];
   char statisticsFolder2[MaxName];
   char nameFileProbs[MaxName] = "./";
   char nameFileExpects[MaxName] = "./";
   char nameFileExpects0[MaxName] = "./";
   char nameFileCount[MaxName] = "./";
   char nameFileClls[MaxName] = "./";
-  strcpy(statisticsFolder2, statisticsFolder);
+  strcpy(statisticsFolder, statisticsFolder_base);
+  strcpy(statisticsFolder2, statisticsFolder_base);
   strcat(statisticsFolder, "_Statistics/EM");
+  // snprintf(statisticsFolder, sizeof(statisticsFolder), "%s%s", statisticsFolder_base, em_stat_folder);
   // create the directory to save information
   if (stat(statisticsFolder, &st) == -1)
   {
@@ -1925,6 +1953,9 @@ static foreign_t pl_dphil(term_t Nodes, term_t Params, term_t StopCond, term_t F
   CLL = dphil(nodes_ex, lenNodes, MaxIter, Probabilities, Weights, NR, EA, ER, Eta, Beta1, Beta2, Adam_hat, Max_W, BatchSize, strategy, statisticsFolder, save, seeded, seed, TypeReg, Gamma); // return the CLL and the learned probabilities
   // return the CLL and the learned probabilies
   ret = setResults(CLL, Probabilities, NR, &CLLFinal, &ProbFinal);
+  free(Probabilities);
+  free(Weights);
+  free_nodes(nodes_ex,lenNodes);
   return ret;
 }
 
@@ -1957,6 +1988,13 @@ static foreign_t pl_emphil(term_t Nodes, term_t Params, term_t RegParams, term_t
   CLL = emphil(nodes_ex, lenNodes, Probabilities, Expectations, Expectations0, NR, MaxIter, EA, ER, statisticsFolder, save, seeded, seed, TypeReg, Gamma, GammaCount);
   // return the CLL and the learned probabilities
   ret = setResults(CLL, Probabilities, NR, &CLLFinal, &ProbFinal);
+  if (Init == 1) 
+    free(InitParameters);
+  free(Probabilities);
+  // free(Counts);
+  free(Expectations);
+  free(Expectations0);
+  free_nodes(nodes_ex,lenNodes);
   return ret;
 }
 // Given a single AC Circuit, the list of parameters and the number of rules NR, evaluates the AC
@@ -1976,6 +2014,7 @@ static foreign_t pl_forward(term_t Circuit, term_t Parameters, term_t NR, term_t
   // return the computed value
   ret = PL_put_float(out, root->value);
   ret = PL_unify(Output, out);
+  free(Probabilities);
   return ret;
 }
 

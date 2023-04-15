@@ -86,6 +86,9 @@ unplus_split(II^OO,^,II,OO).
 unplus_split(II+OO,+,II,OO).
 
 show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIIOOO,How,III,OOO),
+  copy_term(P2,P22), show_grid_call(P2,I,III), show_grid_call(P22,O,OOO).
+/*
+show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIIOOO,How,III,OOO),
  must_det_ll((grid_to_gid(I,GIDI),grid_to_gid(O,GIDO),
   copy_term(P2,P22),
   grid_call_for_info(P2,I,III,S1),
@@ -94,7 +97,7 @@ show_grid_call(P2,IO,IIIOOO):- is_plus_split(IO,How,I,O),!,unplus_split(IIIOOO,H
        ((O=OOO,tersify(P22,S2),Aligned=false))))),  
   if_t(((III+OOO)\=@=(I+O)), 
      print_side_by_side(green,III,called(S1,left,from(GIDI)),_,OOO,aligned(Aligned,S2,right,from(GIDO)))))),!.
-
+*/
 show_grid_call(P2,I,III):-
   grid_call_for_info(P2,I,III,S1),
    if_t(((III)\=@=(I)), print_side_by_side(green,I,before(S1),_,III,after(S1))),!.
@@ -205,17 +208,23 @@ set_vm_grid(VM,In):- w_section(debug,set_vm_grid_now(VM,In)).
 set_vm_grid_now(VM,Grp):- 
   data_type(Grp,Type),
   gset(VM.type) = data_type(Type),
-  pp(yellow,set_vm_grid_now(Type)),pp(cyan,Type),fail.
+  pp(yellow,set_vm_grid_now(Type)),pp(cyan,Type),
+  fail.
+
 set_vm_grid_now(VM,In):- VM==In,!.
-set_vm_grid_now(VM,In):- is_vm_map(In),!,map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
+set_vm_grid_now(VM,In):- is_vm_map(In),!,
+  map_to_grid(_Was,In,Obj,_Grid,_Closure), Obj\=@=In, !, set_vm_grid(VM,Obj).
 
 
 set_vm_grid_now(VM,Grid):- is_grid(Grid), !,
+ must_det_ll((
+  grid_size(Grid,H,V), 
+  gset(VM.h)=H, gset(VM.v)=V, 
   gset(VM.grid)=Grid, 
-  grid_size(Grid,H,V), gset(VM.h)=H, gset(VM.v)=V, 
-%  gset(VM.start_points) = VM.lo_points,
+  gset(VM.start_grid)=Grid, 
   localpoints_include_bg(Grid, Points),
-  gset(VM.lo_points)=Points.
+  gset(VM.lo_points)=Points,
+  gset(VM.start_points)=Points)).
 
 set_vm_grid_now(VM,Points):- is_cpoints_list(Points), !,  
 %  gset(VM.start_points) = VM.lo_points,

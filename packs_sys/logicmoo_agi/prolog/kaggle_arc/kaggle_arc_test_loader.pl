@@ -242,6 +242,8 @@ load_json_files1:- load_json_files(eval400,v,'./data/devaluation/*.json').
 %:- load_json_files(t,'./data/test_nar_10x10/*.json').
 load_json_files1:- load_json_files('1D_testset',t,'./data/1D_testset/*.json').
 load_json_files1:- load_json_files('MyTrainingData',t,'./dbigham/Data/MyTrainingData/*.json').
+
+load_json_files1:- load_json_files(michod,t,'./arc-task-generator/conditional_transforms_schema/tasks/0*.json').
 %:- load_json_files(v,'../../secret_data/solu**66/*.json').
 %:- load_json_files(v,'../../secret_data/evaluation/*.json').
 %load_json_files1:- load_deval, load_json_files('secret_data_evaluation',v,'/data/evaluation/*.json').

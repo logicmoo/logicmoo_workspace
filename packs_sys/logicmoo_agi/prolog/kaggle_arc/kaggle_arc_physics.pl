@@ -62,16 +62,37 @@ flip_Once(flipDHV,X,Y):- flipDHV(X,Y).
 flip_Many(Rot,X,Y):- flip_Once(Rot,X,Y),X\=@=Y.
 flip_Many(sameR,X,X).
 
+neighbor_counts(_,_,[],_,[]):-!.
+neighbor_counts(H,V,[C-P1|Ps],Points,[(N-C)-P1|Ps2]):-
+  must_det_ll((
+  neighbor_count1(C,P1,Points,N),
+  neighbor_counts(H,V,Ps,Points,Ps2))).
+
+neighbor_count1(C,_P1,_Points,N):- is_bg_color(C),!,N=0.
+neighbor_count1(C,_P1,_Points,N):- var(C),!,N=200.
+neighbor_count1(C,P1,Points,N):- 
+ findall(Dir,(n_s_e_w(Dir),once((is_adjacent_point_m2(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD)))),DirsC),
+ findall(Dir,(is_diag(Dir),once((is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),==(C,CD)))),DirsD),
+ findall(Dir,(is_adjacent_point(P1,Dir,P2),member(NC-P2,Points),only_color_data(NC,CD),dif_color(C,CD)),DirsE),
+ length(DirsE,E1),
+ length(DirsC,C1),
+ length(DirsD,D1), N is E1+C1*2+D1*2.
+
+neighbor_counts(Grid,GridO):-
+ must_det_ll((
+  globalpoints_maybe_bg(Grid,Points),
+  grid_size(Grid,H,V),
+  neighbor_counts(H,V,Points,Points,CountedPointsO),
+  points_to_grid(H,V,CountedPointsO,GridO))).
 
 %grid_mass_ints(Grid,[[1]]):- Grid=@=[[_]],!. 
-grid_mass_ints(Grid,GridIII):- 
+grid_mass_ints(Grid,GridIII):-
   unique_fg_colors(Grid,Sorted),
   %arc_test_property(Prop),
   mapgrid(normal_w(Sorted),Grid,GridIII),!.
   /*
   %Prop = unique_colors(lst(vals([[cyan,yellow,orange,green,red,blue,black],[orange,cyan,yellow,green,black,red,blue]]),len(7),diff([orange,cyan,yellow,green,black,red,blue]=@=[cyan,yellow,orange,green,red,blue,black])))
-  
-  include(is_fg_color,CC,FG),
+  dmiles  include(is_fg_color,CC,FG),
   (FG==[]->SORT=[fg,black,bg];SORT=FG),!,
   %((unique_fg_colors(Grid,FG)->FG\==[])->true;FG=[black]),
   mapgrid(normal_w(SORT),Grid,GridIII),!.
@@ -92,27 +113,70 @@ normal_w(_ColorSort,Cell,3):- var(Cell),is_fg_color(Cell),!.
 %normal_w(ColorSort,Cell,N):- color_int(Cell,N),!.
 normal_w(_ColorSort,_,0).
 
+
+rav_rot_test([[_,_,green,_],[red,_,green,yellow],[red,blue,blue,_],[red,_,_,yellow]]).
+rav_rot_test([[black,black,green,black],[red,black,green,yellow],[red,blue,blue,black],[red,black,black,yellow]]).
+rav_rot_test([[red,red,red,red,red,red,_,_],[red,red,red,red,red,red,_,_],[_,_,blue,blue,_,_,_,_],[_,_,blue,blue,_,_,_,_],[_,_,blue,blue,green,green,green,green],[_,_,blue,blue,green,green,green,green],[yellow,yellow,_,_,yellow,yellow,_,_],[yellow,yellow,_,_,yellow,yellow,_,_]]).
+rav_rot_test([[red,red,red,red,red,red,black,black],[red,red,red,red,red,red,black,black],[black,black,blue,blue,black,black,black,black],[black,black,blue,blue,black,black,black,black],[black,black,blue,blue,green,green,green,green],[black,black,blue,blue,green,green,green,green],[yellow,yellow,black,black,yellow,yellow,black,black],[yellow,yellow,black,black,yellow,yellow,black,black]]).
+rav_rot_test([[cyan,cyan,cyan,cyan,cyan,cyan,_,_],[cyan,cyan,cyan,cyan,cyan,cyan,_,_],[_,_,cyan,cyan,_,_,_,_],[_,_,cyan,cyan,_,_,_,_],[_,_,cyan,cyan,cyan,cyan,cyan,cyan],[_,_,cyan,cyan,cyan,cyan,cyan,cyan],[cyan,cyan,_,_,cyan,cyan,_,_],[cyan,cyan,_,_,cyan,cyan,_,_]]).
+rav_rot_test([[cyan,cyan,cyan,cyan,cyan,cyan,black,black],[cyan,cyan,cyan,cyan,cyan,cyan,black,black],[black,black,cyan,cyan,black,black,black,black],[black,black,cyan,cyan,black,black,black,black],[black,black,cyan,cyan,cyan,cyan,cyan,cyan],[black,black,cyan,cyan,cyan,cyan,cyan,cyan],[cyan,cyan,black,black,cyan,cyan,black,black],[cyan,cyan,black,black,cyan,cyan,black,black]]).
+rav_rot_test([[black,black,black,black,black,black,_,_],[black,black,black,black,black,black,_,_],[_,_,black,black,_,_,_,_],[_,_,black,black,_,_,_,_],[_,_,black,black,black,black,black,black],[_,_,black,black,black,black,black,black],[black,black,_,_,black,black,_,_],[black,black,_,_,black,black,_,_]]).
+%rav_rot_test(X):- never_this(X,Y),rav_rot_test(Y),into_mono(Y,Z),X=Y.
+rav_rot_test(X):- clause(rav_rot_test(Y),true),into_monochrome2(Y,Z),X=Z.
+
+/*
+show_grav_rot(X):-
+ must_det_ll((
+  into_grid(X,Y),!,
+  into_solid_grid(Y,YY),!,
+  into_monorot(YY,YYY),!,
+  ignore(( 
+   grav_rot(YYY,R1,Y1), reduce_grid(Y1,Z,A), grav_rot(A,R2,AA), 
+    wots(S,writeq(show_grav_rot(R1,Z,R2))), print_ss(S,YY,AA),  
+     ignore((grid_call([R1,R2],Y,YR), wots(S2,writeq(show_grav_rot(R1,R2))), print_ss(S2,Y,YR))),
+  \+ \+ ignore((call(R1,YY,ZZ),call(R2,YY,TT), print_ss(R1-R2,ZZ,TT))),
+  
+  !)))).
+*/
+
+into_monorot(X,Y):- mapgrid(fg_is_fg_is_bg,X,Y), \+ avoid_mono(Y),!.
+into_monorot(X,X). 
+
+
+avoid_mono(Y):- flipSym(rot90,Y),!.
+avoid_mono(Y):- flipSym(flipH,Y),flipSym(flipV,Y),!.
+
+
+fg_is_fg_is_bg(X,bg):- \+ is_fg_color(X),!.
+fg_is_fg_is_bg(_,fg).
+  
+
 /*
 arc_test_property(Prop):-
  get_current_test(TestID),first_current_example_num(trn+N)
  arc_test_property(TestID, gh(N), comp(cbg(black), i-o, _), Prop).
 
 */
-grav_rot(Grid,sameR,Grid):- \+ \+ Grid=[[_]],!.
 grav_rot(Grid,RotG,Rotated):- %must_be_free(RotG),  
-  must_det_ll((into_grid(Grid,GridII),
+  must_det_ll((
+   into_grid(Grid,GridI),   
+   into_monorot(GridI,GridII),
    dif(RotG,rollD),
-   best_grav_rot_grid(GridII,RotG,Rotated))).
+   best_grav_rot_grid(GridII,RotG,_),
+   grid_call(RotG,GridI,Rotated))).
 
-best_grav_rot(Shape,RotG,Rotated):- must_be_free(Rotated),
+/*best_grav_rot(Shape,RotG,Rotated):- must_be_free(Rotated),
     must_det_ll((
     cast_to_grid(Shape,Grid,Uncast),
     best_grav_rot_grid(Grid,RotG,Final),
     uncast(Shape,Uncast,Final,Rotated))).
+*/
 
 best_grav_rot_grid(Grid,sameR,Grid):- \+ \+ Grid=[[_]],!.
-best_grav_rot_grid(Grid,RotG,RotatedG):- must_be_free(Rotated), 
- must_det_ll(( is_grid(Grid), 
+best_grav_rot_grid(GridI,RotG,RotatedG):- must_be_free(Rotated), 
+ must_det_ll(( is_grid(GridI), 
+    %trim_outside(GridI,Grid),
+    =(GridI,Grid),
     grid_mass_ints(Grid,GridInts),
     w(W,RotG)=Template,
     findall(Template,(flip_Many(RotG,GridInts,Rotated),rot_mass(Rotated,W)),Pos),
@@ -152,6 +216,11 @@ map_row_size(N,Len,[_|Rest],Mass):-
    N2 is N * Len, map_row_size(N2,Len,Rest,Mass),!.
 
 
+is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,rot_mass(Top,TopM),rot_mass(Bottem,BottemM),!,BottemM>TopM.
+is_left_heavy(Grid0):- rot270(Grid0,Grid),!,is_top_heavy(Grid).
+split_50_v(Grid,Top,Bottem):- length_safe(Grid,N),H is floor(N/2), length_safe(Top,H),length_safe(Bottem,H),
+    my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
+
 grav_mass(Grid,sameR):- iz(Grid,hv_symmetric),!.
 grav_mass(Grid,RotOut):- vis2D(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut,_).
 
@@ -160,11 +229,6 @@ tips_to_rot(Grid,H,V,[rot270|RotOut],Final):- H<V, !, rot90(Grid,Grid90),!,atrac
 tips_to_rot(Grid,H,V,[rot90|RotOut],Final):- is_top_heavy(Grid), !, rot270(Grid,Grid90), !, tips_to_rot(Grid90,V,H,RotOut,Final).
 %tips_to_rot(Grid,H,V,[rot180|RotOut]):- is_top_heavy(Grid), !, rot180(Grid,Grid90), !, tips_to_rot(Grid90,H,V,RotOut).
 tips_to_rot(Grid,_H,_V,RotOut,Final):- is_left_heavy(Grid)-> (RotOut=[rot180],rot180(Grid,Final)); (RotOut=[sameR],Final=Grid).
-
-is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,rot_mass(Top,TopM),rot_mass(Bottem,BottemM),!,BottemM>TopM.
-is_left_heavy(Grid0):- rot270(Grid0,Grid),!,is_top_heavy(Grid).
-split_50_v(Grid,Top,Bottem):- length_safe(Grid,N),H is floor(N/2), length_safe(Top,H),length_safe(Bottem,H),
-    my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
 
 
 ensure_dir(s). ensure_dir(e). ensure_dir(w). ensure_dir(n).
@@ -553,15 +617,16 @@ related_how(subsumed_by(Offset,OverlapP),O1,O2,Ps1,Ps2,Overlap,P1L,_P2L):- Overl
 related_how(   subsumed(Offset,OverlapP),O1,O2,Ps1,Ps2,Overlap,_P1L,P2L):- Overlap\==[],P2L==[],
   length(Ps1,Len1),length(Ps2,Len2), OverlapP = rational(Len2/Len1), object_offset(O2,O1,Offset).
 
-sees_dir(s,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SY1 >= EY2, D is SY1-EY2.
-sees_dir(n,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SY2 >= EY1, D is SY2-EY1.
-sees_dir(e,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 >= EX2, D is SX1-EX2.
-sees_dir(w,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX2 >= EX1, D is SX2-EX1.
+sees_dir(n,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SY1 >= EY2, D is SY1-EY2.
+sees_dir(s,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SY2 >= EY1, D is SY2-EY1.
+sees_dir(w,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 >= EX2, D is SX1-EX2.
+sees_dir(e,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX2 >= EX1, D is SX2-EX1.
 
 related_how2(sees(DirsDists),O1,O2,Ps1,Ps2,Overlap,P1L,
   SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
   findall(cc(Dir,Dist),(sees_dir(Dir,Dist,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2),Dist<3),DirsDists), 
    DirsDists\==[].
+
 
 %related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 < SX2, SY1 < SY2, EX2 < EX1, EY2 < EY1, How = contained_by(engulfed).
 related_how2(contained_by,O1,O2,Ps1,Ps2,Overlap,P1L,

@@ -39,6 +39,7 @@ test_pita:-
     hmm_mpe,
     meta,
     pcfg,
+    pcfglrdb,
     var_objdb,
     card,
     dt_umbrella,
@@ -86,7 +87,7 @@ test(best_st_weather):-
 :- begin_tests(dt_viral, []).
 :- ensure_loaded(library(examples/dt_viral)).
 test(best_st_viral):-
-  ansi_format([bold,fg(cyan)], '~nThis test takes few seconds.~n',[]),
+  ansi_format([bold,fg(cyan)], '~nThis test takes some time.~n',[]),
   % run((dt_solve(Strategy,ExpValue),close_to(ExpValue,2.217),perm(Strategy,[[marketed(theo)],[marketed(guy)]]))).
   run((dt_solve(Strategy,ExpValue),close_to(ExpValue,3.21),perm(Strategy,[[marketed(theo)],[marketed(martijn)],[marketed(ingo)],[marketed(guy)]]))).
 :- end_tests(dt_viral).
@@ -421,9 +422,9 @@ test(p):-
 :-ensure_loaded(library(examples/abd1)).
 
 test(a):-
-  run((abd_prob(a,P,Exp),close_to(P,0.72),perm(Exp,[e, c]))).
+  run((abd_prob(a,P,Exp),close_to(P,0.72),perm_map(Exp,[[e,c]]))).
 test(bdd_a):-
-  run((abd_bdd_dot_string(a,_BDD,_Var,_VarA,P,Exp),close_to(P,0.72),perm(Exp,[e, c]))).
+  run((abd_bdd_dot_string(a,_BDD,_Var,_VarA,P,Exp),close_to(P,0.72),perm_map(Exp,[[e,c]]))).
 
 :- end_tests(abd1).
 
@@ -432,7 +433,7 @@ test(bdd_a):-
 :-ensure_loaded(library(examples/abd1cons1)).
 
 test(a):-
-  run((abd_prob(a,P,Exp),close_to(P,0.6),perm(Exp,[\+c, e]))).
+  run((abd_prob(a,P,[[e]]),close_to(P,0.6))).
 
 :- end_tests(abd1cons1).
 
@@ -441,7 +442,7 @@ test(a):-
 :-ensure_loaded(library(examples/abd1cons2)).
 
 test(a):-
-  run((abd_prob(a,P,Exp),close_to(P,0.648),perm(Exp,[c, e]))).
+  run((abd_prob(a,P,Exp),close_to(P,0.648),perm_map(Exp,[[c,e]]))).
 
 :- end_tests(abd1cons2).
 
@@ -450,10 +451,9 @@ test(a):-
 :-ensure_loaded(library(examples/abd2)).
 
 test(a):-
-  run((abd_prob(a,P,Exp),close_to(P,0.72),perm(Exp,[f, (\+g), c, d]))).
+  run((abd_prob(a,P,Exp),close_to(P,0.72),perm_map(Exp,[[f,c,d]]))).
 test(bdd_a):-
-  run((abd_bdd_dot_string(a,_BDD,_Var,_VarA,P,Exp),close_to(P,0.72),
-  perm(Exp,[f, (\+g), c, d]))).
+  run((abd_bdd_dot_string(a,_BDD,_Var,_VarA,P,Exp),close_to(P,0.72), perm_map(Exp,[[f,c,d]]))).
 
 :- end_tests(abd2).
 
@@ -462,10 +462,10 @@ test(bdd_a):-
 :-ensure_loaded(library(examples/abd3)).
 
 test(a):-
-  run((abd_prob(a,P,Exp),close_to(P,0.72),perm(Exp,[c, d, f, \+g]))).
+  run((abd_prob(a,P,Exp),close_to(P,0.72),perm_map(Exp,[[c,d,f]]))).
 test(bdd_a):-
   run((abd_bdd_dot_string(a,_BDD,_Var,_VarA,P,Exp),close_to(P,0.72),
-  perm(Exp,[c, d, f, \+g]))).
+  perm_map(Exp,[[c,d,f]]))).
 
 :- end_tests(abd3).
 
@@ -552,8 +552,8 @@ test(ev):-
 
 :-ensure_loaded(library(examples/eruption_mpe)).
 
-test(ev):-
-  run((map(ev,P,Exp),close_to(P,0.08316),
+test(eruption):-
+  run((map(eruption,P,Exp),close_to(P,0.08316),
 	  perm(Exp,[rule(1,sudden_energy_release,[sudden_energy_release:0.7,'':0.30000000000000004],true),
       rule(2,fault_rupture(southwest_northeast),[fault_rupture(southwest_northeast):0.6,'':0.4],true),
       rule(3,fault_rupture(east_west),[fault_rupture(east_west):0.55,'':0.44999999999999996],true),
@@ -643,10 +643,21 @@ test(nobj):-
 :-ensure_loaded(library(examples/pcfg)).
 
 test(pcfg):-
-  run((prob(pcfg([a,b,a,a]),Prob),close_to(Prob,0.0024)
+  run((prob(pcfg([a,b,a,a]),Prob),close_to(Prob,0.0024,0.0001)
   )).
 
 :- end_tests(pcfg).
+
+
+:- begin_tests(pcfglrdb, []).
+
+:-ensure_loaded(library(examples/pcfglrdb)).
+
+test(pcfglrdb):-
+  run((prob(pcfg([a]),Prob),close_to(Prob,0.3)
+  )).
+
+:- end_tests(pcfglrdb).
 
 :- begin_tests(card, []).
 

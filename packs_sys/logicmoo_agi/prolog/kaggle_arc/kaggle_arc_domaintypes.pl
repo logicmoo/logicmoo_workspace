@@ -170,8 +170,8 @@ decl_bg_color(X):- put_attr(X,ci,bg(X)).
 decl_fill_color(X):-  put_attr(X,ci,hollow(X)),
     freeze(X,(mv_peek1(X,V)->(var(V)->true;is_color(V));true)),decl_multivar(X).
 
-decl_multivar(_).
-%decl_multivar(X):- multivar:multivar(X).
+decl_multivar(_):- !, fail, itrace.
+decl_multivar(X):- multivar:multivar(X).
 
 decl_not_color(NC,GC):- is_bg_color(NC),!,decl_many_fg_colors(GC).
 decl_not_color(NC,GC):- decl_fill_color(GC),!,dif(GC,NC).

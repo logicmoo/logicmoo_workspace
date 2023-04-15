@@ -218,7 +218,7 @@ mapgrid(P3,Grid,GridN,GridO):- into_grid_or_var(Grid,G1),into_grid_or_var(GridN,
 mapg_list(P3,Grid,GridN,GridO):- is_list(Grid),!,maplist(mapg_list(P3),Grid,GridN,GridO).
 mapg_list(P3,Grid,GridN,GridO):- call(P3,Grid,GridN,GridO),!.
 
-mapgrid(P2, Grid,GridN):- into_grid_or_var(Grid,G1),into_grid_or_var(GridN,G2),mapg_list(P2, G1,G2).
+mapgrid(P2, Grid,GridN):- into_grid_or_var(Grid,G1),into_grid_or_var(GridN,G2),!,mapg_list(P2, G1,G2).
 mapg_list(P2, Grid,GridN):- is_list(Grid),!,maplist(mapg_list(P2),Grid,GridN).
 mapg_list(P2, Grid,GridN):- p2_call(P2, Grid,GridN),!.
 
@@ -244,6 +244,7 @@ p1_call(and(P1,Q1),E):- must_be(callable,P1),!, (p1_call(P1,E),p1_call(Q1,E)).
 p1_call(not(not(P1)),E):- !, \+ \+ p1_call(P1,E).
 p1_call(not(P1),E):- !, not(p1_call(P1,E)).
 p1_call(once(P1),E):- !, once(p1_call(P1,E)).
+p1_call(ignore(P1),E):- !, ignore(p1_call(P1,E)).
 p1_call(chk(P1),E):- !, \+ \+ (p1_call(P1,E)).
 p1_call( \+ (P1),E):- !, \+ p1_call(P1,E).
 p1_call(P1,E):- !, call(P1,E).
@@ -265,6 +266,7 @@ p2_call(P2,A,B):- call(P2,A,B).
 p1_or(P1A,P1B,X):- p1_call(P1A,X)->true;p1_call(P1B,X).
 p1_and(P1A,P1B,X):- p1_call(P1A,X),p1_call(P1B,X).
 p1_not(P1,E):- \+ p1_call(P1,E).
+p1_ignore(P1,E):- ignore(p1_call(P1,E)).
 p1_arg(N,P1,E):- arg(N,E,Arg),p1_call(P1,Arg).
 p1_subterm(P1,E):- sub_term(Arg,E),p1_call(P1,Arg).
 my_partition(_,[],[],[]):-!.

@@ -515,7 +515,7 @@ whole_ndividuator(TestID):- ensure_test(TestID),
   check_for_refreshness,
   nop(show_test_grids), set_flag(indiv,0),
   compile_and_save_test,
-  with_luser(use_individuated_cache,true,
+  with_individuated_cache(true,
    with_pair_mode(whole_test,
     findall(PairGroups,
     (kaggle_arc(TestID,ExampleNum,In,Out),%nonvar(Out),
@@ -531,7 +531,7 @@ each_ndividuator(TestID):- ensure_test(TestID),
   nop(show_test_grids), set_flag(indiv,0),
   compile_and_save_test,
   findall(PairGroups,
-  with_luser(use_individuated_cache,true,
+  with_individuated_cache(true,
     (with_test_pairs(TestID,ExampleNum,In,Out,
          once(each_ndividuator(TestID,ExampleNum,In,Out,PairGroups))))),
    AllPairGroups),
@@ -549,7 +549,7 @@ get_each_ndividuator(Complete):-
 
 each_ndividuator(TestID,ExampleNum,In,Out, OUTPUT):- 
  name_the_pair(TestID,ExampleNum,In,Out,PairName), 
- findall(pair_result(PairName,Complete,InC,OutC),
+ findall(show_pair_result(PairName,Complete,InC,OutC),
   (get_each_ndividuator(Complete),
    with_indivs_mode(Complete,((
     with_test_pairs(TestID,ExampleNum,In,Out, 
@@ -561,10 +561,10 @@ each_ndividuator(TestID,ExampleNum,In,Out, OUTPUT):-
         print_side_by_side(each_ndividuator(PairName),In,Out),dash_chars,dash_chars|PairGroups].
 
 
-pair_result(PairName,Complete,InC,OutC):-   
-   print_side_by_side(pair_result(PairName,Complete),InC,OutC),
-   w_section(pair_result_objects(PairName,Complete),
-     (my_maplist(show_i(in),InC), dash_chars, my_maplist(show_i(out),OutC),dash_chars)),
+show_pair_result(PairName,Complete,InC,OutC):-   
+   print_side_by_side(show_pair_result(PairName,Complete),InC,OutC),
+   nop((w_section(pair_result_objects(PairName,Complete),
+     (my_maplist(show_i(in),InC), dash_chars, my_maplist(show_i(out),OutC),dash_chars)))),
    !.
 
 show_i(Y,O):- 
@@ -576,17 +576,18 @@ show_i(Y,O):-
 
 ndividuator(TestID):- ensure_test(TestID),
   never_entire_suite,nop(show_test_grids), set_flag(indiv,0),
-  each_ndividuator(TestID),
-  with_test_pairs(TestID,ExampleNum,In,Out,ndividuator(TestID,ExampleNum,In,Out)).
+  %each_ndividuator(TestID),
+  forall(with_test_pairs(TestID,ExampleNum,In,Out,ndividuator(TestID,ExampleNum,In,Out)),true).
 
-ndividuator(TestID,ExampleNum,In,Out):- get_indivs_mode(Complete), ndividuator(TestID,ExampleNum,Complete,In,Out).
+ndividuator(TestID,ExampleNum,In,Out):- 
+ get_indivs_mode(Complete), ndividuator(TestID,ExampleNum,Complete,In,Out).
 ndividuator(TestID,ExampleNum,Complete,In,Out):-  
  with_indivs_mode(Complete,((name_the_pair(TestID,ExampleNum,In,Out,_PairName),
-  with_test_pairs(TestID,ExampleNum,In,Out, i_pair(Complete,In,Out))))).
+   with_test_pairs(TestID,ExampleNum,In,Out, i_pair(Complete,In,Out))))).
 
 show_test_pairs(TestID):- ensure_test(TestID), set_flag(indiv,0),
-  with_test_pairs(TestID,ExampleNum,In,Out,
-   print_side_by_side(green,In,in(show_test_pairs(TestID>ExampleNum)),_,Out,out(show_test_pairs(TestID>ExampleNum)))).
+ forall( with_test_pairs(TestID,ExampleNum,In,Out,
+   print_side_by_side(green,In,in(show_test_pairs(TestID>ExampleNum)),_,Out,out(show_test_pairs(TestID>ExampleNum)))), true).
 %show_test_grids:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,Grid,print_grid(show_test_grids(TestID),Grid)).
 
 
@@ -701,7 +702,7 @@ testspec_to_pairs(TestSpec,TestID,ExampleNum,I,O):-
 for_each(Gen,Goal):-
   Gen,(Goal*->true;true).
 
-with_test_pairs(TestID,ExampleNum,I,O,P):-
+with_test_pairs(TestID,ExampleNum,I,O,P):- 
  for_each((test_pairs(TestID,ExampleNum,I,O)),
   my_menu_call((
     ensure_test(TestID),
@@ -1183,22 +1184,29 @@ really_set_current_test(TestID):-
 
 some_current_example_num(_):- get_pair_mode(whole_test), !.
 some_current_example_num(_):- get_pair_mode(entire_suite), !.
-some_current_example_num(TrnN):- foc_current_example_num(TrnN).
+some_current_example_num(ExampleNum):- foc_current_example_num(ExampleNum).
 
-foc_current_example_num(TrnN):- get_example_num(TrnN),!.
-foc_current_example_num(TrnN):- TrnN = trn+0, set_example_num(TrnN),!.
-foc_current_example_num(TrnN):- ignore(get_example_num(TrnN)),set_example_num(TrnN),!.
+foc_current_example_num(ExampleNum):- get_example_num(ExampleNum),!.
+foc_current_example_num(ExampleNum):- ExampleNum = trn+0, set_example_num(ExampleNum),!.
+foc_current_example_num(ExampleNum):- ignore(get_example_num(ExampleNum)),set_example_num(ExampleNum),!.
 
 
 current_test_example(TestID,ExampleNum):- get_current_test(TestID),
-  must_det_ll(first_current_example_num(ExampleNum)).
+  (get_example_num(ExampleNum) -> true ; must_det_ll(first_current_example_num(ExampleNum))).
 
-get_example_num(TrnN):- \+ arc_html, nb_current(example,TrnN),ground(TrnN),TrnN\==[],!.
-get_example_num(TrnN):- luser_getval(example,TrnN),ground(TrnN),TrnN\==[],!.
+get_example_num(ExampleNum):- \+ arc_html, nb_current(example,ExampleNum),ground(ExampleNum),ExampleNum\==[],!.
+get_example_num(ExampleNum):- luser_getval(example,ExampleNum),ground(ExampleNum),ExampleNum\==[],!.
 
-set_example_num(TrnN):- luser_setval(example,TrnN).
+set_example_num(_ > ExampleNum):- nonvar(ExampleNum), !, set_example_num(ExampleNum).
+set_example_num(ExampleNum * _):- nonvar(ExampleNum), !, set_example_num(ExampleNum).
+set_example_num(Trn+N):- nonvar(Trn),!,luser_setval(example,Trn+N).
+set_example_num(Atom):- must_det_ll((testid_name_num_io(Atom,_TID,Trn,N,_IO),luser_setval(example,Trn+N))),!.
 
-first_current_example_num(TrnN):- some_current_example_num(TrnN),ground(TrnN),TrnN\==[],get_current_test(TestID),kaggle_arc(TestID,TrnN,_,_),!.
+tid_to_id((TID>(Trn+Num)*IO),(TID>(Trn+Num)*IO)).
+tid_to_id(Atom,(TID>(Trn+Num)*IO)):- testid_name_num_io(Atom,TID,Trn,Num,IO),!.
+
+first_current_example_num(TrnN):- some_current_example_num(TrnN),ground(TrnN),TrnN\==[],
+  get_current_test(TestID),kaggle_arc(TestID,TrnN,_,_),!.
 first_current_example_num(TrnN):- TrnN = trn+0.
 
 next_pair:- with_pair_mode(single_pair,next_pair0).
@@ -1566,8 +1574,12 @@ switch_grid_mode:- (luser_getval('$grid_mode',Dots);Dots=dots),next_grid_mode(Do
 with_next_grid_mode(Goal):- 
   (luser_getval('$grid_mode',Dots);Dots=dots),next_grid_mode(Dots,Dashes), with_luser('$grid_mode',Dashes,Goal).
 
-as_d_grid(In,In):- \+ luser_getval('$grid_mode',dashes),!.
-as_d_grid(In,In1):- as_ngrid(In,In1),!.
+as_d_grid(In,Out):- as_d_grid0(In,Out),!.
+%as_d_grid(In,Out):- apply_grid_color_order(_,In,Mid),as_d_grid0(Mid,Out),!.
+
+
+as_d_grid0(In,In):- \+ luser_getval('$grid_mode',dashes),!.
+as_d_grid0(In,In1):- as_ngrid(In,In1),!.
 as_ngrid(In,In1):- must_det_ll((change_bg_fg(In, _BG, _FG,In0), most_d_colors(In0,_CI,In1))),!.
 as_ngrid(In,In):-!.
 
@@ -1645,8 +1657,15 @@ var_ensure_test(TestID):- \+ get_pair_mode(enire_suite),!,get_current_test(TestI
 %var_ensure_test(TestID):- var(TestID), !, ensure_test(TestID).
 %var_ensure_test(TestID):- \+ ground(TestID), !, all_arc_test_name(TestID).
 
+var_ensure_test(TestID,_):- compound(TestID), TestID=(_^_),!,fail.
 var_ensure_test(TestID,OUT):- var_ensure_test(TestID),OUT=TestID,is_valid_testname(OUT).
 
+var_ensure_test(TestSpec,I,O,Goal):- 
+  var_ensure_test(TestSpec,TestID),
+  wots(Title,\+ \+ (I=(+(in)),O=(-(out)),writeln(Goal))),
+  forall(with_test_pairs(TestID,ExampleNum,I,O,
+    (print_side_by_side(green,I,orig_in(TestID,Title,ExampleNum),_,O,orig_out(TestID,Title,ExampleNum)),
+     forall(Goal,true))),true).
 
 ensure_test(TestID):- nonvar(TestID),!, ignore(( is_valid_testname(TestID), really_set_current_test(TestID))).
 ensure_test(TestID):- var(TestID), !, var_ensure_test(TestID).
@@ -2117,8 +2136,13 @@ track_modes(I,M):- I=..[_|L],my_maplist(plus_minus_modes,L,M).
 plus_minus_modes(Var,-):- var(Var),!. 
 plus_minus_modes(_,+).
 
+kaggle_arc_io_current_first(TestID,E,IO,G):- 
+  get_current_test(TestID),kaggle_arc_io(TestID,E,IO,G).
+kaggle_arc_io_current_first(TestID,E,IO,G):- 
+  get_current_test(TestID2),kaggle_arc_io(TestID,E,IO,G), TestID\==TestID2.
+
 testid_name_num_io_0(ID,_Name,_Example,_Num,_IO):- var(ID),!, fail.
-testid_name_num_io_0(X,TestID,E,N,IO):- is_grid(X),!,kaggle_arc_io(TestID,E+N,IO,G),G=@=X.
+testid_name_num_io_0(X,TestID,E,N,IO):- is_grid(X),!,kaggle_arc_io_current_first(TestID,E+N,IO,G),G=@=X.
 testid_name_num_io_0(ID,_Name,_Example,_Num,_IO):- is_grid(ID),!, fail.
 testid_name_num_io_0(ID,_Name,_Example,_Num,_IO):- is_list(ID), \+ my_maplist(nonvar,ID),!,fail.
 
@@ -2282,7 +2306,7 @@ uses_test_id(P1):- clauses_predicate(M:F/N,P),
                    once((\+ indicates_arg1_testid(F),             
                    \+ \+ (clause(M:P,GG),first_cmpd_goal(GG,G),compound(G),functor(G,GF,_),
                           \+ \+ indicates_arg1_testid(GF),
-                          arg(1,P,Var1),arg(1,G,Var2),Var1==Var2),
+                          compound(P),arg(1,P,Var1),arg(1,G,Var2),Var1==Var2),
                    N1 is N-1, functor(P1,F,N1),
                    \+ predicate_property(M:P1,static))).
 scan_uses_test_id:- forall((uses_test_id(P1),atom(P1)),assertz_if_new(user:(P1:- with_current_test(P1)))).

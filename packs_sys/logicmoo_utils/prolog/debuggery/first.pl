@@ -334,7 +334,7 @@ match_predicates(Spec,M,P,F,A):- '$find_predicate'(Spec,Matches),member(CM:F/A,M
 %
 % If May Hide.
 %
-if_may_hide(G):-G.
+if_may_hide(G):-call(G).
 
 :- meta_predicate with_unlocked_pred(:,0).
 
@@ -388,10 +388,10 @@ mpred_trace_none(W):- (forall(match_predicates(W,M,Pred,F,A),
 % Managed Predicate  Trace nochilds.
 %
 mpred_trace_nochilds(W):- if_may_hide(forall(match_predicates(W,M,Pred,_,_),(
-with_unlocked_pred(M:Pred,(
-'old_set_predicate_attribute'(M:Pred, trace, 1),
-%'old_set_predicate_attribute'(M:Pred, noprofile, 0),
-'old_set_predicate_attribute'(M:Pred, hide_childs, 1)))))).
+  with_unlocked_pred(M:Pred,(
+  'old_set_predicate_attribute'(M:Pred, trace, 1),
+  %'old_set_predicate_attribute'(M:Pred, noprofile, 0),
+  'old_set_predicate_attribute'(M:Pred, hide_childs, 1)))))).
 
 :- export(mpred_trace_childs/1).
 

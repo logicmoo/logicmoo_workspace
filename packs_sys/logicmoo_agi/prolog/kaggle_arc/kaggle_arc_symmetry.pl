@@ -826,7 +826,7 @@ blur_turn(flipDHV). % blur_turn(flipDV). blur_turn(flipDH).
 blur_mix(fg). blur_mix(bg). blur_mix(not_color(Black)):- get_black(Black).
 
 cv(FG,OC):- once(FG==fg;OC==fg;FG==bg;OC==bg),!.
-cv(FG,OC):- FG=OC,!.
+cv(FG,OC):- \+ FG \= OC,!.
 cv(_,_).
 
 mix_cellr(Mix,I,M,O):- mix_cell(Mix,M,I,O).

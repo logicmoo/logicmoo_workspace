@@ -183,7 +183,7 @@ reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  f
 
 reduce_1op(_Type,Len1,Half1,PassNo,GridIn, make_solid_object(Rect,H,V),OUT):-  GridIn = [Row1|GridR], my_maplist(=@=(Row1),GridR),
   Row1= [C1|Row], my_maplist(=@=(C1),Row), grid_size(GridIn,H,V), once(H > 1 ; V > 1),!,
-    (H==V->(Rect=square,OUT=[[C1]]);(H>V->(Rect=rect,OUT=[[C1]]);(Rect=rect,OUT=[[C1]]))).
+    (H==V->(Rect=square,OUT=[[C1]]);(H>V->(Rect=rect,OUT=[[C1,C1]]);(Rect=rect,OUT=[[C1],[C1]]))).
 
 
 reduce_1op(_Type,Half,Len,_,[Row1|Grid],copy_row_ntimes(1,Times),[Row1]):- 
@@ -547,7 +547,8 @@ add_bg(III,II,bg):- subst(III,'$VAR'('_'),'bg',II).
 %b_grid_to_norm(I,OUT):- b_grid_to_norm(Op,I,OO),OUT=(OO-w(Op)).
 %b_grid_to_norm(Op,I,O):- Op==[],!,I=O.
 %b_grid_to_norm(Op,IO,IIOO):-  compound(IO),IO=(I^O),b_grid_to_norm(Op,I,II),!,Op\==[],b_grid_to_norm(Op2,O,OO),!,Op=Op2,IIOO=II^OO.
-normalize_grid(Op,I,GOO):-   
+normalize_grid(OpRot,I,GOO):- grav_rot(I,R1,M),I\=@=M,!,normalize_grid(Op,M,GOO),append(Op,[R1],OpRot).
+normalize_grid(R2Op,I,GOOP):-   
  must_det_ll((
   debug_c(reduce,writeg(normalize_grid=I)),
   protect_vars(I,III,How),
@@ -559,7 +560,10 @@ normalize_grid(Op,I,GOO):-
   call(How,COp,Op),
   call(How,COO,OO),
   mapgrid(fix_bg(Which),OO,GOO),
-  debug_c(reduce,writeg([un_reduce_grid=OO,un_cop=Op])))).
+  debug_c(reduce,writeg([un_reduce_grid=OO,un_cop=Op])),
+  grav_rot(GOO,R2,GOOP),
+  ((R2==sameR->R2Op=Op;R2Op=[R2|Op])))).
+
 
 fix_bg(Which,OO,X):- fail, Which=@=OO,!,freeze(X,X\=(_,_)).
 %fix_bg(Which,OO,_):-OO=fg,!.
@@ -588,15 +592,24 @@ reduce_grid(AB,[],AB):-!.
 reverse_op(I,R):- reverse(I,R),!.
 reverse_op(I,[I]).
 
-reduce_grid_pair1(AB,OPS,ARBR):- \+ ground(AB), 
- must_det_ll((
-  protect_vars(AB,ABC,How),
-  my_assertion(ground(ABC)),  
-  reduce_grid_pair111(ABC,OPSP,ARBRP),
-  call(How,OPSP+ARBRP,OPS+ARBR),
-  nop((my_assertion((\+ (sub_term(E,OPS+ARBR),compound(E), E='$VAR'(_)))))))).
+contains_numberedvars(AB):- \+ \+ (sub_term(E,AB),compound(E), E='$VAR'(_)).
 
-reduce_grid_pair1(AB,OPS,ARBR):- reduce_grid_pair111(AB,OPS,ARBR),!.
+
+reduce_grid_pair1(AB,OPS,ARBR):- fail,  \+ ground(AB),  
+ \+ contains_numberedvars(AB+OPS),
+ must_det_ll((
+  protect_vars(AB,ABC,Unprotect),
+  my_assertion(ground(ABC)))),
+ reduce_grid_pair2(ABC,OPSP+ARBRP),
+ must_det_ll((
+  call(Unprotect,OPSP+ARBRP,OPS+ARBR),
+  my_assertion((\+ contains_numberedvars(AB+ARBR))))),!.
+
+reduce_grid_pair1(AB,OPS,ARBR):- reduce_grid_pair2(AB,OPS,ARBR).
+
+reduce_grid_pair2(AB,OPS,ARBR):- 
+  %my_assertion(ground(AB)),
+  rrd_call(reduce_grid_pair111(AB,OPS,ARBR)),!.
 
 reduce_grid_pair111(A^B,ROPA,AR^BR):-
   once((reduce_grid_pass(1,A^A,[A^A],ROPA,AR^AR),
@@ -645,7 +658,7 @@ common_reductions_from_two(GL,OPS,G1,G2,G1R,G2R):-
    reductions_from_two(OPS,G1,G2,G1R,G2R).
 
 
-reductions(GL,OPS,REDUCE):- into_grid_list(GL,List), reductions1(List,OPS,REDUCE),!.
+reductions(GL,OPS,REDUCE):- into_grid_list(GL,List),!, fail_over_time(6, reductions1(List,OPS,REDUCE)),!.
 %reductions([A,B],OPS,[AA,BB]):- !, reductions_from_two(OPS,A,B,AA,BB).
 reductions1(List,[Reduce|OPS],REDUCE):-
    select(G1,List,Rest0),select(G2,Rest0,Rest),
@@ -656,23 +669,28 @@ reductions1(AB,[],AB).
 
 reduce_two(G1,G2,Reduce,G1R,G2R):- reductions_from_two(Reduce,G1,G2,G1R,G2R).
 
-reductions_from_two(Reduce,G1,G2,G1R,G2R):- one_reduction1(Reduce,G1,G2,G1R,G2R).
+reductions_from_two(Reduce,G1,G2,G1R,G2R):- one_reduction1(Reduce,G1,G2,G1R,G2R),!.
 reductions_from_two(r_c(Reduce),G1,G2,G1RR,G2RR):- rot90(G1,G1R),rot90(G2,G2R),one_reduction1(Reduce,G1R,G2R,G1RR,G2RR),!,Reduce\==[].
 reductions_from_two(c_r(Reduce),G1,G2,G1RR,G2RR):- rot270(G1,G1R),rot270(G2,G2R),one_reduction1(Reduce,G1R,G2R,G1RR,G2RR),!,Reduce\==[].
 
+rrd_up:- flag('$reduction_recursion_depth',X,X+1).
+rrd_down:- flag('$reduction_recursion_depth',X,X-1).
+rrd_ok:- flag('$reduction_recursion_depth',X,X),X<100.
+%rrd_call(Goal):- !, call(Goal).
+rrd_call(Goal):- scce_orig(rrd_up,(rrd_ok,Goal),rrd_down).
+one_reduction1(OP,G1,G2,G1R,G2R):- rrd_call(one_reduction11(OP,G1,G2,G1R,G2R)).
+one_reduction11(Reduce,G1,G2,G1R,G2R):- var(Reduce),!,reduce_grid_pair1(G1^G2,Reduce,G1R^G2R),!.
+one_reduction11(OP,G1,G2,G1R,G2R):- nonvar(OP),OP\==[],!,one_reduction3(OP,G1,G1R),!,(G2=@=G1->G2R=G1R ; one_reduction2(OP,G2,G2R)).
 
-one_reduction1(OP,G1,G2,G1R,G2R):- nonvar(OP),OP\==[],!,one_reduction1(OP,G1,G1R),!,(G2=@=G1->G2R=G1R ; one_reduction2(OP,G2,G2R)).
-one_reduction1(Reduce,G1,G2,G1R,G2R):- var(Reduce),reduce_grid_pair1(G1^G2,Reduce,G1R^G2R).
+one_reduction2(OP,G1,G1R):- one_reduction3(OP,G1,G1R).
 
-one_reduction2(OP,G1,G1R):- one_reduction1(OP,G1,G1R).
-
-%one_reduction1(OP,G=Var,GG):- var(Var),!, one_reduction1(OP,G,GG).
-one_reduction1([],G1,G1R):- !, G1=G1R.
-one_reduction1(OPS,G1,G1RR):- nonvar(OPS), OPS=[OP|OPL], !, one_reduction1(OP,G1,G1R),
-  one_reduction1(OPL,G1R,G1RR).
-one_reduction1(reversed(OP),G1,G1R):-!, one_reduction1(OP,G1,G1R).
-one_reduction1(OP^OP,G1,G1R):-!,one_reduction1(OP,G1,G1R).
-one_reduction1((OP),G1,G1R):-!, grid_call(OP,G1,G1R). % dmsg(one_reduction1(OP,G1,G1R)).
+%one_reduction1(OP,G=Var,GG):- var(Var),!, onae_reduction1(OP,G,GG).
+one_reduction3(OP,G,GG):- var(OP),!,throw(var_one_reduction3(OP,G,GG)).
+one_reduction3(Nil,G1,G1R):- Nil==[],!, G1=G1R.
+one_reduction3(OPS,G1,G1RR):- nonvar(OPS), OPS=[OP|OPL], !, one_reduction3(OP,G1,G1R),one_reduction3(OPL,G1R,G1RR).
+one_reduction3(reversed(OP),G1,G1R):-!, one_reduction3(OP,G1,G1R).
+one_reduction3(OP^OP2,G1,G1R):- OP==OP2,!,one_reduction3(OP,G1,G1R).
+one_reduction3((OP),G1,G1R):-!, grid_call(OP,G1,G1R). % dmsg(one_reduction1(OP,G1,G1R)).
 
 
 %reduce_grid(A^B,OPA^OPB,AA^BB):- A\=@=B,nth1(N,A,EA,A0),my_maplist(=(_),EA),nth1(N,B,EB,B0),EA=@=EB,reduce_grid(A0^B0,OPA^OPB,AA^BB).
@@ -687,7 +705,9 @@ reduce_pair_op(PassNo,Grid,NBC,[OP|More],Reduced):-
     reduce_grid_pass(PassNo,GridR,[GridR|NBC],More,Reduced),!.
 reduce_pair_op(_,NR,_,[],NR):-!.
 
-test_reduce_grid(Grid,GridO):- reduce_grid(Grid,Ops,GridO),unreduce_grid(GridO,Ops,Unred),show_sf_if_lame(Ops,Unred,Grid).
+test_reduce_grid(Grid,GridO):- 
+ reduce_grid(Grid,Ops,GridO),
+  unreduce_grid(GridO,Ops,Unred),show_sf_if_lame(Ops,Unred,Grid).
 
 
   

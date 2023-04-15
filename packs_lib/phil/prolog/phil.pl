@@ -21,7 +21,6 @@ This module provides algorithms for learning the structure and the parameters of
 :-use_module(library(random)).
 :-use_module(library(system)).
 :-use_module(library(terms)).
-:-use_module(library(rbtrees)).
 :-use_module(library(apply)).
 :- use_module(library(pio)).
 :- use_module(library(dialect)).
@@ -81,6 +80,10 @@ default_setting_hplp(saveHPLP,no).
 default_setting_hplp(saveFile,"hplp"). % File where to save the initial large HPLP generated
 default_setting_hplp(max_layer,-1). % Indicates the Max number of clause layer. -1 indicates the highest layer possible
 
+default_setting_hplp(saveArthmeticCircuit,no). % default value=no, values= no,testing,training,all
+% The name of the folder where to save the circuits
+default_setting_hplp(testingCircuitFile,"testing_circuits").
+default_setting_hplp(trainingCircuitFile,"training_circuits").
 
 %     PHIL  default settings
 default_setting_hplp(maxIter_phil,1000). % Max iteration
@@ -271,7 +274,17 @@ or_list1([H|T],B0,B1):-
  */
 test_hplp(M:P,TestFolds,LL,AUCROC,ROC,AUCPR,PR):-
   test_hplp_prob(M:P,TestFolds,_NPos,_NNeg,LL,LG),
-  compute_areas_diagrams(LG,AUCROC,ROC,AUCPR,PR).
+  compute_areas_diagrams(LG,AUCROC,ROC,AUCPR,PR),
+  writeCurves(ROC,PR,"Curves.txt").
+
+writeCurves(ROC,PR,FileName):-
+    open(FileName,write, Stream),
+    write(Stream, "ROC="),
+    write(Stream,ROC),
+    nl(Stream),
+    write(Stream, "PR="),
+    write(Stream,PR),
+    close(Stream).
 
 
 
@@ -303,6 +316,7 @@ test_hplp_prob(M:P,TestFolds,NPos,NNeg,CLL,Results) :-
     true
   ), 
   test_no_area([TE],M,NPos,NNeg,CLL,Results),
+  writeList(Results,"Classification.txt"),
   (M:bg(RBG0)->
     retract_all(ThBGRef),
     retract_all(ClBGRef)
@@ -587,13 +601,24 @@ learn_params_hplp(DB,M,R0,R,CLL):-
   length(DB,NEx),
   abolish_all_tables,
   M:local_setting(group,G),
-  %trace,
   derive_circuit_groupatoms(DB,M,NEx,G,[],Nodes0,0,CLL0,_LE,[]),!,
   maplist(remove_p,Nodes0,Nodes),
   M:local_setting(algorithmType,Algorithm),
   M:local_setting(maxIter_phil,MaxIter),
   M:local_setting(epsilon_deep,EA),
   M:local_setting(epsilon_deep_fraction,ER),
+  M:local_setting(saveArthmeticCircuit,SaveCircuits),
+  (SaveCircuits=all->
+    M:local_setting(trainingCircuitFile,CircuitFile),
+    writefile(Nodes,CircuitFile)
+  ;
+    ( SaveCircuits=training ->
+      M:local_setting(trainingCircuitFile,CircuitFile),
+      writefile(Nodes,CircuitFile)
+      ;
+      true
+     )
+  ),
   StopCond=[MaxIter,EA,ER],
   M:local_setting(statistics_folder,Statistics_folder),
   M:local_setting(saveStatistics,Save),
@@ -612,6 +637,7 @@ learn_params_hplp(DB,M,R0,R,CLL):-
     ;
     Params=[NR,ZERO,Seeded,Seed,Init]
   ),
+
   format3(M,'Initial CLL on PHIL ~f */~n',[CLL0]),
   retract_all(Th0Ref),
   retract_all(R1Ref),
@@ -710,7 +736,6 @@ induce_hplp_rules(M:Folds,R):-
   ),
   length(DB,NMegaEx),
   M:local_setting(megaex_bottom, NumMB),
-  %trace,
   (NMegaEx >= NumMB ->
       true
     ;
@@ -843,7 +868,6 @@ getTrees([(rule(_,[Head:_,_],_,Body),_)|RestBottom],[Tree|RestTrees]):-
       getTree(Body,[],BodyTrees),
       Tree=t(Head,BodyTrees)
     ;
-    %trace,
     Bod=[Head|Body],
     getTree(Bod,[],BodyTrees),
     length(BodyTrees, LTree),
@@ -992,7 +1016,6 @@ generateHPLPs(InitLevel,HeadFunctor,MaxLayer,Prob,[Tree|RestTrees],[HPLP|RestHPL
   assert(getIndex(1)),
   generateHPLPloop(MaxLayer,1,InitLevel,[h([Head,'',Prob],Forest)],[],HPLP1,0,Level),
   retractall(getIndex(_Index1)),
-  %trace,
   removeHidden(HPLP1,HPLP11,[HeadFunctor],_),
   reduce([],HPLP11,0,[],HPLP),
   %HPLP=HPLP11,
@@ -1054,7 +1077,6 @@ generateHPLPloopCurr(Hidden,PathIndex,Prob,Index,[t(Pred2,ForestChild)|RestFores
             ),
             %atom_concat(PathIndex1,Index,PathIndexNew),
             getHidden(Hidden,Pred2,PathIndexNew,HiddenNew),
-            %trace,
             getRate(Rate),
             ProbNew is Prob*Rate,
             Temp=[h([HiddenNew,PathIndexNew,ProbNew],ForestChild)],
@@ -1344,12 +1366,12 @@ saveTrees(Bottoms,FileName):-
   
   writeList(List,FileName):-
   open(FileName,write, Stream),
-  writeList1(Stream,List),
+  writeList1(List,Stream),
   close(Stream).
-  writeList1(_,[]).
-  writeList1(Stream,[HeadList|RestList]):-
+  writeList1([],_).
+  writeList1([HeadList|RestList],Stream):-
   writeln(Stream,HeadList),
-  writeList1(Stream,RestList).
+  writeList1(RestList,Stream).
   
   
   %!	writeClause
@@ -1361,7 +1383,7 @@ saveTrees(Bottoms,FileName):-
     copy_term(List,ListCopy),
     numbervars((ListCopy,_ListVar),0,_V),
     writeln(Stream,"Learned Program"),
-    writeClause1(Stream,ListCopy),
+    writeClause1(ListCopy,Stream),
     close(Stream).
   
   
@@ -1371,11 +1393,11 @@ saveTrees(Bottoms,FileName):-
     writeln(user_output,"Learned Program"),
     writeClause1(user_output,ListCopy).
   
-  writeClause1(_,[]).
-  writeClause1(Stream,[HeadList|RestList]):-
+  writeClause1([],_).
+  writeClause1([HeadList|RestList],Stream):-
     write(Stream,HeadList),
     writeln(Stream,"."),
-    writeClause1(Stream,RestList).
+    writeClause1(RestList,Stream).
 
 
   /*update_theory_par([],[],[]).
@@ -2879,31 +2901,6 @@ set_hplp(M:Parameter,Value):-
 setting_sc(M:P,V):-
   M:local_setting(P,V).
 
-extract_vars_list(L,[],V):-
-  rb_new(T),
-  extract_vars_tree(L,T,T1),
-  rb_keys(T1,V).
-
-extract_vars_term(Variable, Var0, Var1) :-
-  var(Variable), !,
-  (rb_lookup(Variable, Var0,_) ->
-    Var1 = Var0
-  ;
-    rb_insert(Var0,Variable,1,Var1)
-  ).
-
-extract_vars_term(Term, Var0, Var1) :-
-  Term=..[_F|Args],
-  extract_vars_tree(Args, Var0, Var1).
-
-
-
-extract_vars_tree([], Var, Var).
-
-extract_vars_tree([Term|Tail], Var0, Var1) :-
-  extract_vars_term(Term, Var0, Var),
-  extract_vars_tree(Tail, Var, Var1).
-
 
 difference([],_,[]).
 
@@ -2999,7 +2996,7 @@ gen_clause_cw(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   append([phil:onec(AC)],BodyList1,BodyList2),
   list2and(BodyList2,Body1),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_probs(HeadList,Probs),
   maplist(to_tabled_head_list,M,HeadList,HeadList1),
   (M:local_setting(single_var,true)->
@@ -3041,7 +3038,7 @@ gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   process_body_db(BodyList,and([N]),ACAnd, DB,[],_Vars,BodyList1,Module,M),
   list2and(BodyList1,Body1),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_probs(HeadList,Probs),
   maplist(to_tabled_head_list(M),HeadList,HeadList1),
   (M:local_setting(single_var,true)->
@@ -3057,7 +3054,7 @@ gen_clause(rule(_R,HeadList,BodyList,Lit),M,N,N1,
   process_body(BodyList,and([N]),ACAnd,[],_Vars,BodyList1,Module,M),
   list2and(BodyList1,Body1),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_probs(HeadList,Probs),
   maplist(to_tabled_head_list(M),HeadList,HeadList1),
   (M:local_setting(single_var,true)->
@@ -3083,7 +3080,6 @@ gen_clause(def_rule(H,BodyList,Lit),M,N,N,def_rule(H,BodyList,Lit),Clauses) :- !
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body1),
   add_ac_arg(H,ACAnd,Module,Head1),
-  %trace,
   to_tabled(M,Head1,Head2),
   Clauses=[(Head2 :- Body1)].
 
@@ -3143,7 +3139,7 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body2),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),%***test single_var
   (M:local_setting(single_var,true)->
@@ -3164,7 +3160,7 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
   append([phil:onec(AC)],BodyList2,BodyList3),
   list2and(BodyList3,Body2),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),%***test single_var
   (M:local_setting(single_var,true)->
@@ -3174,12 +3170,9 @@ term_expansion_int((Head :- Body),M, (Clauses,[rule(R,HeadList,BodyList,true)]))
   ).
 
 
-  
-
 term_expansion_int((Head :- Body),M,(Clauses,[def_rule(Head,BodyList,true)])) :-
   % definite clause senza DB
     %M:local_setting(compiling,on),
-    %trace,
     ((Head:-Body) \= ((system:term_expansion(_,_)) :- _ )),!,
     list2and(BodyList, Body),
     process_body(BodyList,AC,AC1,[],_Vars,BodyList2,Module,M),
@@ -3189,7 +3182,38 @@ term_expansion_int((Head :- Body),M,(Clauses,[def_rule(Head,BodyList,true)])) :-
     Clauses=(Head1 :- Body2).
 
 
+  term_expansion_int(Head,M, ((Head1:-phil:onec(Env,One)),[def_rule(Head,[],true)])) :-
+    M:local_setting(compiling,on),
+    M:local_setting(depth_bound,true),
+    %definite fact with db
+    (Head \= ((system:term_expansion(_,_) ):- _ )),
+    (Head\= end_of_file),!,
+    add_bdd_arg_db(Head,Env,One,_DB,_Module,Head1).
+  
+  term_expansion_int(Head,M, ((Head1:-phil:onec(Env,One)),[def_rule(Head,[],true)])) :-
+    M:local_setting(compiling,on),
+    %definite fact without db
+    (Head \= ((system:term_expansion(_,_) ):- _ )),
+    (Head\= end_of_file),!,
+    add_bdd_arg(Head,Env,One,_Module,Head1).
 
+
+  add_bdd_arg_db(A,Env,BDD,DB,A1):-
+    A=..[P|Args],
+    append(Args,[DB,Env,BDD],Args1),
+    A1=..[P|Args1].
+  
+  
+  add_bdd_arg(A,Env,BDD,Module,A1):-
+    A=..[P|Args],
+    append(Args,[Env,BDD],Args1),
+    A1=..[P,Module|Args1].
+  
+  
+  add_bdd_arg_db(A,Env,BDD,DB,Module,A1):-
+    A=..[P|Args],
+    append(Args,[DB,Env,BDD],Args1),
+    A1=..[P,Module|Args1].
 
 
   add_bdd_arg(A,BDD,A1):-
@@ -3244,7 +3268,20 @@ test_folds([HT|TT],M,LG0,LG,Pos0,Pos,Neg0,Neg,CLL0,CLL):-
 
 test_1fold(F,M,LGOrd,Pos,Neg,CLL1):-
   find_ex(F,M,LG,Pos,Neg),
-  compute_CLL_atoms(LG,M,0,0,CLL1,LG1),
+  format("Test: Positive examples=~g, Negative examples=~g ~n",[Pos,Neg]),
+  compute_CLL_atoms(LG,M,0,0,CLL1,LG1,[],Nodes),
+  M:local_setting(saveArthmeticCircuit,SaveCircuits),
+  (SaveCircuits=all->
+    M:local_setting(testingCircuitFile,CircuitFile),
+    writefile(Nodes,CircuitFile)
+  ;
+    ( SaveCircuits=testing ->
+      M:local_setting(testingCircuitFile,CircuitFile),
+      writefile(Nodes,CircuitFile)
+      ;
+      true
+     )
+  ),
   keysort(LG1,LGOrd).
 
 
@@ -3420,35 +3457,35 @@ neg_ex([H|T],M,[HT|TT],At1,C):-
   member(H,Co),
   neg_ex(T,M,TT,At1,C).
 
-compute_CLL_atoms([],_M,_N,CLL,CLL,[]):-!.
+compute_CLL_atoms([],_M,_N,CLL,CLL,[],Nodes,Nodes):-!.
 
-compute_CLL_atoms([],_M,_N,CLL,CLL,[]):-!.
+compute_CLL_atoms([],_M,_N,CLL,CLL,[],Nodes,Nodes):-!.
 
-compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1]):-!,
+compute_CLL_atoms([\+ H|T],M,N,CLL0,CLL1,[PG- (\+ H)|T1],Nodes0,Nodes):-!,
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
   abolish_all_tables,
   get_node(H,M,Circuit),!,
-  %writeln(Circuit),
+  CircuitNew = not(Circuit),
+  append(Nodes0,[CircuitNew],Nodes0_New),
   length(LR,NR),
   forward(Circuit,LR,NR,PG),
   PG1 is 1-PG,
   (PG1=:=0.0->
-    setting_sc(logzero,LZ),
+    M:local_setting(logzero,LZ),
     CLL2 is CLL0+LZ
   ;
     CLL2 is CLL0+ log(PG1)
   ),
   N1 is N+1,
-  compute_CLL_atoms(T,M,N1,CLL2,CLL1,T1).
+  compute_CLL_atoms(T,M,N1,CLL2,CLL1,T1,Nodes0_New,Nodes).
 
-compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1]):-
+compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1],Nodes0,Nodes):-
   findall(P,M:rule(_R,[_:P|_],_BL,_Lit),LR),
   abolish_all_tables,
   get_node(H,M,Circuit),!,
+  append(Nodes0,[Circuit],Nodes0_New),
   length(LR,NR),
   forward(Circuit,LR,NR,PG),
-  %writeln(Circuit),
-  
   (PG=:=0.0->
     M:local_setting(logzero,LZ),
     CLL2 is CLL0+LZ
@@ -3456,7 +3493,7 @@ compute_CLL_atoms([H|T],M,N,CLL0,CLL1,[PG-H|T1]):-
     CLL2 is CLL0+ log(PG)
   ),
   N1 is N+1,
-  compute_CLL_atoms(T,M,N1,CLL2,CLL1,T1).
+  compute_CLL_atoms(T,M,N1,CLL2,CLL1,T1,Nodes0_New,Nodes).
 
 
 

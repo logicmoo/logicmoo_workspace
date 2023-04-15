@@ -14,22 +14,75 @@ fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!,
 
 fav(v('p'),[dmiles]).
 
-fav(v('37d3e8b2'), 
- human_coded(
+fav(v('37d3e8b2'),
+ human(
    rule(links_count(contains,1),subst_color(fg,blue)),
    rule(links_count(contains,2),subst_color(fg,red)),
    rule(links_count(contains,3),subst_color(fg,green)),
    rule(links_count(contains,4),subst_color(fg,yellow)))).
+fav(v('37d3e8b2'),
+  indiv_h(colormass)).
+
+
+fav(v('0a2355a6'),
+ human(
+   rule(links_count(contains,1),subst_color(fg,blue)),
+   rule(links_count(contains,2),subst_color(fg,green)),
+   rule(links_count(contains,3),subst_color(fg,red)),
+   rule(links_count(contains,4),subst_color(fg,yellow)))).
+fav(v('0a2355a6'),
+  indiv_h(colormass)).
+
 
 fav(t('ea32f347'), 
- human_coded(
-   rule(pg(_,RANK1,_,1),subst_color(fg,blue)),
+ human(
+   rule(pg(_,RANK1,_,1),subst_color(fg,red)),
    rule(pg(_,RANK1,_,2),subst_color(fg,yellow)),
-   rule(pg(_,RANK1,_,3),subst_color(fg,red)) )):-
-      RANK1 = mass(_)
-      .
+   rule(pg(_,RANK1,_,3),subst_color(fg,blue)) )):-
+      RANK1 = mass(_).
+fav(v('ea32f347'),
+  indiv_h(colormass)).
+
+
+fav(t('a61f2674'), 
+ human(
+   rule(pg(_,RANK1,_,_),subst_color(fg,black)),
+   rule(pg(_,RANK1,_,1),subst_color(fg,red)),
+   rule(pg(N,RANK1,_,N),subst_color(fg,blue)) )):-
+      RANK1 = mass(_).
+fav(v('0a2355a6'),
+  indiv_h(colormass)).
   
 
+fav(v('b230c067'), 
+ human(
+   rule(pg(_,RANK1,_,_),subst_color(fg,black)),
+   rule(pg(_,RANK1,_,1),subst_color(fg,red)),
+   rule(pg(N,RANK1,_,N),subst_color(fg,blue)) )):-
+      RANK1 = mass(_).
+fav(v('b230c067'),
+  indiv_h(colormass)).
+
+
+
+fav(t('25d487eb'), 
+ human(
+   rule(from(mass(1),color(C)),
+     rule(from(iz(symmetry_type(sym_h_xor_v,true)),top(Point)),
+       shoot(Point,C))))).
+fav(t('25d487eb'),
+  indiv_h(colormass)).
+
+
+fav(t('f8b3ba0a'), 
+ human(
+   use_output_predictor,
+   rule(from(pg(_,RANK1,_,2),color(Color2)),subst_color(fg,Color2)),
+   rule(from(pg(_,RANK1,_,3),color(Color3)),subst_color(fg,Color3)),
+   rule(from(pg(_,RANK1,_,4),color(Color4)),subst_color(fg,Color4)))):-
+     RANK1 = mass(_).       
+fav(t('f8b3ba0a'),
+  indiv_h(colormass)).
 
 
 %~ (save_supertest(v('00576224'),'muarc_cache/00576224.ansi.pl'))

@@ -175,19 +175,38 @@ with_current_pair(I,O,Goal):-
   ((I=@=CI,O=@=CO) -> call(Goal) ;
   setup_call_cleanup(set_current_pair(I,O),Goal,
    set_current_pair(CI,CO))).
+%current_pair(I,O):- current_pair0(II,OO),II=I,OO=O.
+current_pair(I,O):-  (var(I)->luser_getval(input_grid,I);true),
+  must_det_ll((is_gridoid(I),other_grid(I,O))).
 
-  
 
-set_current_pair(I,O):- 
-  luser_setval(input_grid,I),
-  luser_setval(output_grid,O),ensure_other_grid(I,O),set_target_grid(O),
-  must_det_ll((other_grid(I,OO),OO==O)).
+ensure_example_num(I,O):-
+ ignore((
+  current_test_example(TestID,ExampleNum0),
+  ((ExampleNum=ExampleNum0;ExampleNum=_), kaggle_arc(TestID,ExampleNum,II,OO), 
+    once((II=@=I,OO=@=O);(II=@=I,OO=@=O))),
+  set_example_num(ExampleNum))),!.
 
-current_pair(I,O):- current_pair0(II,OO),II=I,OO=O.
-current_pair0(I,O):- luser_getval(input_grid,I), is_gridoid(I),!, must_det_ll((other_grid(I,O))).
-current_pair0(I,O):- current_test_example(TestID,ExampleNum),
+set_current_pair(I,O):-
+  must_det_ll((ensure_example_num(I,O),
+  %luser_setval(input_grid,I),
+  %luser_setval(output_grid,O),
+  ensure_other_grid(I,O),
+  %set_target_grid(O),
+  other_grid(I,OOO),nop((OOO=@=O)))),!.
+
+%current_pair_io(I,O):- fail, current_test_example(TestID,ExampleNum), ground(ExampleNum),!, kaggle_arc(TestID,ExampleNum,I,O).
+current_pair_io(I,O):-  
+   current_test_example(TestID,ExampleNum), 
+   kaggle_arc(TestID,ExampleNum,I,O), set_current_pair(I,O), (ground(ExampleNum)->!;true).
+
+/*
+current_pair_io(I,O):- current_test_example(TestID,ExampleNum),
+   (luser_getval(input_grid,Was);Was=[]),
    setup_call_cleanup(true,
-     ((kaggle_arc(TestID,ExampleNum,I,O);fail),set_current_pair(I,O)), luser_setval(input_grid,[])).
+     ((kaggle_arc(TestID,ExampleNum,I,O);fail),set_current_pair(I,O)), 
+        luser_setval(input_grid,Was)).
+*/
 
 % test_hint(ratio_between(mass,mass)). %ac0a08a4
 increase_size_by_grid_mass(In,Out):- mass(In,Mass),increase_size(Mass,In,Out).
@@ -196,14 +215,14 @@ increase_size_by_color_count(In,Out):- fg_color_count(In,Size),increase_size(Siz
 
 
 
-ratio_between(Unique_color_count,and(Mass,Area)):- !, current_pair(I,O),
+ratio_between(Unique_color_count,and(Mass,Area)):- !, current_pair_io(I,O),
   call(Unique_color_count,I,UCC), ratio_about(Mass,UCC,I,O), ratio_about(Area,UCC,I,O).
-ratio_between(Mass1,Mass2):- current_pair(I,O), call(Mass1,I,UCC), ratio_about(Mass2,UCC,I,O).
+ratio_between(Mass1,Mass2):- current_pair_io(I,O), call(Mass1,I,UCC), ratio_about(Mass2,UCC,I,O).
 
 ratio_about(square(Area), UCC,I,O):- !, call(Area,I,IA), call(Area,O,OA), n_times(UCC^2,IA,OA).
 ratio_about(Mass, UCC,I,O):-  call(Mass,I,IM), call(Mass,O,OM), n_times(UCC,IM,OM).
 
-test_hint(How,P2):- must_det_ll((current_pair(I,O),call(P2,I,II),call(P2,O,OO))),call(How,II,OO).
+test_hint(How,P2):- must_det_ll((current_pair_io(I,O),call(P2,I,II),call(P2,O,OO))),call(How,II,OO).
 test_hint(G):- current_predicate(_,G),!,call(G).
 
 mass_and_area(P2Mass,P2Area):- test_hint(P2Mass,mass),test_hint(P2Area,area).

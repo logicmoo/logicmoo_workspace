@@ -270,7 +270,7 @@ pbox_io_result(TestID,ExampleNum,IO,G,Objs):- !,
 i_pbox(GridIn,Objs):- 
   ROptions=i_pbox,
   PairName=i_pbox,
-  locally(nb_setval(use_individuated_cache,false),
+  with_individuated_cache(false,
   ((do_ig(ROptions,GridIn,IndvS),
   into_grid(GridIn,Grid),
   locally(nb_setval(debug_indiv,t),

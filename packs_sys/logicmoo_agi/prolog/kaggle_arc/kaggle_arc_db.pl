@@ -428,7 +428,7 @@ replace_local_point_color(Point,NewC,OldC,G,GO):- is_list(G),!, my_maplist(repla
 replace_local_point_color(Point,NewC,OldC,G,GO):- is_object(G), !,
     localpoints(G,Points),     
     replace_in_points(Point,NewC,OldC,Points,RPoints),
-    %loc2D(G,OH,OV),offset_point(OH,OV,Point,LPoint),shape_rep(grav,G,NCPoints), my_maplist(replace_in_points(Point,NewC,OldC),NCPoints,RNCPoints),,shape_rep(grav,RNCPoints)
+    %loc2D(G,OH,OV),offset_point(OH,OV,Point,LPoint),shape_rep(grav,G,NCPoints), my_maplist(replace_in_points(Point,NewC,OldC),NCPoints,RNCPoints), ,shape_rep(grav,RNCPoints)
     setq(G,localpoints(RPoints),GO).
 replace_local_point_color(Point,NewC,OldC,G,GO):- trace_or_throw(unknown_target_type(replace_local_point_color(Point,NewC,OldC,G,GO))).
 

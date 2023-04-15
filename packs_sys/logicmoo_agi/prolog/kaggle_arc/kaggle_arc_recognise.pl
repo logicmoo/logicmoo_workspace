@@ -515,8 +515,8 @@ maybe_ogs_test2:-
 maybe_ogs_test_i(In):- maybe_ogs_test_j(I),(maybe_if_changed(trim_to_rect,I,In);In=I),mass(In,Mass),Mass>0.
 maybe_ogs_test_j(In):- enum_object(O),global_grid(O,In).
 maybe_ogs_test_j(In):- maybe_ogs_test_p(In).
-maybe_ogs_test_p(In):- current_pair(I,O),grid_minus_grid(I,O,In).
-maybe_ogs_test_p(In):- current_pair(I,O),mapgrid(cell_minus_cell,O,I,In).
+maybe_ogs_test_p(In):- current_pair_io(I,O),grid_minus_grid(I,O,In).
+maybe_ogs_test_p(In):- current_pair_io(I,O),mapgrid(cell_minus_cell,O,I,In).
 maybe_ogs_test_p(Out):- current_test_example(X,Y),into_grid(X>Y*_,Out).
 maybe_ogs_test_o(Out):- get_current_test(TestID), kaggle_arc(TestID,_,_,Out), \+ maybe_ogs_test_p(Out).
 maybe_ogs_test_o(Out):- maybe_ogs_test_p(Out).

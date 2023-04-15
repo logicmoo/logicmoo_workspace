@@ -82,6 +82,16 @@ S1 sorts the grid by column 2.
 S1 gets the name of the tool from column 1 row 1 and finds a tool with the same name to offer the user.
 ").
 
+map_of(tool_table,
+"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %   Column 1   |   Column 2    %
+ %--------------+---------------%
+ %              |               %
+ %              |               %
+ %              |               %
+ %              |               %
+ %              |               %
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%").
 example_mentalese(translating_english_to_event_calc, "
 
 ").

@@ -71,7 +71,6 @@ details.
 % :- dynamic utility/2.
 
 :-use_module(library(lists)).
-:-use_module(library(rbtrees)).
 :-use_module(library(apply)).
 :-use_module(library(assoc)).
 
@@ -155,25 +154,6 @@ dt_solve(M:Strategy,Cost):-
 
 pair(M,A,B):- M:rule_by_num(A,B,_,_).
 split([A,B],A,B).
-
-/**
- * dt_solve(-Strategy:list,-Cost:float) is det
- *
- * The predicate computes the best solution for the decision theory
- * problem. It returns the best strategy in Strategy and it cost
- * in Cost. Solution with pruning.
- */
-dt_solve_bug(M:Strategy,Cost):-
-  abolish_all_tables,
-  findall([S,U],M:'$util'(S,U),L),
-  % writeln(L),
-  maplist(split,L,LStrategy,LUtils),
-  init(Env),
-  get_bdd(M,Env,LStrategy,[],LBDD),
-  % writeln(LBDD),
-  compute_best_strategy(Env,LBDD,LUtils,St,Cost),
-  end(Env),
-  maplist(pair(M),St,Strategy).
 
 get_bdd(_,_,[],L,L):- !.
 get_bdd(M,Env,[G|T],L,LO):-
@@ -264,21 +244,46 @@ abd_prob(M:Goal,P,Delta):-
   end(Env),
   erase(Ref),
   member((Goal,P,Exp),L),
-  from_assign_to_exp(Exp,M,Delta).
+  maplist(from_assign_to_exp(M),Exp,DeltaAll),
+  simplify_delta(DeltaAll,Delta).
+
+subset_([], []).
+subset_([E|Tail], [E|NTail]):-
+  subset_(Tail, NTail).
+subset_([_|Tail], NTail):-
+  subset_(Tail, NTail).
+
+mycompare(<,L1,L2) :- length(L1,A1), length(L2,A2), A1 < A2.
+mycompare(>, _, _).
+
+sub([A],[A]).
+sub([H|T],[V|R]):-
+  findall(X,(subset_(H,X), member(X,T)),LX),
+  (   LX = [] ->
+    V = H,
+    sub(T,R) ;
+    sub(T,[V|R]) 
+  ).
+
+simplify_delta([],[]):- !.
+simplify_delta(Din,Delta):-
+  predsort(mycompare,Din,LS),
+  reverse(LS,LNR),
+  sub(LNR,Delta), !.
 
 
 
-from_assign_to_exp([],_M,[]).
-
-from_assign_to_exp([Var-Val|TA],M,[Abd|TDelta]):-
+from_assign_to_exp(_M,[],[]):- !.
+from_assign_to_exp(M,[Var-Val|TA],[Abd|TDelta]):-
   M:av(R,S,Var),
   M:abd(R,S,H),
   (Val=1->
     Abd=H
   ;
     Abd= \+(H)
+    % Abd= []
   ),
-  from_assign_to_exp(TA,M,TDelta).
+  from_assign_to_exp(M,TA,TDelta).
 
 
 /**
@@ -351,7 +356,7 @@ abd_bdd_dot_string(M:Goal,dot(Dot),LV,LAV,P,Delta):-
   ret_abd_prob(Env,BDD,P,Exp),
   create_dot_string(Env,BDD,Dot),
   end(Env),
-  from_assign_to_exp(Exp,M,Delta),
+  maplist(from_assign_to_exp(M),Exp,Delta),
   findall([V,R,S],M:v(R,S,V),LV),
   findall([V,R,S],M:av(R,S,V),LAV).
 
@@ -596,15 +601,21 @@ get_p(M:Goal,Env,P):-
 
 
 get_abd_p(M:Goal,M:Evidence,Env,P,Exp):-
+  % get_node_no_rec(M:Evidence,Env,OutIC),
   get_cond_node(M:Goal,M:Evidence,Env,Out,_),
+  % get_node(M:Evidence,Env,OutIC),
   Out=(_,BDD),
+  % OutIC = (_,BDDIC),
   ret_abd_prob(Env,BDD,P,Exp).
 
 get_cond_p(M:Goal,M:Evidence,Env,P):-
   get_cond_node(M:Goal,M:Evidence,Env,BDDGE,BDDE),
   ret_probc(Env,BDDE,PE),
   ret_probc(Env,BDDGE,PGE),
-  P is PGE/PE.
+  ( PE =:= 0 -> 
+      writeln("Undefined: probability of evidence 0.") ;
+      P is PGE/PE
+  ).
 
 
 get_node(M:Goal,Env,BDD):-
@@ -618,6 +629,18 @@ get_node(M:Goal,Env,BDD):-
     true
   ;
     zeroc(Env,BDD)
+  ).
+
+get_node_no_rec(M:Goal,Env,BDD):- %with DB=false
+  retractall(M:v(_,_,_)),
+  retractall(M:v(_,_,_)),
+  retractall(M:av(_,_,_)),
+  add_bdd_arg(Goal,Env,BDD,M,Goal1),
+  (M:Goal1*->
+    true
+  ;
+    zeroc(Env,BDD)
+    % format("-------------------------Failed goal: ~w ~n",[M:Goal])
   ).
 
 get_node(M:Goal,Env,BDD):- %with DB=false
@@ -863,12 +886,12 @@ generate_rules_fact([Head:_P|T],Env,VC,R,Probs,N,[Clause|Clauses],Module):-
 generate_rules_fact_vars([],_Env,_R,_Probs,_N,[],_Module).
 
 generate_rules_fact_vars([Head:_P1,'':_P2],Env,R,Probs,N,[Clause],Module):-!,
-  extract_vars_list([Head],[],VC),
+  term_variables([Head],VC),
   add_bdd_arg(Head,Env,BDD,Module,Head1),
   Clause=(Head1:-(get_var_n(Module,Env,R,VC,Probs,V),equalityc(Env,V,N,BDD))).
 
 generate_rules_fact_vars([Head:_P|T],Env,R,Probs,N,[Clause|Clauses],Module):-
-  extract_vars_list([Head],[],VC),
+  term_variables([Head],VC),
   add_bdd_arg(Head,Env,BDD,Module,Head1),
   Clause=(Head1:-(get_var_n(Module,Env,R,VC,Probs,V),equalityc(Env,V,N,BDD))),
   N1 is N+1,
@@ -932,7 +955,7 @@ process_body([\+ db(H)|T],BDD,BDD1,Vars,Vars1,[\+ H|Rest],Env,Module):-
   process_body(T,BDD,BDD1,Vars,Vars1,Rest,Env,Module).
 
 process_body([\+ H|T],BDD,BDD1,Vars,[BDDH,BDDN,BDD2|Vars1],
-[(H1,bdd_notc(Env,BDDH,BDDN)),
+[H1,bdd_notc(Env,BDDH,BDDN),
   andc(Env,BDD,BDDN,BDD2)|Rest],Env,Module):-!,
   add_bdd_arg(H,Env,BDDH,Module,H1),
   process_body(T,BDD2,BDD1,Vars,Vars1,Rest,Env,Module).
@@ -965,7 +988,7 @@ process_body_db([\+ db(H)|T],BDD,BDD1,DB,Vars,Vars1,[\+ H|Rest],Env,Module):-
   process_body_db(T,BDD,BDD1,DB,Vars,Vars1,Rest,Env,Module).
 
 process_body_db([\+ H|T],BDD,BDD1,DB,Vars,[BDDH,BDDN,BDD2|Vars1],
-[(H1,bdd_notc(Env,BDDH,BDDN)),
+[H1,bdd_notc(Env,BDDH,BDDN),
   andc(Env,BDD,BDDN,BDD2)|Rest],Env,Module):-!,
   add_bdd_arg_db(H,Env,BDDH,DB,Module,H1),
   process_body_db(T,BDD2,BDD1,DB,Vars,Vars1,Rest,Env,Module).
@@ -988,9 +1011,14 @@ process_body_db([H|T],BDD,BDD1,DB,Vars,[BDDH,BDD2|Vars1],
   process_body_db(T,BDD2,BDD1,DB,Vars,Vars1,Rest,Env,Module).
 
 
-process_head(HeadList, GroundHeadList) :-
+process_head(HeadList, GroundHeadList1) :-
   ground_prob(HeadList), !,
-  process_head_ground(HeadList, 0.0, GroundHeadList).
+  process_head_ground(HeadList, 0.0, GroundHeadList),
+  ( GroundHeadList = [V:P] -> 
+      P1 is 1.0 - P, 
+      GroundHeadList1 = [V:P,'':P1] ; 
+      GroundHeadList1 = GroundHeadList
+  ).
 
 process_head(HeadList0, HeadList):-
   get_probs(HeadList0,PL),
@@ -1082,38 +1110,6 @@ set_pita(M:Parameter,Value):-
 setting_pita(M:P,V):-
   M:local_pita_setting(P,V).
 
-extract_vars_list(L,[],V):-
-  rb_empty(T),
-  extract_vars_tree(L,T,T1),
-  rb_keys(T1,V).
-
-extract_vars(Term,V):-
-  rb_empty(T),
-  extract_vars_term(Term,T,T1),
-  rb_keys(T1,V).
-
-extract_vars_term(Variable, Var0, Var1) :-
-  var(Variable), !,
-  (rb_lookup(Variable, Var0,_) ->
-    Var1 = Var0
-  ;
-    rb_insert(Var0,Variable,1,Var1)
-  ).
-
-extract_vars_term(Term, Var0, Var1) :-
-  Term=..[_F|Args],
-  % format('Term: ~w - Args: ~w ~n',[Term,Args]),
-  extract_vars_tree(Args, Var0, Var1).
-
-
-
-extract_vars_tree([], Var, Var).
-
-extract_vars_tree([Term|Tail], Var0, Var1) :-
-  extract_vars_term(Term, Var0, Var),
-  extract_vars_tree(Tail, Var, Var1).
-
-
 delete_equal([],_,[]).
 
 delete_equal([H|T],E,T):-
@@ -1168,49 +1164,37 @@ to_table(M,Heads,ProcTabDir,Heads1):-
 
 tab_dir(_M,'':_,[],[]):-!.
 
-tab_dir(M,H:P,[],[H:P]):-
-  M:tabled(H),!.
-
 % tab dir for decision variables
 % merge with the previous one?
 % the predicates are equal except
 % (?)::H and H:P
-tab_dir(M,HT,[],[H]):-
-  (HT = ?::H ; HT = (?)::H),
+tab_dir(M,D::H,[],[H]):-
+  (D == ? ; D == (?)),
   M:tabled(H),!.
 % tab dir for decision variables
 % merge with the previous one?
 % the predicates are equal except
 % (?)::H and '$util'(A,B)
 tab_dir(M,H,[],[H]):-
-  M:tabled(H),!,
   H=..[F|_],
-  F = utility.
+  F = utility,
+  M:tabled(H),!.
+
+tab_dir(M,H:P,[],[H:P]):-
+  M:tabled(H),!.
+
+tab_dir(M,P::H,[],[H:P]):-
+  P \== ?,
+  M:tabled(H),!.
 
 
-tab_dir(M,H:P,[(:- table HT)],[H1:P]):-
-  functor(H,F,A0),
-  functor(PT,F,A0),
-  PT=..[F|Args0],
-  (M:local_pita_setting(depth_bound,true)->
-    ExtraArgs=[_,_,lattice(orc/3)]
-  ;
-    ExtraArgs=[_,lattice(orc/3)]
-  ),
-  append(Args0,ExtraArgs,Args),
-  HT=..[F|Args],
-  H=..[_|ArgsH],
-  H1=..[F|ArgsH],
-  assert(M:tabled(PT)),
-  zero_clause(M,F/A0,LZ),
-  assert(M:zero_clauses(LZ)).
 
 % tab dir for decision variables
 % merge with the previous one?
 % the predicates are equal
 % except variable n 2 and 4.
-tab_dir(M,HT1,[(:- table HT)],[H1]):-
-  (HT1 = ?::H ; HT1 = (?)::H),
+tab_dir(M,P::H,[(:- table HT)],[H1]):-
+  (P== ?;P == (?)),!,
   functor(H,F,A0),
   functor(PT,F,A0),
   PT=..[F|Args0],
@@ -1233,7 +1217,7 @@ tab_dir(M,HT1,[(:- table HT)],[H1]):-
 % except variable n 2 and 4.
 tab_dir(M,H,[(:- table HT)],[H1]):-
   H=..[F|_],
-  F = utility,
+  F = utility,!,
   functor(H,F,A0),
   functor(PT,F,A0),
   PT=..[F|Args0],
@@ -1249,6 +1233,26 @@ tab_dir(M,H,[(:- table HT)],[H1]):-
   assert(M:tabled(PT)),
   zero_clause(M,F/A0,LZ),
   assert(M:zero_clauses(LZ)).
+
+
+tab_dir(M,Head,[(:- table HT)],[H1:P]):-
+  (Head=H:P;Head=P::H),!,
+  functor(H,F,A0),
+  functor(PT,F,A0),
+  PT=..[F|Args0],
+  (M:local_pita_setting(depth_bound,true)->
+    ExtraArgs=[_,_,lattice(orc/3)]
+  ;
+    ExtraArgs=[_,lattice(orc/3)]
+  ),
+  append(Args0,ExtraArgs,Args),
+  HT=..[F|Args],
+  H=..[_|ArgsH],
+  H1=..[F|ArgsH],
+  assert(M:tabled(PT)),
+  zero_clause(M,F/A0,LZ),
+  assert(M:zero_clauses(LZ)).
+
 
 pita_expansion(begin_of_file,_):-
   !,
@@ -1316,7 +1320,7 @@ pita_expansion((Prob:- Constraint), Clauses) :-
   append([onec(Env,BDD)],BodyList2,BodyList3),
   list2and(BodyList3,Body2),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),%***test single_vars
   (M:local_pita_setting(single_var,true)->
@@ -1345,7 +1349,7 @@ pita_expansion(map_query(Clause),[query_rule(R,HeadList,Body,VC)|Clauses]):-
   ;
     Clauses=[Clauses0]
   ),
-  extract_vars(Clause,VC),
+  term_variables(Clause,VC),
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList).
 
@@ -1359,7 +1363,7 @@ pita_expansion(abducible(Head),[Clause,abd(R,S,H)]) :-
     H=Head,
     Probs=[1.0,1.0]
   ),
-  extract_vars_list([H],[],VC),
+  term_variables([H],VC),
   get_next_rule_number(M,R),
   add_bdd_arg(H,Env,BDD,M,Head1), %***test single_var
   (M:local_pita_setting(single_var,true)->
@@ -1383,7 +1387,7 @@ pita_expansion(Head:-Body,[Clause,rule_by_num(R,H,Body1,[]),TabDir]) :-
   append([onec(Env,BDD)],BodyList1,BodyList2),
   list2and(BodyList2,Body1),
   append([Head],BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   to_table(M,[Head],TabDir,HeadList1),
   HeadList1 = [H1],
@@ -1398,7 +1402,7 @@ pita_expansion(Head,[Clause,rule_by_num(R,[H],[],VC),TabDir]) :-
   M:pita_on,
   (Head \= ((pita_expansion(_,_)) :- _ )),
   (Head = ((?) :: H) ; Head = decision(H)), ground(H), !,
-  extract_vars_list([Head],_,VC), % VC is [] so maybe avoid the computation
+  term_variables([Head],VC), % VC is [] so maybe avoid the computation
   get_next_rule_number(M,R),
   to_table(M,[Head],TabDir,HeadList1),
   HeadList1 = [H1],
@@ -1412,13 +1416,15 @@ pita_expansion(Head:-Body,[Clause,TabDir,'$util'(H,U)]) :-
   pita_input_mod(M),
   M:pita_on,
   (Head \= ((pita_expansion(_,_)) :- _ )),
-  (Head = (H => U) ; Head = utility(H,U)), ground(H), number(U), !,
+  (Head = (H => U) ; Head = utility(H,U)),
+  ( ground(H) -> true ; throw(error("Expected ground decision fact in utility/2"))),
+  ( number(U) -> true ; throw(error("Expected a number for utility in utility/2"))), !,
   list2and(BodyList, Body),
   process_body(BodyList,BDD,BDDAnd,[],_Vars,BodyList1,Env,M),
   append([onec(Env,BDD)],BodyList1,BodyList2),
   list2and(BodyList2,Body1),
   append([Head],BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   to_table(M,[Head],TabDir,HeadList1),  % <---------------------- if HEAD = H => U does NOT WORKS
   HeadList1 = [H1],
@@ -1432,7 +1438,9 @@ pita_expansion(Head,'$util'(H,U)) :-
   pita_input_mod(M),
   M:pita_on,
   (Head \= ((pita_expansion(_,_)) :- _ )),
-  (Head = (H => U) ; Head = utility(H,U)), ground(H), number(U), !.
+  (Head = (H => U) ; Head = utility(H,U)),
+  ( ground(H) -> true ; throw(error("Expected ground decision fact in utility/2"))),
+  ( number(U) -> true ; throw(error("Expected a number for utility in utility/2"))), !.
 
 pita_expansion(Head:-Body,[rule_by_num(R,HeadList,BodyList,VC1)|Clauses]) :-
   prolog_load_context(module, M),pita_input_mod(M),M:pita_on,
@@ -1448,7 +1456,7 @@ pita_expansion(Head:-Body,[rule_by_num(R,HeadList,BodyList,VC1)|Clauses]) :-
   ),
   length(D0,Len),
   Prob is 1.0/Len,
-  extract_vars_list([H],[],VH),
+  term_variables([H],VH),
   delete_equal(VH,Var,VH1),
   maplist(gen_head(H,Prob,VH1,Var),D0,HeadList),
   get_next_rule_number(M,R),
@@ -1458,7 +1466,7 @@ pita_expansion(Head:-Body,[rule_by_num(R,HeadList,BodyList,VC1)|Clauses]) :-
   append([onec(Env,BDD)],BodyList1,BodyList2),
   list2and(BodyList2,Body1),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   (M:local_pita_setting(single_var,true)->
     VC1 = []
   ;
@@ -1481,7 +1489,7 @@ pita_expansion(Head:-Body,[rule_by_num(R,HeadList,BodyList,VC1)|Clauses]) :-
   ;
     true
   ),
-  extract_vars_list([H],[],VH),
+  term_variables([H],VH),
   delete_equal(VH,Var,VH1),
   maplist(gen_head_disc(H,VH1,Var),D,HeadList),
   get_next_rule_number(M,R),
@@ -1491,7 +1499,7 @@ pita_expansion(Head:-Body,[rule_by_num(R,HeadList,BodyList,VC1)|Clauses]) :-
   append([onec(Env,BDD)],BodyList1,BodyList2),
   list2and(BodyList2,Body1),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   (M:local_pita_setting(single_var,true)->
     VC1 = []
   ;
@@ -1514,7 +1522,7 @@ pita_expansion((Head :- Body),
   append([onec(Env,BDD)],BodyList1,BodyList2),
   list2and(BodyList2,Body1),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),
   (M:local_pita_setting(single_var,true)->
@@ -1541,7 +1549,7 @@ pita_expansion((Head :- Body),
   append([onec(Env,BDD)],BodyList1,BodyList2),
   list2and(BodyList2,Body1),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),
   (M:local_pita_setting(single_var,true)->
@@ -1605,7 +1613,7 @@ pita_expansion((Head :- Body), Clauses) :-
   append([onec(Env,BDD)],BodyList2,BodyList3),
   list2and(BodyList3,Body2),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),%***test single_var
   (M:local_pita_setting(single_var,true)->
@@ -1629,7 +1637,7 @@ pita_expansion((Head :- Body), [rule_by_num(R,HeadList,BodyList,VC1)|Clauses]) :
   append([onec(Env,BDD)],BodyList2,BodyList3),
   list2and(BodyList3,Body2),
   append(HeadList,BodyList,List),
-  extract_vars_list(List,[],VC),
+  term_variables(List,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),%***test single_vars
   (M:local_pita_setting(single_var,true)->
@@ -1683,7 +1691,7 @@ pita_expansion(Head,
   Head=(_;_), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list(HeadList,[],VC),
+  term_variables(HeadList,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),
   (M:local_pita_setting(single_var,true)->
@@ -1701,7 +1709,7 @@ pita_expansion(Head,[rule_by_num(R,HeadList,[],VC1)|Clauses]) :-
   Head=(_;_), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list(HeadList,[],VC),
+  term_variables(HeadList,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs), %**** test single_var
   (M:local_pita_setting(single_var,true)->
@@ -1727,12 +1735,12 @@ pita_expansion(Head,[rule_by_num(R,HeadList,[],VC1)|Clauses]) :-
   ),
   length(D0,Len),
   Prob is 1.0/Len,
-  extract_vars_list([H],[],VH),
+  term_variables([H],VH),
   delete_equal(VH,Var,VH1),
   maplist(gen_head(H,Prob,VH1,Var),D0,HeadList),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs), %**** test single_var
-  extract_vars_list(HeadList,[],VC),
+  term_variables(HeadList,VC),
   (M:local_pita_setting(single_var,true)->
     VC1 = []
   ;
@@ -1755,12 +1763,12 @@ pita_expansion(Head,[rule_by_num(R,HeadList,[],VC1)|Clauses]) :-
   ;
     true
   ),
-  extract_vars_list([H],[],VH),
+  term_variables([H],VH),
   delete_equal(VH,Var,VH1),
   maplist(gen_head_disc(H,VH1,Var),D,HeadList),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs), %**** test single_var
-  extract_vars_list(HeadList,[],VC),
+  term_variables(HeadList,VC),
   (M:local_pita_setting(single_var,true)->
     VC1 = []
   ;
@@ -1811,7 +1819,7 @@ pita_expansion(Head,[rule_by_num(R,HeadList,[],VC1)|Clauses]) :-
   (Head=(_H:_);Head=(_::_H)), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list(HeadList,[],VC),
+  term_variables(HeadList,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),
   to_table(M,HeadList,TabDir,[H1:_]),
@@ -1831,7 +1839,7 @@ pita_expansion(Head,[rule_by_num(R,HeadList,[],VC1)|Clauses]) :-
   (Head=(_H:_);Head=(_::_H)), !,
   list2or(HeadListOr, Head),
   process_head(HeadListOr, HeadList),
-  extract_vars_list(HeadList,[],VC),
+  term_variables(HeadList,VC),
   get_next_rule_number(M,R),
   get_probs(HeadList,Probs),
   to_table(M,HeadList,TabDir,[H1:_]),

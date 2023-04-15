@@ -13,7 +13,7 @@ phil on SWISH Manual - SWI-Prolog Version
 
 Introduction
 ============
-phil is a suite of programs for reasoning with hierarchical probabilistic logic programs (HPLP) :cite:`NguLamRig17-PLP-IW`. 
+phil is a suite of programs for reasoning with hierarchical probabilistic logic programs (HPLP) :cite:`fadja2021learning,NguLamRig17-PLP-IW`. 
 It allows both inference and learning. phil is available only for SWI-Prolog. 
 
 phil is part of cplint on SWISH web application available at `<http://cplint.eu>`_.
@@ -72,7 +72,7 @@ Other machine learning datasets are available in pack `phil_datasets <https://gi
 
 Syntax 
 ==================
-phil allows the definition of discrete probability distributions. It performs inference, parameter and structure learning on Hierarchical Probabilistic Logic Programs (HPLPs) :cite:`NguLamRig17-PLP-IW`.
+phil allows the definition of discrete probability distributions. It performs inference, parameter and structure learning on Hierarchical Probabilistic Logic Programs (HPLPs), see :cite:`fadja2021learning`.
 
 HPLPs are restrictions of Logic programs with annotated disjunctions LPADs (:cite:`VenVer03-TR,VenVer04-ICLP04-IC`). A HPLP is a set of annotated clauses whose head contain a single atom annotated with a probability. For the rest, the usual syntax of Prolog is used. 
 A general HPLP clause has the following form: ::
@@ -139,7 +139,7 @@ If the HPLP contains function symbols, the definition is more complex, see :cite
 
 Inference
 ==================
-phil answers queries using the module phil. It performs exact inference using a program transformation technique.  Each program is converted to a set of arithmetic circuits (ACs) or deep neural networks using a modified version of PITA :cite:`Rig14-CJ-IJ` with tabling and answer subsumption :cite:`RigSwi10-ICLP10-IC` as described in :cite:`NguLamRig17-PLP-IW`.
+phil answers queries using the module phil. It performs exact inference using a program transformation technique.  Each program is converted to a set of arithmetic circuits (ACs) or deep neural networks using a modified version of PITA :cite:`Rig14-CJ-IJ` with tabling and answer subsumption :cite:`RigSwi10-ICLP10-IC` as described in :cite:`fadja2021learning,NguLamRig17-PLP-IW`.
 
 
 For answering queries, you have to prepare a Prolog file where you first load the inference module :code:`phil`, initialize it with the directive :code:`:- phil` and then enclose the hierarchical program clauses in :code:`:-begin_in.` and :code:`:-end_in.` or enclose the clauses in :code:`in([<clauses>])`. 

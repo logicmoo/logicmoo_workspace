@@ -334,7 +334,7 @@ pred_global_cpoints(_Pred7,_Color,[],Grid,Grid):- !.
 pred_global_cpoints(Pred7,Color,[H|T],Grid,GridO):- !, pred_global_cpoints(Pred7,Color,H,Grid,GridM),pred_global_cpoints(Pred7,Color,T,GridM,GridO).
 pred_global_cpoints(Pred7,FG,Point,Grid,GridO):- FG == fg, point_to_hvc(Point,H,V,C), !, hv_c_value_or(Grid,Old,H,V,_), call(Pred7,H,V,C,Old,Grid,GridO).
 pred_global_cpoints(Pred7,Color,Point,Grid,GridO):- point_to_hvc(Point, H,V,_),  hv_c_value_or(Grid,Old,H,V,_),  call(Pred7,H,V,Color,Old,Grid,GridO).
-%pred_global_cpo ints(Pred7,Color,Point,Grid,GridO):- set_local _points(Pred7,,Point,Grid,GridO).
+%pred_global_cpo ints(Pred7,Color,Point,Grid,GridO):- set_local _points(Pred7,  ,Point,Grid,GridO).
 pred_global_cpoints(Pred7,Color,Point,Grid,Grid):-  nop(warn_skip(((pred_global_points(Pred7,Color,Point))))).
 
 
@@ -489,6 +489,61 @@ colors_to_vars(Colors,Vars,Grid,GridO):- (plain_var(Colors)->unique_colors(Grid,
 subst_cvars([],[],A,A):-!. 
 subst_cvars([F|FF],[R|RR],S,D):- !, freeze(R,(\=(R,_-_))),subst001(S,F,R,M), subst_cvars(FF,RR,M,D).
 
+
+pair_color_order(Grid,Colors):- 
+  testid_name_num_io_0(Grid,TestID,E,N,_),!,
+  findall(G,kaggle_arc_io(TestID,E+N,_,G),GL),
+  grid_color_order(GL,Colors).
+
+input_color_vary(TestID):-
+  findall(G,kaggle_arc_io(TestID,trn+_,in,G),GL),
+  color_vary(GL).
+output_color_vary(TestID):-
+  findall(G,kaggle_arc_io(TestID,trn+_,out,G),GL),
+  color_vary(GL).
+output_to_input_color_vary(TestID):-
+  forall(kaggle_arc(TestID,trn+_,I,O),color_overlap(I,O)).
+
+color_vary(I,O):- \+ color_overlap(I,O).
+color_vary([I,O]):- !, color_vary(I,O).
+color_vary(List):- forall(pairs_from(List,I,O),color_vary(I,O)).
+
+pairs_from(List,I,O):- append(_,[I|Rest],List),member(O,Rest).
+
+color_overlap(I,O):- fg_color_cc(I,FG1),fg_color_cc(O,FG2),
+  color_overlap_cc(FG1,FG2).
+
+color_overlap_cc(FG1,FG2):-
+  maplist(arg_same(1),FG1,FG2).
+size_overlap_cc(FG1,FG2):-
+  maplist(arg_same(2),FG1,FG2).
+
+
+
+
+fg_color_cc(Grid,FGs):-
+  colors_cc(Grid,CCs),
+  my_include(arg1(is_real_fg_color),CCs,FGs).
+
+test_color_order(Grid,Colors):- 
+  testid_name_num_io_0(Grid,TestID,_,_,_),!,
+  findall(G,kaggle_arc_io(TestID,_,_,G),GL),
+  grid_color_order(GL,Colors).
+
+grid_color_order(Grid,Colors):-
+  fg_color_cc(Grid,FGs),
+  maplist(arg(1),FGs,Colors).
+
+apply_grid_color_order(Colors,Grid,GridO):-
+  (var(Colors)->test_color_order(Grid,Colors);true),
+  available_fg_colors(Avails),
+  mapgrid(subst_color_order(Colors,Avails),Grid,GridO),!.
+subst_color_order(Colors,Avails,Grid,GridO):- 
+  is_color(Grid),nth1(Nth,Colors,E),E=@=Grid,
+  nth1(Nth,Avails,GridO),!.
+subst_color_order(_,_,Grid,Grid).
+
+ 
 /*
 colors_to_vars(B,A,Grid,GridO):- is_list(Grid),!,my_maplist(colors_to_vars(B,A),Grid,GridO).
 colors_to_vars(F,R,S,D):- nth1(N,F,E),E==S,nth1(N,R,D),!.
@@ -688,20 +743,21 @@ gsize_member(vis2D(X,Y),X,Y).
 grid_size(NIL,1,1):- NIL==[],!.
 grid_size(ID,H,V):- is_grid_size(ID,H,V),!.
 grid_size(GID,H,V):- atom(GID),gid_to_grid(GID,Grid),!,grid_size_nd(Grid,H,V),!.
-grid_size(OID,H,V):- atom(OID),oid_to_parent_gid(OID,GID),grid_size(GID,H,V),!.
+grid_size(Point,H,V):- is_point(Point),hv_point(H,V,Point),!.
+grid_size(OID,H,V):- \+compound(OID),!,atom(OID),!,oid_to_parent_gid(OID,GID),grid_size(GID,H,V),!.
 grid_size(I,H,V):- notrace(is_object(I)),indv_props_list(I,L),gsize_member(E,H,V),member(E,L),!.
 %grid_size(G,H,V):- quietly(is_object(G)), !, vis2D(G,H,V).
-grid_size(Points,H,V):- is_points_list(Points),!,points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V),!.
+grid_size(Points,H,V):- is_points_list(Points),!,must_det_ll(points_range(Points,_LoH,_LoV,_HiH,_HiV,H,V)),!.
 %grid_size(G,H,V):- is_graid(G,GG),!, grid_size(GG,H,V).
 grid_size(G,H,V):- notrace(is_vm_map(G)),H = G.h,V = G.v, !.
 grid_size(G,H,V):- notrace(is_group(G)),mapgroup(grid_size_term,G,Offsets),grid_size_2d(Offsets,H,V),!.
-grid_size(G,H,V):- findall(size2D(H,V),((sub_term(E,G),compound(E),gsize_member(E,H,V))),Offsets),grid_size_2d(Offsets,H,V),!.
+grid_size(G,H,V):- findall(size2D(H,V),((sub_compound(E,G),gsize_member(E,H,V))),Offsets),grid_size_2d(Offsets,H,V),!.
 %grid_size([G|G],H,V):- is_list(G), length(G,H),length([G|G],V),!.
 grid_size(G,H,V):- notrace(is_grid(G)),!,grid_size_nd(G,H,V),!.
 %grid_size([G|G],H,V):- is_list(G),is_list(G), grid_size_nd([G|G],H,V),!.
 %grid_size(O,_,_):- trace_or_throw(no_grid_size(O)).
-grid_size(G,H,V):- sub_term(E,G),compound(E),E=giz(gid(GID)),nonvar(GID),grid_size(GID,H,V),!.
-grid_size(G,H,V):- sub_term(E,G),compound(E),E=oid(OID),nonvar(OID),oid_to_parent_gid(OID,GID),grid_size(GID,H,V),!.
+grid_size(G,H,V):- sub_compound(E,G),E=giz(gid(GID)),nonvar(GID),grid_size(GID,H,V),!.
+grid_size(G,H,V):- sub_compound(E,G),E=oid(OID),nonvar(OID),oid_to_parent_gid(OID,GID),grid_size(GID,H,V),!.
 
 grid_size(O,30,30):- arcST,itrace,dmsg(warn(grid_size(O,30,30))),!.
 

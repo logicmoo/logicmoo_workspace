@@ -759,7 +759,8 @@ learn_group_mapping_now1(AG00,BG00):-
 
      
 learn_group_mapping(AG00,BG00):-
-  warn_skip(learn_group_mapping_now(AG00,BG00)).
+  %warn_skip
+  (learn_group_mapping_now(AG00,BG00)).
 
 learn_group_mapping_now(AG00,BG00):-
   %ignore(learn_group_mapping1(AG00,BG00)),
@@ -1199,8 +1200,20 @@ save_rule2(IO_DIR,TITLE,AL,BL):-
   assert_showed_mapping(AL,BL),!,
   skip_rule(IO_DIR,"All background objects "+ TITLE,AL,BL).
 
-save_rule2(IO_DIR,TITLE,IP,OP):- 
- arcST,
+
+%save_rule2(IO_DIR,TITLE,[IP],[OP]):- !, save_rule22(IO_DIR,TITLE,IP,OP).
+save_rule2(IO_DIR,TITLE,IP,OP):-
+  save_rule22(IO_DIR,TITLE,IP,OP).
+
+save_rule22(IO_DIR,TITLE,IP,OP):-
+ must_det_ll((
+   into_lhs_obj(IP,HS1),
+   into_lhs_obj(OP,HS2),
+   save_rule3(IO_DIR,TITLE,HS1,HS2))).
+
+
+save_rule3(IO_DIR,TITLE,IP,OP):- 
+ %arcST,
  ip_op_debug_info(IP,OP,LOCK),
  if_t(once(true;is_fg_object(IP);is_fg_object(OP)),
  (must_det_ll((
@@ -1214,6 +1227,15 @@ save_rule2(IO_DIR,TITLE,IP,OP):-
  w_section(title(["SAVE", TITLE ,IO_DIR,RN]),
  ((print_rule_grids(IO_DIR,TITLE,IP,OP,LOCK),
    save_learnt_rule(arc_cache:object_to_object(TITLE,lhs(III),rhs(OOO),NewSharedS,LOCK),oneTwo,twoOne)))))))).
+
+into_lhs_obj(Obj,Obj):-!.
+into_lhs_obj(Obj,obj(PropList)):-
+ must_det_ll((
+ PropList = [iz(cenGX(_)),iz(cenGY(_)),iz(sizeGX(_)),iz(sizeGY(_)),iz(sid(_)),pen(_),rot2D(_),oid(_),mass(_)],
+ maplist(must_indv_prop(Obj),PropList))).
+
+must_indv_prop(obj(Obj),Prop):- member(Prop,Obj),!.
+must_indv_prop(Obj,Prop):- must_det_ll(indv_props(Obj,Prop)).
 
 skip_rule(IO_DIR,TITLE,IP,OP):- 
  ip_op_debug_info(IP,OP,LOCK),
@@ -2066,9 +2088,10 @@ use_test_associatable_group_real(In,SolutionO):-
 
 
 use_test_associatable_group(I,O):-
-  warn_skip(((use_test_associatable_group_now(I,O)))),!.
+  %warn_skipg
+  (((use_test_associatable_group_now(I,O)))),!.
 
-use_test_associatable_group(I,O):-
+use_test_associatable_group_now(I,O):-
   use_test_associatable_group_real(I,O),
   nop(print_side_by_side(real_associatable_group,I,O)).
 

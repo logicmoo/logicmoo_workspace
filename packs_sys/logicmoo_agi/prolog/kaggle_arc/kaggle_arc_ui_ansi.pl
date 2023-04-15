@@ -78,6 +78,8 @@ arc_simple_rewrite(I,O):-
   b_setval(arc_can_portray,t).
 
 
+:- current_prolog_flag(never_pp_hook, true).
+
 
 portray_terse:- true,!.
 
@@ -100,18 +102,26 @@ arc_portray(G, TF):- catch(arc_portray_nt(G, TF),E,(writeln(E),never_let_arc_por
 % Portray In Debugger
 
 arc_portray_nt(G, false):- is_grid(G), print_grid(G),!.
-arc_portray_nt(G0, true):- is_group(G0), ppt(G0),!.
+%arc_portray_nt([G|L],_False):- is_object(G), !, pp([G|L]).
+%arc_portray_nt(G0, true):- is_group(G0), ppt(G0),!.
 %arc_portray_nt(G0, false):- is_group(G0), ppt(G0),!.
-arc_portray_nt(G0, false):- is_group(G0), into_list(G0,G), length(G,L),% L>1, !,
-   dash_chars, 
-   once(((why_grouped(_TestID,Why,WG),WG=@=G,fail);(Why = (size2D=L)))),!,
-   print_grid(Why,G),nl_now,
-   %underline_print(writeln(Why)),
-   print_info_l(G),
-   dash_chars.
+arc_portray_nt(G0, Tracing):- is_group(G0), into_list(G0,G), length(G,L),% L>1, !,
+   maplist(tersify,G0,GG), write(GG),
+   if_t(Tracing==false,
+    in_cmt((
+     dash_chars, 
+     once(((why_grouped(_TestID,Why,WG),WG=@=G,fail);(Why = (size2D=L)))),!,
+     print_grid(Why,G),nl_now,
+     
+     %underline_print(writeln(Why)),
+     %print_info_l(G),
+     dash_chars))).
 
 
-arc_portray_nt(G,_False):- is_object(G), wots(S,ppt(G)), show_indiv(S,G).
+arc_portray_nt(G,_False):- is_object(G), wots(S,writeg(G)),
+  global_grid(G,GG),!,
+  print_grid(GG),
+  write(S),!. % show_indiv(S,G).
   %object_grid(G,OG), 
   %neighbor_map(OG,NG), !,
   %print_grid(object_grid,NG),nl_now,
@@ -533,7 +543,7 @@ arcp:will_arc_portray:-
    flag(arc_portray_current_depth,X,X),X<3,
    current_predicate(bfly_startup/0).
 
-user:portray(Grid):-
+user:portray(Grid):- 
   arcp:will_arc_portray, \+ \+ catch(quietly(arc_portray(Grid)),_,fail),!, flush_output.
 
 
@@ -690,19 +700,20 @@ number_vars_calc_goals(Term,TermC,[5|SGoals]):-
 
 
 
-writeg(Term):- ignore( \+ notrace(catch(once(writeg0(Term);ppa(Term)),E,(pp(E),ppa(Term))))).
+writeg(Term):- ignore( \+ notrace(catch(once(writeg0(Term);ppa(Term)),E,(pp(E),ppa(Term))))),!.
 
 writeg0(Term):- term_attvars(Term,Attvars),Attvars\==[],!,
-  (((number_vars_calc_goals(Term,TermC,Goals),
+  must_det_ll(((number_vars_calc_goals(Term,TermC,Goals),
   writeg5(TermC)),!,
   if_t(Goals\==[],(nl_if_needed, 
     write(' goals='), call_w_pad_prev(3,az_ansi(print_tree_no_nl(Goals))))))),!.
 
-writeg0(Term):- \+ ground(Term), must_det_ll((  
+writeg0(Term):- \+ ground(Term), 
+ \+ \+ must_det_ll((  
   numbervars(Term,0,_Ten1,[singletons(true),attvar(skip)]), writeg5(Term))).
 writeg0(Term):- writeg5(Term),!.
 
-writeg5(X):- is_ftVar(X),!,write_nbsp,write_nbsp,print(X).
+writeg5(X):- is_ftVar(X),!,write_nbsp,write_nbsp,print(X),write_nbsp.
 writeg5(N=V):- is_simple_2x2(V),!,print_grid(N,V),writeln(' = '),call_w_pad_prev(2,writeg9(V)).
 writeg5(N=V):- is_gridoid(V),!,print_grid(N,V),writeln(' = '),call_w_pad_prev(2,writeg9(V)).
 writeg5(N=V):- nl_if_needed,nonvar(N), pp_no_nl(N),writeln(' = '), !, call_w_pad_prev(2,writeg5(V)). 
@@ -1136,11 +1147,12 @@ print_side_by_side(A^B):- caret_to_list(A^B,List),print_side_by_side(List),!.
 print_side_by_side(call(P)):- !, call(P,Ret),!,print_side_by_side_l(1,Ret).
 print_side_by_side(List):- is_obj_props(List),!,wqs(List).
 print_side_by_side(G):- is_grid(G),!,print_grid(G).
+print_side_by_side([G|L]):- is_grid(G),maplist(is_grid,L),!,print_side_by_side_l(1,[G|L]).
 print_side_by_side(G):- is_object(G),!,print_grid([G]).
+print_side_by_side(Title=Value):- !, format('~N'),print_title(Title),write('==>'),print_side_by_side(Value).
 print_side_by_side(GF):- grid_footer(GF,G,W),is_gridoid(G),!,print_grid(W,G).
 %print_side_by_side(Title=(A^B)):- print_side_by_side((Title=A)^B).
 
-print_side_by_side(Title=Value):- !, format('~N'),print_title(Title),write('==>'),print_side_by_side(Value).
 print_side_by_side(P):- is_list(P), print_side_by_side_l(1,P), !,nop((length(P,PL),PL>5,writeln(pss=PL))).
 print_side_by_side(P):- \+ is_list(P), !, ignore((print_side_by_side_l(1,[P]))),!.
 
@@ -1884,6 +1896,7 @@ correct_nbsp(S0,S):- replace_in_string([" &nbsp;"="&nbsp;","&nbsp; "="&nbsp;"],S
 
 %ansi_format_real(Ansi,Format,Args):- wants_html,!,sformat(S,Format,Args),!,color_print_webui(Ansi,S).
 %ansi_format_real(Ansi,Format,Args):- ansicall(Ansi,format(Format,Args)),!.
+ansi_format_real(fg(fg(Ansi)),Format,Args):- !, ansi_format(fg(Ansi),Format,Args).
 ansi_format_real(Ansi,Format,Args):- ansi_format(Ansi,Format,Args).
 
 
