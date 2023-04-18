@@ -86,10 +86,6 @@ counts_change(TestID,ExampleNum,In,X,N1,N2):- in_out_atoms(In,Out),
    ExampleNum = trn+_,
    (propcounts(TestID, ExampleNum, Out, count, N2, X) -> true ; N2=0), N1\==N2.
 
-accompany_change30(TestID,P,Same):-
-  maplist(no_repeats_var,[P]),
-  accompany_changed_compute_pass1(TestID,P,Same).
-
 compute_scene_change(TestID):-
  with_pair_mode(whole_test, 
  (banner_lines(red,4),
@@ -179,11 +175,11 @@ compute_scene_change_pass2b(TestID,P):-
 compute_scene_change_pass2b(_,_).
 
 compute_scene_change_pass2c(TestID,P):-
-   make_unifiable_cc(P,UP),
+   make_unifiable_u(P,UP),
    is_accompany_changed_db(TestID,P,Same),
    is_accompany_changed_db(TestID,UP,DSame),
    P\=@=UP,
-   maplist(make_unifiable_cc,DSame,USame),
+   maplist(make_unifiable_u,DSame,USame),
    intersection(Same,USame,Kept,_,_),Kept\==[],
    forall(retract(is_accompany_changed_db(TestID,P,_)),true),
    assert_ilp_new(is_accompany_changed_db(TestID,P,Kept)).
@@ -297,12 +293,11 @@ ensure_prop_change(Prop):-
 
 prop_can(Prop,Can):-
   ensure_prop_change(Prop),
-  prop_cant(Prop,Cant),
+  once((prop_cant(Prop,Cant),
   prop_can1(Prop,Can1),
-  intersection(Can1,Cant,_,Can,_).
+  intersection(Can1,Cant,_,Can,_))).
+  %(Can == [] -> (CanL=Can1,fail) ; CanL= Can).
 
-
-% Turns out due to shortage Fred Meyer doesn't have the XR now anyways .. But i confirmed they do have  have a 28 day supply of the non-XR   .. .. Go ahead and not send the XR if you haven't sent it
 
 prop_cant(Prop,Set):-
   ensure_prop_change(Prop),
@@ -322,34 +317,10 @@ prop_can1(Prop,Can):-
     ((enum_object_ext(O),has_prop(giz(g(out)),O),has_prop(cc(bg,0),O),
       has_prop(Prop,O))),[I|L]),
   indv_props_list(I,List),
-  findall(P,(member(P,List),ok_notice(P),forall(member(E,L),has_prop(P,E))),Can).
+  findall(P,(member(P,List),P\=@=Prop,ok_notice(P),forall(member(E,L),has_prop(P,E))),Can).
 
 
-accompany_changed_compute_pass1(TestID,P,SameS):- 
-  findall(ac(TestID,X,ExampleNum,PO),
-    (accompany_change2(TestID,ExampleNum,[X1=P1O,X2=P2O,common=_Intersect]),
-     member(X=PO,[X1=P1O,X2=P2O])), AC0),
-  sort(AC0,AC1),
-  list_to_set_variant(AC1,AC2),
-  props_change(TestID,P,_),
-  ac1_or_ac2(TestID,P,AC2,NewSame),
-  correct_antes3(TestID,P,NewSame,SameS).
-
-ac1_or_ac2(TestID,P,AC2,NewSame):-
-  ac1_or_ac2_1(TestID,P,AC2,NewSame)*->true;ac1_or_ac2_2(TestID,P,AC2,NewSame).
-  
-ac1_or_ac2_1(TestID,P,AC2,NewSame):-
-  findall(ac1(PO),member(ac(TestID,P,_ExampleNum,PO),AC2),AC3),
-  merge_xtra_props_ac1(AC3,Same),
-  find_peers_with_same(TestID,P,Same,NewSame),
-  NewSame\==[].
-
-ac1_or_ac2_2(TestID,P,AC2,NewSame):-
-  findall(ac2(ExampleNum,PO),(member(ac(TestID,P,ExampleNum,PO),AC2)),AC3),
-  sort(AC3,AC4),
-  merge_xtra_props_ac2(AC4,Same),
-  find_peers_with_same(TestID,P,Same,NewSame),
-  NewSame\==[].
+accompany_changed_compute_pass1(TestID,P,SameS):- props_change(TestID,P,_),prop_can(P,SameS).
 
 %xlisting(propcounts+variance_had_count_set+(pen([cc(yellow,1)]);links_count(contains,4))-'$spft$').
 /*
@@ -393,6 +364,7 @@ merge_xtra_props_ac2(AC2,Same):-
  ExampleNum \== ExampleNum2,
  intersection(PO1,PO2,Some),Some\==[],!,
  merge_xtra_props_ac2([ac2(ExampleNum,Some)|AC4],Same).
+
 merge_xtra_props_ac2([ac2(ExampleNum,PO1)|AC3],[ac2(ExampleNum,PO1)|Same]):-
   merge_xtra_props_ac2(AC3,Same),!.
 merge_xtra_props_ac2(Same,Same):-!.
@@ -412,7 +384,8 @@ same_prop_names(X1,X2):-
   compound(X1),compound(X2), same_functor(X1,X2),!,
   make_unifiable_u(X1,U1), make_unifiable_u(X2,U2),  U1 =@= U2.
 
-%make_unifiable_u(link(sees(L),A),link(sees(_),_)):-!.
+make_unifiable_u(Atom,U):- atomic(Atom),!,freeze(U,atomic(U)).
+make_unifiable_u(link(sees(L),A),link(sees(U),B)):- !, maplist(make_unifiable_u,[A|L],[B|U]).
 make_unifiable_u(X1,U1):- make_unifiable_cc(X1,U1),!.
 
 accompany_change2(TestID,ExampleNum,[X1=P1O,X2=P2O,common=Intersect]):-

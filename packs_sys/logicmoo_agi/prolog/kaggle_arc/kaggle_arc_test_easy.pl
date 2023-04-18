@@ -317,14 +317,14 @@ warn_and_fail_on_bad_p2(Cyan,Orange,Ex1,P2,I,Expect):-
  w_section(title(warn_and_fail_on_bad_p2),
  ((\+ \+ with_io_training_context(I,Expect,   
    (( put_attr(M,expect_p2,Expect),
-   (grid_call(P2,I,M)->OurOut=M;OurOut=I),
-    count_difs(OurOut,Expect,Errors),
+   (grid_call(P2,I,M)->OurSolution=M;OurSolution=I),
+    count_difs(OurSolution,Expect,Errors),
    (Errors = 0 
-     -> banner_grids(Cyan,I,pass_p2(P2,Ex1),OurOut,"MATCH") 
-     ; (banner_grids(Orange,OurOut,fail(Errors,P2,Ex1),Expect,"MISMATCH"),
-        assert(fail_p2(Ex1,P2,I,OurOut,Expect)),
-        banner_grids(red,I,fail(Errors,P2,Ex1),OurOut,"WRONG"),
-        nop(show_sameness_or_lameness(Cyan,Orange,warn_and_fail_on_bad_p2(P2,Ex1),OurOut,Expect,Errors)),
+     -> banner_grids(Cyan,I,pass_p2(P2,Ex1),OurSolution,"MATCH") 
+     ; (banner_grids(Orange,OurSolution,fail(Errors,P2,Ex1),Expect,"MISMATCH"),
+        assert(fail_p2(Ex1,P2,I,OurSolution,Expect)),
+        banner_grids(red,I,fail(Errors,P2,Ex1),OurSolution,"WRONG"),
+        nop(show_sameness_or_lameness(Cyan,Orange,warn_and_fail_on_bad_p2(P2,Ex1),OurSolution,Expect,Errors)),
         !,fail)),!,
    Errors == 0)))))).
      
