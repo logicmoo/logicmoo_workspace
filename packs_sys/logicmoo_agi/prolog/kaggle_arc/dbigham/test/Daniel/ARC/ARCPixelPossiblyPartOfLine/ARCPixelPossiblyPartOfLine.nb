@@ -1,0 +1,1019 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     41627,       1011]
+NotebookOptionsPosition[     32499,        803]
+NotebookOutlinePosition[     38137,        942]
+CellTagsIndexPosition[     38094,        939]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCPixelPossiblyPartOfLine", "Title",ExpressionUUID->"fa4d43cb-a3ae-43a8-8dc9-41edf7a96f0b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCPixelPossiblyPartOfLine", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[497]:=",ExpressionUUID->"37f29a88-54c8-44a7-a19a-a491044011db"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"1220980d-e099-4786-8a39-85269a9ebb77"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ARCParseFile", "[", "\"\<28e73c20\>\"", "]"}], "[", 
+  RowBox[{"\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+  "]"}]], "Input",
+ CellLabel->"In[80]:=",ExpressionUUID->"4a5dd13b-0b7f-4795-9aab-918dd6a641f7"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"}
+   },
+   AutoDelete->False,
+   FrameStyle->{
+     AbsoluteThickness[1], 
+     GrayLevel[0.5]},
+   GridBoxBackground->{
+    "Columns" -> {{None}}, "Rows" -> {{None}}, 
+     "ItemsIndexed" -> {{1, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 2} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 5} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {2, 1} -> 
+       GrayLevel[0], {2, 2} -> GrayLevel[0], {2, 3} -> GrayLevel[0], {2, 4} -> 
+       GrayLevel[0], {2, 5} -> GrayLevel[0], {2, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 2} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 5} -> 
+       GrayLevel[0], {3, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 2} -> 
+       GrayLevel[0], {4, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 5} -> 
+       GrayLevel[0], {4, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {5, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {5, 2} -> 
+       GrayLevel[0], {5, 3} -> GrayLevel[0], {5, 4} -> GrayLevel[0], {5, 5} -> 
+       GrayLevel[0], {5, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 2} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 5} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`]}},
+   GridBoxDividers->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+   GridBoxFrame->{"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+   GridBoxItemSize->{"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{3.8721508376239057`*^9},
+ CellLabel->"Out[80]=",ExpressionUUID->"d7522147-e431-4a71-b912-e715312de7ad"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Straight Section of Line", "Subsection",
+ CellChangeTimes->{{3.8721523427605877`*^9, 
+  3.872152374938002*^9}},ExpressionUUID->"5b54eeac-9a05-4831-bc03-\
+031b9607793a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCPixelPossiblyPartOfLine-20220914-VEDPIU", 
+              Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484], 45062960, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCPixelPossiblyPartOfLine-20220914-VEDPIU"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCPixelPossiblyPartOfLine-20220914-VEDPIU", 
+            Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484], "CellID" -> 45062960, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCPixelPossiblyPartOfLine-20220914-VEDPIU", 
+           Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCPixelPossiblyPartOfLine-20220914-VEDPIU"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718484}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.872152386777993*^9},ExpressionUUID->"1bcf7ef0-41f4-429c-9a83-\
+c61665a0c394"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCPixelPossiblyPartOfLine", "[", "\n", "\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ARCParseScene", "[", 
+      RowBox[{
+       RowBox[{"ARCParseFile", "[", "\"\<28e73c20\>\"", "]"}], "[", 
+       RowBox[{"\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+       "]"}], "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{
+      "\"\<Objects\>\"", ",", " ", "1", ",", " ", "\"\<Image\>\"", ",", " ", 
+       "1"}], "]"}], "]"}], ",", "\n", "\t", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", " ", "2"}], "}"}]}], "\n", "]"}], " ", "//", " ", 
+  "Indent2"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.872150839746998*^9, 3.87215086286899*^9}, {
+   3.8721513646021852`*^9, 3.872151366249268*^9}, {3.872151436365775*^9, 
+   3.872151457779197*^9}, 3.872152254510634*^9, 3.872152386777993*^9},
+ CellLabel->"In[161]:=",
+ CellID->45062960,
+ "TestId" -> 
+ "ARCPixelPossiblyPartOfLine-20220914-VEDPIU",ExpressionUUID->"b8bb7834-fb52-\
+4c40-b67f-b73d39d03193"]
+}, Open  ]],
+
+Cell[BoxData["\<\"<|\\\"Result\\\" -> True, \\\"AdjacentPixels\\\" -> {{1, \
+1}, {1, 3}}|>\"\>"], "Output",
+ CellChangeTimes->{{3.872152255237031*^9, 3.8721522694393845`*^9}, {
+  3.8721523121829433`*^9, 3.872152339097293*^9}},
+ CellLabel->
+  "Out[162]=",ExpressionUUID->"97c63ef1-9860-4bbc-ab40-0011a70ab739"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Corner", "Subsection",
+ CellChangeTimes->{{3.8721523427605877`*^9, 3.8721523437524076`*^9}, {
+  3.87215237642803*^9, 
+  3.87215237695312*^9}},ExpressionUUID->"78baf709-0aaa-436e-b6ee-\
+8da0bc5975f5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCPixelPossiblyPartOfLine-20220914-O9E5J4", 
+              Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488], 33231915, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCPixelPossiblyPartOfLine-20220914-O9E5J4"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCPixelPossiblyPartOfLine-20220914-O9E5J4", 
+            Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488], "CellID" -> 33231915, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCPixelPossiblyPartOfLine-20220914-O9E5J4", 
+           Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCPixelPossiblyPartOfLine-20220914-O9E5J4"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718488}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.8721523870589757`*^9},ExpressionUUID->"6c48a8db-73b2-43b8-b12a-\
+4a7fc6d41db0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCPixelPossiblyPartOfLine", "[", "\n", "\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ARCParseScene", "[", 
+      RowBox[{
+       RowBox[{"ARCParseFile", "[", "\"\<28e73c20\>\"", "]"}], "[", 
+       RowBox[{"\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+       "]"}], "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{
+      "\"\<Objects\>\"", ",", " ", "1", ",", " ", "\"\<Image\>\"", ",", " ", 
+       "1"}], "]"}], "]"}], ",", "\n", "\t", 
+    RowBox[{"{", 
+     RowBox[{"6", ",", " ", "1"}], "}"}]}], "\n", "]"}], " ", "//", " ", 
+  "Indent2"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.872150839746998*^9, 3.87215086286899*^9}, {
+   3.8721513646021852`*^9, 3.872151366249268*^9}, {3.872151436365775*^9, 
+   3.872151457779197*^9}, 3.872152254510634*^9, {3.8721523833589168`*^9, 
+   3.8721523870589757`*^9}},
+ CellLabel->"In[167]:=",
+ CellID->33231915,
+ "TestId" -> 
+ "ARCPixelPossiblyPartOfLine-20220914-O9E5J4",ExpressionUUID->"92d8db20-ed52-\
+46ed-862c-89246c8c85db"]
+}, Open  ]],
+
+Cell[BoxData["\<\"<|\\\"Result\\\" -> True, \\\"AdjacentPixels\\\" -> {{5, \
+1}, {6, 2}}|>\"\>"], "Output",
+ CellChangeTimes->{{3.872152255237031*^9, 3.8721522694393845`*^9}, {
+   3.8721523121829433`*^9, 3.872152339097293*^9}, 3.8721523846552916`*^9},
+ CellLabel->
+  "Out[168]=",ExpressionUUID->"633690b9-c6b0-4180-a876-566445185b32"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["End of Line", "Subsection",
+ CellChangeTimes->{{3.8721522455311832`*^9, 
+  3.872152246473503*^9}},ExpressionUUID->"e5a7fd0d-cf0e-468d-8175-\
+58058c659683"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCPixelPossiblyPartOfLine-20220914-Z8B0ST", 
+              Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492], 73172753, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCPixelPossiblyPartOfLine-20220914-Z8B0ST"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCPixelPossiblyPartOfLine-20220914-Z8B0ST", 
+            Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492], "CellID" -> 73172753, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCPixelPossiblyPartOfLine-20220914-Z8B0ST", 
+           Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCPixelPossiblyPartOfLine-20220914-Z8B0ST"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953718492}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.8721523873294587`*^9},ExpressionUUID->"49404bc3-14e0-4242-89a7-\
+48e8a4ad798a"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCPixelPossiblyPartOfLine", "[", "\n", "\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ARCParseScene", "[", 
+      RowBox[{
+       RowBox[{"ARCParseFile", "[", "\"\<28e73c20\>\"", "]"}], "[", 
+       RowBox[{"\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+       "]"}], "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{
+      "\"\<Objects\>\"", ",", " ", "1", ",", " ", "\"\<Image\>\"", ",", " ", 
+       "1"}], "]"}], "]"}], ",", "\n", "\t", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", " ", "1"}], "}"}]}], "\n", "]"}], " ", "//", " ", 
+  "Indent2"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.872150839746998*^9, 3.87215086286899*^9}, {
+   3.8721513646021852`*^9, 3.872151366249268*^9}, {3.872151436365775*^9, 
+   3.872151457779197*^9}, 3.8721523873294587`*^9},
+ CellLabel->"In[151]:=",
+ CellID->73172753,
+ "TestId" -> 
+ "ARCPixelPossiblyPartOfLine-20220914-Z8B0ST",ExpressionUUID->"2b39d1eb-7492-\
+4f93-ac2b-5df7976cd6e2"]
+}, Open  ]],
+
+Cell[BoxData["\<\"<|\\\"Result\\\" -> True, \\\"AdjacentPixels\\\" -> {{1, \
+2}}|>\"\>"], "Output",
+ CellChangeTimes->{{3.872150855194352*^9, 3.872150866224618*^9}, 
+   3.872151105795487*^9, {3.8721513331818314`*^9, 3.872151367149107*^9}, {
+   3.8721514396287303`*^9, 3.872151504203025*^9}, {3.872151585209669*^9, 
+   3.8721516149301853`*^9}, {3.8721521961402454`*^9, 3.8721522353250575`*^9}},
+ CellLabel->
+  "Out[152]=",ExpressionUUID->"0265ac78-4529-4636-8c23-a629dbb8e446"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Empty Space", "Subsection",
+ CellChangeTimes->{{3.8721523427605877`*^9, 
+  3.8721523550520725`*^9}},ExpressionUUID->"f10d3a47-eac8-4b54-8c94-\
+908c76514201"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCPixelPossiblyPartOfLine-20220914-Q3P78M", 
+              Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496], 2249201, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCPixelPossiblyPartOfLine-20220914-Q3P78M"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCPixelPossiblyPartOfLine-20220914-Q3P78M", 
+            Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496], "CellID" -> 2249201, "SubTest" -> 
+            None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCPixelPossiblyPartOfLine-20220914-Q3P78M", 
+           Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCPixelPossiblyPartOfLine-20220914-Q3P78M"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914953818496}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.872152387613448*^9},ExpressionUUID->"d5168e2f-23c9-44d8-8ead-\
+6223ce1ab537"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCPixelPossiblyPartOfLine", "[", "\n", "\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ARCParseScene", "[", 
+      RowBox[{
+       RowBox[{"ARCParseFile", "[", "\"\<28e73c20\>\"", "]"}], "[", 
+       RowBox[{"\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+       "]"}], "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{
+      "\"\<Objects\>\"", ",", " ", "1", ",", " ", "\"\<Image\>\"", ",", " ", 
+       "1"}], "]"}], "]"}], ",", "\n", "\t", 
+    RowBox[{"{", 
+     RowBox[{"2", ",", " ", "1"}], "}"}]}], "\n", "]"}], " ", "//", " ", 
+  "Indent2"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.872150839746998*^9, 3.87215086286899*^9}, {
+   3.8721513646021852`*^9, 3.872151366249268*^9}, {3.872151436365775*^9, 
+   3.872151457779197*^9}, 3.872152254510634*^9, {3.87215235761756*^9, 
+   3.872152387613448*^9}},
+ CellLabel->"In[165]:=",
+ CellID->2249201,
+ "TestId" -> 
+ "ARCPixelPossiblyPartOfLine-20220914-Q3P78M",ExpressionUUID->"08b6945e-4fcb-\
+4b4b-a199-a70f1c2c1b85"]
+}, Open  ]],
+
+Cell[BoxData["\<\"<|\\\"Result\\\" -> False|>\"\>"], "Output",
+ CellChangeTimes->{{3.872152255237031*^9, 3.8721522694393845`*^9}, {
+  3.8721523121829433`*^9, 3.872152364614125*^9}},
+ CellLabel->
+  "Out[166]=",ExpressionUUID->"748d7200-26e2-4949-80db-e550704c6b87"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["More than Two Adjacent Pixels", "Subsection",
+ CellChangeTimes->{{3.873103787465703*^9, 3.873103788089825*^9}, {
+  3.8731047039223557`*^9, 
+  3.8731047091143465`*^9}},ExpressionUUID->"94492692-3820-4cc0-a5f1-\
+c76eeb1a7121"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCPixelPossiblyPartOfLine-20220925-VEVZ6O", 
+              Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753], 98955045, "SubTest" -> 
+              None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCPixelPossiblyPartOfLine-20220925-VEVZ6O"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCPixelPossiblyPartOfLine-20220925-VEVZ6O", 
+            Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753], "CellID" -> 98955045, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCPixelPossiblyPartOfLine-20220925-VEVZ6O", 
+           Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCPixelPossiblyPartOfLine-20220925-VEVZ6O"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202292510251241753}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.873104711565817*^9},ExpressionUUID->"08f3829e-6c4c-4530-a2e6-\
+b73de15f6ada"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCPixelPossiblyPartOfLine", "[", "\n", "\t", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ARCParseScene", "[", "\n", "\t\t", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"ARCParseFile", "[", "\"\<d9f24cd1\>\"", "]"}], "[", 
+        RowBox[{"\"\<Train\>\"", ",", " ", "2", ",", " ", "\"\<Output\>\""}], 
+        "]"}], ",", "\n", "\t\t", 
+       RowBox[{
+       "\"\<FormMultiColorCompositeObjects\>\"", " ", "->", " ", "False"}], 
+       ",", "\n", "\t\t", 
+       RowBox[{
+       "\"\<CheckForGridsAndDividers\>\"", " ", "->", " ", "False"}]}], "\n", 
+      "\t", "]"}], "[", 
+     RowBox[{"[", 
+      RowBox[{
+      "\"\<Objects\>\"", ",", " ", "1", ",", " ", "\"\<Image\>\"", ",", " ", 
+       "1"}], "]"}], "]"}], ",", "\n", "\t", 
+    RowBox[{"{", 
+     RowBox[{"7", ",", " ", "1"}], "}"}]}], "\n", "]"}], " ", "//", " ", 
+  "Indent2"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.872150839746998*^9, 3.87215086286899*^9}, {
+   3.8721513646021852`*^9, 3.872151366249268*^9}, {3.872151436365775*^9, 
+   3.872151457779197*^9}, 3.872152254510634*^9, {3.87215235761756*^9, 
+   3.872152387613448*^9}, {3.8731037932182064`*^9, 3.8731038070170884`*^9}},
+ CellLabel->"In[495]:=",
+ CellID->98955045,
+ "TestId" -> 
+ "ARCPixelPossiblyPartOfLine-20220925-VEVZ6O",ExpressionUUID->"f62fa65f-32ad-\
+40db-931f-22768487490b"]
+}, Open  ]],
+
+Cell[BoxData["\<\"<|\\\"Result\\\" -> True, \\\"AdjacentPixels\\\" -> {{7, \
+2}, {8, 1}}|>\"\>"], "Output",
+ CellChangeTimes->{{3.8731038028610682`*^9, 3.8731038265867214`*^9}, 
+   3.8731043395829773`*^9, {3.873104550319331*^9, 3.8731045779692135`*^9}, 
+   3.873104689724335*^9},
+ CellLabel->
+  "Out[496]=",ExpressionUUID->"56d0d61f-9e97-4cab-9eb1-3343209ac777"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCPixelPossiblyPartOfLine], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCPixelPossiblyPartOfLine, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCPixelPossiblyPartOfLine]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCPixelPossiblyPartOfLine, "SubTest" -> None], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCPixelPossiblyPartOfLine], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCPixelPossiblyPartOfLine]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCPixelPossiblyPartOfLine, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCPixelPossiblyPartOfLine]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264 = "", ImageSize -> {100, 33}]}]},
+             Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022914925218264}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCPixelPossiblyPartOfLine", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCPixelPossiblyPartOfLine}, "ReturnNotebook" -> 
+    True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"dc67546d-c0ef-477a-b73a-baffef74a5c1"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 98, 0, 98, "Title",ExpressionUUID->"fa4d43cb-a3ae-43a8-8dc9-41edf7a96f0b"],
+Cell[681, 24, 261, 6, 54, "Code",ExpressionUUID->"37f29a88-54c8-44a7-a19a-a491044011db",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[967, 34, 79, 0, 67, "Section",ExpressionUUID->"1220980d-e099-4786-8a39-85269a9ebb77"],
+Cell[CellGroupData[{
+Cell[1071, 38, 258, 5, 29, "Input",ExpressionUUID->"4a5dd13b-0b7f-4795-9aab-918dd6a641f7"],
+Cell[1332, 45, 3178, 52, 167, "Output",ExpressionUUID->"d7522147-e431-4a71-b912-e715312de7ad"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4547, 102, 174, 3, 54, "Subsection",ExpressionUUID->"5b54eeac-9a05-4831-bc03-031b9607793a"],
+Cell[CellGroupData[{
+Cell[4746, 109, 3763, 87, 52, "TestUI",ExpressionUUID->"1bcf7ef0-41f4-429c-9a83-c61665a0c394",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[8512, 198, 1122, 28, 108, "Code",ExpressionUUID->"b8bb7834-fb52-4c40-b67f-b73d39d03193",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->45062960]
+}, Open  ]],
+Cell[9649, 229, 309, 5, 33, "Output",ExpressionUUID->"97c63ef1-9860-4bbc-ab40-0011a70ab739"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[9995, 239, 205, 4, 38, "Subsection",ExpressionUUID->"78baf709-0aaa-436e-b6ee-8da0bc5975f5"],
+Cell[CellGroupData[{
+Cell[10225, 247, 3765, 87, 52, "TestUI",ExpressionUUID->"6c48a8db-73b2-43b8-b12a-4a7fc6d41db0",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[13993, 336, 1154, 29, 108, "Code",ExpressionUUID->"92d8db20-ed52-46ed-862c-89246c8c85db",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->33231915]
+}, Open  ]],
+Cell[15162, 368, 334, 5, 33, "Output",ExpressionUUID->"633690b9-c6b0-4180-a876-566445185b32"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[15533, 378, 161, 3, 38, "Subsection",ExpressionUUID->"e5a7fd0d-cf0e-468d-8175-58058c659683"],
+Cell[CellGroupData[{
+Cell[15719, 385, 3765, 87, 52, "TestUI",ExpressionUUID->"49404bc3-14e0-4242-89a7-48e8a4ad798a",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[19487, 474, 1102, 28, 108, "Code",ExpressionUUID->"2b39d1eb-7492-4f93-ac2b-5df7976cd6e2",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->73172753]
+}, Open  ]],
+Cell[20604, 505, 476, 7, 33, "Output",ExpressionUUID->"0265ac78-4529-4636-8c23-a629dbb8e446"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[21117, 517, 163, 3, 38, "Subsection",ExpressionUUID->"f10d3a47-eac8-4b54-8c94-908c76514201"],
+Cell[CellGroupData[{
+Cell[21305, 524, 3761, 87, 52, "TestUI",ExpressionUUID->"d5168e2f-23c9-44d8-8ead-6223ce1ab537",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[25069, 613, 1148, 29, 108, "Code",ExpressionUUID->"08b6945e-4fcb-4b4b-a199-a70f1c2c1b85",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->2249201]
+}, Open  ]],
+Cell[26232, 645, 264, 4, 33, "Output",ExpressionUUID->"748d7200-26e2-4949-80db-e550704c6b87"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[26533, 654, 230, 4, 38, "Subsection",ExpressionUUID->"94492692-3820-4cc0-a5f1-c76eeb1a7121"],
+Cell[CellGroupData[{
+Cell[26788, 662, 3812, 89, 52, "TestUI",ExpressionUUID->"08f3829e-6c4c-4530-a2e6-b73de15f6ada",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[30603, 753, 1479, 36, 180, "Code",ExpressionUUID->"f62fa65f-32ad-40db-931f-22768487490b",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->98955045]
+}, Open  ]],
+Cell[32097, 792, 362, 6, 33, "Output",ExpressionUUID->"56d0d61f-9e97-4cab-9eb1-3343209ac777"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

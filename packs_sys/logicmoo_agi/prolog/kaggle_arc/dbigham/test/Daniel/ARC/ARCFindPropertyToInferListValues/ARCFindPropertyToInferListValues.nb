@@ -1,0 +1,347 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     13310,        339]
+NotebookOptionsPosition[      6836,        186]
+NotebookOutlinePosition[     12518,        324]
+CellTagsIndexPosition[     12475,        321]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCFindPropertyToInferListValues", "Title",ExpressionUUID->"8f610d93-794f-4078-bf1a-72e2393f9eba"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCFindPropertyToInferListValues", 
+  "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[171]:=",ExpressionUUID->"cc680f49-57e9-4cc4-922c-ea0ce0a00739"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"578c0f06-c2e3-44f3-9f3e-3a4cf7b939ec"],
+
+Cell[BoxData[
+ RowBox[{"Lui", "[", "\"\<a5f85a15\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.874483615366418*^9, 
+  3.8744836213172665`*^9}},ExpressionUUID->"6ca2153b-e4ab-46a6-81bd-\
+71e53c1460d5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCFindPropertyToInferListValues-20221011-DWHW0K", 
+              Daniel`ARC`ARCFindPropertyToInferListValues, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333], 96644179, "SubTest" -> 
+              None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCFindPropertyToInferListValues-20221011-DWHW0K"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCFindPropertyToInferListValues-20221011-DWHW0K", 
+            Daniel`ARC`ARCFindPropertyToInferListValues, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333], "CellID" -> 96644179, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCFindPropertyToInferListValues-20221011-DWHW0K", 
+           Daniel`ARC`ARCFindPropertyToInferListValues, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCFindPropertyToInferListValues-20221011-DWHW0K"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{840., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210119264840333}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.8744836083787174`*^9},ExpressionUUID->"88cbe194-a00e-49e0-8d3f-\
+42609448e524"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCFindPropertyToInferListValues", "[", "\n", "\t", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"\"\<Shape\>\"", ",", " ", "\"\<Fill\>\""}], "}"}], ",", "\n", 
+   "\t", 
+   RowBox[{"<|", "\n", "\t\t", 
+    RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+     RowBox[{"{", 
+      RowBox[{
+      "2", ",", " ", "9", ",", " ", "9", ",", " ", "9", ",", " ", "3", ",", 
+       " ", "3"}], "}"}]}], "\n", "\t", "|>"}], ",", "\n", "\t", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", " ", "4"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", " ", "4"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", " ", "4"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", " ", "4"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", " ", "4"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", " ", "4"}], "}"}]}], "}"}]}], "\n", "]"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.8744835591806087`*^9, 3.8744836083787174`*^9}},
+ CellLabel->"In[169]:=",
+ CellID->96644179,
+ "TestId" -> 
+ "ARCFindPropertyToInferListValues-20221011-DWHW0K",ExpressionUUID->"0114bb99-\
+5d8d-453d-b897-fc38d02c6604"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"ObjectValue", "[", 
+    RowBox[{"Daniel`ARC`Private`TODO", ",", "\<\"Color\"\>"}], "]"}], ",", 
+   "4"}], "}"}]], "Output",
+ CellChangeTimes->{3.87448237997202*^9, 3.8744836014765987`*^9},
+ CellLabel->
+  "Out[170]=",ExpressionUUID->"4b9eac0c-c825-49d7-a293-86bddc53024e"]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCFindPropertyToInferListValues], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCFindPropertyToInferListValues, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCFindPropertyToInferListValues]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCFindPropertyToInferListValues, "SubTest" -> None], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCFindPropertyToInferListValues], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCFindPropertyToInferListValues]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCFindPropertyToInferListValues, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCFindPropertyToInferListValues]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221011955423746}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCFindPropertyToInferListValues", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCFindPropertyToInferListValues}, 
+    "ReturnNotebook" -> True}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"cd923abc-14f3-4d2d-9e3c-7de9ab1bd2c6"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 104, 0, 98, "Title",ExpressionUUID->"8f610d93-794f-4078-bf1a-72e2393f9eba"],
+Cell[687, 24, 270, 7, 54, "Code",ExpressionUUID->"cc680f49-57e9-4cc4-922c-ea0ce0a00739",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[982, 35, 79, 0, 67, "Section",ExpressionUUID->"578c0f06-c2e3-44f3-9f3e-3a4cf7b939ec"],
+Cell[1064, 37, 199, 4, 29, "Input",ExpressionUUID->"6ca2153b-e4ab-46a6-81bd-71e53c1460d5"],
+Cell[CellGroupData[{
+Cell[1288, 45, 3862, 89, 52, "TestUI",ExpressionUUID->"88cbe194-a00e-49e0-8d3f-42609448e524",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[5153, 136, 1317, 35, 162, "Code",ExpressionUUID->"0114bb99-5d8d-453d-b897-fc38d02c6604",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->96644179]
+}, Open  ]],
+Cell[6485, 174, 323, 8, 33, "Output",ExpressionUUID->"4b9eac0c-c825-49d7-a293-86bddc53024e"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

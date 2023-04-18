@@ -1,0 +1,1322 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ToolManager | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class ToolManager</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="Tool.html" class="tsd-signature-type">Tool</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">ToolManager</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>This special <a href="Tool.html">Tool</a> is responsible for managing all of the Diagram&#39;s
+					mode-less tools, which you can access as the <a href="Diagram.html#toolManager">Diagram.toolManager</a>.</p>
+					<p>Mode-less tools are tools that are present in one of the following lists:
+						<a href="ToolManager.html#mouseDownTools">mouseDownTools</a>, <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>, or <a href="ToolManager.html#mouseUpTools">mouseUpTools</a>.
+						This ToolManager tool is normally the <a href="Diagram.html#defaultTool">Diagram.defaultTool</a>,
+					so it is also usually the <a href="Diagram.html#currentTool">Diagram.currentTool</a> when the user is doing &quot;nothing&quot;.</p>
+					<p>When this tool is running as the current tool, it handles mouse-down,
+						mouse-move, and mouse-up events and the corresponding touch events.
+						For each event it iterates over each of the tools in the corresponding list,
+						calling the tool&#39;s <a href="Tool.html#canStart">Tool.canStart</a> predicate.
+						If that predicate returns true, it starts that tool by making it the
+						diagram&#39;s current tool.
+						It then activates the tool and passes on the event to the tool by calling
+						the corresponding method (either <a href="Tool.html#doMouseDown">Tool.doMouseDown</a>,
+					<a href="Tool.html#doMouseMove">Tool.doMouseMove</a>, or <a href="Tool.html#doMouseUp">Tool.doMouseUp</a>).</p>
+					<p>Because this tool is typically the one running as the diagram&#39;s current tool
+						when the user isn&#39;t &quot;doing&quot; anything, this tool can also handle other events,
+					such as mouse wheel events and keyboard commands.</p>
+					<p>Keyboard events are just passed on to the <a href="Diagram.html#commandHandler">Diagram.commandHandler</a>&#39;s
+					<a href="CommandHandler.html#doKeyDown">CommandHandler.doKeyDown</a> or <a href="CommandHandler.html#doKeyUp">CommandHandler.doKeyUp</a> method.</p>
+					<p>This tool also is responsible for showing tooltips.
+						Tooltip <a href="Adornment.html">Adornment</a>s may be declared as any <a href="GraphObject.html#toolTip">GraphObject.toolTip</a>,
+						or as the <a href="Diagram.html#toolTip">Diagram.toolTip</a> if the mouse or finger remains motionless in the background of the diagram.
+					You can set <a href="ToolManager.html#toolTipDuration">toolTipDuration</a> to control how long the tooltip remains visible after being motionless.</p>
+					<p>This tool does not utilize any tool handles.
+						This tool does not conduct any transactions.
+						But of course some of the tools that the ToolManager starts can show tool handles and/or
+					conduct their own transactions.</p>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="ToolManager.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#actionTool" class="tsd-kind-icon">action<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#clickCreatingTool" class="tsd-kind-icon">click<wbr>Creating<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#clickSelectingTool" class="tsd-kind-icon">click<wbr>Selecting<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#contextMenuTool" class="tsd-kind-icon">context<wbr>Menu<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#currentToolTip" class="tsd-kind-icon">current<wbr>Tool<wbr>Tip</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#dragSelectingTool" class="tsd-kind-icon">drag<wbr>Selecting<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#dragSize" class="tsd-kind-icon">drag<wbr>Size</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#draggingTool" class="tsd-kind-icon">dragging<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#gestureBehavior" class="tsd-kind-icon">gesture<wbr>Behavior</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#holdDelay" class="tsd-kind-icon">hold<wbr>Delay</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#hoverDelay" class="tsd-kind-icon">hover<wbr>Delay</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#linkReshapingTool" class="tsd-kind-icon">link<wbr>Reshaping<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#linkingTool" class="tsd-kind-icon">linking<wbr>Tool</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="ToolManager.html#mouseDownTools" class="tsd-kind-icon">mouse<wbr>Down<wbr>Tools</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="ToolManager.html#mouseMoveTools" class="tsd-kind-icon">mouse<wbr>Move<wbr>Tools</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="ToolManager.html#mouseUpTools" class="tsd-kind-icon">mouse<wbr>UpTools</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#mouseWheelBehavior" class="tsd-kind-icon">mouse<wbr>Wheel<wbr>Behavior</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#panningTool" class="tsd-kind-icon">panning<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#relinkingTool" class="tsd-kind-icon">relinking<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#resizingTool" class="tsd-kind-icon">resizing<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#rotatingTool" class="tsd-kind-icon">rotating<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#textEditingTool" class="tsd-kind-icon">text<wbr>Editing<wbr>Tool</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="ToolManager.html#toolTipDuration" class="tsd-kind-icon">tool<wbr>Tip<wbr>Duration</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doKeyDown" class="tsd-kind-icon">do<wbr>Key<wbr>Down</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doKeyUp" class="tsd-kind-icon">do<wbr>Key<wbr>Up</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doMouseDown" class="tsd-kind-icon">do<wbr>Mouse<wbr>Down</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doMouseHover" class="tsd-kind-icon">do<wbr>Mouse<wbr>Hover</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doMouseMove" class="tsd-kind-icon">do<wbr>Mouse<wbr>Move</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doMouseWheel" class="tsd-kind-icon">do<wbr>Mouse<wbr>Wheel</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doToolTip" class="tsd-kind-icon">do<wbr>Tool<wbr>Tip</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#doWaitAfter" class="tsd-kind-icon">do<wbr>Wait<wbr>After</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#findTool" class="tsd-kind-icon">find<wbr>Tool</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#hideToolTip" class="tsd-kind-icon">hide<wbr>Tool<wbr>Tip</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#initializeStandardTools" class="tsd-kind-icon">initialize<wbr>Standard<wbr>Tools</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#positionToolTip" class="tsd-kind-icon">position<wbr>Tool<wbr>Tip</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#replaceTool" class="tsd-kind-icon">replace<wbr>Tool</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ToolManager.html#showToolTip" class="tsd-kind-icon">show<wbr>Tool<wbr>Tip</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Constants</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="ToolManager.html#static-GestureCancel" class="tsd-kind-icon">Gesture<wbr>Cancel</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="ToolManager.html#static-GestureNone" class="tsd-kind-icon">Gesture<wbr>None</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="ToolManager.html#static-GestureZoom" class="tsd-kind-icon">Gesture<wbr>Zoom</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="ToolManager.html#static-WheelNone" class="tsd-kind-icon">Wheel<wbr>None</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="ToolManager.html#static-WheelScroll" class="tsd-kind-icon">Wheel<wbr>Scroll</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="ToolManager.html#static-WheelZoom" class="tsd-kind-icon">Wheel<wbr>Zoom</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Tool<wbr>Manager<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ToolManager.html" class="tsd-signature-type">ToolManager</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>You do not normally need to create an instance of this tool
+								because one already exists as the <a href="Diagram.html#toolManager">Diagram.toolManager</a>, which you can modify.</p>
+								<p>The <a href="Tool.html#name">Tool.name</a> of this tool is &quot;ToolManager&quot;.</p>
+								<p>The constructor produces a ToolManager that manages no tools.
+									Call <a href="ToolManager.html#initializeStandardTools">initializeStandardTools</a> to create various tools,
+									initialize the tool properties such as <a href="ToolManager.html#draggingTool">draggingTool</a>,
+								and initialize the three mouse tool lists with those newly created tools.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="ToolManager.html" class="tsd-signature-type">ToolManager</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="actionTool" class="tsd-anchor"></a>
+					<h3>
+						action<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="ActionTool.html" class="tsd-signature-type">ActionTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="ActionTool.html">ActionTool</a>, normally one of the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="clickCreatingTool" class="tsd-anchor"></a>
+					<h3>
+						click<wbr>Creating<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="ClickCreatingTool.html" class="tsd-signature-type">ClickCreatingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="ClickCreatingTool.html">ClickCreatingTool</a>, normally one of the <a href="ToolManager.html#mouseUpTools">mouseUpTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="clickSelectingTool" class="tsd-anchor"></a>
+					<h3>
+						click<wbr>Selecting<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="ClickSelectingTool.html" class="tsd-signature-type">ClickSelectingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="ClickSelectingTool.html">ClickSelectingTool</a>, normally one of the <a href="ToolManager.html#mouseUpTools">mouseUpTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="contextMenuTool" class="tsd-anchor"></a>
+					<h3>
+						context<wbr>Menu<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="ContextMenuTool.html" class="tsd-signature-type">ContextMenuTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="ContextMenuTool.html">ContextMenuTool</a>, normally one of the <a href="ToolManager.html#mouseUpTools">mouseUpTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="currentToolTip" class="tsd-anchor"></a>
+					<h3>
+						current<wbr>Tool<wbr>Tip
+					<span class="tsd-signature-symbol">: </span><a href="Adornment.html" class="tsd-signature-type">Adornment</a><span class="tsd-signature-symbol"> | </span><a href="HTMLInfo.html" class="tsd-signature-type">HTMLInfo</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns the currently showing tooltip, or null if there is none.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="dragSelectingTool" class="tsd-anchor"></a>
+					<h3>
+						drag<wbr>Selecting<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="DragSelectingTool.html" class="tsd-signature-type">DragSelectingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="DragSelectingTool.html">DragSelectingTool</a>, normally one of the <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="dragSize" class="tsd-anchor"></a>
+					<h3>
+						drag<wbr>Size
+					<span class="tsd-signature-symbol">: </span><a href="Size.html" class="tsd-signature-type">Size</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the distance in view coordinates within which a mouse down-and-up is considered a click and beyond which a mouse movement is considered a drag.
+									The default value is 2 pixels horizontally and vertically for mouse events, and increases by 6 pixels for touch events.
+								This value is used by <a href="Tool.html#isBeyondDragSize">Tool.isBeyondDragSize</a>.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.2</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="draggingTool" class="tsd-anchor"></a>
+					<h3>
+						dragging<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="DraggingTool.html" class="tsd-signature-type">DraggingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="DraggingTool.html">DraggingTool</a>, normally one of the <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="gestureBehavior" class="tsd-anchor"></a>
+					<h3>
+						gesture<wbr>Behavior
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the ToolManager&#39;s default gestureBehavior behavior. Allowed values are <a href="ToolManager.html#static-GestureZoom">ToolManager.GestureZoom</a> and
+								<a href="ToolManager.html#static-GestureCancel">ToolManager.GestureCancel</a> and <a href="ToolManager.html#static-GestureNone">ToolManager.GestureNone</a>.</p>
+								<p>The default value is <a href="ToolManager.html#static-GestureZoom">ToolManager.GestureZoom</a>.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.5</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="holdDelay" class="tsd-anchor"></a>
+					<h3>
+						hold<wbr>Delay
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the time between when the mouse stops moving and a hold event,
+									in milliseconds.
+								The default value is 850 milliseconds.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="hoverDelay" class="tsd-anchor"></a>
+					<h3>
+						hover<wbr>Delay
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the time between when the mouse stops moving and a hover event,
+									in milliseconds. This value affects the delay before <a href="GraphObject.html#toolTip">GraphObject.toolTip</a>s are shown.
+								The default value is 850 milliseconds.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="linkReshapingTool" class="tsd-anchor"></a>
+					<h3>
+						link<wbr>Reshaping<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="LinkReshapingTool.html" class="tsd-signature-type">LinkReshapingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="LinkReshapingTool.html">LinkReshapingTool</a>, normally one of the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="linkingTool" class="tsd-anchor"></a>
+					<h3>
+						linking<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="LinkingTool.html" class="tsd-signature-type">LinkingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="LinkingTool.html">LinkingTool</a>, normally one of the <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="mouseDownTools" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						mouse<wbr>Down<wbr>Tools
+					<span class="tsd-signature-symbol">: </span><a href="List.html" class="tsd-signature-type">List</a><span class="tsd-signature-symbol">&lt;</span><a href="Tool.html" class="tsd-signature-type">Tool</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns the list of <a href="Tool.html">Tool</a>s that might be started upon a mouse or finger press event.
+									When the ToolManager handles a mouse-down or touch-down event in <a href="ToolManager.html#doMouseDown">doMouseDown</a>,
+									it searches this list in order, starting the first tool for which
+								<a href="Tool.html#canStart">Tool.canStart</a> returns true.</p>
+								<p>This list may be modified, but it must not be modified while any tool
+								is handling events.</p>
+								<p><a href="ToolManager.html#initializeStandardTools">initializeStandardTools</a> installs the following tools, in order:</p>
+								<ul>
+									<li><a href="ToolManager.html#actionTool">actionTool</a>, an <a href="ActionTool.html">ActionTool</a></li>
+									<li><a href="ToolManager.html#relinkingTool">relinkingTool</a>, a <a href="RelinkingTool.html">RelinkingTool</a></li>
+									<li><a href="ToolManager.html#linkReshapingTool">linkReshapingTool</a>, a <a href="LinkReshapingTool.html">LinkReshapingTool</a></li>
+									<li><a href="ToolManager.html#rotatingTool">rotatingTool</a>, a <a href="RotatingTool.html">RotatingTool</a></li>
+									<li><a href="ToolManager.html#resizingTool">resizingTool</a>, a <a href="ResizingTool.html">ResizingTool</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="mouseMoveTools" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						mouse<wbr>Move<wbr>Tools
+					<span class="tsd-signature-symbol">: </span><a href="List.html" class="tsd-signature-type">List</a><span class="tsd-signature-symbol">&lt;</span><a href="Tool.html" class="tsd-signature-type">Tool</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns the list of <a href="Tool.html">Tool</a>s that might be started upon a mouse or finger move event.
+									When the ToolManager handles a mouse-move or touch-move event in <a href="ToolManager.html#doMouseMove">doMouseMove</a>,
+									it searches this list in order, starting the first tool for which
+								<a href="Tool.html#canStart">Tool.canStart</a> returns true.</p>
+								<p>This list may be modified, but it must not be modified while any tool
+								is handling events.</p>
+								<p><a href="ToolManager.html#initializeStandardTools">initializeStandardTools</a> installs the following tools, in order:</p>
+								<ul>
+									<li><a href="ToolManager.html#linkingTool">linkingTool</a>, a <a href="LinkingTool.html">LinkingTool</a></li>
+									<li><a href="ToolManager.html#draggingTool">draggingTool</a>, a <a href="DraggingTool.html">DraggingTool</a></li>
+									<li><a href="ToolManager.html#dragSelectingTool">dragSelectingTool</a>, a <a href="DragSelectingTool.html">DragSelectingTool</a></li>
+									<li><a href="ToolManager.html#panningTool">panningTool</a>, a <a href="PanningTool.html">PanningTool</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="mouseUpTools" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						mouse<wbr>UpTools
+					<span class="tsd-signature-symbol">: </span><a href="List.html" class="tsd-signature-type">List</a><span class="tsd-signature-symbol">&lt;</span><a href="Tool.html" class="tsd-signature-type">Tool</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns the list of <a href="Tool.html">Tool</a>s that might be started upon a mouse or finger up event.
+									When the ToolManager handles a mouse-up or touch-up event in <a href="ToolManager.html#doMouseUp">doMouseUp</a>,
+									it searches this list in order, starting the first tool for which
+								<a href="Tool.html#canStart">Tool.canStart</a> returns true.</p>
+								<p>This list may be modified, but it must not be modified while any tool
+								is handling events.</p>
+								<p><a href="ToolManager.html#initializeStandardTools">initializeStandardTools</a> installs the following tools, in order:</p>
+								<ul>
+									<li><a href="ToolManager.html#contextMenuTool">contextMenuTool</a>, a <a href="ContextMenuTool.html">ContextMenuTool</a></li>
+									<li><a href="ToolManager.html#textEditingTool">textEditingTool</a>, a <a href="TextEditingTool.html">TextEditingTool</a></li>
+									<li><a href="ToolManager.html#clickCreatingTool">clickCreatingTool</a>, a <a href="ClickCreatingTool.html">ClickCreatingTool</a></li>
+									<li><a href="ToolManager.html#clickSelectingTool">clickSelectingTool</a>, a <a href="ClickSelectingTool.html">ClickSelectingTool</a></li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="mouseWheelBehavior" class="tsd-anchor"></a>
+					<h3>
+						mouse<wbr>Wheel<wbr>Behavior
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the ToolManager&#39;s mouse wheel behavior. Allowed values are <a href="ToolManager.html#static-WheelScroll">ToolManager.WheelScroll</a> and
+								<a href="ToolManager.html#static-WheelZoom">ToolManager.WheelZoom</a> and <a href="ToolManager.html#static-WheelNone">ToolManager.WheelNone</a>.</p>
+								<p>The default value is <a href="ToolManager.html#static-WheelScroll">ToolManager.WheelScroll</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="panningTool" class="tsd-anchor"></a>
+					<h3>
+						panning<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="PanningTool.html" class="tsd-signature-type">PanningTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="PanningTool.html">PanningTool</a>, normally one of the <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="relinkingTool" class="tsd-anchor"></a>
+					<h3>
+						relinking<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="RelinkingTool.html" class="tsd-signature-type">RelinkingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="RelinkingTool.html">RelinkingTool</a>, normally one of the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="resizingTool" class="tsd-anchor"></a>
+					<h3>
+						resizing<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="ResizingTool.html" class="tsd-signature-type">ResizingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="ResizingTool.html">ResizingTool</a>, normally one of the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="rotatingTool" class="tsd-anchor"></a>
+					<h3>
+						rotating<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="Tool.html" class="tsd-signature-type">Tool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="RotatingTool.html">RotatingTool</a>, normally one of the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="textEditingTool" class="tsd-anchor"></a>
+					<h3>
+						text<wbr>Editing<wbr>Tool
+					<span class="tsd-signature-symbol">: </span><a href="TextEditingTool.html" class="tsd-signature-type">TextEditingTool</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the mode-less <a href="TextEditingTool.html">TextEditingTool</a>, normally one of the <a href="ToolManager.html#mouseUpTools">mouseUpTools</a>.</p>
+								<p>You can disable this tool by setting its <a href="Tool.html#isEnabled">Tool.isEnabled</a> property to false.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="toolTipDuration" class="tsd-anchor"></a>
+					<h3>
+						tool<wbr>Tip<wbr>Duration
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets how long a tool tip is visible.
+								The default value is 5000 milliseconds.</p>
+								<p>This is used by <a href="ToolManager.html#showToolTip">showToolTip</a> to determine how long to wait before calling <a href="ToolManager.html#hideToolTip">hideToolTip</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doKeyDown" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Key<wbr>Down
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Key<wbr>Down<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This just calls <a href="CommandHandler.html#doKeyDown">CommandHandler.doKeyDown</a> on the diagram&#39;s <a href="Diagram.html#commandHandler">Diagram.commandHandler</a>.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doKeyUp" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Key<wbr>Up
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Key<wbr>Up<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This just calls <a href="CommandHandler.html#doKeyUp">CommandHandler.doKeyUp</a> on the diagram&#39;s <a href="Diagram.html#commandHandler">Diagram.commandHandler</a>.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseDown" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Down
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Down<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Iterate over the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a> list and start the first tool
+								for which its <a href="Tool.html#canStart">Tool.canStart</a> predicate returns true.</p>
+								<p>Starting a tool replaces the <a href="Diagram.html#currentTool">Diagram.currentTool</a> with the new tool.
+									Successfully doing so also activates the new tool by calling <a href="Tool.html#doActivate">Tool.doActivate</a>
+								and passes on the mouse-down event to it by calling <a href="Tool.html#doMouseDown">Tool.doMouseDown</a>.</p>
+								<p>Not finding any startable tools causes this tool manager to activate,
+									thereby enabling the mouse-move and mouse-up behaviors and starts
+								detection of a mouse-hold event after <a href="ToolManager.html#holdDelay">holdDelay</a> milliseconds.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseHover" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						do<wbr>Mouse<wbr>Hover
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Hover<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Implement the standard behavior for mouse hover and mouse hold events,
+								called by <a href="ToolManager.html#doWaitAfter">doWaitAfter</a> when the mouse has not moved for a period of time.</p>
+								<p>If there has been no mouse down, the timer is set for <a href="ToolManager.html#hoverDelay">hoverDelay</a> milliseconds.
+									If it executes, it calls any <a href="GraphObject.html#mouseHover">GraphObject.mouseHover</a> function on the object
+									at the mouse or on any of its containing panels,
+								or it calls any <a href="Diagram.html#mouseHover">Diagram.mouseHover</a> function for a background mouse-hover event.</p>
+								<p>If there had been a mouse down, the timer is set for <a href="ToolManager.html#holdDelay">holdDelay</a> milliseconds.
+									If it executes, it calls any <a href="GraphObject.html#mouseHold">GraphObject.mouseHold</a> function on the object
+									at the mouse or on any of its containing panels,
+								or it calls any <a href="Diagram.html#mouseHold">Diagram.mouseHold</a> function for a background mouse-held-down event.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseMove" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Move
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Move<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Iterate over the <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a> list and start the first tool
+								for which its <a href="Tool.html#canStart">Tool.canStart</a> predicate returns true.</p>
+								<p>Starting a tool replaces the <a href="Diagram.html#currentTool">Diagram.currentTool</a> with the new tool.
+									Successfully doing so also activates the new tool by calling <a href="Tool.html#doActivate">Tool.doActivate</a>
+								and passes on the mouse-move event to it by calling <a href="Tool.html#doMouseMove">Tool.doMouseMove</a>.</p>
+								<p>If no tool is found and activated, this:</p>
+								<ul>
+									<li>Calls <a href="Tool.html#standardMouseOver">Tool.standardMouseOver</a> to invoke any mouse-enter, mouse-over, or mouse-leave functions.</li>
+									<li>if the mouse has moved sufficiently, such that <a href="Tool.html#isBeyondDragSize">Tool.isBeyondDragSize</a> is true,
+										this also calls <a href="Tool.html#standardWaitAfter">Tool.standardWaitAfter</a> for a possible call to
+									<a href="ToolManager.html#doWaitAfter">doWaitAfter</a> after <a href="ToolManager.html#hoverDelay">hoverDelay</a> milliseconds.</li>
+									<li>Sets the <a href="Diagram.html#lastInput">Diagram.lastInput</a> to bubble.</li>
+								</ul>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseUp" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Up
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Up<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Iterate over the <a href="ToolManager.html#mouseUpTools">mouseUpTools</a> list and start the first tool
+								for which its <a href="Tool.html#canStart">Tool.canStart</a> predicate returns true.</p>
+								<p>Starting a tool replaces the <a href="Diagram.html#currentTool">Diagram.currentTool</a> with the new tool.
+									Successfully doing so also activates the new tool by calling <a href="Tool.html#doActivate">Tool.doActivate</a>
+								and passes on the mouse-up event to it by calling <a href="Tool.html#doMouseUp">Tool.doMouseUp</a>.</p>
+								<p>If no startable tool is found it deactivates this tool manager,
+								to get ready for a mouse-down and ignore mouse-move and mouse-up events.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseWheel" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Wheel
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Wheel<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>The diagram will call this method as the mouse wheel is rotated.</p>
+								<p>By default this just calls <a href="Tool.html#standardMouseWheel">Tool.standardMouseWheel</a>.
+									This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doToolTip" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						do<wbr>Tool<wbr>Tip
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Tool<wbr>Tip<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Implement the standard behavior for tooltips,
+								called by <a href="ToolManager.html#doWaitAfter">doWaitAfter</a> when the mouse has not moved for a period of time.</p>
+								<p>This looks for a <a href="GraphObject.html">GraphObject</a> at the latest mouse point.
+									If it finds an object, it checks for a <a href="GraphObject.html#toolTip">GraphObject.toolTip</a>.
+									If it has none, this method searches up the visual tree for a containing
+								<a href="Panel.html">Panel</a> that does have a tooltip.</p>
+								<p>If it didn&#39;t find any object, this looks for a <a href="Diagram.html#toolTip">Diagram.toolTip</a>.</p>
+								<p>If it eventually finds a tooltip, this calls <a href="ToolManager.html#showToolTip">showToolTip</a>.
+								Otherwise this calls <a href="ToolManager.html#hideToolTip">hideToolTip</a>.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doWaitAfter" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Wait<wbr>After
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Wait<wbr>After<span class="tsd-signature-symbol">(</span>event<span class="tsd-signature-symbol">: </span><a href="InputEvent.html" class="tsd-signature-type">InputEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Implement the standard behavior for when the mouse has not moved for a period of time.
+								This is due to an expired timer started by calling <a href="Tool.html#standardWaitAfter">Tool.standardWaitAfter</a>.</p>
+								<p>This calls <a href="ToolManager.html#doMouseHover">doMouseHover</a> and, if not mouse-down, <a href="ToolManager.html#doToolTip">doToolTip</a>.
+									Afterwards, if the event that called <a href="Tool.html#standardWaitAfter">Tool.standardWaitAfter</a> was a touch event,
+								this simulates a right click, enabling context menu functionality and other actions on touch devices.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>event: <a href="InputEvent.html" class="tsd-signature-type">InputEvent</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The event that caused <a href="Tool.html#standardWaitAfter">standardWaitAfter</a>. In this override,
+											if it is a touch event and the <a href="Diagram.html#lastInput">Diagram.lastInput</a> event is not handled (<a href="InputEvent.html#handled">InputEvent.handled</a> set to false),
+										then this method will simulate a right click.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="findTool" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						find<wbr>Tool
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Tool<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Tool.html" class="tsd-signature-type">Tool</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Find a mouse tool of a given name.
+								This searches the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a>, <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>, and <a href="ToolManager.html#mouseUpTools">mouseUpTools</a> lists.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the type of tool, such as &quot;Dragging&quot; or &quot;ClickSelecting&quot;.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns
+								<a href="Tool.html" class="tsd-signature-type">Tool</a>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">null</span>
+							</h4>
+							<p>a <a href="Tool.html">Tool</a> whose <a href="Tool.html#name">Tool.name</a> exactly matches the given name,
+							or null if no such tool is found in any of the three lists.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="hideToolTip" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						hide<wbr>Tool<wbr>Tip
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">hide<wbr>Tool<wbr>Tip<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Hide any tooltip.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="initializeStandardTools" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						initialize<wbr>Standard<wbr>Tools
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">initialize<wbr>Standard<wbr>Tools<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Initialize the three mouse tool lists with instances of the standard tools.
+									This adds new instances of tools to the following three mouse tool lists:
+									<a href="ToolManager.html#mouseDownTools">mouseDownTools</a>, <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>, or <a href="ToolManager.html#mouseUpTools">mouseUpTools</a>.
+									This also sets the various tool properties of this ToolManager
+									to those newly created tools.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="positionToolTip" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						position<wbr>Tool<wbr>Tip
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">position<wbr>Tool<wbr>Tip<span class="tsd-signature-symbol">(</span>tooltip<span class="tsd-signature-symbol">: </span><a href="Adornment.html" class="tsd-signature-type">Adornment</a>, obj<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This is called by <a href="ToolManager.html#showToolTip">showToolTip</a> to position the part within the viewport.
+									It normally goes just below the cursor.
+									But if the mouse is too close to the right edge or the bottom edge of the viewport,
+								it is positioned left and/or above the cursor.</p>
+								<p>This method only operates if the tooltip, an <a href="Adornment.html">Adornment</a>, does not have a <a href="Adornment.html#placeholder">Adornment.placeholder</a>.
+									When there is a <a href="Placeholder.html">Placeholder</a> in the tooltip, that Adornment is automatically positioned
+								so that the Placeholder is positioned at the adorned object, the second argument to this method.</p>
+								<p>This method may be overridden.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+								<p>If you override this method to position the tooltip,
+									the tooltip has already been measured but not arranged,
+									so you can use its <a href="GraphObject.html#measuredBounds">GraphObject.measuredBounds</a> width and height
+								but not its <a href="GraphObject.html#actualBounds">GraphObject.actualBounds</a>.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tooltip: <a href="Adornment.html" class="tsd-signature-type">Adornment</a></h5>
+								</li>
+								<li>
+									<h5>obj: <a href="GraphObject.html" class="tsd-signature-type">GraphObject</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The <a href="GraphObject.html">GraphObject</a> getting the tooltip,
+										or null if the tooltip is for the diagram background.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="replaceTool" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						replace<wbr>Tool
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">replace<wbr>Tool<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, newtool<span class="tsd-signature-symbol">: </span><a href="Tool.html" class="tsd-signature-type">Tool</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Tool.html" class="tsd-signature-type">Tool</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Replace a mouse tool of a given name with a new tool, or remove an existing tool (if the <em>newtool</em> is null).
+									This searches the <a href="ToolManager.html#mouseDownTools">mouseDownTools</a>, <a href="ToolManager.html#mouseMoveTools">mouseMoveTools</a>,
+									and <a href="ToolManager.html#mouseUpTools">mouseUpTools</a> lists.
+									The new tool is inserted into the same list in which the same-named tool is found,
+									at the same position as the old tool.
+									However, if no existing tool with the given name is present, this does <strong>not</strong> add the new tool to any list, since it cannot know where it should be added.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the type of tool, such as &quot;Dragging&quot; or &quot;ClickSelecting&quot;.</p>
+									</div>
+								</li>
+								<li>
+									<h5>newtool: <a href="Tool.html" class="tsd-signature-type">Tool</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>If null, any tool that the search finds will just be removed
+										from the list in which it was found.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="Tool.html" class="tsd-signature-type">Tool</a></h4>
+							<p>the old tool that was replaced by the new one; this is null if none was found and the new tool was not added to any mouse tool list</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="showToolTip" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						show<wbr>Tool<wbr>Tip
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">show<wbr>Tool<wbr>Tip<span class="tsd-signature-symbol">(</span>tooltip<span class="tsd-signature-symbol">: </span><a href="Adornment.html" class="tsd-signature-type">Adornment</a><span class="tsd-signature-symbol"> | </span><a href="HTMLInfo.html" class="tsd-signature-type">HTMLInfo</a>, obj<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Show a tooltip Adornment or HTMLInfo.
+								This is called by <a href="ToolManager.html#doToolTip">doToolTip</a> once that method has found a tooltip to display.</p>
+								<p>This calls <a href="ToolManager.html#positionToolTip">positionToolTip</a> to make it easier to customize how the tooltip
+								is positioned relative to the object with the tooltip.</p>
+								<p>This method may be overridden, but you should consider calling this base method in order to get all of its functionality.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tooltip: <a href="Adornment.html" class="tsd-signature-type">Adornment</a><span class="tsd-signature-symbol"> | </span><a href="HTMLInfo.html" class="tsd-signature-type">HTMLInfo</a></h5>
+								</li>
+								<li>
+									<h5>obj: <a href="GraphObject.html" class="tsd-signature-type">GraphObject</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The GraphObject getting the tooltip; this is null if the tooltip is being shown for the diagram background.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constants</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-GestureCancel" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Gesture<wbr>Cancel
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="ToolManager.html#gestureBehavior">gestureBehavior</a> indicates that the pointer/touch pinch gestures
+						on the canvas intend to have no effect on the Diagram, but also no effect on the page.</p>
+						<dl class="tsd-comment-tags">
+							<dt>since</dt>
+							<dd><p>1.5</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-GestureNone" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Gesture<wbr>None
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="ToolManager.html#gestureBehavior">gestureBehavior</a> indicates that the pointer/touch pinch gestures
+							on the canvas intend to have no effect on the Diagram, but will not be prevented,
+						and may bubble up the page to have other effects (such as zooming the page).</p>
+						<dl class="tsd-comment-tags">
+							<dt>since</dt>
+							<dd><p>1.5</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-GestureZoom" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Gesture<wbr>Zoom
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="ToolManager.html#gestureBehavior">gestureBehavior</a> indicates that the pointer/touch pinch gestures
+						on the canvas intend to zoom the Diagram.</p>
+						<dl class="tsd-comment-tags">
+							<dt>since</dt>
+							<dd><p>1.5</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-WheelNone" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Wheel<wbr>None
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="ToolManager.html#mouseWheelBehavior">mouseWheelBehavior</a> indicates that the mouse wheel events are ignored,
+						although scrolling or zooming by other means may still be allowed.</p>
+						<dl class="tsd-comment-tags">
+							<dt>since</dt>
+							<dd><p>1.2</p>
+							</dd>
+						</dl>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-WheelScroll" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Wheel<wbr>Scroll
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This default value for <a href="ToolManager.html#mouseWheelBehavior">mouseWheelBehavior</a> indicates that mouse wheel events scroll the diagram.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-WheelZoom" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Wheel<wbr>Zoom
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="ToolManager.html#mouseWheelBehavior">mouseWheelBehavior</a> indicates that the mouse wheel events change the scale of the diagram.</p>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="ToolManager.html" class="tsd-kind-icon">Tool<wbr>Manager</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="ToolManager.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#actionTool" class="tsd-kind-icon">action<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#clickCreatingTool" class="tsd-kind-icon">click<wbr>Creating<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#clickSelectingTool" class="tsd-kind-icon">click<wbr>Selecting<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#contextMenuTool" class="tsd-kind-icon">context<wbr>Menu<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#currentToolTip" class="tsd-kind-icon">current<wbr>Tool<wbr>Tip</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#dragSelectingTool" class="tsd-kind-icon">drag<wbr>Selecting<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#dragSize" class="tsd-kind-icon">drag<wbr>Size</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#draggingTool" class="tsd-kind-icon">dragging<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#gestureBehavior" class="tsd-kind-icon">gesture<wbr>Behavior</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#holdDelay" class="tsd-kind-icon">hold<wbr>Delay</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#hoverDelay" class="tsd-kind-icon">hover<wbr>Delay</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#linkReshapingTool" class="tsd-kind-icon">link<wbr>Reshaping<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#linkingTool" class="tsd-kind-icon">linking<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="ToolManager.html#mouseDownTools" class="tsd-kind-icon">mouse<wbr>Down<wbr>Tools</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="ToolManager.html#mouseMoveTools" class="tsd-kind-icon">mouse<wbr>Move<wbr>Tools</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="ToolManager.html#mouseUpTools" class="tsd-kind-icon">mouse<wbr>UpTools</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#mouseWheelBehavior" class="tsd-kind-icon">mouse<wbr>Wheel<wbr>Behavior</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#panningTool" class="tsd-kind-icon">panning<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#relinkingTool" class="tsd-kind-icon">relinking<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#resizingTool" class="tsd-kind-icon">resizing<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#rotatingTool" class="tsd-kind-icon">rotating<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#textEditingTool" class="tsd-kind-icon">text<wbr>Editing<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="ToolManager.html#toolTipDuration" class="tsd-kind-icon">tool<wbr>Tip<wbr>Duration</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doKeyDown" class="tsd-kind-icon">do<wbr>Key<wbr>Down</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doKeyUp" class="tsd-kind-icon">do<wbr>Key<wbr>Up</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doMouseDown" class="tsd-kind-icon">do<wbr>Mouse<wbr>Down</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doMouseHover" class="tsd-kind-icon">do<wbr>Mouse<wbr>Hover</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doMouseMove" class="tsd-kind-icon">do<wbr>Mouse<wbr>Move</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doMouseWheel" class="tsd-kind-icon">do<wbr>Mouse<wbr>Wheel</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doToolTip" class="tsd-kind-icon">do<wbr>Tool<wbr>Tip</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#doWaitAfter" class="tsd-kind-icon">do<wbr>Wait<wbr>After</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#findTool" class="tsd-kind-icon">find<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#hideToolTip" class="tsd-kind-icon">hide<wbr>Tool<wbr>Tip</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#initializeStandardTools" class="tsd-kind-icon">initialize<wbr>Standard<wbr>Tools</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#positionToolTip" class="tsd-kind-icon">position<wbr>Tool<wbr>Tip</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#replaceTool" class="tsd-kind-icon">replace<wbr>Tool</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ToolManager.html#showToolTip" class="tsd-kind-icon">show<wbr>Tool<wbr>Tip</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="ToolManager.html#static-GestureCancel" class="tsd-kind-icon">Gesture<wbr>Cancel</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="ToolManager.html#static-GestureNone" class="tsd-kind-icon">Gesture<wbr>None</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="ToolManager.html#static-GestureZoom" class="tsd-kind-icon">Gesture<wbr>Zoom</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="ToolManager.html#static-WheelNone" class="tsd-kind-icon">Wheel<wbr>None</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="ToolManager.html#static-WheelScroll" class="tsd-kind-icon">Wheel<wbr>Scroll</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="ToolManager.html#static-WheelZoom" class="tsd-kind-icon">Wheel<wbr>Zoom</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

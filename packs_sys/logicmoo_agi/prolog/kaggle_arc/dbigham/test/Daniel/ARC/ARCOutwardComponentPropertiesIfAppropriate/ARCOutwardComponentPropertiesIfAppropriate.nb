@@ -1,0 +1,1006 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     43737,        998]
+NotebookOptionsPosition[     37187,        842]
+NotebookOutlinePosition[     43032,        984]
+CellTagsIndexPosition[     42989,        981]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCOutwardComponentPropertiesIfAppropriate", "Title",ExpressionUUID->"15d3c84a-ed75-4e2f-a0a5-05936fe6fd30"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCOutwardComponentPropertiesIfAppropriate", 
+  "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[361]:=",ExpressionUUID->"549bd4c5-3c15-4e92-b852-68301742d930"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"3b3a80cf-992b-4b26-a480-cf011611204c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCOutwardComponentPropertiesIfAppropriate-20220813-OQLTI2", 
+              Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212], 16927371]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCOutwardComponentPropertiesIfAppropriate-20220813-OQLTI2"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCOutwardComponentPropertiesIfAppropriate-20220813-OQLTI2", 
+            Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212], "CellID" -> 16927371, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCOutwardComponentPropertiesIfAppropriate-20220813-OQLTI2", 
+           Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212], None], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCOutwardComponentPropertiesIfAppropriate-20220813-OQLTI2"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{840., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228131746528212}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.869415965193899*^9},ExpressionUUID->"1579f028-35e6-4967-baa8-\
+bd3efee13156"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCOutwardComponentPropertiesIfAppropriate", "[", "\n", "\t", 
+  RowBox[{
+   RowBox[{"<|", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{
+     "\"\<UUID\>\"", " ", "->", " ", 
+      "\"\<1699055b-d715-4dad-a882-a8be620b4ba0\>\""}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+      RowBox[{"ARCScene", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"2", ",", " ", 
+           RowBox[{"-", "1"}], ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"2", ",", " ", "2", ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", " ", "2", ",", " ", "2"}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"2", ",", " ", "2", ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"2", ",", " ", 
+           RowBox[{"-", "1"}], ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}]}], "}"}], "]"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"3", ",", " ", "4"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"4", ",", " ", "4"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"4", ",", " ", "5"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"5", ",", " ", "4"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"5", ",", " ", "5"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"5", ",", " ", "6"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"6", ",", " ", "4"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"6", ",", " ", "5"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"7", ",", " ", "4"}], "}"}]}], "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+      RowBox[{"ARCScene", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"10", ",", " ", 
+           RowBox[{"-", "1"}], ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"10", ",", " ", "10", ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"10", ",", " ", "10", ",", " ", "10"}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"10", ",", " ", "10", ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"10", ",", " ", 
+           RowBox[{"-", "1"}], ",", " ", 
+           RowBox[{"-", "1"}]}], "}"}]}], "}"}], "]"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Shapes\>\"", " ", "->", " ", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+          RowBox[{"ARCScene", "[", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"2", ",", " ", 
+               RowBox[{"-", "1"}], ",", " ", 
+               RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"2", ",", " ", "2", ",", " ", 
+               RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", " ", "2", ",", " ", "2"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"2", ",", " ", "2", ",", " ", 
+               RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"2", ",", " ", 
+               RowBox[{"-", "1"}], ",", " ", 
+               RowBox[{"-", "1"}]}], "}"}]}], "}"}], "]"}]}], "\n", "\t\t\t", 
+         "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+               "2", ",", " ", "2", ",", " ", "1", ",", " ", "2", ",", " ", 
+                "2"}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", "2", ",", " ", "2", ",", " ", 
+                "2", ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", "2", ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}]}], "}"}], "]"}]}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], 
+             ",", " ", 
+             RowBox[{"\"\<Angle\>\"", " ", "->", " ", "270"}]}], "|>"}]}]}], 
+         "\n", "\t\t\t", "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", "2"}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", "2", ",", " ", "2"}], "}"}], 
+              ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"2", ",", " ", "2", ",", " ", "1"}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", "2", ",", " ", "2"}], "}"}], 
+              ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", "2"}], "}"}]}], "}"}], "]"}]}], 
+          ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], 
+             ",", " ", 
+             RowBox[{"\"\<Angle\>\"", " ", "->", " ", "180"}]}], "|>"}]}]}], 
+         "\n", "\t\t\t", "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", "2", ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", "2", ",", " ", "2", ",", " ", 
+                "2", ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+               "2", ",", " ", "2", ",", " ", "1", ",", " ", "2", ",", " ", 
+                "2"}], "}"}]}], "}"}], "]"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], 
+             ",", " ", 
+             RowBox[{"\"\<Angle\>\"", " ", "->", " ", "90"}]}], "|>"}]}]}], 
+         "\n", "\t\t\t", "|>"}]}], "\n", "\t\t", "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", " ", "2"}], "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{"3", ",", " ", "4"}], "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Y\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<X\>\"", " ", "->", " ", "4"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Y2\>\"", " ", "->", " ", "7"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<X2\>\"", " ", "->", " ", "6"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Width\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Height\>\"", " ", "->", " ", "5"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Length\>\"", " ", "->", " ", "5"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<PrimarySizeDimension\>\"", " ", "->", " ", "\"\<Y\>\""}], 
+     ",", "\n", "\t\t", 
+     RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", 
+      RowBox[{"3", "/", "5"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Area\>\"", " ", "->", " ", "15"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<FilledArea\>\"", " ", "->", " ", "9"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<FilledProportion\>\"", " ", "->", " ", "0.6"}], ",", "\n", 
+     "\t\t", 
+     RowBox[{"\"\<Components\>\"", " ", "->", " ", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{
+          "\"\<UUID\>\"", " ", "->", " ", 
+           "\"\<7cdcd221-ab79-465c-afdb-8191e8eb58fe\>\""}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"2", ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"2", ",", " ", "2", ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", "2", ",", " ", "2"}], "}"}], 
+              ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"2", ",", " ", "2", ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"2", ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}]}], "}"}], "]"}]}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"3", ",", " ", "4"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"4", ",", " ", "4"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"4", ",", " ", "5"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"5", ",", " ", "5"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"5", ",", " ", "6"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", " ", "4"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", " ", "5"}], "}"}], ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"7", ",", " ", "4"}], "}"}]}], "}"}]}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", "\n", "\t\t\t\t\t", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"10", ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"10", ",", " ", "10", ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10"}], "}"}], 
+              ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"10", ",", " ", "10", ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+              RowBox[{"{", 
+               RowBox[{"10", ",", " ", 
+                RowBox[{"-", "1"}], ",", " ", 
+                RowBox[{"-", "1"}]}], "}"}]}], "}"}], "\n", "\t\t\t\t", 
+            "]"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Shapes\>\"", " ", "->", " ", 
+           RowBox[{"{", "\n", "\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"<|", "\n", "\t\t\t\t\t\t", 
+              RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+               RowBox[{"ARCScene", "[", "\n", "\t\t\t\t\t\t\t", 
+                RowBox[{"{", "\n", "\t\t\t\t\t\t\t\t", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"10", ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", "\n", 
+                  "\t\t\t\t\t\t\t\t", 
+                  RowBox[{"{", 
+                   RowBox[{"10", ",", " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", "\n", 
+                  "\t\t\t\t\t\t\t\t", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10"}], 
+                   "}"}], ",", "\n", "\t\t\t\t\t\t\t\t", 
+                  RowBox[{"{", 
+                   RowBox[{"10", ",", " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", "\n", 
+                  "\t\t\t\t\t\t\t\t", 
+                  RowBox[{"{", 
+                   RowBox[{"10", ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "\n", "\t\t\t\t\t\t\t", 
+                 "}"}], "\n", "\t\t\t\t\t\t", "]"}]}], "\n", "\t\t\t\t\t", 
+              "|>"}], ",", "\n", "\t\t\t\t\t", 
+             RowBox[{"<|", "\n", "\t\t\t\t\t\t", 
+              RowBox[{
+               RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+                RowBox[{"ARCScene", "[", "\n", "\t\t\t\t\t\t\t", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"10", ",", " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10"}], 
+                    "}"}], ",", " ", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10", ",", 
+                    " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}]}], "}"}], "\n", 
+                 "\t\t\t\t\t\t", "]"}]}], ",", "\n", "\t\t\t\t\t\t", 
+               RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+                RowBox[{"<|", 
+                 RowBox[{
+                  RowBox[{
+                  "\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], ",", 
+                  " ", 
+                  RowBox[{"\"\<Angle\>\"", " ", "->", " ", "270"}]}], 
+                 "|>"}]}]}], "\n", "\t\t\t\t\t", "|>"}], ",", "\n", 
+             "\t\t\t\t\t", 
+             RowBox[{"<|", "\n", "\t\t\t\t\t\t", 
+              RowBox[{
+               RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+                RowBox[{"ARCScene", "[", "\n", "\t\t\t\t\t\t\t", 
+                 RowBox[{"{", "\n", "\t\t\t\t\t\t\t\t", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", "10"}], "}"}], ",", "\n", 
+                   "\t\t\t\t\t\t\t\t", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10"}], 
+                    "}"}], ",", "\n", "\t\t\t\t\t\t\t\t", 
+                   RowBox[{"{", 
+                    RowBox[{"10", ",", " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", "\n", 
+                   "\t\t\t\t\t\t\t\t", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10"}], 
+                    "}"}], ",", "\n", "\t\t\t\t\t\t\t\t", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", "10"}], "}"}]}], "\n", 
+                  "\t\t\t\t\t\t\t", "}"}], "\n", "\t\t\t\t\t\t", "]"}]}], ",",
+                "\n", "\t\t\t\t\t\t", 
+               RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+                RowBox[{"<|", 
+                 RowBox[{
+                  RowBox[{
+                  "\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], ",", 
+                  " ", 
+                  RowBox[{"\"\<Angle\>\"", " ", "->", " ", "180"}]}], 
+                 "|>"}]}]}], "\n", "\t\t\t\t\t", "|>"}], ",", "\n", 
+             "\t\t\t\t\t", 
+             RowBox[{"<|", "\n", "\t\t\t\t\t\t", 
+              RowBox[{
+               RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+                RowBox[{"ARCScene", "[", "\n", "\t\t\t\t\t\t\t", 
+                 RowBox[{"{", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+                   RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10", ",", 
+                    " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+                   RowBox[{"{", 
+                    RowBox[{"10", ",", " ", "10", ",", " ", 
+                    RowBox[{"-", "1"}], ",", " ", "10", ",", " ", "10"}], 
+                    "}"}]}], "}"}], "\n", "\t\t\t\t\t\t", "]"}]}], ",", "\n", 
+               "\t\t\t\t\t\t", 
+               RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+                RowBox[{"<|", 
+                 RowBox[{
+                  RowBox[{
+                  "\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], ",", 
+                  " ", 
+                  RowBox[{"\"\<Angle\>\"", " ", "->", " ", "90"}]}], 
+                 "|>"}]}]}], "\n", "\t\t\t\t\t", "|>"}]}], "\n", "\t\t\t\t", 
+            "}"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+           RowBox[{"{", "2", "}"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"3", ",", " ", "4"}], "}"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Y\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<X\>\"", " ", "->", " ", "4"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Y2\>\"", " ", "->", " ", "7"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<X2\>\"", " ", "->", " ", "6"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Width\>\"", " ", "->", " ", "3"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Height\>\"", " ", "->", " ", "5"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Length\>\"", " ", "->", " ", "5"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{
+          "\"\<PrimarySizeDimension\>\"", " ", "->", " ", "\"\<Y\>\""}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", 
+           RowBox[{"3", "/", "5"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Area\>\"", " ", "->", " ", "15"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<FilledArea\>\"", " ", "->", " ", "8"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{
+          "\"\<FilledProportion\>\"", " ", "->", " ", "0.5333333333333333"}], 
+          ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<WidthRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<WidthInverseRank\>\"", " ", "->", " ", "2"}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<HeightRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<HeightInverseRank\>\"", " ", "->", " ", "2"}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<LengthRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<LengthInverseRank\>\"", " ", "->", " ", "2"}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<YRank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<YInverseRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<XRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<XInverseRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Y2Rank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Y2InverseRank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<X2Rank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<X2InverseRank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<PrimarySizeDimensionRank\>\"", " ", "->", " ", "1"}], 
+          ",", "\n", "\t\t\t\t", 
+          RowBox[{
+          "\"\<PrimarySizeDimensionInverseRank\>\"", " ", "->", " ", "2"}], 
+          ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<AspectRatioRank\>\"", " ", "->", " ", "2"}], ",", "\n",
+           "\t\t\t\t", 
+          RowBox[{"\"\<AspectRatioInverseRank\>\"", " ", "->", " ", "1"}]}], 
+         "\n", "\t\t\t", "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{
+          "\"\<UUID\>\"", " ", "->", " ", 
+           "\"\<c185b5d2-735f-4f10-9002-ea26516b4136\>\""}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", 
+            RowBox[{"{", 
+             RowBox[{"{", "1", "}"}], "}"}], "]"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"{", 
+             RowBox[{"5", ",", " ", "4"}], "}"}], "}"}]}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+            "|>"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Shapes\>\"", " ", "->", " ", 
+           RowBox[{"{", "\n", "\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+               RowBox[{"ARCScene", "[", 
+                RowBox[{"{", 
+                 RowBox[{"{", "10", "}"}], "}"}], "]"}]}], "|>"}], ",", "\n", 
+             "\t\t\t\t\t", 
+             RowBox[{"<|", 
+              RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+              "|>"}], ",", "\n", "\t\t\t\t\t", 
+             RowBox[{"<|", 
+              RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Square\>\""}], 
+              "|>"}], ",", "\n", "\t\t\t\t\t", 
+             RowBox[{"<|", 
+              RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Rectangle\>\""}], 
+              "|>"}], ",", "\n", "\t\t\t\t\t", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Square\>\""}], 
+               ",", " ", 
+               RowBox[{"\"\<Filled\>\"", " ", "->", " ", "True"}]}], "|>"}], 
+             ",", "\n", "\t\t\t\t\t", 
+             RowBox[{"<|", 
+              RowBox[{
+               RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Rectangle\>\""}], 
+               ",", " ", 
+               RowBox[{"\"\<Filled\>\"", " ", "->", " ", "True"}]}], "|>"}]}],
+             "\n", "\t\t\t\t", "}"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+           RowBox[{"{", "1", "}"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"5", ",", " ", "4"}], "}"}]}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Y\>\"", " ", "->", " ", "5"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<X\>\"", " ", "->", " ", "4"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Y2\>\"", " ", "->", " ", "5"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<X2\>\"", " ", "->", " ", "4"}], ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Length\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{
+          "\"\<PrimarySizeDimension\>\"", " ", "->", " ", "\"\<None\>\""}], 
+          ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<FilledArea\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<FilledProportion\>\"", " ", "->", " ", "1."}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<WidthRank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<WidthInverseRank\>\"", " ", "->", " ", "1"}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<HeightRank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<HeightInverseRank\>\"", " ", "->", " ", "1"}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<LengthRank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<LengthInverseRank\>\"", " ", "->", " ", "1"}], ",", 
+          "\n", "\t\t\t\t", 
+          RowBox[{"\"\<YRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<YInverseRank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<XRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<XInverseRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Y2Rank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Y2InverseRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<X2Rank\>\"", " ", "->", " ", "2"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<X2InverseRank\>\"", " ", "->", " ", "1"}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<PrimarySizeDimensionRank\>\"", " ", "->", " ", "2"}], 
+          ",", "\n", "\t\t\t\t", 
+          RowBox[{
+          "\"\<PrimarySizeDimensionInverseRank\>\"", " ", "->", " ", "1"}], 
+          ",", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<AspectRatioRank\>\"", " ", "->", " ", "1"}], ",", "\n",
+           "\t\t\t\t", 
+          RowBox[{"\"\<AspectRatioInverseRank\>\"", " ", "->", " ", "2"}]}], 
+         "\n", "\t\t\t", "|>"}]}], "\n", "\t\t", "}"}]}]}], "\n", "\t", 
+    "|>"}], ",", "\n", "\t", 
+   RowBox[{"<|", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+      RowBox[{"ARCScene", "[", 
+       RowBox[{"{", 
+        RowBox[{"{", 
+         RowBox[{
+         "1", ",", " ", "1", ",", " ", "1", ",", " ", "1", ",", " ", "1", ",",
+           " ", "1", ",", " ", "1", ",", " ", "1", ",", " ", "1"}], "}"}], 
+        "}"}], "]"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+      RowBox[{"{", 
+       RowBox[{"5", ",", " ", "7"}], "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+      RowBox[{"<|", 
+       RowBox[{
+        RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Line\>\""}], ",", " ", 
+        RowBox[{"\"\<Angle\>\"", " ", "->", " ", "0"}]}], "|>"}]}], ",", "\n",
+      "\t\t", 
+     RowBox[{"\"\<Shapes\>\"", " ", "->", " ", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{"<|", 
+         RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+          RowBox[{"ARCScene", "[", 
+           RowBox[{"{", 
+            RowBox[{"{", 
+             RowBox[{
+             "10", ",", " ", "10", ",", " ", "10", ",", " ", "10", ",", " ", 
+              "10", ",", " ", "10", ",", " ", "10", ",", " ", "10", ",", " ", 
+              "10"}], "}"}], "}"}], "]"}]}], "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}]}], "}"}], "]"}]}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], 
+             ",", " ", 
+             RowBox[{"\"\<Angle\>\"", " ", "->", " ", "270"}]}], "|>"}]}]}], 
+         "\n", "\t\t\t", "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+           RowBox[{"ARCScene", "[", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}], ",", " ", 
+              RowBox[{"{", "10", "}"}]}], "}"}], "]"}]}], ",", "\n", 
+          "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{
+             RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Rotation\>\""}], 
+             ",", " ", 
+             RowBox[{"\"\<Angle\>\"", " ", "->", " ", "90"}]}], "|>"}]}]}], 
+         "\n", "\t\t\t", "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Line\>\""}], "|>"}], 
+        ",", "\n", "\t\t\t", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Rectangle\>\""}], 
+         "|>"}], ",", "\n", "\t\t\t", 
+        RowBox[{"<|", 
+         RowBox[{
+          RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Line\>\""}], ",", " ", 
+          RowBox[{"\"\<Angle\>\"", " ", "->", " ", "0"}]}], "|>"}], ",", "\n",
+         "\t\t\t", 
+        RowBox[{"<|", 
+         RowBox[{
+          RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Rectangle\>\""}], ",", 
+          " ", 
+          RowBox[{"\"\<Filled\>\"", " ", "->", " ", "True"}]}], "|>"}]}], 
+       "\n", "\t\t", "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+      RowBox[{"{", "1", "}"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Width\>\"", " ", "->", " ", "9"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}]}], "\n", "\t", "|>"}], 
+   ",", "\n", "\t", 
+   RowBox[{"<|", 
+    RowBox[{
+     RowBox[{"\"\<Width\>\"", " ", "->", " ", "15"}], ",", " ", 
+     RowBox[{"\"\<Height\>\"", " ", "->", " ", "10"}]}], "|>"}]}], "\n", 
+  "]"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{3.869415965193899*^9},
+ CellLabel->"In[161]:=",
+ CellID->16927371,
+ "TestId" -> 
+ "ARCOutwardComponentPropertiesIfAppropriate-20220813-OQLTI2",ExpressionUUID->\
+"60f46420-a0db-4bd8-9570-93c078a43cef"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{"\<\"Outward\"\>", "\[Rule]", "True"}], ",", 
+   RowBox[{"\<\"Direction\"\>", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "1"}], "}"}]}]}], "\[RightAssociation]"}]], "Output",
+ CellChangeTimes->{3.869415962924734*^9},
+ CellLabel->
+  "Out[162]=",ExpressionUUID->"d16a662d-98a3-4dfe-86b6-f049bd847d23"]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate, "SubTest" -> 
+             None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[
+                Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202281317153115134}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCOutwardComponentPropertiesIfAppropriate", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCOutwardComponentPropertiesIfAppropriate}, 
+    "ReturnNotebook" -> True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"71759620-cfee-450f-acd2-f6bff3686c4b"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 114, 0, 98, "Title",ExpressionUUID->"15d3c84a-ed75-4e2f-a0a5-05936fe6fd30"],
+Cell[697, 24, 280, 7, 54, "Code",ExpressionUUID->"549bd4c5-3c15-4e92-b852-68301742d930",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[1002, 35, 79, 0, 67, "Section",ExpressionUUID->"3b3a80cf-992b-4b26-a480-cf011611204c"],
+Cell[CellGroupData[{
+Cell[1106, 39, 3772, 85, 52, "TestUI",ExpressionUUID->"1579f028-35e6-4967-baa8-bd3efee13156",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[4881, 126, 31886, 700, 3420, "Code",ExpressionUUID->"60f46420-a0db-4bd8-9570-93c078a43cef",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->16927371]
+}, Open  ]],
+Cell[36782, 829, 377, 9, 33, "Output",ExpressionUUID->"d16a662d-98a3-4dfe-86b6-f049bd847d23"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

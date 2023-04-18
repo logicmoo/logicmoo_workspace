@@ -1,0 +1,37 @@
+/*
+M-ACL ver 1 AbdProofProc. ver mple
+Input file: induction/m_acl_tests/ancestor.bg, Output file: induction/m_acl_tests/ancestor.rules
+Max spec steps=10, Beamsize=10, Derivation depth=50,Verbosity=3, 
+Min cov=1, Accuracy stopping threshold=0.800
+4 positive examples, 4 negative examples
+*/
+/* Execution time 0.013000 seconds. Generated rules */
+ 
+ancestor(A,B):-parent(A,B).
+/* Name: cl_3 GC: yes, LC: yes 
+Covered positive examples: [ancestor(b,c),ancestor(a,b)]
+Covered positive abduced examples: []
+Covered negative abduced examples: []
+Abduced literals: []  */
+ 
+ 
+ancestor(A,B):-parent(A,C),ancestor(C,B).
+/* Name: cl_28 GC: yes, LC: yes 
+Covered positive examples: [ancestor(d,c)]
+Covered positive abduced examples: []
+Covered negative abduced examples: [ancestor(a,c)]
+Abduced literals: [[not(ancestor(c,d)),cl_28],[not(ancestor(b,d)),cl_28],[not(ancestor(c,a)),cl_28]]  */
+ 
+ 
+father(A,B):-male(A),parent(A,B).
+/* Name: cl_47 GC: yes, LC: yes 
+Covered positive examples: [father(a,b)]
+Covered positive abduced examples: []
+Covered negative abduced examples: []
+Abduced literals: []  */
+ 
+/* Backtracked clauses 
+ 
+cl_16: father(A,B):-male(A),ancestor(A,B).
+ 
+*/

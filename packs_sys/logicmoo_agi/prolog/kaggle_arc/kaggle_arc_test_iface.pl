@@ -811,6 +811,7 @@ next_suite:-
 :- dynamic(dir_test_suite_name/1).
 
 :- dynamic(dont_sort_by_hard/1).
+dont_sort_by_hard(S):- S \== test_names_by_hard,!.
 dont_sort_by_hard(test_names_by_fav). dont_sort_by_hard(all_arc_test_name). dont_sort_by_hard(all_arc_test_name_unordered).
 %dont_sort_by_hard(P):- atom(P), \+ atom_concat(_,'_hard',P).
 
@@ -827,6 +828,7 @@ test_suite_name(evaluation).
 test_suite_name(easy_solve_suite).
 test_suite_name(test_names_by_fav). 
 test_suite_name(human_t).
+test_suite_name(michod_solved_train).
 test_suite_name(is_symgrid).
 %test_suite_name(sol_t).
 %test_suite_name(hard_t).
@@ -1397,7 +1399,8 @@ test_name_output_file(TestID,File):- sub_atom_value(TestID,OID),!,atomic_list_co
 clear_test(TestID):- is_list(TestID),!,my_maplist(clear_test,TestID).
 clear_test(TestID):- ensure_test(TestID),
    clear_training(TestID),
-   warn_skip(clear_saveable_test_info(TestID)),
+   %warn_skip
+   (clear_saveable_test_info(TestID)),
    unload_test_file(TestID).
 
 clear_saveable_test_info(TestID):- 

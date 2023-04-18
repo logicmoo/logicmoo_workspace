@@ -1,0 +1,365 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>HTMLInfo | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class HTMLInfo</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">HTMLInfo</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>HTMLInfo is used to show and hide custom HTML page elements, such as a context menu, tooltip, or text editor made of HTML.</p>
+					<p>Properties that can be set to an HTMLInfo include:</p>
+					<ul>
+						<li><a href="TextEditingTool.html#defaultTextEditor">TextEditingTool.defaultTextEditor</a></li>
+						<li><a href="TextBlock.html#textEditor">TextBlock.textEditor</a></li>
+						<li><a href="GraphObject.html#contextMenu">GraphObject.contextMenu</a></li>
+						<li><a href="Diagram.html#contextMenu">Diagram.contextMenu</a></li>
+						<li><a href="GraphObject.html#toolTip">GraphObject.toolTip</a></li>
+						<li><a href="Diagram.html#toolTip">Diagram.toolTip</a></li>
+					</ul>
+					<p>When a context menu is set to an instance of HTMLInfo,
+						<a href="ContextMenuTool.html#showContextMenu">ContextMenuTool.showContextMenu</a> and <a href="ContextMenuTool.html#hideContextMenu">ContextMenuTool.hideContextMenu</a>
+						call <a href="HTMLInfo.html#show">show</a> and <a href="HTMLInfo.html#hide">hide</a> respectively. You may define <a href="HTMLInfo.html#mainElement">mainElement</a>
+					instead of <a href="HTMLInfo.html#hide">hide</a> in order to automatically use a default hide method.</p>
+					<p>When a tooltip is set to an instance of HTMLInfo,
+						<a href="ToolManager.html#showToolTip">ToolManager.showToolTip</a> and <a href="ToolManager.html#hideToolTip">ToolManager.hideToolTip</a>
+					call <a href="HTMLInfo.html#show">show</a> and <a href="HTMLInfo.html#hide">hide</a> respectively.</p>
+					<p>When a text editor is set to an instance of HTMLInfo,
+					<a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a> calls <a href="HTMLInfo.html#show">show</a> and <a href="TextEditingTool.html#doDeactivate">TextEditingTool.doDeactivate</a> calls <a href="HTMLInfo.html#hide">hide</a>.</p>
+					<p>For HTMLInfo to work, you must define <a href="HTMLInfo.html#show">show</a>
+						and either <a href="HTMLInfo.html#hide">hide</a> or <a href="HTMLInfo.html#mainElement">mainElement</a>.
+						Typical usage will also stop the <a href="ContextMenuTool.html">ContextMenuTool</a> once the desired context action occurs,
+					typically by calling <code>diagram.currentTool.stopTool();</code>.</p>
+					<p>Example usage of HTMLInfo can be found in the
+						<a href="../../samples/customContextMenu.html">Custom Context Menu</a> and
+						<a href="../../samples/htmlLightBoxContextMenu.html">HTML LightBox Context Menu</a> samples, the
+						<a href="../../samples/customTextEditingTool.html">Custom TextEditingTool sample</a>, and the
+					<a href="../../extensions/textEditor.html">Text Editor implementation extension</a>.</p>
+					<p>Here is the outline for typical usage of HTMLInfo as a context menu:</p>
+					<pre><code class="hljs js"><span class="hljs-comment">// Assign an HTMLInfo to the Diagram:</span>
+myDiagram.contextMenu = $(go.HTMLInfo, {
+  <span class="hljs-attr">show</span>: showContextMenu,
+  <span class="hljs-attr">hide</span>: hideContextMenu
+});
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showContextMenu</span>(<span class="hljs-params">obj, diagram, tool</span>) </span>{
+  <span class="hljs-comment">// Show the context menu HTML element:</span>
+  SomeDOMElement.style.display = <span class="hljs-string">"block"</span>;
+
+  <span class="hljs-comment">// Also show relevant buttons given the current state</span>
+  <span class="hljs-comment">// and the GraphObject obj; if null, the context menu is for the whole Diagram</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hideContextMenu</span>(<span class="hljs-params"></span>) </span>{
+  SomeDOMElement.style.display = <span class="hljs-string">"none"</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buttonClick</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-comment">// do some action when a context menu button is clicked</span>
+
+  <span class="hljs-comment">// then:</span>
+  myDiagram.currentTool.stopTool();
+}
+</code></pre>
+					<p>By default, <a href="TextEditingTool.html#defaultTextEditor">TextEditingTool.defaultTextEditor</a> is an instance of HTMLInfo.
+					You can see its default implementation details <a href="../../extensions/textEditor.html">here</a>.</p>
+					<dl class="tsd-comment-tags">
+						<dt>since</dt>
+						<dd><p>1.7</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="HTMLInfo.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="HTMLInfo.html#hide" class="tsd-kind-icon">hide</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="HTMLInfo.html#mainElement" class="tsd-kind-icon">main<wbr>Element</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="HTMLInfo.html#show" class="tsd-kind-icon">show</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="HTMLInfo.html#valueFunction" class="tsd-kind-icon">value<wbr>Function</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new HTMLInfo<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="HTMLInfo.html" class="tsd-signature-type">HTMLInfo</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>A newly constructed HTMLInfo can be assigned as a value of <a href="TextEditingTool.html#defaultTextEditor">TextEditingTool.defaultTextEditor</a>, <a href="TextBlock.html#textEditor">TextBlock.textEditor</a>
+								<a href="GraphObject.html#contextMenu">GraphObject.contextMenu</a>, <a href="Diagram.html#contextMenu">Diagram.contextMenu</a>, <a href="GraphObject.html#toolTip">GraphObject.toolTip</a>, or <a href="Diagram.html#toolTip">Diagram.toolTip</a>.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="HTMLInfo.html" class="tsd-signature-type">HTMLInfo</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="hide" class="tsd-anchor"></a>
+					<h3>
+						hide
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">a</span><span class="tsd-signature-symbol">: </span><a href="Diagram.html" class="tsd-signature-type">Diagram</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">b</span><span class="tsd-signature-symbol">: </span><a href="Tool.html" class="tsd-signature-type">Tool</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the function to call when an HTMLInfo is to be hidden.
+									The function should &quot;hide&quot; the HTMLInfo, either by removing any traces of it or otherwise
+								returning the page state to one where the HTMLInfo content is no longer considered active.</p>
+								<p>Setting this is not strictly necessary, if no action is to be taken when hiding the HTMLInfo.</p>
+								<p>If this is called by:</p>
+								<ul>
+									<li><a href="ContextMenuTool.html#hideContextMenu">ContextMenuTool.hideContextMenu</a>, the second argument is the <a href="ContextMenuTool.html">ContextMenuTool</a>.</li>
+									<li><a href="ToolManager.html#hideToolTip">ToolManager.hideToolTip</a>, the second argument is the <a href="ToolManager.html">ToolManager</a>.</li>
+									<li><a href="TextEditingTool.html#doDeactivate">TextEditingTool.doDeactivate</a>, the second argument is the <a href="TextEditingTool.html">TextEditingTool</a>.</li>
+								</ul>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="HTMLInfo.html#mainElement">mainElement</a></p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="mainElement" class="tsd-anchor"></a>
+					<h3>
+						main<wbr>Element
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the primary HTML Element that represents this HTMLInfo.
+									In a context menu, this would be the outermost HTML element, the one which typically
+								shows and hides. If this is set and <a href="HTMLInfo.html#hide">hide</a> is not, HTMLInfo will automatically execute:</p>
+								<pre><code class="hljs js">  tool.mainElement.style.display = <span class="hljs-string">"none"</span>;
+</code></pre>
+								<p>when <a href="HTMLInfo.html#hide">hide</a> would typically be called.</p>
+								<p>This is set only for convenience; the default value for this property is null.</p>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="HTMLInfo.html#hide">hide</a></p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="show" class="tsd-anchor"></a>
+					<h3>
+						show
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">a</span><span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">b</span><span class="tsd-signature-symbol">: </span><a href="Diagram.html" class="tsd-signature-type">Diagram</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">c</span><span class="tsd-signature-symbol">: </span><a href="Tool.html" class="tsd-signature-type">Tool</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the function to call when an HTMLInfo is to be shown,
+								such as when used as the <a href="GraphObject.html#contextMenu">GraphObject.contextMenu</a> or <a href="Diagram.html#toolTip">Diagram.toolTip</a> or <a href="TextBlock.html#textEditor">TextBlock.textEditor</a>.</p>
+								<p>If this is called by:</p>
+								<ul>
+									<li><a href="ContextMenuTool.html#showContextMenu">ContextMenuTool.showContextMenu</a>, the first argument is the <a href="GraphObject.html">GraphObject</a> for which the context menu is being shown, or null for the diagram background.</li>
+									<li><a href="ToolManager.html#showToolTip">ToolManager.showToolTip</a>, the first argument is the <a href="GraphObject.html">GraphObject</a> for which the tooltip is being shown, or null for the diagram background.</li>
+									<li><a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a>, the first argument is the <a href="TextBlock.html">TextBlock</a> for which the text editor is being shown.</li>
+								</ul>
+								<p>If you need access to any bound data for the first argument, if it is non-null, you can get it via:
+									<code>obj.part.data</code>
+								and then you can look at any of the properties you have put on that data.</p>
+								<p>When used as a context menu, typically shown elements, such as buttons, should call
+								<code>diagram.currentTool.stopTool();</code> when their action is completed.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="valueFunction" class="tsd-anchor"></a>
+					<h3>
+						value<wbr>Function
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets a function that returns the primary value associated with this HTMLInfo,
+								such as the string value of a text editor, which would be solicited by the <a href="TextEditingTool.html">TextEditingTool</a>.</p>
+								<p>This typically returns a string.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="HTMLInfo.html" class="tsd-kind-icon">HTMLInfo</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="HTMLInfo.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="HTMLInfo.html#hide" class="tsd-kind-icon">hide</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="HTMLInfo.html#mainElement" class="tsd-kind-icon">main<wbr>Element</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="HTMLInfo.html#show" class="tsd-kind-icon">show</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="HTMLInfo.html#valueFunction" class="tsd-kind-icon">value<wbr>Function</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

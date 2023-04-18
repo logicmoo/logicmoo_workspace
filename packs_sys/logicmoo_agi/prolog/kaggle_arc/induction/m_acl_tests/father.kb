@@ -1,0 +1,12 @@
+begin(model(male_katy_0)).
+neg.
+
+male(katy).
+end(model(male_katy_0)).
+ 
+begin(model(positive)).
+pos.
+ 
+male(david).
+end(model(positive)).
+ 

@@ -1,0 +1,346 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>AnimationManager | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class AnimationManager</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">AnimationManager</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>AnimationManager handles animations in a <a href="Diagram.html">Diagram</a>. Each Diagram has one, <a href="Diagram.html#animationManager">Diagram.animationManager</a>.
+					Layouts, Group expansion and Tree expansion automatically start animations.</p>
+					<p>Animation is enabled by default, setting the <a href="AnimationManager.html#isEnabled">isEnabled</a> property to false will turn off animations for a Diagram.</p>
+					<p>When an animations begins it raises the &quot;AnimationStarting&quot; diagram event,
+					upon completion it raises the &quot;AnimationFinished&quot; diagram event.</p>
+					<p>Animation will stop if a new transaction is started, if an undo or redo is called,
+						if a layout is invalidated, or if a model is replaced.
+						When an animation is stopped, the Diagram immediately finishes the animation and draws the final state.
+					Animations can be stopped programatically with the method <a href="AnimationManager.html#stopAnimation">AnimationManager.stopAnimation</a>.</p>
+					<dl class="tsd-comment-tags">
+						<dt>since</dt>
+						<dd><p>1.4</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="AnimationManager.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="AnimationManager.html#duration" class="tsd-kind-icon">duration</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="AnimationManager.html#isAnimating" class="tsd-kind-icon">is<wbr>Animating</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="AnimationManager.html#isEnabled" class="tsd-kind-icon">is<wbr>Enabled</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="AnimationManager.html#isInitial" class="tsd-kind-icon">is<wbr>Initial</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="AnimationManager.html#isTicking" class="tsd-kind-icon">is<wbr>Ticking</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="AnimationManager.html#stopAnimation" class="tsd-kind-icon">stop<wbr>Animation</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Animation<wbr>Manager<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="AnimationManager.html" class="tsd-signature-type">AnimationManager</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>You do not normally need to create an instance of this class because one already exists as the <a href="Diagram.html#animationManager">Diagram.animationManager</a>, which you can modify.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="AnimationManager.html" class="tsd-signature-type">AnimationManager</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="duration" class="tsd-anchor"></a>
+					<h3>
+						duration
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the duration for animations, in milliseconds.</p>
+								<p>The default value is 600 milliseconds.
+									The value must be a number greater than or equal to 1.
+								Setting this property does not raise any events.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="isAnimating" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						is<wbr>Animating
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property is true when the animation manger is currently animating.</p>
+								<p>This value cannot be set, but animation can be stopped by calling <a href="AnimationManager.html#stopAnimation">stopAnimation</a>,
+								and it can be prevented by setting <a href="AnimationManager.html#isEnabled">isEnabled</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="isEnabled" class="tsd-anchor"></a>
+					<h3>
+						is<wbr>Enabled
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets whether this AnimationManager operates.</p>
+								<p>The default value is true.
+									Setting this to false does not stop an animation, it only stops future animations.
+									To stop any ongoing animation, use <a href="AnimationManager.html#stopAnimation">stopAnimation</a>.
+								Setting this property does not raise any events.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="isInitial" class="tsd-anchor"></a>
+					<h3>
+						is<wbr>Initial
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets whether an animation is performed on an initial layout.</p>
+								<p>The default value is true.
+									Changing the value does not affect any ongoing animation.
+								Setting this property does not raise any events.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.6</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="isTicking" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						is<wbr>Ticking
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property is true when the animation manger is in the middle of an animation tick.
+								Animation only operates on GraphObjects during ticks, but code outside of AnimationManager&#39;s control may execute between ticks.</p>
+								<p>isTicking can only be true when <a href="AnimationManager.html#isAnimating">isAnimating</a> is also true.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="stopAnimation" class="tsd-anchor"></a>
+					<h3>
+						stop<wbr>Animation
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">stop<wbr>Animation<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Stops any running animation and updates the Diagram to its final state.</p>
+								<p>If an animation was about to begin, it is cancelled.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="AnimationManager.html" class="tsd-kind-icon">Animation<wbr>Manager</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="AnimationManager.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="AnimationManager.html#duration" class="tsd-kind-icon">duration</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="AnimationManager.html#isAnimating" class="tsd-kind-icon">is<wbr>Animating</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="AnimationManager.html#isEnabled" class="tsd-kind-icon">is<wbr>Enabled</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="AnimationManager.html#isInitial" class="tsd-kind-icon">is<wbr>Initial</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="AnimationManager.html#isTicking" class="tsd-kind-icon">is<wbr>Ticking</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="AnimationManager.html#stopAnimation" class="tsd-kind-icon">stop<wbr>Animation</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>RescalingTool | GoJS API</title>
+	<meta name="description" content="Documentation for GoJS API">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/style.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<nav id="navTop" class="w-full z-30 top-0 text-white bg-nwoods-primary">
+		<div class="w-full container max-w-screen-lg mx-auto flex flex-wrap sm:flex-nowrap items-center justify-between mt-0 py-2">
+			<div class="md:pl-4">
+				<a class="text-white hover:text-white no-underline hover:no-underline
+				font-bold text-2xl lg:text-4xl rounded-lg hover:bg-nwoods-secondary" href="../../index.html">
+				<h1 class="mb-0 p-1">GoJS</h1>
+				</a>
+			</div>
+			<button id="topnavButton" class="rounded-lg sm:hidden focus:outline-none focus:ring" aria-label="Navigation">
+				<svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+					<path id="topnavOpen" fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+					<path id="topnavClosed" class="hidden" fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+				</svg>
+			</button>
+			<div id="topnavList" class="hidden sm:block items-center w-auto mt-0 text-white p-0 z-20">
+				<ul class="list-reset list-none font-semibold flex justify-end flex-wrap sm:flex-nowrap items-center px-0 pb-0">
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="../../learn/index.html">Learn</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="../../samples/index.html">Samples</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="../../intro/index.html">Intro</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="../../api/index.html">API</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="https://www.nwoods.com/products/register.html">Register</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="../../download.html">Download</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="https://forum.nwoods.com/c/gojs/11">Forum</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="https://www.nwoods.com/contact.html"
+					target="_blank" rel="noopener" onclick="getOutboundLink('https://www.nwoods.com/contact.html', 'contact');">Contact</a></li>
+					<li class="p-1 sm:p-0"><a class="topnav-link" href="https://www.nwoods.com/sales/index.html"
+					target="_blank"rel="noopener" onclick="getOutboundLink('https://www.nwoods.com/sales/index.html', 'buy');">Buy</a></li>
+				</ul>
+			</div>
+		</div>
+		<hr class="border-b border-gray-600 opacity-50 my-0 py-0" />
+	</nav>
+	<div class="tsd tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="w-full max-w-screen-xl mx-auto px-2">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd tsd-page-title">
+			<div class="w-full max-w-screen-xl mx-auto px-2">
+				<div class="top-copyright">
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.1.49<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class RescalingTool</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="tsd w-full max-w-screen-xl mx-auto pb-4">
+	<div class="row px-2 w-full">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-extension">
+				<p>
+					This is an extension and not part of the main GoJS library.
+					Note that the API for this class may change at any time.
+					If you intend to use an extension in production, you should copy the code to your own source directory.
+					Extensions can be found in the GoJS kit under the <code>extensions</code> or <code>extensionsTS</code> folders.
+					See the <a href="../../intro/extensions.html">Extensions intro page</a> for more information.
+				</p>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="Tool.html" class="tsd-signature-type" data-tsd-kind="Class">Tool</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">RescalingTool</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>A custom tool for rescaling an object by modifying its <a href="GraphObject.html#scale">GraphObject.scale</a> property.</p>
+					<p>Install the RescalingTool as a mouse-down tool by calling:
+					myDiagram.toolManager.mouseDownTools.add(new RescalingTool());</p>
+					<p>Normally it would not make sense for the same object to be both resizable and rescalable.</p>
+					<p>Note that there is no <code>Part.rescaleObjectName</code> property and there is no <code>Part.rescalable</code> property.
+						So although you cannot customize any Node to affect this tool, you can set
+						<a>RescalingTool.rescaleObjectName</a> and set <a>RescalingTool.isEnabled</a> to control
+					whether objects are rescalable and when.</p>
+					<p>If you want to experiment with this extension, try the <a href="../../extensionsJSM/Rescaling.html">Rescaling</a> sample.</p>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="RescalingTool.html#adornedObject" class="tsd-kind-icon">adorned<wbr>Object</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="RescalingTool.html#handle" class="tsd-kind-icon">handle</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="RescalingTool.html#handleArchetype" class="tsd-kind-icon">handle<wbr>Archetype</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="RescalingTool.html#rescaleObjectName" class="tsd-kind-icon">rescale<wbr>Object<wbr>Name</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#canStart" class="tsd-kind-icon">can<wbr>Start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="RescalingTool.html#computeScale" class="tsd-kind-icon">compute<wbr>Scale</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#doActivate" class="tsd-kind-icon">do<wbr>Activate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#doCancel" class="tsd-kind-icon">do<wbr>Cancel</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#doDeactivate" class="tsd-kind-icon">do<wbr>Deactivate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#doMouseMove" class="tsd-kind-icon">do<wbr>Mouse<wbr>Move</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="RescalingTool.html#findRescaleObject" class="tsd-kind-icon">find<wbr>Rescale<wbr>Object</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="RescalingTool.html#makeAdornment" class="tsd-kind-icon">make<wbr>Adornment</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="RescalingTool.html#scale" class="tsd-kind-icon">scale</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="RescalingTool.html#updateAdornments" class="tsd-kind-icon">update<wbr>Adornments</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Rescaling<wbr>Tool<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RescalingTool.html" class="tsd-signature-type" data-tsd-kind="Class">RescalingTool</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<h4 class="tsd-returns-title">Returns <a href="RescalingTool.html" class="tsd-signature-type" data-tsd-kind="Class">RescalingTool</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="adornedObject" class="tsd-anchor"></a>
+					<h3>
+						adorned<wbr>Object
+					<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type" data-tsd-kind="Class">GraphObject</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets the <a href="GraphObject.html">GraphObject</a> that is being rescaled.
+								This may be the same object as the selected <a href="Part.html">Part</a> or it may be contained within that Part.</p>
+								<p>This property is also settable, but should only be set when overriding functions
+								in RescalingTool, and not during normal operation.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="handle" class="tsd-anchor"></a>
+					<h3>
+						handle
+					<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type" data-tsd-kind="Class">GraphObject</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This property returns the <a href="GraphObject.html">GraphObject</a> that is the tool handle being dragged by the user.
+									This will be contained by an <a href="Adornment.html">Adornment</a> whose category is &quot;RescalingTool&quot;.
+								Its <a href="Adornment.html#adornedObject">Adornment.adornedObject</a> is the same as the <a href="RescalingTool.html#adornedObject">adornedObject</a>.</p>
+								<p>This property is also settable, but should only be set either within an override of <a href="RescalingTool.html#doActivate">doActivate</a>
+								or prior to calling <a href="RescalingTool.html#doActivate">doActivate</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="handleArchetype" class="tsd-anchor"></a>
+					<h3>
+						handle<wbr>Archetype
+					<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type" data-tsd-kind="Class">GraphObject</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets a small GraphObject that is copied as a rescale handle for the selected part.
+									By default this is a <a href="Shape.html">Shape</a> that is a small blue square.
+								Setting this property does not raise any events.</p>
+								<p>Here is an example of changing the default handle to be green &quot;X&quot;:</p>
+								<pre><code class="language-js"><span style="color: #D4D4D4">  </span><span style="color: #9CDCFE">tool</span><span style="color: #D4D4D4">.</span><span style="color: #9CDCFE">handleArchetype</span><span style="color: #D4D4D4"> =</span>
+<span style="color: #D4D4D4">    </span><span style="color: #DCDCAA">$</span><span style="color: #D4D4D4">(</span><span style="color: #9CDCFE">go</span><span style="color: #D4D4D4">.</span><span style="color: #9CDCFE">Shape</span><span style="color: #D4D4D4">, </span><span style="color: #CE9178">&quot;XLine&quot;</span><span style="color: #D4D4D4">,</span>
+<span style="color: #D4D4D4">      { </span><span style="color: #9CDCFE">width:</span><span style="color: #D4D4D4"> </span><span style="color: #B5CEA8">8</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">height:</span><span style="color: #D4D4D4"> </span><span style="color: #B5CEA8">8</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">stroke:</span><span style="color: #D4D4D4"> </span><span style="color: #CE9178">&quot;green&quot;</span><span style="color: #D4D4D4">, </span><span style="color: #9CDCFE">fill:</span><span style="color: #D4D4D4"> </span><span style="color: #CE9178">&quot;transparent&quot;</span><span style="color: #D4D4D4"> });</span>
+</code></pre>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="rescaleObjectName" class="tsd-anchor"></a>
+					<h3>
+						rescale<wbr>Object<wbr>Name
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This property returns the name of the GraphObject that identifies the object to be rescaled by this tool.</p>
+								<p>The default value is the empty string, resulting in the whole Node being rescaled.
+								This property is used by findRescaleObject when calling <a href="Panel.html#findObject">Panel.findObject</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="canStart" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						can<wbr>Start
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">can<wbr>Start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This tool can start running if the mouse-down happens on a &quot;Rescaling&quot; handle.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="computeScale" class="tsd-anchor"></a>
+					<h3>
+						compute<wbr>Scale
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">compute<wbr>Scale<span class="tsd-signature-symbol">(</span>newPoint<span class="tsd-signature-symbol">: </span><a href="Point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Compute the new scale given a point.</p>
+								<p>This method is called by both <a href="RescalingTool.html#doMouseMove">doMouseMove</a> and <a href="RescalingTool.html#doMouseUp">doMouseUp</a>.
+									This method may be overridden.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>newPoint: <a href="Point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>in document coordinates</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="doActivate" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Activate
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Activate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Activating this tool remembers the <a href="RescalingTool.html#handle">handle</a> that was dragged,
+									the <a href="RescalingTool.html#adornedObject">adornedObject</a> that is being rescaled,
+								starts a transaction, and captures the mouse.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="doCancel" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Cancel
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Cancel<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Restore the original <a href="GraphObject.html#scale">GraphObject.scale</a> of the adorned object.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="doDeactivate" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Deactivate
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Deactivate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Stop the current transaction, forget the <a href="RescalingTool.html#handle">handle</a> and <a href="RescalingTool.html#adornedObject">adornedObject</a>, and release the mouse.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="doMouseMove" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Move
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Move<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Call <a href="RescalingTool.html#scale">scale</a> with a new scale determined by the current mouse point.
+								This determines the new scale by calling <a href="RescalingTool.html#computeScale">computeScale</a>.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="doMouseUp" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Up
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Up<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Call <a href="RescalingTool.html#scale">scale</a> with a new scale determined by the most recent mouse point,
+								and commit the transaction.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="findRescaleObject" class="tsd-anchor"></a>
+					<h3>
+						find<wbr>Rescale<wbr>Object
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Rescale<wbr>Object<span class="tsd-signature-symbol">(</span>part<span class="tsd-signature-symbol">: </span><a href="Part.html" class="tsd-signature-type" data-tsd-kind="Class">Part</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type" data-tsd-kind="Class">GraphObject</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Return the GraphObject to be rescaled by the user.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>part: <a href="Part.html" class="tsd-signature-type" data-tsd-kind="Class">Part</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="GraphObject.html" class="tsd-signature-type" data-tsd-kind="Class">GraphObject</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="makeAdornment" class="tsd-anchor"></a>
+					<h3>
+						make<wbr>Adornment
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">make<wbr>Adornment<span class="tsd-signature-symbol">(</span>rescaleObj<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type" data-tsd-kind="Class">GraphObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Adornment.html" class="tsd-signature-type" data-tsd-kind="Class">Adornment</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>rescaleObj: <a href="GraphObject.html" class="tsd-signature-type" data-tsd-kind="Class">GraphObject</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="Adornment.html" class="tsd-signature-type" data-tsd-kind="Class">Adornment</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="scale" class="tsd-anchor"></a>
+					<h3>
+						scale
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">(</span>newScale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Set the <a href="GraphObject.html#scale">GraphObject.scale</a> of the <a href="RescalingTool.html#findRescaleObject">findRescaleObject</a>.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>newScale: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<a name="updateAdornments" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						update<wbr>Adornments
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Adornments<span class="tsd-signature-symbol">(</span>part<span class="tsd-signature-symbol">: </span><a href="Part.html" class="tsd-signature-type" data-tsd-kind="Class">Part</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>part: <a href="Part.html" class="tsd-signature-type" data-tsd-kind="Class">Part</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../index.html">GoJS <wbr>Class <wbr>Index</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-is-extension">
+						<a href="RescalingTool.html" class="tsd-kind-icon">Rescaling<wbr>Tool</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="RescalingTool.html#adornedObject" class="tsd-kind-icon">adorned<wbr>Object</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="RescalingTool.html#handle" class="tsd-kind-icon">handle</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="RescalingTool.html#handleArchetype" class="tsd-kind-icon">handle<wbr>Archetype</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="RescalingTool.html#rescaleObjectName" class="tsd-kind-icon">rescale<wbr>Object<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#canStart" class="tsd-kind-icon">can<wbr>Start</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="RescalingTool.html#computeScale" class="tsd-kind-icon">compute<wbr>Scale</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#doActivate" class="tsd-kind-icon">do<wbr>Activate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#doCancel" class="tsd-kind-icon">do<wbr>Cancel</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#doDeactivate" class="tsd-kind-icon">do<wbr>Deactivate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#doMouseMove" class="tsd-kind-icon">do<wbr>Mouse<wbr>Move</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="RescalingTool.html#findRescaleObject" class="tsd-kind-icon">find<wbr>Rescale<wbr>Object</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="RescalingTool.html#makeAdornment" class="tsd-kind-icon">make<wbr>Adornment</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="RescalingTool.html#scale" class="tsd-kind-icon">scale</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+								<a href="RescalingTool.html#updateAdornments" class="tsd-kind-icon">update<wbr>Adornments</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="tsd w-full max-w-screen-xl mx-auto px-2">
+	<div class="bottom-copyright">Copyright &copy; 1998-2021 by Northwoods Software Corporation.</div>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-1506307-5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date()); gtag('config', 'UA-1506307-5');
+  var getOutboundLink = function(url, label) {
+    gtag('event', 'click', {
+      'event_category': 'outbound',
+      'event_label': label,
+      'transport_type': 'beacon'
+    });
+  }
+
+  // topnav
+  var topButton = document.getElementById("topnavButton");
+  var topnavList = document.getElementById("topnavList");
+  topButton.addEventListener("click", function() {
+    this.classList.toggle("active");
+    topnavList.classList.toggle("hidden");
+    document.getElementById("topnavOpen").classList.toggle("hidden");
+    document.getElementById("topnavClosed").classList.toggle("hidden");
+  });
+</script>
+</body>
+</html>

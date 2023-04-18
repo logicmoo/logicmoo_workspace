@@ -1,0 +1,868 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CircularLayout | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class CircularLayout</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="Layout.html" class="tsd-signature-type">Layout</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">CircularLayout</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>This layout positions nodes in a circular arrangement.
+						There are several samples that use CircularLayout.
+					The layout cannot guarantee that it provides optimal positioning of nodes when trying to minimize link crossings.</p>
+					<p><p class="boxrun">
+							If you want to experiment interactively with most of the properties, try the <a href="../../samples/cLayout.html">Circular Layout</a> sample.
+						See samples that make use of CircularLayout in the <a href="../../samples/index.html#circularlayout">samples index</a>.</p>
+						<p>This layout makes use of a <a href="LayoutNetwork.html">LayoutNetwork</a> of
+							<a href="CircularVertex.html">CircularVertex</a>es and <a href="CircularEdge.html">CircularEdge</a>s that normally
+						correspond to the <a href="Node.html">Node</a>s and <a href="Link.html">Link</a>s of the <a href="Diagram.html">Diagram</a>.</p>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="CircularLayout.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="CircularLayout.html#actualCenter" class="tsd-kind-icon">actual<wbr>Center</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="CircularLayout.html#actualSpacing" class="tsd-kind-icon">actual<wbr>Spacing</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="CircularLayout.html#actualXRadius" class="tsd-kind-icon">actualXRadius</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="CircularLayout.html#actualYRadius" class="tsd-kind-icon">actualYRadius</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#arrangement" class="tsd-kind-icon">arrangement</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#aspectRatio" class="tsd-kind-icon">aspect<wbr>Ratio</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#comparer" class="tsd-kind-icon">comparer</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#direction" class="tsd-kind-icon">direction</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#nodeDiameterFormula" class="tsd-kind-icon">node<wbr>Diameter<wbr>Formula</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#radius" class="tsd-kind-icon">radius</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#sorting" class="tsd-kind-icon">sorting</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#spacing" class="tsd-kind-icon">spacing</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#startAngle" class="tsd-kind-icon">start<wbr>Angle</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="CircularLayout.html#sweepAngle" class="tsd-kind-icon">sweep<wbr>Angle</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="CircularLayout.html#commitLayout" class="tsd-kind-icon">commit<wbr>Layout</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="CircularLayout.html#commitLinks" class="tsd-kind-icon">commit<wbr>Links</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="CircularLayout.html#commitNodes" class="tsd-kind-icon">commit<wbr>Nodes</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="CircularLayout.html#createNetwork" class="tsd-kind-icon">create<wbr>Network</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="CircularLayout.html#doLayout" class="tsd-kind-icon">do<wbr>Layout</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Constants</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Ascending" class="tsd-kind-icon">Ascending</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-BidirectionalLeft" class="tsd-kind-icon">Bidirectional<wbr>Left</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-BidirectionalRight" class="tsd-kind-icon">Bidirectional<wbr>Right</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Circular" class="tsd-kind-icon">Circular</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Clockwise" class="tsd-kind-icon">Clockwise</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-ConstantAngle" class="tsd-kind-icon">Constant<wbr>Angle</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-ConstantDistance" class="tsd-kind-icon">Constant<wbr>Distance</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-ConstantSpacing" class="tsd-kind-icon">Constant<wbr>Spacing</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Counterclockwise" class="tsd-kind-icon">Counterclockwise</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Descending" class="tsd-kind-icon">Descending</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Forwards" class="tsd-kind-icon">Forwards</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Optimized" class="tsd-kind-icon">Optimized</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Packed" class="tsd-kind-icon">Packed</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Pythagorean" class="tsd-kind-icon">Pythagorean</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="CircularLayout.html#static-Reverse" class="tsd-kind-icon">Reverse</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Circular<wbr>Layout<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CircularLayout.html" class="tsd-signature-type">CircularLayout</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Constructs a <a href="CircularLayout.html">CircularLayout</a> with no <a href="Layout.html#network">Layout.network</a>
+								and with no owning <a href="Layout.html#diagram">Layout.diagram</a>.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="CircularLayout.html" class="tsd-signature-type">CircularLayout</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="actualCenter" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						actual<wbr>Center
+					<span class="tsd-signature-symbol">: </span><a href="Point.html" class="tsd-signature-type">Point</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property is the coordinates of the center of the laid-out ellipse immediately after the layout.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="actualSpacing" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						actual<wbr>Spacing
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property is the effective spacing that may have been calculated by the layout.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="actualXRadius" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						actualXRadius
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property is the effective X radius that may have been calculated by the layout.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="actualYRadius" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						actualYRadius
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property is the effective Y radius that may have been calculated by the layout.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="arrangement" class="tsd-anchor"></a>
+					<h3>
+						arrangement
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets how the nodes are spaced.
+									If <a href="CircularLayout.html#arrangement">arrangement</a> === <a href="CircularLayout.html#static-Packed">CircularLayout.Packed</a>,
+								the specified <a href="CircularLayout.html#radius">radius</a> will be ignored.</p>
+								<p>The default value is <a href="CircularLayout.html#static-ConstantSpacing">CircularLayout.ConstantSpacing</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="aspectRatio" class="tsd-anchor"></a>
+					<h3>
+						aspect<wbr>Ratio
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the ratio of the arrangement&#39;s height to its width
+								(1 for a circle, &gt;1 for a vertically elongated ellipse).</p>
+								<p>This is 1 by default.
+								The value must be a positive number.</p>
+								<p>Modifying this value changes the height, but keeps the width and the <a href="CircularLayout.html#radius">radius</a> constant.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="comparer" class="tsd-anchor"></a>
+					<h3>
+						comparer
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">a</span><span class="tsd-signature-symbol">: </span><a href="CircularVertex.html" class="tsd-signature-type">CircularVertex</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">b</span><span class="tsd-signature-symbol">: </span><a href="CircularVertex.html" class="tsd-signature-type">CircularVertex</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the comparer which sorts the data when <a href="CircularLayout.html#sorting">sorting</a> is
+								set to <a href="CircularLayout.html#static-Ascending">CircularLayout.Ascending</a> or <a href="CircularLayout.html#static-Descending">CircularLayout.Descending</a>.</p>
+								<p>The default function compares the <a href="Part.html#text">Part.text</a> values of the vertexes&#39; <a href="LayoutVertex.html#node">LayoutVertex.node</a>s.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="direction" class="tsd-anchor"></a>
+					<h3>
+						direction
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets whether the nodes are arranged clockwise or counterclockwise.</p>
+								<p>The default value is <a href="CircularLayout.html#static-Clockwise">CircularLayout.Clockwise</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="nodeDiameterFormula" class="tsd-anchor"></a>
+					<h3>
+						node<wbr>Diameter<wbr>Formula
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Specifies how the diameter of nodes will be calculated.
+								When a node is not circular, it is not clear what its diameter is.</p>
+								<p>The default is <a href="CircularLayout.html#static-Pythagorean">CircularLayout.Pythagorean</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="radius" class="tsd-anchor"></a>
+					<h3>
+						radius
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the horizontal radius of the elliptical arrangement.</p>
+								<p>The default value is NaN.
+									NaN indicates that the <a href="CircularLayout.html#spacing">spacing</a> will determine the size of the ring.
+									If <a href="CircularLayout.html#spacing">spacing</a> is also NaN, the effective spacing will be 6.
+									If <a href="CircularLayout.html#spacing">spacing</a> is a number, the effective radius will be &gt; radius if and only if
+									the spacing between elements would otherwise be less than spacing.
+									The specified value for <a href="CircularLayout.html#radius">radius</a> will be ignored if <a href="CircularLayout.html#arrangement">arrangement</a> === <a href="CircularLayout.html#static-Packed">CircularLayout.Packed</a>.
+								This property must always be positive or NaN.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="sorting" class="tsd-anchor"></a>
+					<h3>
+						sorting
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets if and how the nodes are sorted.</p>
+								<p><a href="CircularLayout.html#static-Forwards">CircularLayout.Forwards</a> indicates that the nodes are arranged in the order the layout gets them.
+									<a href="CircularLayout.html#static-Reverse">CircularLayout.Reverse</a> indicates that the nodes are arranged in the reverse order that the layout gets them.
+									<a href="CircularLayout.html#static-Ascending">CircularLayout.Ascending</a> and <a href="CircularLayout.html#static-Descending">CircularLayout.Descending</a> indicate that the nodes
+									will be sorted using the <a href="CircularLayout.html#comparer">comparer</a>.
+								<a href="CircularLayout.html#static-Optimized">CircularLayout.Optimized</a> indicates that the nodes will be arranged to minimize link crossings.</p>
+								<p>The default value is <a href="CircularLayout.html#static-Optimized">CircularLayout.Optimized</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="spacing" class="tsd-anchor"></a>
+					<h3>
+						spacing
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the distance between nodes (if <a href="CircularLayout.html#radius">radius</a> is NaN)
+								or the minimum distance between nodes (if <a href="CircularLayout.html#radius">radius</a> is a number).</p>
+								<p>The default value is 6.
+								The value may be NaN.</p>
+								<p>If <a href="CircularLayout.html#spacing">spacing</a> is NaN, there is no minimum spacing, allowing nodes to overlap,
+									unless <a href="CircularLayout.html#radius">radius</a> is NaN,
+									in which case the effective spacing will be 6 to determine an effective radius.
+									If <a href="CircularLayout.html#spacing">spacing</a> is a number but <a href="CircularLayout.html#radius">radius</a> isn&#39;t,
+									the effective spacing will be spacing, and this will determine the effective radius.
+									If both <a href="CircularLayout.html#spacing">spacing</a> and <a href="CircularLayout.html#radius">radius</a> are numbers,
+									the effective radius will be at least <a href="CircularLayout.html#radius">radius</a>,
+								but may be larger so that the minimum spacing between nodes is <a href="CircularLayout.html#spacing">spacing</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="startAngle" class="tsd-anchor"></a>
+					<h3>
+						start<wbr>Angle
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the angle (in degrees, clockwise from the positive side of the X axis) of the first element.</p>
+								<p>The default value is 0.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="sweepAngle" class="tsd-anchor"></a>
+					<h3>
+						sweep<wbr>Angle
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the absolute angle (in degrees) between the first and last node.</p>
+								<p>The default value is 360.
+									The value must be greater than zero and less than or equal to 360.
+								If it is not in this range, it will be automatically set to 360.</p>
+								<p>Whether the arrangement is clockwise or counterclockwise does not depend on the sign of this value.
+									The direction can be controlled by setting <a href="CircularLayout.html#direction">direction</a>.
+									If 360 is the specified value, the actual value will be less to keep the first and last
+									elements from overlapping, and the spacing between the first and last nodes will be determined
+								the same way as for all other adjacent nodes.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="commitLayout" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						commit<wbr>Layout
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">commit<wbr>Layout<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Position each <a href="Node.html">Node</a> according to the Vertex position, and then position the <a href="Link.html">Link</a>s.</p>
+								<p>You should not call this method -- it is a &quot;protected virtual&quot; method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="commitLinks" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagVirtual">Virtual</span>
+						commit<wbr>Links
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">commit<wbr>Links<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Commit the position and routing of all edge links.
+									This is called by <a href="CircularLayout.html#commitLayout">commitLayout</a>.
+									This is only called if <a href="Layout.html#isRouting">Layout.isRouting</a> is true.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="commitNodes" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagVirtual">Virtual</span>
+						commit<wbr>Nodes
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">commit<wbr>Nodes<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Commit the position of all vertex nodes.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createNetwork" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						create<wbr>Network
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Network<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CircularNetwork.html" class="tsd-signature-type">CircularNetwork</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Create a new <a href="LayoutNetwork.html">LayoutNetwork</a> of <a href="CircularVertex.html">CircularVertex</a>es and <a href="CircularEdge.html">CircularEdge</a>s.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="CircularNetwork.html" class="tsd-signature-type">CircularNetwork</a></h4>
+							<p>a new <a href="LayoutNetwork.html">LayoutNetwork</a>.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doLayout" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Layout
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Layout<span class="tsd-signature-symbol">(</span>coll<span class="tsd-signature-symbol">: </span><a href="Diagram.html" class="tsd-signature-type">Diagram</a><span class="tsd-signature-symbol"> | </span><a href="Group.html" class="tsd-signature-type">Group</a><span class="tsd-signature-symbol"> | </span><a href="Iterable.html" class="tsd-signature-type">Iterable</a><span class="tsd-signature-symbol">&lt;</span><a href="Part.html" class="tsd-signature-type">Part</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Assign the positions of the vertexes in the network.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>coll: <a href="Diagram.html" class="tsd-signature-type">Diagram</a><span class="tsd-signature-symbol"> | </span><a href="Group.html" class="tsd-signature-type">Group</a><span class="tsd-signature-symbol"> | </span><a href="Iterable.html" class="tsd-signature-type">Iterable</a><span class="tsd-signature-symbol">&lt;</span><a href="Part.html" class="tsd-signature-type">Part</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>A <a href="Diagram.html">Diagram</a> or a <a href="Group.html">Group</a> or a collection of <a href="Part.html">Part</a>s.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constants</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Ascending" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Ascending
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>Nodes are sorted using the <a href="CircularLayout.html#comparer">comparer</a>, in ascending order;
+						This value is used for <a href="CircularLayout.html#sorting">CircularLayout.sorting</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-BidirectionalLeft" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Bidirectional<wbr>Left
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The ring is filled by alternating sides; the second node is counterclockwise from the first node;
+						This value is used for <a href="CircularLayout.html#direction">CircularLayout.direction</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-BidirectionalRight" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Bidirectional<wbr>Right
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The ring is filled by alternating sides; the second node is clockwise from the first node;
+						This value is used for <a href="CircularLayout.html#direction">CircularLayout.direction</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Circular" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Circular
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The effective diameter is either the width or height of the node, whichever is larger;
+							This will cause circular nodes to touch when <a href="CircularLayout.html#spacing">CircularLayout.spacing</a> is 0;
+							This is ideal when the nodes are circular.
+						This value is used for <a href="CircularLayout.html#nodeDiameterFormula">CircularLayout.nodeDiameterFormula</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Clockwise" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Clockwise
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>Rings are filled clockwise;
+						This value is used for <a href="CircularLayout.html#direction">CircularLayout.direction</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-ConstantAngle" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Constant<wbr>Angle
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The angular distance between the nodes is constant;
+						This value is used for <a href="CircularLayout.html#arrangement">CircularLayout.arrangement</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-ConstantDistance" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Constant<wbr>Distance
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The distance between the centers of the nodes is constant;
+						This value is used for <a href="CircularLayout.html#arrangement">CircularLayout.arrangement</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-ConstantSpacing" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Constant<wbr>Spacing
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The spacing between the idealized boundaries of the nodes is constant;
+						This value is used for <a href="CircularLayout.html#arrangement">CircularLayout.arrangement</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Counterclockwise" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Counterclockwise
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>Rings are filled counterclockwise;
+						This value is used for <a href="CircularLayout.html#direction">CircularLayout.direction</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Descending" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Descending
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>Nodes are sorted using the <a href="CircularLayout.html#comparer">comparer</a>, in reverse ascending (descending) order;
+						This value is used for <a href="CircularLayout.html#sorting">CircularLayout.sorting</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Forwards" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Forwards
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>Nodes are arranged in the order given;
+						This value is used for <a href="CircularLayout.html#sorting">CircularLayout.sorting</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Optimized" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Optimized
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>Nodes are ordered to reduce link crossings;
+						This value is used for <a href="CircularLayout.html#sorting">CircularLayout.sorting</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Packed" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Packed
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The vertices are arranged as close together as possible considering the <a href="CircularLayout.html#spacing">CircularLayout.spacing</a>,
+							assuming the nodes are rectangular;
+						This value is used for <a href="CircularLayout.html#arrangement">CircularLayout.arrangement</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Pythagorean" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Pythagorean
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>The effective diameter is sqrt(width^2+height^2);
+							The corners of square nodes will touch at 45 degrees when <a href="CircularLayout.html#spacing">CircularLayout.spacing</a> is 0;
+						This value is used for <a href="CircularLayout.html#nodeDiameterFormula">CircularLayout.nodeDiameterFormula</a>.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Reverse" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Reverse
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>Nodes are arranged in the reverse of the order given;
+						This value is used for <a href="CircularLayout.html#sorting">CircularLayout.sorting</a>.</p>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="CircularLayout.html" class="tsd-kind-icon">Circular<wbr>Layout</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="CircularLayout.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="CircularLayout.html#actualCenter" class="tsd-kind-icon">actual<wbr>Center</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="CircularLayout.html#actualSpacing" class="tsd-kind-icon">actual<wbr>Spacing</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="CircularLayout.html#actualXRadius" class="tsd-kind-icon">actualXRadius</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="CircularLayout.html#actualYRadius" class="tsd-kind-icon">actualYRadius</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#arrangement" class="tsd-kind-icon">arrangement</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#aspectRatio" class="tsd-kind-icon">aspect<wbr>Ratio</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#comparer" class="tsd-kind-icon">comparer</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#direction" class="tsd-kind-icon">direction</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#nodeDiameterFormula" class="tsd-kind-icon">node<wbr>Diameter<wbr>Formula</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#radius" class="tsd-kind-icon">radius</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#sorting" class="tsd-kind-icon">sorting</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#spacing" class="tsd-kind-icon">spacing</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#startAngle" class="tsd-kind-icon">start<wbr>Angle</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="CircularLayout.html#sweepAngle" class="tsd-kind-icon">sweep<wbr>Angle</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="CircularLayout.html#commitLayout" class="tsd-kind-icon">commit<wbr>Layout</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="CircularLayout.html#commitLinks" class="tsd-kind-icon">commit<wbr>Links</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="CircularLayout.html#commitNodes" class="tsd-kind-icon">commit<wbr>Nodes</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="CircularLayout.html#createNetwork" class="tsd-kind-icon">create<wbr>Network</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="CircularLayout.html#doLayout" class="tsd-kind-icon">do<wbr>Layout</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Ascending" class="tsd-kind-icon">Ascending</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-BidirectionalLeft" class="tsd-kind-icon">Bidirectional<wbr>Left</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-BidirectionalRight" class="tsd-kind-icon">Bidirectional<wbr>Right</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Circular" class="tsd-kind-icon">Circular</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Clockwise" class="tsd-kind-icon">Clockwise</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-ConstantAngle" class="tsd-kind-icon">Constant<wbr>Angle</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-ConstantDistance" class="tsd-kind-icon">Constant<wbr>Distance</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-ConstantSpacing" class="tsd-kind-icon">Constant<wbr>Spacing</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Counterclockwise" class="tsd-kind-icon">Counterclockwise</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Descending" class="tsd-kind-icon">Descending</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Forwards" class="tsd-kind-icon">Forwards</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Optimized" class="tsd-kind-icon">Optimized</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Packed" class="tsd-kind-icon">Packed</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Pythagorean" class="tsd-kind-icon">Pythagorean</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="CircularLayout.html#static-Reverse" class="tsd-kind-icon">Reverse</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

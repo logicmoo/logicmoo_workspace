@@ -1,0 +1,266 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     11568,        258]
+NotebookOptionsPosition[      5452,        110]
+NotebookOutlinePosition[     11093,        248]
+CellTagsIndexPosition[     11050,        245]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCSetPropertyListPositions", "Title",ExpressionUUID->"450aef59-4ddd-47e7-b27c-0e775c62a272"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCSetPropertyListPositions", "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"f28788a8-79cf-43e9-bd83-7d425c651295"],
+
+Cell[CellGroupData[{
+
+Cell["Manual Tests", "Section",
+ CellChangeTimes->{{3.872413079014942*^9, 
+  3.8724130796630898`*^9}},ExpressionUUID->"d8455298-48f1-45cc-98b2-\
+f4833a1cdc18"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCSetPropertyListPositions", "[", "]"}], " ", "//", " ", 
+  "Indent2"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8724130756082745`*^9, 3.872413076907956*^9}},
+ CellLabel->
+  "In[1233]:=",ExpressionUUID->"b9fdc9ed-0a27-4d2e-9fc4-6578ad0a3bdd"],
+
+Cell[BoxData["\<\"{\\n    \\\"Colors\\\" -> 1,\\n    \\\"Color\\\" -> 2,\\n   \
+ \\\"Image\\\" -> 3,\\n    \\\"MonochromeImage\\\" -> 4,\\n    \\\"Shape\\\" \
+-> 5,\\n    \\\"Shapes\\\" -> 6,\\n    \\\"Angle\\\" -> 7,\\n    \
+\\\"Width\\\" -> 8,\\n    \\\"Height\\\" -> 9,\\n    \\\"Length\\\" -> 10,\\n \
+   \\\"Position\\\" -> 11,\\n    \\\"VerticalLineSymmetry\\\" -> 12,\\n    \\\
+\"HorizontalLineSymmetry\\\" -> 13,\\n    \
+\\\"VerticalAndHorizontalLineSymmetry\\\" -> 14,\\n    \\\"Y\\\" -> 15,\\n    \
+\\\"X\\\" -> 16,\\n    \\\"YInverse\\\" -> 17,\\n    \\\"XInverse\\\" -> \
+18,\\n    \\\"Y2\\\" -> 19,\\n    \\\"X2\\\" -> 20,\\n    \\\"Y2Inverse\\\" \
+-> 21,\\n    \\\"X2Inverse\\\" -> 22,\\n    \\\"YMiddle\\\" -> 23,\\n    \
+\\\"XMiddle\\\" -> 24,\\n    \\\"XRelative\\\" -> 25,\\n    \\\"YRelative\\\" \
+-> 26,\\n    \\\"ZOrder\\\" -> 27,\\n    \\\"PrimarySizeDimension\\\" -> \
+28,\\n    \\\"AspectRatio\\\" -> 29,\\n    \\\"HollowCount\\\" -> 30,\\n    \
+\\\"Area\\\" -> 31,\\n    \\\"FilledArea\\\" -> 32,\\n    \
+\\\"FilledProportion\\\" -> 33,\\n    \\\"SurfacePixelCount\\\" -> 34,\\n    \
+\\\"ColorUseCount\\\" -> 35,\\n    \\\"PixelPositions\\\" -> 36,\\n    \
+\\\"Group\\\" -> 37,\\n    \\\"ColorCount\\\" -> 38,\\n    \
+\\\"MostUsedColor\\\" -> 39,\\n    \\\"ImageUseCount\\\" -> 40,\\n    \
+\\\"ShapeUseCount\\\" -> 41,\\n    \\\"GeneralShapeUseCount\\\" -> 42,\\n    \
+\\\"Width.Rank\\\" -> 43,\\n    \\\"Width.InverseRank\\\" -> 44,\\n    \
+\\\"Height.Rank\\\" -> 45,\\n    \\\"Height.InverseRank\\\" -> 46,\\n    \
+\\\"Length.Rank\\\" -> 47,\\n    \\\"Length.InverseRank\\\" -> 48,\\n    \
+\\\"Y.Rank\\\" -> 49,\\n    \\\"Y.InverseRank\\\" -> 50,\\n    \\\"X.Rank\\\" \
+-> 51,\\n    \\\"X.InverseRank\\\" -> 52,\\n    \\\"YInverse.Rank\\\" -> \
+53,\\n    \\\"YInverse.InverseRank\\\" -> 54,\\n    \\\"XInverse.Rank\\\" -> \
+55,\\n    \\\"XInverse.InverseRank\\\" -> 56,\\n    \\\"Y2.Rank\\\" -> 57,\\n \
+   \\\"Y2.InverseRank\\\" -> 58,\\n    \\\"X2.Rank\\\" -> 59,\\n    \
+\\\"X2.InverseRank\\\" -> 60,\\n    \\\"Y2Inverse.Rank\\\" -> 61,\\n    \
+\\\"Y2Inverse.InverseRank\\\" -> 62,\\n    \\\"X2Inverse.Rank\\\" -> 63,\\n   \
+ \\\"X2Inverse.InverseRank\\\" -> 64,\\n    \\\"YMiddle.Rank\\\" -> 65,\\n    \
+\\\"YMiddle.InverseRank\\\" -> 66,\\n    \\\"XMiddle.Rank\\\" -> 67,\\n    \\\
+\"XMiddle.InverseRank\\\" -> 68,\\n    \\\"XRelative.Rank\\\" -> 69,\\n    \\\
+\"XRelative.InverseRank\\\" -> 70,\\n    \\\"YRelative.Rank\\\" -> 71,\\n    \
+\\\"YRelative.InverseRank\\\" -> 72,\\n    \\\"ZOrder.Rank\\\" -> 73,\\n    \
+\\\"ZOrder.InverseRank\\\" -> 74,\\n    \\\"PrimarySizeDimension.Rank\\\" -> \
+75,\\n    \\\"PrimarySizeDimension.InverseRank\\\" -> 76,\\n    \
+\\\"AspectRatio.Rank\\\" -> 77,\\n    \\\"AspectRatio.InverseRank\\\" -> \
+78,\\n    \\\"HollowCount.Rank\\\" -> 79,\\n    \\\"HollowCount.InverseRank\\\
+\" -> 80,\\n    \\\"Area.Rank\\\" -> 81,\\n    \\\"Area.InverseRank\\\" -> \
+82,\\n    \\\"FilledArea.Rank\\\" -> 83,\\n    \\\"FilledArea.InverseRank\\\" \
+-> 84,\\n    \\\"FilledProportion.Rank\\\" -> 85,\\n    \
+\\\"FilledProportion.InverseRank\\\" -> 86,\\n    \
+\\\"SurfacePixelCount.Rank\\\" -> 87,\\n    \\\"SurfacePixelCount.InverseRank\
+\\\" -> 88,\\n    \\\"ColorUseCount.Rank\\\" -> 89,\\n    \
+\\\"ColorUseCount.InverseRank\\\" -> 90,\\n    \\\"ColorCount.Rank\\\" -> 91,\
+\\n    \\\"ColorCount.InverseRank\\\" -> 92,\\n    \\\"MostUsedColor.Rank\\\" \
+-> 93,\\n    \\\"MostUsedColor.InverseRank\\\" -> 94,\\n    \
+\\\"ImageUseCount.Rank\\\" -> 95,\\n    \\\"ImageUseCount.InverseRank\\\" -> \
+96,\\n    \\\"ShapeUseCount.Rank\\\" -> 97,\\n    \
+\\\"ShapeUseCount.InverseRank\\\" -> 98,\\n    \
+\\\"GeneralShapeUseCount.Rank\\\" -> 99,\\n    \
+\\\"GeneralShapeUseCount.InverseRank\\\" -> 100\\n}\"\>"], "Output",
+ CellChangeTimes->{{3.872413074562875*^9, 3.872413077323553*^9}},
+ CellLabel->
+  "Out[1234]=",ExpressionUUID->"79b6eada-b3fc-4a93-a2d7-af751bef5367"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCSetPropertyListPositions], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCSetPropertyListPositions, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCSetPropertyListPositions]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCSetPropertyListPositions, "SubTest" -> None], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCSetPropertyListPositions], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCSetPropertyListPositions]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCSetPropertyListPositions, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCSetPropertyListPositions]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202291710165982037}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCSetPropertyListPositions", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCSetPropertyListPositions}, "ReturnNotebook" -> 
+    True}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"23ae52d2-2f8f-48e6-869b-dcff7e189385"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 99, 0, 98, "Title",ExpressionUUID->"450aef59-4ddd-47e7-b27c-0e775c62a272"],
+Cell[682, 24, 237, 5, 54, "Code",ExpressionUUID->"f28788a8-79cf-43e9-bd83-7d425c651295",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[944, 33, 159, 3, 67, "Section",ExpressionUUID->"d8455298-48f1-45cc-98b2-f4833a1cdc18"],
+Cell[CellGroupData[{
+Cell[1128, 40, 358, 9, 54, "Code",ExpressionUUID->"b9fdc9ed-0a27-4d2e-9fc4-6578ad0a3bdd",
+ InitializationCell->False],
+Cell[1489, 51, 3923, 54, 2054, "Output",ExpressionUUID->"79b6eada-b3fc-4a93-a2d7-af751bef5367"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

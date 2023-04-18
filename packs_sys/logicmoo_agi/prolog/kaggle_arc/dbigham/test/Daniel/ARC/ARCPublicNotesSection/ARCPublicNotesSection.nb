@@ -1,0 +1,1021 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     70264,       1013]
+NotebookOptionsPosition[     64157,        862]
+NotebookOutlinePosition[     69786,       1003]
+CellTagsIndexPosition[     69743,       1000]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCPublicNotesSection", "Title",ExpressionUUID->"fe2f77ca-f4a2-4359-8ee6-16e8c4689805"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCPublicNotesSection", "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"c80294ea-6fab-4b3c-9b59-91c316e99118"],
+
+Cell[CellGroupData[{
+
+Cell["Manual Tests", "Section",
+ CellChangeTimes->{{3.868959295016923*^9, 
+  3.8689592956777554`*^9}},ExpressionUUID->"786907c4-6215-4c46-a98e-\
+51d6d113b314"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCPublicNotesSection", "[", "\"\<0ca9ddb6\>\"", "]"}], " ", "//", 
+  " ", "Indent3"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8689587638041334`*^9, 3.8689587642424145`*^9}, {
+  3.8689592917949266`*^9, 3.868959304297434*^9}},
+ CellLabel->"In[5]:=",ExpressionUUID->"b8e1fc8c-9a53-49e1-86cb-4b9487bf896a"],
+
+Cell[BoxData["\<\"{\\n    Cell[\\n        \\\"Finding Rules\\\",\\n        \\\
+\"Subsection\\\",\\n        CellChangeTimes -> {{3.868957474783822*^9, \
+3.868957475934936*^9}}\\n    ],\\n    Cell[\\n        \\\"Scene \
+Parsing\\\",\\n        \\\"Subsubsection\\\",\\n        CellChangeTimes -> \
+{{3.8689581221114435*^9, 3.868958148150901*^9}}\\n    ],\\n    Cell[\\n       \
+ \\\"We parse the input and output scenes into objects.\\\",\\n        \
+\\\"Item\\\",\\n        CellChangeTimes -> {\\n            \
+3.8689573812539735*^9,\\n            {3.868957445623539*^9, \
+3.868957497117038*^9},\\n            {3.8689581385305524*^9, \
+3.8689581395749516*^9}\\n        }\\n    ],\\n    Cell[\\n        \\\"In the \
+output scenes, the multi-color objects are parsed into a form that specifies \
+their colored components:\\\",\\n        \\\"Item\\\",\\n        \
+CellChangeTimes -> {3.8689573812539735*^9, {3.868957445623539*^9, \
+3.8689575493353567*^9}}\\n    ],\\n    Cell[\\n        BoxData[\\n            \
+{\\n                RowBox[\\n                    {\\n                        \
+RowBox[\\n                            {\\n                                \
+\\\"parsedScene\\\",\\n                                \\\" \\\",\\n          \
+                      \\\"=\\\",\\n                                \\\" \\\",\
+\\n                                RowBox[\\n                                 \
+   {\\n                                        \\\"ARCParseScene\\\",\\n      \
+                                  \\\"[\\\",\\n                               \
+         RowBox[\\n                                            {\\n           \
+                                     RowBox[\\n                               \
+                     {\\\"ARCParseFile\\\", \\\"[\\\", \\\"\\\\\\\"0ca9ddb6\\\
+\\\\\"\\\", \\\"]\\\"}\\n                                                \
+],\\n                                                \\\"[\\\",\\n            \
+                                    RowBox[\\n                                \
+                    {\\n                                                      \
+  \\\"\\\\\\\"Train\\\\\\\"\\\",\\n                                           \
+             \\\",\\\",\\n                                                    \
+    \\\" \\\",\\n                                                        \
+\\\"1\\\",\\n                                                        \
+\\\",\\\",\\n                                                        \\\" \
+\\\",\\n                                                        \
+\\\"\\\\\\\"Output\\\\\\\"\\\"\\n                                             \
+       }\\n                                                ],\\n              \
+                                  \\\"]\\\"\\n                                \
+            }\\n                                        ],\\n                 \
+                       \\\"]\\\"\\n                                    }\\n   \
+                             ]\\n                            }\\n             \
+           ],\\n                        \\\";\\\"\\n                    }\\n  \
+              ],\\n                \\\"\[IndentingNewLine]\\\",\\n            \
+    RowBox[\\n                    {\\n                        RowBox[\\n      \
+                      {\\n                                RowBox[\\n          \
+                          {\\n                                        \
+\\\"parsedScene\\\",\\n                                        \\\"[\\\",\\n  \
+                                      RowBox[\\n                              \
+              {\\\"[\\\", RowBox[{\\\"\\\\\\\"Objects\\\\\\\"\\\", \\\",\\\", \
+\\\" \\\", \\\"1\\\"}], \\\"]\\\"}\\n                                        \
+],\\n                                        \\\"]\\\"\\n                     \
+               }\\n                                ],\\n                      \
+          \\\" \\\",\\n                                \\\"//\\\",\\n         \
+                       \\\" \\\",\\n                                \
+RowBox[\\n                                    {\\n                            \
+            \\\"SimplifyObjects\\\",\\n                                       \
+ \\\"[\\\",\\n                                        RowBox[\\n              \
+                              {\\n                                            \
+    \\\"\\\\\\\"ExtraKeys\\\\\\\"\\\",\\n                                     \
+           \\\" \\\",\\n                                                \
+\\\"->\\\",\\n                                                \\\" \\\",\\n   \
+                                             RowBox[{\\\"{\\\", \
+\\\"\\\\\\\"Components\\\\\\\"\\\", \\\"}\\\"}]\\n                            \
+                }\\n                                        ],\\n             \
+                           \\\"]\\\"\\n                                    \
+}\\n                                ]\\n                            }\\n      \
+                  ],\\n                        \\\" \\\",\\n                  \
+      \\\"//\\\",\\n                        \\\" \\\",\\n                     \
+   \\\"ARCIndent\\\"\\n                    }\\n                ]\\n           \
+ }\\n        ],\\n        \\\"Code\\\",\\n        InitializationCell -> \
+False,\\n        CellChangeTimes -> {\\n            {3.8689575870820417*^9, \
+3.868957661441868*^9},\\n            {3.868957694769695*^9, \
+3.8689577740812254*^9},\\n            {3.868957865570739*^9, \
+3.8689578800783186*^9}\\n        },\\n        CellLabel -> \\\"In[5]:=\\\"\\n \
+   ],\\n    Cell[\\n        BoxData[\\n            TagBox[\\n                \
+GridBox[\\n                    {\\n                        \
+{\\\"\\\\\\\"<|\\\\\\\"\\\"},\\n                        {\\n                  \
+          TemplateBox[\\n                                {\\n                 \
+                   TemplateBox[\\n                                        \
+{\\n                                            \\\"\\\\\\\"    \\\\\\\"\\\",\
+\\n                                            TemplateBox[\\n                \
+                                {\\n                                          \
+          \\\"\\\\\\\"\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \
+\\\\\\\"\\\",\\n                                                    \
+TagBox[\\n                                                        GridBox[\\n \
+                                                           {\\n               \
+                                                 {\\\"\\\\\\\"\\\\\\\"\\\", \
+\\\"\\\\\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\"},\\n                       \
+                                         {\\\"\\\\\\\"\\\\\\\"\\\", \
+\\\"\\\\\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\"},\\n                       \
+                                         {\\\"\\\\\\\"\\\\\\\"\\\", \
+\\\"\\\\\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\"}\\n                        \
+                                    },\\n                                     \
+                       AutoDelete -> False,\\n                                \
+                            GridBoxBackground -> {\\n                         \
+                                       \\\"Columns\\\" -> {{None}},\\n        \
+                                                        \\\"Rows\\\" -> \
+{{None}},\\n                                                                \
+\\\"ItemsIndexed\\\" -> {\\n                                                  \
+                  {1, 1} -> RGBColor[1, 1, 0],\\n                             \
+                                       {1, 2} -> GrayLevel[0.2],\\n           \
+                                                         {1, 3} -> \
+RGBColor[1, 1, 0],\\n                                                         \
+           {2, 1} -> GrayLevel[0.2],\\n                                       \
+                             {2, 2} -> RGBColor[1, 0, 0],\\n                  \
+                                                  {2, 3} -> \
+GrayLevel[0.2],\\n                                                            \
+        {3, 1} -> RGBColor[1, 1, 0],\\n                                       \
+                             {3, 2} -> GrayLevel[0.2],\\n                     \
+                                               {3, 3} -> RGBColor[1, 1, 0]\\n \
+                                                               }\\n           \
+                                                 },\\n                        \
+                                    GridBoxDividers -> {\\n                   \
+                                             \\\"Columns\\\" -> {{True}},\\n  \
+                                                              \\\"Rows\\\" -> \
+{{True}}\\n                                                            },\\n  \
+                                                          GridBoxFrame -> \
+{\\n                                                                \
+\\\"ColumnsIndexed\\\" -> {\\n                                                \
+                    {{1, -1}, {1, -1}} -> True\\n                             \
+                                   }\\n                                       \
+                     },\\n                                                    \
+        GridBoxItemSize -> {\\n                                               \
+                 \\\"Columns\\\" -> {{1.3}},\\n                               \
+                                 \\\"Rows\\\" -> {{1.5}}\\n                   \
+                                         },\\n                                \
+                            FrameStyle -> {\\n                                \
+                                AbsoluteThickness[1],\\n                      \
+                                          GrayLevel[0.5]\\n                   \
+                                         }\\n                                 \
+                       ],\\n                                                  \
+      \\\"Grid\\\"\\n                                                    ]\\n \
+                                               },\\n                          \
+                      \\\"RowDefault\\\"\\n                                   \
+         ]\\n                                        },\\n                    \
+                    \\\"RowDefault\\\"\\n                                    \
+],\\n                                    \\\"\\\\\\\",\\\\\\\"\\\"\\n         \
+                       },\\n                                \
+\\\"RowDefault\\\"\\n                            ]\\n                        \
+},\\n                        {\\\"\\\\\\\"    \
+\\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {3, 2},\\\\\\\"\\\"},\\n          \
+              {\\\"\\\\\\\"    \\\\\\\\\\\\\\\"Components\\\\\\\\\\\\\\\" -> \
+{\\\\\\\"\\\"},\\n                        {\\n                            \
+TemplateBox[\\n                                {\\n                           \
+         TemplateBox[\\n                                        {\\n          \
+                                  \\\"\\\\\\\"        \\\\\\\"\\\",\\n        \
+                                    TemplateBox[\\n                           \
+                     {\\n                                                    \
+\\\"\\\\\\\"<|\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \\\\\\\"\\\",\\n       \
+                                             TagBox[\\n                       \
+                                 GridBox[\\n                                  \
+                          {{\\\"\\\\\\\"\\\\\\\"\\\"}},\\n                    \
+                                        AutoDelete -> False,\\n               \
+                                             GridBoxBackground -> {\\n        \
+                                                        \\\"Columns\\\" -> \
+{{None}},\\n                                                                \
+\\\"Rows\\\" -> {{None}},\\n                                                  \
+              \\\"ItemsIndexed\\\" -> {\\n                                    \
+                                {1, 1} -> RGBColor[1, 1, 0]\\n                \
+                                                }\\n                          \
+                                  },\\n                                       \
+                     GridBoxDividers -> {\\n                                  \
+                              \\\"Columns\\\" -> {{True}},\\n                 \
+                                               \\\"Rows\\\" -> {{True}}\\n    \
+                                                        },\\n                 \
+                                           GridBoxFrame -> {\\n               \
+                                                 \\\"ColumnsIndexed\\\" -> \
+{\\n                                                                    {{1, \
+-1}, {1, -1}} -> True\\n                                                      \
+          }\\n                                                            \
+},\\n                                                            \
+GridBoxItemSize -> {\\n                                                       \
+         \\\"Columns\\\" -> {{1.3}},\\n                                       \
+                         \\\"Rows\\\" -> {{1.5}}\\n                           \
+                                 },\\n                                        \
+                    FrameStyle -> {\\n                                        \
+                        AbsoluteThickness[1],\\n                              \
+                                  GrayLevel[0.5]\\n                           \
+                                 }\\n                                         \
+               ],\\n                                                        \
+\\\"Grid\\\"\\n                                                    ],\\n      \
+                                              \\\"\\\\\\\", \
+\\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {3, 2}|>\\\\\\\"\\\"\\n           \
+                                     },\\n                                    \
+            \\\"RowDefault\\\"\\n                                            \
+]\\n                                        },\\n                             \
+           \\\"RowDefault\\\"\\n                                    ],\\n     \
+                               \\\"\\\\\\\",\\\\\\\"\\\"\\n                   \
+             },\\n                                \\\"RowDefault\\\"\\n       \
+                     ]\\n                        },\\n                        \
+{\\n                            TemplateBox[\\n                               \
+ {\\n                                    TemplateBox[\\n                      \
+                  {\\n                                            \
+\\\"\\\\\\\"        \\\\\\\"\\\",\\n                                          \
+  TemplateBox[\\n                                                {\\n         \
+                                           \\\"\\\\\\\"<|\\\\\\\\\\\\\\\"\
+Image\\\\\\\\\\\\\\\" -> \\\\\\\"\\\",\\n                                     \
+               TagBox[\\n                                                     \
+   GridBox[\\n                                                            \
+{{\\\"\\\\\\\"\\\\\\\"\\\"}},\\n                                              \
+              AutoDelete -> False,\\n                                         \
+                   GridBoxBackground -> {\\n                                  \
+                              \\\"Columns\\\" -> {{None}},\\n                 \
+                                               \\\"Rows\\\" -> {{None}},\\n   \
+                                                             \\\"ItemsIndexed\
+\\\" -> {\\n                                                                  \
+  {1, 1} -> RGBColor[1, 1, 0]\\n                                              \
+                  }\\n                                                        \
+    },\\n                                                            \
+GridBoxDividers -> {\\n                                                       \
+         \\\"Columns\\\" -> {{True}},\\n                                      \
+                          \\\"Rows\\\" -> {{True}}\\n                         \
+                                   },\\n                                      \
+                      GridBoxFrame -> {\\n                                    \
+                            \\\"ColumnsIndexed\\\" -> {\\n                    \
+                                                {{1, -1}, {1, -1}} -> True\\n \
+                                                               }\\n           \
+                                                 },\\n                        \
+                                    GridBoxItemSize -> {\\n                   \
+                                             \\\"Columns\\\" -> {{1.3}},\\n   \
+                                                             \\\"Rows\\\" -> \
+{{1.5}}\\n                                                            },\\n   \
+                                                         FrameStyle -> {\\n   \
+                                                             AbsoluteThickness\
+[1],\\n                                                                \
+GrayLevel[0.5]\\n                                                            \
+}\\n                                                        ],\\n             \
+                                           \\\"Grid\\\"\\n                    \
+                                ],\\n                                         \
+           \\\"\\\\\\\", \\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {3, 4}|>\
+\\\\\\\"\\\"\\n                                                },\\n          \
+                                      \\\"RowDefault\\\"\\n                   \
+                         ]\\n                                        },\\n    \
+                                    \\\"RowDefault\\\"\\n                     \
+               ],\\n                                    \\\"\\\\\\\",\\\\\\\"\
+\\\"\\n                                },\\n                                \
+\\\"RowDefault\\\"\\n                            ]\\n                        \
+},\\n                        {\\n                            TemplateBox[\\n  \
+                              {\\n                                    \
+TemplateBox[\\n                                        {\\n                   \
+                         \\\"\\\\\\\"        \\\\\\\"\\\",\\n                 \
+                           TemplateBox[\\n                                    \
+            {\\n                                                    \
+\\\"\\\\\\\"<|\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \\\\\\\"\\\",\\n       \
+                                             TagBox[\\n                       \
+                                 GridBox[\\n                                  \
+                          {{\\\"\\\\\\\"\\\\\\\"\\\"}},\\n                    \
+                                        AutoDelete -> False,\\n               \
+                                             GridBoxBackground -> {\\n        \
+                                                        \\\"Columns\\\" -> \
+{{None}},\\n                                                                \
+\\\"Rows\\\" -> {{None}},\\n                                                  \
+              \\\"ItemsIndexed\\\" -> {\\n                                    \
+                                {1, 1} -> RGBColor[1, 0, 0]\\n                \
+                                                }\\n                          \
+                                  },\\n                                       \
+                     GridBoxDividers -> {\\n                                  \
+                              \\\"Columns\\\" -> {{True}},\\n                 \
+                                               \\\"Rows\\\" -> {{True}}\\n    \
+                                                        },\\n                 \
+                                           GridBoxFrame -> {\\n               \
+                                                 \\\"ColumnsIndexed\\\" -> \
+{\\n                                                                    {{1, \
+-1}, {1, -1}} -> True\\n                                                      \
+          }\\n                                                            \
+},\\n                                                            \
+GridBoxItemSize -> {\\n                                                       \
+         \\\"Columns\\\" -> {{1.3}},\\n                                       \
+                         \\\"Rows\\\" -> {{1.5}}\\n                           \
+                                 },\\n                                        \
+                    FrameStyle -> {\\n                                        \
+                        AbsoluteThickness[1],\\n                              \
+                                  GrayLevel[0.5]\\n                           \
+                                 }\\n                                         \
+               ],\\n                                                        \
+\\\"Grid\\\"\\n                                                    ],\\n      \
+                                              \\\"\\\\\\\", \
+\\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {4, 3}|>\\\\\\\"\\\"\\n           \
+                                     },\\n                                    \
+            \\\"RowDefault\\\"\\n                                            \
+]\\n                                        },\\n                             \
+           \\\"RowDefault\\\"\\n                                    ],\\n     \
+                               \\\"\\\\\\\",\\\\\\\"\\\"\\n                   \
+             },\\n                                \\\"RowDefault\\\"\\n       \
+                     ]\\n                        },\\n                        \
+{\\n                            TemplateBox[\\n                               \
+ {\\n                                    TemplateBox[\\n                      \
+                  {\\n                                            \
+\\\"\\\\\\\"        \\\\\\\"\\\",\\n                                          \
+  TemplateBox[\\n                                                {\\n         \
+                                           \\\"\\\\\\\"<|\\\\\\\\\\\\\\\"\
+Image\\\\\\\\\\\\\\\" -> \\\\\\\"\\\",\\n                                     \
+               TagBox[\\n                                                     \
+   GridBox[\\n                                                            \
+{{\\\"\\\\\\\"\\\\\\\"\\\"}},\\n                                              \
+              AutoDelete -> False,\\n                                         \
+                   GridBoxBackground -> {\\n                                  \
+                              \\\"Columns\\\" -> {{None}},\\n                 \
+                                               \\\"Rows\\\" -> {{None}},\\n   \
+                                                             \\\"ItemsIndexed\
+\\\" -> {\\n                                                                  \
+  {1, 1} -> RGBColor[1, 1, 0]\\n                                              \
+                  }\\n                                                        \
+    },\\n                                                            \
+GridBoxDividers -> {\\n                                                       \
+         \\\"Columns\\\" -> {{True}},\\n                                      \
+                          \\\"Rows\\\" -> {{True}}\\n                         \
+                                   },\\n                                      \
+                      GridBoxFrame -> {\\n                                    \
+                            \\\"ColumnsIndexed\\\" -> {\\n                    \
+                                                {{1, -1}, {1, -1}} -> True\\n \
+                                                               }\\n           \
+                                                 },\\n                        \
+                                    GridBoxItemSize -> {\\n                   \
+                                             \\\"Columns\\\" -> {{1.3}},\\n   \
+                                                             \\\"Rows\\\" -> \
+{{1.5}}\\n                                                            },\\n   \
+                                                         FrameStyle -> {\\n   \
+                                                             AbsoluteThickness\
+[1],\\n                                                                \
+GrayLevel[0.5]\\n                                                            \
+}\\n                                                        ],\\n             \
+                                           \\\"Grid\\\"\\n                    \
+                                ],\\n                                         \
+           \\\"\\\\\\\", \\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {5, 2}|>\
+\\\\\\\"\\\"\\n                                                },\\n          \
+                                      \\\"RowDefault\\\"\\n                   \
+                         ]\\n                                        },\\n    \
+                                    \\\"RowDefault\\\"\\n                     \
+               ],\\n                                    \\\"\\\\\\\",\\\\\\\"\
+\\\"\\n                                },\\n                                \
+\\\"RowDefault\\\"\\n                            ]\\n                        \
+},\\n                        {\\n                            TemplateBox[\\n  \
+                              {\\n                                    \
+\\\"\\\\\\\"        \\\\\\\"\\\",\\n                                    \
+TemplateBox[\\n                                        {\\n                   \
+                         \\\"\\\\\\\"<|\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" \
+-> \\\\\\\"\\\",\\n                                            TagBox[\\n     \
+                                           GridBox[\\n                        \
+                            {{\\\"\\\\\\\"\\\\\\\"\\\"}},\\n                  \
+                                  AutoDelete -> False,\\n                     \
+                               GridBoxBackground -> {\\n                      \
+                                  \\\"Columns\\\" -> {{None}},\\n             \
+                                           \\\"Rows\\\" -> {{None}},\\n       \
+                                                 \\\"ItemsIndexed\\\" -> {{1, \
+1} -> RGBColor[1, 1, 0]}\\n                                                   \
+ },\\n                                                    GridBoxDividers -> \
+{\\n                                                        \\\"Columns\\\" \
+-> {{True}},\\n                                                        \
+\\\"Rows\\\" -> {{True}}\\n                                                   \
+ },\\n                                                    GridBoxFrame -> \
+{\\n                                                        \
+\\\"ColumnsIndexed\\\" -> {{{1, -1}, {1, -1}} -> True}\\n                     \
+                               },\\n                                          \
+          GridBoxItemSize -> {\\n                                             \
+           \\\"Columns\\\" -> {{1.3}},\\n                                     \
+                   \\\"Rows\\\" -> {{1.5}}\\n                                 \
+                   },\\n                                                    \
+FrameStyle -> {AbsoluteThickness[1], GrayLevel[0.5]}\\n                       \
+                         ],\\n                                                \
+\\\"Grid\\\"\\n                                            ],\\n              \
+                              \\\"\\\\\\\", \
+\\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {5, 4}|>\\\\\\\"\\\"\\n           \
+                             },\\n                                        \
+\\\"RowDefault\\\"\\n                                    ]\\n                 \
+               },\\n                                \\\"RowDefault\\\"\\n     \
+                       ]\\n                        },\\n                      \
+  {\\\"\\\\\\\"    }\\\\\\\"\\\"},\\n                        \
+{\\\"\\\\\\\"|>\\\\\\\"\\\"}\\n                    },\\n                    \
+DefaultBaseStyle -> \\\"Column\\\",\\n                    GridBoxAlignment -> \
+{\\\"Columns\\\" -> {{Left}}},\\n                    GridBoxItemSize -> \
+{\\\"Columns\\\" -> {{Automatic}}, \\\"Rows\\\" -> {{Automatic}}}\\n          \
+      ],\\n                \\\"Column\\\"\\n            ]\\n        ],\\n     \
+   \\\"Output\\\",\\n        CellChangeTimes -> {\\n            \
+{3.868957610529009*^9, 3.8689576616927233*^9},\\n            \
+{3.868957708122494*^9, 3.8689577128959885*^9},\\n            \
+3.8689577438784103*^9,\\n            3.868957775130328*^9,\\n            \
+3.868957933996896*^9,\\n            3.868958045701891*^9,\\n            \
+3.8689610502344284*^9\\n        },\\n        CellLabel -> \\\"Out[6]=\\\"\\n  \
+  ],\\n    Cell[\\n        \\\"Mapping Input Objects to Output \
+Objects\\\",\\n        \\\"Subsubsection\\\",\\n        CellChangeTimes -> \
+{{3.8689581272151833*^9, 3.868958132597896*^9}}\\n    ],\\n    Cell[\\n       \
+ \\\"In cases where an output object contains a component which was an object \
+in the input, we produce a mapping between the objects, and specify an \
+AddComponents transform.\\\",\\n        \\\"Text\\\",\\n        \
+CellChangeTimes -> {\\n            3.8689580976457005*^9,\\n            \
+{3.8689581645010333*^9, 3.8689581961363697*^9},\\n            \
+{3.8689583992317348*^9, 3.8689584005439835*^9},\\n            \
+{3.8689585244209614*^9, 3.8689585573037977*^9},\\n            \
+{3.8689585941039104*^9, 3.868958612456478*^9}\\n        }\\n    ],\\n    \
+Cell[\\\"For example:\\\", \\\"Text\\\", CellChangeTimes -> \
+{3.8689585521528406*^9}],\\n    Cell[\\n        BoxData[\\n            \
+RowBox[\\n                {\\n                    RowBox[\\n                  \
+      {\\n                            RowBox[\\n                              \
+  {\\n                                    RowBox[\\n                          \
+              {\\n                                            \\\"Normal\\\",\
+\\n                                            \\\"[\\\",\\n                  \
+                          RowBox[\\n                                          \
+      {\\n                                                    \
+\\\"ARCFindObjectMapping\\\",\\n                                              \
+      \\\"[\\\",\\n                                                    \
+RowBox[\\n                                                        {\\n        \
+                                                    RowBox[\\n                \
+                                                {\\n                          \
+                                          \\\"ARCParseFile\\\",\\n            \
+                                                        \\\"[\\\",\\n         \
+                                                           \\\"\\\\\\\"\
+0ca9ddb6\\\\\\\"\\\",\\n                                                      \
+              \\\"]\\\"\\n                                                    \
+            }\\n                                                            \
+],\\n                                                            \
+\\\"[\\\",\\n                                                            \
+RowBox[\\n                                                                {\\\
+\"\\\\\\\"Train\\\\\\\"\\\", \\\",\\\", \\\" \\\", \\\"1\\\"}\\n              \
+                                              ],\\n                           \
+                                 \\\"]\\\"\\n                                 \
+                       }\\n                                                   \
+ ],\\n                                                    \\\"]\\\"\\n        \
+                                        }\\n                                  \
+          ],\\n                                            \\\"]\\\"\\n       \
+                                 }\\n                                    \
+],\\n                                    \\\"[\\\",\\n                        \
+            RowBox[{\\\"[\\\", \\\"1\\\", \\\"]\\\"}],\\n                     \
+               \\\"]\\\"\\n                                }\\n               \
+             ],\\n                            \\\" \\\",\\n                   \
+         \\\"//\\\",\\n                            \\\" \\\",\\n              \
+              \\\"SimplifyObjects\\\"\\n                        }\\n          \
+          ],\\n                    \\\" \\\",\\n                    \
+\\\"//\\\",\\n                    \\\" \\\",\\n                    \
+\\\"ARCIndent\\\"\\n                }\\n            ]\\n        ],\\n        \
+\\\"Code\\\",\\n        InitializationCell -> False,\\n        \
+CellChangeTimes -> {\\n            {3.8689582108220015*^9, \
+3.868958331612497*^9},\\n            {3.8689583687987146*^9, \
+3.868958370889717*^9},\\n            {3.868961045548476*^9, \
+3.868961045697925*^9}\\n        },\\n        CellLabel -> \\\"In[4]:=\\\"\\n  \
+  ],\\n    Cell[\\n        BoxData[\\n            TagBox[\\n                \
+GridBox[\\n                    {\\n                        {\\n               \
+             TemplateBox[\\n                                {\\n              \
+                      TemplateBox[\\n                                        \
+{\\n                                            TemplateBox[\\n               \
+                                 {\\n                                         \
+           \\\"\\\\\\\"\\\\\\\"\\\",\\n                                       \
+             TemplateBox[\\n                                                  \
+      {\\n                                                            \
+\\\"\\\\\\\"<|\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \\\\\\\"\\\",\\n       \
+                                                     TagBox[\\n               \
+                                                 GridBox[\\n                  \
+                                                  {{\\\"\\\\\\\"\\\\\\\"\\\"}}\
+,\\n                                                                    \
+AutoDelete -> False,\\n                                                       \
+             GridBoxBackground -> {\\n                                        \
+                                \\\"Columns\\\" -> {{None}},\\n               \
+                                                         \\\"Rows\\\" -> \
+{{None}},\\n                                                                  \
+      \\\"ItemsIndexed\\\" -> {\\n                                            \
+                                {1, 1} -> RGBColor[1, 0, 0]\\n                \
+                                                        }\\n                  \
+                                                  },\\n                       \
+                                             GridBoxDividers -> {\\n          \
+                                                              \\\"Columns\\\" \
+-> {{True}},\\n                                                               \
+         \\\"Rows\\\" -> {{True}}\\n                                          \
+                          },\\n                                               \
+                     GridBoxFrame -> {\\n                                     \
+                                   \\\"ColumnsIndexed\\\" -> {\\n             \
+                                                               {{1, -1}, {1, \
+-1}} -> True\\n                                                               \
+         }\\n                                                                 \
+   },\\n                                                                    \
+GridBoxItemSize -> {\\n                                                       \
+                 \\\"Columns\\\" -> {{1.3}},\\n                               \
+                                         \\\"Rows\\\" -> {{1.5}}\\n           \
+                                                         },\\n                \
+                                                    FrameStyle -> {\\n        \
+                                                                AbsoluteThickn\
+ess[1],\\n                                                                    \
+    GrayLevel[0.5]\\n                                                         \
+           }\\n                                                               \
+ ],\\n                                                                \
+\\\"Grid\\\"\\n                                                            ],\
+\\n                                                            \\\"\\\\\\\", \
+\\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {4, 3}|>\\\\\\\"\\\"\\n           \
+                                             },\\n                            \
+                            \\\"RowDefault\\\"\\n                             \
+                       ]\\n                                                },\
+\\n                                                \\\"RowDefault\\\"\\n      \
+                                      ],\\n                                   \
+         \\\"\\\\\\\" ->\\\\\\\"\\\"\\n                                       \
+ },\\n                                        \\\"RowDefault\\\"\\n           \
+                         ],\\n                                    \
+\\\"\\\\\\\" <|\\\\\\\"\\\"\\n                                },\\n           \
+                     \\\"RowDefault\\\"\\n                            ]\\n    \
+                    },\\n                        {\\n                         \
+   TemplateBox[\\n                                {\\n                        \
+            TemplateBox[\\n                                        {\\n       \
+                                     \\\"\\\\\\\"    \\\\\\\"\\\",\\n         \
+                                   TemplateBox[\\n                            \
+                    {\\n                                                    \
+\\\"\\\\\\\"\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \\\\\\\"\\\",\\n         \
+                                           TagBox[\\n                         \
+                               GridBox[\\n                                    \
+                        {\\n                                                  \
+              {\\\"\\\\\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\", \\\"\\\\\\\
+\"\\\\\\\"\\\"},\\n                                                           \
+     {\\\"\\\\\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\", \
+\\\"\\\\\\\"\\\\\\\"\\\"},\\n                                                 \
+               {\\\"\\\\\\\"\\\\\\\"\\\", \\\"\\\\\\\"\\\\\\\"\\\", \
+\\\"\\\\\\\"\\\\\\\"\\\"}\\n                                                  \
+          },\\n                                                            \
+AutoDelete -> False,\\n                                                       \
+     GridBoxBackground -> {\\n                                                \
+                \\\"Columns\\\" -> {{None}},\\n                               \
+                                 \\\"Rows\\\" -> {{None}},\\n                 \
+                                               \\\"ItemsIndexed\\\" -> {\\n   \
+                                                                 {1, 1} -> \
+RGBColor[1, 1, 0],\\n                                                         \
+           {1, 2} -> GrayLevel[0.2],\\n                                       \
+                             {1, 3} -> RGBColor[1, 1, 0],\\n                  \
+                                                  {2, 1} -> \
+GrayLevel[0.2],\\n                                                            \
+        {2, 2} -> RGBColor[1, 0, 0],\\n                                       \
+                             {2, 3} -> GrayLevel[0.2],\\n                     \
+                                               {3, 1} -> RGBColor[1, 1, \
+0],\\n                                                                    {3, \
+2} -> GrayLevel[0.2],\\n                                                      \
+              {3, 3} -> RGBColor[1, 1, 0]\\n                                  \
+                              }\\n                                            \
+                },\\n                                                         \
+   GridBoxDividers -> {\\n                                                    \
+            \\\"Columns\\\" -> {{True}},\\n                                   \
+                             \\\"Rows\\\" -> {{True}}\\n                      \
+                                      },\\n                                   \
+                         GridBoxFrame -> {\\n                                 \
+                               \\\"ColumnsIndexed\\\" -> {\\n                 \
+                                                   {{1, -1}, {1, -1}} -> True\
+\\n                                                                }\\n       \
+                                                     },\\n                    \
+                                        GridBoxItemSize -> {\\n               \
+                                                 \\\"Columns\\\" -> \
+{{1.3}},\\n                                                                \\\
+\"Rows\\\" -> {{1.5}}\\n                                                      \
+      },\\n                                                            \
+FrameStyle -> {\\n                                                            \
+    AbsoluteThickness[1],\\n                                                  \
+              GrayLevel[0.5]\\n                                               \
+             }\\n                                                        \
+],\\n                                                        \\\"Grid\\\"\\n  \
+                                                  ]\\n                        \
+                        },\\n                                                \
+\\\"RowDefault\\\"\\n                                            ]\\n         \
+                               },\\n                                        \
+\\\"RowDefault\\\"\\n                                    ],\\n                \
+                    \\\"\\\\\\\",\\\\\\\"\\\"\\n                              \
+  },\\n                                \\\"RowDefault\\\"\\n                  \
+          ]\\n                        },\\n                        \
+{\\\"\\\\\\\"    \\\\\\\\\\\\\\\"Position\\\\\\\\\\\\\\\" -> {3, \
+2},\\\\\\\"\\\"},\\n                        {\\\"\\\\\\\"    \
+\\\\\\\\\\\\\\\"Transform\\\\\\\\\\\\\\\" -> <|\\\\\\\"\\\"},\\n              \
+          {\\\"\\\\\\\"        \\\\\\\\\\\\\\\"Type\\\\\\\\\\\\\\\" -> \\\\\\\
+\\\\\\\\\"AddComponents\\\\\\\\\\\\\\\",\\\\\\\"\\\"},\\n                     \
+   {\\\"\\\\\\\"        \\\\\\\\\\\\\\\"Components\\\\\\\\\\\\\\\" -> {\\\\\\\
+\"\\\"},\\n                        {\\\"\\\\\\\"            \
+<|\\\\\\\"\\\"},\\n                        {\\n                            \
+TemplateBox[\\n                                {\\n                           \
+         TemplateBox[\\n                                        {\\n          \
+                                  \\\"\\\\\\\"                \
+\\\\\\\"\\\",\\n                                            TemplateBox[\\n   \
+                                             {\\n                             \
+                       \\\"\\\\\\\"\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \
+\\\\\\\"\\\",\\n                                                    \
+TagBox[\\n                                                        GridBox[\\n \
+                                                           {{\\\"\\\\\\\"\\\\\
+\\\"\\\"}},\\n                                                            \
+AutoDelete -> False,\\n                                                       \
+     GridBoxBackground -> {\\n                                                \
+                \\\"Columns\\\" -> {{None}},\\n                               \
+                                 \\\"Rows\\\" -> {{None}},\\n                 \
+                                               \\\"ItemsIndexed\\\" -> {\\n   \
+                                                                 {1, 1} -> \
+RGBColor[1, 1, 0]\\n                                                          \
+      }\\n                                                            },\\n   \
+                                                         GridBoxDividers -> {\
+\\n                                                                \
+\\\"Columns\\\" -> {{True}},\\n                                               \
+                 \\\"Rows\\\" -> {{True}}\\n                                  \
+                          },\\n                                               \
+             GridBoxFrame -> {\\n                                             \
+                   \\\"ColumnsIndexed\\\" -> {\\n                             \
+                                       {{1, -1}, {1, -1}} -> True\\n          \
+                                                      }\\n                    \
+                                        },\\n                                 \
+                           GridBoxItemSize -> {\\n                            \
+                                    \\\"Columns\\\" -> {{1.3}},\\n            \
+                                                    \\\"Rows\\\" -> \
+{{1.5}}\\n                                                            },\\n   \
+                                                         FrameStyle -> {\\n   \
+                                                             AbsoluteThickness\
+[1],\\n                                                                \
+GrayLevel[0.5]\\n                                                            \
+}\\n                                                        ],\\n             \
+                                           \\\"Grid\\\"\\n                    \
+                                ]\\n                                          \
+      },\\n                                                \\\"RowDefault\\\"\
+\\n                                            ]\\n                           \
+             },\\n                                        \
+\\\"RowDefault\\\"\\n                                    ],\\n                \
+                    \\\"\\\\\\\",\\\\\\\"\\\"\\n                              \
+  },\\n                                \\\"RowDefault\\\"\\n                  \
+          ]\\n                        },\\n                        {\\n       \
+                     \\\"\\\\\\\"                \\\\\\\\\\\\\\\"Position\\\\\
+\\\\\\\\\\\" -> <|\\\\\\\\\\\\\\\"RelativePosition\\\\\\\\\\\\\\\" -> \
+<|\\\\\\\\\\\\\\\"Y\\\\\\\\\\\\\\\" -> -1, \\\\\\\\\\\\\\\"X\\\\\\\\\\\\\\\" \
+-> -1, \\\\\\\\\\\\\\\"YInverse\\\\\\\\\\\\\\\" -> -1, \
+\\\\\\\\\\\\\\\"XInverse\\\\\\\\\\\\\\\" -> -1|>|>\\\\\\\"\\\"\\n             \
+           },\\n                        {\\\"\\\\\\\"            \
+|>,\\\\\\\"\\\"},\\n                        {\\\"\\\\\\\"            <|\\\\\\\
+\"\\\"},\\n                        {\\n                            \
+TemplateBox[\\n                                {\\n                           \
+         TemplateBox[\\n                                        {\\n          \
+                                  \\\"\\\\\\\"                \
+\\\\\\\"\\\",\\n                                            TemplateBox[\\n   \
+                                             {\\n                             \
+                       \\\"\\\\\\\"\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \
+\\\\\\\"\\\",\\n                                                    \
+TagBox[\\n                                                        GridBox[\\n \
+                                                           {{\\\"\\\\\\\"\\\\\
+\\\"\\\"}},\\n                                                            \
+AutoDelete -> False,\\n                                                       \
+     GridBoxBackground -> {\\n                                                \
+                \\\"Columns\\\" -> {{None}},\\n                               \
+                                 \\\"Rows\\\" -> {{None}},\\n                 \
+                                               \\\"ItemsIndexed\\\" -> {\\n   \
+                                                                 {1, 1} -> \
+RGBColor[1, 1, 0]\\n                                                          \
+      }\\n                                                            },\\n   \
+                                                         GridBoxDividers -> {\
+\\n                                                                \
+\\\"Columns\\\" -> {{True}},\\n                                               \
+                 \\\"Rows\\\" -> {{True}}\\n                                  \
+                          },\\n                                               \
+             GridBoxFrame -> {\\n                                             \
+                   \\\"ColumnsIndexed\\\" -> {\\n                             \
+                                       {{1, -1}, {1, -1}} -> True\\n          \
+                                                      }\\n                    \
+                                        },\\n                                 \
+                           GridBoxItemSize -> {\\n                            \
+                                    \\\"Columns\\\" -> {{1.3}},\\n            \
+                                                    \\\"Rows\\\" -> \
+{{1.5}}\\n                                                            },\\n   \
+                                                         FrameStyle -> {\\n   \
+                                                             AbsoluteThickness\
+[1],\\n                                                                \
+GrayLevel[0.5]\\n                                                            \
+}\\n                                                        ],\\n             \
+                                           \\\"Grid\\\"\\n                    \
+                                ]\\n                                          \
+      },\\n                                                \\\"RowDefault\\\"\
+\\n                                            ]\\n                           \
+             },\\n                                        \
+\\\"RowDefault\\\"\\n                                    ],\\n                \
+                    \\\"\\\\\\\",\\\\\\\"\\\"\\n                              \
+  },\\n                                \\\"RowDefault\\\"\\n                  \
+          ]\\n                        },\\n                        {\\n       \
+                     \\\"\\\\\\\"                \\\\\\\\\\\\\\\"Position\\\\\
+\\\\\\\\\\\" -> <|\\\\\\\\\\\\\\\"RelativePosition\\\\\\\\\\\\\\\" -> \
+<|\\\\\\\\\\\\\\\"Y\\\\\\\\\\\\\\\" -> -1, \\\\\\\\\\\\\\\"X\\\\\\\\\\\\\\\" \
+-> 1, \\\\\\\\\\\\\\\"YInverse\\\\\\\\\\\\\\\" -> -1, \
+\\\\\\\\\\\\\\\"XInverse\\\\\\\\\\\\\\\" -> 1|>|>\\\\\\\"\\\"\\n              \
+          },\\n                        {\\\"\\\\\\\"            |>,\\\\\\\"\\\
+\"},\\n                        {\\\"\\\\\\\"            <|\\\\\\\"\\\"},\\n   \
+                     {\\n                            TemplateBox[\\n          \
+                      {\\n                                    TemplateBox[\\n \
+                                       {\\n                                   \
+         \\\"\\\\\\\"                \\\\\\\"\\\",\\n                         \
+                   TemplateBox[\\n                                            \
+    {\\n                                                    \
+\\\"\\\\\\\"\\\\\\\\\\\\\\\"Image\\\\\\\\\\\\\\\" -> \\\\\\\"\\\",\\n         \
+                                           TagBox[\\n                         \
+                               GridBox[\\n                                    \
+                        {{\\\"\\\\\\\"\\\\\\\"\\\"}},\\n                      \
+                                      AutoDelete -> False,\\n                 \
+                                           GridBoxBackground -> {\\n          \
+                                                      \\\"Columns\\\" -> \
+{{None}},\\n                                                                \
+\\\"Rows\\\" -> {{None}},\\n                                                  \
+              \\\"ItemsIndexed\\\" -> {\\n                                    \
+                                {1, 1} -> RGBColor[1, 1, 0]\\n                \
+                                                }\\n                          \
+                                  },\\n                                       \
+                     GridBoxDividers -> {\\n                                  \
+                              \\\"Columns\\\" -> {{True}},\\n                 \
+                                               \\\"Rows\\\" -> {{True}}\\n    \
+                                                        },\\n                 \
+                                           GridBoxFrame -> {\\n               \
+                                                 \\\"ColumnsIndexed\\\" -> \
+{\\n                                                                    {{1, \
+-1}, {1, -1}} -> True\\n                                                      \
+          }\\n                                                            \
+},\\n                                                            \
+GridBoxItemSize -> {\\n                                                       \
+         \\\"Columns\\\" -> {{1.3}},\\n                                       \
+                         \\\"Rows\\\" -> {{1.5}}\\n                           \
+                                 },\\n                                        \
+                    FrameStyle -> {\\n                                        \
+                        AbsoluteThickness[1],\\n                              \
+                                  GrayLevel[0.5]\\n                           \
+                                 }\\n                                         \
+               ],\\n                                                        \
+\\\"Grid\\\"\\n                                                    ]\\n       \
+                                         },\\n                                \
+                \\\"RowDefault\\\"\\n                                         \
+   ]\\n                                        },\\n                          \
+              \\\"RowDefault\\\"\\n                                    ],\\n  \
+                                  \\\"\\\\\\\",\\\\\\\"\\\"\\n                \
+                },\\n                                \\\"RowDefault\\\"\\n    \
+                        ]\\n                        },\\n                     \
+   {\\n                            \\\"\\\\\\\"                \\\\\\\\\\\\\\\
+\"Position\\\\\\\\\\\\\\\" -> \
+<|\\\\\\\\\\\\\\\"RelativePosition\\\\\\\\\\\\\\\" -> <|\\\\\\\\\\\\\\\"Y\\\\\
+\\\\\\\\\\\" -> 1, \\\\\\\\\\\\\\\"X\\\\\\\\\\\\\\\" -> -1, \
+\\\\\\\\\\\\\\\"YInverse\\\\\\\\\\\\\\\" -> 1, \\\\\\\\\\\\\\\"XInverse\\\\\\\
+\\\\\\\\\" -> -1|>|>\\\\\\\"\\\"\\n                        },\\n              \
+          {\\\"\\\\\\\"            |>,\\\\\\\"\\\"},\\n                       \
+ {\\\"\\\\\\\"            <|\\\\\\\"\\\"},\\n                        {\\n     \
+                       TemplateBox[\\n                                {\\n    \
+                                TemplateBox[\\n                               \
+         {\\n                                            \\\"\\\\\\\"         \
+       \\\\\\\"\\\",\\n                                            \
+TemplateBox[\\n                                                {\\n           \
+                                         \\\"\\\\\\\"\\\\\\\\\\\\\\\"Image\\\\\
+\\\\\\\\\\\" -> \\\\\\\"\\\",\\n                                              \
+      TagBox[\\n                                                        \
+GridBox[\\n                                                            {{\\\"\
+\\\\\\\"\\\\\\\"\\\"}},\\n                                                    \
+        AutoDelete -> False,\\n                                               \
+             GridBoxBackground -> {\\n                                        \
+                        \\\"Columns\\\" -> {{None}},\\n                       \
+                                         \\\"Rows\\\" -> {{None}},\\n         \
+                                                       \\\"ItemsIndexed\\\" \
+-> {\\n                                                                    \
+{1, 1} -> RGBColor[1, 1, 0]\\n                                                \
+                }\\n                                                          \
+  },\\n                                                            \
+GridBoxDividers -> {\\n                                                       \
+         \\\"Columns\\\" -> {{True}},\\n                                      \
+                          \\\"Rows\\\" -> {{True}}\\n                         \
+                                   },\\n                                      \
+                      GridBoxFrame -> {\\n                                    \
+                            \\\"ColumnsIndexed\\\" -> {\\n                    \
+                                                {{1, -1}, {1, -1}} -> True\\n \
+                                                               }\\n           \
+                                                 },\\n                        \
+                                    GridBoxItemSize -> {\\n                   \
+                                             \\\"Columns\\\" -> {{1.3}},\\n   \
+                                                             \\\"Rows\\\" -> \
+{{1.5}}\\n                                                            },\\n   \
+                                                         FrameStyle -> {\\n   \
+                                                             AbsoluteThickness\
+[1],\\n                                                                \
+GrayLevel[0.5]\\n                                                            \
+}\\n                                                        ],\\n             \
+                                           \\\"Grid\\\"\\n                    \
+                                ]\\n                                          \
+      },\\n                                                \\\"RowDefault\\\"\
+\\n                                            ]\\n                           \
+             },\\n                                        \
+\\\"RowDefault\\\"\\n                                    ],\\n                \
+                    \\\"\\\\\\\",\\\\\\\"\\\"\\n                              \
+  },\\n                                \\\"RowDefault\\\"\\n                  \
+          ]\\n                        },\\n                        {\\n       \
+                     \\\"\\\\\\\"                \\\\\\\\\\\\\\\"Position\\\\\
+\\\\\\\\\\\" -> <|\\\\\\\\\\\\\\\"RelativePosition\\\\\\\\\\\\\\\" -> \
+<|\\\\\\\\\\\\\\\"Y\\\\\\\\\\\\\\\" -> 1, \\\\\\\\\\\\\\\"X\\\\\\\\\\\\\\\" \
+-> 1, \\\\\\\\\\\\\\\"YInverse\\\\\\\\\\\\\\\" -> 1, \\\\\\\\\\\\\\\"XInverse\
+\\\\\\\\\\\\\\\" -> 1|>|>\\\\\\\"\\\"\\n                        },\\n         \
+               {\\\"\\\\\\\"            |>\\\\\\\"\\\"},\\n                   \
+     {\\\"\\\\\\\"        }\\\\\\\"\\\"},\\n                        {\\\"\\\\\
+\\\"    |>\\\\\\\"\\\"},\\n                        \
+{\\\"\\\\\\\"|>\\\\\\\"\\\"}\\n                    },\\n                    \
+DefaultBaseStyle -> \\\"Column\\\",\\n                    GridBoxAlignment -> \
+{\\\"Columns\\\" -> {{Left}}},\\n                    GridBoxItemSize -> \
+{\\\"Columns\\\" -> {{Automatic}}, \\\"Rows\\\" -> {{Automatic}}}\\n          \
+      ],\\n                \\\"Column\\\"\\n            ]\\n        ],\\n     \
+   \\\"Output\\\",\\n        CellChangeTimes -> {\\n            \
+{3.868958247557848*^9, 3.868958332507077*^9},\\n            \
+{3.8689583655248456*^9, 3.868958371579588*^9},\\n            \
+3.868961046196887*^9\\n        },\\n        CellLabel -> \\\"Out[4]=\\\"\\n   \
+ ],\\n    Cell[\\n        \\\"Finding Rules from Object Mappings\\\",\\n      \
+  \\\"Subsubsection\\\",\\n        CellChangeTimes -> {{3.868958416159749*^9, \
+3.868958420214033*^9}}\\n    ],\\n    Cell[\\n        \\\"We notice that if \
+we group the object mappings by the color of their input object, the \
+transformation applied is consistent.\\\",\\n        \\\"Item\\\",\\n        \
+CellChangeTimes -> {{3.868958628497119*^9, 3.868958635861541*^9}}\\n    ],\\n \
+   Cell[\\n        \\\"For red, a particular AddComponents transform is \
+needed.\\\",\\n        \\\"Subitem\\\",\\n        CellChangeTimes -> \
+{{3.868958628497119*^9, 3.8689586817424417*^9}}\\n    ],\\n    Cell[\\n       \
+ \\\"For blue, a particular AddComponents transform is needed.\\\",\\n        \
+\\\"Subitem\\\",\\n        CellChangeTimes -> {{3.868958628497119*^9, \
+3.868958685672146*^9}}\\n    ],\\n    Cell[\\n        \\\"For any other \
+color, the output object is the same as the input object.\\\",\\n        \
+\\\"Subitem\\\",\\n        CellChangeTimes -> {{3.868958628497119*^9, \
+3.868958670911913*^9}}\\n    ]\\n}\"\>"], "Output",
+ CellChangeTimes->{
+  3.8689587667303247`*^9, {3.8689588692453003`*^9, 3.868958876054186*^9}, {
+   3.868958932808756*^9, 3.868958944969576*^9}, {3.8689590034668646`*^9, 
+   3.8689590490327845`*^9}, 3.868959134886565*^9, {3.868959224342265*^9, 
+   3.8689592364934864`*^9}, 3.868959305333426*^9, 3.868961966239002*^9},
+ CellLabel->"Out[6]=",ExpressionUUID->"78c65abd-55d9-4931-80c3-872b4f8ef2d1"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCPublicNotesSection], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCPublicNotesSection, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCPublicNotesSection]; Null, ImageSize -> {102.5, 40},
+            Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCPublicNotesSection], ImageSize -> {110., 40}, Method -> 
+           "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCPublicNotesSection], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCPublicNotesSection]; 
+               
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCPublicNotesSection, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCPublicNotesSection]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022881045531550443}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCPublicNotesSection", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCPublicNotesSection}, "ReturnNotebook" -> 
+    True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"f576a42f-d349-4c2c-b3e4-d02c816ac616"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 93, 0, 98, "Title",ExpressionUUID->"fe2f77ca-f4a2-4359-8ee6-16e8c4689805"],
+Cell[676, 24, 231, 5, 54, "Code",ExpressionUUID->"c80294ea-6fab-4b3c-9b59-91c316e99118",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[932, 33, 159, 3, 67, "Section",ExpressionUUID->"786907c4-6215-4c46-a98e-51d6d113b314"],
+Cell[CellGroupData[{
+Cell[1116, 40, 419, 9, 54, "Code",ExpressionUUID->"b8e1fc8c-9a53-49e1-86cb-4b9487bf896a",
+ InitializationCell->False],
+Cell[1538, 51, 62579, 806, 19034, "Output",ExpressionUUID->"78c65abd-55d9-4931-80c3-872b4f8ef2d1"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

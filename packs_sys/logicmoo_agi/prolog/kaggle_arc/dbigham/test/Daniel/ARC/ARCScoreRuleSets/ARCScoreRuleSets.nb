@@ -1,0 +1,2641 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    118575,       2633]
+NotebookOptionsPosition[    110695,       2448]
+NotebookOutlinePosition[    116219,       2585]
+CellTagsIndexPosition[    116176,       2582]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCScoreRuleSets", "Title",ExpressionUUID->"85e6b967-ef90-4b21-82f9-92dba2f2a628"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCScoreRuleSets", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[502]:=",ExpressionUUID->"4d87f1e2-4700-48db-90ee-344c0b9fdc04"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"c5551168-8a1f-46de-b910-5328cfac456c"],
+
+Cell[CellGroupData[{
+
+Cell["Color is a More Likely Pattern/Condition than X", "Subsection",
+ CellChangeTimes->{{3.8704674098664627`*^9, 
+  3.8704674198655224`*^9}},ExpressionUUID->"77c09b48-cac2-47cf-9fff-\
+70b6c74a8073"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCScoreRuleSets-20220825-RFGVRT", Daniel`ARC`ARCScoreRuleSets, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856], 81978014]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> "ARCScoreRuleSets-20220825-RFGVRT"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCScoreRuleSets-20220825-RFGVRT", Daniel`ARC`ARCScoreRuleSets, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856], "CellID" -> 81978014, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCScoreRuleSets-20220825-RFGVRT", Daniel`ARC`ARCScoreRuleSets, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856], None], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCScoreRuleSets-20220825-RFGVRT"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022825215022419856}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.870467422133463*^9},ExpressionUUID->"b60e12ae-c260-4894-bf54-\
+5d67b3fbeb6f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCScoreRuleSets", "[", "\n", "\t", 
+   RowBox[{"{", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"<|", 
+         RowBox[{"\"\<Color\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+        " ", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<X\>\"", " ", "->", " ", "1"}], "|>"}]}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{
+        RowBox[{"<|", 
+         RowBox[{"\"\<Color\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", 
+        " ", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], "|>"}]}]}], "\n", "\t\t",
+       "}"}], ",", "\n", "\t\t", 
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"<|", 
+         RowBox[{"\"\<X\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", " ", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<Color\>\"", " ", "->", " ", "1"}], "|>"}]}], ",", "\n", 
+       "\t\t\t", 
+       RowBox[{
+        RowBox[{"<|", 
+         RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", " ", 
+        RowBox[{"<|", 
+         RowBox[{"\"\<Color\>\"", " ", "->", " ", "2"}], "|>"}]}]}], "\n", 
+      "\t\t", "}"}]}], "\n", "\t", "}"}], "\n", "]"}], " ", "//", " ", 
+  "Indent2"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.8704673731709485`*^9, 3.870467422133463*^9}},
+ CellLabel->"In[808]:=",
+ CellID->81978014,
+ "TestId" -> 
+ "ARCScoreRuleSets-20220825-RFGVRT",ExpressionUUID->"ef87f435-0b7c-4fa4-a199-\
+e2027aca70e5"]
+}, Open  ]],
+
+Cell[BoxData["\<\"<|\\n    {<|\\\"Color\\\" -> 1|> -> <|\\\"X\\\" -> 1|>, \
+<|\\\"Color\\\" -> 2|> -> <|\\\"X\\\" -> 2|>} -> -0.19742116167907758,\\n    \
+{<|\\\"X\\\" -> 1|> -> <|\\\"Color\\\" -> 1|>, <|\\\"X\\\" -> 2|> -> \
+<|\\\"Color\\\" -> 2|>} -> -1.0191866507758092\\n|>\"\>"], "Output",
+ CellChangeTimes->{{3.8704674007757673`*^9, 3.8704674038909507`*^9}, {
+   3.870468911323823*^9, 3.870468914006612*^9}, 3.870508871147565*^9, 
+   3.870510477530136*^9, 3.8705177001180964`*^9, 3.8706361046193447`*^9, 
+   3.870903286300558*^9, 3.871289507213242*^9, {3.8714002186491528`*^9, 
+   3.8714002555361347`*^9}, 3.8719290181284356`*^9},
+ CellLabel->
+  "Out[809]=",ExpressionUUID->"ea29f737-895c-494d-aacf-ba80b35f477d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Associations", "Subsection",
+ CellChangeTimes->{{3.871400119905377*^9, 
+  3.8714001213652153`*^9}},ExpressionUUID->"d162ad65-0ca1-40e5-897b-\
+d54ce7abd22e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCScoreRuleSets-20220905-HCS1LX", Daniel`ARC`ARCScoreRuleSets, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788], 31081132, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> "ARCScoreRuleSets-20220905-HCS1LX"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCScoreRuleSets-20220905-HCS1LX", Daniel`ARC`ARCScoreRuleSets, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788], "CellID" -> 31081132, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCScoreRuleSets-20220905-HCS1LX", Daniel`ARC`ARCScoreRuleSets, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCScoreRuleSets-20220905-HCS1LX"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022951657319788}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.871400250621217*^9},ExpressionUUID->"3b198e8e-093e-4b5d-ad17-\
+bcd296081ffd"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCScoreRuleSets", "[", "\n", "\t", 
+   RowBox[{"{", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"<|", "\n", "\t\t\t", 
+      RowBox[{"\"\<Rules\>\"", " ", "->", " ", 
+       RowBox[{"{", "\n", "\t\t\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"<|", 
+           RowBox[{"\"\<Color\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+          " ", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<X\>\"", " ", "->", " ", "1"}], "|>"}]}], ",", "\n", 
+         "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"<|", 
+           RowBox[{"\"\<Color\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", 
+          " ", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], "|>"}]}]}], "\n", 
+        "\t\t\t", "}"}]}], "\n", "\t\t", "|>"}], ",", "\n", "\t\t", 
+     RowBox[{"<|", "\n", "\t\t\t", 
+      RowBox[{"\"\<Rules\>\"", " ", "->", " ", 
+       RowBox[{"{", "\n", "\t\t\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"<|", 
+           RowBox[{"\"\<X\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", " ", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<Color\>\"", " ", "->", " ", "1"}], "|>"}]}], ",", 
+         "\n", "\t\t\t\t", 
+         RowBox[{
+          RowBox[{"<|", 
+           RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", " ", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<Color\>\"", " ", "->", " ", "2"}], "|>"}]}]}], "\n", 
+        "\t\t\t", "}"}]}], "\n", "\t\t", "|>"}]}], "\n", "\t", "}"}], "\n", 
+   "]"}], " ", "//", " ", "Indent2"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.8704673731709485`*^9, 3.870467422133463*^9}, {
+  3.87140012466978*^9, 3.871400137360118*^9}},
+ CellLabel->"In[699]:=",
+ CellID->31081132,
+ "TestId" -> 
+ "ARCScoreRuleSets-20220905-HCS1LX",ExpressionUUID->"11322d6c-4bc6-468c-99db-\
+5ef465315ee7"]
+}, Open  ]],
+
+Cell[BoxData["\<\"<|\\n    <|\\\"Rules\\\" -> {<|\\\"Color\\\" -> 1|> -> <|\\\
+\"X\\\" -> 1|>, <|\\\"Color\\\" -> 2|> -> <|\\\"X\\\" -> 2|>}|> -> \
+-0.19742116167907758,\\n    <|\\\"Rules\\\" -> {<|\\\"X\\\" -> 1|> -> \
+<|\\\"Color\\\" -> 1|>, <|\\\"X\\\" -> 2|> -> <|\\\"Color\\\" -> 2|>}|> -> \
+-1.0191866507758092\\n|>\"\>"], "Output",
+ CellChangeTimes->{3.8714001379682093`*^9, 3.871400208455637*^9, 
+  3.8714002424826403`*^9, 3.871928168521756*^9},
+ CellLabel->
+  "Out[700]=",ExpressionUUID->"33f4601a-6a06-469f-a626-e3d4402af95f"]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Manual Tests", "Section",
+ CellChangeTimes->{{3.8704688928092813`*^9, 
+  3.8704688946904364`*^9}},ExpressionUUID->"93317389-8c51-4c3e-8227-\
+632b20318b87"],
+
+Cell[CellGroupData[{
+
+Cell["Shape is a More Likely Pattern/Condition than X, Width, etc.", \
+"Subsection",
+ CellChangeTimes->{{3.8704674098664627`*^9, 3.8704674198655224`*^9}, {
+  3.870467696098793*^9, 
+  3.870467704931354*^9}},ExpressionUUID->"f3292ab4-0ecf-4d9b-bde5-\
+ce302188821e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"NotTest", "@", "\n", 
+   RowBox[{"ARCScoreRuleSets", "[", "\n", "\t", 
+    RowBox[{"{", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+            "|>"}]}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+           RowBox[{"Except", "[", 
+            RowBox[{"<|", 
+             RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+             "|>"}], "]"}]}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Shapes\>\"", " ", "->", " ", 
+           RowBox[{"Alternatives", "[", "\n", "\t\t\t\t\t", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+               RowBox[{"ARCScene", "[", 
+                RowBox[{"{", 
+                 RowBox[{"{", "10", "}"}], "}"}], "]"}]}], "|>"}], ",", "\n", 
+             "\t\t\t\t\t", 
+             RowBox[{"<|", 
+              RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+              "|>"}], ",", "\n", "\t\t\t\t\t", 
+             RowBox[{"<|", 
+              RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Rectangle\>\""}], 
+              "|>"}]}], "\n", "\t\t\t\t", "]"}]}], "\n", "\t\t\t", "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Shapes\>\"", " ", "->", " ", 
+           RowBox[{"Except", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+               RowBox[{"ARCScene", "[", 
+                RowBox[{"{", 
+                 RowBox[{"{", "10", "}"}], "}"}], "]"}]}], "|>"}], " ", "|", 
+             " ", 
+             RowBox[{"<|", 
+              RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Rectangle\>\""}], 
+              "|>"}]}], "]"}]}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Width\>\"", " ", "->", " ", "4"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Height\>\"", " ", "->", " ", "5"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Length\>\"", " ", "->", " ", "5"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Length\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"2", ",", " ", "2"}], "}"}]}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+           RowBox[{"{", 
+            RowBox[{"7", ",", " ", "1"}], "}"}]}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y\>\"", " ", "->", " ", "7"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y2\>\"", " ", "->", " ", "6"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y2\>\"", " ", "->", " ", "7"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X2\>\"", " ", "->", " ", "5"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X2\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{
+          "\"\<PrimarySizeDimension\>\"", " ", "->", " ", "\"\<Y\>\""}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{
+          "\"\<PrimarySizeDimension\>\"", " ", "->", " ", "\"\<None\>\""}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", 
+           RowBox[{"4", "/", "5"}]}], "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Area\>\"", " ", "->", " ", "20"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<FilledArea\>\"", " ", "->", " ", "12"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<FilledArea\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<FilledProportion\>\"", " ", "->", " ", "0.6"}], "|>"}],
+          " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<FilledProportion\>\"", " ", "->", " ", "1."}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<ColorUseCount\>\"", " ", "->", " ", "12"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<ColorUseCount\>\"", " ", "->", " ", "1"}], "|>"}], " ",
+          "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Width.Rank\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Width.Rank\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Width.InverseRank\>\"", " ", "->", " ", "2"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Width.InverseRank\>\"", " ", "->", " ", "1"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Height.Rank\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Height.Rank\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Height.InverseRank\>\"", " ", "->", " ", "2"}], "|>"}],
+          " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Height.InverseRank\>\"", " ", "->", " ", "1"}], "|>"}],
+          " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Length.Rank\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Length.Rank\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Length.InverseRank\>\"", " ", "->", " ", "2"}], "|>"}],
+          " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Length.InverseRank\>\"", " ", "->", " ", "1"}], "|>"}],
+          " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y.Rank\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y.Rank\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y.InverseRank\>\"", " ", "->", " ", "1"}], "|>"}], " ",
+          "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y.InverseRank\>\"", " ", "->", " ", "2"}], "|>"}], " ",
+          "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X.Rank\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X.Rank\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->", 
+         " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X.InverseRank\>\"", " ", "->", " ", "2"}], "|>"}], " ",
+          "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X.InverseRank\>\"", " ", "->", " ", "1"}], "|>"}], " ",
+          "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y2.Rank\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y2.Rank\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y2.InverseRank\>\"", " ", "->", " ", "1"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<Y2.InverseRank\>\"", " ", "->", " ", "2"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X2.Rank\>\"", " ", "->", " ", "1"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X2.Rank\>\"", " ", "->", " ", "2"}], "|>"}], " ", "->",
+          " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X2.InverseRank\>\"", " ", "->", " ", "2"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<X2.InverseRank\>\"", " ", "->", " ", "1"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<PrimarySizeDimension.Rank\>\"", " ", "->", " ", "1"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<PrimarySizeDimension.Rank\>\"", " ", "->", " ", "2"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{
+          "\"\<PrimarySizeDimension.InverseRank\>\"", " ", "->", " ", "2"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{
+          "\"\<PrimarySizeDimension.InverseRank\>\"", " ", "->", " ", "1"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<AspectRatio.Rank\>\"", " ", "->", " ", "2"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<AspectRatio.Rank\>\"", " ", "->", " ", "1"}], "|>"}], 
+         " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<AspectRatio.InverseRank\>\"", " ", "->", " ", "1"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<AspectRatio.InverseRank\>\"", " ", "->", " ", "2"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<ColorUseCount.Rank\>\"", " ", "->", " ", "1"}], "|>"}],
+          " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<ColorUseCount.Rank\>\"", " ", "->", " ", "2"}], "|>"}],
+          " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}], ",", 
+      "\n", "\t\t", 
+      RowBox[{"{", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<ColorUseCount.InverseRank\>\"", " ", "->", " ", "2"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Color\>\"", " ", "->", " ", 
+           RowBox[{"ObjectValue", "[", 
+            RowBox[{
+             RowBox[{"<|", 
+              RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+               RowBox[{"<|", 
+                RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], 
+                "|>"}]}], "|>"}], ",", " ", "\"\<Color\>\""}], "]"}]}], "\n", 
+          "\t\t\t", "|>"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{
+         RowBox[{"<|", 
+          RowBox[{"\"\<ColorUseCount.InverseRank\>\"", " ", "->", " ", "1"}], 
+          "|>"}], " ", "->", " ", 
+         RowBox[{"<|", "\n", "\t\t\t\t", 
+          RowBox[{"\"\<Transform\>\"", " ", "->", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Type\>\"", " ", "->", " ", "\"\<Delete\>\""}], 
+            "|>"}]}], "\n", "\t\t\t", "|>"}]}]}], "\n", "\t\t", "}"}]}], "\n",
+      "\t", "}"}], "\n", "]"}]}], " ", "//", " ", "Indent3"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8704678306184072`*^9, 3.8704681662496557`*^9}, {
+  3.8704688960170155`*^9, 3.870468897594646*^9}},
+ CellLabel->
+  "In[2195]:=",ExpressionUUID->"2b3cc864-b608-411e-a2c1-73900537e463"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"<|\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\" -> \"", "\"<|\\\"Transform\\\" -> \"", 
+           "\"<|\\\"Type\\\" -> \\\"Delete\\\"|>\"", "\"|>\""}, 
+          "RowDefault"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{"\"        \"", 
+       TemplateBox[{"\"<|\\\"Shape\\\" -> Except[\"", 
+         TagBox[
+          TooltipBox[
+           FrameBox["\"Pixel\"", FrameStyle -> Directive[
+              RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+            Background -> 
+            RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+              RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+            BaselinePosition -> Baseline, ContentPadding -> True, 
+            FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+           "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+           LabelStyle -> "TextStyling"], 
+          Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], "\"]|>\"",
+          "\" -> \"", "\"<|\\\"Color\\\" -> ObjectValue[\"", 
+         "\"<|\\\"Shape\\\" -> \"", 
+         TagBox[
+          TooltipBox[
+           FrameBox["\"Pixel\"", FrameStyle -> Directive[
+              RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+            Background -> 
+            RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+              RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+            BaselinePosition -> Baseline, ContentPadding -> True, 
+            FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+           "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+           LabelStyle -> "TextStyling"], 
+          Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], "\"|>\"", 
+         "\", \\\"Color\\\"]|>\""}, "RowDefault"]},
+      "RowDefault"]},
+    {"\<\"    } -> -0.6687877434874043,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Width\\\" -> 4|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Width\\\" -> 1|> -> <|\\\"Transform\\\" -> <|\\\"Type\
+\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -0.778467626662937,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Height\\\" -> 5|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Height\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -0.8007669125301242,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Length\\\" -> 5|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Length\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -0.8196011401911263,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Position\\\" -> {2, 2}|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Position\\\" -> {7, 1}|> -> <|\\\"Transform\\\" -> <|\
+\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -0.8884298451698143,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Area\\\" -> 20|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Area\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.0222843206415042,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"FilledArea\\\" -> 12|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"FilledArea\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.0822911820211472,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{
+        "\"        <|\\\"PrimarySizeDimension\\\" -> \\\"Y\\\"|> -> \"", 
+         TemplateBox[{
+          "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"PrimarySizeDimension\\\" -> \\\"None\\\"|> -> \
+<|\\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.0847636502862914,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"FilledProportion\\\" -> 0.6|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"FilledProportion\\\" -> 1.|> -> <|\\\"Transform\\\" \
+-> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.1610911054959039,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Width.Rank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Width.Rank\\\" -> 2|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.1636406068251413,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"ColorUseCount\\\" -> 12|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"ColorUseCount\\\" -> 1|> -> <|\\\"Transform\\\" -> <|\
+\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.1643938403715752,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"AspectRatio\\\" -> 4/5|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"AspectRatio\\\" -> 1|> -> <|\\\"Transform\\\" -> <|\\\
+\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.1967587068458019,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Width.InverseRank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Width.InverseRank\\\" -> 1|> -> <|\\\"Transform\\\" \
+-> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.2116794644931592,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Height.Rank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Height.Rank\\\" -> 2|> -> <|\\\"Transform\\\" -> <|\\\
+\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.2373586167974238,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{
+         TemplateBox[{"\"        \"", 
+           
+           TemplateBox[{
+            "\"<|\\\"Shapes\\\" -> \"", 
+             "\"<|\\\"Image\\\" -> ARCScene[{{10}}]|>\"", "\" | \"", 
+             TagBox[
+              TooltipBox[
+               FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                  RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 
+                4, Background -> 
+                RGBColor[1., 0.9803921568627451, 0.9215686274509803], 
+                BaseStyle -> {
+                  RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+                BaselinePosition -> Baseline, ContentPadding -> True, 
+                FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+               "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+               LabelStyle -> "TextStyling"], 
+              Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+             "\" | \"", 
+             TagBox[
+              TooltipBox[
+               FrameBox["\"Rectangle\"", FrameStyle -> Directive[
+                  RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 
+                4, Background -> 
+                RGBColor[1., 0.9803921568627451, 0.9215686274509803], 
+                BaseStyle -> {
+                  RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+                BaselinePosition -> Baseline, ContentPadding -> True, 
+                FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+               "\"<|\\\"Name\\\" -> \\\"Rectangle\\\"|>\"", TooltipDelay -> 
+               0.4, LabelStyle -> "TextStyling"], 
+              Annotation[#, "<|\"Name\" -> \"Rectangle\"|>", "Tooltip"]& ], 
+             "\"|>\""}, "RowDefault"]}, "RowDefault"], "\" ->\""}, 
+        "RowDefault"], "\" <|\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Delete\\\"|>\
+\"\>"},
+    {"\<\"        |>,\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{
+         TemplateBox[{"\"        \"", 
+           
+           TemplateBox[{
+            "\"<|\\\"Shapes\\\" -> Except[\"", 
+             "\"<|\\\"Image\\\" -> ARCScene[{{10}}]|>\"", "\" | \"", 
+             TagBox[
+              TooltipBox[
+               FrameBox["\"Rectangle\"", FrameStyle -> Directive[
+                  RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 
+                4, Background -> 
+                RGBColor[1., 0.9803921568627451, 0.9215686274509803], 
+                BaseStyle -> {
+                  RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+                BaselinePosition -> Baseline, ContentPadding -> True, 
+                FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+               "\"<|\\\"Name\\\" -> \\\"Rectangle\\\"|>\"", TooltipDelay -> 
+               0.4, LabelStyle -> "TextStyling"], 
+              Annotation[#, "<|\"Name\" -> \"Rectangle\"|>", "Tooltip"]& ], 
+             "\"]|>\""}, "RowDefault"]}, "RowDefault"], "\" ->\""}, 
+        "RowDefault"], "\" <|\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{"\"            \"", 
+       TemplateBox[{
+        "\"\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+         TagBox[
+          TooltipBox[
+           FrameBox["\"Pixel\"", FrameStyle -> Directive[
+              RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+            Background -> 
+            RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+              RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+            BaselinePosition -> Baseline, ContentPadding -> True, 
+            FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+           "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+           LabelStyle -> "TextStyling"], 
+          Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], "\"|>\"", 
+         "\", \\\"Color\\\"]\""}, "RowDefault"]},
+      "RowDefault"]},
+    {"\<\"        |>\"\>"},
+    {"\<\"    } -> -1.2773063155485842,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Height.InverseRank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Height.InverseRank\\\" -> 1|> -> <|\\\"Transform\\\" \
+-> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.2866081244455179,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Length.Rank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Length.Rank\\\" -> 2|> -> <|\\\"Transform\\\" -> <|\\\
+\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.3090675166267958,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Length.InverseRank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Length.InverseRank\\\" -> 1|> -> <|\\\"Transform\\\" \
+-> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.358591854929709,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Y.Rank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Y.Rank\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.3674062683503139,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Y.InverseRank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Y.InverseRank\\\" -> 2|> -> <|\\\"Transform\\\" -> <|\
+\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.4134075294881283,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"X.Rank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"X.Rank\\\" -> 2|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.4435450349974324,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"X.InverseRank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"X.InverseRank\\\" -> 1|> -> <|\\\"Transform\\\" -> <|\
+\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.4898265187684234,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Y2.Rank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Y2.Rank\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.5232766483691011,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Y2.InverseRank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Y2.InverseRank\\\" -> 2|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.5704730561352656,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"X2.Rank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"X2.Rank\\\" -> 2|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.6018199579335755,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"X2.InverseRank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"X2.InverseRank\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.6491509438872274,\"\>"},
+    {"\<\"    {\"\>"},
+    {"\<\"        <|\\\"PrimarySizeDimension.Rank\\\" -> 1|> -> <|\"\>"},
+    {
+     TemplateBox[{"\"            \"", 
+       TemplateBox[{
+        "\"\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+         TagBox[
+          TooltipBox[
+           FrameBox["\"Pixel\"", FrameStyle -> Directive[
+              RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+            Background -> 
+            RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+              RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+            BaselinePosition -> Baseline, ContentPadding -> True, 
+            FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+           "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+           LabelStyle -> "TextStyling"], 
+          Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], "\"|>\"", 
+         "\", \\\"Color\\\"]\""}, "RowDefault"]},
+      "RowDefault"]},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\\\"PrimarySizeDimension.Rank\\\" -> 2|> -> \
+<|\\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.7568701608064303,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"AspectRatio.Rank\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"AspectRatio.Rank\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.7892125556495233,\"\>"},
+    {"\<\"    {\"\>"},
+    {"\<\"        <|\\\"PrimarySizeDimension.InverseRank\\\" -> 2|> -> \
+<|\"\>"},
+    {
+     TemplateBox[{"\"            \"", 
+       TemplateBox[{
+        "\"\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+         TagBox[
+          TooltipBox[
+           FrameBox["\"Pixel\"", FrameStyle -> Directive[
+              RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+            Background -> 
+            RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+              RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+            BaselinePosition -> Baseline, ContentPadding -> True, 
+            FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+           "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+           LabelStyle -> "TextStyling"], 
+          Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], "\"|>\"", 
+         "\", \\\"Color\\\"]\""}, "RowDefault"]},
+      "RowDefault"]},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\\\"PrimarySizeDimension.InverseRank\\\" -> 1|> -> \
+<|\\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.8142607604105592,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{
+        "\"        <|\\\"AspectRatio.InverseRank\\\" -> 1|> -> \"", 
+         TemplateBox[{
+          "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"AspectRatio.InverseRank\\\" -> 2|> -> <|\\\"Transform\
+\\\" -> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.8418740355025445,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"X\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"X\\\" -> 1|> -> <|\\\"Transform\\\" -> <|\\\"Type\\\" \
+-> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.9407910081273774,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Y\\\" -> 2|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Y\\\" -> 7|> -> <|\\\"Transform\\\" -> <|\\\"Type\\\" \
+-> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.9407910081273774,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"X2\\\" -> 5|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"X2\\\" -> 1|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.9421313890848384,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"Y2\\\" -> 6|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"Y2\\\" -> 7|> -> <|\\\"Transform\\\" -> \
+<|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -1.9421313890848384,\"\>"},
+    {"\<\"    {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{
+          "\"<|\\\"ColorUseCount.Rank\\\" -> 1|>\"", "\" -> \"", 
+           "\"<|\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"|>\"", "\", \\\"Color\\\"]|>\""}, "RowDefault"]}, "RowDefault"],
+        "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\\\"ColorUseCount.Rank\\\" -> 2|> -> <|\\\"Transform\\\" \
+-> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -2.120615033601262,\"\>"},
+    {"\<\"    {\"\>"},
+    {"\<\"        <|\\\"ColorUseCount.InverseRank\\\" -> 2|> -> <|\"\>"},
+    {
+     TemplateBox[{"\"            \"", 
+       TemplateBox[{
+        "\"\\\"Color\\\" -> ObjectValue[\"", "\"<|\\\"Shape\\\" -> \"", 
+         TagBox[
+          TooltipBox[
+           FrameBox["\"Pixel\"", FrameStyle -> Directive[
+              RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+            Background -> 
+            RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+              RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+            BaselinePosition -> Baseline, ContentPadding -> True, 
+            FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+           "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+           LabelStyle -> "TextStyling"], 
+          Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], "\"|>\"", 
+         "\", \\\"Color\\\"]\""}, "RowDefault"]},
+      "RowDefault"]},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\\\"ColorUseCount.InverseRank\\\" -> 1|> -> \
+<|\\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Delete\\\"|>|>\"\>"},
+    {"\<\"    } -> -2.1736018332417957\"\>"},
+    {"\<\"|>\"\>"}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Output",
+ CellChangeTimes->{
+  3.8704681669819856`*^9, 3.870468276449336*^9, 3.8704683755088816`*^9, 
+   3.8704684763766394`*^9, 3.870468665823106*^9, 3.8704687325372972`*^9, 
+   3.8704688001777315`*^9, 3.8704688981471443`*^9, 3.870508888247123*^9, {
+   3.870508927810629*^9, 3.8705089390038214`*^9}, {3.870508982029547*^9, 
+   3.8705089982779603`*^9}, {3.870509098591028*^9, 3.870509182597275*^9}, 
+   3.8705104515725718`*^9},
+ CellLabel->
+  "Out[2196]=",ExpressionUUID->"35e69d06-5719-4c6a-92f3-3e3679ee0630"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Working", "Subsection",
+ CellChangeTimes->{{3.8704674098664627`*^9, 3.8704674198655224`*^9}, {
+  3.870467696098793*^9, 3.870467704931354*^9}, {3.8704699354358845`*^9, 
+  3.870469936511994*^9}},ExpressionUUID->"b99173b7-e28f-4fd9-b637-\
+602adc7d15bd"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"NotTest", "@", "\n", 
+   RowBox[{"ARCScoreRuleSets", "[", "\n", "\t", 
+    RowBox[{"{", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"a", "[", "\"\<Rules\>\"", "]"}], ",", "\n", "\t\t", 
+      RowBox[{"b", "[", "\"\<Rules\>\"", "]"}]}], "\n", "\t", "}"}], "\n", 
+    "]"}]}], " ", "//", " ", "Indent3"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8704678306184072`*^9, 3.8704681662496557`*^9}, {
+  3.8704688960170155`*^9, 3.870468897594646*^9}, {3.870469942313018*^9, 
+  3.870469960582445*^9}, {3.870470790599634*^9, 3.870470798236255*^9}},
+ CellLabel->
+  "In[1935]:=",ExpressionUUID->"f59a70cb-72d2-42c6-abc8-bd878b8425ea"],
+
+Cell[BoxData["\<\"<|\\n    {\\n        <|\\\"Height.Rank\\\" -> 1|> -> <|\\n  \
+          \\\"Color\\\" -> 1,\\n            \\\"Examples\\\" -> {1, 2},\\n    \
+        \\\"ExampleCount\\\" -> 2,\\n            \\\"UseCount\\\" -> 2,\\n    \
+        \\\"InputObjects\\\" -> {\\n                \
+\\\"38fda208-e012-4a20-b2fe-f0fd0a6f7497\\\",\\n                \
+\\\"0e0243ea-2b7c-485e-a5d7-d226882f3d16\\\"\\n            }\\n        |>,\\n \
+       <|\\\"Height.Rank\\\" -> 2|> -> <|\\n            \\\"Color\\\" -> \
+2,\\n            \\\"Examples\\\" -> {1, 2},\\n            \\\"ExampleCount\\\
+\" -> 2,\\n            \\\"UseCount\\\" -> 2,\\n            \
+\\\"InputObjects\\\" -> {\\n                \
+\\\"3fc42f06-3914-4ef9-a886-d1a5e4a36d96\\\",\\n                \
+\\\"f8280f16-b779-4502-8550-922bb195c614\\\"\\n            }\\n        |>,\\n \
+       <|\\\"Height.Rank\\\" -> 3|> -> <|\\n            \\\"Color\\\" -> \
+3,\\n            \\\"Examples\\\" -> {1, 2},\\n            \\\"ExampleCount\\\
+\" -> 2,\\n            \\\"UseCount\\\" -> 2,\\n            \
+\\\"InputObjects\\\" -> {\\n                \
+\\\"95641dff-3128-4cc7-8db4-5367e6b4f0a7\\\",\\n                \
+\\\"d899e339-f916-4f87-9e29-c3761fd7c105\\\"\\n            }\\n        |>,\\n \
+       <|\\\"Height.Rank\\\" -> 4|> -> <|\\n            \\\"Color\\\" -> \
+4,\\n            \\\"Examples\\\" -> {1, 2},\\n            \\\"ExampleCount\\\
+\" -> 2,\\n            \\\"UseCount\\\" -> 2,\\n            \
+\\\"InputObjects\\\" -> {\\n                \
+\\\"4ec4d633-a4f9-4557-a125-5ae408a5d0ff\\\",\\n                \
+\\\"65e2748b-eddc-4bc3-a116-844a9a8f9736\\\"\\n            }\\n        |>\\n  \
+  } -> -2.2930779750164367,\\n    {\\n        <|\\\"X\\\" -> 6|> -> <|\\n     \
+       \\\"Color\\\" -> Inactive[Plus][ObjectValue[<|\\\"X\\\" -> 2|>, \
+\\\"Height.Rank\\\"], -1],\\n            \\\"Examples\\\" -> {1, 2},\\n       \
+     \\\"ExampleCount\\\" -> 2,\\n            \\\"UseCount\\\" -> 2,\\n       \
+     \\\"InputObjects\\\" -> {\\n                \
+\\\"d5ef96d3-60e3-40ca-b184-852e0d6cd8bd\\\",\\n                \
+\\\"0ce7c5bd-b904-4ed6-80f0-e8d31d027407\\\"\\n            }\\n        |>,\\n \
+       <|\\\"X\\\" -> 2|> -> <|\\n            \\\"Color\\\" -> ObjectValue[<|\
+\\\"X\\\" -> 2|>, \\\"Height.Rank\\\"],\\n            \\\"Examples\\\" -> {1, \
+2},\\n            \\\"ExampleCount\\\" -> 2,\\n            \\\"UseCount\\\" \
+-> 2,\\n            \\\"InputObjects\\\" -> {\\n                \
+\\\"4f22d433-c4d9-424d-876f-d262de5d6c87\\\",\\n                \
+\\\"6127fff3-ba79-4415-9b45-1d2d71b605ab\\\"\\n            }\\n        |>,\\n \
+       <|\\\"X\\\" -> 4|> -> <|\\n            \\\"Color\\\" -> \
+Inactive[Plus][\\n                ObjectValue[\\n                    \
+<|\\\"Image\\\" -> ARCScene[{{5}, {5}, {5}, {5}, {5}, {5}, {5}, {5}}]|>,\\n   \
+                 \\\"Height.Rank\\\"\\n                ],\\n                1\
+\\n            ],\\n            \\\"Examples\\\" -> {1, 2},\\n            \
+\\\"ExampleCount\\\" -> 2,\\n            \\\"UseCount\\\" -> 2,\\n            \
+\\\"InputObjects\\\" -> {\\n                \
+\\\"caedf41d-782d-484c-aeba-333fb2a72fc4\\\",\\n                \
+\\\"efa2e3c9-579c-429b-8a44-3139a655d05a\\\"\\n            }\\n        |>,\\n \
+       <|\\\"X\\\" -> 8|> -> <|\\n            \\\"Color\\\" -> \
+ObjectValue[\\n                <|\\\"Image\\\" -> ARCScene[{{5}, {5}, {5}, \
+{5}, {5}, {5}, {5}, {5}}]|>,\\n                \\\"X.Rank\\\"\\n            \
+],\\n            \\\"Examples\\\" -> {1, 2},\\n            \\\"ExampleCount\\\
+\" -> 2,\\n            \\\"UseCount\\\" -> 2,\\n            \
+\\\"InputObjects\\\" -> {\\n                \
+\\\"b0aaff1b-7334-44d8-a17d-92ab3f6b53e9\\\",\\n                \
+\\\"3db0263c-0732-4977-829d-01ff9be0eed9\\\"\\n            }\\n        |>\\n  \
+  } -> -2.4027592373438527\\n|>\"\>"], "Output",
+ CellChangeTimes->{
+  3.8704681669819856`*^9, 3.870468276449336*^9, 3.8704683755088816`*^9, 
+   3.8704684763766394`*^9, 3.870468665823106*^9, 3.8704687325372972`*^9, 
+   3.8704688001777315`*^9, 3.8704688981471443`*^9, {3.8704699453454795`*^9, 
+   3.8704699611135006`*^9}, 3.8704700175798035`*^9, 3.8704704450268097`*^9, {
+   3.870470477351606*^9, 3.8704704906034756`*^9}, {3.870470532680686*^9, 
+   3.8704705568250737`*^9}, {3.870470627555456*^9, 3.8704706475524497`*^9}, {
+   3.8704707802076187`*^9, 3.87047079875216*^9}, 3.870470875120037*^9, {
+   3.8704709270153365`*^9, 3.870470933862295*^9}},
+ CellLabel->
+  "Out[1936]=",ExpressionUUID->"dc031403-27a5-400e-a244-3488cc9dd247"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCScoreRuleSets], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCScoreRuleSets, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCScoreRuleSets]; Null, ImageSize -> {102.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[Daniel`ARC`ARCScoreRuleSets], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[Daniel`ARC`ARCScoreRuleSets], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCScoreRuleSets]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCScoreRuleSets, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCScoreRuleSets]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202282521560419501}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCScoreRuleSets", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {"Function" -> Daniel`ARC`ARCScoreRuleSets}, 
+    "ReturnNotebook" -> True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"111dea80-878b-4a4d-828b-fd3c79632681"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 88, 0, 98, "Title",ExpressionUUID->"85e6b967-ef90-4b21-82f9-92dba2f2a628"],
+Cell[671, 24, 251, 6, 54, "Code",ExpressionUUID->"4d87f1e2-4700-48db-90ee-344c0b9fdc04",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[947, 34, 79, 0, 67, "Section",ExpressionUUID->"c5551168-8a1f-46de-b910-5328cfac456c"],
+Cell[CellGroupData[{
+Cell[1051, 38, 199, 3, 54, "Subsection",ExpressionUUID->"77c09b48-cac2-47cf-9fff-70b6c74a8073"],
+Cell[CellGroupData[{
+Cell[1275, 45, 3531, 81, 52, "TestUI",ExpressionUUID->"b60e12ae-c260-4894-bf54-5d67b3fbeb6f",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[4809, 128, 1640, 45, 252, "Code",ExpressionUUID->"ef87f435-0b7c-4fa4-a199-e2027aca70e5",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->81978014]
+}, Open  ]],
+Cell[6464, 176, 719, 10, 94, "Output",ExpressionUUID->"ea29f737-895c-494d-aacf-ba80b35f477d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7220, 191, 162, 3, 54, "Subsection",ExpressionUUID->"d162ad65-0ca1-40e5-897b-d54ce7abd22e"],
+Cell[CellGroupData[{
+Cell[7407, 198, 3630, 83, 52, "TestUI",ExpressionUUID->"3b198e8e-093e-4b5d-ad17-bcd296081ffd",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[11040, 283, 1977, 50, 324, "Code",ExpressionUUID->"11322d6c-4bc6-468c-99db-5ef465315ee7",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->31081132]
+}, Open  ]],
+Cell[13032, 336, 536, 8, 114, "Output",ExpressionUUID->"33f4601a-6a06-469f-a626-e3d4402af95f"]
+}, Closed]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13617, 350, 161, 3, 67, "Section",ExpressionUUID->"93317389-8c51-4c3e-8227-632b20318b87"],
+Cell[CellGroupData[{
+Cell[13803, 357, 263, 5, 54, "Subsection",ExpressionUUID->"f3292ab4-0ecf-4d9b-bde5-ce302188821e"],
+Cell[CellGroupData[{
+Cell[14091, 366, 41744, 973, 5419, "Code",ExpressionUUID->"2b3cc864-b608-411e-a2c1-73900537e463",
+ InitializationCell->False],
+Cell[55838, 1341, 49188, 1004, 3095, "Output",ExpressionUUID->"35e69d06-5719-4c6a-92f3-3e3679ee0630"]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[105075, 2351, 256, 4, 38, "Subsection",ExpressionUUID->"b99173b7-e28f-4fd9-b637-602adc7d15bd"],
+Cell[CellGroupData[{
+Cell[105356, 2359, 735, 16, 162, "Code",ExpressionUUID->"f59a70cb-72d2-42c6-abc8-bd878b8425ea",
+ InitializationCell->False],
+Cell[106094, 2377, 4549, 65, 1914, "Output",ExpressionUUID->"dc031403-27a5-400e-a244-3488cc9dd247"]
+}, Open  ]]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

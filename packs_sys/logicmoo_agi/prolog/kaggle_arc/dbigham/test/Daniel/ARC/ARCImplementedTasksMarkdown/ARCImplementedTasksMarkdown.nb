@@ -1,0 +1,368 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     15335,        360]
+NotebookOptionsPosition[      9018,        207]
+NotebookOutlinePosition[     14638,        346]
+CellTagsIndexPosition[     14595,        343]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCImplementedTasksMarkdown", "Title",ExpressionUUID->"fe3416a8-2723-4e9f-b090-12335c6842d0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCImplementedTasksMarkdown", "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"d77e5628-2add-4172-ba75-063b9d9334b1"],
+
+Cell[CellGroupData[{
+
+Cell["Related", "Section",
+ CellChangeTimes->{{3.8712273123639975`*^9, 
+  3.8712273131246357`*^9}},ExpressionUUID->"2bc4c8ec-14df-44ed-bf28-\
+d047347035af"],
+
+Cell[BoxData[
+ RowBox[{"FunctionNotebook", "[", "ARCUpdateReadme", "]"}]], "Input",
+ CellChangeTimes->{{3.871227313534214*^9, 
+  3.8712273158119698`*^9}},ExpressionUUID->"cd134aaa-f85c-4129-bb37-\
+bb767817af75"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"578486c2-b286-42c7-bbc9-f764a16a30ed"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"res", " ", "=", " ", 
+    RowBox[{"ARCImplementedTasksMarkdown", "[", "]"}]}], ";"}], "\n", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"CopyToClipboard", "[", "res", "]"}], ";", "\n", 
+    RowBox[{"EditFile", "[", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"FileNameDrop", "[", 
+         RowBox[{
+          RowBox[{"FindFile", "[", "\"\<ARC`\>\"", "]"}], ",", " ", 
+          RowBox[{"-", "1"}]}], "]"}], ",", " ", "\"\<README.md\>\""}], "}"}],
+       "]"}], "]"}], ";"}], "*)"}]}], "\n", 
+ RowBox[{
+  RowBox[{"StringReplaceInFiles", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"\"\<## Tasks Implemented\>\"", " ", "~~", " ", "___"}], " ", "->",
+      " ", "res"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"FileNameDrop", "[", 
+         RowBox[{
+          RowBox[{"FindFile", "[", "\"\<ARC`\>\"", "]"}], ",", " ", 
+          RowBox[{"-", "1"}]}], "]"}], ",", " ", "\"\<README.md\>\""}], "}"}],
+       "]"}], "}"}]}], "]"}], ";"}], "\n", "res"}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8689646210938005`*^9, 3.868964627988933*^9}, {
+   3.8700890850167384`*^9, 3.870089087227268*^9}, 3.870089122019865*^9, {
+   3.8712272201889744`*^9, 3.871227226293008*^9}},
+ CellLabel->
+  "In[649]:=",ExpressionUUID->"a2a4ec1e-61cd-497c-a140-dda8f4f720fa"],
+
+Cell[BoxData["\<\"## Tasks Implemented\\n\\n### Core ARC Training Tasks \
+(34)\\n\\n* [0ca9ddb6](TaskNotes/0ca9ddb6/notes.md)\\n* \
+[3c9b0459](TaskNotes/3c9b0459/notes.md)\\n* \
+[1caeab9d](TaskNotes/1caeab9d/notes.md)\\n* \
+[b60334d2](TaskNotes/b60334d2/notes.md)\\n* \
+[25ff71a9](TaskNotes/25ff71a9/notes.md)\\n* \
+[3ac3eb23](TaskNotes/3ac3eb23/notes.md)\\n* \
+[e76a88a6](TaskNotes/e76a88a6/notes.md)\\n* \
+[c0f76784](TaskNotes/c0f76784/notes.md)\\n* \
+[321b1fc6](TaskNotes/321b1fc6/notes.md)\\n* \
+[05f2a901](TaskNotes/05f2a901/notes.md)\\n* \
+[08ed6ac7](TaskNotes/08ed6ac7/notes.md)\\n* \
+[a61f2674](TaskNotes/a61f2674/notes.md)\\n* \
+[253bf280](TaskNotes/253bf280/notes.md)\\n* \
+[25d8a9c8](TaskNotes/25d8a9c8/notes.md)\\n* \
+[c8f0f002](TaskNotes/c8f0f002/notes.md)\\n* \
+[31aa019c](TaskNotes/31aa019c/notes.md)\\n* \
+[363442ee](TaskNotes/363442ee/notes.md)\\n* \
+[25d487eb](TaskNotes/25d487eb/notes.md)\\n* \
+[0962bcdd](TaskNotes/0962bcdd/notes.md)\\n* \
+[0d3d703e](TaskNotes/0d3d703e/notes.md)\\n* \
+[1bfc4729](TaskNotes/1bfc4729/notes.md)\\n* \
+[178fcbfb](TaskNotes/178fcbfb/notes.md)\\n* \
+[1f876c06](TaskNotes/1f876c06/notes.md)\\n* \
+[22eb0ac0](TaskNotes/22eb0ac0/notes.md)\\n* \
+[746b3537](TaskNotes/746b3537/notes.md)\\n* \
+[6F8CD79B](TaskNotes/6F8CD79B/notes.md)\\n* \
+[72CA375D](TaskNotes/72CA375D/notes.md)\\n* \
+[A79310A0](TaskNotes/A79310A0/notes.md)\\n* \
+[40853293](TaskNotes/40853293/notes.md)\\n* \
+[95990924](TaskNotes/95990924/notes.md)\\n* \
+[BE94B721](TaskNotes/BE94B721/notes.md)\\n* \
+[ed36ccf7](TaskNotes/ed36ccf7/notes.md)\\n* \
+[a740d043](TaskNotes/a740d043/notes.md)\\n* \
+[b9b7f026](TaskNotes/b9b7f026/notes.md)\\n\\n### Personally Created Training \
+Tasks (12)\\n\\n* [jnohuorzh-easier](TaskNotes/jnohuorzh-easier/notes.md)\\n* \
+[ihiz27k2n](TaskNotes/ihiz27k2n/notes.md)\\n* \
+[jnohuorzh](TaskNotes/jnohuorzh/notes.md)\\n* \
+[0uduqqj6f](TaskNotes/0uduqqj6f/notes.md)\\n* \
+[2wfys5w64](TaskNotes/2wfys5w64/notes.md)\\n* \
+[2wfys5w64-relative-right-side](TaskNotes/2wfys5w64-relative-right-side/notes.\
+md)\\n* [n1hczotml](TaskNotes/n1hczotml/notes.md)\\n* \
+[ifmyulnv8](TaskNotes/ifmyulnv8/notes.md)\\n* \
+[ifmyulnv8-shape](TaskNotes/ifmyulnv8-shape/notes.md)\\n* \
+[ifmyulnv8-dynamic-shape](TaskNotes/ifmyulnv8-dynamic-shape/notes.md)\\n* \
+[referenceable-components](TaskNotes/referenceable-components/notes.md)\\n* \
+[178fcbfb-easier](TaskNotes/178fcbfb-easier/notes.md)\\n\\n## Tasks Passing \
+via Generalization\\n\\n### Training Tasks (26)\\n\\nThe following ARC \
+training tasks started passing after some different task was \
+implemented.\\n\\n* [ea32f347](TaskNotes/ea32f347/notes.md)\\n* \
+[5521c0d9](TaskNotes/5521c0d9/notes.md)\\n* \
+[6c434453](TaskNotes/6c434453/notes.md)\\n* \
+[6e82a1ae](TaskNotes/6e82a1ae/notes.md)\\n* \
+[aabf363d](TaskNotes/aabf363d/notes.md)\\n* \
+[b1948b0a](TaskNotes/b1948b0a/notes.md)\\n* \
+[d511f180](TaskNotes/d511f180/notes.md)\\n* \
+[88a10436](TaskNotes/88a10436/notes.md)\\n* \
+[d037b0a7](TaskNotes/d037b0a7/notes.md)\\n* \
+[4347f46a](TaskNotes/4347f46a/notes.md)\\n* \
+[67385a82](TaskNotes/67385a82/notes.md)\\n* \
+[56ff96f3](TaskNotes/56ff96f3/notes.md)\\n* \
+[4be741c5](TaskNotes/4be741c5/notes.md)\\n* \
+[90c28cc7](TaskNotes/90c28cc7/notes.md)\\n* \
+[a87f7484](TaskNotes/a87f7484/notes.md)\\n* \
+[e9afcf9a](TaskNotes/e9afcf9a/notes.md)\\n* \
+[f8ff0b80](TaskNotes/f8ff0b80/notes.md)\\n* \
+[1cf80156](TaskNotes/1cf80156/notes.md)\\n* \
+[23b5c85d](TaskNotes/23b5c85d/notes.md)\\n* \
+[445eab21](TaskNotes/445eab21/notes.md)\\n* \
+[4258a5f9](TaskNotes/4258a5f9/notes.md)\\n* \
+[913fb3ed](TaskNotes/913fb3ed/notes.md)\\n* \
+[a61ba2ce](TaskNotes/a61ba2ce/notes.md)\\n* \
+[810b9b61](TaskNotes/810b9b61/notes.md)\\n* \
+[27a28665](TaskNotes/27a28665/notes.md)\\n* \
+[6e02f1e3](TaskNotes/6e02f1e3/notes.md)\\n\\n### Evaluation Tasks \
+(9)\\n\\nThe following ARC evaluation tasks are passing. Evaluation tasks \
+have not been analyzed or implemented specifically.\\n\\n* \
+[84f2aca1](TaskNotes/84f2aca1/notes.md)\\n* \
+[66e6c45b](TaskNotes/66e6c45b/notes.md)\\n* \
+[f45f5ca7](TaskNotes/f45f5ca7/notes.md)\\n* \
+[fc754716](TaskNotes/fc754716/notes.md)\\n* \
+[e21a174a](TaskNotes/e21a174a/notes.md)\\n* \
+[070dd51e](TaskNotes/070dd51e/notes.md)\\n* \
+[1A2E2828](TaskNotes/1A2E2828/notes.md)\\n* \
+[64a7c07e](TaskNotes/64a7c07e/notes.md)\\n* \
+[ae58858e](TaskNotes/ae58858e/notes.md)\"\>"], "Output",
+ CellChangeTimes->{
+  3.868963274491413*^9, 3.868963354403633*^9, {3.8689637509692574`*^9, 
+   3.8689637849733963`*^9}, 3.868963861963874*^9, {3.868963909338173*^9, 
+   3.8689639390164165`*^9}, {3.8689639711675625`*^9, 3.868964024133667*^9}, {
+   3.868964386692843*^9, 3.8689644208448353`*^9}, {3.868964456606146*^9, 
+   3.868964482799322*^9}, {3.868964548504091*^9, 3.868964592362439*^9}, 
+   3.868964628694541*^9, 3.86896581216848*^9, 3.868967522587689*^9, 
+   3.868975635289811*^9, {3.868984029404504*^9, 3.868984052024212*^9}, 
+   3.8689970682432985`*^9, 3.8693311680920095`*^9, 3.8693372952922773`*^9, 
+   3.8693505301650205`*^9, 3.8699082589017353`*^9, 3.869908430023446*^9, 
+   3.869908479645527*^9, 3.8699520571321244`*^9, 3.869952114939356*^9, 
+   3.870029198076447*^9, 3.870029277283149*^9, 3.870089079590074*^9, 
+   3.870089124418358*^9, 3.8701308829072857`*^9, 3.870130943638674*^9, 
+   3.8701969604471464`*^9, 3.8702040705351677`*^9, 3.870289485823909*^9, 
+   3.870537886598088*^9, 3.870606732776351*^9, 3.870638635116706*^9, 
+   3.8706388403829317`*^9, 3.8706389169365263`*^9, 3.8706409362428255`*^9, 
+   3.8706410115172105`*^9, 3.8706987959489636`*^9, 3.8707206958617334`*^9, {
+   3.8707286172729034`*^9, 3.870728626638069*^9}, 3.870762704439003*^9, 
+   3.8707681300086365`*^9, 3.87081708550628*^9, 3.8708788851319256`*^9, 
+   3.8708789624197826`*^9, 3.8709047499394894`*^9, 3.8709048739214773`*^9, 
+   3.8711355462699394`*^9, 3.8711356200385323`*^9, 3.8711458343754873`*^9, 
+   3.8711501037406745`*^9, 3.871214975882266*^9, 3.8712271822084837`*^9, 
+   3.871227228235724*^9},
+ CellLabel->
+  "Out[652]=",ExpressionUUID->"7ca37ad3-c63c-4baa-aada-4a4a3cf1a9bb"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCImplementedTasksMarkdown], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581]], ImageSize -> {95., 40}, Method -> 
+           "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCImplementedTasksMarkdown, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCImplementedTasksMarkdown]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCImplementedTasksMarkdown], ImageSize -> {110., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCImplementedTasksMarkdown], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCImplementedTasksMarkdown]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCImplementedTasksMarkdown, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCImplementedTasksMarkdown]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581 = "", ImageSize -> {100, 33}]}]}, 
+            Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288120354581}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCImplementedTasksMarkdown", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCImplementedTasksMarkdown}, "ReturnNotebook" -> 
+    True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"a12cb916-bc91-4726-8b95-10beea622b0f"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 99, 0, 98, "Title",ExpressionUUID->"fe3416a8-2723-4e9f-b090-12335c6842d0"],
+Cell[682, 24, 237, 5, 54, "Code",ExpressionUUID->"d77e5628-2add-4172-ba75-063b9d9334b1",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[944, 33, 156, 3, 67, "Section",ExpressionUUID->"2bc4c8ec-14df-44ed-bf28-d047347035af"],
+Cell[1103, 38, 211, 4, 29, "Input",ExpressionUUID->"cd134aaa-f85c-4129-bb37-bb767817af75"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1351, 47, 79, 0, 67, "Section",ExpressionUUID->"578486c2-b286-42c7-bbc9-f764a16a30ed"],
+Cell[CellGroupData[{
+Cell[1455, 51, 1480, 39, 126, "Code",ExpressionUUID->"a2a4ec1e-61cd-497c-a140-dda8f4f720fa",
+ InitializationCell->False],
+Cell[2938, 92, 6040, 110, 2034, "Output",ExpressionUUID->"7ca37ad3-c63c-4baa-aada-4a4a3cf1a9bb"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

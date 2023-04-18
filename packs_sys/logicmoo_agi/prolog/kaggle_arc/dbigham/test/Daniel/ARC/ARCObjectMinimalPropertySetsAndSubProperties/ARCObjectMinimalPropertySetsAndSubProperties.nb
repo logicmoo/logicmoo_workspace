@@ -1,0 +1,243 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     10030,        235]
+NotebookOptionsPosition[      3494,         81]
+NotebookOutlinePosition[      9555,        225]
+CellTagsIndexPosition[      9512,        222]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCObjectMinimalPropertySetsAndSubProperties", "Title",ExpressionUUID->"1c37011b-c55f-4040-a17e-f9605d66ba1f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCObjectMinimalPropertySetsAndSubProperties", 
+  "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"b79c3662-c7e2-4b01-a2f2-06e69374ec17"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"ce0c4d91-4af4-43a3-89ca-320f231b9873"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCObjectMinimalPropertySetsAndSubProperties", "[", "]"}], " ", "//",
+   " ", "Indent2"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.871930932834366*^9, 3.8719309341826334`*^9}},
+ CellLabel->
+  "In[846]:=",ExpressionUUID->"05d06e89-934c-4ab6-8a7a-c38405560c7e"],
+
+Cell[BoxData["\<\"<|\\n    \\\"MinimalPropertySets\\\" -> {\\n        \
+{\\\"Image\\\", \\\"Position\\\", \\\"ZOrder\\\"},\\n        {\\n            \
+\\\"Shape\\\" | \\\"MonochromeImage\\\" | \\\"Shapes\\\",\\n            \
+Alternatives[\\n                \\\"Color\\\",\\n                \
+Condition[\\n                    Missing[\\\"Color\\\"],\\n                   \
+ MatchQ[\\n                        #1[\\\"Shape\\\"],\\n                      \
+  KeyValuePattern[\\n                            {\\n                         \
+       \\\"Border\\\" -> KeyValuePattern[\\\"Color\\\" -> _],\\n              \
+                  \\\"Interior\\\" -> KeyValuePattern[\\\"Color\\\" -> _]\\n  \
+                          }\\n                        ]\\n                    \
+]\\n                ]\\n            ],\\n            \\\"X\\\" | \\\"XInverse\
+\\\",\\n            \\\"Y\\\" | \\\"YInverse\\\",\\n            \\\"Width\\\" \
+| \\\"X2\\\" | \\\"X2Inverse\\\",\\n            \\\"Height\\\" | \\\"Y2\\\" | \
+\\\"Y2Inverse\\\",\\n            \\\"ZOrder\\\"\\n        }\\n    },\\n    \\\
+\"SubProperties\\\" -> {\\n        \\\"Image\\\" -> <||>,\\n        \
+\\\"Position\\\" -> <|\\n            \\\"SubProperties\\\" -> {\\n            \
+    \\\"RelativePosition\\\" -> <|\\\"SubProperties\\\" -> {\\\"Y\\\" | \
+\\\"YInverse\\\", \\\"X\\\" | \\\"XInverse\\\"}|>,\\n                \
+\\\"Y\\\" -> <|\\\"ObjectGet\\\" -> (#1[\\\"Y\\\"] & )|>,\\n                \
+\\\"X\\\" -> <|\\\"ObjectGet\\\" -> (#1[\\\"X\\\"] & )|>\\n            },\\n  \
+          \\\"MinimalPropertySets\\\" -> {{\\\"RelativePosition\\\"}, \
+{\\\"Y\\\", \\\"X\\\"}}\\n        |>,\\n        \\\"Shapes\\\" -> \
+<|\\\"ClassList\\\" -> True|>,\\n        \\\"Shape\\\" -> \
+<|\\\"MinimalPropertySets\\\" -> {{\\\"Name\\\", \\\"Angle\\\"}}|>\\n    \
+}\\n|>\"\>"], "Output",
+ CellChangeTimes->{{3.8719309312582808`*^9, 3.871930934659867*^9}},
+ CellLabel->
+  "Out[847]=",ExpressionUUID->"44e83abe-beee-4dac-9a7b-9a697f7cbec2"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties, 
+             "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Options", Print[
+             Utility`Indent`Indent2[
+              Options[
+              Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties]]]; 
+           Null, ImageSize -> {87.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties, "SubTest" -> 
+            None], ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[
+                Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229112022165391}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCObjectMinimalPropertySetsAndSubProperties", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCObjectMinimalPropertySetsAndSubProperties}, 
+    "ReturnNotebook" -> True}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"f9a36e43-2233-421c-8a82-6266c370fe9f"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 116, 0, 160, "Title",ExpressionUUID->"1c37011b-c55f-4040-a17e-f9605d66ba1f"],
+Cell[699, 24, 257, 6, 54, "Code",ExpressionUUID->"b79c3662-c7e2-4b01-a2f2-06e69374ec17",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[981, 34, 79, 0, 67, "Section",ExpressionUUID->"ce0c4d91-4af4-43a3-89ca-320f231b9873"],
+Cell[CellGroupData[{
+Cell[1085, 38, 374, 9, 54, "Code",ExpressionUUID->"05d06e89-934c-4ab6-8a7a-c38405560c7e",
+ InitializationCell->False],
+Cell[1462, 49, 1992, 27, 834, "Output",ExpressionUUID->"44e83abe-beee-4dac-9a7b-9a697f7cbec2"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,960 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     42134,        952]
+NotebookOptionsPosition[     35195,        786]
+NotebookOutlinePosition[     40819,        926]
+CellTagsIndexPosition[     40776,        923]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCObjectFromAllPixels", "Title",ExpressionUUID->"71a4079e-9d2a-4c71-9204-fa5cbc991bd1"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCObjectFromAllPixels", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[2242]:=",ExpressionUUID->"8cc26653-8255-40b7-b4a1-b6ec07c87cfd"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"9016128c-3a58-40a2-98f2-5169b3d2d7ce"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCObjectFromAllPixels-20220902-DYB839", 
+              Daniel`ARC`ARCObjectFromAllPixels, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682], 69807027, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCObjectFromAllPixels-20220902-DYB839"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCObjectFromAllPixels-20220902-DYB839", 
+            Daniel`ARC`ARCObjectFromAllPixels, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682], "CellID" -> 69807027, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCObjectFromAllPixels-20220902-DYB839", 
+           Daniel`ARC`ARCObjectFromAllPixels, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCObjectFromAllPixels-20220902-DYB839"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{840., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215531533682}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.87113719461141*^9},ExpressionUUID->"b96b38f3-02dc-4888-ad0b-76586448dc25"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"NormalizeOutput", "@", "\n", 
+   RowBox[{"ARCObjectFromAllPixels", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"ARCParseFile", "[", "\"\<ed36ccf7\>\"", "]"}], "[", 
+      RowBox[{"\"\<Train\>\"", ",", " ", "2", ",", " ", "\"\<Input\>\""}], 
+      "]"}], ",", " ", "0"}], "]"}]}], " ", "//", " ", "ARCIndent"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.8711368132489696`*^9, 3.8711368146014385`*^9}, {
+  3.8711370557665763`*^9, 3.871137060024485*^9}, {3.87113719461141*^9, 
+  3.8711372008151617`*^9}, {3.871738839173855*^9, 3.871738866996413*^9}},
+ CellLabel->"In[2238]:=",
+ CellID->69807027,
+ "TestId" -> 
+ "ARCObjectFromAllPixels-20220902-DYB839",ExpressionUUID->"59f14957-37da-48ea-\
+9541-c519fcbac912"]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"<|\"\>"},
+    {"\<\"    \\\"UUID\\\" -> 0,\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"    \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {1, 2} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {1, 3} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {2, 1} -> GrayLevel[0.2], {2, 2} -> 
+                 GrayLevel[0.2], {2, 3} -> GrayLevel[0.2], {3, 1} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {3, 2} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {3, 3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"    \\\"PixelPositions\\\" -> {{1, 1}, {1, 2}, {1, 3}, {3, 1}, {3, \
+2}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"    \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+                 GrayLevel[1], {1, 3} -> GrayLevel[1], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+                 GrayLevel[0.2], {3, 1} -> GrayLevel[1], {3, 2} -> 
+                 GrayLevel[1], {3, 3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"    \\\"Shapes\\\" -> {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"<|\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+                 GrayLevel[1], {1, 3} -> GrayLevel[1], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+                 GrayLevel[0.2], {3, 1} -> GrayLevel[1], {3, 2} -> 
+                 GrayLevel[1], {3, 3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"], "\"|>\""}, "RowDefault"]}, 
+        "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"        <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+                 GrayLevel[0.2], {1, 3} -> GrayLevel[1], {2, 1} -> 
+                 GrayLevel[1], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+                 GrayLevel[1], {3, 1} -> GrayLevel[0.2], {3, 2} -> 
+                 GrayLevel[0.2], {3, 3} -> GrayLevel[1]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \
+\\\"Rotation\\\", \\\"Angle\\\" -> 270|>\"\>"},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[0.2], {1, 2} -> 
+                 GrayLevel[1], {1, 3} -> GrayLevel[1], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+                 GrayLevel[0.2], {3, 1} -> GrayLevel[1], {3, 2} -> 
+                 GrayLevel[1], {3, 3} -> GrayLevel[1]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \
+\\\"Rotation\\\", \\\"Angle\\\" -> 180|>\"\>"},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+                 GrayLevel[0.2], {1, 3} -> GrayLevel[0.2], {2, 1} -> 
+                 GrayLevel[1], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+                 GrayLevel[1], {3, 1} -> GrayLevel[1], {3, 2} -> 
+                 GrayLevel[0.2], {3, 3} -> GrayLevel[1]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \
+\\\"Rotation\\\", \\\"Angle\\\" -> 90|>\"\>"},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+                 GrayLevel[1], {1, 3} -> GrayLevel[0.2], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+                 GrayLevel[0.2], {3, 1} -> GrayLevel[1], {3, 2} -> 
+                 GrayLevel[1], {3, 3} -> GrayLevel[1]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Flip\\\", \\\
+\"Direction\\\" -> \\\"Vertical\\\"|>\"\>"},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+                 GrayLevel[1], {1, 3} -> GrayLevel[1], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+                 GrayLevel[0.2], {3, 1} -> GrayLevel[0.2], {3, 2} -> 
+                 GrayLevel[1], {3, 3} -> GrayLevel[1]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Flip\\\", \\\
+\"Direction\\\" -> \\\"Horizontal\\\"|>\"\>"},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \\\"Image\\\" -> \"", 
+         TagBox[
+          
+          GridBox[{{"\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}}, AutoDelete -> 
+           False, GridBoxBackground -> {
+            "Columns" -> {{None}}, "Rows" -> {{None}}, 
+             "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+               GrayLevel[1], {1, 3} -> GrayLevel[1], {1, 4} -> 
+               GrayLevel[1], {1, 5} -> GrayLevel[1], {1, 6} -> 
+               GrayLevel[1], {2, 1} -> GrayLevel[1], {2, 2} -> 
+               GrayLevel[1], {2, 3} -> GrayLevel[1], {2, 4} -> 
+               GrayLevel[1], {2, 5} -> GrayLevel[1], {2, 6} -> 
+               GrayLevel[1], {3, 1} -> GrayLevel[0.2], {3, 2} -> 
+               GrayLevel[0.2], {3, 3} -> GrayLevel[0.2], {3, 4} -> 
+               GrayLevel[0.2], {3, 5} -> GrayLevel[0.2], {3, 6} -> 
+               GrayLevel[0.2], {4, 1} -> GrayLevel[0.2], {4, 2} -> 
+               GrayLevel[0.2], {4, 3} -> GrayLevel[0.2], {4, 4} -> 
+               GrayLevel[0.2], {4, 5} -> GrayLevel[0.2], {4, 6} -> 
+               GrayLevel[0.2], {5, 1} -> GrayLevel[1], {5, 2} -> 
+               GrayLevel[1], {5, 3} -> GrayLevel[1], {5, 4} -> 
+               GrayLevel[1], {5, 5} -> GrayLevel[0.2], {5, 6} -> 
+               GrayLevel[0.2], {6, 1} -> GrayLevel[1], {6, 2} -> 
+               GrayLevel[1], {6, 3} -> GrayLevel[1], {6, 4} -> 
+               GrayLevel[1], {6, 5} -> GrayLevel[0.2], {6, 6} -> 
+               GrayLevel[0.2]}}, 
+           GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+           GridBoxFrame -> {"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+            GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+           FrameStyle -> {
+             AbsoluteThickness[1], 
+             GrayLevel[0.5]}], "Grid"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Scaled\\\", \
+\\\"Factor\\\" -> 0.5|>\"\>"},
+    {"\<\"        |>,\"\>"},
+    {"\<\"        <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \\\"Image\\\" -> \"", 
+         TagBox[
+          
+          GridBox[{{
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}}, AutoDelete -> False, 
+           GridBoxBackground -> {
+            "Columns" -> {{None}}, "Rows" -> {{None}}, 
+             "ItemsIndexed" -> {{1, 1} -> GrayLevel[1], {1, 2} -> 
+               GrayLevel[1], {1, 3} -> GrayLevel[1], {1, 4} -> 
+               GrayLevel[1], {1, 5} -> GrayLevel[1], {1, 6} -> 
+               GrayLevel[1], {1, 7} -> GrayLevel[1], {1, 8} -> 
+               GrayLevel[1], {1, 9} -> GrayLevel[1], {2, 1} -> 
+               GrayLevel[1], {2, 2} -> GrayLevel[1], {2, 3} -> 
+               GrayLevel[1], {2, 4} -> GrayLevel[1], {2, 5} -> 
+               GrayLevel[1], {2, 6} -> GrayLevel[1], {2, 7} -> 
+               GrayLevel[1], {2, 8} -> GrayLevel[1], {2, 9} -> 
+               GrayLevel[1], {3, 1} -> GrayLevel[1], {3, 2} -> 
+               GrayLevel[1], {3, 3} -> GrayLevel[1], {3, 4} -> 
+               GrayLevel[1], {3, 5} -> GrayLevel[1], {3, 6} -> 
+               GrayLevel[1], {3, 7} -> GrayLevel[1], {3, 8} -> 
+               GrayLevel[1], {3, 9} -> GrayLevel[1], {4, 1} -> 
+               GrayLevel[0.2], {4, 2} -> GrayLevel[0.2], {4, 3} -> 
+               GrayLevel[0.2], {4, 4} -> GrayLevel[0.2], {4, 5} -> 
+               GrayLevel[0.2], {4, 6} -> GrayLevel[0.2], {4, 7} -> 
+               GrayLevel[0.2], {4, 8} -> GrayLevel[0.2], {4, 9} -> 
+               GrayLevel[0.2], {5, 1} -> GrayLevel[0.2], {5, 2} -> 
+               GrayLevel[0.2], {5, 3} -> GrayLevel[0.2], {5, 4} -> 
+               GrayLevel[0.2], {5, 5} -> GrayLevel[0.2], {5, 6} -> 
+               GrayLevel[0.2], {5, 7} -> GrayLevel[0.2], {5, 8} -> 
+               GrayLevel[0.2], {5, 9} -> GrayLevel[0.2], {6, 1} -> 
+               GrayLevel[0.2], {6, 2} -> GrayLevel[0.2], {6, 3} -> 
+               GrayLevel[0.2], {6, 4} -> GrayLevel[0.2], {6, 5} -> 
+               GrayLevel[0.2], {6, 6} -> GrayLevel[0.2], {6, 7} -> 
+               GrayLevel[0.2], {6, 8} -> GrayLevel[0.2], {6, 9} -> 
+               GrayLevel[0.2], {7, 1} -> GrayLevel[1], {7, 2} -> 
+               GrayLevel[1], {7, 3} -> GrayLevel[1], {7, 4} -> 
+               GrayLevel[1], {7, 5} -> GrayLevel[1], {7, 6} -> 
+               GrayLevel[1], {7, 7} -> GrayLevel[0.2], {7, 8} -> 
+               GrayLevel[0.2], {7, 9} -> GrayLevel[0.2], {8, 1} -> 
+               GrayLevel[1], {8, 2} -> GrayLevel[1], {8, 3} -> 
+               GrayLevel[1], {8, 4} -> GrayLevel[1], {8, 5} -> 
+               GrayLevel[1], {8, 6} -> GrayLevel[1], {8, 7} -> 
+               GrayLevel[0.2], {8, 8} -> GrayLevel[0.2], {8, 9} -> 
+               GrayLevel[0.2], {9, 1} -> GrayLevel[1], {9, 2} -> 
+               GrayLevel[1], {9, 3} -> GrayLevel[1], {9, 4} -> 
+               GrayLevel[1], {9, 5} -> GrayLevel[1], {9, 6} -> 
+               GrayLevel[1], {9, 7} -> GrayLevel[0.2], {9, 8} -> 
+               GrayLevel[0.2], {9, 9} -> GrayLevel[0.2]}}, 
+           GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+           GridBoxFrame -> {"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+            GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+           FrameStyle -> {
+             AbsoluteThickness[1], 
+             GrayLevel[0.5]}], "Grid"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"            \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Scaled\\\", \
+\\\"Factor\\\" -> 0.3333333333333333|>\"\>"},
+    {"\<\"        |>\"\>"},
+    {"\<\"    },\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"    \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[
+                 0.9411764705882353, 0.07058823529411765, 0.7450980392156863], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[
+                0.6274509803921569, 0.047058823529411764`, 
+                 0.49673202614379086`], FrameTicks -> None, PlotRangePadding -> 
+               None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 
+                 RowBox[{
+                  "0.9411764705882353`", ",", "0.07058823529411765`", ",", 
+                   "0.7450980392156863`"}], "]"}], NumberMarks -> False]], 
+             Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+             Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[
+            0.9411764705882353, 0.07058823529411765, 0.7450980392156863], 
+            Editable -> False, Selectable -> False], "\"}\""}, "RowDefault"]},
+         "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"    \\\"Color\\\" -> 6,\"\>"},
+    {"\<\"    \\\"Position\\\" -> {1, 1},\"\>"},
+    {"\<\"    \\\"ColorCount\\\" -> 1,\"\>"},
+    {"\<\"    \\\"Y\\\" -> 1,\"\>"},
+    {"\<\"    \\\"X\\\" -> 1,\"\>"},
+    {"\<\"    \\\"YInverse\\\" -> 3,\"\>"},
+    {"\<\"    \\\"XInverse\\\" -> 3,\"\>"},
+    {"\<\"    \\\"Y2\\\" -> 3,\"\>"},
+    {"\<\"    \\\"X2\\\" -> 3,\"\>"},
+    {"\<\"    \\\"Y2Inverse\\\" -> 1,\"\>"},
+    {"\<\"    \\\"X2Inverse\\\" -> 1,\"\>"},
+    {"\<\"    \\\"ZOrder\\\" -> 0,\"\>"},
+    {"\<\"    \\\"YMiddle\\\" -> 2,\"\>"},
+    {"\<\"    \\\"XMiddle\\\" -> 2,\"\>"},
+    {"\<\"    \\\"Width\\\" -> 3,\"\>"},
+    {"\<\"    \\\"Height\\\" -> 3,\"\>"},
+    {"\<\"    \\\"Length\\\" -> 3,\"\>"},
+    {"\<\"    \\\"PrimarySizeDimension\\\" -> \\\"None\\\",\"\>"},
+    {"\<\"    \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"    \\\"Area\\\" -> 9,\"\>"},
+    {"\<\"    \\\"FilledArea\\\" -> 5,\"\>"},
+    {"\<\"    \\\"FilledProportion\\\" -> 0.5555555555555556,\"\>"},
+    {"\<\"    \\\"SurfacePixelCount\\\" -> 5,\"\>"},
+    {"\<\"    \\\"VerticalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"    \\\"HorizontalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"    \\\"VerticalAndHorizontalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"    \\\"HollowCount\\\" -> 0\"\>"},
+    {"\<\"|>\"\>"}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Output",
+ CellChangeTimes->{
+  3.8711368157406173`*^9, 3.8711368659991846`*^9, {3.8711370011193047`*^9, 
+   3.8711370736963005`*^9}, {3.8711371264059267`*^9, 3.8711372010795927`*^9}, 
+   3.8712895941741724`*^9, 3.871489879976883*^9, 3.8717388675304103`*^9},
+ CellLabel->
+  "Out[2239]=",ExpressionUUID->"607594fa-06d0-4163-83f6-5bb3a0b39825"],
+
+Cell[CellGroupData[{
+
+Cell["Position Option", "Subsection",
+ CellChangeTimes->{{3.8717387702262306`*^9, 
+  3.8717387735376234`*^9}},ExpressionUUID->"b122070f-8e14-459e-912b-\
+7a0e6898244d"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCObjectFromAllPixels-20220909-05Q6AZ", 
+              Daniel`ARC`ARCObjectFromAllPixels, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429], 86097533, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCObjectFromAllPixels-20220909-05Q6AZ"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCObjectFromAllPixels-20220909-05Q6AZ", 
+            Daniel`ARC`ARCObjectFromAllPixels, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429], "CellID" -> 86097533, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCObjectFromAllPixels-20220909-05Q6AZ", 
+           Daniel`ARC`ARCObjectFromAllPixels, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCObjectFromAllPixels-20220909-05Q6AZ"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229915122122429}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.87173888191245*^9},ExpressionUUID->"4abf2e49-d338-48b2-9f51-20be8ce683a5"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"NormalizeOutput", "@", "\n", 
+    RowBox[{"ARCObjectFromAllPixels", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"ARCParseFile", "[", "\"\<ed36ccf7\>\"", "]"}], "[", 
+       RowBox[{"\"\<Train\>\"", ",", " ", "2", ",", " ", "\"\<Input\>\""}], 
+       "]"}], ",", " ", "0", ",", " ", 
+      RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+       RowBox[{"{", 
+        RowBox[{"10", ",", " ", "10"}], "}"}]}]}], "]"}]}], " ", "//", " ", 
+   RowBox[{"SimplifyObjects", "[", 
+    RowBox[{"\"\<ExtraKeys\>\"", " ", "->", " ", "\"\<PixelPositions\>\""}], 
+    "]"}]}], " ", "//", " ", "ARCIndent"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.8711368132489696`*^9, 3.8711368146014385`*^9}, {
+  3.8711370557665763`*^9, 3.871137060024485*^9}, {3.87113719461141*^9, 
+  3.8711372008151617`*^9}, {3.8717387776860085`*^9, 3.871738781357519*^9}, {
+  3.871738877577032*^9, 3.871738878604992*^9}},
+ CellLabel->"In[2240]:=",
+ CellID->86097533,
+ "TestId" -> 
+ "ARCObjectFromAllPixels-20220909-05Q6AZ",ExpressionUUID->"fca9b4c3-482f-4a4a-\
+b8d9-15ae22948709"]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"<|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"    \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {1, 2} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {1, 3} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {2, 1} -> GrayLevel[0.2], {2, 2} -> 
+                 GrayLevel[0.2], {2, 3} -> GrayLevel[0.2], {3, 1} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {3, 2} -> 
+                 RGBColor[
+                  0.9411764705882353, 0.07058823529411765, 
+                   0.7450980392156863], {3, 3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"    \\\"Position\\\" -> {10, 10},\"\>"},
+    {"\<\"    \\\"PixelPositions\\\" -> {{10, 10}, {10, 11}, {10, 12}, {12, \
+10}, {12, 11}}\"\>"},
+    {"\<\"|>\"\>"}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Output",
+ CellChangeTimes->{
+  3.8717387818841553`*^9, {3.8717388120067883`*^9, 3.871738823531479*^9}, 
+   3.8717388789951897`*^9},
+ CellLabel->
+  "Out[2241]=",ExpressionUUID->"a1fc6b9c-6de5-4cc9-8b69-53be79d37c00"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCObjectFromAllPixels], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCObjectFromAllPixels, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCObjectFromAllPixels]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCObjectFromAllPixels, "SubTest" -> None], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCObjectFromAllPixels], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCObjectFromAllPixels]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCObjectFromAllPixels, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCObjectFromAllPixels]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229215463531352}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCObjectFromAllPixels", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCObjectFromAllPixels}, "ReturnNotebook" -> 
+    True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"98b6f0ca-da19-4dc3-b370-84b3023c15bf"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 94, 0, 98, "Title",ExpressionUUID->"71a4079e-9d2a-4c71-9204-fa5cbc991bd1"],
+Cell[677, 24, 258, 6, 54, "Code",ExpressionUUID->"8cc26653-8255-40b7-b4a1-b6ec07c87cfd",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[960, 34, 79, 0, 67, "Section",ExpressionUUID->"9016128c-3a58-40a2-98f2-5169b3d2d7ce"],
+Cell[CellGroupData[{
+Cell[1064, 38, 3752, 87, 52, "TestUI",ExpressionUUID->"b96b38f3-02dc-4888-ad0b-76586448dc25",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[4819, 127, 877, 20, 72, "Code",ExpressionUUID->"59f14957-37da-48ea-9541-c519fcbac912",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->69807027]
+}, Open  ]],
+Cell[5711, 150, 21974, 448, 1975, "Output",ExpressionUUID->"607594fa-06d0-4163-83f6-5bb3a0b39825"],
+Cell[CellGroupData[{
+Cell[27710, 602, 167, 3, 54, "Subsection",ExpressionUUID->"b122070f-8e14-459e-912b-7a0e6898244d"],
+Cell[CellGroupData[{
+Cell[27902, 609, 3752, 87, 52, "TestUI",ExpressionUUID->"4abf2e49-d338-48b2-9f51-20be8ce683a5",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[31657, 698, 1222, 28, 72, "Code",ExpressionUUID->"fca9b4c3-482f-4a4a-b8d9-15ae22948709",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->86097533]
+}, Open  ]],
+Cell[32894, 729, 2261, 52, 163, "Output",ExpressionUUID->"a1fc6b9c-6de5-4cc9-8b69-53be79d37c00"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

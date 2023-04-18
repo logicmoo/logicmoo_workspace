@@ -1,0 +1,13 @@
+ 
+/*
+ACL1 ver 1 AbdProofProc. ver 1
+File name: father
+Max spec steps=10, Beamsize=5, Derivation depth=20, Verb
+osity=3
+*/
+Execution time 0.310000 seconds. Generated rules
+ 
+father(A,B):-parent(A,B),male(A).
+/*Covered positive examples: [father(david,steve),father(john,mary)]
+Covered negative examples: []
+Abduced literals: [[not(father(katy,ellen)),not(male(katy))],[father(david,steve),male(david)]]*/

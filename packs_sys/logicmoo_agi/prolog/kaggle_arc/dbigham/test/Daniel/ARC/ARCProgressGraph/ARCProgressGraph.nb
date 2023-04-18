@@ -1,0 +1,440 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     18020,        432]
+NotebookOptionsPosition[     12031,        286]
+NotebookOutlinePosition[     17545,        422]
+CellTagsIndexPosition[     17502,        419]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCProgressGraph", "Title",ExpressionUUID->"cfa9dcef-e5d5-4fca-a6d8-1c3199c2cae0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCProgressGraph", "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"f4cc73e4-aaba-4233-b6e9-340d48a7250e"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"4b9c6aea-d435-4783-ae95-fdd01abe8e6b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"graph", " ", "=", " ", 
+  RowBox[{"ARCProgressGraph", "[", "]"}]}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8741675804557624`*^9, 3.8741675811027813`*^9}},
+ CellLabel->
+  "In[420]:=",ExpressionUUID->"092ee7a9-de27-47e5-8f58-3d4ec58816d8"],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, {}, 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.009166666666666668], 
+     AbsoluteThickness[1.6], LineBox[CompressedData["
+1:eJxVz3FEnHEcx/HHEUf/RExEnkuK03SiiaTfnDiucq222dZ2T5erbqQjMUae
+EdFfzx8REY+IiNzY3/OMMWLcrq5uXeX6Lza5MSKy3fOp74/Pj+f3e14+f71D
+qfkn6YBhGEO1z39rR13kfz+++w2q2pWt/yFu9e32sPNJtrHKjnxiW+dsJ1gg
+e93s6gTbXGEnPmq3+bbL2u2+c3UH4rDvShe74SVbLbOze2y3xM4HDsWd6H/I
+jjxnWx/Yzi7bK7Kr/9hmuCh+hP5x7V70L2n3oX9HewD9BW2F/lu26jgiZ0fF
+Nuy+13sU/dt6j6E/r/c4+m+0h9Hfdkx2RtjeO+0E+re0x9D/Xayeov9a+xn6
+QyVyLq79Av2LYuMV+l2x9xr9+2L7Dfr/6h12W37KnkR/TFyx0L/AjmyyrW9s
+549YTaK/+eTeFlwdZJtZdmKDbX8V23Duil1pKotT6I+KjSn0z4mtNPrX2e4X
+sZpG/y+28eBUPIN+JTZn0f9W7MLOmtiDvc9iI4P+S7bZeEZO9IvNjPoPayEb
+TQ==
+      "]]}, 
+    {RGBColor[0.880722, 0.611041, 0.142051], PointSize[0.009166666666666668], 
+     AbsoluteThickness[1.6], LineBox[CompressedData["
+1:eJxVz1FEBEEcx/FxRPRyRKJkj1NJacURyU1OKuVs11Wcq1vRS6QlEZGNiJ72
+ISJiRURko+dsRERsV1dXV7neomQjIlI3o5n6DTPj4z/z8A1NzCQmA4SQgdJm
+d2nRR++li/wto+IcbEfQXgZNVtHqAVp/QFvlWbDbhvbTaGUFre2jzQLaKbsQ
+9qOlo9iKDqbQdBlt7KHtPNoLXIJJC1odRetLaGsX7ebQ/jdaacoJ11LWn5RW
+mM1F6TCzsyNdz1zMooNfaNpwBTYGpRuZ7QXpZmZvWzrCTDzpdmb1U7qDWQ9f
+g6042p2XjjL7W8JmjFk5k/Me3v8h3cf7Q3mw0y9sxnn/nLCr8X5bOsH7T+X/
+Id7/jrbrbn5Nub1eYTPJ+2fR6iZaP0Fbb2i35hbsd6MVA61toM1jtPOKLlYX
+RO8w748J0xHePy3nKd6/jraPhEma9z+jSdWdeD/G+6mwOc77p4RJhvevod1D
+tP+EVirvwVrnP/8AqgwbFg==
+      "]]}}, {{{{}, {GraphicsGroupBox[{
+         {GrayLevel[1], AbsoluteThickness[4], Opacity[
+           NCache[
+            Rational[2, 3], 0.6666666666666666]], CapForm["Butt"], JoinForm[
+          "Round"], 
+          BSplineCurveBox[{
+           Offset[{0, 0}, {3.8742192*^9, 201.}], 
+            Offset[{0, 0}, {3.8742192*^9, 201.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 201.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 201.}], 
+            Offset[{0., 0.}, {3.8743542*^9, 201.}], 
+            Offset[{0, 0}, {3.8744838000025377`*^9, 200.9999997638437}], 
+            Offset[{5., 1.1102230246251565`*^-15}, {3.8744838000025377`*^9, 
+             200.9999997638437}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             200.9999997638437}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             200.9999997638437}]}]}, 
+         {RGBColor[
+          0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+          AbsoluteThickness[1.25], 
+          BSplineCurveBox[{
+           Offset[{0, 0}, {3.8742192*^9, 201.}], 
+            Offset[{0, 0}, {3.8742192*^9, 201.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 201.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 201.}], 
+            Offset[{0., 0.}, {3.8743542*^9, 201.}], 
+            Offset[{0, 0}, {3.8744838000025377`*^9, 200.9999997638437}], 
+            Offset[{5., 1.1102230246251565`*^-15}, {3.8744838000025377`*^9, 
+             200.9999997638437}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             200.9999997638437}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             200.9999997638437}]}]}, 
+         {EdgeForm[None], FaceForm[{GrayLevel[1], Opacity[
+           NCache[
+            Rational[2, 3], 0.6666666666666666]]}], 
+          PolygonBox[{
+           Offset[{99., 7.500000000000022}, {3.8744838000025377`*^9, 
+             200.9999997638437}], 
+            Offset[{99., -7.499999999999978}, {3.8744838000025377`*^9, 
+             200.9999997638437}], 
+            Offset[{10., -7.499999999999997}, {3.8744838000025377`*^9, 
+             200.9999997638437}], 
+            Offset[{10., 7.500000000000003}, {3.8744838000025377`*^9, 
+             200.9999997638437}]}]}, 
+         {RGBColor[
+          0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+          AbsoluteThickness[1.25], EdgeForm[None]}, {}, InsetBox[
+          StyleBox[
+           RotationBox["\<\"Implemented tasks\"\>",
+            BoxRotation->0.],
+           StripOnInput->False,
+           LineOpacity->1,
+           FrontFaceOpacity->1,
+           BackFaceOpacity->1,
+           Opacity->1,
+           FontOpacity->1], 
+          Offset[{54.5, 1.2101430968414206*^-14}, \
+{3.8744838000025377*^9, 200.9999997638437}], 
+          ImageScaled[{Rational[1, 2], Rational[1, 2]}]]}], GraphicsGroupBox[{
+         {GrayLevel[1], AbsoluteThickness[4], Opacity[
+           NCache[
+            Rational[2, 3], 0.6666666666666666]], CapForm["Butt"], JoinForm[
+          "Round"], 
+          BSplineCurveBox[{
+           Offset[{0, 0}, {3.8742192*^9, 124.}], 
+            Offset[{0, 0}, {3.8742192*^9, 124.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 124.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 124.}], 
+            Offset[{0., 0.}, {3.8743542*^9, 124.}], 
+            Offset[{0, 0}, {3.8744838000025377`*^9, 123.99999990891537`}], 
+            Offset[{5., 1.1102230246251565`*^-15}, {3.8744838000025377`*^9, 
+             123.99999990891537`}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             123.99999990891537`}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             123.99999990891537`}]}]}, 
+         {RGBColor[
+          0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+          AbsoluteThickness[1.25], 
+          BSplineCurveBox[{
+           Offset[{0, 0}, {3.8742192*^9, 124.}], 
+            Offset[{0, 0}, {3.8742192*^9, 124.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 124.}], 
+            Offset[{0., 0.}, {3.8742867*^9, 124.}], 
+            Offset[{0., 0.}, {3.8743542*^9, 124.}], 
+            Offset[{0, 0}, {3.8744838000025377`*^9, 123.99999990891537`}], 
+            Offset[{5., 1.1102230246251565`*^-15}, {3.8744838000025377`*^9, 
+             123.99999990891537`}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             123.99999990891537`}], 
+            Offset[{10., 2.220446049250313*^-15}, {3.8744838000025377`*^9, 
+             123.99999990891537`}]}]}, 
+         {EdgeForm[None], FaceForm[{GrayLevel[1], Opacity[
+           NCache[
+            Rational[2, 3], 0.6666666666666666]]}], 
+          PolygonBox[{
+           Offset[{160., 7.5000000000000355`}, {3.8744838000025377`*^9, 
+             123.99999990891537`}], 
+            Offset[{160., -7.4999999999999645`}, {3.8744838000025377`*^9, 
+             123.99999990891537`}], 
+            Offset[{10., -7.499999999999998}, {3.8744838000025377`*^9, 
+             123.99999990891537`}], 
+            Offset[{10., 7.500000000000002}, {3.8744838000025377`*^9, 
+             123.99999990891537`}]}]}, 
+         {RGBColor[
+          0.6666666666666666, 0.6666666666666666, 0.6666666666666666], 
+          AbsoluteThickness[1.25], EdgeForm[None]}, {}, InsetBox[
+          StyleBox[
+           RotationBox["\<\"Tasks passing via generalization\"\>",
+            BoxRotation->0.],
+           StripOnInput->False,
+           LineOpacity->1,
+           FrontFaceOpacity->1,
+           BackFaceOpacity->1,
+           Opacity->1,
+           FontOpacity->1], 
+          Offset[{85., 1.887379141862766*^-14}, \
+{3.8744838000025377*^9, 123.99999990891537}], 
+          ImageScaled[{Rational[1, 2], Rational[1, 2]}]]}]}}, {}}, {}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{False, False},
+  AxesLabel->{None, None},
+  AxesOrigin->{3.8676096*^9, 0},
+  DisplayFunction->Identity,
+  Frame->{{True, True}, {True, True}},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->FrontEndValueCache[{{Automatic, Automatic}, {
+      Charting`DateTicksFunction[Automatic, DateTicksFormat -> {Automatic}], 
+      Charting`DateTicksFunction[
+      Automatic, DateTicksFormat -> {Automatic}, "TickLabels" -> None]}}, {{
+     Automatic, Automatic}, {{{3.8656224*^9, 
+        FormBox[
+         StyleBox["\"Jul\"", 
+          Directive[], {}, StripOnInput -> False], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8683008*^9, 
+        FormBox[
+         StyleBox["\"Aug\"", 
+          Directive[], {}, StripOnInput -> False], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8709792*^9, 
+        FormBox[
+         StyleBox["\"Sep\"", 
+          Directive[], {}, StripOnInput -> False], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8735712*^9, 
+        FormBox[
+         StyleBox["\"Oct\"", 
+          Directive[], {}, StripOnInput -> False], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8762496*^9, 
+        FormBox[
+         StyleBox["\"Nov\"", 
+          Directive[], {}, StripOnInput -> False], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}}, {{3.8656224*^9, 
+        FormBox[
+         TemplateBox[{0., 0.}, "Spacer2"], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8683008*^9, 
+        FormBox[
+         TemplateBox[{0., 0.}, "Spacer2"], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8709792*^9, 
+        FormBox[
+         TemplateBox[{0., 0.}, "Spacer2"], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8735712*^9, 
+        FormBox[
+         TemplateBox[{0., 0.}, "Spacer2"], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}, {3.8762496*^9, 
+        FormBox[
+         TemplateBox[{0., 0.}, "Spacer2"], TraditionalForm], {
+        0.013888888888888888`, 0.}, 
+        Directive[]}}}}],
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  ImagePadding->{{All, 192.00000027414495`}, {All, All}},
+  ImageSize->700,
+  Method->{
+   "NoShowPlotTheme" -> Automatic, "OptimizePlotMarkers" -> True, 
+    "OptimizePlotMarkers" -> True, 
+    "CoordinatesToolOptions" -> {"DisplayFunction" -> ({
+        Identity[
+         Part[#, 1]], 
+        Identity[
+         Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+        Identity[
+         Part[#, 1]], 
+        Identity[
+         Part[#, 2]]}& )}},
+  PlotLabel->FormBox["\"Tasks Passing\"", TraditionalForm],
+  PlotRange->{{3.8676096*^9, 3.8740896*^9}, {0, 201.}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.08090169943749476]}},
+  Ticks->{{}, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.8741672593684454`*^9, {3.874167366362468*^9, 3.8741673889870358`*^9}, 
+   3.8741674655942764`*^9, 3.874167496987087*^9, {3.8741675656465034`*^9, 
+   3.8741675852109995`*^9}},
+ CellLabel->
+  "Out[421]=",ExpressionUUID->"7a632bfc-28c7-42ab-abf6-93d4afa0adb8"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7., Automatic}, {Automatic, 0}},
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCProgressGraph], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCProgressGraph, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCProgressGraph]; Null, ImageSize -> {102.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCProgressGraph, "SubTest" -> None], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[Daniel`ARC`ARCProgressGraph], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCProgressGraph]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCProgressGraph, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCProgressGraph]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210717306023440}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCProgressGraph", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {"Function" -> Daniel`ARC`ARCProgressGraph}, 
+    "ReturnNotebook" -> True}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"a51b5a2a-d497-4075-a0f0-0efa83907bbf"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 88, 0, 98, "Title",ExpressionUUID->"cfa9dcef-e5d5-4fca-a6d8-1c3199c2cae0"],
+Cell[671, 24, 226, 5, 54, "Code",ExpressionUUID->"f4cc73e4-aaba-4233-b6e9-340d48a7250e",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[922, 33, 79, 0, 67, "Section",ExpressionUUID->"4b9c6aea-d435-4783-ae95-fdd01abe8e6b"],
+Cell[CellGroupData[{
+Cell[1026, 37, 342, 8, 54, "Code",ExpressionUUID->"092ee7a9-de27-47e5-8f58-3d4ec58816d8",
+ InitializationCell->False],
+Cell[1371, 47, 10620, 234, 356, "Output",ExpressionUUID->"7a632bfc-28c7-42ab-abf6-93d4afa0adb8"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

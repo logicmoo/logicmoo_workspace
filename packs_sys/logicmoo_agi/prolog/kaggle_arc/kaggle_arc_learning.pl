@@ -788,6 +788,7 @@ learn_group_mapping_now(AG00,BG00):-
 
   learn_group_mapping_p3(IO_DIR,OI,AG,BG))).
 
+
 learn_group_mapping_p3(IO_DIR,OI,AG,BG):- !,
  locally(nb_setval(rule_cannot_add_more_objects,t),
   (nb_linkval(in_out_pair,in_out_pair(AG,BG,shared)),
@@ -1119,6 +1120,8 @@ match_prop(II,MM):- reduce_prop(II,I),reduce_prop(MM,M),!,I=M,!.
 
 
 :- dynamic(arc_cache:assumed_mapped/3).
+:- dynamic(arc_cache:assumed_unmapped/3).
+:- dynamic(arc_cache:assumed_mapped_rule/3).
 
 assert_doing_map(IO_DIR,A,[B|Objs]):- 
   assertz_in_testid(arc_cache:doing_map(IO_DIR,A,[B|Objs])),
@@ -1245,6 +1248,7 @@ skip_rule(IO_DIR,TITLE,IP,OP):-
 
 print_rule_grids(IO_DIR,TITLE,IP,OP,LOCK):-
  must_det_ll((
+ really_assumed_mapped(IP,OP),
  print_ss(LOCK),
  nop((og_display(IP,IIP), og_display(OP,OOP), 
  print_ss_html(orange,IIP,'IN'(TITLE,IO_DIR),_LW,OOP,'OUT'(TITLE,IO_DIR)))))).
@@ -1847,10 +1851,12 @@ learn_rule_iin_oout(_,In,O,OL):- mass(O,Mass),
   mass(I,Mass),
   simplify_for_matching(lhs,I,II),
   simplify_for_creating(O,OO),
+  really_assumed_mapped([I],[O]),
   save_learnt_rule(arc_cache:object_to_object(unk(Mode),II,OO,[],[learn_rule_iin_oout(I,O)]),I,O),!.
 
 learn_rule_in_out(Depth,Mode,In,Out):- 
   is_list(In), is_list(Out), 
+  really_assumed_mapped(In,Out),
   my_maplist(compound,In), my_maplist(compound,Out),
   length(In,L), length(Out,L),
   Depth2 is Depth+1, 
@@ -1863,6 +1869,7 @@ learn_rule_in_out(Depth,Mode,In,Out):-
 
 learn_rule_in_out(Depth,Mode,In,Out):- 
   is_group(In),is_group(Out),
+  really_assumed_mapped(In,Out),
   length(In,IL),length(Out,OL),
   Depth2 is Depth+1, 
   if_t((IL=<7,OL=<7),
@@ -1882,7 +1889,7 @@ learn_rule_in_out_now(Depth,Mode,In,Out):-  is_list(In),is_list(Out),
   Depth2 is Depth+1, 
   my_maplist(learn_rule_in_out_now(Depth2,Mode),In,Out).
   %learn_rule_in_out(Depth,Mode,InS,OutS).
-learn_rule_in_out_now(_Depth,_Mode,In,Out):- nop(save_learnt_rule(test_associatable(In,Out),In,Out)).
+learn_rule_in_out_now(_Depth,_Mode,In,Out):- save_learnt_rule(test_associatable(In,Out),In,Out).
 
 %learn_rule_in_out(Depth,Mode,I,O):- save_learnt_rule(test_associatable(Mode,I,O)).
 
@@ -1902,6 +1909,9 @@ test_local_dyn(F,A):- setof(F/A,(test_local_dyn(F),current_predicate(F/A)),L),me
 :- dynamic(test_local_dyn/1).
 test_local_dyn(learnt_rule).
 test_local_dyn(grid_associatable).
+test_local_dyn(propcounts).
+test_local_dyn(is_for_ilp).
+test_local_dyn(is_accompany_changed_db).
 test_local_dyn(test_associatable).
 test_local_dyn(object_to_object).
 %test_local_dyn(why_grouped).
@@ -1909,6 +1919,8 @@ test_local_dyn(cached_dictation).
 test_local_dyn(oout_associatable).
 test_local_dyn(fav).
 test_local_dyn(propcount).
+test_local_dyn(showed_point_mapping).
+
 
 test_local_save(arc_test_property).
 test_local_save(cached_tests).
@@ -1921,6 +1933,7 @@ test_local_save(gid_glyph_oid).
 test_local_save(did_map).
 test_local_save(object_atomslist).
 test_local_save(assumed_mapped).
+test_local_save(assumed_unmapped).
 test_local_save(object_to_object).
 test_local_save(individuated_cache).
 test_local_save(is_grid_obj_count).
@@ -1933,21 +1946,25 @@ test_local_save(omem).
 test_local_save(smem).
 test_local_save(test_info_cache).
 test_local_save(P):- test_local_dyn(P).
+test_local_save(F,A):- test_local_dyn(F,A).
 test_local_save(F,A):- setof(F/A,(test_local_save(F),current_predicate(F/A),A\==0),L),member(F/A,L).
+test_local_save(F,A):- setof(F/A,(current_predicate(arc_cache:F/A),A\==0,functor(P,F,A),
+  \+ predicate_property(arc_cache:P,imported_from(_))),L),member(F/A,L).
+test_local_save(F,A):- setof(F/A,(test_local_save(F),current_predicate(arc_cache:F/A),A\==0),L),member(F/A,L).
 
 
 training_info(TestID,InfoSet):-
  sub_atom_value(TestID,TestIDA),
   findall(Ref,
   (test_local_dyn(F,A), functor(X,F,A),
-      clause(X,_,Ref),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),
+      (clause(X,_,Ref);clause(arc_cache:X,_,Ref)),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),
   list_to_set(Info,InfoSet).
 
 saveable_test_info(TestID,InfoSet):-
  sub_atom_value(TestID,TestIDA),
  findall(Ref,
   (test_local_save(F,A), functor(X,F,A),
-      clause(X,_,Ref),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),
+      (clause(X,_,Ref);clause(arc_cache:X,_,Ref)),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),
  list_to_set(Info,InfoSet).
 
 
@@ -2095,8 +2112,29 @@ use_test_associatable_group_now(I,O):-
   use_test_associatable_group_real(I,O),
   nop(print_side_by_side(real_associatable_group,I,O)).
 
-gather_assumed_mapped(A,B):-
-  call_in_testid(arc_cache:assumed_mapped([A],[B])).
+gather_assumed_mapped_o_l(A,BL):- findall(B,gather_assumed_mapped_o_o(A,B),BL).
+gather_assumed_mapped_l_o(AL,B):- findall(A,gather_assumed_mapped_o_o(A,B),AL).
+gather_assumed_mapped_l_l(AL,BL):- call_in_testid(arc_cache:assumed_mapped(AL,BL)).
+
+really_assumed_mapped(A,B):- listify(A,AL), listify(B,BL), 
+  assertz_in_testid(arc_cache:assumed_mapped_rule(AL,BL)).
+
+gather_assumed_mapped_rule(AL,BL):- call_in_testid(arc_cache:assumed_mapped_rule(AL,BL)).
+gather_assumed_mapped_rule(AL,BL):- call_in_testid(arc_cache:assumed_mapped(AL,BL)), 
+  AL=[A],BL=[B],is_assumed_unmapped_o_o(A,B),
+  \+ call_in_testid(arc_cache:assumed_mapped_rule(AL,BL)).
+
+gather_assumed_mapped_o_o(A,B):-
+  gather_assumed_mapped_l_l(AL,BL),
+  member_or_e(A,AL),member_or_e(B,BL),
+  \+ is_assumed_unmapped_o_o(A,B).
+
+is_assumed_unmapped_o_o(A,B):-
+  call_in_testid(arc_cache:assumed_unmapped(AA,BB)),
+  member_or_e(A,AA),member_or_e(B,BB).
+
+member_or_e(E,L):- \+ is_list(E), is_list(L),!,member(E,L).
+member_or_e(E,L):- E=L.
 
 io_order(A,B,B,A):- has_prop(giz(g(out)),A),!.
 io_order(A,B,A,B).
@@ -2156,8 +2194,7 @@ need_object(B):-
   pp_wcg(L2\=@=L))),
   (L2\=@=L). %->writeln(need_object(B));(writeln(not_need_object(B)),fail)).
   
-show_safe_assumed_mapped:- warn_skip(((show_safe_assumed_mapped))),!.
-
+%show_safe_assumed_mapped:- warn_skip(((show_safe_assumed_mapped))),!.
 show_safe_assumed_mapped:-
 % pp_wcg(show_safe_assumed_mapped),
  findall(sam(Why,AA,BB),
@@ -2178,12 +2215,22 @@ show_safe_assumed_mapped:-
          dash_chars,print_ss(SWHYS,AA,BB)))))))),
  dash_chars,!.
 
+show_assumed_mapped(TestID):-
+  ensure_test(TestID),
+% pp_wcg(show_safe_assumed_mapped),
+ SAME = sam(A,B),
+ findall(SAME,gather_assumed_mapped_rule(A,B),SAML),
+ sort(SAML,SAMS),
+   forall(member(SAME,SAMS),
+      (dash_chars, print_ss(A,B))),
+ dash_chars,!.
 
 
-gather_assumed_mapped_o_l(A,BL):- findall(B,gather_assumed_mapped(A,B),BL).
-gather_assumed_mapped_l_o(AL,B):- findall(A,gather_assumed_mapped(A,B),AL).
 
-arc_cache:doing_map(Out,B,A):-      doing_map_list(Out,B,[A|_]).
+  
+
+
+arc_cache:doing_map(Out,B,A):-    doing_map_list(Out,B,[A|_]).
 
 doing_map_sc(Out,A,B):-   doing_map_list(Out,B,List),member(A,List),(is_bg_object(B)->is_bg_object(A);is_fg_object(A)),can_pair(A,B).
 
@@ -2200,15 +2247,16 @@ can_pair(A,B):-
 safe_assumed_mapped(o_i,A,B):-  doing_map_list(out,B,[A|_]),can_pair(A,B).
 %safe_assumed_mapped(two_way_sc,A,B):- doing_map_sc(out,B,A),doing_map_sc(in,A,B),can_pair(A,B).
 %doing_map_list(in,A,[B|_]),
-safe_assumed_mapped(only_ness,A,B):- gather_assumed_mapped(A,B), \+ (gather_assumed_mapped(A,C),B\==C),can_pair(A,B).
+safe_assumed_mapped(only_ness,A,B):- gather_assumed_mapped_o_o(A,B), \+ (gather_assumed_mapped_o_o(A,C),B\==C),can_pair(A,B).
 
-safe_assumed_mapped(priorities(LenA,LenB),A,B):- findall(v(APB,A,LenA,B,LenB), (safe_assumed_mapped(A,LenA,B,LenB),APB is LenA+LenB),List),
+safe_assumed_mapped(priorities(LenA,LenB),A,B):- findall(v(APB,A,LenA,B,LenB), 
+ (safe_assumed_mapped(A,LenA,B,LenB),APB is LenA+LenB),List),
    sort_safe(List,Set),
    member(v(_,A,LenA,B,LenB),Set),can_pair(A,B).
-safe_assumed_mapped(A,LenA,B,LenB):- gather_assumed_mapped(A,B),
+safe_assumed_mapped(A,LenA,B,LenB):- gather_assumed_mapped_o_o(A,B),
   gather_assumed_mapped_o_l(A,BL),length(BL,LenA), gather_assumed_mapped_l_o(AL,B),length(AL,LenB).
 
-%clear_arc_learning:- !.
+clear_arc_learning:- !.
 clear_arc_learning:- 
   abolish(arc_cache:object_to_object/6),dynamic(arc_cache:object_to_object/6),
   dmsg(clear_arc_learning),
@@ -2218,6 +2266,8 @@ clear_arc_learning:-
   retractall_in_testid(arc_cache:object_atomslist(_,_,_,_)),
   retractall_in_testid(arc_cache:object_to_object(_,_,_,_,_)),
   retractall_in_testid(arc_cache:assumed_mapped(_,_)),
+  retractall_in_testid(arc_cache:assumed_unmapped(_,_)),
+  retractall_in_testid(arc_cache:assumed_mapped_rule(_,_)),
   retractall_in_testid(arc_cache:object_atomslist(_,_,_,_)))),!.
 prolog:make_hook(after, Some):- any_arc_files(Some), forall(clear_arc_learning,true), fail.
 
@@ -2228,7 +2278,7 @@ use_test_associatable_obj(In,Sol):-
    matches_close_prop(In,giz(g(in)),List),
 
    if_t(List\==[],
-        (member(F0,List),gather_assumed_mapped(F0,F1),
+        (member(F0,List),gather_assumed_mapped_o_o(F0,F1),
          print_side_by_side_three(0,[in=In,mid=F0,inout=F1]))),
 
    matches_close_prop(In,giz(g(out)),OutList),
@@ -2247,10 +2297,10 @@ use_test_associatable_obj(In,Sol):- In = obj(O1),
 
 
 matches_close_prop(In,giz(g(in)),List):- 
-  findall(F0,gather_assumed_mapped(F0,_),Objs),
+  findall(F0,gather_assumed_mapped_o_o(F0,_),Objs),
   sort_by_closeness(In,Objs,List), List\==[].
 matches_close_prop(In,giz(g(out)),List):- 
-  findall(F1,gather_assumed_mapped(_,F1),Objs),
+  findall(F1,gather_assumed_mapped_o_o(_,F1),Objs),
   sort_by_closeness(In,Objs,List), List\==[].
 matches_close_prop(In,Prop,List):-
   prop_group(Prop,Objs),

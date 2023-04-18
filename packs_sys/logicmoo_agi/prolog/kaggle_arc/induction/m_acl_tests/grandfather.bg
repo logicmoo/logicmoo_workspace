@@ -1,0 +1,71 @@
+/* example 1.2 
+
+Learns the theory:
+| ?- i(L,D).
+
+D = [not(male(katy)),male(david)],
+L = [rule(father(_A,_B),[male(_A)])] ? 
+
+
+*/
+
+:-dynamic parent/2, male/1, female/1, abducibles/1.
+
+
+parent(john,mary).
+male(john).
+
+parent(david,steve).
+male(david).
+male(steve).
+
+parent(mary,ellen).
+female(mary).
+
+parent(ellen,sue).
+female(ellen).
+
+parent(steve,jim).
+male(jim).
+
+bias(rule(grandfather(X,Y),_B),
+        [X,Y,Z],
+        [
+        father(X,Y),father(Y,X),father(X,Z),father(Z,X),
+        father(Z,Y),father(Y,Z),
+        parent(X,Y),parent(Y,X),parent(X,Z),parent(Z,X),
+        parent(Z,Y),parent(Y,Z)
+        ]).
+
+bias(rule(father(X,Y),_B),
+        [X,Y,Z],
+        [
+        parent(X,Y),parent(Y,X),parent(X,Z),parent(Z,X),
+        parent(Z,Y),parent(Y,Z),
+        male(X),male(Y),male(Z),
+        female(X),female(Y),female(Z)]).
+
+
+abducibles([father(_,_),grandfather(_,_)]).
+
+
+ic([]).
+
+
+eplus([
+grandfather(john,ellen),
+grandfather(david,jim),
+father(john,mary)
+]).
+
+eminus([
+grandfather(mary,sue),
+grandfather(mary,john),
+father(john,ellen),
+father(david,jim),
+father(jim,david)
+]). 
+
+
+
+

@@ -1,0 +1,2247 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    108390,       2239]
+NotebookOptionsPosition[    101695,       2079]
+NotebookOutlinePosition[    107355,       2220]
+CellTagsIndexPosition[    107312,       2217]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCFormCompositeObjects", "Title",ExpressionUUID->"e330c2c1-ae10-4b04-912f-2f76dbc27ea8"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCFormCompositeObjects", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->"In[10]:=",ExpressionUUID->"3b00e239-359a-4d59-b4a4-0c6cde1ad43a"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"0ca29079-7fa3-48dc-8e54-3a9e808ea32a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCFormCompositeObjects-20220718-XRHLHS", 
+              Daniel`ARC`ARCFormCompositeObjects, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389], 94346783]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCFormCompositeObjects-20220718-XRHLHS"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCFormCompositeObjects-20220718-XRHLHS", 
+            Daniel`ARC`ARCFormCompositeObjects, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389], "CellID" -> 94346783, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCFormCompositeObjects-20220718-XRHLHS", 
+           Daniel`ARC`ARCFormCompositeObjects, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389], None], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCFormCompositeObjects-20220718-XRHLHS"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{840., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202271815413011389}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.867162090118838*^9},ExpressionUUID->"4c9ecb18-3df1-4ce0-aca2-\
+7c2908f9f1ff"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCFormCompositeObjects", "[", "\n", "\t", 
+   RowBox[{
+    RowBox[{"ARCScene", "[", "\n", "\t\t", 
+     RowBox[{"{", "\n", "\t\t\t", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "4", ",", " ", "0", ",", " ", "4", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "0", ",", " ", "2", ",", " ", "0", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "4", ",", " ", "0", ",", " ", "4", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "7", ",", " ", "0", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", 
+         " ", "7", ",", " ", "1", ",", " ", "7", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "7", ",", " ", "0", ",", " ", "0"}], "}"}], ",", 
+       "\n", "\t\t\t", 
+       RowBox[{"{", 
+        RowBox[{
+        "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0", ",", 
+         " ", "0", ",", " ", "0", ",", " ", "0", ",", " ", "0"}], "}"}]}], 
+      "\n", "\t\t", "}"}], "\n", "\t", "]"}], ",", "\n", "\t", 
+    RowBox[{"{", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<61038be5-ff0b-4127-ae12-53327fe3d08e\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{"{", "1", "}"}], "}"}], "]"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"7", ",", " ", "7"}], "}"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"<|", 
+            RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], "|>"}],
+            ",", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Square\>\""}], 
+            "|>"}], ",", " ", 
+           RowBox[{"<|", 
+            RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Rectangle\>\""}], 
+            "|>"}]}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "1", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"7", ",", " ", "7"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "7"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "7"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}]}], "\n", "\t\t", "|>"}],
+       ",", "\n", "\t\t", 
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<6a8b514b-f10a-499b-8bca-fa4bd26d3093\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{"{", "2", "}"}], "}"}], "]"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"4", ",", " ", "3"}], "}"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], "|>"}], 
+          "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "2", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"4", ",", " ", "3"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "4"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}]}], "\n", "\t\t", "|>"}],
+       ",", "\n", "\t\t", 
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<c352b306-971b-4632-b5a0-a66a4c8e4b27\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{"{", "4", "}"}], "}"}], "]"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "\[Rule]", " ", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"3", ",", " ", "2"}], "}"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], "|>"}], 
+          "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "4", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"3", ",", " ", "2"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}]}], "\n", "\t\t", "|>"}],
+       ",", "\n", "\t\t", 
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<334e881a-c81d-4f55-b381-1ea1090a5ffc\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{"{", "4", "}"}], "}"}], "]"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "\[Rule]", " ", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"3", ",", " ", "4"}], "}"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], "|>"}], 
+          "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "4", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"3", ",", " ", "4"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "4"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}]}], "\n", "\t\t", "|>"}],
+       ",", "\n", "\t\t", 
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<b7049403-c19e-41e3-8edb-84ef0649a82b\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{"{", "4", "}"}], "}"}], "]"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "\[Rule]", " ", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"5", ",", " ", "2"}], "}"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], "|>"}], 
+          "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "4", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"5", ",", " ", "2"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "5"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}]}], "\n", "\t\t", "|>"}],
+       ",", "\n", "\t\t", 
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<6f024852-92f6-44db-978a-0716313e5b74\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{"{", "4", "}"}], "}"}], "]"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "\[Rule]", " ", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"5", ",", " ", "4"}], "}"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Shape\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"<|", 
+           RowBox[{"\"\<Name\>\"", " ", "->", " ", "\"\<Pixel\>\""}], "|>"}], 
+          "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "4", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "1"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"5", ",", " ", "4"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "5"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "4"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "1"}]}], "\n", "\t\t", "|>"}],
+       ",", "\n", "\t\t", 
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<7ad70b35-3033-471b-85bf-17399c3e2a35\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", " ", "7", ",", " ", 
+              RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{"7", ",", " ", 
+              RowBox[{"-", "1"}], ",", " ", "7"}], "}"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", " ", "7", ",", " ", 
+              RowBox[{"-", "1"}]}], "}"}]}], "}"}], "]"}]}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"6", ",", " ", "7"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"7", ",", " ", "6"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"7", ",", " ", "8"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"8", ",", " ", "7"}], "}"}]}], "}"}]}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "7", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"6", ",", " ", "6"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "6"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "6"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "4"}]}], "\n", "\t\t", 
+       "|>"}]}], "\n", "\t", "}"}], ",", "\n", "\t", 
+    RowBox[{"{", "\n", "\t\t", 
+     RowBox[{
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<89a9707c-edbe-4bf9-b0da-2fee6ba9b163\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"10", ",", " ", 
+              RowBox[{"-", "1"}], ",", " ", "10"}], "}"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", " ", "10", ",", " ", 
+              RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", " ", 
+              RowBox[{"-", "1"}], ",", " ", "10"}], "}"}]}], "}"}], "]"}]}], 
+        ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"3", ",", " ", "2"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"3", ",", " ", "4"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"4", ",", " ", "3"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"5", ",", " ", "2"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"5", ",", " ", "4"}], "}"}]}], "}"}]}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "10", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"3", ",", " ", "2"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "2"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "5"}]}], "\n", "\t\t", "|>"}],
+       ",", "\n", "\t\t", 
+      RowBox[{"<|", "\n", "\t\t\t", 
+       RowBox[{
+        RowBox[{
+        "\"\<UUID\>\"", " ", "->", " ", 
+         "\"\<0548a70a-33ec-42c5-b1c5-38e21b613ee1\>\""}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Image\>\"", " ", "->", " ", 
+         RowBox[{"ARCScene", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", " ", "10", ",", " ", 
+              RowBox[{"-", "1"}]}], "}"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{"10", ",", " ", "10", ",", " ", "10"}], "}"}], ",", " ", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", " ", "10", ",", " ", 
+              RowBox[{"-", "1"}]}], "}"}]}], "}"}], "]"}]}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<PixelPositions\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"6", ",", " ", "7"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"7", ",", " ", "6"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"7", ",", " ", "7"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"7", ",", " ", "8"}], "}"}], ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"8", ",", " ", "7"}], "}"}]}], "}"}]}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Colors\>\"", " ", "->", " ", 
+         RowBox[{"{", "10", "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Width\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Height\>\"", " ", "->", " ", "3"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Position\>\"", " ", "->", " ", 
+         RowBox[{"{", 
+          RowBox[{"6", ",", " ", "6"}], "}"}]}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<Y\>\"", " ", "->", " ", "6"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<X\>\"", " ", "->", " ", "6"}], ",", "\n", "\t\t\t", 
+        RowBox[{"\"\<AspectRatio\>\"", " ", "->", " ", "1"}], ",", "\n", 
+        "\t\t\t", 
+        RowBox[{"\"\<Area\>\"", " ", "->", " ", "5"}]}], "\n", "\t\t", 
+       "|>"}]}], "\n", "\t", "}"}]}], "\n", "]"}], " ", "//", " ", 
+  "ARCIndent"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.8671596946493273`*^9, 3.867159715287489*^9}, 
+   3.8671597571932526`*^9, {3.8671607733012285`*^9, 3.8671607758170943`*^9}, {
+   3.867160815770625*^9, 3.8671608239258623`*^9}, {3.867160855745947*^9, 
+   3.867160898188284*^9}, {3.86716126539931*^9, 3.8671612983908167`*^9}, {
+   3.867161412910296*^9, 3.8671614138301353`*^9}, {3.8671615307561674`*^9, 
+   3.8671615350197396`*^9}, 3.867162090118838*^9, {3.8687946241115103`*^9, 
+   3.868794630567066*^9}, {3.8687947909289055`*^9, 3.8687948238549557`*^9}, {
+   3.8697728504446907`*^9, 3.8697729030501204`*^9}},
+ CellLabel->"In[812]:=",
+ CellID->94346783,
+ "TestId" -> 
+ "ARCFormCompositeObjects-20220718-XRHLHS",ExpressionUUID->"d9460f11-794d-\
+4111-9b89-9916f7d6a5b7"]
+}, Open  ]],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"{\"\>"},
+    {"\<\"    <|\"\>"},
+    {"\<\"        \\\"UUID\\\" -> \
+\\\"89a9707c-edbe-4bf9-b0da-2fee6ba9b163\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {1, 2} -> 
+                 GrayLevel[0.2], {1, 3} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> 
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {2, 
+                  3} -> GrayLevel[0.2], {3, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {3, 2} -> 
+                 GrayLevel[0.2], {3, 3} -> 
+                 RGBColor[1., 0.8627450980392157, 0.]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"        \\\"PixelPositions\\\" -> {{3, 2}, {3, 4}, {4, 3}, {5, 2}, \
+{5, 4}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[
+                0.6666666666666667, 0.16993464052287582`, 0.1411764705882353],
+                FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 
+                 RowBox[{
+                  "1.`", ",", "0.2549019607843137`", ",", 
+                   "0.21176470588235294`"}], "]"}], NumberMarks -> False]], 
+             Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+             Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.2549019607843137, 0.21176470588235294`], Editable -> 
+            False, Selectable -> False], "\", \"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.8627450980392157, 0.], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[0.6666666666666667, 0.5751633986928105, 0.], 
+               FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"1.`", ",", "0.8627450980392157`", ",", "0.`"}], 
+                 "]"}], NumberMarks -> False]], Appearance -> None, 
+             BaseStyle -> {}, BaselinePosition -> Baseline, 
+             DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.8627450980392157, 0.]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.8627450980392157, 0.], Editable -> False, 
+            Selectable -> False], "\"}\""}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"        \\\"Width\\\" -> 3,\"\>"},
+    {"\<\"        \\\"Height\\\" -> 3,\"\>"},
+    {"\<\"        \\\"Position\\\" -> {3, 2},\"\>"},
+    {"\<\"        \\\"Y\\\" -> 3,\"\>"},
+    {"\<\"        \\\"X\\\" -> 2,\"\>"},
+    {"\<\"        \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"        \\\"Area\\\" -> 9,\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {1, 2} -> 
+                 GrayLevel[0.2], {1, 3} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> 
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {2, 
+                  3} -> GrayLevel[0.2], {3, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {3, 2} -> 
+                 GrayLevel[0.2], {3, 3} -> 
+                 RGBColor[1., 0.8627450980392157, 0.]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"        \\\"Shapes\\\" -> {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \"", 
+         TemplateBox[{"\"<|\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {1, 2} -> 
+                 GrayLevel[0.2], {1, 3} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {2, 1} -> 
+                 GrayLevel[0.2], {2, 2} -> 
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {2, 
+                  3} -> GrayLevel[0.2], {3, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.], {3, 2} -> 
+                 GrayLevel[0.2], {3, 3} -> 
+                 RGBColor[1., 0.8627450980392157, 0.]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"], "\"|>\""}, "RowDefault"]}, 
+        "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"            <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \\\"Image\\\" -> \"", 
+         TagBox[
+          
+          GridBox[{{"\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}}, AutoDelete -> 
+           False, GridBoxBackground -> {
+            "Columns" -> {{None}}, "Rows" -> {{None}}, 
+             "ItemsIndexed" -> {{1, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 3} -> 
+               GrayLevel[0.2], {1, 4} -> GrayLevel[0.2], {1, 5} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 6} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 3} -> 
+               GrayLevel[0.2], {2, 4} -> GrayLevel[0.2], {2, 5} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 6} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {3, 1} -> 
+               GrayLevel[0.2], {3, 2} -> GrayLevel[0.2], {3, 3} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {3, 4} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {3, 5} -> 
+               GrayLevel[0.2], {3, 6} -> GrayLevel[0.2], {4, 1} -> 
+               GrayLevel[0.2], {4, 2} -> GrayLevel[0.2], {4, 3} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {4, 4} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {4, 5} -> 
+               GrayLevel[0.2], {4, 6} -> GrayLevel[0.2], {5, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {5, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {5, 3} -> 
+               GrayLevel[0.2], {5, 4} -> GrayLevel[0.2], {5, 5} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {5, 6} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {6, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {6, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {6, 3} -> 
+               GrayLevel[0.2], {6, 4} -> GrayLevel[0.2], {6, 5} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {6, 6} -> 
+               RGBColor[1., 0.8627450980392157, 0.]}}, 
+           GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+           GridBoxFrame -> {"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+            GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+           FrameStyle -> {
+             AbsoluteThickness[1], 
+             GrayLevel[0.5]}], "Grid"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Scaled\\\
+\", \\\"Factor\\\" -> 0.5|>\"\>"},
+    {"\<\"            |>,\"\>"},
+    {"\<\"            <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \\\"Image\\\" -> \"", 
+         TagBox[
+          
+          GridBox[{{
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}}, AutoDelete -> False, 
+           GridBoxBackground -> {
+            "Columns" -> {{None}}, "Rows" -> {{None}}, 
+             "ItemsIndexed" -> {{1, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 3} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 4} -> 
+               GrayLevel[0.2], {1, 5} -> GrayLevel[0.2], {1, 6} -> 
+               GrayLevel[0.2], {1, 7} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 8} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {1, 9} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 3} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 4} -> 
+               GrayLevel[0.2], {2, 5} -> GrayLevel[0.2], {2, 6} -> 
+               GrayLevel[0.2], {2, 7} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 8} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {2, 9} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {3, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {3, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {3, 3} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {3, 4} -> 
+               GrayLevel[0.2], {3, 5} -> GrayLevel[0.2], {3, 6} -> 
+               GrayLevel[0.2], {3, 7} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {3, 8} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {3, 9} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {4, 1} -> 
+               GrayLevel[0.2], {4, 2} -> GrayLevel[0.2], {4, 3} -> 
+               GrayLevel[0.2], {4, 4} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {4, 5} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {4, 6} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {4, 7} -> 
+               GrayLevel[0.2], {4, 8} -> GrayLevel[0.2], {4, 9} -> 
+               GrayLevel[0.2], {5, 1} -> GrayLevel[0.2], {5, 2} -> 
+               GrayLevel[0.2], {5, 3} -> GrayLevel[0.2], {5, 4} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {5, 5} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {5, 6} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {5, 7} -> 
+               GrayLevel[0.2], {5, 8} -> GrayLevel[0.2], {5, 9} -> 
+               GrayLevel[0.2], {6, 1} -> GrayLevel[0.2], {6, 2} -> 
+               GrayLevel[0.2], {6, 3} -> GrayLevel[0.2], {6, 4} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {6, 5} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {6, 6} -> 
+               RGBColor[1., 0.2549019607843137, 0.21176470588235294`], {6, 7} -> 
+               GrayLevel[0.2], {6, 8} -> GrayLevel[0.2], {6, 9} -> 
+               GrayLevel[0.2], {7, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {7, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {7, 3} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {7, 4} -> 
+               GrayLevel[0.2], {7, 5} -> GrayLevel[0.2], {7, 6} -> 
+               GrayLevel[0.2], {7, 7} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {7, 8} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {7, 9} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {8, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {8, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {8, 3} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {8, 4} -> 
+               GrayLevel[0.2], {8, 5} -> GrayLevel[0.2], {8, 6} -> 
+               GrayLevel[0.2], {8, 7} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {8, 8} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {8, 9} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {9, 1} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {9, 2} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {9, 3} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {9, 4} -> 
+               GrayLevel[0.2], {9, 5} -> GrayLevel[0.2], {9, 6} -> 
+               GrayLevel[0.2], {9, 7} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {9, 8} -> 
+               RGBColor[1., 0.8627450980392157, 0.], {9, 9} -> 
+               RGBColor[1., 0.8627450980392157, 0.]}}, 
+           GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+           GridBoxFrame -> {"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+            GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+           FrameStyle -> {
+             AbsoluteThickness[1], 
+             GrayLevel[0.5]}], "Grid"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Scaled\\\
+\", \\\"Factor\\\" -> 0.3333333333333333|>\"\>"},
+    {"\<\"            |>\"\>"},
+    {"\<\"        },\"\>"},
+    {"\<\"        \\\"Components\\\" -> {\"\>"},
+    {"\<\"            <|\"\>"},
+    {"\<\"                \\\"UUID\\\" -> \
+\\\"c352b306-971b-4632-b5a0-a66a4c8e4b27\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"PixelPositions\\\" -> {{3, 2}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> {\"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"}\""}, "RowDefault"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.8627450980392157, 0.], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[0.6666666666666667, 0.5751633986928105, 0.], 
+               FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"1.`", ",", "0.8627450980392157`", ",", "0.`"}], 
+                 "]"}], NumberMarks -> False]], Appearance -> None, 
+             BaseStyle -> {}, BaselinePosition -> Baseline, 
+             DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.8627450980392157, 0.]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.8627450980392157, 0.], Editable -> False, 
+            Selectable -> False], "\"}\""}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Width\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Height\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Position\\\" -> {3, 2},\"\>"},
+    {"\<\"                \\\"Y\\\" -> 3,\"\>"},
+    {"\<\"                \\\"X\\\" -> 2,\"\>"},
+    {"\<\"                \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Area\\\" -> 1,\"\>"},
+    {"\<\"                \\\"YRelative\\\" -> 0,\"\>"},
+    {"\<\"                \\\"XRelative\\\" -> 0\"\>"},
+    {"\<\"            |>,\"\>"},
+    {"\<\"            <|\"\>"},
+    {"\<\"                \\\"UUID\\\" -> \
+\\\"334e881a-c81d-4f55-b381-1ea1090a5ffc\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"PixelPositions\\\" -> {{3, 4}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> {\"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"}\""}, "RowDefault"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.8627450980392157, 0.], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[0.6666666666666667, 0.5751633986928105, 0.], 
+               FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"1.`", ",", "0.8627450980392157`", ",", "0.`"}], 
+                 "]"}], NumberMarks -> False]], Appearance -> None, 
+             BaseStyle -> {}, BaselinePosition -> Baseline, 
+             DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.8627450980392157, 0.]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.8627450980392157, 0.], Editable -> False, 
+            Selectable -> False], "\"}\""}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Width\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Height\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Position\\\" -> {3, 4},\"\>"},
+    {"\<\"                \\\"Y\\\" -> 3,\"\>"},
+    {"\<\"                \\\"X\\\" -> 4,\"\>"},
+    {"\<\"                \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Area\\\" -> 1,\"\>"},
+    {"\<\"                \\\"YRelative\\\" -> 0,\"\>"},
+    {"\<\"                \\\"XRelative\\\" -> 2\"\>"},
+    {"\<\"            |>,\"\>"},
+    {"\<\"            <|\"\>"},
+    {"\<\"                \\\"UUID\\\" -> \
+\\\"6a8b514b-f10a-499b-8bca-fa4bd26d3093\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"PixelPositions\\\" -> {{4, 3}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> {\"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"}\""}, "RowDefault"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[
+                0.6666666666666667, 0.16993464052287582`, 0.1411764705882353],
+                FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 
+                 RowBox[{
+                  "1.`", ",", "0.2549019607843137`", ",", 
+                   "0.21176470588235294`"}], "]"}], NumberMarks -> False]], 
+             Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+             Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.2549019607843137, 0.21176470588235294`]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.2549019607843137, 0.21176470588235294`], Editable -> 
+            False, Selectable -> False], "\"}\""}, "RowDefault"]}, 
+        "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Width\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Height\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Position\\\" -> {4, 3},\"\>"},
+    {"\<\"                \\\"Y\\\" -> 4,\"\>"},
+    {"\<\"                \\\"X\\\" -> 3,\"\>"},
+    {"\<\"                \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Area\\\" -> 1,\"\>"},
+    {"\<\"                \\\"YRelative\\\" -> 1,\"\>"},
+    {"\<\"                \\\"XRelative\\\" -> 1\"\>"},
+    {"\<\"            |>,\"\>"},
+    {"\<\"            <|\"\>"},
+    {"\<\"                \\\"UUID\\\" -> \
+\\\"b7049403-c19e-41e3-8edb-84ef0649a82b\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"PixelPositions\\\" -> {{5, 2}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> {\"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"}\""}, "RowDefault"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.8627450980392157, 0.], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[0.6666666666666667, 0.5751633986928105, 0.], 
+               FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"1.`", ",", "0.8627450980392157`", ",", "0.`"}], 
+                 "]"}], NumberMarks -> False]], Appearance -> None, 
+             BaseStyle -> {}, BaselinePosition -> Baseline, 
+             DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.8627450980392157, 0.]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.8627450980392157, 0.], Editable -> False, 
+            Selectable -> False], "\"}\""}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Width\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Height\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Position\\\" -> {5, 2},\"\>"},
+    {"\<\"                \\\"Y\\\" -> 5,\"\>"},
+    {"\<\"                \\\"X\\\" -> 2,\"\>"},
+    {"\<\"                \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Area\\\" -> 1,\"\>"},
+    {"\<\"                \\\"YRelative\\\" -> 2,\"\>"},
+    {"\<\"                \\\"XRelative\\\" -> 0\"\>"},
+    {"\<\"            |>,\"\>"},
+    {"\<\"            <|\"\>"},
+    {"\<\"                \\\"UUID\\\" -> \
+\\\"6f024852-92f6-44db-978a-0716313e5b74\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[1., 0.8627450980392157, 0.]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"PixelPositions\\\" -> {{5, 4}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> {\"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\"}\""}, "RowDefault"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.8627450980392157, 0.], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[0.6666666666666667, 0.5751633986928105, 0.], 
+               FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 RowBox[{"1.`", ",", "0.8627450980392157`", ",", "0.`"}], 
+                 "]"}], NumberMarks -> False]], Appearance -> None, 
+             BaseStyle -> {}, BaselinePosition -> Baseline, 
+             DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.8627450980392157, 0.]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.8627450980392157, 0.], Editable -> False, 
+            Selectable -> False], "\"}\""}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Width\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Height\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Position\\\" -> {5, 4},\"\>"},
+    {"\<\"                \\\"Y\\\" -> 5,\"\>"},
+    {"\<\"                \\\"X\\\" -> 4,\"\>"},
+    {"\<\"                \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Area\\\" -> 1,\"\>"},
+    {"\<\"                \\\"YRelative\\\" -> 2,\"\>"},
+    {"\<\"                \\\"XRelative\\\" -> 2\"\>"},
+    {"\<\"            |>\"\>"},
+    {"\<\"        },\"\>"},
+    {"\<\"        \\\"ColorCount\\\" -> 2,\"\>"},
+    {"\<\"        \\\"YInverse\\\" -> 7,\"\>"},
+    {"\<\"        \\\"XInverse\\\" -> 8,\"\>"},
+    {"\<\"        \\\"Y2\\\" -> 5,\"\>"},
+    {"\<\"        \\\"X2\\\" -> 4,\"\>"},
+    {"\<\"        \\\"Y2Inverse\\\" -> 5,\"\>"},
+    {"\<\"        \\\"X2Inverse\\\" -> 6,\"\>"},
+    {"\<\"        \\\"ZOrder\\\" -> 0,\"\>"},
+    {"\<\"        \\\"YMiddle\\\" -> 4,\"\>"},
+    {"\<\"        \\\"XMiddle\\\" -> 3,\"\>"},
+    {"\<\"        \\\"Length\\\" -> 3,\"\>"},
+    {"\<\"        \\\"PrimarySizeDimension\\\" -> \\\"None\\\",\"\>"},
+    {"\<\"        \\\"FilledArea\\\" -> 5,\"\>"},
+    {"\<\"        \\\"FilledProportion\\\" -> 0.5555555555555556,\"\>"},
+    {"\<\"        \\\"SurfacePixelCount\\\" -> 5,\"\>"},
+    {"\<\"        \\\"VerticalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"        \\\"HorizontalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"        \\\"VerticalAndHorizontalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"        \\\"HollowCount\\\" -> 0\"\>"},
+    {"\<\"    |>,\"\>"},
+    {"\<\"    <|\"\>"},
+    {"\<\"        \\\"UUID\\\" -> \
+\\\"0548a70a-33ec-42c5-b1c5-38e21b613ee1\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[0.2], {1, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 
+                  3} -> GrayLevel[0.2], {2, 1} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 
+                  2} -> 
+                 RGBColor[0., 0.4549019607843137, 0.8509803921568627], {2, 3} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  1} -> GrayLevel[0.2], {3, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"        \\\"PixelPositions\\\" -> {{6, 7}, {7, 6}, {7, 7}, {7, 8}, \
+{8, 7}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[0., 0.4549019607843137, 0.8509803921568627], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[0., 0.3032679738562092, 0.5673202614379085], 
+               FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 
+                 RowBox[{
+                  "0.`", ",", "0.4549019607843137`", ",", 
+                   "0.8509803921568627`"}], "]"}], NumberMarks -> False]], 
+             Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+             Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[0., 0.4549019607843137, 0.8509803921568627]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[0., 0.4549019607843137, 0.8509803921568627], Editable -> 
+            False, Selectable -> False], "\", \"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[
+                0.6666666666666667, 0.34771241830065364`, 
+                 0.07058823529411765], FrameTicks -> None, PlotRangePadding -> 
+               None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 
+                 RowBox[{
+                  "1.`", ",", "0.5215686274509804`", ",", 
+                   "0.10588235294117647`"}], "]"}], NumberMarks -> False]], 
+             Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+             Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.5215686274509804, 0.10588235294117647`], Editable -> 
+            False, Selectable -> False], "\"}\""}, "RowDefault"]}, 
+        "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"        \\\"Width\\\" -> 3,\"\>"},
+    {"\<\"        \\\"Height\\\" -> 3,\"\>"},
+    {"\<\"        \\\"Position\\\" -> {6, 6},\"\>"},
+    {"\<\"        \\\"Y\\\" -> 6,\"\>"},
+    {"\<\"        \\\"X\\\" -> 6,\"\>"},
+    {"\<\"        \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"        \\\"Area\\\" -> 9,\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"        \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[0.2], {1, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 
+                  3} -> GrayLevel[0.2], {2, 1} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 
+                  2} -> RGBColor[
+                  0., 0.4549019607843137, 0.8509803921568627], {2, 3} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  1} -> GrayLevel[0.2], {3, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"        \\\"Shapes\\\" -> {\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"            \"", 
+         TemplateBox[{"\"<|\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[0.2], {1, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 
+                  3} -> GrayLevel[0.2], {2, 1} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 
+                  2} -> RGBColor[
+                  0., 0.4549019607843137, 0.8509803921568627], {2, 3} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  1} -> GrayLevel[0.2], {3, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"], "\"|>\""}, "RowDefault"]}, 
+        "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"            <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \\\"Image\\\" -> \"", 
+         TagBox[
+          
+          GridBox[{{"\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\""}}, AutoDelete -> 
+           False, GridBoxBackground -> {
+            "Columns" -> {{None}}, "Rows" -> {{None}}, 
+             "ItemsIndexed" -> {{1, 1} -> GrayLevel[0.2], {1, 2} -> 
+               GrayLevel[0.2], {1, 3} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 5} -> 
+               GrayLevel[0.2], {1, 6} -> GrayLevel[0.2], {2, 1} -> 
+               GrayLevel[0.2], {2, 2} -> GrayLevel[0.2], {2, 3} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 5} -> 
+               GrayLevel[0.2], {2, 6} -> GrayLevel[0.2], {3, 1} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 2} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 3} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {3, 4} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {3, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 1} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 2} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 3} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {4, 4} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {4, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 1} -> 
+               GrayLevel[0.2], {5, 2} -> GrayLevel[0.2], {5, 3} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 5} -> 
+               GrayLevel[0.2], {5, 6} -> GrayLevel[0.2], {6, 1} -> 
+               GrayLevel[0.2], {6, 2} -> GrayLevel[0.2], {6, 3} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 5} -> 
+               GrayLevel[0.2], {6, 6} -> GrayLevel[0.2]}}, 
+           GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+           GridBoxFrame -> {"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+            GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+           FrameStyle -> {
+             AbsoluteThickness[1], 
+             GrayLevel[0.5]}], "Grid"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Scaled\\\
+\", \\\"Factor\\\" -> 0.5|>\"\>"},
+    {"\<\"            |>,\"\>"},
+    {"\<\"            <|\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \\\"Image\\\" -> \"", 
+         TagBox[
+          
+          GridBox[{{
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}, {
+            "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", "\"\"", 
+             "\"\""}}, AutoDelete -> False, 
+           GridBoxBackground -> {
+            "Columns" -> {{None}}, "Rows" -> {{None}}, 
+             "ItemsIndexed" -> {{1, 1} -> GrayLevel[0.2], {1, 2} -> 
+               GrayLevel[0.2], {1, 3} -> GrayLevel[0.2], {1, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 7} -> 
+               GrayLevel[0.2], {1, 8} -> GrayLevel[0.2], {1, 9} -> 
+               GrayLevel[0.2], {2, 1} -> GrayLevel[0.2], {2, 2} -> 
+               GrayLevel[0.2], {2, 3} -> GrayLevel[0.2], {2, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 7} -> 
+               GrayLevel[0.2], {2, 8} -> GrayLevel[0.2], {2, 9} -> 
+               GrayLevel[0.2], {3, 1} -> GrayLevel[0.2], {3, 2} -> 
+               GrayLevel[0.2], {3, 3} -> GrayLevel[0.2], {3, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 7} -> 
+               GrayLevel[0.2], {3, 8} -> GrayLevel[0.2], {3, 9} -> 
+               GrayLevel[0.2], {4, 1} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 2} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 3} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 4} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {4, 5} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {4, 6} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {4, 7} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 8} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {4, 9} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 1} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 2} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 3} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 4} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {5, 5} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {5, 6} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {5, 7} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 8} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {5, 9} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 1} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 2} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 3} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 4} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {6, 5} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {6, 6} -> 
+               RGBColor[0., 0.4549019607843137, 0.8509803921568627], {6, 7} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 8} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {6, 9} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {7, 1} -> 
+               GrayLevel[0.2], {7, 2} -> GrayLevel[0.2], {7, 3} -> 
+               GrayLevel[0.2], {7, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {7, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {7, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {7, 7} -> 
+               GrayLevel[0.2], {7, 8} -> GrayLevel[0.2], {7, 9} -> 
+               GrayLevel[0.2], {8, 1} -> GrayLevel[0.2], {8, 2} -> 
+               GrayLevel[0.2], {8, 3} -> GrayLevel[0.2], {8, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {8, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {8, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {8, 7} -> 
+               GrayLevel[0.2], {8, 8} -> GrayLevel[0.2], {8, 9} -> 
+               GrayLevel[0.2], {9, 1} -> GrayLevel[0.2], {9, 2} -> 
+               GrayLevel[0.2], {9, 3} -> GrayLevel[0.2], {9, 4} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {9, 5} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {9, 6} -> 
+               RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {9, 7} -> 
+               GrayLevel[0.2], {9, 8} -> GrayLevel[0.2], {9, 9} -> 
+               GrayLevel[0.2]}}, 
+           GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+           GridBoxFrame -> {"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+            GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+           FrameStyle -> {
+             AbsoluteThickness[1], 
+             GrayLevel[0.5]}], "Grid"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Transform\\\" -> <|\\\"Type\\\" -> \\\"Scaled\\\
+\", \\\"Factor\\\" -> 0.3333333333333333|>\"\>"},
+    {"\<\"            |>\"\>"},
+    {"\<\"        },\"\>"},
+    {"\<\"        \\\"Components\\\" -> {\"\>"},
+    {"\<\"            <|\"\>"},
+    {"\<\"                \\\"UUID\\\" -> \
+\\\"7ad70b35-3033-471b-85bf-17399c3e2a35\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\"", "\"\"", "\"\""}, {"\"\"", "\"\"", "\"\""}, {
+              "\"\"", "\"\"", "\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> GrayLevel[0.2], {1, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {1, 
+                  3} -> GrayLevel[0.2], {2, 1} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {2, 
+                  2} -> GrayLevel[0.2], {2, 3} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  1} -> GrayLevel[0.2], {3, 2} -> 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], {3, 
+                  3} -> GrayLevel[0.2]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"PixelPositions\\\" -> {{6, 7}, {7, 6}, {7, 8}, \
+{8, 7}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[
+                0.6666666666666667, 0.34771241830065364`, 
+                 0.07058823529411765], FrameTicks -> None, PlotRangePadding -> 
+               None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 
+                 RowBox[{
+                  "1.`", ",", "0.5215686274509804`", ",", 
+                   "0.10588235294117647`"}], "]"}], NumberMarks -> False]], 
+             Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+             Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[1., 0.5215686274509804, 0.10588235294117647`]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[1., 0.5215686274509804, 0.10588235294117647`], Editable -> 
+            False, Selectable -> False], "\"}\""}, "RowDefault"]}, 
+        "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Width\\\" -> 3,\"\>"},
+    {"\<\"                \\\"Height\\\" -> 3,\"\>"},
+    {"\<\"                \\\"Position\\\" -> {6, 6},\"\>"},
+    {"\<\"                \\\"Y\\\" -> 6,\"\>"},
+    {"\<\"                \\\"X\\\" -> 6,\"\>"},
+    {"\<\"                \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Area\\\" -> 4,\"\>"},
+    {"\<\"                \\\"YRelative\\\" -> 0,\"\>"},
+    {"\<\"                \\\"XRelative\\\" -> 0\"\>"},
+    {"\<\"            |>,\"\>"},
+    {"\<\"            <|\"\>"},
+    {"\<\"                \\\"UUID\\\" -> \
+\\\"61038be5-ff0b-4127-ae12-53327fe3d08e\\\",\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Image\\\" -> \"", 
+           TagBox[
+            
+            GridBox[{{"\"\""}}, AutoDelete -> False, 
+             GridBoxBackground -> {
+              "Columns" -> {{None}}, "Rows" -> {{None}}, 
+               "ItemsIndexed" -> {{1, 1} -> 
+                 RGBColor[0., 0.4549019607843137, 0.8509803921568627]}}, 
+             GridBoxDividers -> {"Columns" -> {{True}}, "Rows" -> {{True}}}, 
+             GridBoxFrame -> {
+              "ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}}, 
+             GridBoxItemSize -> {"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}, 
+             FrameStyle -> {
+               AbsoluteThickness[1], 
+               GrayLevel[0.5]}], "Grid"]}, "RowDefault"]}, "RowDefault"], 
+       "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"PixelPositions\\\" -> {{7, 7}},\"\>"},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Shape\\\" -> {\"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Pixel\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Pixel\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Pixel\"|>", "Tooltip"]& ], 
+           "\", \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Square\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Square\\\"|>\"", TooltipDelay -> 0.4, 
+             LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Square\"|>", "Tooltip"]& ], 
+           "\", \"", 
+           TagBox[
+            TooltipBox[
+             FrameBox["\"Rectangle\"", FrameStyle -> Directive[
+                RGBColor[1, 0.5, 0.], "Thickness" -> 1], RoundingRadius -> 4, 
+              Background -> 
+              RGBColor[1., 0.9803921568627451, 0.9215686274509803], BaseStyle -> {
+                RGBColor[0.4, 0.21, 0.06], "FontFamily" -> "Arial"}, 
+              BaselinePosition -> Baseline, ContentPadding -> True, 
+              FrameMargins -> {{5, 5}, {3, 3}}, StripOnInput -> False], 
+             "\"<|\\\"Name\\\" -> \\\"Rectangle\\\"|>\"", TooltipDelay -> 0.4,
+              LabelStyle -> "TextStyling"], 
+            Annotation[#, "<|\"Name\" -> \"Rectangle\"|>", "Tooltip"]& ], 
+           "\"}\""}, "RowDefault"]}, "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {
+     TemplateBox[{
+       TemplateBox[{"\"                \"", 
+         TemplateBox[{"\"\\\"Colors\\\" -> {\"", 
+           InterpretationBox[
+            ButtonBox[
+             TooltipBox[
+              GraphicsBox[{{
+                 GrayLevel[0], 
+                 RectangleBox[{0, 0}]}, {
+                 GrayLevel[0], 
+                 RectangleBox[{1, -1}]}, {
+                 RGBColor[0., 0.4549019607843137, 0.8509803921568627], 
+                 RectangleBox[{0, -1}, {2, 1}]}}, DefaultBaseStyle -> 
+               "ColorSwatchGraphics", AspectRatio -> 1, Frame -> True, 
+               FrameStyle -> 
+               RGBColor[0., 0.3032679738562092, 0.5673202614379085], 
+               FrameTicks -> None, PlotRangePadding -> None, ImageSize -> 
+               Dynamic[{
+                 Automatic, 
+                  1.35 (CurrentValue["FontCapHeight"]/AbsoluteCurrentValue[
+                   Magnification])}]], 
+              StyleBox[
+               RowBox[{"RGBColor", "[", 
+                 
+                 RowBox[{
+                  "0.`", ",", "0.4549019607843137`", ",", 
+                   "0.8509803921568627`"}], "]"}], NumberMarks -> False]], 
+             Appearance -> None, BaseStyle -> {}, BaselinePosition -> 
+             Baseline, DefaultBaseStyle -> {}, ButtonFunction :> 
+             With[{Typeset`box$ = EvaluationBox[]}, 
+               If[
+                Not[
+                 AbsoluteCurrentValue["Deployed"]], 
+                SelectionMove[Typeset`box$, All, Expression]; 
+                FrontEnd`Private`$ColorSelectorInitialAlpha = 1; 
+                FrontEnd`Private`$ColorSelectorInitialColor = 
+                 RGBColor[0., 0.4549019607843137, 0.8509803921568627]; 
+                FrontEnd`Private`$ColorSelectorUseMakeBoxes = True; 
+                MathLink`CallFrontEnd[
+                  FrontEnd`AttachCell[Typeset`box$, 
+                   FrontEndResource["RGBColorValueSelector"], {
+                   0, {Left, Bottom}}, {Left, Top}, 
+                   "ClosingActions" -> {
+                    "SelectionDeparture", "ParentChanged", 
+                    "EvaluatorQuit"}]]]], BaseStyle -> Inherited, Evaluator -> 
+             Automatic, Method -> "Preemptive"], 
+            RGBColor[0., 0.4549019607843137, 0.8509803921568627], Editable -> 
+            False, Selectable -> False], "\"}\""}, "RowDefault"]}, 
+        "RowDefault"], "\",\""},
+      "RowDefault"]},
+    {"\<\"                \\\"Width\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Height\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Position\\\" -> {7, 7},\"\>"},
+    {"\<\"                \\\"Y\\\" -> 7,\"\>"},
+    {"\<\"                \\\"X\\\" -> 7,\"\>"},
+    {"\<\"                \\\"AspectRatio\\\" -> 1,\"\>"},
+    {"\<\"                \\\"Area\\\" -> 1,\"\>"},
+    {"\<\"                \\\"YRelative\\\" -> 1,\"\>"},
+    {"\<\"                \\\"XRelative\\\" -> 1\"\>"},
+    {"\<\"            |>\"\>"},
+    {"\<\"        },\"\>"},
+    {"\<\"        \\\"ColorCount\\\" -> 2,\"\>"},
+    {"\<\"        \\\"YInverse\\\" -> 4,\"\>"},
+    {"\<\"        \\\"XInverse\\\" -> 4,\"\>"},
+    {"\<\"        \\\"Y2\\\" -> 8,\"\>"},
+    {"\<\"        \\\"X2\\\" -> 8,\"\>"},
+    {"\<\"        \\\"Y2Inverse\\\" -> 2,\"\>"},
+    {"\<\"        \\\"X2Inverse\\\" -> 2,\"\>"},
+    {"\<\"        \\\"ZOrder\\\" -> 0,\"\>"},
+    {"\<\"        \\\"YMiddle\\\" -> 7,\"\>"},
+    {"\<\"        \\\"XMiddle\\\" -> 7,\"\>"},
+    {"\<\"        \\\"Length\\\" -> 3,\"\>"},
+    {"\<\"        \\\"PrimarySizeDimension\\\" -> \\\"None\\\",\"\>"},
+    {"\<\"        \\\"FilledArea\\\" -> 5,\"\>"},
+    {"\<\"        \\\"FilledProportion\\\" -> 0.5555555555555556,\"\>"},
+    {"\<\"        \\\"SurfacePixelCount\\\" -> 4,\"\>"},
+    {"\<\"        \\\"VerticalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"        \\\"HorizontalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"        \\\"VerticalAndHorizontalLineSymmetry\\\" -> False,\"\>"},
+    {"\<\"        \\\"HollowCount\\\" -> 0\"\>"},
+    {"\<\"    |>\"\>"},
+    {"\<\"}\"\>"}
+   },
+   DefaultBaseStyle->"Column",
+   GridBoxAlignment->{"Columns" -> {{Left}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Column"]], "Output",
+ CellChangeTimes->{
+  3.8671597689984283`*^9, {3.867160771266987*^9, 3.8671607998411584`*^9}, 
+   3.8671609000407867`*^9, {3.86716102746357*^9, 3.8671610566754694`*^9}, 
+   3.867161091369585*^9, {3.867161298936658*^9, 3.867161348596097*^9}, 
+   3.867161416438718*^9, 3.867161536004443*^9, {3.8671616324338546`*^9, 
+   3.867161682823069*^9}, 3.8671617601234436`*^9, {3.8671618298985643`*^9, 
+   3.867161859266184*^9}, 3.867161972216634*^9, 3.8671620099821367`*^9, 
+   3.867162082405582*^9, 3.867162121838129*^9, {3.8676605706681714`*^9, 
+   3.8676605946676917`*^9}, 3.8676746441394215`*^9, 3.868794632276412*^9, 
+   3.8687947020643826`*^9, {3.868794745198106*^9, 3.8687947603672495`*^9}, 
+   3.868794824415242*^9, {3.868795319444189*^9, 3.8687953318828735`*^9}, {
+   3.869772549052133*^9, 3.8697725512440453`*^9}, {3.8697729038259983`*^9, 
+   3.86977292676084*^9}, 3.8697729889808645`*^9, 3.8697730313062763`*^9, 
+   3.8705557499676375`*^9, 3.8705570431664*^9, 3.8705570780526037`*^9, {
+   3.8705571098018785`*^9, 3.870557154977973*^9}, {3.8705572063950167`*^9, 
+   3.870557234068703*^9}, 3.8705573736601095`*^9, {3.87060036515825*^9, 
+   3.8706003751391783`*^9}, 3.8709039254579*^9, 3.8712896934134083`*^9, 
+   3.8719290388895226`*^9},
+ CellLabel->
+  "Out[813]=",ExpressionUUID->"cffb35c0-696a-48be-af33-67ddf918f14f"],
+
+Cell[CellGroupData[{
+
+Cell["OtherScene Option", "Subsection",
+ CellChangeTimes->{{3.867671798898716*^9, 
+  3.8676718010693307`*^9}},ExpressionUUID->"a30323af-9fd6-4291-904f-\
+b9bb819da0dc"],
+
+Cell["Tricky to test, so will skip for now. Related:", "Text",
+ CellChangeTimes->{{3.867675177248148*^9, 
+  3.867675184104479*^9}},ExpressionUUID->"b871aa70-6527-4191-8e53-\
+02d8e2ba58a0"],
+
+Cell[BoxData[
+ RowBox[{"Lui", "[", "\"\<ARCParseInputAndOutputScenes-20220724-BK2FLS\>\"", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.867675271216916*^9, 
+  3.867675271974615*^9}},ExpressionUUID->"20aa739b-28bd-4471-91fb-\
+1a851df75cf7"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCFormCompositeObjects], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCFormCompositeObjects, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCFormCompositeObjects]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCFormCompositeObjects], ImageSize -> {110., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCFormCompositeObjects], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCFormCompositeObjects]; 
+               
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCFormCompositeObjects, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCFormCompositeObjects]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452 = "", ImageSize -> {100, 33}]}]},
+             Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022718150535452}]], "DockedCell"]},
+TaggingRules->{
+ "WelcomeScreenSettings" -> {"FEStarting" -> False}, 
+  "CreateNamedNotebook2Args" -> {
+   "ARCFormCompositeObjects", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCFormCompositeObjects}, "ReturnNotebook" -> 
+    True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"5c8d9d6a-f846-47ea-bc1d-06fc3d866521"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 95, 0, 98, "Title",ExpressionUUID->"e330c2c1-ae10-4b04-912f-2f76dbc27ea8"],
+Cell[678, 24, 254, 5, 54, "Code",ExpressionUUID->"3b00e239-359a-4d59-b4a4-0c6cde1ad43a",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[957, 33, 79, 0, 67, "Section",ExpressionUUID->"0ca29079-7fa3-48dc-8e54-3a9e808ea32a"],
+Cell[CellGroupData[{
+Cell[1061, 37, 3630, 85, 52, "TestUI",ExpressionUUID->"4c9ecb18-3df1-4ce0-aca2-7c2908f9f1ff",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[4694, 124, 19134, 415, 2592, "Code",ExpressionUUID->"d9460f11-794d-4111-9b89-9916f7d6a5b7",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->94346783]
+}, Open  ]],
+Cell[23843, 542, 77190, 1513, 4797, "Output",ExpressionUUID->"cffb35c0-696a-48be-af33-67ddf918f14f"],
+Cell[CellGroupData[{
+Cell[101058, 2059, 167, 3, 54, "Subsection",ExpressionUUID->"a30323af-9fd6-4291-904f-b9bb819da0dc"],
+Cell[101228, 2064, 188, 3, 35, "Text",ExpressionUUID->"b871aa70-6527-4191-8e53-02d8e2ba58a0"],
+Cell[101419, 2069, 236, 5, 29, "Input",ExpressionUUID->"20aa739b-28bd-4471-91fb-1a851df75cf7"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

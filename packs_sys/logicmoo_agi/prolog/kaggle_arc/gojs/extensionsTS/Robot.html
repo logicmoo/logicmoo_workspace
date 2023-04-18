@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simulating Input Events</title>
+  <meta name="description" content="TypeScript: Test a diagram by simulating abstract input events." />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Copyright 1998-2019 by Northwoods Software Corporation. -->
+
+  <script src="../samples/assets/require.js"></script>
+  <script src="../assets/js/goSamples.js"></script> <!-- this is only for the GoJS Samples framework -->
+  <script id="code">
+    function init() {
+      require(["RobotScript"], function(app) {
+        app.init();
+        document.getElementById("dragFromPalette").onclick = app.dragFromPalette;
+        document.getElementById("copyNode").onclick = app.copyNode;
+        document.getElementById("dragSelectNodes").onclick = app.dragSelectNodes;
+        document.getElementById("clickContextMenu").onclick = app.clickContextMenu;
+        document.getElementById("deleteSelection").onclick = app.deleteSelection;
+        document.getElementById("clickLambda").onclick = app.clickLambda;
+        document.getElementById("doubleClickLambda").onclick = app.doubleClickLambda;
+      });
+    }
+  </script>
+</head>
+<body onload="init()">
+  <div id="sample">
+    <div style="width: 100%; display: flex; justify-content: space-between">
+      <div id="myPaletteDiv" style="width: 80px; height: 400px; margin-right: 2px; border: solid 1px black"></div>
+      <div id="myDiagramDiv" style="flex-grow: 1; height: 400px; border: solid 1px black"></div>
+    </div>
+    <p>
+      To simulate mouse events the buttons below use the <b>Robot</b> class that is defined in <a href="Robot.ts">Robot.ts</a>.
+    </p>
+    <p>
+      Click these buttons in order from top to bottom:<br />
+      <button id="dragFromPalette">Drag From Palette</button><br />
+      <button id="copyNode">Copy Node</button><br />
+      <button id="dragSelectNodes">Drag Select Nodes</button><br />
+      <button id="clickContextMenu">Context Menu Click Alpha</button><br />
+      <button id="deleteSelection">Delete</button><br />
+    </p>
+    <p>
+      Clicking operations:<br />
+      <button id="clickLambda">Click Lambda</button><br />
+      <button id="doubleClickLambda">Double Click Lambda</button><br />
+    </p>
+    <p>
+      The <a>UndoManager</a> has been enabled in the main Diagram.
+      Give focus to the Diagram and you can undo everything and then redo everything to confirm what was executed by the Robot.
+    </p>
+    <div id="myStatus" style="color:green"></div>
+  </div>
+</body>
+</html>

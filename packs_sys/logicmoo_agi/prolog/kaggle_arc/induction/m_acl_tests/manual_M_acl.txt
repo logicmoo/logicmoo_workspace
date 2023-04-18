@@ -1,0 +1,177 @@
+                                     M-ACL
+                     Multiple Abductive Concept Learning
+                                  
+
+
+Prerequisites:
+The following software must be installed in your system:
+        Sicstus Prolog: information on how to obtain a commercial licence for Sicstus can be
+                        found at http://www.sics.se/isl/sicstus.html
+
+Installation instructions:
+
+1) download the M-ACL code: m_acl.tar.gz
+
+2) create a directory for your code and data files
+
+3) copy m_acl.tar.gz into it and decompress it
+        gunzip m_acl.tar.gz
+        tar xvf m_acl.tar
+The directory will contain the following files
+	manual_m_acl.txt
+this manual,
+	m_acl.pl
+	abdpp_mple.pl
+	output.pl
+the system, 
+	ancestor.bg
+	ancestor.rules
+	odd_even.bg
+	odd_even.rules
+	grandfather.bg
+	grandfather.rules
+a examples of input and output files.
+
+Running the system:
+1) prepare your data: you need one input file: (see the end of the file for the input file format)
+        <file_stem>.bg :the input file with the training set, background knowledge and bias
+
+2) load Sicstus
+        sicstus
+
+3) load the M-ACL code
+        | ?-[m_acl].
+
+4) start the induction with the command
+        | ?-i(<file_stem>).
+the induction writes the output files <file_stem>.rules containing the
+rules learned.
+
+Input files format:
+Format of <file_stem>.bg :
+
+See ancestor.bg  as an example. Other examples are grandfather.bg and odd_even.bg. 
+
+   1.Bias: 
+     each target predicate must have a "bias" clause 
+          bias(rule(<head>,<body>), 
+                  <list of variables>, 
+                  <list of allowed literals>).
+     The <list of allowed literals> is the list of all the possible literals that 
+     can be added to the rule <head>:-<body> 
+     <body> is a template that can be used in order to specialize the clauses accordingly to     what is already in the body.   In the example below is a variable
+     so that any rule can be refined with the literals in the list.   The <list of variables>      must contain the list of all the variables that
+     may appear in the rule or its refinements and must be the same for all bias facts      relative to the same predicate. 
+     Example: 
+          bias(rule(father(X,Y),_B), 
+                  [X,Y], 
+                  [male(X),male(Y),ancestor(X,Y),ancestor(Y,X),parent(X,Y),parent(Y,X)]).
+   2.Abducible predicates: 
+          abducibles(<list of abducible predicates>).
+     The variables in the abducible predicates must be all different (use _) 
+     Example: 
+          abducibles([ancestor(_,_),father(_,_)]).
+   3.Integrity constraints: 
+          ic(<list of literals in the body>).
+     Example: 
+          ic([male(X),female(X)]).
+   4.Training set: 
+          eplus(<list of positive examples>). 
+          eminus(<list of negative examples>).
+     Example: 
+          eplus([ancestor(a,b),ancestor(b,c),ancestor(d,c), 
+          father(a,b)]). 
+
+          eminus([ancestor(b,a),ancestor(a,d),father(b,c), 
+           father(a,c)]).
+   5.Background theory: 
+          :-dynamic <pred1>/<arity1>,...,<predn>/<arityn>. 
+          <definitions for predicates pred1,...,predn>
+     Example: 
+          :- dynamic parent/2, ancestor/2, father/2, male/1, abducibles/1. 
+
+          parent(a,b). 
+          parent(b,c). 
+          parent(d,b). 
+          male(a). 
+          female(b). 
+
+Output files format:
+
+     The result of the learning phase consists of the file <file_stem>.rules containing the rules learned together with information
+     about the global and local consistency of clauses and the clauses that have, eventually, been retracted. In the case of ancestor.bg,
+     the following output is produced: 
+          /* 
+          M-ACL ver 1 AbdProofProc. ver mple 
+          Input file: ancestor.bg, Output file: ancestor.rules 
+          Max spec steps=10, Beamsize=10, Derivation depth=50,Verbosity=3, 
+          Min cov=5, Accuracy stopping threshold=0.800 
+          4 positive examples, 4 negative examples 
+          */ 
+          /* Execution time 2.640000 seconds. Generated rules */ 
+
+          ancestor(A,B):-parent(A,B). 
+          /* Name: c122 GC: yes, LC: yes 
+          Covered positive examples: [ancestor(b,c),ancestor(a,b)] 
+          Covered positive abduced examples: [] 
+          Covered negative abduced examples: [] 
+          Abduced literals: []  */ 
+            
+
+          ancestor(A,B):-parent(A,C),ancestor(C,B). 
+          /* Name: c147 GC: yes, LC: yes 
+          Covered positive examples: [ancestor(d,c)] 
+          Covered positive abduced examples: [] 
+          Covered negative abduced examples: [ancestor(a,c)] 
+          Abduced literals:
+          [[not(ancestor(c,d)),c147],[not(ancestor(b,d)),c147],[not(ancestor(c,a)),c147]]  */ 
+            
+
+          father(A,B):-male(A),parent(A,B). 
+          /* Name: c166 GC: yes, LC: yes 
+          Covered positive examples: [father(a,b)] 
+          Covered positive abduced examples: [] 
+          Covered negative abduced examples: [] 
+          Abduced literals: []  */ 
+
+          /* Backtracked clauses 
+
+          c135: father(A,B):-male(A),ancestor(A,B). 
+
+          */
+First the name of the input and output file are printed, then the values for the  parameters are shown together with the total execution time. Then follows the rules that have been learned, together with the set of positive and negative examples covered by them and by the set of assumptions made for covering them. In the set of assumptions, each assumption is associated to the rule that generated it. 
+
+The meaning of the fields Name, GC and LC after each clause is the following: 
+Name: is a constant that identifies the clause 
+GC: state whether the clause is globally consistent 
+LC: state whether the clause is locally consistent 
+
+The last part of the output file records the clauses that have been retracted because they generated a global inconsistency. 
+For the other examples, see the output files grandfather.rules and odd_even.rules. 
+Parameters setting:
+	A number of parameters can be set. 
+	The ACL1 parameters are defined by a number of prolog facts and are described below:
+
+        verbosity(V): specifies the verbosity level.  Set by default to 3
+        0: nothing is printed apart from the output rules
+        1: every rule that is added to the theory
+        2: every rule added to the agenda
+        3: the agenda at each specializing step
+
+        beamsize(Beamsize): specifies the size of the beam. Set by default to 5
+        
+        nmax(Nmax): maximum number of specializayion.  Set by default to 10
+
+        der_depth(Depth): depth of derivations.  Set by default to 20
+
+        kt(K):  threshold on K+ and K-.  Set by default to 0.1
+
+	min_cov(MC): minimum number of examples that each clause must cover. 
+		Set by default to 1.
+
+They can be set either by including a fact for them in the input file, by changing the m_acl.pl file and reloading it or by retract and asserts.
+
+
+For reporting bugs, comments and new applications, send an e-mail to
+Fabrizio Riguzzi
+friguzzi@deis.unibo.it

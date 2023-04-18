@@ -1,0 +1,27 @@
+/*
+M-ACL ver 1 AbdProofProc. ver mple
+Input file: grandfather.bg, Output file: grandfather.rules
+Max spec steps=10, Beamsize=10, Derivation depth=50,Verbosity=3, 
+Min cov=1, Accuracy stopping threshold=0.800
+3 positive examples, 5 negative examples
+*/
+/* Execution time 0.700000 seconds. Generated rules */
+ 
+grandfather(A,B):-parent(C,B),father(A,C).
+/* Name: c64 GC: yes, LC: yes 
+Covered positive examples: [grandfather(david,jim),grandfather(john,ellen)]
+Covered positive abduced examples: []
+Covered negative abduced examples: []
+Abduced literals: [[not(father(mary,ellen)),c64],[father(david,steve),c64]]  */
+ 
+ 
+father(A,B):-parent(A,B),male(A).
+/* Name: c92 GC: yes, LC: yes 
+Covered positive examples: [father(john,mary)]
+Covered positive abduced examples: [father(david,steve)]
+Covered negative abduced examples: []
+Abduced literals: []  */
+ 
+/* Backtracked clauses 
+ 
+*/

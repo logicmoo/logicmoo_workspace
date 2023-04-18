@@ -1,0 +1,368 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     19038,        360]
+NotebookOptionsPosition[     13111,        214]
+NotebookOutlinePosition[     18562,        350]
+CellTagsIndexPosition[     18519,        347]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCTaskLog", "Title",ExpressionUUID->"46848549-a689-4535-bfc5-119b583ea2be"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCTaskLog", "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"f2f9af8a-29fd-4cc7-870c-f27978e2ad89"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"27b9a339-e12f-4209-94ce-035501720e06"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"ARCTaskLog", "[", "]"}], " ", "//", " ", "Indent2"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8689533170527773`*^9, 3.868953318225875*^9}},
+ CellLabel->
+  "In[1880]:=",ExpressionUUID->"b5162689-d036-4b0a-b2a1-49577a642001"],
+
+Cell[BoxData["\<\"{\\n    <|\\n        \\\"Timestamp\\\" -> \
+Missing[\\\"NotRecorded\\\"],\\n        \\\"PersonalExample\\\" -> False,\\n  \
+      \\\"GeneralizedSuccess\\\" -> False,\\n        \\\"SucessCount\\\" -> \
+1,\\n        \\\"Runtime\\\" -> Quantity[1.5, \\\"Minutes\\\"],\\n        \
+\\\"CodeLength\\\" -> Missing[\\\"NotRecorded\\\"],\\n        \
+\\\"ExampleImplemented\\\" -> \\\"0ca9ddb6\\\",\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"SucessCount\\\" -> 2,\\n        \\\"Runtime\\\" -> Quantity[1.5, \
+\\\"Minutes\\\"],\\n        \\\"ExampleImplemented\\\" -> \
+\\\"3c9b0459\\\",\\n        \\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \
+\\\"TotalGeneralizedSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"Timestamp\\\" -> DateObject[{2022, 7, 24}, \\\"Day\\\", \
+\\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" -> 3,\\n        \
+\\\"Runtime\\\" -> Quantity[2.8, \\\"Minutes\\\"],\\n        \
+\\\"RuntimeComment\\\" -> \\\"Slowed down from 1.5 minutes to 2.8 minutes \
+July 24 2022 when we implemented \\\\\\\"Forming Composite Objects Can't \
+Assume\\\\\\\" for 1caeab9d.\\\",\\n        \\\"CodeLength\\\" -> 3034,\\n    \
+    \\\"ExampleImplemented\\\" -> \\\"1caeab9d\\\",\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0\\n    |>,\\n    <|\\n        \\\"Timestamp\\\" -> DateObject[{2022, \
+7, 25}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" \
+-> 4,\\n        \\\"Runtime\\\" -> Quantity[3, \\\"Minutes\\\"],\\n        \\\
+\"CodeLength\\\" -> 3491,\\n        \\\"ExampleImplemented\\\" -> \
+\\\"b60334d2\\\",\\n        \\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \
+\\\"TotalGeneralizedSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"Timestamp\\\" -> DateObject[{2022, 7, 25}, \\\"Day\\\", \
+\\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" -> 5,\\n        \
+\\\"Runtime\\\" -> Quantity[3.8, \\\"Minutes\\\"],\\n        \
+\\\"RuntimeComment\\\" -> \\\"I'm surprised this went up for this input. Did \
+I just not notice it going up for the previous input, or did I really make a \
+change here that slowed things down?\\\",\\n        \\\"CodeLength\\\" -> \
+3549,\\n        \\\"ExampleImplemented\\\" -> \\\"25ff71a9\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[1, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0\\n    |>,\\n    <|\\n        \\\"Timestamp\\\" -> DateObject[{2022, \
+7, 25}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" \
+-> 6,\\n        \\\"Runtime\\\" -> Quantity[3, \\\"Minutes\\\"],\\n        \\\
+\"RuntimeComment\\\" -> \\\"I'm now explicitly skipping inputs where the \
+input and output grids are different sizes.\\\",\\n        \\\"CodeLength\\\" \
+-> 3618,\\n        \\\"ExampleImplemented\\\" -> \\\"3ac3eb23\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[0.5, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0\\n    |>,\\n    <|\\n        \\\"Timestamp\\\" -> DateObject[{2022, \
+7, 25}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" \
+-> 7,\\n        \\\"Runtime\\\" -> Quantity[3, \\\"Minutes\\\"],\\n        \\\
+\"CodeLength\\\" -> 3697,\\n        \\\"ExampleImplemented\\\" -> \
+\\\"e76a88a6\\\",\\n        \\\"ImplementationTime\\\" -> Quantity[1.8, \
+\\\"Hours\\\"],\\n        \\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \
+\\\"TotalGeneralizedSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"Timestamp\\\" -> DateObject[{2022, 7, 25}, \\\"Day\\\", \
+\\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" -> 8,\\n        \
+\\\"Runtime\\\" -> Quantity[3, \\\"Minutes\\\"],\\n        \\\"CodeLength\\\" \
+-> 3698,\\n        \\\"Comment\\\" -> \\\"I also took the opportunity to \
+expand the list of properties we consider for rule formation to include: \
+Width, Height, Position, Y, X, AspectRatio, Area, FilledArea. Still notably \
+absent: Shapes\\\",\\n        \\\"ExampleImplemented\\\" -> \\\"c0f76784\\\",\
+\\n        \\\"ImplementationTime\\\" -> Quantity[3, \\\"Minutes\\\"],\\n     \
+   \\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \
+\\\"TotalGeneralizedSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"Timestamp\\\" -> DateObject[{2022, 7, 25}, \\\"Day\\\", \
+\\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" -> 9,\\n        \
+\\\"Runtime\\\" -> Quantity[4.1, \\\"Minutes\\\"],\\n        \
+\\\"RuntimeComment\\\" -> \\\"ARCFindRules was enhanced to also consider \
+Except[_] rules, which presumably adds runtime.\\\",\\n        \\\"CodeLength\
+\\\" -> 3869,\\n        \\\"ExampleImplemented\\\" -> \\\"321b1fc6\\\",\\n    \
+    \\\"ImplementationTime\\\" -> Quantity[1.8, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0\\n    |>,\\n    <|\\n        \\\"Timestamp\\\" -> DateObject[{2022, \
+8, 4}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \\\"SucessCount\\\" -> \
+10,\\n        \\\"Runtime\\\" -> Quantity[3.7, \\\"Minutes\\\"],\\n        \\\
+\"CodeLength\\\" -> 4505,\\n        \\\"ExampleImplemented\\\" -> \
+\\\"05f2a901\\\",\\n        \\\"ImplementationTime\\\" -> Quantity[5, \
+\\\"Hours\\\"],\\n        \\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \
+\\\"TotalGeneralizedSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"Timestamp\\\" -> DateObject[{2022, 8, 5}, \\\"Day\\\", \\\"Gregorian\\\", \
+-4.],\\n        \\\"SucessCount\\\" -> 11,\\n        \\\"Runtime\\\" -> \
+Quantity[3.7, \\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 4799,\\n      \
+  \\\"ExampleImplemented\\\" -> \\\"08ed6ac7\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[1.75, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"PersonalExample\\\" -> True,\\n        \\\"Timestamp\\\" -> \
+DateObject[{2022, 8, 6}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \
+\\\"SucessCount\\\" -> 11,\\n        \\\"ExampleImplemented\\\" -> \
+\\\"jnohuorzh-easier\\\",\\n        \\\"ImplementationTime\\\" -> \
+Quantity[0.25, \\\"Hours\\\"]\\n    |>,\\n    <|\\n        \
+\\\"PersonalExample\\\" -> True,\\n        \\\"Timestamp\\\" -> \
+DateObject[{2022, 8, 6}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \
+\\\"SucessCount\\\" -> 11,\\n        \\\"Runtime\\\" -> Quantity[3.1, \
+\\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5226,\\n        \
+\\\"ExampleImplemented\\\" -> \\\"ihiz27k2n\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[2.75, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"PersonalExample\\\" -> True,\\n        \\\"Timestamp\\\" -> \
+DateObject[{2022, 6, 8}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \
+\\\"SucessCount\\\" -> 11,\\n        \\\"Runtime\\\" -> Quantity[3.1, \
+\\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5291,\\n        \
+\\\"ExampleImplemented\\\" -> \\\"jnohuorzh\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[0.5, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 0,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"Timestamp\\\" -> DateObject[{2022, 6, 8}, \\\"Day\\\", \\\"Gregorian\\\", \
+-4.],\\n        \\\"SucessCount\\\" -> 12,\\n        \\\"Runtime\\\" -> \
+Quantity[3.6, \\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5386,\\n      \
+  \\\"ExampleImplemented\\\" -> \\\"a61f2674\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[2, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> {\\\"ea32f347\\\"},\\n        \
+\\\"TotalGeneralizedSuccesses\\\" -> 1,\\n        \
+\\\"NewEvaluationSuccesses\\\" -> 0,\\n        \\\"TotalEvaluationSuccesses\\\
+\" -> 0\\n    |>,\\n    <|\\n        \\\"GeneralizedSuccess\\\" -> True,\\n   \
+     \\\"Timestamp\\\" -> DateObject[{2022, 6, 8}, \\\"Day\\\", \\\"Gregorian\
+\\\", -4.],\\n        \\\"SucessCount\\\" -> 13,\\n        \\\"Runtime\\\" -> \
+Quantity[3.6, \\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5386,\\n      \
+  \\\"ExampleImplemented\\\" -> \\\"ea32f347\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[0, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 1,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"PersonalExample\\\" -> True,\\n        \\\"Timestamp\\\" -> \
+DateObject[{2022, 6, 8}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \
+\\\"SucessCount\\\" -> 13,\\n        \\\"Runtime\\\" -> Quantity[3, \
+\\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5551,\\n        \
+\\\"ExampleImplemented\\\" -> \\\"0uduqqj6f\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[1.5, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 1,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"PersonalExample\\\" -> True,\\n        \\\"Timestamp\\\" -> \
+DateObject[{2022, 8, 7}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \
+\\\"SucessCount\\\" -> 13,\\n        \\\"Runtime\\\" -> Quantity[3.1, \
+\\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5703,\\n        \
+\\\"ExampleImplemented\\\" -> \\\"2wfys5w64\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[2, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 1,\\n        \\\"NewEvaluationSuccesses\\\" -> {\\\"84f2aca1\\\"},\\n \
+       \\\"TotalEvaluationSuccesses\\\" -> 1\\n    |>,\\n    <|\\n        \
+\\\"PersonalExample\\\" -> True,\\n        \\\"Timestamp\\\" -> \
+DateObject[{2022, 8, 7}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \
+\\\"SucessCount\\\" -> 13,\\n        \\\"Runtime\\\" -> Quantity[3.1, \
+\\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5875,\\n        \
+\\\"ExampleImplemented\\\" -> \\\"2wfys5w64-relative-right-side\\\",\\n       \
+ \\\"ImplementationTime\\\" -> Quantity[2.7, \\\"Hours\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 1,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 1\\n    |>,\\n    <|\\n        \
+\\\"PersonalExample\\\" -> True,\\n        \\\"Timestamp\\\" -> \
+DateObject[{2022, 8, 7}, \\\"Day\\\", \\\"Gregorian\\\", -4.],\\n        \
+\\\"SucessCount\\\" -> 13,\\n        \\\"Runtime\\\" -> Quantity[3.1, \
+\\\"Minutes\\\"],\\n        \\\"CodeLength\\\" -> 5875,\\n        \
+\\\"ExampleImplemented\\\" -> \\\"n1hczotml\\\",\\n        \
+\\\"ImplementationTime\\\" -> Quantity[5, \\\"Minutes\\\"],\\n        \
+\\\"NewGeneralizedSuccesses\\\" -> 0,\\n        \\\"TotalGeneralizedSuccesses\
+\\\" -> 1,\\n        \\\"NewEvaluationSuccesses\\\" -> 0,\\n        \
+\\\"TotalEvaluationSuccesses\\\" -> 1\\n    |>\\n}\"\>"], "Output",
+ CellChangeTimes->{3.8689533187797174`*^9, 3.868953867501279*^9},
+ CellLabel->
+  "Out[1881]=",ExpressionUUID->"98fdc447-7287-4caf-afa4-c44040d9188e"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[Daniel`ARC`ARCTaskLog], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCTaskLog, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCTaskLog]; Null, ImageSize -> {102.5, 40}, Method -> 
+           "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[Daniel`ARC`ARCTaskLog], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[Daniel`ARC`ARCTaskLog], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCTaskLog]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCTaskLog, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCTaskLog]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202288914491536598}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCTaskLog", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {"Function" -> Daniel`ARC`ARCTaskLog}, 
+    "ReturnNotebook" -> True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"057d17ff-2263-4ff2-b159-a73660e77e14"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 82, 0, 98, "Title",ExpressionUUID->"46848549-a689-4535-bfc5-119b583ea2be"],
+Cell[665, 24, 220, 5, 54, "Code",ExpressionUUID->"f2f9af8a-29fd-4cc7-870c-f27978e2ad89",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[910, 33, 79, 0, 67, "Section",ExpressionUUID->"27b9a339-e12f-4209-94ce-035501720e06"],
+Cell[CellGroupData[{
+Cell[1014, 37, 338, 8, 54, "Code",ExpressionUUID->"b5162689-d036-4b0a-b2a1-49577a642001",
+ InitializationCell->False],
+Cell[1355, 47, 11716, 162, 4654, "Output",ExpressionUUID->"98fdc447-7287-4caf-afa4-c44040d9188e"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

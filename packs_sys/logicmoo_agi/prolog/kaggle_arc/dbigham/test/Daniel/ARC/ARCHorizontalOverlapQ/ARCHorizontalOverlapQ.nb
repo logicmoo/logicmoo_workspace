@@ -1,0 +1,493 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     19505,        485]
+NotebookOptionsPosition[     12295,        315]
+NotebookOutlinePosition[     17924,        455]
+CellTagsIndexPosition[     17881,        452]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCHorizontalOverlapQ", "Title",ExpressionUUID->"c6edf3a4-1cea-4fbe-90f9-25e301edc520"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCHorizontalOverlapQ", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[590]:=",ExpressionUUID->"1394a240-5ea6-4d45-96f6-4243a4a5e402"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"3bb46d5e-120a-41a0-8ad6-1f8d45cdd2b6"],
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCHorizontalOverlapQ-20220804-8YCCKA", 
+              Daniel`ARC`ARCHorizontalOverlapQ, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400], 95360411]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCHorizontalOverlapQ-20220804-8YCCKA"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCHorizontalOverlapQ-20220804-8YCCKA", 
+            Daniel`ARC`ARCHorizontalOverlapQ, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400], "CellID" -> 95360411, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCHorizontalOverlapQ-20220804-8YCCKA", 
+           Daniel`ARC`ARCHorizontalOverlapQ, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400], None], ImageSize -> {140., 25},
+           Method -> "Queued"], 
+         Row[{"ARCHorizontalOverlapQ-20220804-8YCCKA"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{847., {21., 27.}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654400}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ GeneratedCell->False,ExpressionUUID->"f9c1ce62-933a-49a5-92d9-bfb484037b3e"],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{{3.8686162124247756`*^9, 3.868616227260021*^9}, 
+   3.868616431384163*^9, {3.8686165474044285`*^9, 3.8686165723171177`*^9}, {
+   3.868616614029516*^9, 3.8686166423006525`*^9}},
+ CellLabel->
+  "Out[585]=",ExpressionUUID->"6d34244f-d630-49b6-b766-397d78d92aca"],
+
+Cell[CellGroupData[{
+
+Cell["False", "Subsection",
+ CellChangeTimes->{{3.86861644031801*^9, 
+  3.8686164407101417`*^9}},ExpressionUUID->"e9e02bbb-db7c-42cb-b6b1-\
+9b00eae8fc08"],
+
+Cell[CellGroupData[{
+
+Cell["Object 2 Too Right", "Subsubsection",
+ CellChangeTimes->{{3.8686164554860115`*^9, 3.8686164600697117`*^9}, {
+  3.868616658958995*^9, 
+  3.8686166593663054`*^9}},ExpressionUUID->"8d529e0c-4b23-4ab3-82f0-\
+abf7f8a6c70a"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCHorizontalOverlapQ", "[", "\n", "\t", 
+  RowBox[{
+   RowBox[{"<|", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<X\>\"", " ", "\[Rule]", " ", "1"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Y\>\"", " ", "\[Rule]", " ", "1"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Width\>\"", " ", "\[Rule]", " ", "2"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Height\>\"", " ", "\[Rule]", " ", "1"}]}], "\n", "\t", 
+    "|>"}], ",", "\n", "\t", 
+   RowBox[{"<|", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<X\>\"", " ", "\[Rule]", " ", "4"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Y\>\"", " ", "\[Rule]", " ", "3"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Width\>\"", " ", "\[Rule]", " ", "2"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Height\>\"", " ", "\[Rule]", " ", "1"}]}], "\n", "\t", 
+    "|>"}]}], "\n", "]"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.868616180711035*^9, 3.868616225700183*^9}, {
+   3.868616444720484*^9, 3.8686164510075865`*^9}, 3.868616481555128*^9, {
+   3.86861655862499*^9, 3.8686165631446915`*^9}, {3.86861662886117*^9, 
+   3.8686166410799837`*^9}},
+ CellLabel->"In[586]:=",
+ CellID->98632872,
+ "TestId" -> 
+ "ARCVerticalOverlapQ-20220804-QN9BKD",ExpressionUUID->"d4962574-a99e-47e3-\
+b593-554e2cd99030"],
+
+Cell[BoxData["False"], "Output",
+ CellChangeTimes->{3.868616451393134*^9, 3.868616643787348*^9},
+ CellLabel->
+  "Out[587]=",ExpressionUUID->"9022171d-0b23-474a-8f69-8a9f23e942be"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Object 2 Too Left", "Subsubsection",
+ CellChangeTimes->{{3.8686164554860115`*^9, 3.8686164654940357`*^9}, {
+  3.8686166623105907`*^9, 
+  3.8686166627105255`*^9}},ExpressionUUID->"566e6697-0c55-481c-ac5d-\
+1808c93018ab"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCHorizontalOverlapQ-20220804-YW7J25", 
+              Daniel`ARC`ARCHorizontalOverlapQ, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423], 95830631]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCHorizontalOverlapQ-20220804-YW7J25"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCHorizontalOverlapQ-20220804-YW7J25", 
+            Daniel`ARC`ARCHorizontalOverlapQ, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423], "CellID" -> 95830631, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCHorizontalOverlapQ-20220804-YW7J25", 
+           Daniel`ARC`ARCHorizontalOverlapQ, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423], None], ImageSize -> {140., 25},
+           Method -> "Queued"], 
+         Row[{"ARCHorizontalOverlapQ-20220804-YW7J25"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{826., {21., 27.}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022841144654423}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.868616646317786*^9},ExpressionUUID->"fd283fa2-7053-4f32-bd7e-\
+70a08aa7a185"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCHorizontalOverlapQ", "[", "\n", "\t", 
+  RowBox[{
+   RowBox[{"<|", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<X\>\"", " ", "\[Rule]", " ", "1"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Y\>\"", " ", "\[Rule]", " ", "1"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Width\>\"", " ", "\[Rule]", " ", "2"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Height\>\"", " ", "\[Rule]", " ", "1"}]}], "\n", "\t", 
+    "|>"}], ",", "\n", "\t", 
+   RowBox[{"<|", "\n", "\t\t", 
+    RowBox[{
+     RowBox[{"\"\<X\>\"", " ", "\[Rule]", " ", 
+      RowBox[{"-", "1"}]}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Y\>\"", " ", "\[Rule]", " ", "3"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Width\>\"", " ", "\[Rule]", " ", "2"}], ",", "\n", "\t\t", 
+     RowBox[{"\"\<Height\>\"", " ", "\[Rule]", " ", "1"}]}], "\n", "\t", 
+    "|>"}]}], "\n", "]"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.868616180711035*^9, 3.868616225700183*^9}, {
+  3.868616444720484*^9, 3.868616481694148*^9}, {3.8686165661372643`*^9, 
+  3.8686165705284805`*^9}, {3.8686166299640837`*^9, 3.8686166395899143`*^9}},
+ CellLabel->"In[588]:=",
+ CellID->95830631,
+ "TestId" -> 
+ "ARCHorizontalOverlapQ-20220804-YW7J25",ExpressionUUID->"7974fe00-8918-467c-\
+87a3-0f9f47f8e310"]
+}, Open  ]],
+
+Cell[BoxData["False"], "Output",
+ CellChangeTimes->{{3.868616451393134*^9, 3.868616479555089*^9}, 
+   3.8686166451120358`*^9},
+ CellLabel->
+  "Out[589]=",ExpressionUUID->"87661e8d-bacc-49b4-a780-2586676dcc0b"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCHorizontalOverlapQ], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCHorizontalOverlapQ, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCHorizontalOverlapQ]; Null, ImageSize -> {102.5, 40},
+            Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCHorizontalOverlapQ], ImageSize -> {110., 40}, Method -> 
+           "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCHorizontalOverlapQ], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCHorizontalOverlapQ]; 
+               
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCHorizontalOverlapQ, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCHorizontalOverlapQ]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20228411413454281}]], "DockedCell"]},
+TaggingRules->{
+ "WelcomeScreenSettings" -> {"FEStarting" -> False}, 
+  "CreateNamedNotebook2Args" -> {
+   "ARCHorizontalOverlapQ", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCHorizontalOverlapQ}, "ReturnNotebook" -> 
+    True}},
+FrontEndVersion->"12.2 for Microsoft Windows (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"92aab0c8-87e1-4a07-8da1-779931eb8837"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 93, 0, 96, "Title",ExpressionUUID->"c6edf3a4-1cea-4fbe-90f9-25e301edc520"],
+Cell[676, 24, 256, 6, 53, "Code",ExpressionUUID->"1394a240-5ea6-4d45-96f6-4243a4a5e402",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[957, 34, 79, 0, 67, "Section",ExpressionUUID->"3bb46d5e-120a-41a0-8ad6-1f8d45cdd2b6"],
+Cell[1039, 36, 3458, 80, 50, "TestUI",ExpressionUUID->"f9c1ce62-933a-49a5-92d9-bfb484037b3e"],
+Cell[4500, 118, 310, 5, 32, "Output",ExpressionUUID->"6d34244f-d630-49b6-b766-397d78d92aca"],
+Cell[CellGroupData[{
+Cell[4835, 127, 154, 3, 53, "Subsection",ExpressionUUID->"e9e02bbb-db7c-42cb-b6b1-9b00eae8fc08"],
+Cell[CellGroupData[{
+Cell[5014, 134, 224, 4, 44, "Subsubsection",ExpressionUUID->"8d529e0c-4b23-4ab3-82f0-abf7f8a6c70a"],
+Cell[5241, 140, 1373, 29, 287, "Code",ExpressionUUID->"d4962574-a99e-47e3-b593-554e2cd99030",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->98632872],
+Cell[6617, 171, 179, 3, 32, "Output",ExpressionUUID->"9022171d-0b23-474a-8f69-8a9f23e942be"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[6833, 179, 225, 4, 36, "Subsubsection",ExpressionUUID->"566e6697-0c55-481c-ac5d-1808c93018ab"],
+Cell[CellGroupData[{
+Cell[7083, 187, 3560, 84, 50, "TestUI",ExpressionUUID->"fd283fa2-7053-4f32-bd7e-70a08aa7a185",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[10646, 273, 1373, 29, 287, "Code",ExpressionUUID->"7974fe00-8918-467c-87a3-0f9f47f8e310",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->95830631]
+}, Open  ]],
+Cell[12034, 305, 209, 4, 32, "Output",ExpressionUUID->"87661e8d-bacc-49b4-a780-2586676dcc0b"]
+}, Closed]]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

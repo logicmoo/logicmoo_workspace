@@ -17,11 +17,11 @@ i_pair(WasROptions,GridIn,GridOut):- WasROptions==complete,
  catch((must_det_ll((
  check_for_refreshness,
  ((var(GridIn);var(GridOut))-> current_pair_io(GridIn,GridOut) ; true),
- maybe_name_the_pair(GridIn,GridOut,PairName),
+ maybe_name_the_pair(GridIn,GridOut,PairName))),
  notrace(((((guess_how(HOW,GridIn,GridOut,Stuff1,Stuff2), 
              guess_how_else(HOW_ELSE,Stuff1,Stuff2,InC,OutC)))))),
  INDIV = [HOW|HOW_ELSE],
- show_individuated_pair(PairName,INDIV,GridIn,GridOut,InC,OutC)))),_,fail),!.
+ show_individuated_pair(PairName,INDIV,GridIn,GridOut,InC,OutC)),_,fail),!.
 
 i_pair(ROptions,GridIn,GridOut):-
  must_det_ll((  
@@ -52,7 +52,8 @@ maybe_optimize_objects(InC00,OutC00,InCR,OutCR):-
 optimize_objects(InC00,OutC00,InC,OutC):-
   (maybe_optimize_objects(InC00,OutC00,InC,OutC)->true;(InC00=InC,OutC00=OutC)).
 
-
+pairname_to_examplenum(PairName,Example+Num):-
+  sub_term(E,PairName),compound(E),E=(Example+Num),!.
 
 show_individuated_pair(PairName,ROptions,GridIn,GridOfIn,InC,OutC):-  
   GridIn=@=GridOfIn,!,
@@ -66,6 +67,8 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC00,OutC00):-
 
 
 show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
+ (var(PairName)->maybe_name_the_pair(GridIn,GridOut,PairName);true),
+ ignore((pairname_to_examplenum(PairName,ExampleNum)->set_example_num(ExampleNum);ensure_example_num(GridIn,GridOut))),
  must_det_ll((
   grid_to_tid(GridIn,ID1),  grid_to_tid(GridOut,ID2),   
  w_section(show_individuated_sections,((                          
@@ -98,11 +101,13 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
  w_section(show_individuated_learning,must_det_ll((
    %when_in_html(if_wants_output_for(guess_some_relations,guess_some_relations(InC,OutC))),
    %when_in_html(if_wants_output_for(sort_some_relations,sort_some_relations(InC,OutC))),
-   if_wants_output_for(learn_group_mapping,        if_t(sub_var(trn,ID1), learn_group_mapping(InCR,OutCR))),
-   if_wants_output_for(learn_group_mapping_of_tst, if_t(sub_var(tst,ID1), learn_group_mapping(InCR,OutCR))), 
+   w_section(learn_group_mapping,        if_t(sub_var(trn,ID1), learn_group_mapping(InCR,OutCR))),
+   ignore((w_section(learn_group_mapping_of_tst, if_t(sub_var(tst,ID1), learn_group_mapping(InCR,OutCR))))), 
 
 
    if_wants_output_for(show_safe_assumed_mapped, show_safe_assumed_mapped),
+   if_wants_output_for(show_assumed_mapped, show_assumed_mapped),
+
    if_wants_output_for(show_test_associatable_groups, 
        forall(member(In1,InC),show_test_associatable_groups(ROptions,ID1,In1,GridOut))), 
 
@@ -132,21 +137,21 @@ show_indiv_vert(W,Obj,TD):- wots(TD,show_indiv(W,Obj)).
 
 
 arc_spyable_keyboard_key(detect_pair_hints,'g').
-arc_spyable_keyboard_key(show_interesting_props,'y').
-arc_spyable_keyboard_key(show_safe_assumed_mapped,'j').
+arc_spyable_keyboard_key(show_interesting_props,'o').
+arc_spyable_keyboard_key(show_safe_assumed_mapped,'o').
 arc_spyable_keyboard_key(learn_group_mapping,'o').
 arc_spyable_keyboard_key(learn_group_mapping_of_tst,'o').
-arc_spyable_keyboard_key(show_test_associatable_groups,'a').
+arc_spyable_keyboard_key(show_test_associatable_groups,'o').
 arc_spyable_keyboard_key(try_each_using_training,'u').
 
 
 show_test_associatable_groups(ROptions,ID1,InC,GridOut):- 
   print_grid(wqs(show_test_assocs(ROptions,ID1)),InC),
-  forall(
+  nop(nop((forall(
     must_det_ll1((use_test_associatable_group(InC,Sols)
       *-> show_result("Our Learned Sols", Sols,GridOut,_)
         ; arcdbg_info(red,warn("No Learned Sols")))),
-    true).
+    true)))).
 
 
 show_group(ID1,InC):-

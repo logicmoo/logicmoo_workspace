@@ -714,10 +714,12 @@ test_reduce_grid(Grid,GridO):-
 
 test_reduce_grid:- test_p2(test_reduce_grid).
 
-show_sf_if_lame(Info,Solution,ExpectedOut):- 
-       count_difs(ExpectedOut,Solution,Errors),
+show_sf_if_lame(Info,OurSol,Expected):- 
+    into_solid_grid(OurSol,OurSolution),
+    into_solid_grid(Expected,ExpectedOut),
+       count_difs(OurSolution,ExpectedOut,Errors),
         (Errors\==0 -> 
-          (banner_lines(red),print_side_by_side(red,Solution,'Our Solution'(Errors),_,ExpectedOut,"Expected Solution"),
+          (banner_lines(red),print_side_by_side(red,OurSolution,'Our OurSolution'(Errors),_,ExpectedOut,"Expected OurSolution"),
           pp(Info), banner_lines(red));
 
           arcdbg_info(green,Info)),!. 

@@ -1,0 +1,475 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     18787,        467]
+NotebookOptionsPosition[     11786,        302]
+NotebookOutlinePosition[     17612,        444]
+CellTagsIndexPosition[     17569,        441]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCThreePatchesToPossibleSymmetryBounds", "Title",ExpressionUUID->"6c97c6e5-4c1c-4843-bda4-745924759d88"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCThreePatchesToPossibleSymmetryBounds", 
+  "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[1066]:=",ExpressionUUID->"71338d78-57a1-4ca5-9154-afce079815e8"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"d257a2d2-70f6-42f3-b6ea-b6a966348b3c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCThreePatchesToPossibleSymmetryBounds-20221001-CGZN1E", 
+              Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389], 34619904, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCThreePatchesToPossibleSymmetryBounds-20221001-CGZN1E"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCThreePatchesToPossibleSymmetryBounds-20221001-CGZN1E", 
+            Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389], "CellID" -> 34619904, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCThreePatchesToPossibleSymmetryBounds-20221001-CGZN1E", 
+           Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCThreePatchesToPossibleSymmetryBounds-20221001-CGZN1E"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{840., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022101212496389}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.873661368866891*^9},ExpressionUUID->"3a5aa29a-f484-4676-b9a8-\
+417bc82cca3f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCThreePatchesToPossibleSymmetryBounds", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"8", ",", " ", "8"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"23", ",", " ", "8"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"23", ",", " ", "23"}], "}"}]}], "}"}], ",", " ", "3", ",", " ",
+    "3", ",", " ", "30", ",", " ", "30"}], "]"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{3.873661368866891*^9},
+ CellLabel->"In[1062]:=",
+ CellID->34619904,
+ "TestId" -> 
+ "ARCThreePatchesToPossibleSymmetryBounds-20221001-CGZN1E",ExpressionUUID->\
+"1f29611c-9793-4d2f-91cd-0f91f8f3285c"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{"\<\"CenterY\"\>", "\[Rule]", "16.5`"}], ",", 
+   RowBox[{"\<\"CenterX\"\>", "\[Rule]", "16.5`"}], ",", 
+   RowBox[{"\<\"Y\"\>", "\[Rule]", "3"}], ",", 
+   RowBox[{"\<\"X\"\>", "\[Rule]", "3"}], ",", 
+   RowBox[{"\<\"Y2\"\>", "\[Rule]", "30"}], ",", 
+   RowBox[{"\<\"X2\"\>", "\[Rule]", "30"}]}], 
+  "\[RightAssociation]"}]], "Output",
+ CellChangeTimes->{3.873661366342108*^9, 3.873734174267408*^9, 
+  3.8737345443545694`*^9, 3.8737348562467957`*^9},
+ CellLabel->
+  "Out[1063]=",ExpressionUUID->"4fdc62f5-6428-4a4b-a816-2b51f72dc454"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCThreePatchesToPossibleSymmetryBounds-20221002-B6W0UP", 
+              Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436], 98456586, "SubTest" -> 
+              None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCThreePatchesToPossibleSymmetryBounds-20221002-B6W0UP"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCThreePatchesToPossibleSymmetryBounds-20221002-B6W0UP", 
+            Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436], "CellID" -> 98456586, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCThreePatchesToPossibleSymmetryBounds-20221002-B6W0UP", 
+           Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCThreePatchesToPossibleSymmetryBounds-20221002-B6W0UP"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{840., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210217274862436}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.8737348684656873`*^9},ExpressionUUID->"4fc590be-5b34-457f-b961-\
+a0083a159708"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCThreePatchesToPossibleSymmetryBounds", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", " ", "5"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", " ", "10"}], "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"13", ",", " ", "5"}], "}"}]}], "}"}], ",", " ", "3", ",", " ", 
+   "3", ",", " ", "30", ",", " ", "30"}], "]"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{
+  3.873661368866891*^9, {3.873734284322753*^9, 3.8737342912274933`*^9}},
+ CellLabel->"In[1064]:=",
+ CellID->98456586,
+ "TestId" -> 
+ "ARCThreePatchesToPossibleSymmetryBounds-20221002-B6W0UP",ExpressionUUID->\
+"f3992da9-4ba3-4452-ac86-0599a063e49b"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{"\<\"CenterY\"\>", "\[Rule]", "8.5`"}], ",", 
+   RowBox[{"\<\"CenterX\"\>", "\[Rule]", "8.5`"}], ",", 
+   RowBox[{"\<\"Y\"\>", "\[Rule]", "1"}], ",", 
+   RowBox[{"\<\"X\"\>", "\[Rule]", "1"}], ",", 
+   RowBox[{"\<\"Y2\"\>", "\[Rule]", "16"}], ",", 
+   RowBox[{"\<\"X2\"\>", "\[Rule]", "16"}]}], 
+  "\[RightAssociation]"}]], "Output",
+ CellChangeTimes->{{3.873734298720559*^9, 3.8737343046621647`*^9}, 
+   3.8737346785331025`*^9, 3.873734857159299*^9},
+ CellLabel->
+  "Out[1065]=",ExpressionUUID->"3a00f959-7fcd-4572-a0a2-026560262c07"]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, "SubTest" -> 
+             None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, "SubTest" -> 
+            None], ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[
+                Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20221012055476367}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCThreePatchesToPossibleSymmetryBounds", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCThreePatchesToPossibleSymmetryBounds}, 
+    "ReturnNotebook" -> True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"3a28cba9-45ce-45bb-aa57-18d72405efc4"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 111, 0, 98, "Title",ExpressionUUID->"6c97c6e5-4c1c-4843-bda4-745924759d88"],
+Cell[694, 24, 278, 7, 54, "Code",ExpressionUUID->"71338d78-57a1-4ca5-9154-afce079815e8",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[997, 35, 79, 0, 67, "Section",ExpressionUUID->"d257a2d2-70f6-42f3-b6ea-b6a966348b3c"],
+Cell[CellGroupData[{
+Cell[1101, 39, 3867, 87, 52, "TestUI",ExpressionUUID->"3a5aa29a-f484-4676-b9a8-417bc82cca3f",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[4971, 128, 778, 21, 54, "Code",ExpressionUUID->"1f29611c-9793-4d2f-91cd-0f91f8f3285c",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->34619904]
+}, Open  ]],
+Cell[5764, 152, 602, 13, 33, "Output",ExpressionUUID->"4fdc62f5-6428-4a4b-a816-2b51f72dc454"],
+Cell[CellGroupData[{
+Cell[6391, 169, 3918, 89, 52, "TestUI",ExpressionUUID->"4fc590be-5b34-457f-b961-a0083a159708",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[10312, 260, 828, 22, 54, "Code",ExpressionUUID->"f3992da9-4ba3-4452-ac86-0599a063e49b",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->98456586]
+}, Open  ]],
+Cell[11155, 285, 603, 13, 33, "Output",ExpressionUUID->"3a00f959-7fcd-4572-a0a2-026560262c07"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,35 @@
+/*
+M-ACL ver 1 AbdProofProc. ver mple
+Input file: odd_even.bg, Output file: odd_even.rules
+Max spec steps=10, Beamsize=10, Derivation depth=50,Verbosity=3, 
+Min cov=1, Accuracy stopping threshold=0.800
+5 positive examples, 5 negative examples
+*/
+/* Execution time 0.420000 seconds. Generated rules */
+ 
+even(A):-zero(A).
+/* Name: c100 GC: yes, LC: yes 
+Covered positive examples: [even(0)]
+Covered positive abduced examples: []
+Covered negative abduced examples: []
+Abduced literals: []  */
+ 
+ 
+even(A):-succ(A,B),odd(B).
+/* Name: c111 GC: yes, LC: yes 
+Covered positive examples: [even(8),even(4)]
+Covered positive abduced examples: []
+Covered negative abduced examples: []
+Abduced literals: [[odd(7),c111]]  */
+ 
+ 
+odd(A):-succ(A,B),even(B).
+/* Name: c119 GC: yes, LC: yes 
+Covered positive examples: [odd(9),odd(3)]
+Covered positive abduced examples: [odd(7)]
+Covered negative abduced examples: []
+Abduced literals: [[not(even(3)),c119]]  */
+ 
+/* Backtracked clauses 
+ 
+*/

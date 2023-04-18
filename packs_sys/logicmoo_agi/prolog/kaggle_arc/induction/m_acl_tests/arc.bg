@@ -1,0 +1,141 @@
+:-style_check(- (discontiguous)). 
+
+
+:- multifile at_bottem/2.
+:- multifile at_left/2.
+:- multifile at_right/2.
+:- multifile at_top/2.
+:- multifile color_change/2.
+:- multifile move_down/4.
+:- multifile move_left/4.
+:- multifile move_right/4.
+:- multifile move_up/4.
+:- multifile lhs/8.
+:- multifile rhs/8.
+
+:- multifile nat30/1.
+:- multifile begin/1.
+:- multifile end/1.
+:- multifile canbe_int/1.
+:- multifile size/1.
+:- multifile zero/1.
+
+:- multifile neg/1.
+:- multifile bias/3.
+:- multifile eminus/1.
+:- multifile eplus/1.
+:- multifile ic/1.
+:- multifile input/1.
+:- multifile output/1.
+
+/* more information taken out */
+
+:-dynamic succ/2, zero/1, abducibles/1.
+:-dynamic color_change/2, move_down/4, lhs/8, rhs/8.
+
+
+/* example 1.2 
+
+Learns the theory:
+| ?- i(L,D).
+
+D = [not(male(katy)),male(david)],
+L = [rule(father(_A,_B),[male(_A)])] ? 
+
+
+*/
+
+
+output(rhs/8). 
+input(lhs/8). 
+input(move_down/4). 
+input(color_change/2). 
+input(move_up/4). 
+
+:-use_module(library(clpfd)). 
+
+color_change(cyan,red).
+
+size(30). 
+at_left(1,_). 
+at_top(_,1). 
+at_bottem(_,P):- size(P). 
+at_right(P,_):-size(P). 
+
+canbe_int(P):- integeR(P),!,nat30(P).
+canbe_int(P):- atoM(P),P=inf,!,fail.
+canbe_int(P):- vaR(P),!,(attvar(P)->true;freeze(P,\+ atom(P))),nat30(P).
+
+nat30(P):- P#>1,size(S),P#<S.
+move_right(P,Q,R,Q):- maplist(canbe_int,[P,Q,R]),R#=P+1. 
+move_left(P,Q,R,Q):- maplist(canbe_int,[P,Q,R]),R#=P-1. 
+move_up(P,Q,P,R):- maplist(canbe_int,[P,Q,R]),R#=Q-1.
+move_down(P,Q,P,R):- maplist(canbe_int,[P,Q,R]),R#=Q+1. 
+
+begin(model(trn_0)). 
+lhs(trn_0,1,1,sameR,cyan,4,zid_00,sid_22).
+neg(rhs(trn_0,1,1,sameR,cyan,4,zid_00,sid_22)). 
+end(model(trn_0)). 
+
+begin(model(trn_1)). 
+lhs(trn_1,2,1,sameR,cyan,1,zid_00,sid_11). 
+neg(rhs(trn_1,2,1,sameR,cyan,1,zid_00,sid_11)). 
+neg(rhs(_,_,1,_,_,_,_,_)).
+end(model(trn_1)). 
+
+begin(model(trn_2)). 
+lhs(trn_2,2,2,sameR,cyan,3,zid_00,sid_13). 
+neg(rhs(trn_2,2,2,sameR,cyan,3,zid_00,sid_13)).
+end(model(trn_2)). 
+
+rhs(trn_0,1,2,sameR,red,4,zid_00,sid_22). 
+rhs(trn_1,2,2,sameR,red,1,zid_00,sid_11). 
+rhs(trn_2,2,3,sameR,red,3,zid_00,sid_13). 
+
+bias(rule(rhs(A,BI,CI,D,EI,F,G,H),_),[A,BI,CI,B,C,D,EI,E,F,G,H],[lhs(A,B,C,D,E,F,G,H),color_change(E,EI),move_down(B,C,BI,CI)]).
+bias(rule(rhs(A,B,C,D,EI,F,G,H),_),[A,B,C,D,EI,E,F,G,H],[lhs(A,B,C,D,E,F,G,H),color_change(E,EI)]).
+% bias(rule(even(X),_B), [X,Y], [ zero(X), odd(Y), move_down(X,Y),move_down(Y,X) ]).
+
+abducibles(L):- findall(S,(input_output(F/A),functor(P,F,A),signed_pred(P,S)),L).
+% abducibles([odd(_), even(_)]).
+input_output(F/A):- output(F/A).
+%input_output(F/A):- input(F/A).
+signed_pred(P,P).
+signed_pred(P,not(P)).
+signed_pred(P,neg(P)).
+
+ic([]).
+
+
+eplus(L):- !, findall(P,(output(F/A),functor(P,F,A),call(P)),L).
+eplus([
+%	odd(1),
+	odd(3),
+%	odd(5),
+%	odd(7),
+	odd(9),
+	even(0),
+%	even(2),
+	even(4),
+%	even(6),
+	even(8)
+	]).
+
+eminus(L):-!, findall(D,neg(D),L).
+eminus([
+	even(1),	
+%	even(3),	
+	even(5),	
+%	even(7),	
+%	even(9),
+	odd(0),
+	odd(2),
+	odd(4)
+%	odd(6)
+%	odd(8)
+	]).
+
+zero(0).
+
+
+

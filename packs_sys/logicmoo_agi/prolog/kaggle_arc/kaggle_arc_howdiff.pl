@@ -1520,9 +1520,7 @@ unique_of_each(IndvPoints,Points,UniqueInvO,UniquePointsO):-
   UniqueInv=UniqueInvO.
 
 
-count_difs(A,B,C):- is_grid(A),into_grid(B,BB), !, count_difs0(A,BB,C).
-count_difs(B,A,C):- is_grid(A),into_grid(B,BB), !, count_difs0(A,BB,C).
-count_difs(A,B,C):- count_difs0(A,B,C).
+count_difs(A,B,C):- into_grid(A,AA),into_grid(B,BB), !, count_difs0(AA,BB,C).
 count_difs0(Out,GridO,0):- Out=@=GridO,!.
 count_difs0(Out,GridO,1):- ((\+ compound(Out)) ; \+ compound(GridO)),!.
 count_difs0([A|Out],[B|GridO],Errors):- 

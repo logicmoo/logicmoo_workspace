@@ -1,0 +1,15 @@
+theory( neg , 
+        complete , 
+        cnf , 
+       [rule('(male(X) :- female(X))', [type(cnf),cpu(0.26),heur(1),local(1,0,0,1),total(1,0,0,1)]) 
+       ]).
+
+theory( pos , 
+        complete , 
+        cnf , 
+       [rule('(false :- male(X),female(X))', [type(cnf),cpu(0.25),heur(1),local(1,0,0,1),total(1,0,0,1)]) 
+       ]).
+
+
+% no multi-class theory found
+

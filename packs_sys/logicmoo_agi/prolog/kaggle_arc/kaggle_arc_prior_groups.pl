@@ -41,14 +41,19 @@ more_than_1_done(TestID):-
   is_why_grouped_g(TestID, _, individuate(_, two(I2, _O2)),_), 
   I1\==I2,!.
 
-interesting_selectors('Training I/O',trn,_,_):-  get_current_test(TestID),more_than_1_done(TestID).
-interesting_selectors('Training Input',trn,_,in):-  get_current_test(TestID),more_than_1_done(TestID).
-interesting_selectors('Training Output',trn,_,out):-  get_current_test(TestID),more_than_1_done(TestID).
-interesting_selectors('Pair #~w I/O'-[NumP1],trn,Num,_):- current_example_nums(trn,Num, NumP1).
-interesting_selectors('Pair #~w Out'-[NumP1],trn,Num,out):- current_example_nums(trn,Num, NumP1).
-interesting_selectors('Pair #~w In'-[NumP1],trn,Num,in):- current_example_nums(trn,Num, NumP1).
-interesting_selectors('All Input'-[],_,_,in).
-interesting_selectors('Test #~w Input'-[NumP1],tst,Num,in):- current_example_nums(tst,Num, NumP1).
+
+interesting_selectors(Name,Tst,Num,IO):-
+  interesting_selectors0(Name0,Tst,Num,IO),
+  maybe_aformat(Name0,Name00),Name00=Name.
+  
+interesting_selectors0('Training I/O',trn,_,_):-  get_current_test(TestID),more_than_1_done(TestID).
+interesting_selectors0('Training Input',trn,_,in):-  get_current_test(TestID),more_than_1_done(TestID).
+interesting_selectors0('Training Output',trn,_,out):-  get_current_test(TestID),more_than_1_done(TestID).
+interesting_selectors0('Pair #~w I/O'-[NumP1],trn,Num,_):- current_example_nums(trn,Num, NumP1).
+interesting_selectors0('Pair #~w Out'-[NumP1],trn,Num,out):- current_example_nums(trn,Num, NumP1).
+interesting_selectors0('Pair #~w In'-[NumP1],trn,Num,in):- current_example_nums(trn,Num, NumP1).
+interesting_selectors0('All Input'-[],_,_,in).
+interesting_selectors0('Test #~w Input'-[NumP1],tst,Num,in):- current_example_nums(tst,Num, NumP1).
 %interesting_selectors('All I/O'-[],_,_,_).
 
 /*
@@ -73,10 +78,12 @@ interesting_compares(tst+N*in, F1,  trn+N *in,F2) :- current_example_nums(tst,N,
 filter_pairs(whole,whole).
 %filter_pairs(shared,shared). filter_pairs(unshared,shared). filter_pairs(shared,unshared). filter_pairs(unshared,unshared).
 
-make_up_selector_name(Trn_num_io,Named):-  trn_num_io(Trn_num_io,Trn,Num,IO),
+make_up_selector_name(Trn_num_io,Named):-  
+  trn_num_io(Trn_num_io,Trn,Num,IO),
   interesting_selectors(NameI,Trn1,Num1,IO1), match_selector(Trn1,Trn),match_selector(IO1,IO),match_selector(Num1,Num),
   once(maybe_aformat(NameI,Named)).
-maybe_aformat(Fmt-Args,Named):- format(atom(Named),Fmt,Args),!. maybe_aformat(Named,Named).
+maybe_aformat(Fmt-Args,Named):- nonvar(Fmt), format(atom(Named),Fmt,Args),!. 
+maybe_aformat(Named,Named).
 
 match_selector(Trn1,Trn):- var(Trn1),var(Trn),!.
 match_selector(Trn1,Trn):- Trn1=@=Trn.
@@ -178,7 +185,7 @@ reorganize_objs(Objects,[],[],Objects):-!.
 reorganize_objs([],[],[],[]):-!.
 
 
-show_groups(_TestID):-!.
+%show_groups(_TestID):-!.
 show_groups(TestID):- ensure_test(TestID),
   show_filtered_groups(TestID),
   show_pair_groups(TestID).
@@ -195,8 +202,10 @@ show_filtered_groups(TestID):- ensure_test(TestID),
          nop(ignore(((ground((Trn+Num*IO))->print(Objs); (Len<10 ->print(Objs); true))))),
          print_grouped_props(Named+Filter,Objs)))))))).
 
+show_pair_groups(_TestID):-!.
 show_pair_groups(TestID):- ensure_test(TestID),
-  forall(no_repeats(vars(Name1+Filter1,Name2+Filter2),pair_two_groups(TestID,Name1+Filter1,Name2+Filter2,Objs1,Objs2)),
+  forall(no_repeats(vars(Name1+Filter1,Name2+Filter2),
+   pair_two_groups(TestID,Name1+Filter1,Name2+Filter2,Objs1,Objs2)),
     ignore((
       Objs1\==[],Objs2\==[],
       Objs1\==Objs2,   
@@ -210,7 +219,7 @@ show_pair_groups(TestID):- ensure_test(TestID),
       append(Objs1,Objs2,OBJS),list_to_set(OBJS,OBJSET),
       length(OBJS,WP1),length(OBJSET,WP2), WP1 == WP2,
       % pp(Name1+Filter1-Name2+Filter2 = Objs1->Objs2),
-      show_interesting_vs(vs(Name1+Filter1,Name2+Filter2),Objs1,Objs2)
+       once(show_interesting_props(vs(Name1+Filter1,Name2+Filter2),Objs1,Objs2))
       ))).
 
 rules_from(Objs1,Objs2,Objects):- Objects=(Objs1->Objs2).
@@ -242,6 +251,15 @@ test_grouped_io(TestID,ExampleNum,IO,Objs):-
 test_grouped(TestID,ExampleNum,I,O):-  
   test_grouped_io(TestID,ExampleNum,in,I),
   once(test_grouped_io(TestID,ExampleNum,out,O)).
+
+show_prop_counts(TestID):-
+ ExampleNum=trn+_,
+ ROptions=complete,
+  forall(kaggle_arc(TestID,ExampleNum,GridIn,GridOut),
+  must_det_ll((
+   individuate_pair(ROptions,GridIn,GridOut,InC,OutC),
+   print_grouped_props(TestID>ExampleNum*in,InC),
+   print_grouped_props(TestID>ExampleNum*out,OutC)))).
 
 
 :- thread_local(t_l:objs_others/4).
@@ -505,14 +523,16 @@ contains_enough_for_print(obj(Props),Print):- !, contains_enough_for_print(Props
 contains_enough_for_print([P|Props],G):- is_obj_props(Props),!,(contains_enough_for_print(Props,G);
   (compound(P),arg(_,P,G),is_gridoid(G))).
 
-:- dynamic(is_prop2/1).
+:- abolish(is_prop2d/1).
+:- dynamic(is_prop2d/1).
 
 is_obj_props(Props):- is_list(Props), Props\==[], maplist(is_prop1,Props).
 is_prop1(Prop):- ( \+ compound(Prop); Prop=[_|_] ; Prop=(_-_)),!,fail.
 is_prop1(Prop):- is_prop2(Prop),!.
 is_prop1(Prop):- ( is_point(Prop) ; is_color(Prop);  is_object(Prop) ; is_grid_cell(Prop)),!,fail.
-is_prop1(P):- functor(P,F,A),functor(T,F,A),asserta(is_prop2(T)),!.
+is_prop1(P):- functor(P,F,A),functor(T,F,A),asserta(is_prop2d(T)),!.
 
+is_prop2(P):- is_prop2d(P).
 is_prop2(P):- compound_name_arity(P,_,N),N>=2.
 is_prop2(grid(_)). is_prop2(f_grid(_)). is_prop2(pen(_)). is_prop2(unique_colors(_)).
 is_prop2(rul(_)). is_prop2(localpoints(_)). is_prop2(globalpoints(_)).
@@ -712,8 +732,8 @@ skip_ku(Var):- atomic(Var),!,fail.
 skip_ku(S):- priority_prop(S),!,fail.
 %skip_ku(pg(_,_,_,_)).
 %skip_ku(pg(is_fg_object,_,_,_)).
-skip_ku(link(sees([_,_|_]),_)).
-skip_ku(link(sees(_),_)).
+%skip_ku(link(sees([_,_|_]),_)).
+%skip_ku(link(sees(_),_)).
 skip_ku(area(_)).
 skip_ku(localpoints(_)).
 skip_ku(links_count(sees,_)).
@@ -757,8 +777,8 @@ priority_prop(occurs_in_links(contained_by,_)).
 
 ku_rewrite_props(Var,Var):- var(Var),!.
 ku_rewrite_props(List0,List9):- is_grid(List0),!,List9=List0.
-ku_rewrite_props(link(sees([cc(S,_)]),_),link(sees([cc(S,_)]),_)).
-ku_rewrite_props(link(S,_),link(S,_)):-!.
+%ku_rewrite_props(link(sees([cc(S,_)]),_),link(sees([cc(S,_)]),_)).
+%ku_rewrite_props(link(S,_),link(S,_)):-!.
 ku_rewrite_props(S-A,S-B):- ku_rewrite_props(A,B),!.
 ku_rewrite_props(A,A):- is_prop1(A),!.
 ku_rewrite_props(Props,OUTL):- is_list_of_prop_lists(Props),!,maplist(ku_rewrite_props,Props,OUTL).
@@ -961,7 +981,7 @@ hack_prop_groups(Named,Objs):-
   banner_lines(orange,2),
   nop((my_maplist(arg(1),HackedObjs,RRR),
     w_section(hack_prop_groups(Named), (print_ptree(hacked(Named),RRR), banner_lines(yellow,2))))),  
-  ignore(skip_if_ansi(print_propset_groups(Named,Objs,EList))))).
+  ignore(skip_if_ansi(nop(print_propset_groups(Named,Objs,EList)))))).
 
 obj_had_vbo(Objs,HAD,VbO):-
   variance_had_counts(_Common,HAD,Objs,_Versions,_Missing,VersionsByCount,_Variance),
@@ -1074,29 +1094,30 @@ made_split(_,UProp,List,((Len-UProp)->List)):- length_s(List,Len).
 sameps(UProp,_-Prop):- \+ Prop \= UProp.
 
 set_test_id_io(Named):-
-  into_test_id_io1(Named,TestID,ExampleNum,IO),
-  nb_setval(prior_asserts,to(TestID,ExampleNum,IO)).
+  must_det_ll((into_test_id_io1(Named,TestID,ExampleNum,IO),
+  nb_setval(prior_asserts,to(TestID,ExampleNum,IO)))).
 into_test_id_io(Named,TestID,ExampleNum,IO):- var(Named),!, must_det_ll((nb_current(prior_asserts,to(TestID,ExampleNum,IO)))),!.
 into_test_id_io(Named,TestID,ExampleNum,IO):-
   into_test_id_io1(Named,TestID,ExampleNum,IO),
   nb_setval(prior_asserts,to(TestID,ExampleNum,IO)).
 
+%into_test_id_io1(Named+Filter,TestID,ExampleNum,IO):- into_test_id_io1(Named,TestID,ExampleNum,IO),!.
 into_test_id_io1(Named+Filter,TestID,ExampleNum,IO+Filter):- into_test_id_io1(Named,TestID,ExampleNum,IO),!.
-into_test_id_io1(Named,TestID,(Example+Num),IO):- name_to_selector(Named,((Example+Num)*IO)),get_current_test(TestID),!.
+into_test_id_io1(Named,TestID,Example+Num,IO):- \+ compound(Named),!, 
+ must_det_ll((interesting_selectors(Named,Example,Num,IO),get_current_test(TestID))),!.
+into_test_id_io1(Named+Filter,TestID,Named,Filter):- !, get_current_test(TestID),!.
+into_test_id_io1(Named,TestID,Example+Num,IO):- testid_name_num_io(Named,TestID,Example,Num,IO),nonvar(Num),!.
 into_test_id_io1(vs(Name1+Filter1,Name2+Filter2),TestID,
   vs(Example+Num,(Example2+Num2)),
   vs(IO,IO2,vs(Filter1,Filter2))):- 
-  name_to_selector(Name1,((Example+Num)*IO)),get_current_test(TestID),
-  name_to_selector(Name2,((Example2+Num2)*IO2)),!.
+  interesting_selectors(Name1,Example,Num,IO),get_current_test(TestID),
+  interesting_selectors(Name2,Example2,Num2,IO2),!.
 into_test_id_io1(input(TestID>ExampleNum),TestID,ExampleNum,in).
 into_test_id_io1(both(TestID>ExampleNum),TestID,ExampleNum,in_out).
 into_test_id_io1(output(TestID>ExampleNum),TestID,ExampleNum,out).
 into_test_id_io1(Named,TestID,ExampleNum,IO):- Named=..[IO,TestID>ExampleNum],!.
 into_test_id_io1(Named,TestID,ExampleNum,IO):- Named=..[IO,TestID,ExampleNum],!.
-into_test_id_io1(Named+Filter,TestID,Named,Filter):-get_current_test(TestID),!.
 into_test_id_io1(Named,TestID,Named,Named):-get_current_test(TestID),!.
-
-name_to_selector(Named,((Trn+Num)*IO)):- make_up_selector_name(Trn+Num*IO,NameO),Named=NameO.
 
 
 
@@ -1113,6 +1134,10 @@ remember_propcounts(Named,Diversity,B,Prop):- into_test_id_io(Named,TestID,Examp
 remember_propcounts(Named,Diversity,B,Prop,A):- into_test_id_io(Named,TestID,ExampleNum,IO),
   assert_if_new(propcounts(TestID,ExampleNum,IO,Diversity,B,Prop,A)).
 
+
+:- abolish(propcounts/5).
+:- abolish(propcounts/6).
+:- abolish(propcounts/7).
 
 :- dynamic(propcounts/5).
 :- dynamic(propcounts/6).
@@ -2257,9 +2282,9 @@ set_rank(OG,GType,ZType,L,N,Obj):-
    II = pg(OG,GType,ZType,N), 
    override_object([II],L,Obj),!.
 
-:- retractall(arc_cache:individuated_cache(_,_,_,_,_)).
-:- ignore(muarc:clear_all_caches).
-:- luser_setval(use_individuated_cache,false).
+%:- retractall(arc_cache:individuated_cache(_,_,_,_,_)).
+%:- ignore(muarc:clear_all_caches).
+%:- luser_setval(use_individuated_cache,false).
 
 
 
@@ -2287,6 +2312,7 @@ learn_ilp(TestID):-
     must_det_ll(write_ilp_file(TestID,S,logicmoo_ex)),
     solve_via_scene_change(TestID).
 
+:- abolish(is_for_ilp/4).
 :- dynamic(is_for_ilp/4).
 learn_ilp(TestID,ExampleNum,GridIn,GridOut):-  
  ExampleNum = (trn+_),!,
@@ -2295,8 +2321,8 @@ learn_ilp(TestID,ExampleNum,GridIn,GridOut):-
     individuate_pair(complete,GridIn,GridOut,InC,OutC),
     into_ilp_int(ExampleNum,ExampleID),
     assert_ilp(TestID,ExampleNum,liftcover_models,begin(model(ExampleID))),
-    maplist(make_ilp(TestID,ExampleNum,lhs),InC),
-    maplist(make_ilp(TestID,ExampleNum,rhs),OutC),!,
+    maplist(make_ilp_pred(TestID,ExampleNum,lhs),InC),
+    maplist(make_ilp_pred(TestID,ExampleNum,rhs),OutC),!,
     assert_ilp(TestID,ExampleNum,liftcover_models,end(model(ExampleID))),
     assert_ilp(TestID,ExampleNum,liftcover_models,[]),
     assert_ilp(TestID,ExampleNum,liftcover_models,[]),
@@ -2309,8 +2335,8 @@ learn_ilp(TestID,ExampleNum,GridIn,GridOut):-
    into_ilp_int(ExampleNum,ExampleID),
    assert_ilp(TestID,ExampleNum,_,"/*"),
    assert_ilp(TestID,ExampleNum,liftcover_models,begin(model(ExampleID))),
-   maplist(make_ilp(TestID,ExampleNum,lhs),InC),
-   maplist(make_ilp(TestID,ExampleNum,rhs),OutC),!,
+   maplist(make_ilp_pred(TestID,ExampleNum,lhs),InC),
+   maplist(make_ilp_pred(TestID,ExampleNum,rhs),OutC),!,
    assert_ilp(TestID,ExampleNum,liftcover_models,end(model(ExampleID))),
    assert_ilp(TestID,ExampleNum,_,"*/"))).
 
@@ -2326,45 +2352,70 @@ safe_oid(OID,OOID):- atomic_list_concat(['o',_Glyph,Iv,_TV,_UUID,_Trn,Num,IO],'_
                      atomic_list_concat(['obj',Num,Iv,IO],'_',OOID).
 
 
-%make_ilp(_TestID,Example+_Num,_LRSide,_Obj):- Example==tst,!.
-make_ilp(TestID,Example+Num,LRSide,Obj):-
+%make_ilp_pred(_TestID,Example+_Num,_LRSide,_Obj):- Example==tst,!.
+make_ilp_pred(TestID,Example+Num,LRSide,ObjIn):- 
  must_det_ll((   
+   into_obj(ObjIn,Obj),
    ExampleNum = Example+Num,
    obj_to_oid(Obj,OIDUS),
    safe_oid(OIDUS,OID),
    %id_shape(SID,LPs),next_to_32(LPs,Shape),   
-   assert_ilp_object(TestID,ExampleNum,LRSide,Obj,OID,
-       [loc2D,rot2D,pen_color,rotSize2D(grav),vis2D,mass,iz(sid)]))).
+   rhs_obj_format(ArgNames),
+   assert_ilp_object(TestID,ExampleNum,LRSide,Obj,OID,ArgNames))).
 
-into_2arg( V1,V2,A2):- V2==true,!, A2 = V1.
-into_2arg(_V1,V2,A2):- V2==false,!, A2 = V2.
-into_2arg( V1,V2,hv(V1,V2)).
 
-ilp_object_props(_Obj,Props,OID,LRhs,iz(E),V,Pred):- append_term(E,V,P), member(iz(P),Props),!,
+rhs_obj_format([loc2D,rot2D,pen_color,rotSize2D(grav),vis2D,mass,iz(sid)]).
+
+into_2arg(_,_, V1,V2,A2):- V2==true,!, A2 = V1.
+into_2arg(_,_,_V1,V2,A2):- V2==false,!, A2 = V2.
+into_2arg(N,_, V1,V2,A2):- into_hv(N,V1,V2,A2).
+
+into_hv(N,V1,V2,A2):- atom(N), !, A2=..[N,V1,V2].
+into_hv(N,V1,V2,A2):- A2=..[hv,N,V1,V2].
+
+ilp_object_props(Obj,Props,OID,LRhs,Named,V,Pred,Prop):-
+  must_det_ll(ilp_object_props_1(Obj,Props,OID,LRhs,Named,V,Pred,Prop)).
+
+ilp_object_props_1(_Obj,Props,OID,LRhs,iz(E),V,Pred,iz(P)):- append_term(E,V,P), member(iz(P),Props),!,
    functor(P,EF,_), atomic_list_concat([LRhs,'iz',EF],'_',EFIZ), Pred=..[EFIZ,OID,V].
-ilp_object_props(_Obj,Props,OID,LRhs,iz(E),A2,Pred):- append_term(E,V1,P0), append_term(P0,V2,P), member(iz(P),Props),!,
-   functor(P,EF,_), atomic_list_concat([LRhs,'iz',EF],'_',EFIZ), Pred=..[EFIZ,OID,V1,V2],into_2arg(V1,V2,A2).
-ilp_object_props(_Obj,Props,OID,LRhs,(E),V,Pred):- E\=iz(_), append_term(E,V,P), member((P),Props),!,
+ilp_object_props_1(_Obj,Props,OID,LRhs,iz(E),A2,Pred,iz(P)):- append_term(E,V1,P0), append_term(P0,V2,P),
+   member(iz(P),Props),!,
+   functor(P,EF,_), atomic_list_concat([LRhs,'iz',EF],'_',EFIZ), Pred=..[EFIZ,OID,V1,V2],into_2arg(E,EF,V1,V2,A2).
+ilp_object_props_1(_Obj,Props,OID,LRhs,(E),V,Pred,(P)):- E\=iz(_), append_term(E,V,P), member((P),Props),!,
    functor(P,EF,_), atomic_list_concat([LRhs,EF],'_',EFIZ), Pred=..[EFIZ,OID,V].
-ilp_object_props(_Obj,Props,OID,LRhs,(E),A2,Pred):- E\=iz(_), append_term(E,V1,P0), append_term(P0,V2,P), member((P),Props),!,
-   functor(P,EF,_),atomic_list_concat([LRhs,EF],'_',EFIZ), Pred=..[EFIZ,OID,V1,V2],into_2arg(V1,V2,A2).
-ilp_object_props(Obj,_Props,OID,LRhs,(E),V,Pred):- E\=iz(_), append_term(E,Obj,P0),append_term(P0,V,P), call(P),!,
+ilp_object_props_1(_Obj,Props,OID,LRhs,(E),A2,Pred,(P)):- E\=iz(_), append_term(E,V1,P0), append_term(P0,V2,P), member((P),Props),!,
+   functor(P,EF,_),atomic_list_concat([LRhs,EF],'_',EFIZ), Pred=..[EFIZ,OID,V1,V2],into_2arg(E,EF,V1,V2,A2).
+ilp_object_props_1(Obj,_Props,OID,LRhs,(E),V,Pred,Prop):- E\=iz(_), append_term(E,Obj,P0),append_term(P0,V,P), call(P),!,
   functor(P,EF,_), atomic_list_concat([LRhs,EF],'_',EFIZ),
-  append_term(E,OID,P1),append_term(P1,V,PredR),
+  append_term(E,OID,P1),append_term(P1,V,PredR),append_term(E,V,Prop),
   PredR=..[_|PredL], Pred=..[EFIZ|PredL].
 
+%oid_to_lhs(OID,NewRef):- oid_to_lhs_hide(OID,NewRef),!.
+oid_to_lhs_hide(OID,NewRef):- 
+ must_det_ll((
+   into_obj(OID,Obj),
+   indv_props_list(Obj,Props),
+   lhs_obj_format(Fmt),
+   maplist(ilp_object_props(Obj,Props,OID,lhs),Fmt,_Args,_TypeSig,PropL),
+   %writeq(NewRef=TypeSig),nl,
+   %NewRef =.. [lhs|Args],!,
+   NewRef = lhs_obj(PropL))).
+
+lhs_obj_format([loc2D,rot2D,pen,rotSize2D(grav),vis2D,mass,iz(sid)]).
+
+%maplist(un_lhs(B),TypeSig,Prop)
 
 pen_color(Obj,Color):- (pen(Obj,[cc(Color,_)])->true;(pen(Obj,PenInfo),Color=pen(PenInfo))),!.
 
 
-assert_ilp_object(TestID,ExampleNum,LRSide,Obj,OID,List):-
+assert_ilp_object(TestID,ExampleNum,LRSide,Obj,OID,ArgNames):-
  must_det_ll((
    into_ilp_int(ExampleNum,ExampleID),
    indv_props_list(Obj,Props),
    if_t(LRSide==lhs, assert_ilp_typed(LRSide,TestID,ExampleNum,liftcover_models,lhs_peice(ExampleID,OID))),
    if_t(LRSide==rhs, assert_ilp_typed(LRSide,TestID,ExampleNum,liftcover_models,rhs_peice(ExampleID,OID))),
-   maplist(ilp_object_props(Obj,Props,OID,LRSide),List,Args,PredS),
-   maplist(assert_ilp_typed(LRSide,TestID,ExampleNum,liftcover_models),PredS),
+   maplist(ilp_object_props(Obj,Props,OID,LRSide),ArgNames,Args,TypeSig,_),
+   maplist(assert_ilp_typed(LRSide,TestID,ExampleNum,liftcover_models),TypeSig),
    Side =..[LRSide,ExampleID|Args],
    if_t(LRSide==rhs, assert_ilp_typed(LRSide,TestID,ExampleNum,exs,pos(Side))),
    if_t(LRSide==lhs, assert_ilp_typed(LRSide,TestID,ExampleNum,bk,Side)))).

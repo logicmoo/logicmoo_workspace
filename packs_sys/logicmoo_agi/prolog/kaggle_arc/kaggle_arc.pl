@@ -854,7 +854,7 @@ create_group_dmiles:-
   %must_det_ll((create_group(dmiles_nsn2,[
   % 'a61f2674','0a2355a6', 'a61ba2ce', 'ea32f347', 'a79310a0', '37d3e8b2', 'e41c6fd3', 'b230c067', '0d3d703e', '08ed6ac7']))),
    must_det_ll((create_group(dmiles,[
-     
+              'makesboxsq','a61ba2ce',   
               'e41c6fd3','ea32f347',
               '37d3e8b2','0a2355a6',
               'a79310a0','103eff5b',
@@ -863,9 +863,13 @@ create_group_dmiles:-
               '0d3d703e','626c0bcc',
               '5582e5ca','25d487eb',
               '32e9702f','f8b3ba0a',
-              'b230c067','a61ba2ce',
+              'b230c067',
               '29c11459','a61f2674']))),
-  set_current_test('0a2355a6').
+  set_current_test('0a2355a6'),
+  set_pair_mode(whole_test),
+  %set_current_test('makesboxsq'),
+  %set_current_test('08ed6ac7'),
+  !.
 :- initialization(create_group_dmiles).
 %:- noguitracer.
 % :- set_current_test(t('0d3d703e')).  % :- set_current_test(t('5582e5ca')).

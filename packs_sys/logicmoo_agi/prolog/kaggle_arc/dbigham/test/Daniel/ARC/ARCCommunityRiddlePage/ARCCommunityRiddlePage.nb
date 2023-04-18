@@ -1,0 +1,337 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     12901,        329]
+NotebookOptionsPosition[      6366,        172]
+NotebookOutlinePosition[     11990,        312]
+CellTagsIndexPosition[     11947,        309]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCCommunityRiddlePage", "Title",ExpressionUUID->"3f1d09d7-a150-48e4-90b8-c9ed69f6e9c4"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCCommunityRiddlePage", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[1527]:=",ExpressionUUID->"09a2a845-a88b-4242-a312-0e7ec9d6f207"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"2c72bf03-166f-4a6b-8813-89b2e85be682"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCCommunityRiddlePage-20220908-KD9793", 
+              Daniel`ARC`ARCCommunityRiddlePage, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865], 60221072, "SubTest" -> 
+              None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCCommunityRiddlePage-20220908-KD9793"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCCommunityRiddlePage-20220908-KD9793", 
+            Daniel`ARC`ARCCommunityRiddlePage, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865], "CellID" -> 60221072, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCCommunityRiddlePage-20220908-KD9793", 
+           Daniel`ARC`ARCCommunityRiddlePage, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCCommunityRiddlePage-20220908-KD9793"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865 = "", 
+             ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+         Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{840., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202298192937101865}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.8716685772174563`*^9},ExpressionUUID->"0c97b198-2685-449a-a2a3-\
+f8bcfa48ffef"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCCommunityRiddlePage", "[", "\"\<0ca9ddb6\>\"", "]"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{3.8716672924800835`*^9, 3.871668577218458*^9},
+ CellLabel->"In[1525]:=",
+ CellID->60221072,
+ "TestId" -> 
+ "ARCCommunityRiddlePage-20220908-KD9793",ExpressionUUID->"2dce247c-c8fd-4061-\
+b681-07c77fdbfa14"]
+}, Open  ]],
+
+Cell[BoxData["\<\"https://github.com/arc-community/arc/wiki/Riddle_Training_\
+0ca9ddb6\"\>"], "Output",
+ CellChangeTimes->{{3.871667293375713*^9, 3.871667309548387*^9}, 
+   3.87166856887845*^9},
+ CellLabel->
+  "Out[1526]=",ExpressionUUID->"45a52c6f-a125-4deb-82b9-b55480693a15"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"NotTest", "@", "\n", 
+   RowBox[{"ARCCommunityRiddlePage", "[", "\"\<0ca9ddb6\>\"", "]"}]}], " ", "//",
+   " ", "SystemOpen"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8716672924800835`*^9, 3.8716673156609726`*^9}, {
+  3.8716685742780805`*^9, 
+  3.8716685754008093`*^9}},ExpressionUUID->"68109b62-4d43-437d-a5f0-\
+507d6f5e3bd2"],
+
+Cell[BoxData[
+ RowBox[{"Lui", "[", "\"\<arc riddle '0ca9ddb6'\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.8716673749778147`*^9, 3.8716673861124115`*^9}, {
+  3.871667524667441*^9, 3.8716675276180725`*^9}},
+ CellLabel->
+  "In[1475]:=",ExpressionUUID->"9fd361c0-ddee-42fa-94f7-cdbba4fe5e0f"]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCCommunityRiddlePage], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCCommunityRiddlePage, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCCommunityRiddlePage]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCCommunityRiddlePage, "SubTest" -> None], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCCommunityRiddlePage], ImageSize -> {132.5, 40}, 
+           Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCCommunityRiddlePage]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCCommunityRiddlePage, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCCommunityRiddlePage]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229819747101063}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCCommunityRiddlePage", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCCommunityRiddlePage}, "ReturnNotebook" -> 
+    True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"5459e1e9-544d-4645-b76b-939462ae7eac"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 94, 0, 98, "Title",ExpressionUUID->"3f1d09d7-a150-48e4-90b8-c9ed69f6e9c4"],
+Cell[677, 24, 258, 6, 54, "Code",ExpressionUUID->"09a2a845-a88b-4242-a312-0e7ec9d6f207",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[960, 34, 79, 0, 67, "Section",ExpressionUUID->"2c72bf03-166f-4a6b-8813-89b2e85be682"],
+Cell[CellGroupData[{
+Cell[1064, 38, 3782, 89, 52, "TestUI",ExpressionUUID->"0c97b198-2685-449a-a2a3-f8bcfa48ffef",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[4849, 129, 458, 11, 54, "Code",ExpressionUUID->"2dce247c-c8fd-4061-b681-07c77fdbfa14",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->60221072]
+}, Open  ]],
+Cell[5322, 143, 278, 5, 33, "Output",ExpressionUUID->"45a52c6f-a125-4deb-82b9-b55480693a15"],
+Cell[5603, 150, 443, 11, 72, "Code",ExpressionUUID->"68109b62-4d43-437d-a5f0-507d6f5e3bd2",
+ InitializationCell->False],
+Cell[6049, 163, 289, 5, 29, "Input",ExpressionUUID->"9fd361c0-ddee-42fa-94f7-cdbba4fe5e0f"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

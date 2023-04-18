@@ -1,0 +1,75 @@
+#!/bin/bash
+#--help # Clear the SCREEN of \$1
+
+export THIS_CMD="$0"
+
+if [ -n "$ZSH_EVAL_CONTEXT" ]; then 
+    [[ $ZSH_EVAL_CONTEXT =~ :file$ ]] && SOURCED=1
+elif [ -n "$KSH_VERSION" ]; then
+    [[ "$(cd $(dirname -- $THIS_CMD) && pwd -P)/$(basename -- $THIS_CMD)" != "$(cd $(dirname -- ${.sh.file}) && pwd -P)/$(basename -- ${.sh.file})" ]] && SOURCED=1
+elif [ -n "$BASH_VERSION" ]; then
+    [[ $THIS_CMD != "$BASH_SOURCE" ]] && SOURCED=1
+elif grep -q dash /proc/$$/cmdline; then
+    case $THIS_CMD in *dash*) SOURCED=1 ;; esac
+fi
+
+if [[ "$SOURCED"=="1" ]] ; then
+    export THIS_CMD=$BASH_SOURCE
+fi
+
+if [ -z "$PROMPT_COMMAND" ]; then
+ export PROMPT_COMMAND="resize &>/dev/null; $PROMPT_COMMAND"
+fi
+
+if [ -z "$1" ]; then
+reset -w
+if [ -z $STY ]; then $THIS_CMD /dev/tty ; return 0 2>/dev/null ; exit 0 ; fi
+ INFO="\"$(ls -l /dev/tty)\"" 
+
+ # $THIS_CMD /dev/tty FROM $INFO
+ # -user `whoami` 
+ find /dev/pts/ -type c -writable -exec "$THIS_CMD" {} $1 $2 FROM $INFO \;
+    if [[ "$SOURCED"=="1" ]] ; then
+	shift
+	#echo "The script $BASH_SOURCE $1 $2 WAS sourced."
+    fi
+ return 0 2>/dev/null ; exit 0
+fi
+
+CLS_TO=$1
+
+#CLS="\e[7h$(stty sane ; stty rows 33 ; stty columns 133 ; stty echo ; clear ; tput reset ; tput rmam ; tset )" > $CLS_TO
+CLS="\e[7h$(stty sane ; stty echo ; clear ; tput reset ; tput rmam ; tset )" > $CLS_TO
+CLS="${CLS}\e[2K\e[J\e]50;ClearScrollback\a\ec\e[3J\e\143\e[H\e[2J"
+echo -e -n $CLS > $CLS_TO
+echo -e -n "\eP$CLS\e\\\\" > $CLS_TO
+echo -e -n "$(whoami) $THIS_CMD $*\n" > $CLS_TO
+#setupcon --force
+return 0 2>/dev/null ; exit 0
+
+#reset -w $CLS_TO
+
+
+
+
+#0
+#sition the cursor to "Home" (Top Row, First Column)
+echo -en "\e[H"
+
+# Erase down: clear the screen from the cursor down to the bottom of the screen.
+echo -en "\e[J"
+
+# Note: this is supposed to clear the screen and position the cursor to home,
+# but it didn't work like that for me. It cleared the entire screen (above and 
+# below the cursor), but left the cursor at its last position.
+echo -en "\e[2J"
+
+# putting everything together
+echo -en "\e[H\e[J\e[3J"
+
+screen -S LogicmooServer -p 0 -X stuff ^F
+docker exec -it logicmoo screen -S LogicmooServer -p 0 -X stuff ^F
+clear
+screen -S LogicmooServer -p 0 -X stuff '\001\006'
+#screen -S LogicmooServer -p 0 -X screen scrollback 15000
+

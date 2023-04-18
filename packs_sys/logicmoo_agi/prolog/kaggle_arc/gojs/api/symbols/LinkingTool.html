@@ -1,0 +1,658 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>LinkingTool | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class LinkingTool</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="Tool.html" class="tsd-signature-type">Tool</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="LinkingBaseTool.html" class="tsd-signature-type">LinkingBaseTool</a>
+								<ul class="tsd-hierarchy">
+									<li>
+										<span class="target">LinkingTool</span>
+										<ul class="tsd-hierarchy">
+											<li>
+												<a href="PolylineLinkingTool.html" class="tsd-signature-type">PolylineLinkingTool</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>The LinkingTool lets a user draw a new <a href="Link.html">Link</a> between two ports,
+					using a mouse-drag operation.</p>
+					<p>By default an instance of this tool is installed as a mouse-move tool in the
+						<a href="Diagram.html#toolManager">Diagram.toolManager</a> as the <a href="ToolManager.html#linkingTool">ToolManager.linkingTool</a>.
+					However this tool may be used modally, as described below.</p>
+					<p><a href="LinkingTool.html#canStart">canStart</a> calls <a href="LinkingTool.html#findLinkablePort">findLinkablePort</a> to find a valid &quot;port&quot; element
+						from which (or to which) the user may interactively draw a new link.
+						<a href="LinkingTool.html#doActivate">doActivate</a> sets up a temporary link and two temporary nodes,
+					one at the start port and one following the mouse.</p>
+					<p><p class="boxread">
+						For a general discussion of validation, see <a href="../../intro/validation.html">Introduction to Validation</a>.</p>
+						<p>This tool does not utilize any <a href="Adornment.html">Adornment</a>s or tool handles.</p>
+						<p>This tool conducts a transaction while the tool is active.
+						A successful linking will result in a &quot;LinkDrawn&quot; <a href="DiagramEvent.html">DiagramEvent</a> and a &quot;Linking&quot; transaction.</p>
+						<p>If you want to programmatically start a new user mouse-gesture to draw a new link
+							from a given <a href="GraphObject.html">GraphObject</a> that either is a &quot;port&quot; or may be within
+							the visual tree of a &quot;port&quot;, set the <a href="LinkingTool.html#startObject">startObject</a> property
+							to let <a href="LinkingTool.html#findLinkablePort">findLinkablePort</a> find the real &quot;port&quot; element.
+						Then start and activate this tool:</p>
+						<pre><code class="hljs js">  <span class="hljs-keyword">var</span> tool = myDiagram.toolManager.linkingTool;
+  tool.startObject = ...;
+  myDiagram.currentTool = tool;
+  tool.doActivate();
+</code></pre>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="LinkingTool.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LinkingTool.html#archetypeLabelNodeData" class="tsd-kind-icon">archetype<wbr>Label<wbr>Node<wbr>Data</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LinkingTool.html#archetypeLinkData" class="tsd-kind-icon">archetype<wbr>Link<wbr>Data</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LinkingTool.html#direction" class="tsd-kind-icon">direction</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LinkingTool.html#startObject" class="tsd-kind-icon">start<wbr>Object</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LinkingTool.html#canStart" class="tsd-kind-icon">can<wbr>Start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LinkingTool.html#doActivate" class="tsd-kind-icon">do<wbr>Activate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LinkingTool.html#doDeactivate" class="tsd-kind-icon">do<wbr>Deactivate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LinkingTool.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LinkingTool.html#doNoLink" class="tsd-kind-icon">do<wbr>NoLink</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LinkingTool.html#findLinkablePort" class="tsd-kind-icon">find<wbr>Linkable<wbr>Port</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LinkingTool.html#insertLink" class="tsd-kind-icon">insert<wbr>Link</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Constants</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="LinkingTool.html#static-BackwardsOnly" class="tsd-kind-icon">Backwards<wbr>Only</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="LinkingTool.html#static-Either" class="tsd-kind-icon">Either</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="LinkingTool.html#static-ForwardsOnly" class="tsd-kind-icon">Forwards<wbr>Only</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Linking<wbr>Tool<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="LinkingTool.html" class="tsd-signature-type">LinkingTool</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>You do not normally need to create an instance of this tool
+								because one already exists as the <a href="ToolManager.html#linkingTool">ToolManager.linkingTool</a>, which you can modify.</p>
+								<p>The <a href="Tool.html#name">Tool.name</a> of this tool is &quot;Linking&quot;.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="LinkingTool.html" class="tsd-signature-type">LinkingTool</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="archetypeLabelNodeData" class="tsd-anchor"></a>
+					<h3>
+						archetype<wbr>Label<wbr>Node<wbr>Data
+					<span class="tsd-signature-symbol">: </span><a href="ObjectData.html" class="tsd-signature-type">ObjectData</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets an optional node data object representing a link label, that is copied by <a href="LinkingTool.html#insertLink">insertLink</a>
+								and added to the <a href="GraphLinksModel.html">GraphLinksModel</a> when creating a new <a href="Link.html">Link</a>.</p>
+								<p>The default value is null, which causes no such label node data to be added to the model
+								along with the new link data.</p>
+								<p><a href="LinkingTool.html#insertLink">insertLink</a> calls <a href="GraphLinksModel.html#addLabelKeyForLinkData">GraphLinksModel.addLabelKeyForLinkData</a>
+								to associate the label node data with the link data.</p>
+								<p>Setting this property does not raise any events.
+								This property is ignored if the <a href="Diagram.html#model">Diagram.model</a> is not a <a href="GraphLinksModel.html">GraphLinksModel</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="archetypeLinkData" class="tsd-anchor"></a>
+					<h3>
+						archetype<wbr>Link<wbr>Data
+					<span class="tsd-signature-symbol">: </span><a href="ObjectData.html" class="tsd-signature-type">ObjectData</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets a data object that is copied by <a href="LinkingTool.html#insertLink">insertLink</a>
+									and added to the <a href="GraphLinksModel.html">GraphLinksModel</a> when creating a new <a href="Link.html">Link</a>.
+									The default value is an empty Object, which will be copied.
+									The value must be an Object for the linking operation to succeed.
+								A null value will cause <a href="LinkingTool.html#insertLink">insertLink</a> to fail.</p>
+								<p>The copied link data&#39;s <a href="GraphLinksModel.html#linkFromKeyProperty">GraphLinksModel.linkFromKeyProperty</a>
+									and <a href="GraphLinksModel.html#linkToKeyProperty">GraphLinksModel.linkToKeyProperty</a> properties are set to
+									the corresponding node&#39;s data&#39;s key values.
+									If the ports have <a href="GraphObject.html#portId">GraphObject.portId</a> values that are not null,
+									the link data&#39;s <a href="GraphLinksModel.html#linkFromPortIdProperty">GraphLinksModel.linkFromPortIdProperty</a>
+								and <a href="GraphLinksModel.html#linkToPortIdProperty">GraphLinksModel.linkToPortIdProperty</a> properties are also set.</p>
+								<p>Setting this property does not raise any events.
+								This property is ignored if the <a href="Diagram.html#model">Diagram.model</a> is not a <a href="GraphLinksModel.html">GraphLinksModel</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="direction" class="tsd-anchor"></a>
+					<h3>
+						direction
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the direction in which new links may be drawn.
+									Possible values are <a href="LinkingTool.html#static-ForwardsOnly">LinkingTool.ForwardsOnly</a>, <a href="LinkingTool.html#static-BackwardsOnly">LinkingTool.BackwardsOnly</a>, or <a href="LinkingTool.html#static-Either">LinkingTool.Either</a>.
+									This defaults to <a href="LinkingTool.html#static-Either">LinkingTool.Either</a>.
+								Setting this property does not raise any events.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="startObject" class="tsd-anchor"></a>
+					<h3>
+						start<wbr>Object
+					<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the <a href="GraphObject.html">GraphObject</a> at which <a href="LinkingTool.html#findLinkablePort">findLinkablePort</a> should start its search.
+									The default value is null.
+								Setting this property does not raise any events.</p>
+								<p>If you want to explicitly start a new user mouse-gesture to draw a new link
+									from a given <a href="GraphObject.html">GraphObject</a> that may be a &quot;port&quot; object or may be within
+									the visual tree of a &quot;port&quot; object, set this property to that object
+									to let <a href="LinkingTool.html#findLinkablePort">findLinkablePort</a> find the real &quot;port&quot; object.
+								Then start and activate this tool:</p>
+								<pre><code class="hljs js">  <span class="hljs-keyword">var</span> tool = myDiagram.toolManager.linkingTool;
+  tool.startObject = ...;
+  myDiagram.currentTool = tool;
+  tool.doActivate();
+</code></pre>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="canStart" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						can<wbr>Start
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">can<wbr>Start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This tool can run when the diagram allows linking, the model is modifiable,
+									the left-button mouse drag has moved far enough away to not be a click, and
+									when <a href="LinkingTool.html#findLinkablePort">findLinkablePort</a> has returned a valid port
+								or when <a href="LinkingTool.html#startObject">startObject</a> is a valid port.</p>
+								<p>This method may be overridden, but we recommend that you call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doActivate" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Activate
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Activate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Start the linking operation.</p>
+								<p>If the <a href="LinkingTool.html#startObject">startObject</a> is already set, it uses that object to find the starting port.
+								If it is not set, this calls <a href="LinkingTool.html#findLinkablePort">findLinkablePort</a> and remembers it as the starting port.</p>
+								<p>It then start a transaction, captures the mouse, and changes the cursor.
+									Next it initializes and adds the <a href="LinkingBaseTool.html#temporaryFromNode">LinkingBaseTool.temporaryFromNode</a>,
+									<a href="LinkingBaseTool.html#temporaryToNode">LinkingBaseTool.temporaryToNode</a>, and <a href="LinkingBaseTool.html#temporaryLink">LinkingBaseTool.temporaryLink</a> to the diagram.
+									The temporary nodes that are positioned and sized to be like the real <a href="LinkingBaseTool.html#originalFromPort">LinkingBaseTool.originalFromPort</a>
+									and <a href="LinkingBaseTool.html#originalToPort">LinkingBaseTool.originalToPort</a> ports.
+								The temporary link connects the two temporary ports, of course.</p>
+								<p>This method may be overridden, but we recommend that you call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doDeactivate" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Deactivate
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Deactivate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Finishing the linking operation stops the transaction, releases the mouse, and resets the cursor.</p>
+								<p>This method may be overridden, but we recommend that you call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseUp" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Up
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Up<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>A mouse-up ends the linking operation; if there is a valid <a href="LinkingBaseTool.html#targetPort">targetPort</a> nearby,
+								this adds a new <a href="Link.html">Link</a> by calling <a href="LinkingTool.html#insertLink">insertLink</a>.</p>
+								<p>If there is a new link, it is selected and the &quot;LinkDrawn&quot; <a href="DiagramEvent.html">DiagramEvent</a> is raised
+									with the new link as the <a href="DiagramEvent.html#subject">DiagramEvent.subject</a>.
+									If there is no new link, this calls <a href="LinkingTool.html#doNoLink">doNoLink</a>.
+								In any case this stops the tool.</p>
+								<p>This method may be overridden, but we recommend that you call this base method.
+									It is usually easier to override <a href="LinkingTool.html#insertLink">insertLink</a> or just set <a href="LinkingTool.html#archetypeLinkData">archetypeLinkData</a>.
+								It is also common to implement a &quot;LinkDrawn&quot; <a href="DiagramEvent.html">DiagramEvent</a> listener on the <a href="Diagram.html">Diagram</a>.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doNoLink" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						do<wbr>NoLink
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>NoLink<span class="tsd-signature-symbol">(</span>fromnode<span class="tsd-signature-symbol">: </span><a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, fromport<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, tonode<span class="tsd-signature-symbol">: </span><a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, toport<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This method is called upon a mouse up when no new link is drawn,
+									either because no valid <a href="LinkingBaseTool.html#targetPort">LinkingBaseTool.targetPort</a> was found or because
+								<a href="LinkingTool.html#insertLink">insertLink</a> returned null.</p>
+								<p>This method may be overridden.  By default this method does nothing.
+									If you want to successfully perform any side-effects, you will need to set <a href="Tool.html#transactionResult">Tool.transactionResult</a> to a string;
+									otherwise this tool&#39;s transaction will be rolled-back.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.7</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>fromnode: <a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								</li>
+								<li>
+									<h5>fromport: <a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the from-port, or null to use the node itself</p>
+									</div>
+								</li>
+								<li>
+									<h5>tonode: <a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								</li>
+								<li>
+									<h5>toport: <a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the to-port, or null to use the node itself</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="findLinkablePort" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						find<wbr>Linkable<wbr>Port
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">find<wbr>Linkable<wbr>Port<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Return the <a href="GraphObject.html">GraphObject</a> at the mouse-down point,
+								if it is part of a node and if it is valid to link with it.</p>
+								<p>This method may be overridden, but we recommend that you call this base method.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns
+								<a href="GraphObject.html" class="tsd-signature-type">GraphObject</a>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">null</span>
+							</h4>
+							<p>If the <a href="LinkingTool.html#direction">direction</a> is <a href="LinkingTool.html#static-Either">Either</a> or <a href="LinkingTool.html#static-ForwardsOnly">ForwardsOnly</a>,
+								this checks the element and its parent <a href="Node.html">Node</a> by calling <a href="LinkingBaseTool.html#isValidFrom">LinkingBaseTool.isValidFrom</a>.
+								If the <a href="LinkingTool.html#direction">direction</a> is <a href="LinkingTool.html#static-Either">Either</a> or <a href="LinkingTool.html#static-BackwardsOnly">BackwardsOnly</a>,
+								this checks the element and its parent <a href="Node.html">Node</a> by calling <a href="LinkingBaseTool.html#isValidTo">LinkingBaseTool.isValidTo</a>.
+								In either case finding a matching port will return that port and set <a href="LinkingBaseTool.html#isForwards">LinkingBaseTool.isForwards</a> appropriately.
+							Otherwise this will return null.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="insertLink" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						insert<wbr>Link
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">insert<wbr>Link<span class="tsd-signature-symbol">(</span>fromnode<span class="tsd-signature-symbol">: </span><a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, fromport<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, tonode<span class="tsd-signature-symbol">: </span><a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, toport<span class="tsd-signature-symbol">: </span><a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Link.html" class="tsd-signature-type">Link</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Make a copy of the <a href="LinkingTool.html#archetypeLinkData">archetypeLinkData</a>, set its node and port properties, and add it to the <a href="GraphLinksModel.html">GraphLinksModel</a>.
+								If the model is a <a href="TreeModel.html">TreeModel</a>, set the parent key of the child&#39;s node data object.</p>
+								<p>For GraphLinksModels, if <a href="LinkingTool.html#archetypeLabelNodeData">archetypeLabelNodeData</a> is non-null, this method also adds that node data as an initial label node
+								for the new link data.</p>
+								<p>For TreeModels, if <a href="Diagram.html#isTreePathToChildren">Diagram.isTreePathToChildren</a> is false, the roles of the <em>fromnode</em> and <em>tonode</em> arguments are exchanged.</p>
+								<p>This method may be overridden, but we recommend that you call this base method.
+									Usually though it is easiest to just set <a href="LinkingTool.html#archetypeLinkData">archetypeLinkData</a> to control what kind of link is created.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="LinkingTool.html#doNoLink">doNoLink</a></p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>fromnode: <a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								</li>
+								<li>
+									<h5>fromport: <a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the from-port, or null to use the node itself</p>
+									</div>
+								</li>
+								<li>
+									<h5>tonode: <a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								</li>
+								<li>
+									<h5>toport: <a href="GraphObject.html" class="tsd-signature-type">GraphObject</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the to-port, or null to use the node itself</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns
+								<a href="Link.html" class="tsd-signature-type">Link</a>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">null</span>
+							</h4>
+							<p>the newly created Link, or null if it failed.</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constants</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-BackwardsOnly" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Backwards<wbr>Only
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="LinkingTool.html#direction">LinkingTool.direction</a> indicates that users may draw new links backwards only
+						(i.e. from &quot;to&quot; node to &quot;from&quot; node).</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Either" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Either
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="LinkingTool.html#direction">LinkingTool.direction</a> indicates that users may draw new links in either direction.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-ForwardsOnly" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Forwards<wbr>Only
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>This value for <a href="LinkingTool.html#direction">LinkingTool.direction</a> indicates that users may draw new links forwards only
+						(i.e. from &quot;from&quot; node to &quot;to&quot; node).</p>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="LinkingTool.html" class="tsd-kind-icon">Linking<wbr>Tool</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="LinkingTool.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LinkingTool.html#archetypeLabelNodeData" class="tsd-kind-icon">archetype<wbr>Label<wbr>Node<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LinkingTool.html#archetypeLinkData" class="tsd-kind-icon">archetype<wbr>Link<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LinkingTool.html#direction" class="tsd-kind-icon">direction</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LinkingTool.html#startObject" class="tsd-kind-icon">start<wbr>Object</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LinkingTool.html#canStart" class="tsd-kind-icon">can<wbr>Start</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LinkingTool.html#doActivate" class="tsd-kind-icon">do<wbr>Activate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LinkingTool.html#doDeactivate" class="tsd-kind-icon">do<wbr>Deactivate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LinkingTool.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LinkingTool.html#doNoLink" class="tsd-kind-icon">do<wbr>NoLink</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LinkingTool.html#findLinkablePort" class="tsd-kind-icon">find<wbr>Linkable<wbr>Port</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LinkingTool.html#insertLink" class="tsd-kind-icon">insert<wbr>Link</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="LinkingTool.html#static-BackwardsOnly" class="tsd-kind-icon">Backwards<wbr>Only</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="LinkingTool.html#static-Either" class="tsd-kind-icon">Either</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="LinkingTool.html#static-ForwardsOnly" class="tsd-kind-icon">Forwards<wbr>Only</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

@@ -1,4 +1,10 @@
 
+:- ensure_loaded('solvers.pl').
+
+
+michod_solved_train(t(ID)):- clause(l_solve(ID,_,_),_).
+
+
 read_dsl_test:-  make,     
       setup_call_cleanup(open('arc-dsl/solvers.py',read,In2,[]),read_python(In2),close(In2)),
       uast,!,

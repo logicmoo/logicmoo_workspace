@@ -1,0 +1,24 @@
+/*
+M-ACL ver 1 AbdProofProc. ver mple
+Input file: ILP/mACL/arc.bg, Output file: ILP/mACL/arc.rules
+Max spec steps=10, Beamsize=10, Derivation depth=50,Verbosity=3, 
+Min cov=1, Accuracy stopping threshold=0.800
+3 positive examples, 4 negative examples
+*/
+/* Execution time 0.014000 seconds. Generated rules */
+ 
+rhs(A, _, _, B, C, D, E, F) :-
+    color_change(_, C),
+    lhs(A, G, H, B, _, D, E, F),
+    color_change(_, C),
+    lhs(A, G, H, B, _, D, E, F).
+.
+/* Name: cl_358 GC: yes, LC: yes 
+Covered positive examples: [rhs(trn_2,2,3,sameR,red,3,zid_00,sid_13),rhs(trn_1,2,2,sameR,red,1,zid_00,sid_11),rhs(trn_0,1,2,sameR,red,4,zid_00,sid_22)]
+Covered positive abduced examples: []
+Covered negative abduced examples: []
+Abduced literals: []  */
+ 
+/* Backtracked clauses 
+ 
+*/

@@ -1,0 +1,339 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     11641,        331]
+NotebookOptionsPosition[      5948,        192]
+NotebookOutlinePosition[     11168,        321]
+CellTagsIndexPosition[     11125,        318]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCColors", "Title",ExpressionUUID->"091b5e8c-6c4f-4ed3-8938-3c7b9129abe3"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCColors", "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"965a8b87-6804-43fa-9fbe-1a8332e0dc90"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"585b886b-61a7-4d78-82de-80f5a121ad34"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCColors", "[", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->"In[54]:=",ExpressionUUID->"4bc906e9-aff6-43a1-8f08-63080a77e5d5"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     FrameBox[
+      StyleBox["0",
+       StripOnInput->False,
+       LineColor->GrayLevel[1],
+       FrontFaceColor->GrayLevel[1],
+       BackFaceColor->GrayLevel[1],
+       GraphicsColor->GrayLevel[1],
+       FontColor->GrayLevel[1]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["1",
+       StripOnInput->False,
+       LineColor->GrayLevel[1],
+       FrontFaceColor->GrayLevel[1],
+       BackFaceColor->GrayLevel[1],
+       GraphicsColor->GrayLevel[1],
+       FontColor->GrayLevel[1]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["2",
+       StripOnInput->False,
+       LineColor->GrayLevel[0],
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["3",
+       StripOnInput->False,
+       LineColor->GrayLevel[0],
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["4",
+       StripOnInput->False,
+       LineColor->GrayLevel[0],
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["5",
+       StripOnInput->False,
+       LineColor->GrayLevel[1],
+       FrontFaceColor->GrayLevel[1],
+       BackFaceColor->GrayLevel[1],
+       GraphicsColor->GrayLevel[1],
+       FontColor->GrayLevel[1]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["6",
+       StripOnInput->False,
+       LineColor->GrayLevel[1],
+       FrontFaceColor->GrayLevel[1],
+       BackFaceColor->GrayLevel[1],
+       GraphicsColor->GrayLevel[1],
+       FontColor->GrayLevel[1]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["7",
+       StripOnInput->False,
+       LineColor->GrayLevel[0],
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["8",
+       StripOnInput->False,
+       LineColor->GrayLevel[1],
+       FrontFaceColor->GrayLevel[1],
+       BackFaceColor->GrayLevel[1],
+       GraphicsColor->GrayLevel[1],
+       FontColor->GrayLevel[1]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False], 
+     FrameBox[
+      StyleBox["9",
+       StripOnInput->False,
+       LineColor->GrayLevel[1],
+       FrontFaceColor->GrayLevel[1],
+       BackFaceColor->GrayLevel[1],
+       GraphicsColor->GrayLevel[1],
+       FontColor->GrayLevel[1]],
+      Alignment->{Center, Center},
+      FrameStyle->None,
+      ImageSize->{40, 40},
+      StripOnInput->False]}
+   },
+   AutoDelete->False,
+   GridBoxBackground->{
+    "Columns" -> {{None}}, "Rows" -> {{None}}, 
+     "ItemsIndexed" -> {{1, 1} -> GrayLevel[0], {1, 2} -> 
+       RGBColor[0, 0, 1], {1, 3} -> RGBColor[1, 0, 0], {1, 4} -> 
+       RGBColor[0, 1, 0], {1, 5} -> RGBColor[1, 1, 0], {1, 6} -> 
+       GrayLevel[0.5], {1, 7} -> RGBColor[0.75, 0.25, 0.5], {1, 8} -> 
+       RGBColor[1, 0.5, 0], {1, 9} -> RGBColor[
+         Rational[5, 9], 
+         Rational[5, 9], 1], {1, 10} -> 
+       RGBColor[0.7, 0.13333333333333336`, 0.06666666666666668]}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{{3.8669049773432193`*^9, 3.866905004864501*^9}, 
+   3.8669051550206223`*^9, 3.866905214585479*^9, {3.8669053423570013`*^9, 
+   3.866905384084673*^9}, {3.866905451199424*^9, 3.866905507486664*^9}, {
+   3.866905562755543*^9, 3.866905580289274*^9}, 3.866905639290733*^9, {
+   3.866905687221243*^9, 3.866905697033657*^9}, {3.8669057497527795`*^9, 
+   3.8669057928433795`*^9}},
+ CellLabel->"Out[55]=",ExpressionUUID->"fae1d5f8-d5c5-46c0-8bb9-7a11aa22c799"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[Daniel`ARC`ARCColors], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCColors, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[Daniel`ARC`ARCColors]; 
+           Null, ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[Daniel`ARC`ARCColors], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[Daniel`ARC`ARCColors], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCColors]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCColors, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCColors]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20227151613553437}]], "DockedCell"]},
+InputAutoReplacements->{},
+FrontEndVersion->"12.2 for Microsoft Windows (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"471a5071-52a4-48df-8ab0-c9a0ab591333"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 81, 0, 96, "Title",ExpressionUUID->"091b5e8c-6c4f-4ed3-8938-3c7b9129abe3"],
+Cell[664, 24, 219, 5, 53, "Code",ExpressionUUID->"965a8b87-6804-43fa-9fbe-1a8332e0dc90",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[908, 33, 79, 0, 67, "Section",ExpressionUUID->"585b886b-61a7-4d78-82de-80f5a121ad34"],
+Cell[CellGroupData[{
+Cell[1012, 37, 224, 5, 53, "Code",ExpressionUUID->"4bc906e9-aff6-43a1-8f08-63080a77e5d5",
+ InitializationCell->False],
+Cell[1239, 44, 4669, 143, 59, "Output",ExpressionUUID->"fae1d5f8-d5c5-46c0-8bb9-7a11aa22c799"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

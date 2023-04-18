@@ -1,0 +1,1008 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     54728,       1000]
+NotebookOptionsPosition[     48843,        856]
+NotebookOutlinePosition[     54251,        990]
+CellTagsIndexPosition[     54208,        987]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCFiles", "Title",ExpressionUUID->"80f762d6-37cd-4741-be10-44bad10d8ebb"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCFiles", "]"}]}], "Code",
+ InitializationCell->
+  False,ExpressionUUID->"011d9bb4-b5e0-483b-bf2d-1dfd2b07dc23"],
+
+Cell[CellGroupData[{
+
+Cell["Manual Tests", "Section",
+ CellChangeTimes->{{3.8747753309785748`*^9, 
+  3.874775331650493*^9}},ExpressionUUID->"584ff709-d11e-4996-bd52-\
+70b46f83383b"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"ARCFiles", "[", "\"\<Evaluation\>\"", "]"}]}], "Code",
+ InitializationCell->False,
+ CellChangeTimes->{{3.8747752924191303`*^9, 3.87477532435495*^9}},
+ CellLabel->"In[21]:=",ExpressionUUID->"381ed274-2138-447b-9d4c-943bf7ef588a"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\\
+data\\\\evaluation\\\\00576224.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\009d5c81.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\00dbd492.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\03560426.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\05a7bcf2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0607ce86.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0692e18c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\070dd51e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\08573cc6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0934a4d8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\09c534e7.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0a1d4ef5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0a2355a6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0b17323b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0bb8deee.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0becf7df.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0c786b71.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0c9aba6e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0d87d2a6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0e671a1a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\0f63c0b9.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\103eff5b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\11e1fe23.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\12422b43.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\12997ef3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\12eac192.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\136b0064.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\13713586.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\137f0df0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\140c817e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\14754a24.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\15113be4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\15663ba9.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\15696249.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\16b78196.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\17b80ad2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\17cae0c1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\18419cfa.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\184a9768.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\195ba7dc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1990f7a8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\19bb5feb.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1a2e2828.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1a6449f1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1acc24af.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1c02dbbe.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1c0d0a4b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1c56ad9f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1d0a4b61.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1d398264.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1da012fc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1e81d6f9.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\1e97544e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2037f2c7.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2072aba6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\20818e16.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\20981f0e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\212895b5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\21f83797.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\22a4bbc2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\25094a63.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2546ccf6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\256b0a75.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2685904e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2697da3f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2753e76c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\27a77e38.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\27f8ce4f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\281123b4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\292dd178.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\29700607.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2a5f8217.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2b01abd0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2c0b0aff.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2c737e39.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\2f0c5170.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\310f3251.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3194b014.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\319f2597.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\31adaf00.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\31d5ba1a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\32e9702f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\332efdb3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3391f8c0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\33b52de3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3490cc26.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\34b99a2b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\351d6448.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\358ba94e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\37d3e8b2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3979b1a8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3a301edc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3b4c2228.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3d31c5b3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3ed85e70.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3ee1011a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\3f23242b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\40f6cd08.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\414297c0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\423a55dc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\42918530.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\42a15761.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4364c1c4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\456873bc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\45737921.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\45bbe264.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\477d2879.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\47996f11.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\48131b3c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4852f2fa.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\48f8583b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4aab4007.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4acc7107.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4b6b68e5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4c177718.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4cd1b7b2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4e45f183.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4e469f39.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4f537728.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\4ff4c9da.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\505fff84.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\506d28a5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\50a16a69.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\50aad11f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\50f325b5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\516b51b7.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5207a7b5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5289ad53.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\52fd389e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\54db823b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\55059096.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\551d5bf1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\55783887.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\575b1a71.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5783df64.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5833af48.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\58743b76.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\58e15b12.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\59341089.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5a5a2103.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5af49b42.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5b526a93.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5b692c0f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5b6cbef5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5d2a5c43.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\5ffb2104.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\604001fa.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\60a26a3e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\60c09cac.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\626c0bcc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\62ab2642.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\62b74c02.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\639f5a19.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\642248e4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\642d658d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\64a7c07e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\66e6c45b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\66f2d22f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\67636eac.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\67b4a34d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\67c52801.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\68b67ca3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\692cd3b6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\695367ec.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\696d4842.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\69889d6e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\6a11f6da.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\6ad5bdfd.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\6df30ad6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\6ea4a07e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\6f473927.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7039b2d7.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\705a3229.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\712bf12e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\72207abc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\72a961c9.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\73182012.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\73c3b0d8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\73ccf9c2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\759f3fd3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\762cd429.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\770cc55f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\782b5218.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\79369cc6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7953d61e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\79fb03f4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7bb29440.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7c8af763.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7c9b52a0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7d18a6fb.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7d1f7ee8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7d419a02.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7e02026e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\7ee1c6ea.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\817e6c09.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\81c0276b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\833dafe3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\845d6e51.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\84db8fc4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\84f2aca1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8597cfd7.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\85b81ff1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\85fa5666.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8719f442.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\88207623.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\891232d6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\896d5239.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8a371977.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8b28cd80.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8ba14f53.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8cb8642d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8dae5dfc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8e2edd66.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8ee62060.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\8fbca751.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\90347967.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\903d1b4a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9110e3c5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\917bccba.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\929ab4e9.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\92e50de0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9356391f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\93b4f4b3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\93c31fbe.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\94133066.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\94414823.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\94be5b80.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\95a58926.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\963f59bc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\96a8c0cd.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\97239e3d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9772c176.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\981571dc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\992798f6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\99306f82.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9a4bb226.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9b2a60aa.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9b365c51.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9b4c17c4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9bebae7a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9c1e755f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9c56f360.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9caba7c3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9ddd00f0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9def23fe.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\9f27f097.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a04b2602.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a096bf4d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a3f84088.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a406ac07.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a57f2f04.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a59b95c0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a680ac02.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a8610ef7.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\a934301b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\aa18de87.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\aa300dc3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\aa4ec2a5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\aab50785.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ac0c5833.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ac2e8ecf.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ac3e2b04.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ac605cbb.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ad7e01d0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ae58858e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\aee291af.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\af22c60d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\af24b4cc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b0722778.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b0f4d537.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b15fca0b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b1fc8b8e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b20f7c8b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b457fec5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b4a43f3b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b7999b51.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b7cb93ac.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b7f8a4d8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b7fb29bc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b942fd60.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\b9630600.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ba9d41b8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\baf41dbf.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bb52a14b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bbb1b8b6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bc4146bd.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bcb3040b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bd14c3bf.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\be03b35f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bf32578f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bf699163.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\bf89d739.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c074846d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c1990cce.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c3202e5a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c35c1b4c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c48954c1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c62e2108.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c64f1187.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c658a4bd.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c663677b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c6e1b8da.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c7d4e6ad.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c87289bb.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c8b7cc0f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c92b942c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\c97c0139.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ca8de6ea.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ca8f78db.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\cad67732.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\cb227835.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ccd554ac.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\cd3c21df.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ce039d91.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ce8d95cc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\cf133acc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\cfb2ce5a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d017b73f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d19f7514.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d282b262.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d2acf2cb.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d304284e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d37a1ef5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d47aa2ff.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d492a647.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d4b1c2b1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d4c90558.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d56f2372.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d5c634a2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d931c21c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\d94c3b52.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\da2b0fe3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\da515329.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\dc2aa30b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\dc2e9a9d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\dd2401ed.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\de493100.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\df8cc377.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e0fb7511.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e133d23d.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e1baa8a4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e1d2900e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e2092e0c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e21a174a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e345f17b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e4075551.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e41c6fd3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e57337a4.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e5790162.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e5c44e8f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e619ca6e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e633a9e5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e66aafb8.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e681b708.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e69241bd.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e6de6e8f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e74e1818.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e760a62e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e7639916.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e78887d1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e7a25a18.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e7b06bea.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e7dd8335.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e872b94a.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e88171ec.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e95e3d8e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e99362f0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e9ac8c9e.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e9b4f6fc.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e9bb6954.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\e9c9d9a1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ea959feb.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ea9794b1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ecaa0ec1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ed74f2f2.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ed98d772.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ef26cbf6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f0afb749.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f0df5ff0.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f21745ec.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f3b10344.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f3cdc58f.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f3e62deb.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f4081712.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f45f5ca7.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f5aa3634.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f5c89df1.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f823c43c.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f83cb3f6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f8be4b64.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f9a67cb5.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\f9d67f8b.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\fafd9572.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\fb791726.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\fc754716.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\fd096ab6.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\fd4b2b02.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\fe9372f3.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\fea12743.json\"\>", 
+   ",", "\<\"C:\\\\Users\\\\danie\\\\WolframWorkspaces\\\\Base\\\\ARC\\\\data\
+\\\\evaluation\\\\ff72ca3e.json\"\>"}], "}"}]], "Output",
+ CellChangeTimes->{{3.8747752912344513`*^9, 3.8747753296220207`*^9}},
+ CellLabel->"Out[22]=",ExpressionUUID->"f596d3e8-3d41-4404-ab68-b7c1b4559cf5"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7., Automatic}, {Automatic, 0}},
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[Daniel`ARC`ARCFiles], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCFiles, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[Daniel`ARC`ARCFiles]; 
+           Null, ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCFiles, "SubTest" -> None], ImageSize -> {110., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[Daniel`ARC`ARCFiles], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCFiles]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCFiles, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCFiles]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable202210141827377883}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCFiles", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {"Function" -> Daniel`ARC`ARCFiles}, 
+    "ReturnNotebook" -> True}},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"59d7579b-17ea-41ef-b474-e416931d21fc"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 80, 0, 98, "Title",ExpressionUUID->"80f762d6-37cd-4741-be10-44bad10d8ebb"],
+Cell[663, 24, 218, 5, 54, "Code",ExpressionUUID->"011d9bb4-b5e0-483b-bf2d-1dfd2b07dc23",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[906, 33, 159, 3, 67, "Section",ExpressionUUID->"584ff709-d11e-4996-bd52-70b46f83383b"],
+Cell[CellGroupData[{
+Cell[1090, 40, 312, 6, 54, "Code",ExpressionUUID->"381ed274-2138-447b-9d4c-943bf7ef588a",
+ InitializationCell->False],
+Cell[1405, 48, 47398, 803, 8014, "Output",ExpressionUUID->"f596d3e8-3d41-4404-ab68-b7c1b4559cf5"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,245 @@
+
+  <!DOCTYPE html>
+  <html lang="en">
+  <body>
+  <script src="https://unpkg.com/gojs@2.2.15/release/go.js"></script>
+  <p>
+    This is a minimalist HTML and JavaScript skeleton of the GoJS Sample
+    <a href="https://gojs.net/latest/samples/customContextMenu.html">customContextMenu.html</a>. It was automatically generated from a button on the sample page,
+    and does not contain the full HTML. It is intended as a starting point to adapt for your own usage.
+    For many samples, you may need to inspect the
+    <a href="https://github.com/NorthwoodsSoftware/GoJS/blob/master/samples/customContextMenu.html">full source on Github</a>
+    and copy other files or scripts.
+  </p>
+  <div id="allSampleContent" class="p-4 w-full">
+  <style type="text/css">
+    /* CSS for the traditional context menu */
+    .menu {
+      display: none;
+      position: absolute;
+      opacity: 0;
+      margin: 0;
+      padding: 8px 0;
+      z-index: 999;
+      box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
+      list-style: none;
+      background-color: #ffffff;
+      border-radius: 4px;
+    }
+
+    .menu-item {
+      display: block;
+      position: relative;
+      min-width: 60px;
+      margin: 0;
+      padding: 6px 16px;
+      font: bold 12px sans-serif;
+      color: rgba(0, 0, 0, .87);
+      cursor: pointer;
+    }
+
+    .menu-item::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      content: "";
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+    }
+
+    .menu-item:hover::before {
+      opacity: .04;
+    }
+
+    .menu .menu {
+      top: -8px;
+      left: 100%;
+    }
+
+    .show-menu, .menu-item:hover > .menu {
+      display: block;
+      opacity: 1;
+    }
+  </style>
+  <script id="code">
+
+  var myDiagram = null;
+
+  function init() {
+    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+
+    // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+    // For details, see https://gojs.net/latest/intro/buildingObjects.html
+    const $ = go.GraphObject.make;  // for conciseness in defining templates
+
+    myDiagram =
+      $(go.Diagram, "myDiagramDiv",  // create a Diagram for the DIV HTML element
+        {
+          "undoManager.isEnabled": true
+        });
+
+    // This is the actual HTML context menu:
+    var cxElement = document.getElementById("contextMenu");
+
+    // an HTMLInfo object is needed to invoke the code to set up the HTML cxElement
+    var myContextMenu = $(go.HTMLInfo, {
+      show: showContextMenu,
+      hide: hideContextMenu
+    });
+
+    // define a simple Node template (but use the default Link template)
+    myDiagram.nodeTemplate =
+      $(go.Node, "Auto",
+        { contextMenu: myContextMenu },
+        $(go.Shape, "RoundedRectangle",
+          // Shape.fill is bound to Node.data.color
+          new go.Binding("fill", "color")),
+        $(go.TextBlock,
+          { margin: 3 },  // some room around the text
+          // TextBlock.text is bound to Node.data.key
+          new go.Binding("text", "key"))
+      );
+
+    // create the model data that will be represented by Nodes and Links
+    myDiagram.model = new go.GraphLinksModel(
+      [
+        { key: "Alpha", color: "#f38181" },
+        { key: "Beta", color: "#eaffd0" },
+        { key: "Gamma", color: "#95e1d3" },
+        { key: "Delta", color: "#fce38a" }
+      ],
+      [
+        { from: "Alpha", to: "Beta" },
+        { from: "Alpha", to: "Gamma" },
+        { from: "Beta", to: "Beta" },
+        { from: "Gamma", to: "Delta" },
+        { from: "Delta", to: "Alpha" }
+      ]);
+
+    myDiagram.contextMenu = myContextMenu;
+
+    // We don't want the div acting as a context menu to have a (browser) context menu!
+    cxElement.addEventListener("contextmenu", e => {
+      e.preventDefault();
+      return false;
+    }, false);
+
+    function hideCX() {
+      if (myDiagram.currentTool instanceof go.ContextMenuTool) {
+        myDiagram.currentTool.doCancel();
+      }
+    }
+
+    function showContextMenu(obj, diagram, tool) {
+      // Show only the relevant buttons given the current state.
+      var cmd = diagram.commandHandler;
+      var hasMenuItem = false;
+      function maybeShowItem(elt, pred) {
+        if (pred) {
+          elt.style.display = "block";
+          hasMenuItem = true;
+        } else {
+          elt.style.display = "none";
+        }
+      }
+      maybeShowItem(document.getElementById("cut"), cmd.canCutSelection());
+      maybeShowItem(document.getElementById("copy"), cmd.canCopySelection());
+      maybeShowItem(document.getElementById("paste"), cmd.canPasteSelection(diagram.toolManager.contextMenuTool.mouseDownPoint));
+      maybeShowItem(document.getElementById("delete"), cmd.canDeleteSelection());
+      maybeShowItem(document.getElementById("color"), obj !== null);
+
+      // Now show the whole context menu element
+      if (hasMenuItem) {
+        cxElement.classList.add("show-menu");
+        // we don't bother overriding positionContextMenu, we just do it here:
+        var mousePt = diagram.lastInput.viewPoint;
+        cxElement.style.left = mousePt.x + 5 + "px";
+        cxElement.style.top = mousePt.y + "px";
+      }
+
+      // Optional: Use a `window` pointerdown listener with event capture to
+      //           remove the context menu if the user clicks elsewhere on the page
+      window.addEventListener("pointerdown", hideCX, true);
+    }
+
+    function hideContextMenu() {
+      cxElement.classList.remove("show-menu");
+      // Optional: Use a `window` pointerdown listener with event capture to
+      //           remove the context menu if the user clicks elsewhere on the page
+      window.removeEventListener("pointerdown", hideCX, true);
+    }
+  }
+
+  // This is the general menu command handler, parameterized by the name of the command.
+  function cxcommand(event, val) {
+    if (val === undefined) val = event.currentTarget.id;
+    var diagram = myDiagram;
+    switch (val) {
+      case "cut": diagram.commandHandler.cutSelection(); break;
+      case "copy": diagram.commandHandler.copySelection(); break;
+      case "paste": diagram.commandHandler.pasteSelection(diagram.toolManager.contextMenuTool.mouseDownPoint); break;
+      case "delete": diagram.commandHandler.deleteSelection(); break;
+      case "color": {
+        var color = window.getComputedStyle(event.target)['background-color'];
+        changeColor(diagram, color); break;
+      }
+    }
+    diagram.currentTool.stopTool();
+  }
+
+  // A custom command, for changing the color of the selected node(s).
+  function changeColor(diagram, color) {
+    // Always make changes in a transaction, except when initializing the diagram.
+    diagram.startTransaction("change color");
+    diagram.selection.each(node => {
+      if (node instanceof go.Node) {  // ignore any selected Links and simple Parts
+        // Examine and modify the data, not the Node directly.
+        var data = node.data;
+        // Call setDataProperty to support undo/redo as well as
+        // automatically evaluating any relevant bindings.
+        diagram.model.setDataProperty(data, "color", color);
+      }
+    });
+    diagram.commitTransaction("change color");
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div id="sample">
+  <div style="display: inline-block;">
+    <!-- We make a div to contain both the Diagram div and the context menu (such that they are siblings)
+         so that absolute positioning works easily.
+         This DIV containing both MUST have a non-static CSS position (we use position: relative)
+         so that our context menu's absolute coordinates work correctly. -->
+    <div style="position: relative;">
+      <div id="myDiagramDiv" style="border: 1px solid black; width: 400px; height: 400px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"><canvas tabindex="0" width="398" height="398" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 398px; height: 398px;">This text is displayed if your browser does not support the Canvas HTML element.</canvas><div style="position: absolute; overflow: auto; width: 398px; height: 398px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+      <ul id="contextMenu" class="menu" style="left: 179.5px; top: 233px;">
+        <li id="cut" class="menu-item" onpointerdown="cxcommand(event)" style="display: block;">Cut</li>
+        <li id="copy" class="menu-item" onpointerdown="cxcommand(event)" style="display: block;">Copy</li>
+        <li id="paste" class="menu-item" onpointerdown="cxcommand(event)" style="display: none;">Paste</li>
+        <li id="delete" class="menu-item" onpointerdown="cxcommand(event)" style="display: block;">Delete</li>
+        <li id="color" class="menu-item" style="display: block;">Color
+          <ul class="menu">
+            <li class="menu-item" style="background-color: #f38181;" onpointerdown="cxcommand(event, 'color')">Red</li>
+            <li class="menu-item" style="background-color: #eaffd0;" onpointerdown="cxcommand(event, 'color')">Green</li>
+            <li class="menu-item" style="background-color: #95e1d3;" onpointerdown="cxcommand(event, 'color')">Blue</li>
+            <li class="menu-item" style="background-color: #fce38a;" onpointerdown="cxcommand(event, 'color')">Yellow</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div id="description">
+      <p>This demonstrates the implementation of a custom HTML context menu.</p>
+      <p>For a light-box style HTML context menu implementation, see the <a href="htmlLightBoxContextMenu.html">LightBox Context Menu</a> sample.</p>
+      <p>Right-click or tap-hold on a Node to bring up a context menu.
+      If you have a selection copied in the clipboard, you can bring up a context menu anywhere to paste.</p>
+    </div>
+  </div>
+<p class="text-xs">GoJS version 2.2.15. Copyright 1998-2022 by Northwoods Software.</p></div>
+    <p><a href="https://github.com/NorthwoodsSoftware/GoJS/blob/master/samples/customContextMenu.html" target="_blank">View this sample page's source on GitHub</a></p></div>
+  </body>
+  </html>

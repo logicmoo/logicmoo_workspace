@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Realtime Drag Selecting Tool</title>
+  <meta name="description" content="TypeScript: This customized DragSelectingTool selects and deselects parts continuously while the user is dragging a box, rather than when the tool finishes." />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Copyright 1998-2019 by Northwoods Software Corporation. -->
+
+  <script src="../samples/assets/require.js"></script>
+  <script src="../assets/js/goSamples.js"></script> <!-- this is only for the GoJS Samples framework -->
+  <script id="code">
+    function init() {
+      require(["RealtimeDragSelectingScript"], function(app) {
+        app.init();
+      });
+    }
+  </script>
+</head>
+<body onload="init()">
+  <div id="sample">
+    <div id="myDiagramDiv" style="background-color: white; border: solid 1px black; width: 100%;height: 600px"></div>
+    <p>
+      This sample demonstrates the RealtimeDragSelectingTool, which replaces the standard <a>DragSelectingTool</a>. Press
+      in the background, wait briefly, and then drag to start selecting Nodes or Links that intersect with the box. You can
+      press or release Control (Command on Mac) or Shift while dragging to see how the selection changes.
+    </p>
+    <p>
+      Load it in your own app by including <a href="RealtimeDragSelectingTool.ts">RealtimeDragSelectingTool.ts</a>. Initialize
+      your Diagram by setting <a>ToolManager.dragSelectingTool</a> to a new instance of this tool. For example:
+    </p>
+    <pre>
+myDiagram.toolManager.dragSelectingTool = new go.RealtimeDragSelectingTool();
+    </pre>
+    or
+    <pre>
+$(go.Diagram, { . . .,
+                "toolManager.dragSelectingTool": $(RealtimeDragSelectingTool, { isPartialInclusion: true }),
+                . . . })
+    </pre>
+  </div>
+</body>
+</html>

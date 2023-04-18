@@ -1,0 +1,149 @@
+                                     ACL
+                         Abductive Concept Learning
+                                  version 2
+
+
+Prerequisites:
+
+The following software must be installed in your system:
+        Sicstus Prolog: information on how to obtain a commercial licence for Sicstus can
+                be found at http://www.sics.se/isl/sicstus.html
+
+Installation instructions:
+
+1) download the ACL1 version 2 code: acl1_2.tar.gz
+
+2) create a directory for your code and data files
+
+3) copy acl1_2.tar.gz into it and decompress it
+        gunzip acl1_2.tar.gz
+        tar xvf acl1_2.tar
+The directory will contain the following files
+	manual_acl1_2.txt
+this manual,
+	acl1_2.pl
+	abdpp1.pl
+	output.pl
+the system, 
+	father.bg
+	father.rules
+an example of input and output files.
+
+Running the system:
+
+1) prepare your data: you need one input file: (see the end of the file for the input file format)
+        <file_stem>.bg :the input file with the training set, background knowledge and bias
+
+2) load Sicstus
+        sicstus
+
+3) load the acl1 code
+        | ?-[acl1_2].
+
+4) start the induction with the command
+        | ?-i(<file_stem>).
+the induction writes the output files <file_stem>.rules 
+
+Input files format:
+Format of <file_stem>.bg: (see father.bg as an example)
+
+   Bias:
+   each target predicate must have a "bias" clause
+   bias(rule(<head>,<body>),
+        [<list of variables>],
+        [<list of allowed literals>]).
+   The [<list of allowed literals>] is the list of all the possible literals that
+   can be added to the rule <head>:-<body>
+   <body> is a template that can be used in order to specialize the clauses accordingly to what is already in the body.
+        In the example below is a variable so that any rule
+        can be refined with the literals in the list.
+   The [<list of variables>] must contain the list of all the variables that may
+   appear in the rule or its refinements and must be the same for all bias facts relative to    the same predicate.
+        Example:
+        bias(rule(father(X,Y),_Body),[X,Y,Z],
+        [parent(X,Y),parent(Y,X),parent(X,Z),parent(Y,Z),male(X),male(Y),male(Z),
+        female(X),female(Y),female(Z)]).
+
+   Abducible predicates:
+   abducibles([<list of abducible predicates>]).
+   The variables in the abducible predicates must be all different (use _)
+        Example:
+        abducibles([male(_),female(_)]).
+
+   Integrity constraints: (of the form :-<body>.)
+   ic(<list of literals in the body>).
+        Example:
+        ic([male(X),female(X)]).
+
+   Training set:
+   eplus(<list of positive examples>).
+   eminus(<list of negative examples>).
+        Example:
+        eplus([father(john,mary),father(david,steve)]).
+        eminus([father(katy,ellen),father(john,steve),father(steve,john),father(steve,katy)]).
+
+   Background theory:
+   Rules:
+   :-dynamic <pred1>/<arity1>,...,<predn>/<arityn>.
+   <definitions for predicates pred1,...,predn>
+        Example:
+        :-dynamic parent/2, male/1, female/1.
+
+        parent(john,mary).
+        male(john).
+        parent(david,steve).
+        parent(katy,ellen).
+        female(katy).
+
+Output files format:
+Format of <file_stem>.rules: See for example father.rules:
+        /*
+        ACL1 ver 2 AbdProofProc. ver 1
+        File name: father
+        Max spec steps=10, Beamsize=5, Derivation depth=20, Verb
+        osity=3
+        */
+        Execution time 0.310000 seconds. Generated rules
+
+        father(A,B):-parent(A,B),male(A).
+        /*Covered positive examples: [father(david,steve),father(john,mary)]
+        Covered negative examples: []
+        Abduced literals:[[not(father(katy,ellen)),not(male(katy))],
+                          [father(david,steve),male(david)]]*/
+
+First the name of the input <file_stem> is printed, then the values for the parameters
+are shown together with the total execution time.
+
+Then follows the rules that have been learned, together with the set of positive
+and negative examples covered by them and by the set of assumptions made for covering
+them. In the set of assumptions, each assumption is associated to the
+example that generated it.
+
+
+Parameters setting:
+
+A number of parameters can be set. The ACL1 parameters are defined by a number of prolog facts and are described below: 
+
+        verbosity(V): specifies the verbosity level.  Set by default to 3
+        0: nothing is printed apart from the output rules
+        1: every rule that is added to the theory
+        2: every rule added to the agenda
+        3: the agenda at each specializing step
+
+        beamsize(Beamsize): specifies the size of the beam. Set by default to 5
+
+        nmax(Nmax): maximum number of specializayion.  Set by default to 10
+
+        der_depth(Depth): depth of derivations.  Set by default to 20
+
+        kt(K):  threshold on K+ and K-.  Set by default to 0.1
+
+	min_cov(MC): minimum number of examples that each clause must cover. 
+		Set by default to 1.
+
+
+They can be set either by including a fact for them in the input file, by changing
+the acl1_2.pl file and reloading it or by retract and asserts.
+
+For reporting impressions on the use of the system, bugs or new applications,
+send an e-mail to Fabrizio Riguzzi (friguzzi@deis.unibo.it).

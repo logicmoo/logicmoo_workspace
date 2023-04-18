@@ -1,0 +1,491 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Picture | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class Picture</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="GraphObject.html" class="tsd-signature-type">GraphObject</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">Picture</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>A Picture is a <a href="GraphObject.html">GraphObject</a> that shows an image, video-frame, or Canvas element.</p>
+					<p>You can specify what to show by either setting the <a href="Picture.html#source">source</a> URL property
+						to a URL string or the <a href="Picture.html#element">element</a> property to an HTMLImageElement,
+					HTMLCanvasElement, or HTMLVideoElement.</p>
+					<p>If a <a href="Picture.html#source">source</a> URL is set, the Picture will automatically create a corresponding
+						HTMLImageElement and retain a reference to it in memory. If multiple Pictures specify
+					the same <a href="Picture.html#source">source</a> URL then they will all refer to the same HTMLImageElement.</p>
+					<p>Some created Pictures:</p>
+					<pre><code class="hljs js"><span class="hljs-keyword">var</span> $ = go.GraphObject.make;  <span class="hljs-comment">// for conciseness in defining GraphObjects</span>
+
+<span class="hljs-comment">// A shape with the figure set to "example.png". It will show a gray area until the image is loaded:</span>
+$(go.Picture, { <span class="hljs-attr">source</span>: <span class="hljs-string">"example.png"</span>, <span class="hljs-attr">background</span>: <span class="hljs-string">"gray"</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">50</span> })
+<span class="hljs-comment">// Alternatively:</span>
+$(go.Picture, <span class="hljs-string">"example.png"</span>, { <span class="hljs-attr">background</span>: <span class="hljs-string">"gray"</span>, <span class="hljs-attr">width</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">50</span> })
+</code></pre>
+					<p>If an element is not completely loaded during Diagram initialization, a redraw may occur,
+						and if an image&#39;s size is not known before loading, the containing Part of this Picture
+						may be resized, causing side effects such as layouts.
+						This can be avoided by knowing the size of the image beforehand,
+					and setting the Picture&#39;s <a href="GraphObject.html#desiredSize">GraphObject.desiredSize</a>.</p>
+					<p>With some images (notably sprite sheets) only a portion of the image is expected to be drawn.
+						The <a href="Picture.html#sourceRect">sourceRect</a> property allows the programmer to specify a rectangular area of
+					the source image that the Picture should display.</p>
+					<p>The <a href="Picture.html#imageStretch">imageStretch</a> property allows an image to be resized inside of its bounding box.
+						This property does not change the size of the Picture element, it only resizes or re-scales
+					the image to fit (or not) in its bounds.</p>
+					<p><p class="boxread">
+							For examples of sizing and <a href="Picture.html#imageStretch">imageStretch</a>,
+						see the <a href="../../intro/pictures.html">Introduction page on Pictures</a>.</p>
+						<p>The <a href="Picture.html#errorFunction">errorFunction</a> property allows one to set a function to call when a source fails to load.
+							This is useful in instances where images cannot be guaranteed to work, such as with
+							user specified input. The error function can set the <a href="Picture.html#source">source</a> to a known good value,
+						but care should be taken to avoid error infinite loops when doing so.</p>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="Picture.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#element" class="tsd-kind-icon">element</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#errorFunction" class="tsd-kind-icon">error<wbr>Function</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#flip" class="tsd-kind-icon">flip</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#imageAlignment" class="tsd-kind-icon">image<wbr>Alignment</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#imageStretch" class="tsd-kind-icon">image<wbr>Stretch</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="Picture.html#naturalBounds" class="tsd-kind-icon">natural<wbr>Bounds</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#source" class="tsd-kind-icon">source</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#sourceCrossOrigin" class="tsd-kind-icon">source<wbr>Cross<wbr>Origin</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#sourceRect" class="tsd-kind-icon">source<wbr>Rect</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="Picture.html#successFunction" class="tsd-kind-icon">success<wbr>Function</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Picture<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Picture.html" class="tsd-signature-type">Picture</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>The constructor creates a picture that shows nothing until the
+									<a href="Picture.html#source">source</a> or <a href="Picture.html#element">element</a> is specified. It is also common to specify the
+									<a href="GraphObject.html#desiredSize">GraphObject.desiredSize</a> to make sure that the picture&#39;s size is known
+								before the image is loaded asynchronously, so that layouts do not need to be recomputed.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="Picture.html" class="tsd-signature-type">Picture</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="element" class="tsd-anchor"></a>
+					<h3>
+						element
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLVideoElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLCanvasElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the Picture&#39;s HTML element that provides some kind of visual image.</p>
+								<p>The default value is null.
+									This can be a HTMLImageElement, HTMLVideoElement, or HTMLCanvasElement.
+									If an image, this element must have its source (src) attribute defined.
+								Setting this does not set the <a href="Picture.html#source">Picture.source</a> attribute and that attribute may be unknowable.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="errorFunction" class="tsd-anchor"></a>
+					<h3>
+						error<wbr>Function
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">a</span><span class="tsd-signature-symbol">: </span><a href="Picture.html" class="tsd-signature-type">Picture</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">b</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the function to call if an image fails to load.
+									The arguments to this function are this Picture and the HTMLImageElement&#39;s &quot;error&quot; (onerror) Event.
+								The default value is null, meaning that no specific action occurs when there is an error loading an image.</p>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="Picture.html#successFunction">successFunction</a></p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="flip" class="tsd-anchor"></a>
+					<h3>
+						flip
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets how the Picture is displayed: Either normally or with a Horizontal or Vertical flip or both.</p>
+								<p>Possible values are <a href="GraphObject.html#static-None">GraphObject.None</a>, <a href="GraphObject.html#static-FlipHorizontal">GraphObject.FlipHorizontal</a>, <a href="GraphObject.html#static-FlipVertical">GraphObject.FlipVertical</a>, or <a href="GraphObject.html#static-FlipBoth">GraphObject.FlipBoth</a>.
+								The default is <a href="GraphObject.html#static-None">GraphObject.None</a>.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>2.0</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="imageAlignment" class="tsd-anchor"></a>
+					<h3>
+						image<wbr>Alignment
+					<span class="tsd-signature-symbol">: </span><a href="Spot.html" class="tsd-signature-type">Spot</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the Spot to align the source image to, when the source image
+									is smaller than the Picture. This is only relevant when
+								the <a href="Picture.html#imageStretch">imageStretch</a> property value is not go.GraphObject.Fill.</p>
+								<p>This does not affect Picture coordinates or bounds, it only affects what is drawn within the given area.
+								The default value is <a href="Spot.html#static-Center">Spot.Center</a>.</p>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="Picture.html#imageStretch">imageStretch</a></p>
+									</dd>
+									<dt>since</dt>
+									<dd><p>1.7</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="imageStretch" class="tsd-anchor"></a>
+					<h3>
+						image<wbr>Stretch
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets how the Picture&#39;s image is stretched within its bounding box.
+									Some images will be a different aspect ratio than their given size or <a href="GraphObject.html#desiredSize">desiredSize</a>.
+									This property will never change the size of the Picture itself,
+								only the size of the image that is drawn in the Picture&#39;s <a href="GraphObject.html#actualBounds">actualBounds</a>.</p>
+								<p>Possible values are <a href="GraphObject.html#static-Fill">GraphObject.Fill</a>, <a href="GraphObject.html#static-Uniform">GraphObject.Uniform</a>,
+									<a href="GraphObject.html#static-UniformToFill">GraphObject.UniformToFill</a>, and <a href="GraphObject.html#static-None">GraphObject.None</a>.
+								The default is <a href="GraphObject.html#static-Fill">GraphObject.Fill</a>.</p>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="Picture.html#imageAlignment">imageAlignment</a></p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="naturalBounds" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						natural<wbr>Bounds
+					<span class="tsd-signature-symbol">: </span><a href="Rect.html" class="tsd-signature-type">Rect</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns the natural size of this picture as determined by its source&#39;s width and height.
+									The value is initially NaN x NaN until the picture has been measured.
+								It will use the <a href="Picture.html#element">element</a>&#39;s <code>naturalWidth</code> and <code>naturalHeight</code> if available.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="source" class="tsd-anchor"></a>
+					<h3>
+						source
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the Picture&#39;s source URL, which can be any valid image (png, jpg, gif, etc) URL.</p>
+								<p>The default value is the empty string, which specifies no image source.
+									Setting this attribute creates an HTMLImageElement and sets the <a href="Picture.html#element">Picture.element</a>
+									attribute to that element.
+									Setting the source of multiple Pictures to the same URL will cause only one HTMLImageElement
+									to be created and shared.
+									It is commonplace to either specify a constant URL or to data bind this property to some data property,
+								perhaps using a conversion function in order to produce a proper URL.</p>
+								<p>To avoid remeasuring and rearranging Parts as images load asynchronously,
+									be sure to set the <a href="GraphObject.html#desiredSize">GraphObject.desiredSize</a>
+								(or <a href="GraphObject.html#width">GraphObject.width</a> and <a href="GraphObject.html#height">GraphObject.height</a>) to fixed values</p>
+								<p>For cross-browser support of SVG sources additional care is needed.
+								See the final section of the <a href="../../intro/pictures.html">Introduction page on Pictures</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="sourceCrossOrigin" class="tsd-anchor"></a>
+					<h3>
+						source<wbr>Cross<wbr>Origin
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">a</span><span class="tsd-signature-symbol">: </span><a href="Picture.html" class="tsd-signature-type">Picture</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets a function that returns a value for image.crossOrigin.</p>
+								<p>The default value is null, which will not set a value for image.crossOrigin.
+									Set this property to a function that returns &quot;anonymous&quot; or &quot;use-credentials&quot;
+									if you want images to complete a cross-origin request.
+								Example:</p>
+								<pre><code class="hljs js">   $(go.Picture,
+     { <span class="hljs-attr">width</span>: <span class="hljs-number">64</span>, <span class="hljs-attr">height</span>: <span class="hljs-number">64</span> },
+     { <span class="hljs-attr">sourceCrossOrigin</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">pict</span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">"use-credentials"</span>; } },
+     <span class="hljs-keyword">new</span> go.Binding(<span class="hljs-string">"source"</span>, <span class="hljs-string">"path"</span>))
+</code></pre>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.5</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="sourceRect" class="tsd-anchor"></a>
+					<h3>
+						source<wbr>Rect
+					<span class="tsd-signature-symbol">: </span><a href="Rect.html" class="tsd-signature-type">Rect</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the rectangular area of the source image that this picture should display.
+								This is only common with sprite maps and image tables.</p>
+								<p>The value must be of type <a href="Rect.html">Rect</a>.
+								The default value is Rect(NaN, NaN, NaN, NaN), which means the whole source image should be used.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="successFunction" class="tsd-anchor"></a>
+					<h3>
+						success<wbr>Function
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">a</span><span class="tsd-signature-symbol">: </span><a href="Picture.html" class="tsd-signature-type">Picture</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">b</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Event</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the function to call when an image loads successfully.
+									The arguments to this function are this Picture and the HTMLImageElement&#39;s &quot;load&quot; Event.
+								The default value is null, meaning that no specific action occurs when an image finishes loading.</p>
+								<dl class="tsd-comment-tags">
+									<dt>see</dt>
+									<dd><p><a href="Picture.html#errorFunction">errorFunction</a></p>
+									</dd>
+									<dt>since</dt>
+									<dd><p>1.7</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="Picture.html" class="tsd-kind-icon">Picture</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="Picture.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#element" class="tsd-kind-icon">element</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#errorFunction" class="tsd-kind-icon">error<wbr>Function</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#flip" class="tsd-kind-icon">flip</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#imageAlignment" class="tsd-kind-icon">image<wbr>Alignment</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#imageStretch" class="tsd-kind-icon">image<wbr>Stretch</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="Picture.html#naturalBounds" class="tsd-kind-icon">natural<wbr>Bounds</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#source" class="tsd-kind-icon">source</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#sourceCrossOrigin" class="tsd-kind-icon">source<wbr>Cross<wbr>Origin</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#sourceRect" class="tsd-kind-icon">source<wbr>Rect</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="Picture.html#successFunction" class="tsd-kind-icon">success<wbr>Function</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

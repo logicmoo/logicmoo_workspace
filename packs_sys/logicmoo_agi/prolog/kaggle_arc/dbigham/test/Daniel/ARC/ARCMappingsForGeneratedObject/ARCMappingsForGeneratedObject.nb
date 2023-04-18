@@ -1,0 +1,1374 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     78054,       1366]
+NotebookOptionsPosition[     70457,       1189]
+NotebookOutlinePosition[     76151,       1329]
+CellTagsIndexPosition[     76108,       1326]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["ARCMappingsForGeneratedObject", "Title",ExpressionUUID->"2e4889c7-2535-4fe2-80fc-d3602b117d11"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{"RunUnitTests", "[", "ARCMappingsForGeneratedObject", "]"}]}], "Code",
+ InitializationCell->False,
+ CellLabel->
+  "In[1209]:=",ExpressionUUID->"c12897c9-aee1-4942-8b37-f9646338730a"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",ExpressionUUID->"adc70b56-e028-482d-a9a1-b0939e108c23"],
+
+Cell[CellGroupData[{
+
+Cell["28e73c20", "Subsection",
+ CellChangeTimes->{
+  3.8728000261948805`*^9},ExpressionUUID->"f570aa16-fae1-407f-9b70-\
+e9322f316d9f"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ARCParseFile", "[", "\"\<28e73c20\>\"", "]"}], "[", 
+  RowBox[{"\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.872238825664999*^9, 3.8722388263034096`*^9}},
+ CellLabel->
+  "In[789]:=",ExpressionUUID->"da62974d-5531-42c1-83b4-0dde366d6159"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"}
+   },
+   AutoDelete->False,
+   FrameStyle->{
+     AbsoluteThickness[1], 
+     GrayLevel[0.5]},
+   GridBoxBackground->{
+    "Columns" -> {{None}}, "Rows" -> {{None}}, 
+     "ItemsIndexed" -> {{1, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 2} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 5} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {1, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {2, 1} -> 
+       GrayLevel[0], {2, 2} -> GrayLevel[0], {2, 3} -> GrayLevel[0], {2, 4} -> 
+       GrayLevel[0], {2, 5} -> GrayLevel[0], {2, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 2} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 5} -> 
+       GrayLevel[0], {3, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 2} -> 
+       GrayLevel[0], {4, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 5} -> 
+       GrayLevel[0], {4, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {5, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {5, 2} -> 
+       GrayLevel[0], {5, 3} -> GrayLevel[0], {5, 4} -> GrayLevel[0], {5, 5} -> 
+       GrayLevel[0], {5, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 2} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 4} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 5} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 6} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`]}},
+   GridBoxDividers->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+   GridBoxFrame->{"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+   GridBoxItemSize->{"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{3.872238826595047*^9},
+ CellLabel->
+  "Out[789]=",ExpressionUUID->"821644db-cac6-43ce-9db6-e80dcc1e6d2d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCMappingsForGeneratedObject-20220915-WTG4U0", 
+              Daniel`ARC`ARCMappingsForGeneratedObject, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], 28390654, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCMappingsForGeneratedObject-20220915-WTG4U0"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCMappingsForGeneratedObject-20220915-WTG4U0", 
+            Daniel`ARC`ARCMappingsForGeneratedObject, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], "CellID" -> 28390654, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCMappingsForGeneratedObject-20220915-WTG4U0", 
+           Daniel`ARC`ARCMappingsForGeneratedObject, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCMappingsForGeneratedObject-20220915-WTG4U0"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.8544921875, 27.1455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.87223818900626*^9},ExpressionUUID->"31f171f2-9248-4bc9-bd07-16d442b741d7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"res", " ", "=", "\n", 
+   RowBox[{"NormalizeOutput", "@", "\n", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"parsedScene", ",", " ", "object"}], "}"}], ",", "\n", "\t", 
+      RowBox[{
+       RowBox[{"parsedScene", " ", "=", " ", 
+        RowBox[{"ARCParseScene", "[", 
+         RowBox[{
+          RowBox[{"ARCParseFile", "[", "\"\<28e73c20\>\"", "]"}], "[", 
+          RowBox[{
+          "\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], "]"}],
+          "]"}]}], ";", "\n", "\t", 
+       RowBox[{"object", " ", "=", " ", 
+        RowBox[{"parsedScene", "[", 
+         RowBox[{"[", 
+          RowBox[{"\"\<Objects\>\"", ",", " ", "1"}], "]"}], "]"}]}], ";", 
+       "\n", "\t", 
+       RowBox[{"ARCMappingsForGeneratedObject", "[", "\n", "\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ARCPossiblyGeneratedObjectQ", "[", "object", "]"}], "[", 
+          "\"\<Line\>\"", "]"}], ",", "\n", "\t\t", 
+         RowBox[{"object", "[", "\"\<Color\>\"", "]"}], ",", "\n", "\t\t", 
+         RowBox[{"Replace", "[", "\n", "\t\t\t", 
+          RowBox[{
+           RowBox[{"parsedScene", "[", "\"\<Scene\>\"", "]"}], ",", "\n", 
+           "\t\t\t", 
+           RowBox[{
+            RowBox[{"parsedScene", "[", "\"\<Background\>\"", "]"}], " ", "->",
+             " ", "Daniel`ARC`Private`$nonImageColor"}], ",", "\n", "\t\t\t", 
+           RowBox[{"{", "3", "}"}]}], "\n", "\t\t", "]"}]}], "\n", "\t", 
+        "]"}]}]}], "\n", "]"}]}]}], ";"}], "\n", 
+ RowBox[{"res", " ", "//", " ", "ARCIndent"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.872234021647648*^9, 3.87223411568356*^9}, {
+   3.872234152135808*^9, 3.8722341536470947`*^9}, 3.87223818900626*^9, {
+   3.8722789097872725`*^9, 3.872278911587081*^9}, {3.8723225773592196`*^9, 
+   3.8723225817146015`*^9}, {3.8723226696227255`*^9, 
+   3.8723226715823817`*^9}, {3.8723231543385096`*^9, 
+   3.8723231544535265`*^9}, {3.8723231930032578`*^9, 
+   3.8723232243465443`*^9}, {3.8723243428651705`*^9, 3.872324349926529*^9}},
+ CellLabel->"In[282]:=",
+ CellID->28390654,
+ "TestId" -> 
+ "ARCMappingsForGeneratedObject-20220915-WTG4U0",ExpressionUUID->"a2b5cf2b-\
+fbaa-44a6-a4cb-1ed3ebf1f2d5"]
+}, Open  ]],
+
+Cell[BoxData["\<\"{\\n    <|\\n        \\\"UUID\\\" -> 0,\\n        \
+\\\"Position\\\" -> {1, 1},\\n        \\\"Start\\\" -> True,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 1,\\n        \\\"TotalDistanceSoFar\\\" -> 1\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> 1\\n \
+   |>,\\n    <|\\n        \\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> \
+{1, 2},\\n        \\\"PreviousPosition\\\" -> {1, 1},\\n        \
+\\\"IncomingDirection\\\" -> {0, 1},\\n        \\\"IncomingDirectionY\\\" -> \
+0,\\n        \\\"IncomingDirectionX\\\" -> 1,\\n        \\\"ColorAhead\\\" -> \
+-1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead2\\\" -> -1,\\n        \\\"ColorAhead2MatchesObject\\\" -> \
+False,\\n        \\\"ColorAhead3\\\" -> -1,\\n        \
+\\\"ColorAhead3MatchesObject\\\" -> False,\\n        \\\"Color135Degrees\\\" \
+-> -1,\\n        \\\"Color135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> 2\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {1, 3},\\n        \\\"PreviousPosition\
+\\\" -> {1, 2},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-1,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 3,\\n        \\\"TotalDistanceSoFar\\\" -> 3\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {1, 4},\\n        \\\"PreviousPosition\
+\\\" -> {1, 3},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 4,\\n        \\\"TotalDistanceSoFar\\\" -> 4\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {1, 5},\\n        \\\"PreviousPosition\
+\\\" -> {1, 4},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -2,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 5,\\n        \\\"TotalDistanceSoFar\\\" -> 5\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {1, 6},\\n        \\\"PreviousPosition\
+\\\" -> {1, 5},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> -2,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -2,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -2,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 6,\\n        \\\"TotalDistanceSoFar\\\" -> 6\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 90\\n    |>,\\n    <|\\n        \
+\\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> {2, 6},\\n        \
+\\\"PreviousPosition\\\" -> {1, 6},\\n        \\\"IncomingDirection\\\" -> \
+{1, 0},\\n        \\\"IncomingDirectionY\\\" -> 1,\\n        \
+\\\"IncomingDirectionX\\\" -> 0,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {0, 1},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-1,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -1,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> 3,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> True,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> 7\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {3, 6},\\n        \\\"PreviousPosition\
+\\\" -> {2, 6},\\n        \\\"IncomingDirection\\\" -> {1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> 1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {1, 0},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-1,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 3,\\n        \\\"TotalDistanceSoFar\\\" -> 8\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {4, 6},\\n        \\\"PreviousPosition\
+\\\" -> {3, 6},\\n        \\\"IncomingDirection\\\" -> {1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> 1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {1, 0},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 4,\\n        \\\"TotalDistanceSoFar\\\" -> 9\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {5, 6},\\n        \\\"PreviousPosition\
+\\\" -> {4, 6},\\n        \\\"IncomingDirection\\\" -> {1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> 1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {1, 0},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -2,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 5,\\n        \\\"TotalDistanceSoFar\\\" -> \
+10\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \\\
+\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> 0,\\n  \
+      \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\" -> \
+0,\\n        \\\"Position\\\" -> {6, 6},\\n        \\\"PreviousPosition\\\" \
+-> {5, 6},\\n        \\\"IncomingDirection\\\" -> {1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> 1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {1, 0},\\n        \
+\\\"ColorAhead\\\" -> -2,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -2,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -2,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 6,\\n        \\\"TotalDistanceSoFar\\\" -> \
+11\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, -1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+-1,\\n        \\\"TurnDegrees\\\" -> 90\\n    |>,\\n    <|\\n        \\\"UUID\
+\\\" -> 0,\\n        \\\"Position\\\" -> {6, 5},\\n        \
+\\\"PreviousPosition\\\" -> {6, 6},\\n        \\\"IncomingDirection\\\" -> \
+{0, -1},\\n        \\\"IncomingDirectionY\\\" -> 0,\\n        \
+\\\"IncomingDirectionX\\\" -> -1,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {1, 0},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-1,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -1,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> 3,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> True,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> \
+12\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, -1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+-1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> {6, 4},\\n        \
+\\\"PreviousPosition\\\" -> {6, 5},\\n        \\\"IncomingDirection\\\" -> \
+{0, -1},\\n        \\\"IncomingDirectionY\\\" -> 0,\\n        \
+\\\"IncomingDirectionX\\\" -> -1,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {0, -1},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-1,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -1,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> -1,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees\\\
+\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees2\\\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" \
+-> False,\\n        \\\"Color45Degrees\\\" -> -1,\\n        \
+\\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 3,\\n        \\\"TotalDistanceSoFar\\\" -> \
+13\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, -1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+-1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> {6, 3},\\n        \
+\\\"PreviousPosition\\\" -> {6, 4},\\n        \\\"IncomingDirection\\\" -> \
+{0, -1},\\n        \\\"IncomingDirectionY\\\" -> 0,\\n        \
+\\\"IncomingDirectionX\\\" -> -1,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {0, -1},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-1,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -2,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> -1,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees\\\
+\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees2\\\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" \
+-> False,\\n        \\\"Color45Degrees\\\" -> -1,\\n        \
+\\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 4,\\n        \\\"TotalDistanceSoFar\\\" -> \
+14\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, -1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+-1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> {6, 2},\\n        \
+\\\"PreviousPosition\\\" -> {6, 3},\\n        \\\"IncomingDirection\\\" -> \
+{0, -1},\\n        \\\"IncomingDirectionY\\\" -> 0,\\n        \
+\\\"IncomingDirectionX\\\" -> -1,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {0, -1},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-2,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -2,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> -1,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees\\\
+\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees2\\\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" \
+-> False,\\n        \\\"Color45Degrees\\\" -> -1,\\n        \
+\\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 5,\\n        \\\"TotalDistanceSoFar\\\" -> \
+15\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, -1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+-1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \
+\\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> {6, 1},\\n        \
+\\\"PreviousPosition\\\" -> {6, 2},\\n        \\\"IncomingDirection\\\" -> \
+{0, -1},\\n        \\\"IncomingDirectionY\\\" -> 0,\\n        \
+\\\"IncomingDirectionX\\\" -> -1,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {0, -1},\\n        \\\"ColorAhead\\\" -> -2,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-2,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -2,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> -1,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees\\\
+\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees2\\\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" \
+-> False,\\n        \\\"Color45Degrees\\\" -> -2,\\n        \
+\\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 6,\\n        \\\"TotalDistanceSoFar\\\" -> \
+16\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {-1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> -1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 90\\n    |>,\\n    <|\\n        \
+\\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> {5, 1},\\n        \
+\\\"PreviousPosition\\\" -> {6, 1},\\n        \\\"IncomingDirection\\\" -> \
+{-1, 0},\\n        \\\"IncomingDirectionY\\\" -> -1,\\n        \
+\\\"IncomingDirectionX\\\" -> 0,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {0, -1},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-1,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -1,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> 3,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> True,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> \
+17\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {-1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> -1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {4, 1},\\n        \\\"PreviousPosition\
+\\\" -> {5, 1},\\n        \\\"IncomingDirection\\\" -> {-1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> -1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {-1, 0},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+3,\\n        \\\"ColorAhead3MatchesObject\\\" -> True,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 3,\\n        \\\"TotalDistanceSoFar\\\" -> \
+18\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {-1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> -1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {3, 1},\\n        \\\"PreviousPosition\
+\\\" -> {4, 1},\\n        \\\"IncomingDirection\\\" -> {-1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> -1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {-1, 0},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> 3,\\n        \\\"ColorAhead2MatchesObject\\\
+\" -> True,\\n        \\\"ColorAhead3\\\" -> -2,\\n        \
+\\\"ColorAhead3MatchesObject\\\" -> False,\\n        \\\"Color135Degrees\\\" \
+-> -1,\\n        \\\"Color135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 4,\\n        \\\"TotalDistanceSoFar\\\" -> \
+19\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \\\
+\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> 1,\\n  \
+      \\\"TurnDegrees\\\" -> 90\\n    |>,\\n    <|\\n        \\\"UUID\\\" -> \
+0,\\n        \\\"Position\\\" -> {3, 2},\\n        \\\"PreviousPosition\\\" \
+-> {3, 1},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {-1, 0},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-1,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> 3,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> True,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> \
+20\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \\\
+\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> 1,\\n  \
+      \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\" -> \
+0,\\n        \\\"Position\\\" -> {3, 3},\\n        \\\"PreviousPosition\\\" \
+-> {3, 2},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+3,\\n        \\\"ColorAhead3MatchesObject\\\" -> True,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 3,\\n        \\\"TotalDistanceSoFar\\\" -> \
+21\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \\\
+\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> 1,\\n  \
+      \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\" -> \
+0,\\n        \\\"Position\\\" -> {3, 4},\\n        \\\"PreviousPosition\\\" \
+-> {3, 3},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> 3,\\n        \\\"ColorAhead2MatchesObject\\\
+\" -> True,\\n        \\\"ColorAhead3\\\" -> -2,\\n        \
+\\\"ColorAhead3MatchesObject\\\" -> False,\\n        \\\"Color135Degrees\\\" \
+-> -1,\\n        \\\"Color135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 4,\\n        \\\"TotalDistanceSoFar\\\" -> \
+22\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \\\
+\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> 0,\\n  \
+      \\\"TurnDegrees\\\" -> 90\\n    |>,\\n    <|\\n        \\\"UUID\\\" -> \
+0,\\n        \\\"Position\\\" -> {4, 4},\\n        \\\"PreviousPosition\\\" \
+-> {3, 4},\\n        \\\"IncomingDirection\\\" -> {1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> 1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> 3,\\n        \\\"ColorAhead2MatchesObject\\\
+\" -> True,\\n        \\\"ColorAhead3\\\" -> -2,\\n        \
+\\\"ColorAhead3MatchesObject\\\" -> False,\\n        \\\"Color135Degrees\\\" \
+-> 3,\\n        \\\"Color135DegreesMatchesObject\\\" -> True,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> \
+23\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, -1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+-1,\\n        \\\"TurnDegrees\\\" -> 90\\n    |>,\\n    <|\\n        \\\"UUID\
+\\\" -> 0,\\n        \\\"Position\\\" -> {4, 3},\\n        \
+\\\"PreviousPosition\\\" -> {4, 4},\\n        \\\"IncomingDirection\\\" -> \
+{0, -1},\\n        \\\"IncomingDirectionY\\\" -> 0,\\n        \
+\\\"IncomingDirectionX\\\" -> -1,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {1, 0},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> 3,\
+\\n        \\\"ColorAhead2MatchesObject\\\" -> True,\\n        \
+\\\"ColorAhead3\\\" -> -2,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> 3,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> True,\\n        \
+\\\"Color90Degrees\\\" -> 3,\\n        \\\"Color90DegreesMatchesObject\\\" -> \
+True,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> 3,\\n        \\\"Color45DegreesMatchesObject\\\" -> True,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> \
+24\\n    |> -> <|\\n        \\\"Stop\\\" -> True\\n    |>\\n}\"\>"], "Output",
+ CellChangeTimes->{
+  3.8722340555730915`*^9, {3.872234093075437*^9, 3.872234116991005*^9}, 
+   3.872234154915946*^9, {3.8722342014258547`*^9, 3.872234210469336*^9}, {
+   3.8722343039938946`*^9, 3.8722343252564964`*^9}, {3.8722343568921776`*^9, 
+   3.872234412437003*^9}, {3.8722345321088176`*^9, 3.8722345607127733`*^9}, 
+   3.872234595361188*^9, 3.8722347437731905`*^9, 3.872234782447709*^9, 
+   3.872235170254716*^9, {3.8722352967363634`*^9, 3.8722353132314677`*^9}, 
+   3.872235398610273*^9, {3.8722379298139195`*^9, 3.8722379659965644`*^9}, {
+   3.872238080398868*^9, 3.8722380913439817`*^9}, 3.8722381702424164`*^9, {
+   3.87223822973945*^9, 3.8722382424247503`*^9}, 3.872238398292557*^9, 
+   3.872238497030556*^9, {3.872238542144287*^9, 3.8722385560534325`*^9}, 
+   3.8722386719721084`*^9, 3.8722387170877867`*^9, 3.8722387942074423`*^9, {
+   3.8722389631845274`*^9, 3.8722390187815323`*^9}, 3.8722390678490458`*^9, 
+   3.872239142601763*^9, 3.8722391777899933`*^9, 3.8722392556447015`*^9, 
+   3.872271829549867*^9, 3.872275251571195*^9, 3.8722770315606422`*^9, 
+   3.8722771849038506`*^9, {3.8722789074691277`*^9, 3.872278912054716*^9}, 
+   3.8722808903969975`*^9, 3.8723224928760753`*^9, {3.872322575903837*^9, 
+   3.8723225897751045`*^9}, {3.872322705554858*^9, 3.872322719843215*^9}, {
+   3.872322768878641*^9, 3.872322793589212*^9}, {3.8723228623416243`*^9, 
+   3.87232300186966*^9}, {3.8723232110063844`*^9, 3.8723232401195717`*^9}, 
+   3.872323815523974*^9, {3.872324328757184*^9, 3.872324350661293*^9}, 
+   3.8723503132281694`*^9, {3.872412151448573*^9, 3.872412176518427*^9}, 
+   3.8724242251702003`*^9, {3.8728000330752754`*^9, 3.872800060511093*^9}},
+ CellLabel->
+  "Out[284]=",ExpressionUUID->"f2f472d8-8bd3-41c1-9d86-6bbc3485783e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["e5790162", "Subsection",
+ CellChangeTimes->{3.8728000261948805`*^9, 
+  3.8728000718494973`*^9},ExpressionUUID->"a9d2139e-f49d-459f-add4-\
+9aa5c707c39a"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ARCParseFile", "[", "\"\<e5790162\>\"", "]"}], "[", 
+  RowBox[{"\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.872238825664999*^9, 3.8722388263034096`*^9}, 
+   3.872800074015376*^9},
+ CellLabel->
+  "In[285]:=",ExpressionUUID->"358e4247-8767-4918-afdf-fcff6196f639"],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"},
+    {"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"}
+   },
+   AutoDelete->False,
+   FrameStyle->{
+     AbsoluteThickness[1], 
+     GrayLevel[0.5]},
+   GridBoxBackground->{
+    "Columns" -> {{None}}, "Rows" -> {{None}}, 
+     "ItemsIndexed" -> {{1, 1} -> GrayLevel[0], {1, 2} -> 
+       GrayLevel[0], {1, 3} -> GrayLevel[0], {1, 4} -> GrayLevel[0], {1, 5} -> 
+       GrayLevel[0], {1, 6} -> GrayLevel[0], {2, 1} -> GrayLevel[0], {2, 2} -> 
+       GrayLevel[0], {2, 3} -> GrayLevel[0], {2, 4} -> GrayLevel[0], {2, 5} -> 
+       GrayLevel[0], {2, 6} -> GrayLevel[0], {3, 1} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 2} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {3, 4} -> 
+       RGBColor[
+        0.9411764705882353, 0.07058823529411765, 0.7450980392156863], {3, 5} -> 
+       GrayLevel[0], {3, 6} -> GrayLevel[0], {4, 1} -> GrayLevel[0], {4, 2} -> 
+       GrayLevel[0], {4, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {4, 4} -> 
+       GrayLevel[0], {4, 5} -> GrayLevel[0], {4, 6} -> GrayLevel[0], {5, 1} -> 
+       GrayLevel[0], {5, 2} -> GrayLevel[0], {5, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {5, 4} -> 
+       GrayLevel[0], {5, 5} -> GrayLevel[0], {5, 6} -> GrayLevel[0], {6, 1} -> 
+       GrayLevel[0], {6, 2} -> GrayLevel[0], {6, 3} -> 
+       RGBColor[0.1803921568627451, 0.8, 0.25098039215686274`], {6, 4} -> 
+       GrayLevel[0], {6, 5} -> GrayLevel[0], {6, 6} -> GrayLevel[0]}},
+   GridBoxDividers->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+   GridBoxFrame->{"ColumnsIndexed" -> {{{1, -1}, {1, -1}} -> True}},
+   GridBoxItemSize->{"Columns" -> {{1.3}}, "Rows" -> {{1.5}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{3.872238826595047*^9, 3.872800074567024*^9},
+ CellLabel->
+  "Out[285]=",ExpressionUUID->"f51777ed-19e6-465b-a933-1cf00a5cf529"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ DynamicBox[ToBoxes[
+   Column[{
+     Framed[
+      Grid[{{
+         Button["Run", 
+          
+          With[{DevTools`TestingTools`Private`res = 
+            DevTools`TestingTools`Private`runButtonClicked[
+             "ARCMappingsForGeneratedObject-20220915-WTG4U0", 
+              Daniel`ARC`ARCMappingsForGeneratedObject, 
+              HoldComplete[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], 28390654, "SubTest" -> None]}, 
+           If[
+            FailureQ[DevTools`TestingTools`Private`res], 
+            Print[DevTools`TestingTools`Private`res]]], 
+          ImageSize -> {57.5, 25}, Method -> "Queued"], 
+         Button[
+         "Update", {
+           "TestUiMarker", "TestId" -> 
+            "ARCMappingsForGeneratedObject-20220915-WTG4U0"}; 
+          DevTools`TestingTools`Private`updateTestClicked[
+           "ARCMappingsForGeneratedObject-20220915-WTG4U0", 
+            Daniel`ARC`ARCMappingsForGeneratedObject, 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], "CellID" -> 28390654, 
+            "SubTest" -> None], ImageSize -> {80., 25}, Method -> "Queued"], 
+         Button["Open in Editor", 
+          DevTools`TestingTools`Private`openInEditorClicked[
+          "ARCMappingsForGeneratedObject-20220915-WTG4U0", 
+           Daniel`ARC`ARCMappingsForGeneratedObject, 
+           HoldComplete[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], 
+           Utility`FilterOptions[
+           "SubTest" -> None, 
+            DevTools`TestingTools`Private`openInEditorClicked]], 
+          ImageSize -> {140., 25}, Method -> "Queued"], 
+         Row[{"ARCMappingsForGeneratedObject-20220915-WTG4U0"}, 
+          ImageSize -> {Full, Automatic}, Alignment -> {Right, Center}]}}], 
+      ImageSize -> {Full, Automatic}, FrameStyle -> GrayLevel[0.8], 
+      FrameMargins -> 10], 
+     DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219; If[
+       And[
+        ValueQ[
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219 =!= "", 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219 =!= Null], 
+       (If[
+        TrueQ[
+         OptionValue[
+         DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+        Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+        Framed[#, FrameStyle -> LightGray, Background -> White, FrameMargins -> 
+         15]]& )[
+        Grid[{{
+           Pane[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219, "ImageSize" -> {Full, {0, 
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {}, 
+                "MaxHeight"]}}, Scrollbars -> Automatic, FrameMargins -> 0]}, 
+          If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {}, "NakedSection"]], 
+           Apply[Sequence, {}], {
+            Button[
+            "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219 = "", ImageSize -> {100, 33}]}]},
+          Spacings -> {0, 1}, Alignment -> {Left, Top}]], 
+       Apply[Sequence, {}]]}], StandardForm],
+  ImageSizeCache->{833., {21.3544921875, 26.6455078125}},
+  TrackedSymbols:>{
+   DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable2022915943932219}]], "TestUI",
+ CellMargins->{{65, 0}, {0, 0}},
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ GeneratedCell->False,
+ CellChangeTimes->{
+  3.87223818900626*^9},ExpressionUUID->"11469c0d-5405-4602-999d-b5d600cf0fed"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ReloadARC", "[", "]"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"res", " ", "=", "\n", 
+   RowBox[{"NormalizeOutput", "@", "\n", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"parsedScene", ",", " ", "object"}], "}"}], ",", "\n", "\t", 
+      RowBox[{
+       RowBox[{"parsedScene", " ", "=", " ", 
+        RowBox[{"ARCParseScene", "[", "\n", "\t\t", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"ARCParseFile", "[", "\"\<e5790162\>\"", "]"}], "[", 
+           RowBox[{
+           "\"\<Train\>\"", ",", " ", "1", ",", " ", "\"\<Output\>\""}], 
+           "]"}], ",", "\n", "\t\t", 
+          RowBox[{
+          "\"\<FormMultiColorCompositeObjects\>\"", " ", "->", " ", 
+           "False"}]}], "\n", "\t", "]"}]}], ";", "\n", "\t", 
+       RowBox[{"object", " ", "=", " ", 
+        RowBox[{"parsedScene", "[", 
+         RowBox[{"[", 
+          RowBox[{"\"\<Objects\>\"", ",", " ", "1"}], "]"}], "]"}]}], ";", 
+       "\n", "\t", 
+       RowBox[{"ARCMappingsForGeneratedObject", "[", "\n", "\t\t", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ARCPossiblyGeneratedObjectQ", "[", "object", "]"}], "[", 
+          "\"\<Line\>\"", "]"}], ",", "\n", "\t\t", 
+         RowBox[{"object", "[", "\"\<Color\>\"", "]"}], ",", "\n", "\t\t", 
+         RowBox[{"Replace", "[", "\n", "\t\t\t", 
+          RowBox[{
+           RowBox[{"parsedScene", "[", "\"\<Scene\>\"", "]"}], ",", "\n", 
+           "\t\t\t", 
+           RowBox[{
+            RowBox[{"parsedScene", "[", "\"\<Background\>\"", "]"}], " ", "->",
+             " ", "Daniel`ARC`Private`$nonImageColor"}], ",", "\n", "\t\t\t", 
+           RowBox[{"{", "3", "}"}]}], "\n", "\t\t", "]"}]}], "\n", "\t", 
+        "]"}]}]}], "\n", "]"}]}]}], ";"}], "\n", 
+ RowBox[{"res", " ", "//", " ", "ARCIndent"}]}], "Code",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellChangeTimes->{{3.872234021647648*^9, 3.87223411568356*^9}, {
+   3.872234152135808*^9, 3.8722341536470947`*^9}, 3.87223818900626*^9, {
+   3.8722789097872725`*^9, 3.872278911587081*^9}, {3.8723225773592196`*^9, 
+   3.8723225817146015`*^9}, {3.8723226696227255`*^9, 
+   3.8723226715823817`*^9}, {3.8723231543385096`*^9, 
+   3.8723231544535265`*^9}, {3.8723231930032578`*^9, 
+   3.8723232243465443`*^9}, {3.8723243428651705`*^9, 3.872324349926529*^9}, 
+   3.8728000797665524`*^9, {3.8728001131347275`*^9, 3.8728001281423845`*^9}, {
+   3.8728837478117857`*^9, 3.8728838586341877`*^9}, {3.872884428123502*^9, 
+   3.8728844282334456`*^9}},
+ CellLabel->"In[527]:=",
+ CellID->133173879,
+ "TestId" -> 
+ "ARCMappingsForGeneratedObject-20220915-WTG4U0",ExpressionUUID->"19a8168c-\
+ce38-44b4-93e8-b206adaaa9eb"]
+}, Open  ]],
+
+Cell[BoxData["\<\"{\\n    <|\\n        \\\"UUID\\\" -> 0,\\n        \
+\\\"Position\\\" -> {3, 1},\\n        \\\"Start\\\" -> True,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 1,\\n        \\\"TotalDistanceSoFar\\\" -> 1\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> 1\\n \
+   |>,\\n    <|\\n        \\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> \
+{3, 2},\\n        \\\"PreviousPosition\\\" -> {3, 1},\\n        \
+\\\"IncomingDirection\\\" -> {0, 1},\\n        \\\"IncomingDirectionY\\\" -> \
+0,\\n        \\\"IncomingDirectionX\\\" -> 1,\\n        \\\"ColorAhead\\\" -> \
+-1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead2\\\" -> 6,\\n        \\\"ColorAhead2MatchesObject\\\" -> \
+False,\\n        \\\"ColorAhead3\\\" -> -1,\\n        \
+\\\"ColorAhead3MatchesObject\\\" -> False,\\n        \\\"Color135Degrees\\\" \
+-> -1,\\n        \\\"Color135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> 2\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {0, 1},\\n        \
+\\\"OutgoingDirectionY\\\" -> 0,\\n        \\\"OutgoingDirectionX\\\" -> \
+1,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {3, 3},\\n        \\\"PreviousPosition\
+\\\" -> {3, 2},\\n        \\\"IncomingDirection\\\" -> {0, 1},\\n        \
+\\\"IncomingDirectionY\\\" -> 0,\\n        \\\"IncomingDirectionX\\\" -> \
+1,\\n        \\\"PreviousIncomingDirection\\\" -> {0, 1},\\n        \
+\\\"ColorAhead\\\" -> 6,\\n        \\\"ColorAheadMatchesObject\\\" -> \
+False,\\n        \\\"ColorAhead2\\\" -> -1,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-1,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 3,\\n        \\\"TotalDistanceSoFar\\\" -> 3\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 90\\n    |>,\\n    <|\\n        \
+\\\"UUID\\\" -> 0,\\n        \\\"Position\\\" -> {4, 3},\\n        \
+\\\"PreviousPosition\\\" -> {3, 3},\\n        \\\"IncomingDirection\\\" -> \
+{1, 0},\\n        \\\"IncomingDirectionY\\\" -> 1,\\n        \
+\\\"IncomingDirectionX\\\" -> 0,\\n        \\\"PreviousIncomingDirection\\\" \
+-> {0, 1},\\n        \\\"ColorAhead\\\" -> -1,\\n        \
+\\\"ColorAheadMatchesObject\\\" -> False,\\n        \\\"ColorAhead2\\\" -> \
+-1,\\n        \\\"ColorAhead2MatchesObject\\\" -> False,\\n        \
+\\\"ColorAhead3\\\" -> -2,\\n        \\\"ColorAhead3MatchesObject\\\" -> \
+False,\\n        \\\"Color135Degrees\\\" -> 3,\\n        \
+\\\"Color135DegreesMatchesObject\\\" -> True,\\n        \
+\\\"Color90Degrees\\\" -> -1,\\n        \\\"Color90DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees2\\\" -> -1,\\n        \
+\\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \\\"Color45Degrees\\\
+\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> 6,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 2,\\n        \\\"TotalDistanceSoFar\\\" -> 4\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {5, 3},\\n        \\\"PreviousPosition\
+\\\" -> {4, 3},\\n        \\\"IncomingDirection\\\" -> {1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> 1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {1, 0},\\n        \
+\\\"ColorAhead\\\" -> -1,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -2,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -1,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 3,\\n        \\\"TotalDistanceSoFar\\\" -> 5\
+\\n    |> -> <|\\n        \\\"OutgoingDirection\\\" -> {1, 0},\\n        \
+\\\"OutgoingDirectionY\\\" -> 1,\\n        \\\"OutgoingDirectionX\\\" -> \
+0,\\n        \\\"TurnDegrees\\\" -> 0\\n    |>,\\n    <|\\n        \\\"UUID\\\
+\" -> 0,\\n        \\\"Position\\\" -> {6, 3},\\n        \\\"PreviousPosition\
+\\\" -> {5, 3},\\n        \\\"IncomingDirection\\\" -> {1, 0},\\n        \
+\\\"IncomingDirectionY\\\" -> 1,\\n        \\\"IncomingDirectionX\\\" -> \
+0,\\n        \\\"PreviousIncomingDirection\\\" -> {1, 0},\\n        \
+\\\"ColorAhead\\\" -> -2,\\n        \\\"ColorAheadMatchesObject\\\" -> False,\
+\\n        \\\"ColorAhead2\\\" -> -2,\\n        \
+\\\"ColorAhead2MatchesObject\\\" -> False,\\n        \\\"ColorAhead3\\\" -> \
+-2,\\n        \\\"ColorAhead3MatchesObject\\\" -> False,\\n        \
+\\\"Color135Degrees\\\" -> -1,\\n        \\\"Color135DegreesMatchesObject\\\" \
+-> False,\\n        \\\"Color90Degrees\\\" -> -1,\\n        \
+\\\"Color90DegreesMatchesObject\\\" -> False,\\n        \\\"Color90Degrees2\\\
+\" -> -1,\\n        \\\"Color90Degrees2MatchesObject\\\" -> False,\\n        \
+\\\"Color45Degrees\\\" -> -2,\\n        \\\"Color45DegreesMatchesObject\\\" \
+-> False,\\n        \\\"ColorNegative45Degrees\\\" -> -2,\\n        \
+\\\"ColorNegative45DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative90Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative90DegreesMatchesObject\\\" -> False,\\n        \
+\\\"ColorNegative135Degrees\\\" -> -1,\\n        \
+\\\"ColorNegative135DegreesMatchesObject\\\" -> False,\\n        \
+\\\"DistanceSinceLastTurn\\\" -> 4,\\n        \\\"TotalDistanceSoFar\\\" -> 6\
+\\n    |> -> <|\\n        \\\"Stop\\\" -> True\\n    |>\\n}\"\>"], "Output",
+ CellChangeTimes->{
+  3.8722340555730915`*^9, {3.872234093075437*^9, 3.872234116991005*^9}, 
+   3.872234154915946*^9, {3.8722342014258547`*^9, 3.872234210469336*^9}, {
+   3.8722343039938946`*^9, 3.8722343252564964`*^9}, {3.8722343568921776`*^9, 
+   3.872234412437003*^9}, {3.8722345321088176`*^9, 3.8722345607127733`*^9}, 
+   3.872234595361188*^9, 3.8722347437731905`*^9, 3.872234782447709*^9, 
+   3.872235170254716*^9, {3.8722352967363634`*^9, 3.8722353132314677`*^9}, 
+   3.872235398610273*^9, {3.8722379298139195`*^9, 3.8722379659965644`*^9}, {
+   3.872238080398868*^9, 3.8722380913439817`*^9}, 3.8722381702424164`*^9, {
+   3.87223822973945*^9, 3.8722382424247503`*^9}, 3.872238398292557*^9, 
+   3.872238497030556*^9, {3.872238542144287*^9, 3.8722385560534325`*^9}, 
+   3.8722386719721084`*^9, 3.8722387170877867`*^9, 3.8722387942074423`*^9, {
+   3.8722389631845274`*^9, 3.8722390187815323`*^9}, 3.8722390678490458`*^9, 
+   3.872239142601763*^9, 3.8722391777899933`*^9, 3.8722392556447015`*^9, 
+   3.872271829549867*^9, 3.872275251571195*^9, 3.8722770315606422`*^9, 
+   3.8722771849038506`*^9, {3.8722789074691277`*^9, 3.872278912054716*^9}, 
+   3.8722808903969975`*^9, 3.8723224928760753`*^9, {3.872322575903837*^9, 
+   3.8723225897751045`*^9}, {3.872322705554858*^9, 3.872322719843215*^9}, {
+   3.872322768878641*^9, 3.872322793589212*^9}, {3.8723228623416243`*^9, 
+   3.87232300186966*^9}, {3.8723232110063844`*^9, 3.8723232401195717`*^9}, 
+   3.872323815523974*^9, {3.872324328757184*^9, 3.872324350661293*^9}, 
+   3.8723503132281694`*^9, {3.872412151448573*^9, 3.872412176518427*^9}, 
+   3.8724242251702003`*^9, {3.8728000330752754`*^9, 3.8728000804659543`*^9}, {
+   3.8728001153484554`*^9, 3.872800118340947*^9}, {3.8728837512646914`*^9, 
+   3.8728837590336013`*^9}, 3.8728837944779453`*^9, 3.8728838364963927`*^9, 
+   3.8728843706323786`*^9, 3.8728844523896976`*^9, 3.872884509035965*^9, 
+   3.8728845957668753`*^9, 3.8728847293706346`*^9, 3.8728847806359563`*^9},
+ CellLabel->
+  "Out[529]=",ExpressionUUID->"638a96bd-14e1-425c-a370-a51fc659ef7b"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+Evaluator->"Local",
+WindowSize->{958, 980},
+WindowMargins->{{-7, Automatic}, {Automatic, 0}},
+Visible->True,
+DockedCells->{
+  Cell[
+   BoxData[
+    DynamicBox[
+     ToBoxes[
+      Column[{
+        Row[{
+          Button["New Test", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`NewFunctionCell[
+            Daniel`ARC`ARCMappingsForGeneratedObject], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175]], ImageSize -> {95., 40}, 
+           Method -> "Queued"], " ", 
+          Button["Add Tests to File", 
+           
+           DevTools`NotebookTools`\
+RedirectPrintsAndMessagesToDynamicOutputSection[
+            DevTools`TestingTools`CreateUnitTests[
+            Daniel`ARC`ARCMappingsForGeneratedObject, "SubTest" -> None], 
+            HoldComplete[
+            DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175]], ImageSize -> {162.5, 40}, 
+           Method -> "Queued"], " ", 
+          Button[
+          "Run Tests", 
+           DevTools`TestingTools`RunUnitTestsInNotebook[
+            Daniel`ARC`ARCMappingsForGeneratedObject]; Null, 
+           ImageSize -> {102.5, 40}, Method -> "Queued"], " ", 
+          Button["Edit Tests", 
+           DevTools`TestingTools`EditUnitTests[
+           Daniel`ARC`ARCMappingsForGeneratedObject, "SubTest" -> None], 
+           ImageSize -> {110., 40}, Method -> "Queued"], " ", 
+          Button["Edit Function", 
+           DevTools`SourceTools`EditFunction[
+           Daniel`ARC`ARCMappingsForGeneratedObject], 
+           ImageSize -> {132.5, 40}, Method -> "Queued"], " ", 
+          Row[{
+            
+            DynamicModule[{
+             DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+              "Capture"}, 
+             Button[
+              Dynamic[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel], 
+              If[
+              DevTools`TestingTools`FunctionCapture`Private`buttonLabel === 
+               "Capture", 
+               DevTools`TestingTools`FunctionCapture`EnableFunctionCapture[
+                Daniel`ARC`ARCMappingsForGeneratedObject]; 
+               DevTools`TestingTools`FunctionCapture`\
+RegisterFunctionCaptureNotebook[Daniel`ARC`ARCMappingsForGeneratedObject, 
+                 InputNotebook[]]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Release"; Null, 
+               DevTools`TestingTools`FunctionCapture`DisableFunctionCapture[
+                Daniel`ARC`ARCMappingsForGeneratedObject]; 
+               DevTools`TestingTools`FunctionCapture`Private`buttonLabel = 
+                "Capture"; Null], ImageSize -> {100, 40}, Method -> "Queued"],
+              DynamicModuleValues :> {}], 
+            Button["?", 
+             DevTools`TestingTools`FunctionCapture`CaptureFunctionHelp[], 
+             ImageSize -> {30, 40}, Method -> "Queued"]}], " ", 
+          Row[{
+            Button["<", 
+             DevTools`NotebookTools`MoveNotebook["Left"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"], 
+            Button[">", 
+             DevTools`NotebookTools`MoveNotebook["Right"], 
+             ImageSize -> {42.5, 40}, Method -> "Queued"]}]}], 
+        DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175; If[
+          And[
+           ValueQ[
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175], 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175 =!= "", 
+           DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175 =!= Null], 
+          (If[
+           TrueQ[
+            OptionValue[
+            DevTools`NotebookTools`DynamicOutputSection, {"MaxHeight" -> 300},
+              "NakedSection"]], 
+           Framed[#, FrameStyle -> None, FrameMargins -> 2], 
+           
+           Framed[#, FrameStyle -> LightGray, Background -> White, 
+            FrameMargins -> 15]]& )[
+           Grid[{{
+              Pane[
+              DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175, "ImageSize" -> {Full, {0, 
+                  OptionValue[
+                  DevTools`NotebookTools`DynamicOutputSection, {
+                   "MaxHeight" -> 300}, "MaxHeight"]}}, Scrollbars -> 
+               Automatic, FrameMargins -> 0]}, 
+             If[
+              TrueQ[
+               OptionValue[
+               DevTools`NotebookTools`DynamicOutputSection, {
+                "MaxHeight" -> 300}, "NakedSection"]], 
+              Apply[Sequence, {}], {
+               Button[
+               "OK", DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175 = "", 
+                ImageSize -> {100, 33}]}]}, Spacings -> {0, 1}, 
+            Alignment -> {Left, Top}]], 
+          Apply[Sequence, {}]]}], StandardForm], 
+     TrackedSymbols :> {
+      DevTools`NotebookTools`Private`\
+DynamicOutputSectionVariable20229158331929175}]], "DockedCell"]},
+TaggingRules->{
+ "CreateNamedNotebook2Args" -> {
+   "ARCMappingsForGeneratedObject", "Type" -> "Function", 
+    "GenerateNotebookArgs" -> {
+     "Function" -> Daniel`ARC`ARCMappingsForGeneratedObject}, 
+    "ReturnNotebook" -> True}},
+InputAutoReplacements->{},
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"cf3e203e-4a12-4b97-b1f0-903301e832f5"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 101, 0, 98, "Title",ExpressionUUID->"2e4889c7-2535-4fe2-80fc-d3602b117d11"],
+Cell[684, 24, 265, 6, 54, "Code",ExpressionUUID->"c12897c9-aee1-4942-8b37-f9646338730a",
+ InitializationCell->False],
+Cell[CellGroupData[{
+Cell[974, 34, 79, 0, 67, "Section",ExpressionUUID->"adc70b56-e028-482d-a9a1-b0939e108c23"],
+Cell[CellGroupData[{
+Cell[1078, 38, 134, 3, 54, "Subsection",ExpressionUUID->"f570aa16-fae1-407f-9b70-e9322f316d9f"],
+Cell[CellGroupData[{
+Cell[1237, 45, 330, 7, 29, "Input",ExpressionUUID->"da62974d-5531-42c1-83b4-0dde366d6159"],
+Cell[1570, 54, 3180, 53, 167, "Output",ExpressionUUID->"821644db-cac6-43ce-9db6-e80dcc1e6d2d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4787, 112, 3784, 86, 52, "TestUI",ExpressionUUID->"31f171f2-9248-4bc9-bd07-16d442b741d7",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[8574, 200, 2357, 52, 324, "Code",ExpressionUUID->"a2b5cf2b-fbaa-44a6-a4cb-1ed3ebf1f2d5",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->28390654]
+}, Open  ]],
+Cell[10946, 255, 39523, 564, 16754, "Output",ExpressionUUID->"f2f472d8-8bd3-41c1-9d86-6bbc3485783e"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[50506, 824, 158, 3, 38, "Subsection",ExpressionUUID->"a9d2139e-f49d-459f-add4-9aa5c707c39a"],
+Cell[CellGroupData[{
+Cell[50689, 831, 356, 8, 29, "Input",ExpressionUUID->"358e4247-8767-4918-afdf-fcff6196f639"],
+Cell[51048, 841, 2390, 41, 167, "Output",ExpressionUUID->"f51777ed-19e6-465b-a933-1cf00a5cf529"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[53475, 887, 3784, 86, 50, "TestUI",ExpressionUUID->"11469c0d-5405-4602-999d-b5d600cf0fed",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.}],
+Cell[57262, 975, 2724, 59, 378, "Code",ExpressionUUID->"19a8168c-ce38-44b4-93e8-b206adaaa9eb",
+ CellGroupingRules->{"GroupTogetherGrouping", 10000.},
+ InitializationCell->False,
+ CellID->133173879]
+}, Open  ]],
+Cell[60001, 1037, 10416, 147, 3794, "Output",ExpressionUUID->"638a96bd-14e1-425c-a370-a51fc659ef7b"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

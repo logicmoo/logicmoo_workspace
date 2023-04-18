@@ -1,0 +1,729 @@
+﻿<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GoJS changelog." />
+  <meta http-equiv="cache-control" content="no-cache">
+  <title>GoJS Change Log</title>
+  <!-- Copyright 1998-2019 by Northwoods Software Corporation. -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-1506307-5', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <!-- custom CSS after bootstrap -->
+  <link href="assets/css/main.css" rel="stylesheet" type="text/css"/>
+  <script src="release/go.js"></script>
+  <script src="assets/js/goDoc.js"></script>
+</head>
+
+<body onload="goDoc()">
+<!-- fixed navbar -->
+<nav id="fixed-nav" class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <div class="navheader-container">
+        <div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+          <a id="toplogo" class="navbar-brand" href="index.html">GoJS</a>
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="learn/index.html">Learn</a></li>
+        <li><a href="samples/index.html">Samples</a></li>
+        <li><a href="intro/index.html">Intro</a></li>
+        <li><a href="api/index.html">API</a></li>
+        <li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+        <li><a href="download.html">Download</a></li>
+        <li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+        <li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+        <li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+        <li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+<div class="container-fluid mt70 plr15">
+  <h2>GoJS Change Log</h2>
+  <p id="ver"></p>
+  <script>
+    if (go && go.version) {
+      var p = document.getElementById('ver');
+      if (p !== null) p.textContent = ("Version: " + go.version);
+    }
+  </script>
+
+  <p>
+    We maintain a <a href="https://github.com/NorthwoodsSoftware/GoJS">GitHub Repository</a>,
+    which you can star to follow version updates.
+    We also notify of changes on <a href="https://twitter.com/NorthwoodsGo">Twitter</a>.
+  </p>
+
+  <hr>
+
+  <h3>GoJS 2.0</h3>
+
+  <p>
+    For 2.0, GoJS has been rewritten in TypeScript, with improvements to stability and documentation.
+    All customers (with or without source code license) can take advantage of the TypeScript definitions <code>.d.ts</code> file,
+    which is much more comprehensive in 2.0.
+  </p>
+  <p>
+    A source license will now include TypeScript source files as well as JavaScript sources,
+    and examples of how to build the library into your project with Webpack or Browserify,
+    should you wish to. This will allow you to remove unused modules from the source code,
+    such as Layouts, Models, and Tools that you are not using. Note that unless you have strong minification,
+    you may not see size improvements over the pre-built <code>go.js</code> library, which is highly optimized.
+  </p>
+  <p>
+    The size of the <code>go.js</code> library has been slightly reduced (both uncompressed and gzipped), from 1.8 versions.
+  </p>
+  <p>
+    The main library has been reduced by removing many of the uncommon figures. These are now an extension. (<a href="extensions/Figures.js" target="_blank">Figures.js</a>)
+  </p>
+  <p>
+    GoJS can now be run DOM-less, in Node.
+  </p>
+  <p>
+    We have added the ability to create your own Panels, with the new PanelLayout class. See an example <a href="/samples/panelLayout.html" target="_blank">here</a>.
+  </p>
+
+  <h4>Changes for 2.0.6</h4>
+  <ul>
+    <li>Fixed a bug with the <code>go.d.ts</code> file where <a>GraphObject.alignment</a> was missing.</li>
+    <li>
+      Added missing cloneProtected overrides for <a>BalloonLink</a> and <a>DimensioningLink</a> so data is properly copied.
+    </li>
+  </ul>
+
+  <h4>Changes for 2.0.5</h4>
+  <ul>
+    <li>
+      Fix for <a>Shape,defineFigureGenerator</a> where it would incorrectly throw an error on Geometry bounds being too large, when they were not.
+    </li>
+    <li>
+      Some touch events would cause [intervention] warnings in some browsers when canceled because GoJS would call <code>preventDefault</code> on non-cancelable events.
+      This has been fixed.
+    </li>
+    <li>Fixed a bug with <a>Diagram.zoomToFit</a> when <a>Diagram.scrollMode</a> was set to <a>Diagram,InfiniteScroll</a>.</li>
+    <li>Fixed a bug where <a>GuidedDraggingTool</a> was snapping the whole part to a guideline instead of the location object.</li>
+  </ul>
+
+
+  <h4>Changes for 2.0.4</h4>
+  <ul>
+    <li>
+      Fixed the TypeScript declaration of <a>GraphObject,make</a> to allow an <code>HTMLDivElement</code> as an argument when building a <a>Diagram</a>.
+      Also added some type overloads of that function to reduce apparent type errors with correct code.
+    </li>
+    <li>
+      Fixed some apparent non-determinism in the results of <a>LayeredDigraphLayout</a> upon an initial layout.
+    </li>
+    <li>
+      Animation upgrades, notably when you move a port during an animation, connected Links will properly re-route.
+    </li>
+  </ul>
+
+
+  <h4>Changes for 2.0.3</h4>
+  <ul>
+    <li>
+      Improved data binding of tooltips and context menus for item panels to avoid temporarily setting <a>Panel.data</a> incorrectly.
+    </li>
+    <li>
+      Enhanced the meaning of <a>UndoManager.maxHistoryLength</a> so that a value of zero causes no <a>Transaction</a>s to be
+      remembered in the <a>UndoManager.history</a> but allows commits and rollbacks to occur normally.
+    </li>
+    <li>
+      Fixed a bug from 2.0.1 with <a>Diagram.makeSVG</a> incorrectly re-using SVG elements.
+    </li>
+    <li>
+      Fixed a bug from 2.0.0 with <a>Diagram.makeSVG</a> when drawing dashed paths.
+    </li>
+    <li>
+      Deployment fixes for electron apps.
+    </li>
+  </ul>
+
+
+  <h4>Changes for 2.0.2</h4>
+  <ul>
+    <li>
+      Updated the <a href="samples/canvases.html">Charts in Nodes sample</a> to use <a href="https://chartjs.org">Chart.js</a>.
+    </li>
+    <li>
+      Deployment fixes. This release should resolve <em>"Cannot use 'in' operator to search for 'go' in undefined"</em> errors in some browser contexts.
+    </li>
+  </ul>
+
+
+  <h4>Changes for 2.0.1</h4>
+  <ul>
+    <li>
+      TypeScript declarations: we have created the <a>ObjectData</a> interface, defined as <code>{ [index: string]: any; }</code>,
+      to allow easier manipulation of data Objects, mostly in Models and change notification.
+      Many methods and properties now use <code>ObjectData</code> instead of <code>Object</code> in the <code>go.d.ts</code> file.
+      The compiled JavaScript is unchanged by these better type declarations.
+    </li>
+    <li>
+      We have added interface declarations for the "options" argument to
+      <a>Diagram.makeImage</a>, <a>Diagram.makeImageData</a>, and <a>Diagram.makeSvg</a>.
+      Also we have added more precise declarations replacing the <code>string</code> type for arguments to
+      <a>Diagram.addDiagramListener</a>, <a>Diagram.removeDiagramListener</a>, <a>Diagram.scroll</a>,
+      and for the properties
+      <a>Shape.strokeCap</a>, <a>Shape.strokeJoin</a>, and <a>TextBlock.textAlign</a>.
+      JavaScript calls to these methods are unchanged by these better type declarations.
+    </li>
+    <li>
+      We have improved the declarations for <a>GraphObject,make</a>.
+      You may find that you will need to cast the result of calling this function or pass a result type when the first argument is a string.  For example:
+      <code>$(go.Node, . . ., { contextMenu: $&lt;go.Adornment&gt;("ContextMenu", . . .) }, . . .</code>.
+      Also, you may find that event handlers need to have precise type declarations for the arguments.  For example:
+      <code>$(go.Node, . . ., { click: function(e: go.InputEvent, node: go.GraphObject) { . . .} }, . . .</code>.
+      JavaScript calls to this function are unchanged by the better type declarations for <a>GraphObject,make</a>.
+    </li>
+    <li>
+      The HTML Divs created for the default context menu now have CSS class names: 'goCXforeground' and 'goCXbackground'.
+      The HTML textarea for the TextEditingTool now has the CSS class name: 'goTXarea'.
+    </li>
+    <li>
+      When supplied with an argument, <a>CommandHandler.expandTree</a>, <a>CommandHandler.collapseTree</a>,
+      <a>CommandHandler.expandSubGraph</a>, and <a>CommandHandler.collapseSubGraph</a>
+      incorrectly operated on the <a>Diagram.selection</a> if the argument Part was already in an expanded/collapsed state.
+      This has been fixed not to do so.
+    </li>
+    <li>
+      Performance improvements with JumpOver/JumpGap Links.
+    </li>
+    <li>
+      Fixed a bug with inappropriate invalidation of link routes when a Group was moved.
+    </li>
+    <li>
+      Fixes for SVG rendering of Pattern brushes.
+    </li>
+  </ul>
+
+
+  <h4>Changes for 2.0</h4>
+  <ul>
+    <li>
+      <b>Build GoJS from TypeScript Source:</b>
+      <p>
+        GoJS can be compiled from the TypeScript source files.
+        Dynamically building GoJS this way allows unused modules/code to be removed.
+        See the new Intro page on <a href="intro/source.html">Building GoJS from TypeScript sources</a>
+      </p>
+    </li>
+    <!-- don't document yet
+    <li>
+      <b>GoJS can now be loaded as an ES6 Module:</b>
+      <p>
+        GoJS can be used as a module with <code>&lt;script type="module"&gt;</code> tags.
+        This requires using the <code>go-module.js</code> or <code>go-debug-module.js</code> builds,
+        which uses <code>export const go</code>. There is an example in the <code>/samplesTS</code> directory,
+        <a href="samplesTS/minimalModule.html">minimalModule.html</a>.
+      </p>
+    </li>
+    -->
+    <li>
+      <b>GoJS now runs in DOM-less environments like Node:</b>
+      <p>
+        GoJS can run in DOM-less environments, like Node, without any dependencies.
+        See the new Introduction page on <a href="intro/nodeScript.html">GoJS with Node.js</a>.
+      </p>
+      <p>
+        GoJS cannot guarantee accurate Picture and TextBlock measuring in DOM-less environments,
+        so if you do not set <code>desiredSize</code> (or <code>width</code> <em>and</em> <code>height</code>) on TextBlocks or Pictures,
+        you may want to use GoJS inside of a headless browser project, like Chrome's Puppeteer.
+        We detail how to use GoJS with Puppeteer in the <a href="intro/serverSideImages.html">Server Side Images</a>
+        Introduction page.
+      </p>
+      <p>
+        DOM-less environments can be used for server-side work, such as computing complex layouts.
+        Headless environments such as Puppeteer can be used to do layout calculations or to make
+        <a href="intro/serverSideImages.html">server-side images of Diagrams</a>.
+      </p>
+      <!-- Undocumented
+      <p>
+        DOM-less environments can be forced by calling <a>Diagram,useDom</a> with <code>false</code> as the argument.
+      </p>
+      -->
+      <p>See the note about <a>Diagram.viewSize</a> below.</p>
+    </li>
+    <li>
+      <b>Reworked part-moving and added a new class: <a>DraggingOptions</a>:</b>
+      <p>
+        <a>DraggingOptions</a> holds properties for Part-moving operations, and
+        <a>DraggingInfo</a> holds relative positions of dragged objects, for use in snapping and cancellation.
+        The <a>DraggingTool</a> has an instance of the DraggingOptions class, and
+        setting properties like <a>DraggingTool.isGridSnapEnabled</a> modifies this instance.
+        If the Diagram has no DraggingTool associated with it, it falls back to the default properties of the class.
+        You can create your own to pass to part-moving methods.
+        Typically you do not need to create an instance of this class.
+      </p>
+      <p>
+        Moving parts has been reworked. <a>Diagram.moveParts</a>, <a>Diagram.computeMove</a>, and
+        <a>CommandHandler.computeEffectiveCollection</a> now accept
+        an additional argument for a <a>DraggingOptions</a> instance.
+        This allows fine-grained control over programmatic moving of nodes.
+        Typically, these options are supplied by the <a>DraggingTool.dragOptions</a> instance.
+      </p>
+      <p>
+        <a>DraggingTool.computeMove</a> functionality has been moved to <a>Diagram.computeMove</a>,
+        and <a>DraggingTool.computeEffectiveCollection</a> functionality has been moved to <a>CommandHandler.computeEffectiveCollection</a>.
+        These methods remain on their original class for compatibility when overriding,
+        but the main functionality has been moved to the Diagram class for tree-shaking reasons.
+      </p>
+    </li>
+    <li>
+      <b>Diagram and Layer:</b>
+      <ul>
+        <li>
+          Added <a>Diagram.mouseEnter</a> and <a>Diagram.mouseLeave</a> to allow for functions to be called on mouseenter and mouseleave events
+          on the Diagram's Canvas element.
+        </li>
+        <li>
+          When mouse leaves a Diagram, <a>Diagram.lastInput</a> is now set to the "mouseout" MouseEvent.
+        </li>
+        <li>
+          Added <code>"GainedFocus"</code> and <code>"LostFocus"</code> <a>DiagramEvent</a>s,
+          which allow functions to be called when the Diagram's canvas gains or loses focus,
+          without having to access any of the DOM within the <a>Diagram.div</a>.
+        </li>
+        <li>
+          Added <a>Diagram.findPartsAt</a>, <a>Diagram.findPartsIn</a> and <a>Diagram.findPartsNear</a> as convenience functions.
+          These functions call <a>Diagram.findObjectsAt</a>, <a>Diagram.findObjectsIn</a> or <a>Diagram.findObjectsNear</a>
+          and only return Parts in non-temporary layers, rather than all GraphObjects.
+        </li>
+        <li>
+          Added <a>Diagram.viewSize</a> which can be used to set a viewport size in DOM-less environments.
+          See the new <a href="intro/nodeScript.html">Intro page on GoJS with Node.js</a>.
+        </li>
+        <li>
+          Added <a>Diagram.handlesDragDropForTopLevelParts</a> which determines whether drag-and-drop events
+          may be bubbled up to the diagram if not handled by a Part.
+        </li>
+        <li>
+          <a>Diagram.moveParts</a>, <a>Diagram.copyParts</a>, and <a>Diagram.computePartsBounds</a> now accept an Array of parts,
+          in addition to their former iterable collection of Parts.
+        </li>
+        <li>
+          <a>Diagram.makeImage</a> and <a>Diagram.makeImageData</a> now accept <code>callback</code> and <code>callbackTimeout</code> options.
+          If a callback function is provided, the methods will instead return null
+          and image creation will wait until all Diagram Picture sources are loaded
+          before creating the image and invoking the callback.
+        </li>
+        <!-- Undocumented
+        <li>
+          Added static function <a>Diagram,isUsingDom</a>, which returns true if Diagrams are using a DOM, false otherwise,
+          and <a>Diagram,useDom</a>, which sets whether or not GoJS should use a DOM if one is available.
+        </li>
+        -->
+      </ul>
+    </li>
+    <li>
+      <b>Models:</b>
+      <ul>
+        <li>
+          Added property <a>Model.copiesKey</a> which controls whether <a>Model.copyNodeData</a> and <a>GraphLinksModel.copyLinkData</a>
+          copy any key property of the data.
+          Setting this to false is useful in forcing copies from a <a>Palette</a> to get a new unique key.
+          The default value is true for compatibility with version 1.*.
+        </li>
+        <li>
+          Improved <a>Model.updateTargetBindings</a> and <a>Part.updateTargetBindings</a> to update <a>Panel</a>s that have
+          <a>Panel.itemArray</a> data bound if the contents of the Array have changed.
+          In version 1, the reference to the Array had to have changed -- the <a>Panel.itemArray</a> had to have been replaced.
+          In version 2, the <a>Panel.itemArray</a> property setter checks to see if all of the Array items have corresponding Panels
+          and that all child Panels correspond to Array items (i.e. <a>Panel.data</a> refers to the Array item),
+          even if the new property value is a reference to the same Array that it had been before.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <b>Parts:</b>
+      <ul>
+        <li>
+          Added <a>Part.rotationSpot</a> to control the Spot within the <a>Part.rotateObject</a>
+          that the <a>RotatingTool</a> will pivot about.
+        </li>
+        <li>
+          <a>Part.move</a> and <a>Part.moveTo</a> now have an additional optional boolean argument
+          to specify moving by location instead of position.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <b>Panels and PanelLayout:</b>
+      <ul>
+        <li>
+          Spot Panels now allow child elements to stretch, which will match the size of the main element.
+          <a href="intro/panels.html#StretchingWithSpotPanels" target="_blank">See the Intro Page for an example.</a>
+        </li>
+        <li>
+          It is now possible to create your own Panel layouts with the <a>PanelLayout</a> class. This is expected to be very uncommon,
+          but may serve uncommon use cases. See the <a href="samples/panelLayout.html">PanelLayout sample</a> for an example.
+          There is a new static function, <a>Panel,definePanelLayout</a> for this purpose.
+        </li>
+        <li>
+          When building from source, it is also possible to exclude many Panel types that you are not using, to make the resulting JS smaller.
+          See the <a href="intro/source.html">Intro page on building GoJS sources</a> for details.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <b>GraphObjects and Geometry:</b>
+      <ul>
+        <li>
+          <a>GraphObject.cloneProtected</a> is now documented. It functions in a similar
+          fashion to <a>Model.cloneProtected</a> and <a>Layout.cloneProtected</a>,
+          and is necessary for properly copying additional properties on custom subclasses of GraphObject.
+        </li>
+        <li>
+          Added properties <a>Picture.flip</a> and <a>TextBlock.flip</a>, which default to <a>GraphObject,None</a>,
+          can be set to <a>GraphObject,FlipHorizontal</a>, <a>GraphObject,FlipVertical</a>,
+          or <a>GraphObject,FlipBoth</a> to flip a Picture's or TextBlock's rendering.
+        </li>
+        <li>
+          Added properties <a>Shape.graduatedSkip</a> and <a>TextBlock.graduatedSkip</a>, which allow ticks/labels along a Graduated panel
+          to be skipped, causing gaps. These properties take a function, and default to null meaning no ticks/labels will be skipped.
+        </li>
+        <li>
+          Added predefined builders for "ToolTip" and "ContextMenu" for ease of template creation.
+          The definitions for these builders can be found in <a href="extensions/Buttons.js">Buttons.js</a>
+        </li>
+        <li>
+          Added <a>TextBlock,WrapBreakAll</a> as a value for <a>TextBlock.wrap</a>,
+          which allows text to break at individual characters.
+        </li>
+        <li>
+          Added <a>TextBlock,getBaseline</a>, <a>TextBlock,setBaseline</a>, <a>TextBlock,getUnderline</a>, <a>TextBlock,setUnderline</a>,
+          which give more control over the height to that lines of text and underlines are drawn.
+        </li>
+        <li>
+          Added <a>GraphObject.getDocumentBounds</a>, as a convenient way to avoid having to call <a>GraphObject.getDocumentPoint</a>
+          on all four corner points of a rectangular area.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <b>Layouts:</b>
+      <ul>
+        <li>
+          Documented <a>CircularNetwork</a>, <a>ForceDirectedNetwork</a>, <a>LayeredDigraphNetwork</a>, and <a>TreeNetwork</a>.
+          These are the subclasses of <a>LayoutNetwork</a> for their respectively-named Layouts.
+        </li>
+        <li>
+          Added <a>Layout.getLayoutBounds</a> method and <a>Layout.boundsComputation</a> functional property,
+          to support easier customization for how large the layout treats each node.  This is convenient when your nodes have
+          decorations or text that you do not want to consider during the layout, even if those objects might overlap other nodes.
+        </li>
+        <li>
+          Documented <a>Layout.initialOrigin</a> method, to be called by overrides of <a>Layout.doLayout</a> when used as a <a>Group.layout</a>
+          that may want to account for the original location of the group when the group has a <a>Group.placeholder</a>.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <b>Tools and Commands:</b>
+      <ul>
+        <li>
+          <a>CommandHandler.scrollToPart</a> has been extended to automatically expand any subtrees and subgraphs
+          in order to make visible each <a>Part</a> that it scrolls to.
+        </li>
+        <li>
+          Added <a>ClickCreatingTool.isGridSnapEnabled</a>, which works like <a>DraggingTool.isGridSnapEnabled</a>
+          and <a>ResizingTool.isGridSnapEnabled</a>.
+        </li>
+        <li>
+          Added <a>RotatingTool.computeRotationPoint</a> to control the point about which the object rotates.
+          Added <a>RotatingTool.rotationPoint</a> to remember the result of <a>RotatingTool.computeRotationPoint</a>.
+          Added <a>RotatingTool.handleAngle</a> and <a>RotatingTool.handleDistance</a> to determine
+          where the rotation handle is placed relative to the rotation point in the <a>Part.rotateObject</a>.
+          A custom RotatingTool is no longer needed to position the rotation handle above the object.
+        </li>
+        <li>
+          Improved <a>LinkingBaseTool.copyPortProperties</a> to better handle rotated ports when setting up a temporary port.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <b>Brushes:</b>
+      <ul>
+        <li>
+          Added <a>Brush,isDark</a> instance and static methods, which determine whether a
+          Brush or CSS color string is "dark", based on luminance.
+          This can be useful in bindings to determine text colors.
+        </li>
+        <li>
+          Added <a>Brush,mix</a> to allow for the mixing of two CSS colors.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <b>Samples and Extensions:</b>
+      <ul>
+        <li>
+          Many samples have been translated into TypeScript, in the <code>samplesTS</code> folder in the kit.
+        </li>
+        <li>
+          Added <a href="samples/panelLayout.html">PanelLayout</a>, demonstrating <a>Panel,definePanelLayout</a>.
+        </li>
+        <li>
+          Added <a href="extensionsTS/PackedLayout.html">extensionsTS/PackedLayout</a>,
+          which demonstrates a custom layout for packing nodes closely into a rectangular or elliptical area.
+          (Source is TS only)
+        </li>
+        <li>
+          Added <a href="samples/wordcloud.html">Wordcloud</a>, which demonstrates a wordcloud using a PackedLayout.
+        </li>
+        <li>
+          Added <a href="samplesTS/minimalModule.html">samplesTS/minimalModule</a>,
+          which demonstrates using GoJS as an ES6 module.
+          (Source is TS only)
+        </li>
+        <li>
+          Added <a href="extensionsTS/OverviewResizing.html">OverviewResizing</a>,
+          which demonstrates the OverviewResizingTool, used for resizing an <a>Overview.box</a>.
+          This has replaced functionality that used to be built-in.
+          It is defined in both the "extension" and "extensionsTS" folders.
+        </li>
+        <li>
+          Added <a href="extensionsTS/ZoomSlider.html">extensionsTS/ZoomSlider</a>,
+          which demonstrates an HTML slider that can zoom in/out of a GoJS diagram.
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>Incompatible 2.0 changes and removals</h4>
+  <p>
+    Many of the minor changes were made to order to increase the modularity of the implementation.
+    Nevertheless we have tried to maintain API compatibility with version 1.*.
+  </p>
+  <ul>
+    <li>
+      <b>Most Predefined Shape figures</b>
+      <p>
+        In order to shrink the size of the GoJS library we no longer define most predefined figures in the library.
+        Instead, you can find all of their definitions in the <a href="extensions/Figures.js" target="_blank">Figures.js</a> file.
+        You can load this file or simply load only those figures that you want to use by copying their definitions into your code.
+        For example, the <a href="samples/shapes.html">Shapes sample</a> loads this file.
+      <p>
+        A number of very common figures remain predefined in version 2.0.
+        The figures that remain in 2.0 are: "Rectangle", "Square", "RoundedRectangle", "Border", "Ellipse", "Circle",
+        "TriangleRight", "TriangleDown", "TriangleLeft", "TriangleUp", "Triangle", "Diamond", "LineH", "LineV",
+        "BarH", "BarV", "MinusLine", "PlusLine", "XLine".
+      <p>
+        Note also that the definitions that are in the <a href="extensions/Figures.js" target="_blank">Figures.js</a> file
+        are <em>not</em> entirely the same as their definitions in version 1.*.
+        A number of figures have been improved and some figure parameters have been added or changed meaning.
+        To use the old predefined figures, you can load or copy from the "extensions/Figures.js" file of an earlier version of GoJS.
+      <p>
+          The static function <a>Shape,defineFigureGenerator</a> now has additionally checks for geometric validity.
+          To be valid, the generated Geometry bounds must be equal to or less than the supplied width and height.
+    </li>
+    <li>
+      <strong>List, Set, and Map constructors no longer take type arguments, but are generic in TypeScript</strong>
+      <p>
+        The GoJS <code>List</code>, <code>Set</code>, and <code>Map</code> constructors no longer take
+        type arguments and no longer do type checking in JavaScript.
+        However, when using TypeScript these classes are now generic and will do type checking at compile time.
+      </p>
+      <p>
+        In JavaScript, instead of <code>new go.List(go.Point)</code>, write <code>new go.List()</code>.
+        For compatibility, you can still provide an element type argument, but it is not used and not checked.
+      </p>
+      <p>
+        In TypeScript, instead of <code>new go.List(go.Point)</code>, write <code>new go.List&lt;go.Point&gt;()</code>,
+        and the TypeScript compiler will enforce the List element typing.
+      </p>
+      <p>
+        All three constructors now take an optional <a>Iterable</a> or <code>Array</code> argument that
+        provides the initial elements for the new collection.
+      </p>
+      <p>
+        In a future major version, we may replace <code>go.Map</code> and <code>go.Set</code> with
+        enhanced ES6 <code>Map</code> and <code>Set</code> classes.
+      </p>
+    </li>
+    <li>
+      <a>List.add</a>, <a>Set.add</a>, and <a>Map.add</a> now all return the collection itself instead of a boolean.
+      This is for increased compatibility with ES6 <code>Map</code> and <code>Set</code> collections.
+    </li>
+    <li>
+      <strong><a>Panel.type</a> used to be of type <a>EnumValue</a> and now is of type <a>PanelLayout</a>. </strong>
+      <p>
+        This may affect data-bindings, in the uncommon case where a template binds <a>Panel.type</a>.
+        You should make sure that any data bindings are returning possible type values such as <code>go.Panel.Horizontal</code>.
+        Data binding <a>Panel.type</a> without using a conversion function will not work with old data,
+        since the property has changed type.
+      </p>
+    </li>
+    <li>
+      <strong>For Spot Panels, the <code>offsetX/offsetY</code> of <a>GraphObject.alignmentFocus</a> has been reversed.</strong>
+      <p>
+        If you are using the <code>offsetX/offsetY</code> values in <a>GraphObject.alignmentFocus</a>,
+        this may cause your panels to be arranged differently.
+        You will need to flip the sign to retain compatibility.
+      </p>
+      <p>
+        This change is to rectify a design inconsistency with Spot Panel elements.
+        The <code>offsetX/offsetY</code> values now correctly offset the alignment focal point,
+        and not the Spot Panel's element itself.
+      </p>
+    </li>
+
+    <li>
+      <b>CommandHandler.defaultScale</b> has been moved to <a>Diagram.defaultScale</a>
+      As with many of the other properties and methods that have been "moved" to other classes,
+      this is to improve the ability to tree-shake code out of your app.
+    </li>
+    <li>
+      <b>DiagramEvent.cancel</b>
+      <p>
+        The only use for this property was with the <code>"SelectionDeleting"</code> <a>DiagramEvent</a>
+        in order to prevent the user from deleting the selection.
+        Where one might have written this Diagram listener:
+        <pre>"SelectionDeleting": function(e) {
+  if (e.diagram.selection.any(function(p) { return p.data.key.indexOf("e") >= 0; })) {
+    e.cancel = true;
+  }
+}</pre>
+        one can write the equivalent functionality with this <a>CommandHandler.canDeleteSelection</a> method override:
+        <pre>"commandHandler.canDeleteSelection": function() {
+  return !this.diagram.selection.any(function(p) { return p.data.key.indexOf("e") >= 0; })
+          &amp;&amp; go.CommandHandler.prototype.canDeleteSelection.call(this);
+}</pre>
+        Overriding the method supports the updating/enablement of commands that call <a>CommandHandler.deleteSelection</a>.
+        Furthermore not having a "cancel" property on the DiagramEvent avoids any potential problems that might occur if there
+        are multiple listeners for the <code>"SelectionDeleting"</code> event.
+        The <code>"SelectionDeleting"</code> <a>DiagramEvent</a> remains useful,
+        but not for controlling whether or not the deletion should happen.
+    </li>
+    <li>
+      <b>Button styling</b>
+      <p>
+        Updated the styling of buttons. Buttons are now rounded rectangles and have an effect when pressed.
+        Some predefined buttons have increased a small amount in size:
+        <ul>
+          <li><b>TreeExpanderButton:</b> 3 pixels wider and taller</li>
+          <li><b>SubGraphExpanderButton:</b> 3 pixels wider and taller</li>
+          <li><b>PanelExpanderButton:</b> 3 pixels wider and 5 pixels taller</li>
+        </ul>
+        Definitions for buttons can be found in the <a href="extensions/Buttons.js" target="_blank">Buttons.js</a> file.
+    </li>
+    <li>
+      Improved computation of <a>Link.midPoint</a> and <a>Link.midAngle</a> to be faster and
+      changed some cases where labels fell on very small segments of a link.
+      Orthogonal bezier links will also have more accurate label placement with the new methods.
+    </li>
+    <li>
+      <a>Diagram.initialContentAlignment</a>'s default value of <a>Spot,Default</a> now acts like <a>Spot,Center</a>,
+      instead of <a>Spot,None</a>.
+      Basically, if you don't set <a>Diagram.initialContentAlignment</a>,
+      the contents will now show up in the middle of the viewport rather than at the top-left corner.
+    </li>
+    <li>
+      Custom <a>TextEditingTool</a>s (the values of <a>TextEditingTool.currentTextEditor</a> and <a>TextBlock.textEditor</a>)
+      can no longer be set to HTML Elements.
+      They must be an instance of <a>HTMLInfo</a>, which was introduced in version 1.7.
+    </li>
+    <li>
+      The <a>ResizingTool</a>, when computing a cell size <a>ResizingTool.computeCellSize</a>,
+      no longer checks the <a>DraggingTool</a>'s possible grid snapping cell size.
+      As with many of the other properties and methods that have been "moved" to other classes,
+      this is to improve the ability to tree-shake code out of your app.
+    </li>
+    <li>
+      Swapped the order of the <a>RotatingTool</a> and <a>ResizingTool</a> in the <a>ToolManager.mouseDownTools</a> list.
+      This is to cause the RotatingTool's Adornment to be behind the ResizingTool's Adornment if both are present.
+    </li>
+    <li>
+      Moved the <a href="extensions/OverviewResizingTool.js">OverviewResizingTool</a>,
+      which had been completely internal, out of the core library into an extension.
+      The <a>Overview.box</a> can no longer be resized unless OverviewResizingTool has been loaded.
+    </li>
+    <li>
+      Removed <strong>GraphObject.fromEndSegmentDirection</strong> and <strong>GraphObject.toEndSegmentDirection</strong>.
+      One can override <a>Link.getLinkDirection</a> to achieve the same effects.
+    </li>
+    <li>
+      Changed <a>Link.getLinkPoint</a> to treat a <a>GraphObject.fromSpot</a> or <a>GraphObject.toSpot</a> with
+      <a>Spot.x</a> and <a>Spot.y</a> exactly 0.5 (but with any <a>Spot.offsetX</a> and <a>Spot.offsetY</a>)
+      as if it were <a>Spot.None</a> but focussing on that spot.
+      This allows for links to stop at the edge of a shape while going towards a point other than the center of the port.
+      In the past the link direction for spots at (0.5, 0.5) was always assumed to be zero,
+      going rightwards to or from the port, which was not intuitive or useful.
+    </li>
+    <li>
+      The <a>DiagramEvent.subject</a> for "SelectionMoved" and "SelectionCopied" <a>DiagramEvent</a>s is now a <a>Set</a>
+      of the moved or of the newly copied Parts, not just the <a>Diagram.selection</a>.
+      This makes it easier to find the unselected Parts that were moved or copied.
+    </li>
+    <li>
+      The <a>LayoutNetwork</a> constructor and constructors for subclasses of <a>LayoutNetwork</a>
+      now require the <a>Layout</a> as the first argument.
+      This was needed for better code, to avoid potential null references.
+    </li>
+    <li>
+      The <a>LayoutVertex</a> and <a>LayoutEdge</a> constructors and constructors for subclasses of <a>LayoutVertex</a>
+      and <a>LayoutEdge</a> now require the <a>LayoutNetwork</a> as the first argument.
+      This was needed for better code, to avoid potential null references.
+    </li>
+    <li>
+      <a>Placeholder</a>s in <a>Group</a>s now take up zero size when collapsed,
+      even when there is padding in the <a>Placeholder</a>.
+      You can add a <a>GraphObject.margin</a> on the Placeholder or
+      specify its <a>GraphObject.minSize</a> to make sure that has a size when collapsed.
+      <a>Placeholder</a>s in <a>Group</a>s now respect <a>GraphObject.minSize</a>.
+    </li>
+    <li>
+      <a>Layout.isRealtime</a> is now tri-state, with possible values being true, false, or null.
+      The default is now null.
+      A null value is treated as true for a <a>Diagram.layout</a> but false for a <a>Group.layout</a>.
+      This reduces the number of situations where there can be surprising layout behavior when moving
+      or resizing member nodes, while continuing to support explicit control of this property.
+    </li>
+    <li>
+      <a>Diagram.scrollsPageOnFocus</a> has changed its default value from true to false.
+      This avoids an occasional end-user complaint.
+    </li>
+    <li>
+      <a>Diagram.allowDrop</a> has changed its default value from false to true.
+      This helps avoid a common error when starting to use a <a>Palette</a> or a second <a>Diagram</a>.
+    </li>
+    <li>
+      <a>Overview</a>s now include the observed diagram's viewport bounds so the <a>Overview.box</a> will always be visible.
+      This reduces confusion that some end-users experience.
+    </li>
+    <li>
+      <a>Tool.doCancel</a> now sets <a>Tool.transactionResult</a> to null before calling <a>Tool.stopTool</a>,
+      in order to cause any call to <a>Tool.stopTransaction</a> to roll-back any transaction.
+    </li>
+  </ul>
+
+  <h4>Changes for 1.8 and previous are <a href="../1.8.38/changelog.html">here</a>.</h4>
+
+
+  <hr style="margin-top:50px;" />
+</div> <!-- end container -->
+<script src="assets/js/jquery.min.js"></script>
+<script async src="assets/js/bootstrap.min.js"></script>
+</body>
+</html>

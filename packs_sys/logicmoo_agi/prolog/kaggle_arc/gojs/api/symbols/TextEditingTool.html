@@ -1,0 +1,892 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>TextEditingTool | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class TextEditingTool</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="Tool.html" class="tsd-signature-type">Tool</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">TextEditingTool</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>The TextEditingTool is used to let the user interactively edit text in place.
+						This sets the <a href="TextBlock.html#text">TextBlock.text</a> property; you may want to save the changed text to the model
+					by using a TwoWay <a href="Binding.html">Binding</a> on the &quot;text&quot; property of editable TextBlocks.</p>
+					<p>Typically this is used by setting the <a href="TextBlock.html#editable">TextBlock.editable</a> property to true
+						on a particular <a href="TextBlock.html">TextBlock</a> in a part.
+						When the part is selected and the user clicks on the <a href="TextBlock.html">TextBlock</a>
+						or invokes the <a href="CommandHandler.html#editTextBlock">CommandHandler.editTextBlock</a> command,
+						this tool is started and it uses an HTMLTextArea to perform in-place text editing.
+					(For more details see the description for <a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a>.)</p>
+					<p>The <a href="TextBlock.html">TextBlock</a> is accessible as the <a href="TextEditingTool.html#textBlock">TextEditingTool.textBlock</a> property.
+						The text editor is accessible as the <a href="TextEditingTool.html#currentTextEditor">TextEditingTool.currentTextEditor</a> property.
+						From the text editor control one can access the <a href="TextBlock.html">TextBlock</a> being edited via the
+						&#39;textEditingTool&#39; property to get to this tool, from which one can use
+					the <a href="TextEditingTool.html#textBlock">TextEditingTool.textBlock</a> property.</p>
+					<p>You can disable mouse clicking from starting this text editing tool
+						by setting <a href="Tool.html#isEnabled">Tool.isEnabled</a> to false.
+						You can disable the F2 key from starting this text editing tool
+						by making sure <a href="Part.html#canEdit">Part.canEdit</a> returns false,
+						by either setting <a href="Diagram.html#allowTextEdit">Diagram.allowTextEdit</a> to false
+					or by setting <a href="Part.html#textEditable">Part.textEditable</a> to false.</p>
+					<p>If you want to programmatically start the user editing a particular TextBlock,
+						call <a href="CommandHandler.html#editTextBlock">CommandHandler.editTextBlock</a>.
+					That command method is also invoked by the F2 key on the keyboard.</p>
+					<p><p class="boxread">
+							For a general discussion of text editing validation, see: <a href="../../intro/validation.html#TextEditingValidation">Introduction to Text Validation</a>.
+						For customizing the TextEditingTool, read about <a href="HTMLInfo.html">HTMLInfo</a> and see <a href="../../intro/HTMLInteraction.html#TextEditors">Introduction to Text Editors</a>.</p>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="TextEditingTool.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="TextEditingTool.html#currentTextEditor" class="tsd-kind-icon">current<wbr>Text<wbr>Editor</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="TextEditingTool.html#defaultTextEditor" class="tsd-kind-icon">default<wbr>Text<wbr>Editor</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="TextEditingTool.html#selectsTextOnActivate" class="tsd-kind-icon">selects<wbr>Text<wbr>OnActivate</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="TextEditingTool.html#starting" class="tsd-kind-icon">starting</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="TextEditingTool.html#state" class="tsd-kind-icon">state</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="TextEditingTool.html#textBlock" class="tsd-kind-icon">text<wbr>Block</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="TextEditingTool.html#textValidation" class="tsd-kind-icon">text<wbr>Validation</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#acceptText" class="tsd-kind-icon">accept<wbr>Text</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#canStart" class="tsd-kind-icon">can<wbr>Start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#doActivate" class="tsd-kind-icon">do<wbr>Activate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#doCancel" class="tsd-kind-icon">do<wbr>Cancel</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#doDeactivate" class="tsd-kind-icon">do<wbr>Deactivate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#doMouseDown" class="tsd-kind-icon">do<wbr>Mouse<wbr>Down</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#doStart" class="tsd-kind-icon">do<wbr>Start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#isValidText" class="tsd-kind-icon">is<wbr>Valid<wbr>Text</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="TextEditingTool.html#measureTemporaryTextBlock" class="tsd-kind-icon">measure<wbr>Temporary<wbr>Text<wbr>Block</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Constants</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-DoubleClick" class="tsd-kind-icon">Double<wbr>Click</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-Enter" class="tsd-kind-icon">Enter</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-LostFocus" class="tsd-kind-icon">Lost<wbr>Focus</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-MouseDown" class="tsd-kind-icon">Mouse<wbr>Down</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-SingleClick" class="tsd-kind-icon">Single<wbr>Click</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-SingleClickSelected" class="tsd-kind-icon">Single<wbr>Click<wbr>Selected</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-StateActive" class="tsd-kind-icon">State<wbr>Active</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-StateEditing" class="tsd-kind-icon">State<wbr>Editing</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-StateInvalid" class="tsd-kind-icon">State<wbr>Invalid</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-StateNone" class="tsd-kind-icon">State<wbr>None</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-StateValidated" class="tsd-kind-icon">State<wbr>Validated</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-StateValidating" class="tsd-kind-icon">State<wbr>Validating</a></li>
+								<li class="tsd-kind-constant tsd-parent-kind-class tsd-is-static"><a href="TextEditingTool.html#static-Tab" class="tsd-kind-icon">Tab</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Text<wbr>Editing<wbr>Tool<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="TextEditingTool.html" class="tsd-signature-type">TextEditingTool</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>You do not normally need to create an instance of this tool
+								because one already exists as the <a href="ToolManager.html#textEditingTool">ToolManager.textEditingTool</a>, which you can modify.</p>
+								<p>The <a href="Tool.html#name">Tool.name</a> of this tool is &quot;TextEditing&quot;.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="TextEditingTool.html" class="tsd-signature-type">TextEditingTool</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="currentTextEditor" class="tsd-anchor"></a>
+					<h3>
+						current<wbr>Text<wbr>Editor
+					<span class="tsd-signature-symbol">: </span><a href="HTMLInfo.html" class="tsd-signature-type">HTMLInfo</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the <a href="HTMLInfo.html">HTMLInfo</a> that is editing the text.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="defaultTextEditor" class="tsd-anchor"></a>
+					<h3>
+						default<wbr>Text<wbr>Editor
+					<span class="tsd-signature-symbol">: </span><a href="HTMLInfo.html" class="tsd-signature-type">HTMLInfo</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the default <a href="HTMLInfo.html">HTMLInfo</a> that edits the text.</p>
+								<p>When <a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a> is called, the <a href="TextEditingTool.html#currentTextEditor">currentTextEditor</a> is set to this value by default.
+								If a <a href="TextBlock.html#textEditor">TextBlock.textEditor</a> is specified on the TextBlock, that editor is used instead.</p>
+								<p>This tool will call <a href="HTMLInfo.html#show">HTMLInfo.show</a> during <a href="TextEditingTool.html#doActivate">doActivate</a>,
+								and <a href="HTMLInfo.html#hide">HTMLInfo.hide</a> during <a href="TextEditingTool.html#doDeactivate">doDeactivate</a>.</p>
+								<p>By default the value is an <a href="HTMLInfo.html">HTMLInfo</a>, and the <a href="HTMLInfo.html#mainElement">HTMLInfo.mainElement</a> is an <code>HTMLTextArea</code>.
+								You can see the default implementation details <a href="../../extensions/textEditor.html">here</a>.</p>
+								<p>For typical operation, HTMLInfo implementations should have a way of calling <a href="TextEditingTool.html#acceptText">TextEditingTool.acceptText</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="selectsTextOnActivate" class="tsd-anchor"></a>
+					<h3>
+						selects<wbr>Text<wbr>OnActivate
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets whether to select (highlight) the editable text when the TextEditingTool is activated.
+								The default is true.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.5</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="starting" class="tsd-anchor"></a>
+					<h3>
+						starting
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets how user gestures can start in-place editing of text.</p>
+								<p>Possible values are <a href="TextEditingTool.html#static-SingleClickSelected">TextEditingTool.SingleClickSelected</a>, <a href="TextEditingTool.html#static-SingleClick">TextEditingTool.SingleClick</a>, and <a href="TextEditingTool.html#static-DoubleClick">TextEditingTool.DoubleClick</a>.</p>
+								<p>The default is <a href="TextEditingTool.html#static-SingleClickSelected">TextEditingTool.SingleClickSelected</a></p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="state" class="tsd-anchor"></a>
+					<h3>
+						state
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the state of the TextEditingTool.
+								The only accepted values are listed as constant properties of TextEditingTool, including:</p>
+								<ul>
+									<li><a href="TextEditingTool.html#static-StateNone">TextEditingTool.StateNone</a></li>
+									<li><a href="TextEditingTool.html#static-StateActive">TextEditingTool.StateActive</a></li>
+									<li><a href="TextEditingTool.html#static-StateEditing">TextEditingTool.StateEditing</a></li>
+									<li><a href="TextEditingTool.html#static-StateValidating">TextEditingTool.StateValidating</a></li>
+									<li><a href="TextEditingTool.html#static-StateValidated">TextEditingTool.StateValidated</a></li>
+								</ul>
+								<p>The starting value value is <a href="TextEditingTool.html#static-StateNone">TextEditingTool.StateNone</a>,
+									<a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a> sets the value to <a href="TextEditingTool.html#static-StateActive">TextEditingTool.StateActive</a>.
+									The default text editor receiving focus sets the value to <a href="TextEditingTool.html#static-StateEditing">TextEditingTool.StateEditing</a>.
+									<a href="TextEditingTool.html#acceptText">TextEditingTool.acceptText</a> sets the value to <a href="TextEditingTool.html#static-StateValidating">TextEditingTool.StateValidating</a>.
+								Once accepted and the tool begins the &quot;TextEditing&quot; transaction, the value is set to <a href="TextEditingTool.html#static-StateValidated">TextEditingTool.StateValidated</a>.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.7</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="textBlock" class="tsd-anchor"></a>
+					<h3>
+						text<wbr>Block
+					<span class="tsd-signature-symbol">: </span><a href="TextBlock.html" class="tsd-signature-type">TextBlock</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the <a href="TextBlock.html">TextBlock</a> that is being edited.
+									This property is initially null and is set in <a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a>
+									as the <a href="TextBlock.html">TextBlock</a> at the mouse click point.
+									However, if you set this property beforehand, <a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a>
+								will not set it, and this tool will edit the given <a href="TextBlock.html">TextBlock</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="textValidation" class="tsd-anchor"></a>
+					<h3>
+						text<wbr>Validation
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">aTextBlock</span><span class="tsd-signature-symbol">: </span><a href="TextBlock.html" class="tsd-signature-type">TextBlock</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">oldString</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">newString</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the predicate that determines whether or not a string of text is valid.
+									If this is non-null, this predicate is called in addition to any <a href="TextBlock.html#textValidation">TextBlock.textValidation</a> predicate.
+									See <a href="TextEditingTool.html#isValidText">isValidText</a> for more details.
+								The default predicate is null, which is equivalent to simply returning true.</p>
+								<p>The function, if supplied, must not have any side-effects.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="acceptText" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						accept<wbr>Text
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">accept<wbr>Text<span class="tsd-signature-symbol">(</span>reason<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Finish editing by trying to accept the new text.</p>
+								<p>Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>reason: <span class="tsd-signature-type">EnumValue</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The reason must be either <a href="TextEditingTool.html#static-LostFocus">TextEditingTool.LostFocus</a>,
+										<a href="TextEditingTool.html#static-MouseDown">TextEditingTool.MouseDown</a>, <a href="TextEditingTool.html#static-Tab">TextEditingTool.Tab</a>, or <a href="TextEditingTool.html#static-Enter">TextEditingTool.Enter</a>.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="canStart" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span> <span class="tsd-flag ts-flagOverride">Override</span>
+						can<wbr>Start
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">can<wbr>Start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This may run when there is a mouse-click on a <a href="TextBlock.html">TextBlock</a> for which the
+									<a href="TextBlock.html#editable">TextBlock.editable</a> property is true in a <a href="Part.html">Part</a>
+								that <a href="Part.html#isSelected">Part.isSelected</a>.</p>
+								<p>This method may be overridden.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doActivate" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Activate
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Activate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Start editing the text for a <a href="TextEditingTool.html#textBlock">textBlock</a>.</p>
+								<p>If <a href="TextEditingTool.html#textBlock">TextEditingTool.textBlock</a> is not already specified, this looks for one at the current
+								mouse point. If none is found, this method does nothing.</p>
+								<p>This method sets <a href="TextEditingTool.html#currentTextEditor">currentTextEditor</a>.
+									If <a href="TextBlock.html#textEditor">TextBlock.textEditor</a> is defined on the <a href="TextBlock.html">TextBlock</a> it will use that as the value.
+									By default, it uses the value of <a href="TextEditingTool.html#defaultTextEditor">defaultTextEditor</a>, which is an {@HTMLInfo}
+								showing an HTML textarea, with the CSS class <code>goTXarea</code>.</p>
+								<p>If the <a href="TextEditingTool.html#currentTextEditor">currentTextEditor</a> is an <a href="HTMLInfo.html">HTMLInfo</a>, this method calls <a href="HTMLInfo.html#show">HTMLInfo.show</a> on that instance.</p>
+								<p>This sets <a href="Tool.html#isActive">Tool.isActive</a> to true.
+									Custom text editors should call <a href="TextEditingTool.html#acceptText">TextEditingTool.acceptText</a> to finish the edit
+									by modifying the <a href="TextBlock.html">TextBlock</a> and committing the edit transaction.
+								Or call <a href="TextEditingTool.html#doCancel">TextEditingTool.doCancel</a> to abort the edit.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doCancel" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Cancel
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Cancel<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Abort any text editing operation.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doDeactivate" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Deactivate
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Deactivate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Release the mouse.</p>
+								<p>If the <a href="TextEditingTool.html#currentTextEditor">currentTextEditor</a> is an <a href="HTMLInfo.html">HTMLInfo</a>, this calls <a href="HTMLInfo.html#hide">HTMLInfo.hide</a>.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseDown" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Down
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Down<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This calls <a href="TextEditingTool.html#acceptText">acceptText</a> with the reason <a href="TextEditingTool.html#static-MouseDown">TextEditingTool.MouseDown</a>,
+								if this tool <a href="Tool.html#isActive">Tool.isActive</a>.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doMouseUp" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Mouse<wbr>Up
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Mouse<wbr>Up<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>A click (mouse up) calls <a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a> if this tool is not already active
+								and if <a href="TextEditingTool.html#canStart">TextEditingTool.canStart</a> returns true.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="doStart" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagOverride">Override</span>
+						do<wbr>Start
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">do<wbr>Start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This calls <a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a> if there is a
+								<a href="TextEditingTool.html#textBlock">textBlock</a> set. <a href="TextEditingTool.html#doActivate">doActivate</a> attempts to set <a href="TextEditingTool.html#textBlock">textBlock</a> if it is null.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isValidText" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						is<wbr>Valid<wbr>Text
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<wbr>Text<span class="tsd-signature-symbol">(</span>textblock<span class="tsd-signature-symbol">: </span><a href="TextBlock.html" class="tsd-signature-type">TextBlock</a>, oldstr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, newstr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This predicate checks any <a href="TextBlock.html#textValidation">TextBlock.textValidation</a> predicate and
+									this tool&#39;s <a href="TextEditingTool.html#textValidation">textValidation</a> predicate to make sure the <a href="TextBlock.html#text">TextBlock.text</a>
+								property may be set to the new string.</p>
+								<p>This method may be overridden, although usually it is sufficient to set <a href="TextEditingTool.html#textValidation">textValidation</a>.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>textblock: <a href="TextBlock.html" class="tsd-signature-type">TextBlock</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the <a href="TextBlock.html">TextBlock</a> that is being edited.</p>
+									</div>
+								</li>
+								<li>
+									<h5>oldstr: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the previous string value.</p>
+									</div>
+								</li>
+								<li>
+									<h5>newstr: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the proposed new string value.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>true if the new string is valid for the given TextBlock.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="measureTemporaryTextBlock" class="tsd-anchor"></a>
+					<h3>
+						measure<wbr>Temporary<wbr>Text<wbr>Block
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">measure<wbr>Temporary<wbr>Text<wbr>Block<span class="tsd-signature-symbol">(</span>text<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="TextBlock.html" class="tsd-signature-type">TextBlock</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This method returns a temporary <a href="TextBlock.html">TextBlock</a> used for measuring text during editing.
+									The TextBlock.text is set to the parameter&#39;s value,
+								and the TextBlock is measured with the last available width of the <a href="TextEditingTool.html#textBlock">textBlock</a>.</p>
+								<p>Text editors can use the <a href="GraphObject.html#measuredBounds">GraphObject.measuredBounds</a> and <a href="TextBlock.html#lineCount">TextBlock.lineCount</a>
+								to determine a reasonable size for their text areas.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.7</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>text: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the text to measure</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="TextBlock.html" class="tsd-signature-type">TextBlock</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constants</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-DoubleClick" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Double<wbr>Click
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#starting">TextEditingTool.starting</a>,
+							A double click on a <a href="TextBlock.html">TextBlock</a> with <a href="TextBlock.html#editable">TextBlock.editable</a> property set to true
+						will start in-place editing.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Enter" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Enter
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#acceptText">TextEditingTool.acceptText</a>, the user has typed ENTER.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-LostFocus" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Lost<wbr>Focus
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#acceptText">TextEditingTool.acceptText</a>, the text editing control has lost focus.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-MouseDown" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Mouse<wbr>Down
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#acceptText">TextEditingTool.acceptText</a>, the user has clicked somewhere else in the diagram.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-SingleClick" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Single<wbr>Click
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#starting">TextEditingTool.starting</a>,
+							A single click on a <a href="TextBlock.html">TextBlock</a> with <a href="TextBlock.html#editable">TextBlock.editable</a> property set to true
+						will start in-place editing.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-SingleClickSelected" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Single<wbr>Click<wbr>Selected
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#starting">TextEditingTool.starting</a>,
+							A single click on a <a href="TextBlock.html">TextBlock</a> with <a href="TextBlock.html#editable">TextBlock.editable</a> property set to true
+						will start in-place editing, but only if the <a href="Part.html">Part</a> that the <a href="TextBlock.html">TextBlock</a> is in is already selected.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-StateActive" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						State<wbr>Active
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#state">state</a>,
+						<a href="TextEditingTool.html#doActivate">TextEditingTool.doActivate</a> sets the value of <a href="TextEditingTool.html#state">state</a> to this.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-StateEditing" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						State<wbr>Editing
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#state">state</a>,
+						The default text editor receiving focus sets the value of <a href="TextEditingTool.html#state">state</a> to this.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-StateInvalid" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						State<wbr>Invalid
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#state">state</a>,
+						If validation fails, TextEditingTool.acceptText sets the value of <a href="TextEditingTool.html#state">state</a> to this.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-StateNone" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						State<wbr>None
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#state">state</a>,
+						this is the starting value before the tool is activated.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-StateValidated" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						State<wbr>Validated
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#state">state</a>,
+						Once accepted and the tool begins the &quot;TextEditing&quot; transaction, the value of <a href="TextEditingTool.html#state">state</a> is set to this.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-StateValidating" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						State<wbr>Validating
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#state">state</a>,
+						TextEditingTool.acceptText sets the value of <a href="TextEditingTool.html#state">state</a> to this.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+					<a name="static-Tab" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						Tab
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EnumValue</span>        </h3>
+					<div class="tsd-comment tsd-typography">
+						<p>A possible value for <a href="TextEditingTool.html#acceptText">TextEditingTool.acceptText</a>, the user has typed TAB.</p>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="TextEditingTool.html" class="tsd-kind-icon">Text<wbr>Editing<wbr>Tool</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#currentTextEditor" class="tsd-kind-icon">current<wbr>Text<wbr>Editor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#defaultTextEditor" class="tsd-kind-icon">default<wbr>Text<wbr>Editor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#selectsTextOnActivate" class="tsd-kind-icon">selects<wbr>Text<wbr>OnActivate</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#starting" class="tsd-kind-icon">starting</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#state" class="tsd-kind-icon">state</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#textBlock" class="tsd-kind-icon">text<wbr>Block</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="TextEditingTool.html#textValidation" class="tsd-kind-icon">text<wbr>Validation</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#acceptText" class="tsd-kind-icon">accept<wbr>Text</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#canStart" class="tsd-kind-icon">can<wbr>Start</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#doActivate" class="tsd-kind-icon">do<wbr>Activate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#doCancel" class="tsd-kind-icon">do<wbr>Cancel</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#doDeactivate" class="tsd-kind-icon">do<wbr>Deactivate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#doMouseDown" class="tsd-kind-icon">do<wbr>Mouse<wbr>Down</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#doMouseUp" class="tsd-kind-icon">do<wbr>Mouse<wbr>Up</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#doStart" class="tsd-kind-icon">do<wbr>Start</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#isValidText" class="tsd-kind-icon">is<wbr>Valid<wbr>Text</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="TextEditingTool.html#measureTemporaryTextBlock" class="tsd-kind-icon">measure<wbr>Temporary<wbr>Text<wbr>Block</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-DoubleClick" class="tsd-kind-icon">Double<wbr>Click</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-Enter" class="tsd-kind-icon">Enter</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-LostFocus" class="tsd-kind-icon">Lost<wbr>Focus</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-MouseDown" class="tsd-kind-icon">Mouse<wbr>Down</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-SingleClick" class="tsd-kind-icon">Single<wbr>Click</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-SingleClickSelected" class="tsd-kind-icon">Single<wbr>Click<wbr>Selected</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-StateActive" class="tsd-kind-icon">State<wbr>Active</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-StateEditing" class="tsd-kind-icon">State<wbr>Editing</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-StateInvalid" class="tsd-kind-icon">State<wbr>Invalid</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-StateNone" class="tsd-kind-icon">State<wbr>None</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-StateValidated" class="tsd-kind-icon">State<wbr>Validated</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-StateValidating" class="tsd-kind-icon">State<wbr>Validating</a>
+							</li>
+							<li class=" tsd-kind-constant tsd-parent-kind-class tsd-is-static">
+								<a href="TextEditingTool.html#static-Tab" class="tsd-kind-icon">Tab</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

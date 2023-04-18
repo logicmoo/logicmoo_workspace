@@ -560,7 +560,12 @@ do_todo3([oinfo(O1,_Ps1,_OID1,_Todo1)|Objs],TODO,[O1|NewObjs]):-
 
 
 
-add_oinfo(Ref,oinfo(O1,Ps1,OID1,[])):- into_obj(Ref,O1),obj_to_oid(O1,OID1),globalpoints(O1,Ps1),!.
+add_oinfo(Ref,oinfo(O1,Ps1,NewRef,[])):- into_obj(Ref,O1),
+  obj_to_oid(O1,OID1),
+  maybe_oid_to_lhs(OID1,NewRef),
+  globalpoints(O1,Ps1),!.
+
+maybe_oid_to_lhs(OID1,NewRef):- if_defined(oid_to_lhs(OID1,NewRef),OID1=NewRef).
 
 find_relationsB([O1|Rest],TodoIN,TodoOUT):-
   find_relations2(O1,Rest,TodoIN,TodoMID),
@@ -612,10 +617,12 @@ related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,P2L):-
   related_how2(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2).
 
 related_how(subsumed_by(Offset,OverlapP),O1,O2,Ps1,Ps2,Overlap,P1L,_P2L):- Overlap\==[],P1L==[],
-  length(Ps1,Len1),length(Ps2,Len2), OverlapP = rational(Len1/Len2), object_offset(O2,O1,Offset).
+  length(Ps1,Len1),length(Ps2,Len2), OverlapP = rational(Len1/Len2), object_offset(O2,O1,Offset),
+  \+ is_bg_object(O1), \+ is_bg_object(O2).
 
 related_how(   subsumed(Offset,OverlapP),O1,O2,Ps1,Ps2,Overlap,_P1L,P2L):- Overlap\==[],P2L==[],
-  length(Ps1,Len1),length(Ps2,Len2), OverlapP = rational(Len2/Len1), object_offset(O2,O1,Offset).
+  length(Ps1,Len1),length(Ps2,Len2), OverlapP = rational(Len2/Len1), object_offset(O2,O1,Offset),
+  \+ is_bg_object(O1), \+ is_bg_object(O2).
 
 sees_dir(n,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SY1 >= EY2, D is SY1-EY2.
 sees_dir(s,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SY2 >= EY1, D is SY2-EY1.
@@ -625,26 +632,29 @@ sees_dir(e,D,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX
 related_how2(sees(DirsDists),O1,O2,Ps1,Ps2,Overlap,P1L,
   SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
   findall(cc(Dir,Dist),(sees_dir(Dir,Dist,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2),Dist<3),DirsDists), 
+  \+ is_bg_object(O1), \+ is_bg_object(O2),
    DirsDists\==[].
 
 
 %related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 < SX2, SY1 < SY2, EX2 < EX1, EY2 < EY1, How = contained_by(engulfed).
 related_how2(contained_by,O1,O2,Ps1,Ps2,Overlap,P1L,
-  SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
+  SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- \+ is_bg_object(O2),
   SX1 >= SX2, SY1 >= SY2, EX2 >= EX1, EY2 >= EY1.
 %related_how(How,O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- SX1 > SX2, SY1 > SY2, EX2 > EX1, EY2 > EY1, How = contains(engulfed).
 related_how2(contains,O1,O2,Ps1,Ps2,Overlap,P1L,
-  SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
+  SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- \+ is_bg_object(O1),
   SX1 =< SX2, SY1 =< SY2, EX2 =< EX1, EY2 =< EY1.
 
 related_how2(OLPred,O1,O2,Ps1,Ps2,Overlap,
   P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):- Overlap\==[],
   length(Overlap,OL), length(Ps1,Len1),length(Ps2,Len2),
   Overlap1 = rational(OL/Len1), Overlap2 = rational(OL/Len2),
-  overlaps_pred(OLPred,Overlap1,Overlap2).
+  overlaps_pred(OLPred,Overlap1,Overlap2),
+  \+ is_bg_object(O1), \+ is_bg_object(O2).
 
 related_how2(touches(TouchDirs),O1,O2,Ps1,Ps2,Overlap,P1L,SX1,SY1,EX1,EY1,P2L,SX2,SY2,EX2,EY2):-
   Overlap\==[],
+  \+ is_bg_object(O1), \+ is_bg_object(O2),
   findall(Dir,(member(_-P1,P1L), is_adjacent_point(P1,Dir,P2),  member(_-P2,P2L)),Dirs),
   get_ccs(Dirs,TouchDirs), TouchDirs\==[].
 

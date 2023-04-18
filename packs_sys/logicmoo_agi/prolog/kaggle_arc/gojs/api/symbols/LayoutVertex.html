@@ -1,0 +1,838 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>LayoutVertex | GoJS API</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+<header>
+	<!-- non-fixed navbar -->
+	<nav id="non-fixed-nav" class="navbar navbar-inverse navbar-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<div class="navheader-container">
+					<div class="navheader-collapse" data-toggle="collapse" data-target="#navbar">
+						<a id="toplogo" class="navbar-brand" href="../../index.html">GoJS</a>
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../learn/index.html">Learn</a></li>
+					<li><a href="../../samples/index.html">Samples</a></li>
+					<li><a href="../../intro/index.html">Intro</a></li>
+					<li><a href="../../api/index.html" target="api">API</a></li>
+					<li><a href="https://www.nwoods.com/components/evalform.htm">Register</a></li>
+					<li><a href="../../download.html">Download</a></li>
+					<li><a href="https://forum.nwoods.com/c/gojs">Forum</a></li>
+					<li><a href="https://www.nwoods.com/contact.html" onclick="ga('send','event','Outbound Link','click','contact');">Contact</a></li>
+					<li class="buy"><a href="https://www.nwoods.com/sales/index.html" onclick="ga('send','event','Outbound Link','click','buy');">Buy</a></li>
+					<li class="activate"><a href="https://www.nwoods.com/app/activate.aspx?sku=gojs">Activate</a></li>
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+	<div class="tsd-page-header">
+		<div class="tsd-page-toolbar">
+			<div class="container-fluid plr15">
+				<div class="table-wrap">
+					<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+						<div class="field">
+							<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+							<input id="tsd-search-field" type="text" />
+						</div>
+						<ul class="results">
+							<li class="state loading">Preparing search index...</li>
+							<li class="state failure">The search index is not available</li>
+						</ul>
+						<a href="../index.html" class="title">GoJS API</a>
+					</div>
+					<div class="table-cell" id="tsd-widgets">
+						<div id="tsd-filter">
+							<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+							<div class="tsd-filter-group">
+								<div class="tsd-select" id="tsd-filter-visibility">
+									<span class="tsd-select-label">All</span>
+									<ul class="tsd-select-list">
+										<li data-value="public">Public</li>
+										<li data-value="protected">Public/Protected</li>
+										<li data-value="private" class="selected">All</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tsd-page-title">
+			<div class="container-fluid plr15">
+				<div class="top-copyright">
+					<!--<b>GoJS</b>&reg; Diagramming Components<br/>version &lt;br/&gt;version 2.0.6 for TypeScript/HTML<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>-->
+					<b>GoJS</b>&reg; Diagramming Components<br/>version 2.0.6<br/>by <a href="https://www.nwoods.com/">Northwoods Software&reg;</a>
+				</div>
+				<div>
+					<h1>Class LayoutVertex</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<div class="container-fluid container-main plr15">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">LayoutVertex</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="CircularVertex.html" class="tsd-signature-type">CircularVertex</a>
+							</li>
+							<li>
+								<a href="ForceDirectedVertex.html" class="tsd-signature-type">ForceDirectedVertex</a>
+							</li>
+							<li>
+								<a href="LayeredDigraphVertex.html" class="tsd-signature-type">LayeredDigraphVertex</a>
+							</li>
+							<li>
+								<a href="TreeVertex.html" class="tsd-signature-type">TreeVertex</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<p>A vertex represents a <a href="Node.html">Node</a> in a <a href="LayoutNetwork.html">LayoutNetwork</a>,
+						along with its <a href="LayoutVertex.html#bounds">bounds</a> and <a href="LayoutVertex.html#focus">focus</a> and collections of <a href="LayoutEdge.html">LayoutEdge</a>s that come into and go out of the vertex.
+						The <a href="LayoutVertex.html#node">node</a> property may be null for vertexes that represent &quot;dummy&quot; nodes,
+					when the layout wants to work with a network that is not isomorphic with the collection of Nodes and Links being laid out.</p>
+					<p>This holds layout-specific data for the node.
+					For each kind of layout that uses a LayoutNetwork there is a subclass of <a href="LayoutVertex.html">LayoutVertex</a> and a subclass of <a href="LayoutEdge.html">LayoutEdge</a>:</p>
+					<ul>
+						<li><a href="CircularLayout.html">CircularLayout</a>: <a href="CircularVertex.html">CircularVertex</a> and <a href="CircularEdge.html">CircularEdge</a></li>
+						<li><a href="ForceDirectedLayout.html">ForceDirectedLayout</a>: <a href="ForceDirectedVertex.html">ForceDirectedVertex</a> and <a href="ForceDirectedEdge.html">ForceDirectedEdge</a></li>
+						<li><a href="LayeredDigraphLayout.html">LayeredDigraphLayout</a>: <a href="LayeredDigraphVertex.html">LayeredDigraphVertex</a> and <a href="LayeredDigraphEdge.html">LayeredDigraphEdge</a></li>
+						<li><a href="TreeLayout.html">TreeLayout</a>: <a href="TreeVertex.html">TreeVertex</a> and <a href="TreeEdge.html">TreeEdge</a></li>
+					</ul>
+					<p>Modifying a <a href="LayoutNetwork.html">LayoutNetwork</a> or a <a href="LayoutVertex.html">LayoutVertex</a> or a <a href="LayoutEdge.html">LayoutEdge</a> does not
+					invalidate the <a href="Layout.html">Layout</a> or raise any changed events.</p>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="LayoutVertex.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#bounds" class="tsd-kind-icon">bounds</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#centerX" class="tsd-kind-icon">centerX</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#centerY" class="tsd-kind-icon">centerY</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="LayoutVertex.html#destinationEdges" class="tsd-kind-icon">destination<wbr>Edges</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="LayoutVertex.html#destinationVertexes" class="tsd-kind-icon">destination<wbr>Vertexes</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="LayoutVertex.html#edges" class="tsd-kind-icon">edges</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="LayoutVertex.html#edgesCount" class="tsd-kind-icon">edges<wbr>Count</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#focus" class="tsd-kind-icon">focus</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#focusX" class="tsd-kind-icon">focusX</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#focusY" class="tsd-kind-icon">focusY</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#height" class="tsd-kind-icon">height</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#network" class="tsd-kind-icon">network</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#node" class="tsd-kind-icon">node</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="LayoutVertex.html#sourceEdges" class="tsd-kind-icon">source<wbr>Edges</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="LayoutVertex.html#sourceVertexes" class="tsd-kind-icon">source<wbr>Vertexes</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="LayoutVertex.html#vertexes" class="tsd-kind-icon">vertexes</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#width" class="tsd-kind-icon">width</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#x" class="tsd-kind-icon">x</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="LayoutVertex.html#y" class="tsd-kind-icon">y</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LayoutVertex.html#addDestinationEdge" class="tsd-kind-icon">add<wbr>Destination<wbr>Edge</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LayoutVertex.html#addSourceEdge" class="tsd-kind-icon">add<wbr>Source<wbr>Edge</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LayoutVertex.html#commit" class="tsd-kind-icon">commit</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LayoutVertex.html#deleteDestinationEdge" class="tsd-kind-icon">delete<wbr>Destination<wbr>Edge</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="LayoutVertex.html#deleteSourceEdge" class="tsd-kind-icon">delete<wbr>Source<wbr>Edge</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="LayoutVertex.html#static-smartComparer" class="tsd-kind-icon">smart<wbr>Comparer</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="LayoutVertex.html#static-standardComparer" class="tsd-kind-icon">standard<wbr>Comparer</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>
+						constructor
+					</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Layout<wbr>Vertex<span class="tsd-signature-symbol">(</span>network<span class="tsd-signature-symbol">: </span><a href="LayoutNetwork.html" class="tsd-signature-type">LayoutNetwork</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This constructs a vertex that does not know about any <a href="Node.html">Node</a>.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>network: <a href="LayoutNetwork.html" class="tsd-signature-type">LayoutNetwork</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="bounds" class="tsd-anchor"></a>
+					<h3>
+						bounds
+					<span class="tsd-signature-symbol">: </span><a href="Rect.html" class="tsd-signature-type">Rect</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the bounds of this vertex, in document coordinates.
+									Setting this property does not directly modify the position of any <a href="Node.html">Node</a>,
+									but it will modify the value of <a href="LayoutVertex.html#centerX">centerX</a> and <a href="LayoutVertex.html#centerY">centerY</a>,
+								as well as the subsidiary convenience properties <a href="LayoutVertex.html#x">x</a>, <a href="LayoutVertex.html#y">y</a>, <a href="LayoutVertex.html#width">width</a>, and <a href="LayoutVertex.html#height">height</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="centerX" class="tsd-anchor"></a>
+					<h3>
+						centerX
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the center <a href="Point.html#x">Point.x</a> of this vertex, in document coordinates.
+									This property depends on both <a href="LayoutVertex.html#bounds">bounds</a> and <a href="LayoutVertex.html#focus">focus</a>.
+									Setting this property does not modify the position of any <a href="Node.html">Node</a>,
+								but it will modify the value of <a href="LayoutVertex.html#bounds">bounds</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="centerY" class="tsd-anchor"></a>
+					<h3>
+						centerY
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the center <a href="Point.html#y">Point.y</a> of this vertex, in document coordinates.
+									This property depends on both <a href="LayoutVertex.html#bounds">bounds</a> and <a href="LayoutVertex.html#focus">focus</a>.
+									Setting this property does not modify the position of any <a href="Node.html">Node</a>,
+								but it will modify the value of <a href="LayoutVertex.html#bounds">bounds</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="data" class="tsd-anchor"></a>
+					<h3>
+						data
+					<span class="tsd-signature-symbol">: </span><a href="ObjectData.html" class="tsd-signature-type">ObjectData</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the data object in the model that should be associated with this vertex, if any.
+									The value will be non-null if this vertex is virtualized,
+									not represented by a real <a href="Node.html">Node</a> in the <a href="Diagram.html">Diagram</a>.
+									Each data object should have a &#39;bounds&#39; property that is a <a href="Rect.html">Rect</a>
+									or any JavaScript Object with &#39;x&#39;, &#39;y&#39;, &#39;width&#39;, and &#39;height&#39; properties that are real numbers,
+									and non-negative numbers for the width and the height.
+								Setting this data property will also set the <a href="LayoutVertex.html#bounds">bounds</a> and <a href="LayoutVertex.html#focus">focus</a> properties.</p>
+								<dl class="tsd-comment-tags">
+									<dt>since</dt>
+									<dd><p>1.6</p>
+									</dd>
+								</dl>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="destinationEdges" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						destination<wbr>Edges
+					<span class="tsd-signature-symbol">: </span><a href="Iterator.html" class="tsd-signature-type">Iterator</a><span class="tsd-signature-symbol">&lt;</span><a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns an iterator for all of the edges that go out of this vertex.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="destinationVertexes" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						destination<wbr>Vertexes
+					<span class="tsd-signature-symbol">: </span><a href="Iterator.html" class="tsd-signature-type">Iterator</a><span class="tsd-signature-symbol">&lt;</span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns an iterator for all of the vertexes that are connected with edges going out of this vertex.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="edges" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						edges
+					<span class="tsd-signature-symbol">: </span><a href="Iterator.html" class="tsd-signature-type">Iterator</a><span class="tsd-signature-symbol">&lt;</span><a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns an iterator for all of the edges that are connected with this vertex in either direction.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="edgesCount" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						edges<wbr>Count
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns the total number of edges that are connected with this vertex in either direction.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="focus" class="tsd-anchor"></a>
+					<h3>
+						focus
+					<span class="tsd-signature-symbol">: </span><a href="Point.html" class="tsd-signature-type">Point</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the offset of the <a href="LayoutVertex.html#focusX">focusX</a> and <a href="LayoutVertex.html#focusY">focusY</a>
+									from the <a href="LayoutVertex.html#bounds">bounds</a> position.
+									Setting this property does not directly modify the position of any <a href="Node.html">Node</a>,
+								but it does affect the value of <a href="LayoutVertex.html#centerX">centerX</a> and <a href="LayoutVertex.html#centerY">centerY</a>.</p>
+								<p>The &quot;focus&quot; is normally the center of the Node&#39;s <a href="Part.html#locationObject">Part.locationObject</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="focusX" class="tsd-anchor"></a>
+					<h3>
+						focusX
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the relative X position of the &quot;center&quot; point, the focus.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="focusY" class="tsd-anchor"></a>
+					<h3>
+						focusY
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the relative Y position of the &quot;center&quot; point, the focus.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="height" class="tsd-anchor"></a>
+					<h3>
+						height
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the height of this vertex.
+								This is always the vertical distance reserved for the node.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="network" class="tsd-anchor"></a>
+					<h3>
+						network
+					<span class="tsd-signature-symbol">: </span><a href="LayoutNetwork.html" class="tsd-signature-type">LayoutNetwork</a>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets the <a href="LayoutNetwork.html">LayoutNetwork</a> that owns this vertex.
+									The default value is null.
+								It is set automatically for you in <a href="LayoutNetwork.html#createVertex">LayoutNetwork.createVertex</a>.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="node" class="tsd-anchor"></a>
+					<h3>
+						node
+					<span class="tsd-signature-symbol">: </span><a href="Node.html" class="tsd-signature-type">Node</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the <a href="Node.html">Node</a> associated with this vertex, if any.
+									The value may be null if this vertex is a &quot;dummy&quot; vertex,
+								not represented by a real <a href="Node.html">Node</a> in the <a href="Diagram.html">Diagram</a>.</p>
+								<p>This property setter also sets the <a href="LayoutVertex.html#bounds">bounds</a> and <a href="LayoutVertex.html#focus">focus</a> properties
+								according to the value of the Node&#39;s actualBounds and its <a href="Part.html#locationObject">Part.locationObject</a>&#39;s center point.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="sourceEdges" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						source<wbr>Edges
+					<span class="tsd-signature-symbol">: </span><a href="Iterator.html" class="tsd-signature-type">Iterator</a><span class="tsd-signature-symbol">&lt;</span><a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns an iterator for all of the edges that come into this vertex.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="sourceVertexes" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						source<wbr>Vertexes
+					<span class="tsd-signature-symbol">: </span><a href="Iterator.html" class="tsd-signature-type">Iterator</a><span class="tsd-signature-symbol">&lt;</span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns an iterator for all of the vertexes that are connected with edges coming into this vertex.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="vertexes" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagReadOnly">Read-only</span>
+						vertexes
+					<span class="tsd-signature-symbol">: </span><a href="Iterator.html" class="tsd-signature-type">Iterator</a><span class="tsd-signature-symbol">&lt;</span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a><span class="tsd-signature-symbol">&gt;</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This read-only property returns an iterator for all of the vertexes that are connected in either direction with this vertex.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="width" class="tsd-anchor"></a>
+					<h3>
+						width
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the width of this vertex.
+								This is always the horizontal distance reserved for the node.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="x" class="tsd-anchor"></a>
+					<h3>
+						x
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the left point of this vertex.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
+					<a name="y" class="tsd-anchor"></a>
+					<h3>
+						y
+					<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>        </h3>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Gets or sets the top point of this vertex.</p>
+							</div>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addDestinationEdge" class="tsd-anchor"></a>
+					<h3>
+						add<wbr>Destination<wbr>Edge
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Destination<wbr>Edge<span class="tsd-signature-symbol">(</span>edge<span class="tsd-signature-symbol">: </span><a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Adds a <a href="LayoutEdge.html">LayoutEdge</a> to the list of successors
+									(the edge will be going out from this vertex).
+								Calling this method does not modify the <a href="LayoutEdge.html#fromVertex">LayoutEdge.fromVertex</a> of the LayoutEdge.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>edge: <a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addSourceEdge" class="tsd-anchor"></a>
+					<h3>
+						add<wbr>Source<wbr>Edge
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Source<wbr>Edge<span class="tsd-signature-symbol">(</span>edge<span class="tsd-signature-symbol">: </span><a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Adds a <a href="LayoutEdge.html">LayoutEdge</a> to the list of predecessors
+									(the edge will be coming into this vertex).
+								Calling this method does not modify the <a href="LayoutEdge.html#toVertex">LayoutEdge.toVertex</a> of the LayoutEdge.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>edge: <a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="commit" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagVirtual">Virtual</span>
+						commit
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">commit<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Moves the <a href="Node.html">Node</a> corresponding to this vertex
+								so that its position is at the current <a href="LayoutVertex.html#bounds">bounds</a> point.</p>
+								<p>To make the most common cases look right, the Node&#39;s <a href="Part.html#locationObject">Part.locationObject</a>
+									is centered.  Thus iconic nodes will have the center of the icon be positioned
+									according to the center of this vertex, ignoring any labels.
+								Please read the Introduction page on <a href="../../intro/extensions.html">Extensions</a> for how to override methods and how to call this base method.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="deleteDestinationEdge" class="tsd-anchor"></a>
+					<h3>
+						delete<wbr>Destination<wbr>Edge
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">delete<wbr>Destination<wbr>Edge<span class="tsd-signature-symbol">(</span>edge<span class="tsd-signature-symbol">: </span><a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Deletes a <a href="LayoutEdge.html">LayoutEdge</a> from the list of successors
+									(the edge was going out from this vertex).
+								Calling this method does not modify the <a href="LayoutEdge.html#fromVertex">LayoutEdge.fromVertex</a> of the LayoutEdge.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>edge: <a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="deleteSourceEdge" class="tsd-anchor"></a>
+					<h3>
+						delete<wbr>Source<wbr>Edge
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">delete<wbr>Source<wbr>Edge<span class="tsd-signature-symbol">(</span>edge<span class="tsd-signature-symbol">: </span><a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>Deletes a <a href="LayoutEdge.html">LayoutEdge</a> from the list of predecessors
+									(the edge was coming into this vertex).
+								Calling this method does not modify the <a href="LayoutEdge.html#toVertex">LayoutEdge.toVertex</a> of the LayoutEdge.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>edge: <a href="LayoutEdge.html" class="tsd-signature-type">LayoutEdge</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="static-smartComparer" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						smart<wbr>Comparer
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">smart<wbr>Comparer<span class="tsd-signature-symbol">(</span>m<span class="tsd-signature-symbol">: </span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a>, n<span class="tsd-signature-symbol">: </span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This static function is used to compare the <a href="Part.html#text">Part.text</a> values of the <a href="LayoutVertex.html#node">node</a>s of
+									the argument <a href="LayoutVertex.html">LayoutVertex</a>es.
+									If the text ends in a number, the values are compared as numbers rather than lexicographically.
+								Naturally this comparison is significantly slower than <a href="LayoutVertex.html#static-standardComparer">LayoutVertex.standardComparer</a>.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>m: <a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a></h5>
+								</li>
+								<li>
+									<h5>n: <a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>int -1, 0, or 1, depending on whether the comparison between M and N is less than, equal, or greater than.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="static-standardComparer" class="tsd-anchor"></a>
+					<h3>
+						<span class="tsd-flag ts-flagStatic">Static</span>
+						standard<wbr>Comparer
+					</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">standard<wbr>Comparer<span class="tsd-signature-symbol">(</span>m<span class="tsd-signature-symbol">: </span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a>, n<span class="tsd-signature-symbol">: </span><a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<div class="tsd-comment tsd-typography">
+								<p>This static function is used to compare the <a href="Part.html#text">Part.text</a> values of the <a href="LayoutVertex.html#node">node</a>s of
+									the argument <a href="LayoutVertex.html">LayoutVertex</a>es.
+									This just does a simple case-sensitive string comparison.
+								Alternatively you may wish to use <a href="LayoutVertex.html#static-smartComparer">LayoutVertex.smartComparer</a> or write your own comparison function.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>m: <a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a></h5>
+								</li>
+								<li>
+									<h5>n: <a href="LayoutVertex.html" class="tsd-signature-type">LayoutVertex</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+							<p>int -1, 0, or 1, depending on whether the comparison between M and N is less than, equal, or greater than.</p>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="../index.html"><em>GoJS <wbr>Class <wbr>Index</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="LayoutVertex.html" class="tsd-kind-icon">Layout<wbr>Vertex</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#bounds" class="tsd-kind-icon">bounds</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#centerX" class="tsd-kind-icon">centerX</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#centerY" class="tsd-kind-icon">centerY</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#data" class="tsd-kind-icon">data</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="LayoutVertex.html#destinationEdges" class="tsd-kind-icon">destination<wbr>Edges</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="LayoutVertex.html#destinationVertexes" class="tsd-kind-icon">destination<wbr>Vertexes</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="LayoutVertex.html#edges" class="tsd-kind-icon">edges</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="LayoutVertex.html#edgesCount" class="tsd-kind-icon">edges<wbr>Count</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#focus" class="tsd-kind-icon">focus</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#focusX" class="tsd-kind-icon">focusX</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#focusY" class="tsd-kind-icon">focusY</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#height" class="tsd-kind-icon">height</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#network" class="tsd-kind-icon">network</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#node" class="tsd-kind-icon">node</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="LayoutVertex.html#sourceEdges" class="tsd-kind-icon">source<wbr>Edges</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="LayoutVertex.html#sourceVertexes" class="tsd-kind-icon">source<wbr>Vertexes</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="LayoutVertex.html#vertexes" class="tsd-kind-icon">vertexes</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#width" class="tsd-kind-icon">width</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#x" class="tsd-kind-icon">x</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="LayoutVertex.html#y" class="tsd-kind-icon">y</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LayoutVertex.html#addDestinationEdge" class="tsd-kind-icon">add<wbr>Destination<wbr>Edge</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LayoutVertex.html#addSourceEdge" class="tsd-kind-icon">add<wbr>Source<wbr>Edge</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LayoutVertex.html#commit" class="tsd-kind-icon">commit</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LayoutVertex.html#deleteDestinationEdge" class="tsd-kind-icon">delete<wbr>Destination<wbr>Edge</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="LayoutVertex.html#deleteSourceEdge" class="tsd-kind-icon">delete<wbr>Source<wbr>Edge</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="LayoutVertex.html#static-smartComparer" class="tsd-kind-icon">smart<wbr>Comparer</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="LayoutVertex.html#static-standardComparer" class="tsd-kind-icon">standard<wbr>Comparer</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bottom-copyright plr15">
+	Copyright &copy; 1998-2019 by Northwoods Software Corporation.
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+<script src="../../assets/js/api.js"></script>
+<script src="../../assets/js/bootstrap.min.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
+<script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-1506307-5', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+:- dynamic parent/2, ancestor/2, father/2, male/1,abducibles/1.
+
+bias(rule(father(X,Y),_B),
+        [X,Y],
+        [male(X),male(Y),ancestor(X,Y),ancestor(Y,X),parent(X,Y),parent(Y,X)]).
+
+bias(rule(ancestor(X,Y),_B),
+        [X,Y,Z],
+        [parent(X,Y),parent(Y,X),parent(X,Z),ancestor(Z,Y)]).
+        
+abducibles([
+                ancestor(_,_),
+                father(_,_)
+           ]).
+
+ic([parent(a,d)]).
+
+
+eplus([
+	ancestor(a,b),
+	ancestor(b,c),
+	ancestor(d,c),
+	/* 2 positive examples */
+
+	father(a,b)
+	/* 1 positive examples */
+
+	]).
+
+eminus([
+	ancestor(b,a),
+	ancestor(a,d),
+	/* 3 negative examples */
+	father(b,c),
+	father(a,c)
+	/* 3 negative examples */
+
+	]).
+
+parent(a,b).
+parent(b,c).
+parent(d,b).
+/* 2 facts about parent */
+
+male(a).
+/* 1 facts about male */
+
+female(b).
+/* 1 facts about female */

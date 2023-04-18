@@ -1,0 +1,27 @@
+/* father example */
+
+bias(rule(father(X,Y),_Body),[X,Y,Z],
+	[parent(X,Y),parent(Y,X),parent(X,Z),parent(Y,Z),male(X),male(Y),male(Z),
+	female(X),female(Y),female(Z)]).
+
+abducibles([male(_),female(_)]).
+
+ic([]).
+
+eplus([father(john,mary),father(david,steve)]).
+
+eminus([father(katy,ellen),father(john,steve),father(steve,john),father(steve,katy)]). 
+
+
+:-dynamic parent/2, male/1, female/1.
+
+
+parent(john,mary).
+male(john).
+
+parent(david,steve).
+
+parent(katy,ellen).
+female(katy).
+
+
