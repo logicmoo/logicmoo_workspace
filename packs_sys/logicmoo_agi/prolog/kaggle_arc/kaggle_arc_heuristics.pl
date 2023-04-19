@@ -67,6 +67,7 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC00,OutC00):-
 
 
 show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
+ ensure_test(TestID),
  (var(PairName)->maybe_name_the_pair(GridIn,GridOut,PairName);true),
  ignore((pairname_to_examplenum(PairName,ExampleNum)->set_example_num(ExampleNum);ensure_example_num(GridIn,GridOut))),
  must_det_ll((
@@ -101,22 +102,25 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
  w_section(show_individuated_learning,must_det_ll((
    %when_in_html(if_wants_output_for(guess_some_relations,guess_some_relations(InC,OutC))),
    %when_in_html(if_wants_output_for(sort_some_relations,sort_some_relations(InC,OutC))),
+
+    show_object_dependancy(TestID,ExampleNum,InC,OutC),
+ if_t( fail,((
+
+
    w_section(learn_group_mapping,        if_t(sub_var(trn,ID1), learn_group_mapping(InCR,OutCR))),
    ignore((w_section(learn_group_mapping_of_tst, if_t(sub_var(tst,ID1), learn_group_mapping(InCR,OutCR))))), 
-
-
    if_wants_output_for(show_safe_assumed_mapped, show_safe_assumed_mapped),
    if_wants_output_for(show_assumed_mapped, show_assumed_mapped),
 
    if_wants_output_for(show_test_associatable_groups, 
-       forall(member(In1,InC),show_test_associatable_groups(ROptions,ID1,In1,GridOut))), 
+       forall(member(In1,InC),show_test_associatable_groups(ROptions,ID1,In1,GridOut)))), 
 
    if_wants_output_for(try_each_using_training,
      forall(try_each_using_training(InC,GridOut,RulesUsed,OurOut),
       ignore((
        print_grid(try_each_using_training,OurOut),
        nop(pp(RulesUsed)),
-       banner_lines(orange,2))))))))),
+       banner_lines(orange,2))))))))))),
 
   banner_lines(orange,4))))))))))))),!,
   if_wants_output_for(show_interesting_props,  show_interesting_props(PairName,InC,OutC)),!.

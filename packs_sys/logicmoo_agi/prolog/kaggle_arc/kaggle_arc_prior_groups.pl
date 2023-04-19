@@ -2125,6 +2125,7 @@ has_prop(Prop,Obj):- var(Obj),!, enum_object(Obj),nonvar(Obj),has_prop(Prop,Obj)
 has_prop(Prop,Obj):- var(Prop),!,indv_props_list_one(Obj,L),!, member(Prop,L).
 has_prop(and(A,B),Obj):- !, has_prop(A,Obj),has_prop(B,Obj).
 has_prop(call_1(A),Obj):- !, has_prop(AA,Obj),call(A,AA).
+has_prop(( \+ A),Obj):- !, \+ has_prop(A,Obj).
 has_prop(not(A),Obj):- !, \+ has_prop(A,Obj).
 has_prop(or(A,B),Obj):- !, (has_prop(A,Obj);has_prop(B,Obj)).
 has_prop(Prop,Props):- is_obj_props(Props),!,member(Q,Props),(Q=@=Prop -> ! ; ( Q = Prop)).

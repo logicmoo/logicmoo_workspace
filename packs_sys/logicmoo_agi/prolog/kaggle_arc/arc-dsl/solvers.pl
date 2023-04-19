@@ -37,7 +37,7 @@ fix_type_arg(When,Name=Value,Value,ensure_val(When,Name,Value)).
 translate_program(Prop,Merged):- is_list(Prop),
   maplist(translate_call(on_enter),Prop,Call,TransIn0),flatten_code(TransIn0,TransIn1),list_to_set(TransIn1,TransIn),
   maplist(translate_call(on_leave),Prop,Call,TransOut0),flatten_code(TransOut0,TransOut1),
-  reverse(TransOut1,TransOut2),list_to_set(TransOut2,TransOut3),reverse(TransOut3,TransOut).
+  reverse(TransOut1,TransOut2),list_to_set(TransOut2,TransOut3),reverse(TransOut3,TransOut),
   merge_calls(TransIn,TransOut,Merged),!.
 
 merge_calls(TransIn,TransOut,Merged):-
@@ -49,7 +49,7 @@ merge_calls(TransIn,TransOut,Merged):-
  merge_calls(TransInR,TransOutR,TransR),
  append([TransLeft,CallIn,TransR],Merged).
 
-translate_call(On_enter,Prop,[TransIn,Call,TransOut]):-
+translate_call(On_enter,Prog,Call,TransIn):-
   Prog=..[F|ARGS],
   maplist(fix_type_arg(On_enter),ARGS,NARGS,TransIn),
   Call=..[ff,F|NARGS].
@@ -70,11 +70,11 @@ identical_impl_differing_names(replace,subst001).
 translated_call_patterns([upscale,I,Mass,O],  increase_size(Mass,I,O)).
 translated_call_patterns([downscale,I,Mass,O],increase_size(Mass,O,I)).  % Prolog mades automatically bidirectional
 translated_call_patterns([crop,I,TL,BR,O],crop(I,L,T,R,B,O)):- tl_br(TL,T,L),tl_br(BR,B,R).
-translated_call_patterns([switch,N1,N2,O],swap_colors(C1,C2,I,O)):- color_name(N1,C1),color_name(N2,C2).
+translated_call_patterns([switch,N1,N2,O],swap_colors(C1,C2,fg,O)):- color_name(N1,C1),color_name(N2,C2).
 
 maybe_jit_one_test(TestID):-
   clause(l_solve(TestID,IN,OUT),Program),
-  (clause(p_solve(TestID,IN,OUT), Body) -> true;
+  (clause(p_solve(TestID,IN,OUT), Body), % -> true;
    (
     translate_program(Program,Trans),
     list_to_conjucts(Trans,Body),
