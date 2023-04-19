@@ -257,7 +257,7 @@ p2_call(p1_call(P1),E,O):- !, p1_call(P1,E), E=O.
 p2_call([P2],Grid,GridN):- !, p2_call(P2, Grid,GridN).
 p2_call([P2|P2L],Grid,GridN):- !, p2_call(P2, Grid,GridM),p2_call(P2L,GridM,GridN).
 p2_call(ignore(P2),A,B):- p2_call(P2,A,B)*->true;A=B.
-p2_call(type(Type,P2),A,B):- coerce(Type,A,AA),p2_call(P2,AA,B).
+p2_call(type(Type,P2),A,B):- into_type(Type,A,AA),p2_call(P2,AA,B).
 p2_call(or(P2,Q2),A,B):- must_be(callable,P2),!, (p2_call(P2,A,B);p2_call(Q2,A,B)).
 p2_call(and(P2,Q2),A,B):- must_be(callable,P2),!, (p2_call(P2,A,AB),p2_call(Q2,AB,B)).
 p2_call(P2,A,B):- call(P2,A,B).
@@ -269,6 +269,8 @@ p1_not(P1,E):- \+ p1_call(P1,E).
 p1_ignore(P1,E):- ignore(p1_call(P1,E)).
 p1_arg(N,P1,E):- arg(N,E,Arg),p1_call(P1,Arg).
 p1_subterm(P1,E):- sub_term(Arg,E),p1_call(P1,Arg).
+
+:- meta_predicate my_partition(-, ?, ?, ?).
 my_partition(_,[],[],[]):-!.
 my_partition(P1,[H|L],[H|I],E):- \+ \+ p1_call(P1,H),!,
   my_partition(P1,L,I,E).

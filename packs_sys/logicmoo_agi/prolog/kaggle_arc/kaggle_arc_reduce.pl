@@ -600,7 +600,7 @@ reduce_grid_pair1(AB,OPS,ARBR):- fail,  \+ ground(AB),
  must_det_ll((
   protect_vars(AB,ABC,Unprotect),
   my_assertion(ground(ABC)))),
- reduce_grid_pair2(ABC,OPSP+ARBRP),
+ reduce_grid_pair2(ABC,OPSP,ARBRP),
  must_det_ll((
   call(Unprotect,OPSP+ARBRP,OPS+ARBR),
   my_assertion((\+ contains_numberedvars(AB+ARBR))))),!.

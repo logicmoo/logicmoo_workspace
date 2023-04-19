@@ -365,7 +365,7 @@ current_how_else(HOW,Stuff1,Stuff2):-
 
 guess_how_else([HOW|HOW_ELSE],I,O,Stuff1,Stuff2):-
   guess_how(HOW,I,O,MID1,MID2),
-  maplist(guess_how_else,how,HOW_ELSE,MID1,MID2,Stuff1,Stuff2),!.
+  maplist(guess_how_else,HOW_ELSE,MID1,MID2,Stuff1,Stuff2),!.
 guess_how_else([],I,O,I,O).
 
 guess_how(HOW,I1,O1,Stuff1,Stuff2):-
@@ -406,14 +406,14 @@ toggle_values([],[]).
 toggle_val(Lst,V):- is_list(Lst),!,member(V,Lst).
 toggle_val(N,V):- member(TF,[false,true]), V =..[N,TF].
 
-
+:- dynamic(arc_cache:indv_flag/2).
 is_fti_step(set_indv_flags).
 set_indv_flags(X,_VM):- set_indv_flags(X),!.
 set_indv_flags(X):- is_list(X),!,maplist(set_indv_flags,X).
-set_indv_flags(NV):- NV=..[N,V],assert(indv_flag(N,V)). 
+set_indv_flags(NV):- NV=..[N,V],retractall(arc_cache:indv_flag(N,_)),assert(arc_cache:indv_flag(N,V)). 
 
 is_fti_step(which_tf).
-which_tf(Name,True,False,VM):- (indv_flag(Name,true)->run_fti(VM,True);run_fti(VM,False)).
+which_tf(Name,True,False,VM):- (arc_cache:indv_flag(Name,true)->run_fti(VM,True);run_fti(VM,False)).
 
 is_fti_step(nop).
 
@@ -1504,11 +1504,11 @@ get_gpoints_and_props(Props,RGOPoints,PropsO):-
 
 
 /*
+
+*/
 to_props_and_globalpoints(ObjL,_Ans,_GOPoints):- is_grid(ObjL),!,fail.
 to_props_and_globalpoints(ObjL,Ans,GOPoints):- get_gpoints_and_props(ObjL,GOPoints,Ans).
 ogs_into_obj_props( OutGrid,AnsProps,Obj):- like_object(AnsProps,OutGrid,Obj),!.
-
-*/
 
 like_object(Ans,Out,ObjO):- 
   get_gpoints_and_props(Ans,GOPoints,Props),

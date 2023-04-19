@@ -1557,7 +1557,7 @@ print_single_pair_pt2(TestID,ExampleNum,In,Out):- is_cgi,!,
  (ID1 = (TestID>ExampleNum*in)),
  (ID2 = (TestID>ExampleNum*out)),
  print_ss_html_pair(cyan, 
-   NameIn,navCmd((TestID>ExampleNum)),ID1,In,'Input',
+   NameIn,navCmd((TestID>ExampleNum)),ID1,In,wqs('Input'),
    TestAtom,navCmd((TestAtom)),ID2,Out,RightTitle))),!.
 print_single_pair_pt2(TestID,ExampleNum,In1,Out1):- 
    in_out_name(ExampleNum,NameIn,NameOut),!,%easy_diff_idea(TestID,ExampleNum,In1,Out1,LIST),!,
@@ -1632,6 +1632,7 @@ easy_diff_idea(TestID,ExampleNum,In,Out,[NameIn=In,(NameOut+TestID)=Out]):-
 
 other_grid_mode(I^O,II^OO):- with_next_grid_mode((as_d_grid(I,II),as_d_grid(O,OO))).
 
+:- meta_predicate in_out_name(-,+,+).
 %in_out_name(trn+NN,SI,SO):- arc_html,N is NN+1, format(atom(SI),'Training Pair #~w Input',[N]),format(atom(SO),'Training Pair #~w Output',[N]),!.
 in_out_name(trn+N,SI,SO):- into_title_str(trn+N,SI), format(atom(SO),'Output',[]),!.
 in_out_name(tst+N,SI,SO):- into_title_str(tst+N,SI), format(atom(SO),'Output<(REVEALED)>',[]),!.
@@ -2188,7 +2189,7 @@ fix_id_1(Tried,   TriedV):- atom_id(Tried,TriedV),!.
 %DD2401ED
 atom_id(NonAtom,TriedV):- \+ atom(NonAtom),string(NonAtom),!,atom_string(Tried,NonAtom),atom_id(Tried,TriedV).
 %0934a4d8 %07654321
-atom_id(NonAtom,_TriedV):- \+ atom(NonAtom),!,number(NonAtom), fail, todo.
+atom_id(NonAtom,_TriedV):- \+ atom(NonAtom),!,number(NonAtom), fail. %, todo.
 atom_id(Tried,TriedV):- atom_concat(Atom,'.json',Tried),!,atom_id(Atom,TriedV),!.
 atom_id(Atom,TriedV):- atom_id_e(Atom,TriedV),!.
 atom_id(Atom,TriedV):- downcase_atom(Atom,Tried),Atom\==Tried,atom_id(Tried,TriedV).

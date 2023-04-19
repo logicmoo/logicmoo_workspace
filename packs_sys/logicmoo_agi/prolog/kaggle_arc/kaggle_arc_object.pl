@@ -784,6 +784,7 @@ aggregates(link(_,_)).
 aggregates(insideOf(_)).
 
 %is_bg_object(Obj):- get_black(Black),has_prop(pen(  [cc(Black,_)]),Obj).
+is_bg_object(Obj):- is_mapping(Obj),!,fail.
 is_bg_object(Obj):- has_prop(cc(fg,0),Obj),!, \+ is_whole_grid(Obj).
 is_bg_object(Obj):- \+ is_object(Obj),sub_var(cc(fg,0),Obj),!.
 

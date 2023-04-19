@@ -394,7 +394,8 @@ uniqueness_prop(mass(_)).
 
 
 indiv_show_pairs_input(_Peers,_Shown,_List,Indv):- nb_current(menu_key,'o'),!, dg(Indv).
-indiv_show_pairs_input(_Peers,_Shown,_List,Indv):- get_current_test(TestID), print_info(Indv), ignore(what_unique(TestID,Indv)).
+indiv_show_pairs_input(_Peers,_Shown,_List,Indv):- get_current_test(TestID), print_info(Indv), 
+  nop(ignore(what_unique(TestID,Indv))).
 
 indiv_show_pairs_output(_Peers,_Shown,_List,Indv):- nb_current(menu_key,'o'),!, dg(Indv).
 %indiv_show_pairs_output(_Peers,_Shown,_List,Indv):- has_prop(pen([cc('black',_)]),Indv),!, dash_chars, nop(show_indiv(Indv)).
@@ -498,7 +499,7 @@ map_objects(TITLE,PeersI,O2,PeersO,O2):-
  if_t(nb_current(menu_key,'u'),
  (
   indv_props_list(O1,S1),indv_props_list(O2,S2),
-  get_current_test(TestID), ignore(what_unique(TestID,O1)),
+  get_current_test(TestID), nop(ignore(what_unique(TestID,O1))),
   remove_giz(S1,T1),remove_giz(S2,T2),
   indv_u_props(O1,IU),indv_u_props(O2,OU),
   intersection(T1,T2,Sames,IA,OA),my_maplist(refunctor,Sames,NewSames),
@@ -1234,6 +1235,8 @@ get_prop(Test,O1,Prop):-
 prop_specifier(F,Prop):- Prop=..[F,_].
 prop_specifier(F,Prop):- Prop=..[F,_,_].
 prop_specifier(Spec,Prop):- Spec=..[F,A],Prop=..[F,A,_].
+
+equiv_props(Prop1,Prop2):- not_differ_props(Prop1,Prop2).
 
 equiv_props(Nil,_,_):- Nil==[],!.
 equiv_props([H|T],O1,O2):- is_list(T),!,equiv_props(H,O1,O2),equiv_props(T,O1,O2).

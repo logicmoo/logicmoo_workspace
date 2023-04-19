@@ -518,6 +518,9 @@ color_overlap_cc(FG1,FG2):-
 size_overlap_cc(FG1,FG2):-
   maplist(arg_same(2),FG1,FG2).
 
+arg_same(N,Term,Value):-
+  arg(N,Term,Same),
+  Same =@= Value.
 
 
 

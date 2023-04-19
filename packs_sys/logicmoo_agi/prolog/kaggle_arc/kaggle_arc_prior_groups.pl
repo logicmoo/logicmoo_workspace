@@ -370,7 +370,7 @@ show_interesting_comp_diffs(Named,P2,P2A,ObjsI,ObjsO):-
    call(P2,ObjsI,HAD1), call(P2,ObjsO,HAD2),
    w_section(show_interesting_compare(P2,Named),
      must_det_ll((
-      show_changed_diffs(t(P2,Named),P2A,HAD1,HAD2)))))).
+      show_changed_diffs(t(P2,Named),Named,P2A,HAD1,HAD2)))))).
 
 pp_non_nil_e(_,PP):- PP == [],!.
 pp_non_nil_e(Named,PP):- nl,listify(PP,LL),wqs(Named),nl,maplist(pp,LL),nl.
@@ -1621,7 +1621,7 @@ not_care_to_count(giz(_)).
 not_care_to_count(elink(_,_)).
 
 not_care_to_count(_):- !, fail.
-not_care_to_count(Cmpd):- arg(_,Cmpd,E),is_gridoid(E),!, \+ grid(E).
+not_care_to_count(Cmpd):- arg(_,Cmpd,E),is_gridoid(E),!, \+ is_grid(E).
 not_care_to_count(Cmpd):- arg(_,Cmpd,E),is_points_list(E),!.
 %not_care_to_count(iz(info(_))).
 %not_care_to_count(iz(HasNumber)):- sub_term(N,HasNumber),number(N),!.
@@ -2528,8 +2528,8 @@ get_is_for_ilp(_,_,input, :-(D) ):-
 
 get_is_for_ilp(_,_,input, :-(D) ):- get_is_for_ilp(_,_,determination, D ).
 
-get_is_for_ilp(TestID,common,logicmoo_ex,accompany_changed(TestID,P,Same)):- 
-  is_accompany_changed_db(TestID,P,Same).
+get_is_for_ilp(TestID,common,logicmoo_ex,is_accompany_changed_db(TestID,IO,P,Same)):-
+  is_accompany_changed_db(TestID,IO,P,Same).
 
 
 get_is_for_ilp(_,_,liftcover_ex,D):- read_terms_from_atom(D, '

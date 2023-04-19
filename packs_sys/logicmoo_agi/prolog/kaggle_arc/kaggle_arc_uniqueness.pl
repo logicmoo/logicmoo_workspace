@@ -113,6 +113,9 @@ compute_scene_change_pass2(TestID):-
 assert_ilp_new(Term):- clause_asserted(Term),!.
 assert_ilp_new(Term):- pp(assert_ilp_new=Term),!, assert_if_new(Term).
 
+assert_become_new(Term):- clause_asserted(Term),!.
+assert_become_new(Term):- pp_obj_to_grids(assert_become_new=Term),!, assert_if_new(Term).
+
 
 solve_via_scene_change(TestID):-  
  ensure_test(TestID),
@@ -194,7 +197,7 @@ compute_scene_change_pass3c(_,_).
 
 update_accompany_changed_db(TestID,IO,P,Kept):- Kept\==[],
    forall(retract(is_accompany_changed_db(TestID,IO,P,_)),true),
-   assert_ilp_new(is_accompany_changed_db(TestID,IO,P,Kept)).
+   assert_become_new(is_accompany_changed_db(TestID,IO,P,Kept)).
 
 at_least_one_overlap(DSame,Same):-
   member(DS,DSame),member(S,Same),
@@ -213,7 +216,7 @@ correct_antes1(_TestID,_P,Same,Same).
 correct_antes2(TestID,IO,P,Same,Kept):-    
    is_accompany_changed_db(TestID,DP,DSame),
    other_val(P,DP),
-   include(other_vals_from(DSame),Same,Kept), Kept\==[],!.
+   include(other_vals_frm(DSame),Same,Kept), Kept\==[],!.
 correct_antes2(_TestID,_P,Same,Same).
 other_vals_from(DSame,E):- member(DS,DSame),other_val(E,DS),!.
  
@@ -340,10 +343,12 @@ obj_group_io_1(TestID,ExampleNum,IO,O):- obj_group_io_1a(TestID,ExampleNum,IO,O)
 obj_group_io_1(TestID,ExampleNum,IO,O):- obj_group_io_1b(TestID,ExampleNum,IO,O), \+ obj_group_io_1a(TestID,ExampleNum,IO,O).
 
 obj_group_io_1a(TestID,ExampleNum,IO,O):- obj_group_io(TestID,ExampleNum,IO,Objs),Objs\==[],member(O,Objs).
-obj_group_io_1b(TestID,ExampleNum,IO,O):- arc_cache:map_pairs(TestID,ExampleNum,Left,Right), member(O,[Left,Right]),has_prop(giz(g(IO)),O).
+obj_group_io_1b(TestID,ExampleNum,IO,O):- arc_cache:map_pairs(TestID,ExampleNum,IO,Left,Right), member(O,[Left,Right]),has_prop(giz(g(IO)),O).
   
 
 
+%in_out
+%grp([in,out])-> out
 
 
 prop_can1(IO,Prop,Can):-  
@@ -532,7 +537,7 @@ obj_group5(TestID,ExampleNum,IO,ROptions,Objs):-
 
 
 % =============================================================
-show_object_dependancy(TestID):-  
+show_object_dependancy(TestID):-
 % =============================================================
  ensure_test(TestID),
  forall(kaggle_arc(TestID,ExampleNum,_,_),
@@ -540,35 +545,103 @@ show_object_dependancy(TestID):-
 
 show_object_dependancy(TestID,ExampleNum):-  
   forall(obj_group_gg(TestID,ExampleNum,LHSObjs,RHSObjs),
-    show_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs)).
+    show_object_dependancy(TestID>ExampleNum,LHSObjs,RHSObjs)).
 
-show_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs):-
+show_object_dependancy(TestIDExampleNum,LHSObjs,RHSObjs):-
   maybe_remove_bg(LHSObjs,LHSObjs1),
   maybe_remove_bg(RHSObjs,RHSObjs1),
   calc_object_dependancy(LHSObjs1,RHSObjs1,Groups),
-  maplist(into_lst,Groups,Grps),
-  sort_by_generation(Grps,SortedByGen),
-  maplist(assert_map_groups(TestID,ExampleNum),SortedByGen),!.
-
-assert_map_groups(TestID,ExampleNum,LeftRight):-!,
-  if_t(LeftRight\=[_,_], print_ss(map_group(TestID,ExampleNum)=LeftRight)),
-  assert_ilp_new(arc_cache:map_group(TestID,ExampleNum,LeftRight)),
-  assert_map_pair_list(TestID,ExampleNum,LeftRight).
-
-assert_map_pair_list(_TestID,_ExampleNum,[]):-!.
-assert_map_pair_list(TestID,ExampleNum,[Left,Right]):- is_object(Left), is_object(Right), !, assert_map_pairs(TestID,ExampleNum,Left,Right),!.
-assert_map_pair_list(TestID,ExampleNum,[Left|Right]):- into_lst(Left,L1),[Left]\=@=L1,append(L1,Right,LR),!,assert_map_pair_list(TestID,ExampleNum,LR).
-assert_map_pair_list(TestID,ExampleNum,[Left,Right,M|More]):- 
-  assert_map_pair_list(TestID,ExampleNum,[Left,Right]),!,
-  assert_map_pair_list(TestID,ExampleNum,[Right,M|More]).
-
-assert_map_pairs(TestID,ExampleNum,Left,Right):-
-  %print_ss(map_pair(TestID,ExampleNum),Left,Right),
-  assert_ilp_new(arc_cache:map_pairs(TestID,ExampleNum,Left,Right)).
+  pp_obj_to_grids(show_object_dependancy(TestIDExampleNum)==>Groups).
+  %maplist(assert_map_groups(TestID,ExampleNum,in),Groups),!.
 
 
-:- dynamic(arc_cache:map_pairs/4).
-:- dynamic(arc_cache:map_group/3).
+% =============================================================
+print_object_dependancy(TestID):-
+% =============================================================
+ ensure_test(TestID),
+ forall(kaggle_arc(TestID,ExampleNum,_,_),
+     ignore((print_object_dependancy(TestID,ExampleNum)))).
+print_object_dependancy(TestID,ExampleNum):-  
+  forall(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight),
+    pp_obj_to_grids(map_group(TestID,ExampleNum,IO,LeftRight))),
+  forall(arc_cache:map_pairs(TestID,ExampleNum,IO,Left,Right),
+    pp_obj_to_grids(map_pairs(TestID,ExampleNum,IO,Left,Right))).
+
+pp_obj_to_grids(TermWithObjs):-
+  into_solid_grid_strings(TermWithObjs,TermWithGrids),
+  pp(TermWithGrids),!.
+
+into_solid_grid_strings(TermWithObjs,TermWithGrids):-
+  sub_term(Obj,TermWithObjs),Obj\=@=TermWithObjs,is_mapping(Obj),
+  into_solid_grid_strings(Obj,Grid),!,
+  subst001(TermWithObjs,Obj,Grid,TermWithObjsAndGrids),
+  into_solid_grid_strings(TermWithObjsAndGrids,TermWithGrids).
+into_solid_grid_strings(TermWithObjs,TermWithGrids):-
+  sub_term(Obj,TermWithObjs),Obj\=@=TermWithObjs,is_grid(Obj),
+  into_solid_grid_str(Obj,Grid),!,
+  subst001(TermWithObjs,Obj,Grid,TermWithObjsAndGrids),
+  into_solid_grid_strings(TermWithObjsAndGrids,TermWithGrids).
+into_solid_grid_strings(TermWithObjs,TermWithGrids):-
+  sub_term(Obj,TermWithObjs),Obj\=@=TermWithObjs,is_object(Obj),
+  into_solid_grid_str(Obj,Grid),!,
+  subst001(TermWithObjs,Obj,Grid,TermWithObjsAndGrids),
+  into_solid_grid_strings(TermWithObjsAndGrids,TermWithGrids).
+into_solid_grid_strings(TermWithGrids,TermWithGrids).
+%  \+ arc_cache:map_group(TestID,ExampleNum,IO,LeftRight),
+
+into_solid_grid_str(Obj,GridStr):- into_solid_grid(Obj,Grid),!,wots(GridStr,print_grid(Grid)).
+
+% =============================================================
+clear_object_dependancy(TestID):-
+% =============================================================
+ ensure_test(TestID),
+ forall(kaggle_arc(TestID,ExampleNum,_,_),
+     ignore((clear_object_dependancy(TestID,ExampleNum)))).
+clear_object_dependancy(TestID,ExampleNum):-  
+  forall(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight),
+    retract(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight))),
+  forall(arc_cache:map_pairs(TestID,ExampleNum,IO,Left,Right),
+    retract(arc_cache:map_pairs(TestID,ExampleNum,IO,Left,Right))).
+
+
+% =============================================================
+calc_object_dependancy(TestID):-
+% =============================================================
+ ensure_test(TestID),
+ forall(kaggle_arc(TestID,ExampleNum,_,_),
+     ignore((calc_object_dependancy(TestID,ExampleNum)))).
+
+calc_object_dependancy(TestID,ExampleNum):-  
+  forall(obj_group_gg(TestID,ExampleNum,LHSObjs,RHSObjs),
+    calc_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs)).
+
+calc_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs):-
+  maybe_remove_bg(LHSObjs,LHSObjs1),
+  maybe_remove_bg(RHSObjs,RHSObjs1),
+  calc_object_dependancy(LHSObjs1,RHSObjs1,Groups),
+  maplist(assert_map_groups(TestID,ExampleNum,in),Groups),!.
+
+
+assert_map_groups(TestID,ExampleNum,IO,LeftRight):-!,
+  into_lst(LeftRight,LeftRightList),
+  if_t(LeftRightList\=[_,_], print_ss(map_group(TestID,ExampleNum,IO)=LeftRightList)),
+  assert_become_new(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight)),
+  assert_map_pair_list(TestID,ExampleNum,IO,LeftRight).
+
+assert_map_pair_list(_TestID,_ExampleNum,_IO,[]):-!.
+assert_map_pair_list(TestID,ExampleNum,IO,[Left,Right]):- is_object(Left), is_object(Right), !, assert_map_pairs(TestID,ExampleNum,IO,Left,Right),!.
+assert_map_pair_list(TestID,ExampleNum,IO,[Left|Right]):- into_lst(Left,L1),[Left]\=@=L1,append(L1,Right,LR),!,assert_map_pair_list(TestID,ExampleNum,IO,LR).
+assert_map_pair_list(TestID,ExampleNum,IO,[Left,Right,M|More]):- 
+  assert_map_pair_list(TestID,ExampleNum,IO,[Left,Right]),!,
+  assert_map_pair_list(TestID,ExampleNum,IO,[Right,M|More]).
+
+assert_map_pairs(TestID,ExampleNum,IO,Left,Right):-
+  %print_ss(map_pair(TestID,ExampleNum,IO),Left,Right),
+  assert_become_new(arc_cache:map_pairs(TestID,ExampleNum,IO,Left,Right)),!.
+
+
+:- dynamic(arc_cache:map_pairs/5).
+:- dynamic(arc_cache:map_group/4).
 
    
   
@@ -578,10 +651,13 @@ sort_by_generation(Grps,Grps).
 maybe_remove_bg(RHSObjs,RHSObjs1):- my_partition(is_fg_object,RHSObjs,RHSObjs1,Rest),RHSObjs1\==[],Rest\==[],!.
 maybe_remove_bg(RHSObjs,RHSObjs).
 
-calc_object_dependancy(Nil,Objs,RestLR):- maplist(is_bg_object,Nil),
-   maplist(is_functor(grp),Objs),!, Objs=RestLR.
-calc_object_dependancy(Objs,Nil,RestLR):- maplist(is_bg_object,Nil),
-   maplist(is_functor(grp),Objs),!, Objs=RestLR.
+is_mapping_list([O|GrpL]):- is_mapping(O),is_list(GrpL),maplist(is_mapping,GrpL).
+is_mapping(Grp):- is_functor(grp,Grp).
+
+calc_object_dependancy(Nil,Mappings,RestLR):- maplist(is_bg_object,Nil),
+   is_mapping_list(Mappings),!, Mappings=RestLR.
+calc_object_dependancy(Mappings,Nil,RestLR):- maplist(is_bg_object,Nil),
+   is_mapping_list(Mappings),!, Mappings=RestLR.
 calc_object_dependancy(Nil,Objs,RestLR):- maplist(is_bg_object,Nil),
    split_sorted(Objs,SplitLHS,SplitRHS),
    SplitLHS\==[],SplitRHS\==[],!,
@@ -642,14 +718,14 @@ split_sorted(Objs,_Len,Prime,SplitLHS,SplitRHS):-
  variance_counts(Objs,PropObjsounts),
  findall(E,(member(E,PropObjsounts),sub_var(Prime,E)),EL),
  member(E,EL),into_prop(E,P),
- my_partition(has_prop(P),Objs,SplitLHS,SplitRHS).
+ my_partition(has_prop(P),Objs,SplitLHS,SplitRHS),!.
 
 split_sorted(Objs, Len,Prime,SplitLHS,SplitRHS):- 
  Half is Len div Prime,
  count_each_value(Objs,PropObjsounts),
  findall(E,(member(E,PropObjsounts),sub_var(Prime,Half)),EL),
  member(E,EL),into_prop(E,P),
- my_partition(has_prop(P),Objs,SplitLHS,SplitRHS).
+ my_partition(has_prop(P),Objs,SplitLHS,SplitRHS),!.
 
 into_prop(CC,P):- sub_term(E,CC),compound(E),is_prop1(E),!,E=P.
 
@@ -711,167 +787,47 @@ select_group0(TestID,Group,How):-
 
 select_group0(TestID,Group,obj_cache):- findall(O,obj_cache(TestID,O,_),GroupJ), GroupJ\==[], sort_safe(GroupJ,Group).
 
-:- arc_history(test_what_unique).
-test_what_unique:- get_current_test(TestID), what_unique(TestID,n=0,n>10).
-
-
-:- arc_history((get_current_test(TestID),what_unique(TestID,n=0,n>10))).
-get_new_uniq_dict(Dict):- 
-    ArgDict = _{sharedWith:_SharedWith,object:_Obj,trait:_Trait,groupSizeMask:_GroupSizeMask,
-  actualGroupSize:_ActualGroupSize,countMask:_CountMask,
-  actualCount:_ActualCount,otherL:_OtherL,slistL:_ListL,
-  setL:_SetL,others:_TraitCountSets,how:_How,group:_Group},
-  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict).
-
-is_fti_step(most_unique).
-most_unique(symmetry_type,VM):-
-  List = VM.objs,
-  last(List,Obj),
-  set(VM.solution)= Obj.
-
-
-  
-
-what_unique:- get_current_test(TestID),what_unique(TestID).
-
-what_unique(TestID):- 
-   get_vm(VM),
-   ((VM.id \= (TestID > _ * _)), ndividuator),
-   get_vm(VM2), explain_uniqueness(VM2.objs).
-
-what_unique(TestID,Dict):- is_vm_map(Dict),!,what_unique_dict(TestID,Dict).
-what_unique(TestID,Obj):- get_current_test(TestID),select_group(TestID,Group,_How), member(Obj,Group), must_det_ll(what_unique(TestID,Obj,Group)).
-what_unique(TestID,Obj,Group):- (is_group(Group);is_object(Obj)),!,what_unique_obj(TestID,Obj,Group).
-what_unique(TestID,CountMask,GroupSizeMask):-
-  get_new_uniq_dict(Dict),
-  Dict.groupSizeMask = GroupSizeMask,
-  Dict.countMask = CountMask,!,
-  what_unique_dict(TestID,Dict),
-  report_unique(Dict).
-
-get_peers(Obj,Peers):- 
-  get_current_test(TestID),select_group(TestID,Group,_How), select(Obj,Group,Peers).
-
-peerless_props(O1,Peers,PeerlessProps):-
- must_det_ll(( indv_props_list(O1,Props),
-               (var(Peers)->get_peers(O1,Peers);true),
-               (select(O1,Peers,PeersU)->true;PeersU=Peers),
-  include(is_peerless_prop(PeersU),Props,PeerlessProps))).
-
-not_peerless_props(O1,Peers,PeerlessProps):-
- must_det_ll(( indv_props_list(O1,Props),
-               (var(Peers)->get_peers(O1,Peers);true),
-               (select(O1,Peers,PeersU)->true;PeersU=Peers),
-  include(not_peerless_prop(PeersU),Props,PeerlessProps))).
-
-is_peerless_prop(Peers,Prop):- \+ sub_var(Prop,Peers).
-not_peerless_prop(Peers,Prop):- sub_var(Prop,Peers).
-
-what_unique_obj:- get_current_test(TestID),what_unique_obj(TestID,_,_).
-what_unique_obj(TestID,Obj,Group):- 
-  get_new_uniq_dict(Dict),
-  Dict.group = Group,
-  Dict.object = Obj,
-  what_unique_dict(TestID,Dict),
-  report_unique(Dict).
-
-/*what_unique(TestID,CountMask,GroupSizeMask):-
- what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,TraitCounts,How),
- report_unique(SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,TraitCounts,How).
-*/
-report_unique(Dict):- var(Dict),get_new_uniq_dict(Dict),!,report_unique(Dict).
-report_unique(Dict):- var(Dict.actualCount),!,get_current_test(TestID), what_unique_dict(TestID,Dict),report_unique(Dict).
-report_unique(Dict):-
- must_det_ll((
-  ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
-  actualGroupSize:ActualGroupSize,countMask:CountMask,
-  actualCount:ActualCount,otherL:OtherL,listL:ListL,
-  setL:SetL,others:TraitCountSets,how:How,group:Group},
-  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict),
-  maplist_e(tersify,TraitCountSets,HTraitSetO),
-  maplist_e(tersify,SharedWith,SharedWithO),
-  maplist_e(tersify,Group,GroupO),
-  maplist_e(tersify,Obj,ObjO),
-  %(Obj\==[] -> ignore(print_grid(Obj)) ; true),
-  format('~N'), pp(what_unique(ObjO=[ActualCount/ActualGroupSize-Trait],sharedWith=SharedWithO,
-  setL/listL=SetL/ListL,others=HTraitSetO,how=How,
-  groupSizeMask=GroupSizeMask,group:GroupO,countMask=CountMask,otherL=OtherL)))).
-
-maplist_e(P2,A,B):- is_list(A),!,mapgroup(P2,A,B).
-maplist_e(P2,A,B):- call(P2,A,B).
-
-:- style_check(-singleton).
-%:- arc_history(what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
-:- style_check(+singleton).
-
-
-obj_exclude(Obj,Group,Others):- var(Obj),!,select(Obj,Group,Others).
-obj_exclude(Obj,Group,Others):- select(O,Group,Others),(O==Obj *-> true; Group=Others).
-
-
-what_unique_dict(TestID,Dict):- 
-  ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
-  actualGroupSize:ActualGroupSize,countMask:CountMask,
-  actualCount:ActualCount,otherL:OtherL,listL:ListL,
-  setL:SetL,others:TraitCountSets,how:How,group:Group},
-  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict),
-  (var(Group)->(select_group(TestID,Group,How));true),
-  obj_exclude(Obj,Group,Others),  
-  length_criteria(Group,GroupSizeMask),
-  length(Group,ActualGroupSize),
-  mapgroup(each_trait,[Obj|Others],[_-ObjT|TraitList]),
-  member(Trait,ObjT),
-  \+ too_non_unique(Trait),
-  \+ too_unique(Trait),
-  found_in_o(Trait,TraitList,SharedWith),
-  length_criteria(SharedWith,CountMask),
-  length(SharedWith,ActualCount),
-   freeze(B,\+ \+ (member(E,SharedWith), E==B)),
-   my_partition(=(B-_),TraitList,_Mine,NotMine),
-   length(NotMine,OtherL),   
-   %dif(WTrait,Trait),
-   functor(Trait,F,A),functor(WTrait,F,A),
-   found_in_w(WTrait,NotMine,HTraitList),length(HTraitList,ListL),
-   sort_safe(HTraitList,HTraitSet),length(HTraitSet,SetL),
-   findall(C-HTrait,(member(HTrait,HTraitSet),found_in_w(HTrait,NotMine,LS),length(LS,C)),TraitCounts),
-   sort_safe(TraitCounts,TraitCountSets),
-   \+ filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How).
-
-
-explain_uniqueness(GroupWhole):-
-  object_printables(GroupWhole,Group,GroupPP),
-  get_current_test(TestID),!,
-  forall(member(Obj,Group),
-   (dash_chars,
-    object_glyph(Obj,G), object_color_glyph_short(Obj,GC), object_grid(Obj,OG), 
-    locally(nb_setval(color_index,[Obj|GroupPP]),print_side_by_side(GC,GroupPP,'explain_uniqueness',_,OG,G)),
-    dmsg(uobj=Obj),!,
-    forall(what_unique_obj(TestID,Obj,Group),true))),
-  dash_chars.
-
-
-% touching vs each dir
-% size2D
 
 
 
-:- style_check(-singleton).
-filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How):-
-  OtherL=<1.
-
-filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How):-
- ListL=SetL, SetL>1.
 
 
-/*
 
-With each type of example we can have...
 
-values_all_same|values_all_dif
-values_where_1_stand_otherwise
-values_where_2_stand_otherwise
 
-*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+too_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_unique(F).
+%too_unique(obj_to_oid).
+too_unique(globalpoints).
+%too_unique(o).
+too_unique(link).
+too_unique(obj_to_oid).
+too_unique(/*b*/iz).
+%good_overlap(colorlesspoints).
+
+good_overlap(P):- compound(P),!,compound_name_arity(P,F,_),!,good_overlap(F).
+good_overlap(localpoints).
+good_overlap(rot2D).
+
+too_non_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_non_unique(F).
+too_non_unique(grid_size).
+too_non_unique(grid_sz).
+%too_non_unique(/*b*/iz).
+too_non_unique(grid).
+too_non_unique(changes).
+
 
 
 
@@ -939,25 +895,7 @@ each_1trait(T,T):- \+ too_verbose(T).
 each_trait(Obj,Obj-S):- findall(T,each_1trait(Obj,T),L),list_to_set(L,S).
 
 
-too_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_unique(F).
-%too_unique(obj_to_oid).
-too_unique(globalpoints).
-%too_unique(o).
-too_unique(link).
-too_unique(obj_to_oid).
-too_unique(/*b*/iz).
-%good_overlap(colorlesspoints).
 
-good_overlap(P):- compound(P),!,compound_name_arity(P,F,_),!,good_overlap(F).
-good_overlap(localpoints).
-good_overlap(rot2D).
-
-too_non_unique(P):- compound(P),!,compound_name_arity(P,F,_),!,too_non_unique(F).
-too_non_unique(grid_size).
-too_non_unique(grid_sz).
-%too_non_unique(/*b*/iz).
-too_non_unique(grid).
-too_non_unique(changes).
 
 %too_non_unique(mass).
 
@@ -978,3 +916,23 @@ tesT_compare_objects:- compare_objects([
     obj([mass(1),shape_rep(grav,[hv(1,1)]),colors_cc([cc(yellow,1.0)]),localpoints([yellow-hv(1,1)]),vis2D(1,1),rot2D(sameR),loc2D(6,1),changes([]),iz(type(dots)),iz(shape_rep(grav,dot)),iz(filltype(solid)),iz(jagged(true)),center2G(6,1),obj_to_oid(t(af902bf9)>(tst+0)*in,44),globalpoints([yellow-point_06_01]),grid_size(10,10),iz(important)])],
     OUTPUT),
   print(OUTPUT).
+
+
+get_peers(Obj,Peers):- 
+  get_current_test(TestID),select_group(TestID,Group,_How), select(Obj,Group,Peers).
+
+peerless_props(O1,Peers,PeerlessProps):-
+ must_det_ll(( indv_props_list(O1,Props),
+               (var(Peers)->get_peers(O1,Peers);true),
+               (select(O1,Peers,PeersU)->true;PeersU=Peers),
+  include(is_peerless_prop(PeersU),Props,PeerlessProps))).
+
+not_peerless_props(O1,Peers,PeerlessProps):-
+ must_det_ll(( indv_props_list(O1,Props),
+               (var(Peers)->get_peers(O1,Peers);true),
+               (select(O1,Peers,PeersU)->true;PeersU=Peers),
+  include(not_peerless_prop(PeersU),Props,PeerlessProps))).
+
+is_peerless_prop(Peers,Prop):- \+ sub_var(Prop,Peers).
+not_peerless_prop(Peers,Prop):- sub_var(Prop,Peers).
+

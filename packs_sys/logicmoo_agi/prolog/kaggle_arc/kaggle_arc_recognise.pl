@@ -788,7 +788,7 @@ uaf(Fm,Fi,Fo,_,_):- plus(Fi,1,Fo),Fm>Fo.
 
 % unify penalizing a resource each failure
 upref(Resource,O1,O2):-
-  resource_value(Resource,Value),
+  b_get_resource(Resource,Value),
   uaf(Value,0,Used,O1,O2),
   ((Used>0) ->  
     (plus(Value,-Used,NewValue),b_set_resource(Resource,NewValue)) 
@@ -798,6 +798,9 @@ uaf_append(Fm,Fi,Fo,[], L1, L2):- uaf(Fm,Fi,Fo,L1,L2).
 uaf_append(Fm,Fi,Fo,[H1|T], L, [H2|R]) :- uaf(Fm,Fi,Fn,H1,H2),
     uaf_append(Fm,Fn,Fo,T, L, R).
 
+
+b_set_resource(Resource,Value):- b_setval(Resource,Value).
+b_get_resource(Resource,Value):- b_getval(Resource,Value).
 % append allowing some failures (cells only)
 
   
@@ -1196,6 +1199,8 @@ fpad_grid(_CT,P1,Grid,Grid2):-
 
 maybe_into_grid(I,O):- \+ is_grid(I), into_grid(I,O), I \=@=O,!.
 
+constrain_grid(CT,Trig,Grid,GridO):-
+  constrain_grid(_CntDwn,CT,Trig,Grid,GridO).
 
 %constrain_grid_f(Grid2,GridO):- Grid2=GridO.
 %constrain_grid_f(Grid2,Trig,GridO):- constrain_grid(CntDwn,f,Trig,Grid2,GridO),!.

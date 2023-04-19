@@ -34,6 +34,8 @@ fix_type_arg(_When,Var,Var,true):- is_ftVar(Var),!.
 fix_type_arg(When,Var:Type,Var,ensure_type(When,Var,Type)).
 fix_type_arg(When,Name=Value,Value,ensure_val(When,Name,Value)).
 
+flatten_code(A,B):- flatten(A,B),!.
+
 translate_program(Prop,Merged):- is_list(Prop),
   maplist(translate_call(on_enter),Prop,Call,TransIn0),flatten_code(TransIn0,TransIn1),list_to_set(TransIn1,TransIn),
   maplist(translate_call(on_leave),Prop,Call,TransOut0),flatten_code(TransOut0,TransOut1),
@@ -72,12 +74,16 @@ translated_call_patterns([downscale,I,Mass,O],increase_size(Mass,O,I)).  % Prolo
 translated_call_patterns([crop,I,TL,BR,O],crop(I,L,T,R,B,O)):- tl_br(TL,T,L),tl_br(BR,B,R).
 translated_call_patterns([switch,N1,N2,O],swap_colors(C1,C2,fg,O)):- color_name(N1,C1),color_name(N2,C2).
 
+tl_br(TL,T,L):- arg(1,TL,T),arg(2,TL,L),!.
+
+:- dynamic(p_solve/3).
+
 maybe_jit_one_test(TestID):-
   clause(l_solve(TestID,IN,OUT),Program),
   (clause(p_solve(TestID,IN,OUT), Body), % -> true;
    (
     translate_program(Program,Trans),
-    list_to_conjucts(Trans,Body),
+    list_to_conjuncts(Trans,Body),
     assert_if_new(p_solve(TestID,IN,OUT):- Body),
     pp(p_solve(TestID,IN,OUT):- Body))).
 
@@ -85,11 +91,11 @@ into_pygrid(IO,IO).
 
 solve(N,IN,OUT):-
   maybe_jit_one_test(N),
-  fix_testid(N,TestID),
+  fix_test_name(N,TestID),
   forall(kaggle_arc(TestID,ExampleNum,I,O),
-    once((into_pygrid(I,IN),into_pygrid(O,TOUT))),
+    (once((into_pygrid(I,IN),into_pygrid(O,TOUT))),
     ignore((p_solve(N,IN,OUT),
-      print_ss(TestID>ExampleNum,OUT,TOUT)))).
+      print_ss(TestID>ExampleNum,OUT,TOUT))))).
 
 l_solve('67a3c6ac', IN, OUT) :-
     [f(vmirror, IN:'Piece', OUT:'Piece')].

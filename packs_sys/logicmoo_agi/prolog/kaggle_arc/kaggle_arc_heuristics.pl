@@ -103,7 +103,7 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
    %when_in_html(if_wants_output_for(guess_some_relations,guess_some_relations(InC,OutC))),
    %when_in_html(if_wants_output_for(sort_some_relations,sort_some_relations(InC,OutC))),
 
-    show_object_dependancy(TestID,ExampleNum,InC,OutC),
+    show_object_dependancy(TestID>ExampleNum,InC,OutC),
  if_t( fail,((
 
 

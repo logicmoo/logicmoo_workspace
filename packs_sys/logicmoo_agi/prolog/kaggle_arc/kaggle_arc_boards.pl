@@ -589,7 +589,7 @@ compute_test_oo_hints(_):- !.
 compute_test_oo_hints(TestID):- 
   forall(
     kaggle_arc_io(TestID,ExampleNum,out,Out1), 
-     (next_example(TestID,ExampleNum,ExampleNum2), kaggle_arc_io(TestID,ExampleNum2,out,Out2),
+     (next_example_num(TestID,ExampleNum,ExampleNum2), kaggle_arc_io(TestID,ExampleNum2,out,Out2),
       maybe_compute_test_oo_hints(TestID,ExampleNum,Out1,Out2))),!.
 
  maybe_compute_test_oo_hints(TestID,ExampleNum,Out1,Out2):- 
@@ -599,7 +599,7 @@ compute_test_ii_hints(_):-!.
 compute_test_ii_hints(TestID):- 
   forall(
     kaggle_arc_io(TestID,ExampleNum,in,In1), 
-     (next_example(TestID,ExampleNum,ExampleNum2), kaggle_arc_io(TestID,ExampleNum2,in,In2),
+     (next_example_num(TestID,ExampleNum,ExampleNum2), kaggle_arc_io(TestID,ExampleNum2,in,In2),
       maybe_compute_test_ii_hints(TestID,ExampleNum,In1,In2))),!.
 
   maybe_compute_test_ii_hints(TestID,ExampleNum,Out1,Out2):- forall(grid_hint_recolor(i-i,Out1,Out2,Hints),add_hint(TestID,ExampleNum,Hints)).

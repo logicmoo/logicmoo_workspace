@@ -350,8 +350,8 @@ pgt1(Obj):-  hv_point(1,1,HV0101),
        %  globalpoints( [ red-HV0101, silver-point_02_01]),
          grid_size(8, 8)]).
 
-pgt2(Obj):- Obj = hv_point(1,1,HV0101),
-      obj( [ mass(536),
+pgt2(Obj):- hv_point(1,1,HV0101), 
+  Obj = obj( [ mass(536),
          shape_rep(grav, [ HV0101, point_02_01]),
          colors_cc( [ cc(red, 190.0), cc(silver, 132.0), cc(green, 55.0), cc(cyan, 53.0),
                    cc(blue, 45.0), cc(yellow, 36.0), cc(orange, 25.0)]),
