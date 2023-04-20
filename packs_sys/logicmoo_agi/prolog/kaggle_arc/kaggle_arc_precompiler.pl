@@ -28,7 +28,7 @@ must_det_ll_maplist(_,[],[],[]):-!.
 must_det_ll_maplist(P3,[HA|TA],[HB|TB],[HC|TC]):- must_det_ll(call(P3,HA,HB,HC)), must_det_ll_maplist(P3,TA,TB,TC).
 
 %must_det_ll(G):- !, once((notrace(G)*->true;must_det_ll_failed(G))).
-must_det_ll(G):- nb_current(cant_rrtrace,t),!,call(G).
+must_det_ll(G):- never_rrtrace,!,call(G).
 must_det_ll(G):- notrace(arc_html),!, ignore(notrace(G)),!.
 must_det_ll(G):- tracing,!, call(G). % once((call(G)*->true;must_det_ll_failed(G))).
 %must_det_ll(X):- !,must_not_error(X).
@@ -68,22 +68,33 @@ must_det_ll1(X):-
 
 %must_not_error(G):- must(once(G)).
 
-must_not_error(_):- nb_current(cant_rrtrace,t),!,fail.
-must_not_error(G):- tracing,!,call(G).
+must_not_error(G):- (tracing;never_rrtrace),!,call(G).
 must_not_error(G):- is_cgi,!, catch((G),E,((u_dmsg(E=G)))).
-must_not_error(X):- \+ nb_current(cant_rrtrace,t),is_guitracer,!, call(X).
-must_not_error(X):- catch(X,E,(always_rethrow(E)-> throw(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
+must_not_error(X):- is_guitracer,!, call(X).
+must_not_error(X):- catch(X,E,(rethrow_abort(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
   rrtrace(visible_rtrace([-all,+exception]),X)))).
 
-always_rethrow(_):- nb_current(cant_rrtrace,t),!.
+always_rethrow(_):- never_rrtrace,!.
 always_rethrow('$aborted').
 always_rethrow(must_det_ll_failed(_)).
 
+catch_non_abort(Goal):- cant_rrtrace(Goal).
+%catch_non_abort(Goal):- catch(cant_rrtrace(Goal),E,rethrow_abort(E)),!.
+rethrow_abort(E):- format(user_error,'~N~q~n',[catch_non_abort_or_abort(E)]),fail.
+rethrow_abort(time_limit_exceeded):-!.
+rethrow_abort('$aborted'):- !, throw('$aborted'),!,forall(between(1,700,_),sleep(0.01)),writeln(timeout),!,fail.
+rethrow_abort(E):- ds,!,format(user_error,'~N~q~n',[catch_non_abort(E)]),!.
+never_rrtrace:- nb_current(cant_rrtrace,t),!,notrace.
+never_rrtrace:- is_cgi,notrace.
+cant_rrtrace(Goal):- never_rrtrace,!,call(Goal). 
+cant_rrtrace(Goal):- setup_call_cleanup(cant_rrtrace,Goal,can_rrtrace).
 
 main_debug:- main_thread,current_prolog_flag(debug,true).
-
+cant_rrtrace:- nb_setval(cant_rrtrace,t).
+can_rrtrace:- nb_setval(cant_rrtrace,f).
 %must_det_ll_failed(X):- predicate_property(X,number_of_clauses(1)),clause(X,(A,B,C,Body)), (B\==!),!,must_det_ll(A),must_det_ll((B,C,Body)).
-must_det_ll_failed(_):- nb_current(cant_rrtrace,t),!,fail.
+must_det_ll_failed(G):- never_rrtrace,!,notrace,notrace(u_dmsg(must_det_ll_failed(G))),!,throw(must_det_ll_failed(G)).
+must_det_ll_failed(_):- never_rrtrace,!,fail.
 must_det_ll_failed(G):- tracing,notrace(u_dmsg(must_det_ll_failed(G))),!,throw(must_det_ll_failed(G)).
 must_det_ll_failed(G):- main_debug,notrace(u_dmsg(must_det_ll_failed(G))),!,trace,call(G).
 must_det_ll_failed(G):- is_cgi,!, u_dmsg(arc_html(must_det_ll_failed(G))).
@@ -96,7 +107,7 @@ rrtrace(X):- rrtrace(etrace,X).
 
 is_guitracer:- getenv('DISPLAY',_), current_prolog_flag(gui_tracer,true).
 :- meta_predicate(rrtrace(1,0)).
-rrtrace(P1,X):- nb_current(cant_rrtrace,t),!,nop((u_dmsg(cant_rrtrace(P1,X)))),!,fail.
+rrtrace(P1,X):- never_rrtrace,!,nop((u_dmsg(cant_rrtrace(P1,X)))),!,fail.
 rrtrace(P1,G):- is_cgi,!, u_dmsg(arc_html(rrtrace(P1,G))),call(P1,G).
 rrtrace(P1,X):- notrace, \+ is_guitracer,!,nortrace, /*arcST, sleep(0.5), trace,*/
    (notrace(\+ current_prolog_flag(gui_tracer,true)) -> call(P1,X); (itrace,call(P1,X))).
@@ -110,7 +121,7 @@ atrace:- arc_wote(bts).
 %atrace:- ignore((stream_property(X,file_no(2)), with_output_to(X,dumpST))),!.
 
 :- meta_predicate(odd_failure(0)).
-odd_failure(G):- nb_current(cant_rrtrace,t),!,call(G).
+odd_failure(G):- never_rrtrace,!,call(G).
 odd_failure(G):- wno_must(G)*->true;fail_odd_failure(G).
 
 :- meta_predicate(fail_odd_failure(0)).

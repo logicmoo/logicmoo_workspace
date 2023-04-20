@@ -10,7 +10,7 @@ read_dsl_test:-  make,
       uast,!,
       setup_call_cleanup(open('arc-dsl/constants.py',read,In1,[]),read_python(In1),close(In1)),
       !.
-%read_michod_test:- read_sols,read_dsl.
+read_michod_test:- read_sols,read_dsl.
 
 uast:- uast_test.
 uast_test:-setup_call_cleanup(open('arc-dsl/dsl.py.uast',read,In3,[]),read_uast_python(In3),close(In3)).

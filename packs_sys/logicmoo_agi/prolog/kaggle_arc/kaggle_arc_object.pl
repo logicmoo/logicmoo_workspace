@@ -74,7 +74,9 @@ gpoints_to_iv_info(GPoints,ShapePoints,LocX,LocY,PenColors,RotG,Iv,Overrides,LPo
   add_global_points(PLPoints,Grid,Grid),
   %writeg([nowgrid=Grid]),
   ShapePoints=[_|_],
-  grid_to_shape(Grid,RotG,OX,OY,ShapePoints,PenColors),
+  into_solid_grid(Grid,Solid),
+  print_ss(grid_to_shape,Grid,Solid),
+  grid_to_shape(Solid,RotG,OX,OY,ShapePoints,PenColors),
   
   %writeg([then=Grid]),
   lpoints_to_iv_info(ShapePoints,LocX,LocY,PenColors,RotG,Iv),
@@ -1886,7 +1888,7 @@ blur_p2(P2,Obj,NewObj):-
   print_grid(XGridH,XGridV,XGP),
   print_grid(YGridH,YGridV,YGP),
   append(XGP,YGP,XYGP),
-  must_det_ll(rebuild_from_globalpoints(Obj,XYGP,NewObj)).
+  must_det_ll(rebuild_from_globalpoints(_VM,Obj,XYGP,NewObj)).
 :- style_check(+singleton).
 
 pct(G):- call(G), ppt(G).
@@ -1895,11 +1897,11 @@ pct(G):- call(G), ppt(G).
 %  globalpoints_in clude_bg(Obj,GPoints),
 %  rebuild_from_l ocalpoints(Obj,GPoints,NewObj).
 
-rebuild_from_globalpoints(Obj,GPoints,NewObj):-
+rebuild_from_globalpoints(VM,Obj,GPoints,NewObj):-
  must_det_ll((
   
   indv_props_list(Obj,Props),my_partition(is_prop_automatically_rebuilt,Props,_,PropsRetained),
-  peek_vm(VM),
+  (var(VM) -> peek_vm(VM) ; true),
   
   %ppa(before=Obj),
   remObjects(VM,Obj),

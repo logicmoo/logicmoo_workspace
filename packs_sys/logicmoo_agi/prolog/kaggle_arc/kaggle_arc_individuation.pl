@@ -1310,13 +1310,13 @@ maybe_rule(VM,Pre,Post,Obj,NewObj):-
    sub_term(E,Obj),shall_count_as_same(Pre,E),ignore(Pre=E),do_rule(VM,Pre,Post,Obj,NewObj),!.
 maybe_rule(_,_,_,Obj,Obj).
 
-do_rule(_VM,Pre,Post,Obj,NewObj):-
+do_rule(VM,Pre,Post,Obj,NewObj):-
    object_grid(Obj,GPs),
    obj_call(Post,GPs,GPsO),!,
    globalpoints_include_bg(GPsO,LPoints),
    loc2D(Obj,OX,OY),
    offset_points(OX,OY,LPoints,NewGPoints),
-   must_det_ll(rebuild_from_globalpoints(Obj,NewGPoints,NewObj)),
+   must_det_ll(rebuild_from_globalpoints(VM,Obj,NewGPoints,NewObj)),
    print_side_by_side(rule(Pre,Post),[Obj],[NewObj]),!,
    Obj\=@=NewObj,!.
 do_rule(_VM,Pre,Post,Obj,NewObj):-
@@ -2661,11 +2661,11 @@ mono_shaped(_FG, BG,Cell,NewCell):- is_bg_color(Cell),!,nop(decl_many_bg_colors(
 mono_shaped( FG,_BG,Cell,NewCell):- is_fg_color(Cell),!,nop(decl_many_fg_colors(_NewCell)),NewCell=FG.
 mono_shaped(_,_,Cell,Cell).
 
-recolor_object(Recolors,Old,New):- 
+recolor_object(VM,Recolors,Old,New):- 
   %globalpoints_include_bg(Grid,Recolors),
   globalpoints_include_bg(Old,GPoints),
   my_maplist(recolor_point(Recolors),GPoints,NewGPoints),  
-  must_det_ll(rebuild_from_globalpoints(Old,NewGPoints,New)),!.
+  must_det_ll(rebuild_from_globalpoints(VM,Old,NewGPoints,New)),!.
 
 recolor_point(Recolors,_-Point,C-Point):- 
   must_det_l((hv_point(H,V,Point), hv_c_value(Recolors,C,H,V))).
@@ -2726,7 +2726,7 @@ with_mapgrid(MapGrids,Sub_fg_shaped,Shape,VM):-
   with_other_grid(Other,individuate2(_,Shape,GOID,NewGrid,FoundObjs)),
   set_vm(VMS),
   globalpoints_include_bg(VM.start_grid,Recolors),
-  my_maplist(recolor_object(Recolors),FoundObjs,ReColored),
+  my_maplist(recolor_object(VM,Recolors),FoundObjs,ReColored),
   learn_hybrid_shape(ReColored),
   remLOPoints(VM,ReColored),
   addObjects(VM,ReColored))),!.
@@ -3386,7 +3386,7 @@ fg_abtractions(Subtraction,VM):-
   individuate(Subtraction,NewGrid,FoundObjs),
   set_vm(VMS),
   ReColored = FoundObjs,
-  %globalpoints_include_bg(VM.start_grid,Recolors), my_maplist(recolor_object(Recolors),FoundObjs,ReColored),
+  %globalpoints_include_bg(VM.start_grid,Recolors), my_maplist(recolor_object(VM,Recolors),FoundObjs,ReColored),
   print_grid(fg_abtractions(GOID),NewGrid),
   print_ss(ReColored),
   remLOPoints(VM,ReColored),

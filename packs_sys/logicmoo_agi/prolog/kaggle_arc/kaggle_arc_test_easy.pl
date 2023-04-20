@@ -22,7 +22,7 @@ forall_count(P,Q):-
     flag('$fac_t',_,W)).
   
 
-foreach_test(TestID,Goal):- var(TestID),!,foreach_count(all_suite_test_name(TestID),Goal).
+foreach_test(TestID,Goal):- var(TestID),!,foreach_count(all_suite_test_name(TestID),catch_non_abort(Goal)).
 foreach_test(TestID,Goal):- ensure_test(TestID),call(Goal).
 
 foreach_count(P,Q):- flag('$fac_t',W,W), W>0,!,P,Q,report_count(progress,so_far).
@@ -47,7 +47,9 @@ report_count(P,Q):-
 
 
 test_easy:- once(update_and_fail_cls),fail.
-test_easy:- get_pair_mode(entire_suite),!,forall_count(all_arc_test_name(TestID),test_easy(TestID)).
+test_easy:- get_pair_mode(entire_suite),!,
+ forall_count(all_arc_test_name(TestID),
+   catch_non_abort(test_easy(TestID))).
 test_easy:- get_pair_mode(whole_test), get_current_test(TestID),!,must_det_ll(ignore(test_easy(TestID))).
 test_easy:- get_pair_mode(single_pair),
   get_current_test(TestID),some_current_example_num(ExampleNum),!,

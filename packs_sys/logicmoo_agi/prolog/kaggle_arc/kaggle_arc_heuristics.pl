@@ -13,7 +13,7 @@
 :- discontiguous individuals_from_pair/9.
 
 
-i_pair(WasROptions,GridIn,GridOut):- WasROptions==complete,
+i_pair(WasROptions,GridIn,GridOut):- fail, WasROptions==complete, % TODO unfail this
  catch((must_det_ll((
  check_for_refreshness,
  ((var(GridIn);var(GridOut))-> current_pair_io(GridIn,GridOut) ; true),

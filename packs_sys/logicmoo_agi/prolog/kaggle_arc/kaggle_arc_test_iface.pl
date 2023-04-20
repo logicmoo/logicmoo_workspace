@@ -577,6 +577,7 @@ show_i(Y,O):-
 ndividuator(TestID):- ensure_test(TestID),
   never_entire_suite,nop(show_test_grids), set_flag(indiv,0),
   %each_ndividuator(TestID),
+  detect_all_training_hints(TestID),
   forall(with_test_pairs(TestID,ExampleNum,In,Out,ndividuator(TestID,ExampleNum,In,Out)),true).
 
 ndividuator(TestID,ExampleNum,In,Out):- 
@@ -2281,7 +2282,8 @@ color_sym(_,_,C,Sym):- enum_colors(C),color_int(C,I),nth1(I,`ose=xt~+*zk>`,S),na
 %color_sym(P*T,_,C,Sym):- enum_colors(C),color_int(C,I),S is P+I*T,name(Sym,[S]).
 
 
-with_current_test(P1):- get_pair_mode(entire_suite),!,forall_count(all_arc_test_name(TestID),call(P1,TestID)).
+with_current_test(P1):- get_pair_mode(entire_suite),!,forall_count(all_arc_test_name(TestID),
+ catch_non_abort(call(P1,TestID))).
 with_current_test(P1):- ensure_test(TestID), call(P1,TestID).
 
 first_cmpd_goal(GG,_):- \+ compound(GG),!,fail.

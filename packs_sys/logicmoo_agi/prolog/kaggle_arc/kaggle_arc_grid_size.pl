@@ -12,31 +12,43 @@
 :- dynamic(muarc_tmp:grid_size_prediction/4).
 
 
-test_grid_size_prediction:- forall_count(all_arc_test_name(TestID), test_grid_sizes(TestID)). 
-store_grid_size_predictions:- forall_count(all_arc_test_name(TestID), test_grid_sizes(TestID)). 
+test_grid_size_prediction:- forall_count(all_arc_test_name(TestID), predict_grid_size(TestID)). 
+store_grid_size_predictions:- forall_count(all_arc_test_name(TestID), predict_grid_size(TestID)). 
 
-test_grid_sizes(TestID):- 
+predict_grid_size(TestID):- 
+ must_det_ll((
+   ensure_test(TestID),
    retractall(muarc_tmp:learned_grid_size(TestID,_)),
    retractall(muarc_tmp:grid_size_prediction(TestID,_,_,_)),
    findall(R,(kaggle_arc(TestID,(trn+_),In,Out),learn_grid_size(In,Out,R),nop((writeq(R),write('.\n')))),L), 
    asserta_if_new(muarc_tmp:learned_grid_size(TestID,L)),
-   forall(kaggle_arc(TestID,tst+_,In,Out),predict_grid_size(TestID,In,Out)).
+   forall(kaggle_arc(TestID,tst+_,In,Out),
+     ignore((predict_grid_size(TestID,In,Out)))))).
 
 learn_grid_size(In,Out,R):- 
   grid_size(In,IH,IV),grid_size(Out,OH,OV),
   locally(nb_setval(allow_unused_proportion,t),
     proportional(size2D(IH,IV),size2D(OH,OV),R)).
   %proportional_size2D(IH,IV,OH,OV,R).
-   
-predict_grid_size(TestID,In,Out):-    
-   grid_size(In,IH,IV),grid_size(Out,OH,OV),
+
+predict_grid_size_now(TestID,In,PH,PV):-
+   grid_size(In,IH,IV),
    muarc_tmp:learned_grid_size(TestID,List),
  %  predsort_on(better_grid_size_prop,List,SList), 
+   predict_grid_size(List,IH,IV,PH,PV).
+
+predict_grid_size(TestID,In,Out):-
+   predict_grid_size_now(TestID,In,PH,PV),
+  (var(Out)->make_grid(PH,PV,Out);true),!.
+
+test_predict_grid_size(TestID,In,Out):-
+  (nonvar(In)->grid_size(In,IH,IV);true),
+  (nonvar(Out)->grid_size(Out,OH,OV);true),
    wots(SS,((             
-   dash_chars, dash_chars, write(test_grid_sizes(TestID)), write('\n'),   
-   predict_grid_size(List,IH,IV,PH,PV),
+     dash_chars, dash_chars, write(test_predict_grid_size(TestID)), write('\n'),   
+     predict_grid_size_now(TestID,In,PH,PV),
    ((PH=OH,PV=OV) -> C = green ; C = red),
-   color_print(C,predict_grid_size(TestID,in(size2D(IH,IV)),predicted(size2D(PH,PV)),actual(size2D(OH,OV))))))),!,
+   color_print(C,test_predict_grid_size(TestID,in(size2D(IH,IV)),predicted(size2D(PH,PV)),actual(size2D(OH,OV))))))),!,
    (C==green 
      -> asserta(muarc_tmp:grid_size_prediction(TestID,In,PH,PV))
      ;(nop(print_test(TestID)),  write(SS),assert_test_suite(failed_predict_grid_size,TestID),!,fail)).
@@ -53,8 +65,13 @@ predict_grid_size(List,IH,IV,PH,PV):-
    %my_maplist(ppnl,List),dash_chars,
    my_maplist(ppnl,ListA),dash_chars,
    my_maplist(ppnl,NewInfo),dash_chars,
-  predict_grid_size1(ListA,NewInfo,IH,IV,PH,PV).
-predict_grid_size(_List,IH,IV,IH,IV).
+   predict_grid_size_now(ListA,NewInfo,IH,IV,PH,PV),!.
+
+predict_grid_size_now(ListA,NewInfo,IH,IV,PH,PV):-
+  predict_grid_size1(ListA,NewInfo,IH,IV,PH,PV),
+  pp(predict_grid_size(IH,IV,PH,PV)),!.
+predict_grid_size_now(_,_,IH,IV,PH,PV):- PH=IH,PV=IV,
+  pp(predict_grid_size(IH,IV)).
 
 better_grid_size_prop(_,1).
 
