@@ -410,16 +410,23 @@ arc_user(ID):- thread_self(ID).
 
 %luser_setval(N,V):- nb_setval(N,V),!.
 luser_setval(N,V):- arc_user(ID),luser_setval(ID,N,V),!.
-luser_setval(ID,N,V):- \+ (arc_sensical_term(N),arc_sensical_term(V)),  u_dmsg(not_arc_sensical_term(luser_setval(ID,N,V))).
+luser_setval(ID,N,V):- \+ (arc_sensical_term(N),arc_sensical_term(V)),  
+  warn_skip(not_arc_sensical_term(luser_setval(ID,N,V))).
 luser_setval(ID,N,V):- 
   (atom(N)->nb_setval(N,V);true),
   retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
+
+
+luser_unsetval(N):- ignore(nb_delete(N)), arc_user(ID),luser_unsetval(ID,N),!.
+luser_unsetval(ID,N):- retractall(arc_user_prop(ID,N,_)).
 
 luser_default(N,V):- var(V),!,luser_getval(N,V).
 luser_default(N,V):- luser_setval(global,N,V).
 
 luser_linkval(N,V):- arc_user(ID),luser_linkval(ID,N,V),!.
-luser_linkval(ID,N,V):- \+ (arc_sensical_term(N),arc_sensical_term(V)),  u_dmsg(not_arc_sensical_term(luser_linkval(ID,N,V))).
+luser_linkval(ID,N,V):- \+ var(V), \+ (arc_sensical_term(N),arc_sensical_term(V)),  
+ trace,
+ warn_skip(not_arc_sensical_term(luser_linkval(ID,N,V))).
 luser_linkval(ID,N,V):- 
   (atom(N)->nb_linkval(N,V);true), 
   retractall(arc_user_prop(ID,N,_)),asserta(arc_user_prop(ID,N,V)).
@@ -660,7 +667,7 @@ test_regressions:- make, forall((clause(mregression_test,Body),ppt(Body)),must_d
 
 :- dynamic(saved_training/1).
 saved_training(TestID):- call_u('~'(saved_training(TestID))), !, fail. % explictly always assume unsaved?
-saved_training(TestID):- test_name_output_file(TestID,File),exists_file(File).
+saved_training(TestID):- test_name_output_file(TestID,'.pl',File),exists_file(File).
 
 
 
@@ -759,15 +766,22 @@ save_arcathon_runner_devel:- qsave_program('bin/logicmoo_arcathon_runner_devel',
                              save_arcathon_runner_dbg, save_arcathon_runner.
 test_compile_arcathon:- save_arcathon_runner_devel.
 
+devaluation:- catch_log(load_json_files(eval400,v,'./data/devaluation/*.json')).
+
 :- ensure_loaded(kaggle_arc_two).
 
-:- load_json_files.
-:- load_task_states.
-:- load_json_files(eval400,v,'./data/devaluation/*.json').
-:- scan_uses_test_id.
-:- store_grid_size_predictions.
-%:- test_grid_size_predictions.
-:- make_grid_cache.
+:- arc_sub_path('./muarc_cache/test_state/',Test_State),make_directory_path(Test_State),!.
+load_from_main:- 
+  catch_log(load_json_files),
+  catch_log(load_task_states),
+  catch_log(devaluation),
+  !.
+
+:- initialization(load_from_main).
+:- initialization(scan_uses_test_id).
+%:- initialization(store_grid_size_predictions).
+%:- initialization(test_grid_size_predictions).
+:- initialization(make_grid_cache).
 :- initialization(gen_gids).
 
 :- use_module(library(xlisting/xlisting_web)).

@@ -223,14 +223,26 @@ user:file_search_path(arc,  AbsolutePath):- arc_sub_path('.',AbsolutePath).
 
 :- prolog_load_context(directory,ARC_DIR), asserta(muarc_tmp:arc_directory(ARC_DIR)).
 
+%test_name_ansi_output_file(TestID,File):- absolute_file_name(TestID,File,[access(read),file_errors(fail)]),!.
+%test_name_ansi_output_file(TestID,File):- absolute_file_name(TestID,File,[access(create),file_errors(fail)]),!.
+
+
 absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
   catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(directory),solutions(first),file_errors(error),access(read)]),_,fail),!.
+    file_type(directory),solutions(first),file_errors(fail),access(read)]),_,fail),!.
 absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
   absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
-    file_type(regular),solutions(first),file_errors(error),access(read)]).
+    file_type(regular),solutions(first),file_errors(fail),access(read)]).
 
-arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath),!.
+absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
+  catch(absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(directory),solutions(first),file_errors(fail),access(none)]),_,fail),!.
+absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath):- 
+  absolute_file_name(Subdir,AbsolutePath,[relative_to(ARC_DIR),expand(true),
+    file_type(regular),solutions(first),file_errors(fail),access(none)]).
+
+arc_sub_path(Subdir,AbsolutePath):- muarc_tmp:arc_directory(ARC_DIR),
+  absolute_dir_or_file_name(ARC_DIR,Subdir,AbsolutePath),!.
 
 :- export(arc_sub_path/2).
 

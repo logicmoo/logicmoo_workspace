@@ -1,5 +1,5 @@
 
-% Implementing a complete neural network library in Prolog is beyond the scope of this response. However, I can provide you with a basic structure and some functions to get you started with a simple feedforward neural network in Prolog. You can extend this foundation to support more complex networks and vision processing tasks.
+% A simple feedforward neural network in Prolog. You can extend this foundation to support more complex networks and vision processing tasks.
 
 % First, let's define some core functions for matrix operations, since neural networks rely on these operations for feedforward and backpropagation processes:
 
@@ -62,8 +62,6 @@ forward_pass(Input, Weights, Biases, Activations, Output) :-
 
 % With these functions, you can create a simple feedforward neural network with customizable layers, weights, biases, and activation functions. To add more complex functionality, such as vision processing, you would need to implement additional layers (e.g., convolutional layers) and operations (e.g., max-pooling).
 
-% To support more complex networks and vision processing tasks, we'll need to add convolutional layers and pooling layers to our neural network library. I'll provide you with the code for the convolutional and max-pooling layers. Note that these implementations are not optimized for performance, and in practice, it is recommended to use dedicated deep learning libraries like TensorFlow or PyTorch.
-
 % Convolutional Layer:
 % We'll add support for the convolution operation, which is the core operation of convolutional layers.
 
@@ -125,9 +123,9 @@ max_pooling_row_helper([ImgPixel|ImgPixels], PoolSize, Index, Acc, OutputRow) :-
 
 sublist(List, Sublist, Offset, Length) :-
     append(_, Rest, List),
-    append(Sublist, , Rest),
+    append(Sublist, A, Rest),
     length(Sublist, Length),
-    length(, Offset).
+    length(A, Offset).
 
 % Example usage:
 %

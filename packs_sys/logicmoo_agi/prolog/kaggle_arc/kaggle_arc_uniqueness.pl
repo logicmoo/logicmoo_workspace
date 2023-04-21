@@ -150,7 +150,7 @@ compute_scene_change_pass2(TestID):-
     forall(prop_can(TestID,IO,P,PSame),
       assert_accompany_changed_db(TestID,IO,P,PSame))).
 
-assert_become_new(Term):- \+ clause_asserted(Term),!, pp_ilp(assert_become_new=Term), asserta_new(Term).
+%assert_become_new(Term):- \+ clause_asserted(Term),!, pp_ilp(assert_become_new=Term), asserta_new(Term).
 assert_become_new(Term):- asserta_new(Term).
 %assert_become_new(Term):- pp_ilp(assert_become_new=Term),!, assert_if_new(Term).
 
@@ -504,9 +504,11 @@ show_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):-
   forall(member(OD,Groups),
     assert_become_new(arc_cache:each_object_dependancy(TestID,ExampleNum,OD))),
   dash_chars,
-  %print(TestID,ExampleNum),
-  dash_chars,pp_ilp(Groups),!)).
-  %maplist(assert_map_groups(TestID,ExampleNum,in),Groups),!.
+  maplist(assert_map_groups(TestID,ExampleNum,in),Groups),
+  dash_chars,
+  pp_ilp(Groups),
+  dash_chars,
+  print_object_dependancy(TestID,ExampleNum))),!.
 
 %  writeg(sod(TestID,ExampleNum)==>Groups),nl, 
 %  dash_chars)),!.
@@ -607,18 +609,21 @@ calc_object_dependancy(TestID,ExampleNum):-
     calc_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs)).
 
 calc_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs):-
+ must_det_ll((
   maybe_remove_bg(LHSObjs,LHSObjs1),
   maybe_remove_bg(RHSObjs,RHSObjs1),
   Step=0,Ctx=in_out,IsSwapped=false,
   calc_o_d_recursively(IsSwapped,Step,Ctx,RHSObjs1,LHSObjs1,[],Groups),
-  maplist(assert_map_groups(TestID,ExampleNum,in),Groups),!.
+  maplist(assert_map_groups(TestID,ExampleNum,in),Groups))).
 
 
-assert_map_groups(TestID,ExampleNum,IO,LeftRight):-!,
+assert_map_groups(TestID,ExampleNum,IO,LeftRight):- !, nop(assert_map_groups(TestID,ExampleNum,IO,LeftRight)),!.
+assert_map_groups(TestID,ExampleNum,IO,LeftRight):-
+ must_det_ll((
   into_lst(LeftRight,LeftRightList),
-  if_t(LeftRightList\=[_,_], print_ss(map_group(TestID,ExampleNum,IO)=LeftRightList)),
+  if_t(LeftRightList\=[_,_], pp_ilp(map_group(TestID,ExampleNum,IO)=LeftRightList)),
   assert_become_new(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight)),
-  assert_map_pair_list(TestID,ExampleNum,IO,LeftRight).
+  assert_map_pair_list(TestID,ExampleNum,IO,LeftRight))).
 
 assert_map_pair_list(_TestID,_ExampleNum,_IO,[]):-!.
 assert_map_pair_list(TestID,ExampleNum,IO,[Right,Left]):- is_object(Left), is_object(Right), !, 

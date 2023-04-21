@@ -1131,6 +1131,7 @@ prev_test:-  get_current_test(TestID), get_prev_test(TestID,NextID), set_current
 next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
 next_random_test:-  randomize_suite, next_test.
 is_valid_testname(TestID):- nonvar(TestID), kaggle_arc(TestID,_,_,_).
+is_valid_atom_testname(TestID):- nonvar(TestID), once(kaggle_arc(t(TestID),_,_,_);kaggle_arc(v(TestID),_,_,_)).
 
 report_test:- report_suite_test_count, print_qtest.
 
@@ -1263,13 +1264,30 @@ maybe_set_suite(_TestID).
   
   %clear_training(TestID).
 
-needs_dot_extention(File,DotExt,NewName):- \+ atom_concat(_,DotExt,File), atom_concat(File,DotExt,NewName).
+test_name_ansi_output_file(TestID,File):- is_valid_atom_testname(TestID),!,
+  atomic_list_concat(['muarc_cache/test_state/',TestID,'.ansi'],File1),
+  arc_sub_path(File1,File),!.
+test_name_ansi_output_file(TestID,File):- \+ atom(TestID),
+  sub_atom_value(TestID,OID),is_valid_atom_testname(OID),!,
+  test_name_ansi_output_file(OID,File).
+test_name_ansi_output_file(TestID,File):- arc_sub_path(TestID,File).
+
+test_name_output_file(TestID,Ext,ExtFile):- 
+  test_name_ansi_output_file(TestID,File),
+  ensure_file_extension(File,Ext,ExtFile),!.
+
+
+maybe_append_file_extension(File,DotExt,NewName):- \+ atom_concat(_,DotExt,File), atom_concat(File,DotExt,NewName).
+
+ensure_file_extension(File,DotExt,NewName):- var(File),!,atom_concat(File,DotExt,NewName).
+ensure_file_extension(File,DotExt,NewName):- maybe_append_file_extension(File,DotExt,NewName),!.
+ensure_file_extension(File,  _Ext,File):-!.
 
 call_file_goal(S,encoding(Enc)):- arc_set_stream(S,encoding(Enc)),!.
 call_file_goal(_, discontiguous(_)):- !.
 call_file_goal(_,Goal):- call(Goal),!.
 
-load_file_dyn(File):- needs_dot_extention(File,'.pl',NewName),!,load_file_dyn(NewName).
+load_file_dyn(File):- maybe_append_file_extension(File,'.pl',NewName),!,load_file_dyn(NewName).
 load_file_dyn(File):- \+ exists_file(File), !.
 load_file_dyn(File):- load_file_dyn_pfc(File),!.
 %load_file_dyn(File):- consult(File),!.
@@ -1302,8 +1320,7 @@ on_entering_test(TestID):-
   clear_tee,  
   %force_flush_tee,
   clear_test(TestID),
-  test_name_output_file(TestID,File),
-  atom_concat(File,'.pl',PLFile),
+  test_name_output_file(TestID,'.pl',PLFile),
   load_file_dyn(PLFile))).
 
 
@@ -1381,10 +1398,10 @@ save_supertest(TestID):- is_list(TestID),!,my_maplist(save_supertest,TestID).
 save_supertest(TestID):- ensure_test(TestID), save_supertest(TestID,_File).
 
 save_supertest(TestID,File):- var(TestID),!, forall(ensure_test(TestID), save_supertest(TestID,File)).
-save_supertest(TestID,File):- var(File),!,test_name_output_file(TestID,File), save_supertest(TestID,File).
-save_supertest(TestID,File):- needs_dot_extention(File,'.pl',NewName),!,save_supertest(TestID,NewName).
+save_supertest(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_supertest(TestID,File).
+save_supertest(TestID,File):- maybe_append_file_extension(File,'.pl',NewName),!,save_supertest(TestID,NewName).
 
-save_supertest(TestID,File):- !, warn_skip(save_supertest(TestID,File)).
+%save_supertest(TestID,File):- !, warn_skip(save_supertest(TestID,File)).
 save_supertest(TestID,File):-
  saveable_test_info(TestID,Info),
    setup_call_cleanup(open(File,write,O,[create([default]),encoding(text)]), 
@@ -1394,7 +1411,6 @@ save_supertest(TestID,File):-
       close(O)), 
    nop(statistics).
 
-test_name_output_file(TestID,File):- sub_atom_value(TestID,OID),!,atomic_list_concat(['muarc_cache/',OID,'.ansi'],File).
 
 
 clear_test(TestID):- is_list(TestID),!,my_maplist(clear_test,TestID).
@@ -1411,14 +1427,12 @@ clear_saveable_test_info(TestID):-
 
 erase_refs(Info):- my_maplist(erase,Info).
 
-unload_test_file(TestID):-
-   test_name_output_file(TestID,File),
-   atom_concat(File,'.pl',PLFile),
-   unload_file_dyn(PLFile).
+unload_test_file(TestID):- unload_file_dyn(TestID).
 
-unload_file_dyn(File):- needs_dot_extention(File,'.pl',NewName),!,unload_file_dyn(NewName).
+unload_file_dyn(File):- test_name_output_file(File,'.pl',NewName),NewName\=@=File,!,unload_file_dyn(NewName).
 unload_file_dyn(File):- \+ exists_file(File), !.
 unload_file_dyn(File):- unload_file_dyn_pfc(File), unload_file(File),!.
+
 unload_file_dyn_pfc(File):-  
  open(File,read,I),
  repeat,read_term(I,Term,[]),
@@ -1434,8 +1448,7 @@ clear_test_training(TestID):-
      ignore(( 
       \+ arc_option(extreme_caching),
       
-      test_name_output_file(TestID,File),
-      needs_dot_extention(File,'.pl',NewName),
+      test_name_output_file(TestID,'.pl',NewName),
       unload_file(File),
       (exists_file(File)->delete_file(File);true))),
 */
@@ -1792,7 +1805,7 @@ alphabetical_t:- clsmake, write_ansi_file(alphabetical_t).
 alphabetical_v:- clsmake, write_ansi_file(alphabetical_v).
 
 write_ansi_file(F):- call(F,Set),
-  atom_concat(F,'.vt100',FN),
+  ensure_file_extension(F,'.vt100',FN),
   setup_call_cleanup(open(FN,write,O,[create([default]),encoding(iso_latin_1)]),
   forall(member(T,Set), 
     (wots(S,print_test(T)), write(O,S),write(S))),close(O)).
@@ -2319,4 +2332,106 @@ scan_uses_test_id:- forall((uses_test_id(P1),atom(P1)),assertz_if_new(user:(P1:-
 :- all_source_file_predicates_are_exported.
 
 :- initialization(scan_uses_test_id).
+
+
+end_of_file.
+
+
+psql -h chado.flybase.org -U flybase flybase -c "
+SELECT f.uniquename as gene_name, f.organism_id as species_id, o.genus || ' ' || 
+ o.species as organism, f.residues as sequence
+FROM feature f
+JOIN organism o ON f.organism_id = o.organism_id
+WHERE f.type_id = (SELECT cvterm_id FROM cvterm WHERE 
+cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence')) AND 
+f.uniquename ILIKE '%wingless%'
+LIMIT 10;"
+
+
+
+
+psql -h chado.flybase.org -U flybase flybase -c "
+SELECT f.uniquename as gene_name, f.organism_id as species_id, o.genus || ' ' || o.species as organism, f.residues as sequence
+FROM feature f
+JOIN organism o ON f.organism_id = o.organism_id
+WHERE 
+f.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'gene' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence')) AND 
+o.genus = 'Drosophila' AND o.species = 'melanogaster' AND f.uniquename ILIKE '%wingless%'
+LIMIT 10;
+"
+
+
+psql -h chado.flybase.org -U flybase flybase -c "
+SELECT f.uniquename AS gene_name, f.organism_id AS species_id, o.genus || ' ' || o.species AS organism, f.residues AS sequence
+FROM feature f
+JOIN organism o ON f.organism_id = o.organism_id
+WHERE f.type_id = (SELECT cvterm_id FROM cvterm WHERE name = 'gene' AND cv_id = (SELECT cv_id FROM cv WHERE name = 'sequence'))
+AND o.genus = 'Drosophila' AND o.species = 'melanogaster' AND f.uniquename ILIKE '%wingless%'
+LIMIT 10;"
+
+#!/bin/bash
+
+# Replace these variables with your own values
+your_host="your_host"
+your_user="your_user"
+your_database="your_database"
+your_schema="your_schema"
+
+# Connect to PostgreSQL server and retrieve table names within the specified schema
+tables=$(psql -h $your_host -U $your_user -d $your_database -t -c "
+
+
+SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_catalog = 
+  'flybase' AND table_schema = 'public';
+
+
+SELECT table_name FROM information_schema.tables WHERE table_catalog = 'flybase' AND table_schema = 'public';
+
+
+# Create a directory to store the CSV files
+mkdir -p csv_exports/$your_schema
+
+# Iterate over each table
+for table in $tables; do
+    # Print the table name
+    echo "Exporting table: $your_schema.$table"
+
+    # Export the table data to a CSV file
+    psql -h $your_host -U $your_user -d $your_database -c "
+     COPY $your_schema.$table TO STDOUT WITH (FORMAT csv, HEADER true)" > "csv_exports/$your_schema/${table}.csv"
+done
+
+
+psql -h chado.flybase.org -U flybase flybase -c "
+SELECT f.uniquename as gene_name, f.organism_id as species_id, o.genus || ' ' || o.species as organism, 
+f.residues as sequence FROM feature f 
+JOIN organism o ON f.organism_id = o.organism_id WHERE 
+f.uniquename ILIKE '%wingless%'
+LIMIT 10;
+"
+
+o.genus = 'Drosophila' AND o.species = 'melanogaster' AND 
+
+#!/bin/bash
+
+# Replace these variables with your own values
+your_host="your_host"
+your_user="your_user"
+your_database="your_database"
+your_schema="your_schema"
+
+# Connect to PostgreSQL server and retrieve table names within the specified schema
+tables=$(psql -h $your_host -U $your_user -d $your_database -t -c "SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_catalog = '$your_database' AND table_schema = '$your_schema';")
+
+# Create a directory to store the CSV files
+mkdir -p csv_exports/$your_schema
+
+# Iterate over each table
+for table in $tables; do
+    # Print the table name
+    echo "Exporting table: $your_schema.$table"
+
+    # Export the table data to a CSV file
+    psql -h $your_host -U $your_user -d $your_database -c "COPY $your_schema.$table TO STDOUT WITH (FORMAT csv, HEADER true)" > "csv_exports/$your_schema/${table}.csv"
+done
 

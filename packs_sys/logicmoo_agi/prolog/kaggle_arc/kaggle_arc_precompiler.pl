@@ -72,9 +72,10 @@ must_not_error(G):- (tracing;never_rrtrace),!,call(G).
 must_not_error(G):- is_cgi,!, catch((G),E,((u_dmsg(E=G)))).
 must_not_error(X):- is_guitracer,!, call(X).
 must_not_error(X):- catch(X,E,(rethrow_abort(E);(/*arcST,*/writeq(E=X),pp(etrace=X),
+  trace,
   rrtrace(visible_rtrace([-all,+exception]),X)))).
 
-always_rethrow(_):- never_rrtrace,!.
+always_rethrow(E):- never_rrtrace,!,throw(E).
 always_rethrow('$aborted').
 always_rethrow(must_det_ll_failed(_)).
 
@@ -99,7 +100,8 @@ must_det_ll_failed(G):- tracing,notrace(u_dmsg(must_det_ll_failed(G))),!,throw(m
 must_det_ll_failed(G):- main_debug,notrace(u_dmsg(must_det_ll_failed(G))),!,trace,call(G).
 must_det_ll_failed(G):- is_cgi,!, u_dmsg(arc_html(must_det_ll_failed(G))).
 must_det_ll_failed(X):- notrace,is_guitracer,u_dmsg(failed(X))/*,arcST*/,nortrace,atrace, call(X).
-must_det_ll_failed(X):-  u_dmsg(failed(X))/*,arcST*/,nortrace,atrace,visible_rtrace([-all,+fail,+call,+exception],X).
+must_det_ll_failed(X):-  u_dmsg(failed(X))/*,arcST*/,nortrace,atrace,
+ trace,visible_rtrace([-all,+fail,+call,+exception],X).
 % must_det_ll(X):- must_det_ll(X),!.
 
 :- meta_predicate(rrtrace(0)).

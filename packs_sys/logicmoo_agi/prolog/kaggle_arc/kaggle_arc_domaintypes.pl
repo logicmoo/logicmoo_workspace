@@ -223,8 +223,9 @@ is_color_dat(C):- atomic(C),user:color_code(C,W),!,C==W.
 
 :- export(set_bgc/1).
 :- decl_pt(set_bgc(color)).
-set_bgc(BGC):- var(BGC),!,ignore(nb_delete(grid_bgc)),luser_linkval(grid_bgc,BGC),!.
+set_bgc(BGC):- var(BGC),!,luser_unsetval(grid_bgc),!.
 set_bgc(BGC):- luser_linkval(grid_bgc,BGC).
+
 
 :- export(get_bgc/1).
 :- decl_pt(get_bgc(color)).
