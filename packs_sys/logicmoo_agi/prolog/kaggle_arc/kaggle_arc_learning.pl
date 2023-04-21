@@ -576,8 +576,14 @@ sorted_by_closeness(In,Sorted,Objs,List):-
 
 
 find_prox_mappings(A,GID,Candidates,Objs):-
-    obj_grp_atomslist(GID,A,PA,PAP),
+  find_prox_mappings([],A,GID,Candidates,Objs).
+
+find_prox_mappings(Bonus,A,GID,Candidates,Objs):-
+    obj_grp_atomslist(GID,A,PA,PAP0),
+    obj_atoms(Bonus,BonusAtoms),
+    append(PAP0,BonusAtoms,PAP),
     ord(NJ/O+JO+Joins,[PA,A],[PB,B],B) = Why,
+    !,
     findall(Why,
     (      
      member(B,Candidates),obj_grp_atomslist(GID,B,PB,PBP),

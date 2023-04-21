@@ -222,8 +222,9 @@ dref_match(obj(LHS),PA):- !, dref_match(LHS,PA).
 dref_match(List,PA):- is_list(List), flatten(List,ListF),List\=@=ListF,!,dref_match(ListF,PA).
 dref_match(PA,PA).
 
-obj_grp_atoms_deep(A,PA,Atoms):- A=obj(_),!,obj_grp_comparable(A,PA),obj_atoms(PA,Atoms).
-obj_grp_atoms_deep(A,PA,Atoms):- dref_match(A,PA), obj_atoms(PA,Atoms).
+obj_grp_atoms_deep(A,PA,Atoms):- A=obj(_),is_object(A),!,obj_grp_comparable(A,PA),obj_atoms(PA,Atoms).
+obj_grp_atoms_deep(A,PA,Atoms):- dref_match(A,DA),A\=@=DA,!,obj_grp_atoms_deep(DA,PA,Atoms).
+obj_grp_atoms_deep(A,PA,Atoms):- PA=A,obj_atoms(PA,Atoms).
 
 see_object_atomslist(IO,A,PA,Atoms):- call_in_testid(arc_cache:object_atomslist(IO,A,PA,Atoms)).
 
@@ -316,9 +317,17 @@ diff_groups(A0,B0,DD):-
   my_maplist(obj_grp_comparable,B0,B2),
   diff_groups1(A2,B2,DD).
 
+obj_atoms(PA,PAP):- PA==[],!,PAP=[].
+obj_atoms(PA,PAP):- is_grid(PA),globalpoints(PA,GP),!,subobj_atoms(GP,PAP).
+obj_atoms(PA,PAP):- must_det_ll((nonvar(PA))),
+  indv_props_list(PA,MF),
+  must_det((subobj_atoms(MF,PAP),PAP\==[])),!.
+obj_atoms(PA,PAP):- subobj_atoms(PA,PAP),!.
 
-obj_atoms(PA,PAP):- must_det_ll((nonvar(PA),indv_props_list(PA,MF),flatten(MF,M),M\==[],
-  findall(E,(member(SE,M),sub_obj_atom(E,SE)),PAP),PAP\==[])),!.
+subobj_atoms(PA,PAP):- PA==[],!,PAP=[].
+subobj_atoms(PA,PAP):- is_grid(PA),globalpoints(PA,GP),!,subobj_atoms(GP,PAP).
+subobj_atoms(PA,PAP):- must_det_ll((nonvar(PA),flatten([PA],M), 
+  findall(E,(member(SE,M),sub_obj_atom(E,SE)),PAP))),!.
 
 never_matom(localpoints(_)).
 never_matom(shape_rep(grav,_)).

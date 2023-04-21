@@ -766,6 +766,7 @@ test_compile_arcathon:- save_arcathon_runner_devel.
 :- load_json_files(eval400,v,'./data/devaluation/*.json').
 :- scan_uses_test_id.
 :- store_grid_size_predictions.
+%:- test_grid_size_predictions.
 :- make_grid_cache.
 :- initialization(gen_gids).
 

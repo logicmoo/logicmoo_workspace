@@ -566,15 +566,30 @@ as_grid_string(O,SSS):- wots_vs(S,show_indiv(O)), sformat(SSS,'{  ~w}',[S]).
 as_pre_string(O,SS):- wots_hs(S,show_indiv(O)), strip_vspace(S,SS).
 
 
+pretty_grid(O):-
+  catch(
+  (wots_hs(S,print_grid(O)),strip_vspace(S,SS),
+   ptc(orange,(format('"  ~w  "',[SS])))),
+  _,fail),!.
+/*
+pretty_grid(O):-
+  catch(
+  (wots_hs(S,print_grid(O)),strip_vspace(S,SS),
+   ptc(orange,(format('"  ~w  "',[SS])))),
+  _,(never_let_arc_portray_again,fail)).
+*/
 pp_hook_g1(O):-  plain_var(O), !, fail.
 pp_hook_g1(O):-  attvar(O), !, is_colorish(O), data_type(O,DT), writeq('...'(DT)),!.
 pp_hook_g1(S):-  term_is_ansi(S), !, write_nbsp, write_keeping_ansi_mb(S).
-pp_hook_g1(O):-  is_grid(O), 
-% \+ (sub_term(E,O),compound(E),E='$VAR'(_)), 
-  catch((wots_hs(S,print_grid(O)),strip_vspace(S,SS),ptc(orange,(format('"  ~w  "',[SS])))),_,(never_let_arc_portray_again,fail)).
+%pp_hook_g1(S):-  term_contains_ansi(S), !, fail, write_nbsp, write_keeping_ansi_mb(S).
+pp_hook_g1(O):-  is_grid(O), /* \+ (sub_term(E,O),compound(E),E='$VAR'(_)), */ pretty_grid(O).
+
+
+pp_hook_g1(O):- is_object(O), into_solid_grid(O,G), wots(SS,pretty_grid(G)),write(og(SS)),!.
 
 pp_hook_g1(shape_rep(grav,O)):- is_points_list(O), as_grid_string(O,S), wotsq(O,Q), print(shape_rep(grav,S,Q)),!.
 pp_hook_g1(vals(O)):- !, writeq(vals(O)),!.
+%pp_hook_g1(grp(O)):- into_solid_grid_strings(grp(O),Str),Str\=@=grp(O),print_term_no_nl(Str),!.
 pp_hook_g1(localpoints(O)):- is_points_list(O), as_grid_string(O,S), wotsq(O,Q), print(localpoints(S,Q)),!.
 pp_hook_g1(C):- compound(C), compound_name_arguments(C,F,[O]),is_points_list(O), length(O,N),N>2, as_grid_string(O,S), compound_name_arguments(CO,F,[S]), print(CO),!.
 

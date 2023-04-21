@@ -272,6 +272,9 @@ trim_to_rect2(G,G8):- get_bgc(BG), h_and_v(trim_unused_vert(BG),G,G8).
   trim_unused_vert(BG,GridR,GridO):- append(Grid,[Row],GridR),my_maplist(is_bg_or_var(BG),Row),!,trim_unused_vert(BG,Grid,GridO).
   trim_unused_vert(_,G,G).
 
+trim_outside2(G,GG):- grid_call([trim_to_rect2,rot90,trim_to_rect2,rot270],G,GG),!.
+trim_outside2(G,GG):- trim_to_rect(G,GG),!.
+trim_outside2(G,G).
 
 maybe_trim_to_rect(G,GG):- trim_to_rect(G,GG),!,G\=@=GG.
 maybe_trim_outside(G,GG):- trim_outside(G,GG),!,G\=@=GG.
