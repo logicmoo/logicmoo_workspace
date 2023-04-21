@@ -539,7 +539,7 @@ grid_to_shape(Grid,RotG,OX,OY,ShapePoints,PenColors):-
   include(ground,RShape,LShape),  
   grid_size(RotShape,OX,OY),
   % colors_cc 
-  writeg([rotShape=RotShape,lShape=LShape]),
+  %writeg([rotShape=RotShape,lShape=LShape]),
   my_maplist(arg(2),LShape,ShapePoints), 
   my_maplist(arg(1),LShape,Colorz),
   cclumped(Colorz,PenColors0),!,

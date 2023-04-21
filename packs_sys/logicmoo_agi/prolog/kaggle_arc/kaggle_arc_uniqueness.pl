@@ -505,18 +505,8 @@ show_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):-
     assert_become_new(arc_cache:each_object_dependancy(TestID,ExampleNum,OD))),
   dash_chars,
   %print(TestID,ExampleNum),
-  dash_chars,print_sod(1,Groups),!)).
+  dash_chars,pp_ilp(Groups),!)).
   %maplist(assert_map_groups(TestID,ExampleNum,in),Groups),!.
-
-print_sod(D,Grid):-  is_grid(Grid),prefix_spaces(D,print_grid(Grid)),!,nl.
-print_sod(D,List):- is_list(List), \+ is_grid(List),maplist(print_sod(D+3),List).
-print_sod(D,Grp):- is_mapping(Grp),
-  get_mapping_info_list(Grp,Info,List),
-  once(into_solid_grid_strings(List,Term)),
-  prefix_spaces(D,format('<grp ~w>\n',[Info])),print_sod(D+3,Term),prefix_spaces(D,write('</grp>\n')),!.
-print_sod(D,T):- into_solid_grid_strings(T,G), prefix_spaces(D,print(G)),!.
-
-prefix_spaces(D,G):- DD is D, wots(Tabs,print_spaces(DD)),prepend_each_line(Tabs,G).
 
 %  writeg(sod(TestID,ExampleNum)==>Groups),nl, 
 %  dash_chars)),!.
@@ -533,11 +523,23 @@ print_object_dependancy(TestID,ExampleNum):-
   forall(arc_cache:map_pairs(TestID,ExampleNum,IO,Right,Left),
     pp_ilp(map_pairs(TestID,ExampleNum,IO,Right,Left))).
 
-pp_ilp(is_accompany_changed_db(_TestID,IO,P,PSame)):- 
- list_to_conjuncts(PSame,Conj),pp((IO:P):-Conj),writeln('.'),!.
-pp_ilp(_):- format('~N'),nl.
-pp_ilp(T):- into_solid_grid_strings(T,G),print(G),nl,!.
-pp_ilp(T):- print(T),nl,!.
+pp_ilp(Grp):-pp_ilp(1,Grp).
+
+pp_ilp(_,_):- format('~N'),nl,fail.
+pp_ilp(D,is_accompany_changed_db(_TestID,IO,P,PSame)):- 
+ list_to_conjuncts(PSame,Conj),pp_ilp(D,(IO:P):-Conj),writeln('.'),!.
+pp_ilp(D,Grid):- is_grid(Grid),prefix_spaces(D,print_grid(Grid)),!,nl.
+pp_ilp(D,List):- is_list(List), \+ is_grid(List),maplist(pp_ilp(D+3),List).
+pp_ilp(D,Grp):- is_mapping(Grp),
+  get_mapping_info_list(Grp,Info,List),
+  once(into_solid_grid_strings(List,Term)),
+  prefix_spaces(D,format('<grp ~w>\n',[Info])),pp_ilp(D+3,Term),prefix_spaces(D,write('</grp>\n')),!.
+pp_ilp(D,T):- into_solid_grid_strings(T,G),!, prefix_spaces(D,print(G)),!.
+pp_ilp(D,T):- prefix_spaces(D,print(T)),!.
+
+
+prefix_spaces(D,G):- DD is D, wots(Tabs,print_spaces(DD)),prepend_each_line(Tabs,G).
+
 
 /*into_solid_grid_strings(T,WithGrids):-
   sub_term(Obj,T),Obj\=@=T,is_mapping(Obj),
