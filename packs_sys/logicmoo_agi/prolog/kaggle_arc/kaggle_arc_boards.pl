@@ -10,7 +10,7 @@
 :- use_module(library(lists)).
 
 /*
-% detect_all_training_hints(Grid,SGrid):- ...
+% detect_pair_hints(Grid,SGrid):- ...
 line Separated
 Symmetry sorta happening
 Individuals by colormass % t(b230c067)
@@ -54,18 +54,20 @@ compile_and_save_test:- update_and_fail,fail.
 compile_and_save_test:- get_pair_mode(entire_suite),!,clsbake, 
   forall_count(all_arc_test_name(TestID),time(compile_and_save_test(TestID))).
 compile_and_save_test:- get_current_test(TestID),time(compile_and_save_test(TestID)),!,  
-  detect_all_training_hints,!.
+  detect_pair_hints,!.
 
-gen_gids:- u_dmsg(start(gen_gids)),
+gen_gids:- 
+  u_dmsg(start(gen_gids)),
   forall(all_arc_test_name(TestID),gen_gids(TestID)),
   u_dmsg(end(gen_gids)).
 gen_gids(Mask):-
+ must_det_ll((
   testid_name_num_io(Mask,TestID,Example,Num,IO),
   ExampleNum = Example+Num,!,
   %forall(kaggle_arc(TestID,ExampleNum,I,O),name_the_pair(TestID,ExampleNum,I,O,_PairName)),
   forall((kaggle_arc_io(TestID,ExampleNum,IO,G),((ID=(TestID>ExampleNum*IO),term_to_oid(ID,GID)))),
     once((assertz_if_new(tid_to_gids(ID,GID)),assertz_if_new(gid_to_grid(GID,G))))),
-  forall(kaggle_arc_io(TestID,_,_,G),once(grid_to_gid(G,_))),!.
+  forall(kaggle_arc_io(TestID,_,_,G),once(grid_to_gid(G,_))))),!.
 
 :- dynamic(arc_cache:workflow_status/3).
 once_with_workflow_status(Goal):- call_in_testid(arc_cache:workflow_status(Goal,success)),!.
@@ -85,10 +87,9 @@ compile_and_save_test_now(TestID):-
   time((with_individuated_cache(true,
      ((
       gen_gids(TestID),
-      compute_all_test_hints(TestID)),
+      detect_pair_hints(TestID)),
       arc_assert(saved_training(TestID)),
       arc_assert(process_test(TestID)),
-      detect_all_training_hints(TestID),
       nop(individuate_pairs_from_hints(TestID)),
       %train_test(TestID,train_using_io),  
       %print_hybrid_set,      
@@ -216,7 +217,7 @@ show_reduced_inputs(TestSpec):- var_ensure_test(TestSpec,TestID),
   do_some_grids('INPUT'(TestID),Grids).
 
 show_reduced_pairs(TestSpec):- var_ensure_test(TestSpec,TestID),
-  forall(with_test_pairs(TestID,ExampleNum,I,O,
+  forall(with_task_pairs(TestID,ExampleNum,I,O,
     (print_side_by_side(green,I,orig_in(TestID,ExampleNum),_,O,orig_out(TestID,ExampleNum)),
      forall(do_some_grids(TestID,I^O),true))),true).
 
@@ -293,19 +294,6 @@ maybe_easy(I,I,==):- !.
 must_ll(G):- G*->true;throw(failed(G)).
 
 
-detect_all_training_hints:- get_current_test(TestID),time(detect_all_training_hints(TestID)).
-detect_all_training_hints(TestID):- ensure_test(TestID),
-  save_the_alt_grids(TestID),
-  training_only_examples(ExampleNum), 
-  w_section(title(detect_all_training_hints(TestID>ExampleNum)),
-    ( 
-       forall(must_ll(kaggle_arc(TestID,ExampleNum,In,Out)),
-           must_det_ll(detect_pair_hints(TestID,ExampleNum,In,Out))),
-
-       color_print(magenta,call(((must_det_ll(compute_and_show_test_hints(TestID)))))))).
-
-training_only_examples(ExampleNum):- ignore(ExampleNum=(trn+_)).
-
   
 
 color_subst([],[],[]):-!.
@@ -313,21 +301,8 @@ color_subst([O|OSC],[I|ISC],[O-I|O2I]):-
   color_subst(OSC,ISC,O2I).
 color_subst(_OSC,_ISC,[]):-!.
 
-detect_pair_hints:- clsbake, get_current_test(TestID),detect_pair_hints(TestID).
-detect_pair_hints(TestID):- 
- some_current_example_num(ExampleNum), training_only_examples(ExampleNum),
- forall(kaggle_arc(TestID,ExampleNum,In,Out),detect_pair_hints(TestID,ExampleNum,In,Out)).
-detect_pair_hints(TestID,ExampleNum,In,Out):- 
-  ensure_test(TestID),
-  must_det_ll((
-  dmsg(detect_pair_hints(TestID,ExampleNum)),
-  assert_id_grid_cells(_,In), assert_id_grid_cells(_,Out),
-  % guess_board(TT),
-  %print(TT),
-  %ignore(show_reduced_io(In^Out)),
- % ignore(print_single_pair(TestID,ExampleNum,In,Out)),
-  grid_hint_swap(i-o,In,Out),
-  dash_chars)),!.
+
+
 
 guess_board(TT):- arc_setval(TT,guess_board,t).
 
@@ -492,28 +467,22 @@ compute_and_show_test_hints(TestID):- format('~N'),
 */
 
 compute_and_show_test_hints(TestID):- 
- w_section(compute_and_show_test_hints1(TestID)).
-compute_and_show_test_hints1(TestID):- ensure_test(TestID),format('~N'),
-  compute_all_test_hints(TestID),
-  ignore(list_common_props_so_far(TestID)),!,
-  %listing(arc_test_property(TestID,_,_)),
-  with_li_pre(listing(io_xform(TestID,_,_))),
-  %ignore(list_common_props(TestID)),!,
-  format('~N').
-
-list_common_props_so_far(TestID):-
- (\+ arc_test_property(TestID,trn+_,_,_) -> compute_all_test_hints(TestID); true),
- findall(F=Common,
+ ensure_test(TestID),format('~N'),
+ w_section(compute_and_show_test_hints(TestID),
+ ((\+ arc_test_property(TestID,trn+_,_,_) -> detect_pair_hints(TestID); true),
+  findall(F=Common,
   (arc_test_property(TestID,trn+0,F,_),
     retractall(arc_test_property(TestID,common,F,_)),
     (( findall(Data,arc_test_property(TestID,(trn+_),F,Data),Commons),
       once((some_min_unifier(Commons,Common),nonvar(Common))))),
-      assert_test_property(TestID,common,F,Common)),FComs),
+      assert_test_property(TestID,common,F,Common)),FComs), 
   sort_safe(FComs,SComs),
   %dash_chars,
   %print_test(TestID),
   %wots(SS,my_maplist(ptv1,SComs)),
-  w_section(title(list_common_props),ptv1s(cyan+magenta,SComs)),
+  w_section(title(list_common_props),
+    (ptv1s(cyan+magenta,SComs),
+    with_li_pre(listing(io_xform(TestID,_,_))))))),
   !.
 
 my_sub_compound(_,C):- \+ compound(C),!,fail.
@@ -563,15 +532,34 @@ op_op(P2a,P2b,I,O):- call(P2a,I,II),call(P2a,O,OO),call(P2b,II,OO),!.
 
 v_area(I,Size):- vis2D(I,IH,IV), Size is IH * IV.
 
-%compute_all_test_hints(TestID):- arc_test_property(TestID,(trn+1),PP,_),sub_var(i-i,PP),!.
-compute_all_test_hints(TestID):- ensure_test(TestID), in_smaller_than_out(TestID),!,
-  compute_test_ii_hints(TestID),
-  compute_test_oo_hints(TestID),
-  compute_test_io_hints(TestID),!.
-compute_all_test_hints(TestID):-   
-  compute_test_oo_hints(TestID),
-  compute_test_ii_hints(TestID),
-  compute_test_io_hints(TestID),!.
+detect_pair_hints(TestID):- ensure_test(TestID),
+  training_only_examples(ExampleNum),
+  w_section(title(detect_pair_hints(TestID>ExampleNum)),
+    ( 
+       (in_smaller_than_out(TestID) ->
+        (compute_test_ii_hints(TestID), compute_test_oo_hints(TestID));
+        (compute_test_oo_hints(TestID), compute_test_ii_hints(TestID))),
+
+       forall(must_ll(kaggle_arc(TestID,ExampleNum,In,Out)),
+           must_det_ll(detect_pair_hints(TestID,ExampleNum,In,Out))),
+
+       color_print(magenta,call(((must_det_ll(compute_and_show_test_hints(TestID)))))))).
+
+training_only_examples(ExampleNum):- ignore(ExampleNum=(trn+_)).
+
+detect_pair_hints(TestID,ExampleNum,In,Out):- 
+  ensure_test(TestID), training_only_examples(ExampleNum),
+  must_det_ll((
+  dmsg(detect_pair_hints(TestID,ExampleNum)),
+  assert_id_grid_cells(_,In), assert_id_grid_cells(_,Out),
+  % guess_board(TT),
+  %print(TT),
+  %ignore(show_reduced_io(In^Out)),
+ % ignore(print_single_pair(TestID,ExampleNum,In,Out)),
+  grid_hint_swap(i-o,In,Out),
+  dash_chars)),!.
+
+%detect_pair_hints(TestID):- arc_test_property(TestID,(trn+1),PP,_),sub_var(i-i,PP),!.
 
 
 compute_test_io_hints(TestID):- 
@@ -1108,8 +1096,7 @@ illegal_column_data(In,Color,BorderNums):-
   C1 == C2, C1 == Color,!.
 
 
-
-
+/*
 save_the_alt_grids(TestID):- 
  forall(ensure_test(TestID),
   forall(kaggle_arc(TestID,ExampleNum,_,_),
@@ -1118,14 +1105,19 @@ save_the_alt_grids(TestID):-
 save_the_alt_grids(TestID,ExampleNum):-
   arc_test_property(TestID,ExampleNum,has_blank_alt_grid,_),!.
 save_the_alt_grids(TestID,ExampleNum):- 
+  ensure_test(TestID),
+  ignore((training_only_examples(ExampleNum),
   forall(kaggle_arc(TestID,ExampleNum,I,O),
-    once(save_the_alt_grids(TestID,ExampleNum,[],I,O))),!.
+    once(save_the_alt_grids(TestID,ExampleNum,I,O))))),!.
+*/
 
-save_the_alt_grids(TestID,ExampleNum,_,_,_):-arc_test_property(TestID,ExampleNum,ori(_),_),!.
+
+save_the_alt_grids(TestID,ExampleNum,In,Out):- 
+  with_trn_pairs(TestID,ExampleNum,In,Out,save_the_alt_grids(TestID,ExampleNum,[],In,Out)).
+save_the_alt_grids(TestID,ExampleNum,_,_,_):- arc_test_property(TestID,ExampleNum,ori(_),_),!.
 save_the_alt_grids(TestID,ExampleNum,_,_,_):- arc_test_property(TestID,ExampleNum,iro(_),_),!.
-save_the_alt_grids(TestID,ExampleNum,XForms,In,Out):-  %same_sizes(In,Out),
-  !,
-  save_the_alt_grids_now(TestID,ExampleNum,XForms,In,Out),!.
+save_the_alt_grids(TestID,ExampleNum,XForms,In,Out):-  same_sizes(In,Out),
+  !, save_the_alt_grids_now(TestID,ExampleNum,XForms,In,Out),!.
 save_the_alt_grids(TestID,ExampleNum,XForms,In,Out):- fail,
   once((some_norm(In,OpI,NIn), print_ss(some_norm(OpI),In,NIn),
   some_norm(Out,OpO,NOut), print_ss(some_norm(OpO),Out,NOut), 

@@ -29,7 +29,7 @@
             cmp_memberchk_0/2,
             cmp_memberchk_00/2,
             comp_type/3,
-            iz/2,
+            iiz/2,
             extend_iz/2,
             extend_iz_member/2,
             init_iz/2,
@@ -113,7 +113,7 @@
             cmp_memberchk_0/2,
             cmp_memberchk_00/2,
             comp_type/3,
-            iz/2,
+            iiz/2,
             extend_iz/2,
             extend_iz_member/2,
             init_iz/2,
@@ -409,7 +409,7 @@ boxlog_goal_expansion(G,_):- % \+ source_location(_,_),
 */
 
 
-is_iz_or_iza(Var):- zotrace((mtc_get_attr(Var,iz,_);mtc_get_attr(Var,iza,_))).
+is_iz_or_iza(Var):- zotrace((mtc_get_attr(Var,iiz,_);mtc_get_attr(Var,iza,_))).
 
 %% relax( :GoalG) is det.
 %
@@ -454,22 +454,22 @@ relax_goal_alt_old(G,GGG):-
 % Relaxen Argument.
 %
 % % relax_N(G,N,Val):- var(Val),!,setarg(N,G,Val).
-% % relax_N(G,N,Val):- iz(AA,[Val]),!,nb_setarg(N,G,AA).
-relax_N(_,_,Val):- var(Val),!, ((mtc_get_attr(Val,iz,_);mtc_get_attr(Val,iza,_))->true;mtc_put_attr(Val,iz,[_])).
+% % relax_N(G,N,Val):- iiz(AA,[Val]),!,nb_setarg(N,G,AA).
+relax_N(_,_,Val):- var(Val),!, ((mtc_get_attr(Val,iiz,_);mtc_get_attr(Val,iza,_))->true;mtc_put_attr(Val,iiz,[_])).
 relax_N(G,N,Val):- dont_relax(Val)->true;(nb_setarg(N,G,NewVar),put_value(NewVar,Val)).
 
 :- if(exists_source(library(multivar))).
-put_value(Var,Value):- var(Var),multivar(Var),iz(Var,[Value]),mv_set1(Var,Value).
+put_value(Var,Value):- var(Var),multivar(Var),iiz(Var,[Value]),mv_set1(Var,Value).
 put_value(Var,Value):- Var==Value,!.
 put_value(Var,Value):- is_dict(Value,Tag),!,
      (Tag==Var->true;put_value(Var,Tag)),
      dict_pairs(Value,_Tag2,Pairs),
      maplist(put_value_attr(Var),Pairs).
-put_value(Var,Value):- iz(Var,[Value]).
+put_value(Var,Value):- iiz(Var,[Value]).
 
 put_value_attr(Var,N-V):- put_attr_value(Var,N,V).
 put_attr_value(Var,iza,V):- !, add_cond(Var,V).
-put_attr_value(Var,iz,V):- !, iz(Var,V).
+put_attr_value(Var,iiz,V):- !, iiz(Var,V).
 put_attr_value(Arg,Name,FA):- as_constraint_for(Arg,FA,Constraint),!,put_attr_value0(Arg,Name,Constraint).
 
 put_attr_value0(Var,Name,HintE):- 
@@ -479,7 +479,7 @@ put_attr_value0(Var,Name,HintE):-
 
 
 :- else.
- put_value(Var,Value):- iz(Var,[Value]).
+ put_value(Var,Value):- iiz(Var,[Value]).
 :- endif.
 
 dont_relax(A):- var(A),!,is_iz_or_iza(A).
@@ -1277,7 +1277,7 @@ unrelax(X):-copy_term(X,X,Gs),maplist(iz_member,Gs).
 %
 % Domain Member.
 %
-iz_member(iz(X,List)):-!,member(X,List).
+iz_member(iiz(X,List)):-!,member(X,List).
 iz_member(G):-G.
 
 
@@ -1407,21 +1407,21 @@ promp_yn(Fmt,A):- format(Fmt,A),get_single_char(C),C=121.
 
 
 
-% :-swi_module(iz, [ iz/2  ]). % Var, ?Domain
+% :-swi_module(iiz, [ iiz/2  ]). % Var, ?Domain
 :- use_module(library(ordsets)).
 
-%% iz( ?X, ?Dom) is semidet.
+%% iiz( ?X, ?Dom) is semidet.
 %
 % Domain.
 %
-:- was_export(iz/2).
+:- was_export(iiz/2).
 
-iz(X, Dom) :- var(Dom), !, mtc_get_attr(X, iz, Dom).
-% iz(X, Dom) :- var(Dom), !, (mtc_get_attr(X, iz, Dom)->true;mtc_put_attr(X, iz, [iziz(Dom)])).
-iz(X, List) :- 
+iiz(X, Dom) :- var(Dom), !, mtc_get_attr(X, iiz, Dom).
+% iiz(X, Dom) :- var(Dom), !, (mtc_get_attr(X, iiz, Dom)->true;mtc_put_attr(X, iiz, [iziz(Dom)])).
+iiz(X, List) :- 
       listify(List,List0),
       list_to_ord_set(List0, Domain),
-      mtc_put_attr(Y, iz, Domain),
+      mtc_put_attr(Y, iiz, Domain),
       X = Y.
 
 :- was_export(extend_iz_member/2).
@@ -1432,7 +1432,7 @@ iz(X, List) :-
 %
 % Extend Domain.
 %
-extend_iz_member(X, DomL):- init_iz(X, Dom2), ord_union(Dom2, DomL, NewDomain),mtc_put_attr( X, iz, NewDomain ).
+extend_iz_member(X, DomL):- init_iz(X, Dom2), ord_union(Dom2, DomL, NewDomain),mtc_put_attr( X, iiz, NewDomain ).
 
 :- was_export(extend_iz/2).
 
@@ -1442,7 +1442,7 @@ extend_iz_member(X, DomL):- init_iz(X, Dom2), ord_union(Dom2, DomL, NewDomain),m
 %
 % Extend Domain.
 %
-extend_iz(X, DomE):-  init_iz(X, Dom2),ord_add_element(Dom2, DomE, NewDomain),mtc_put_attr( X, iz, NewDomain ).
+extend_iz(X, DomE):-  init_iz(X, Dom2),ord_add_element(Dom2, DomE, NewDomain),mtc_put_attr( X, iiz, NewDomain ).
 
 :- was_export(init_iz/2).
 
@@ -1452,35 +1452,35 @@ extend_iz(X, DomE):-  init_iz(X, Dom2),ord_add_element(Dom2, DomE, NewDomain),mt
 %
 % Init Domain.
 %
-init_iz(X,Dom):-mtc_get_attr(X, iz, Dom),!.
-init_iz(X,Dom):-Dom =[_], mtc_put_attr(X, iz, Dom),!.
+init_iz(X,Dom):-mtc_get_attr(X, iiz, Dom),!.
+init_iz(X,Dom):-Dom =[_], mtc_put_attr(X, iiz, Dom),!.
 
 % An attributed variable with attribute value Domain has been
 % assigned the value Y
 
-iz:attr_unify_hook([Y], Value) :-  same(Y , Value),!.
-iz:attr_unify_hook(Domain, Y) :-
-   ( mtc_get_attr(Y, iz, Dom2)
+iiz:attr_unify_hook([Y], Value) :-  same(Y , Value),!.
+iiz:attr_unify_hook(Domain, Y) :-
+   ( mtc_get_attr(Y, iiz, Dom2)
    -> ord_intersection(Domain, Dom2, NewDomain),
          ( NewDomain == []
          -> fail
          ; NewDomain = [Value]
           -> same(Y , Value)
-             ; mtc_put_attr(Y, iz, NewDomain)
+             ; mtc_put_attr(Y, iiz, NewDomain)
            )
    ; var(Y)
-   -> mtc_put_attr( Y, iz, Domain )
+   -> mtc_put_attr( Y, iiz, Domain )
    ; (\+ \+ (cmp_memberchk_0(Y, Domain)))
 ).
 
 
 
 % Translate attributes from this module to residual goals
-iz:attribute_goals(X) --> { mtc_get_attr(X, iz, List) },!,[iz(X, List)].
+iiz:attribute_goals(X) --> { mtc_get_attr(X, iiz, List) },!,[iiz(X, List)].
 
 
 
-%iz:attr_portray_hook(Val, _) :- write('iz:'), write(Val),!.
+%iiz:attr_portray_hook(Val, _) :- write('iiz:'), write(Val),!.
 
 %iza:attr_portray_hook(Val, _) :- write('iza:'), write(Val),!.
 

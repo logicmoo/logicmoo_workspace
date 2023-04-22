@@ -78,7 +78,7 @@ arc_simple_rewrite(I,O):-
   b_setval(arc_can_portray,t).
 
 
-:- current_prolog_flag(never_pp_hook, true).
+%:- set_prolog_flag(never_pp_hook, true).
 
 
 portray_terse:- true,!.
@@ -2490,6 +2490,7 @@ isc:- ignore(save_codes).
 :- initialization(isc).
 
 test_show_color_on_reload:- prolog_load_context(reloading,true)-> test_show_colors ; true.
+
 
 /*
 get_glyph(Point,Glyph):-  

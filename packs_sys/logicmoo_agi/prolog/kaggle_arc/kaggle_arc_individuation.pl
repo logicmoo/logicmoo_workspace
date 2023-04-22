@@ -1855,8 +1855,8 @@ first_grid1(_In,_Out,in_out).
 compile_and_save_current_test(_):-!.
 compile_and_save_current_test(Why):-
  get_current_test(TestID),
+ detect_pair_hints(TestID),!,
  time(compile_and_save_test(TestID)),!,
- detect_all_training_hints,!,
  forall(compile_and_save_current_test_pt_2(TestID,Why),true).
 
 arc_test_property(A,B,C):- 

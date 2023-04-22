@@ -673,7 +673,7 @@ saved_training(TestID):- test_name_output_file(TestID,'.pl',File),exists_file(Fi
 
 :- set_prolog_flag(arc_term_expansion, true).
 
-%:- ensure_loaded('kaggle_arc_fwd.pfc').
+:- ensure_loaded('kaggle_arc_fwd.pfc').
 
 %:- set_prolog_flag(arc_term_expansion, false).
 
@@ -778,7 +778,7 @@ load_from_main:-
   !.
 
 :- initialization(load_from_main).
-:- initialization(scan_uses_test_id).
+:- initialization(scan_uses_test_id(main_file)).
 %:- initialization(store_grid_size_predictions).
 %:- initialization(test_grid_size_predictions).
 :- initialization(make_grid_cache).
@@ -894,7 +894,7 @@ create_group_dmiles:-
 
 %:- demo.
 :- current_prolog_flag(argv,C),(member('-l',C)->initialize;true).
-:- initialization(scan_uses_test_id).
+:- initialization(scan_uses_test_id(main_file_complete)).
 %:- use_module('./induction/h_muarc_alephlib').
 %:- consult('./induction/h_muarc_aleph').
 %:- tmp:loading_arc_from(M),'$set_source_module'(M).

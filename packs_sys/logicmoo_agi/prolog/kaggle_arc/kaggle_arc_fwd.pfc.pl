@@ -5,6 +5,7 @@
   unless permission or license is granted (contact at business@logicmoo.org)
 */
 :- include(kaggle_arc_header).
+:- set_prolog_flag(pfc_term_expansion,false).
 
 %%:- module(user).
 
@@ -40,7 +41,9 @@
 %:- module(system).
 
 %:- expects_dialect(pfc).
+:- if( \+ current_predicate(forall_assert/2)).
 forall_assert(G,P):- forall(G,arc_assert(P)).
+:- endif.
 :- set_prolog_flag(pfc_term_expansion,true).
 
 meta_argtypes(find_test_gids(testID,grid_type,gid)).

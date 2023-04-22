@@ -71,7 +71,7 @@ train_using_io(TestID,DictIn,DictOut):- train_using_io(TestID,trn,0,DictIn,DictO
 train_using_io(TestID,Trn,N1,DictIn,DictOut):-  
   kaggle_arc(TestID,(Trn+N1),In,Out),!,
 
-  with_test_pairs(TestID,(Trn+N1),In,Out,
+  with_trn_pairs(TestID,(Trn+N1),In,Out,
   must_det_ll((
   %detect_pair_hints(TestID,(Trn+N1),In,Out),
   pp(train_for_objects_from_1pair(DictIn,TestID,[Trn,'i',N1,'o',N1],In,Out,DictMid)),
@@ -210,7 +210,8 @@ appended_trial(human,[learn_rule]).
 
 solve_test:- forall(trial_non_human(Trial),solve_test_trial(Trial)).
 
-solve_test_trial(Trial):- mmake, with_test_pairs(TestID,ExampleNum,I,O,solve_test_trial_pair(Trial,TestID,ExampleNum,I,O)).
+solve_test_trial(Trial):- mmake, 
+  with_task_pairs(TestID,ExampleNum,I,O,solve_test_trial_pair(Trial,TestID,ExampleNum,I,O)).
 
 solve_test_trial_pair(Trial,TestID,ExampleNum,_I,_O):- 
  my_time((my_menu_call((catch(solve_test_trial(Trial,TestID,ExampleNum),E,

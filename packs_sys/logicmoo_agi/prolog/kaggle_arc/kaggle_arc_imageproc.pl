@@ -692,7 +692,21 @@ get_colum_l(Width,Grid,[Col|Cols]):-
   get_colum_l(Wm1,Grid,Cols).
 
 get_colum(G,GridNew):- into_grid(G,Grid),G\=@=Grid,!,get_colum(Grid,GridNew).
-get_colum(N,Grid,Col):- my_maplist(nth1(N),Grid,Col).
+get_colum(N,Grid,Col):- maplist(nth1(N),Grid,Col).
+
+% Transpose a 2D grid
+transpoze([C1|Rest],C1):- C1==[],!,(ground(Rest)->true;maplist(=(C1),Rest)).
+transpoze(Grid,[TheFirsts|NGrid]):-
+  maplist(first_rest,Grid,TheFirsts,TheRests),
+  transpoze(TheRests,NGrid).
+%transpoze([C1|_],[]):- C1=[].
+first_rest([H|T],H,T).
+
+% Rotate a 2D grid by 90 degrees clockwise
+rotate_90(Grid, RotatedGrid) :-
+    transpoze(Grid, TransposedGrid),
+    maplist(reverse,TransposedGrid, RotatedGrid).
+
 
 make_var_grid(H,V,G):- make_grid(H,V,G),numbervars(G,0,_N).
 

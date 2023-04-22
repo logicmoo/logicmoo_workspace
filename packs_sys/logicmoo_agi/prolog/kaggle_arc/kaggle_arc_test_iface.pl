@@ -89,7 +89,7 @@ menu_cmd1(_,'j','                  or (j)unctions between objects',   (cls_z_mak
 menu_cmd1(_,'k','                  or (k)ill/clear all test data.',(update_changes,clear_test)).
 menu_cmd1(_,'B','                  or (B)oxes test.',(update_changes,pbox_indivs)).
 menu_cmd1(_,'R','                  or (R)epairs test.',(update_changes,repair_symmetry)).
-menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls_z_make,!,compile_and_save_test)).
+menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls_z_make,!,compute_and_show_test_hints,compile_and_save_test)).
 menu_cmd1(_,'p','                  or (p)rint the test (textured grid)',(update_changes,maybe_set_suite,print_testinfo,print_test)).
 menu_cmd1(_,'w','                  or (w)rite the test info',(update_changes,switch_pair_mode)).
 menu_cmd1(_,'X','                  or  E(X)amine the program leared by training',(cls_z_make,print_test,!,learned_test,solve_easy)).
@@ -532,7 +532,7 @@ each_ndividuator(TestID):- ensure_test(TestID),
   compile_and_save_test,
   findall(PairGroups,
   with_individuated_cache(true,
-    (with_test_pairs(TestID,ExampleNum,In,Out,
+    (with_task_pairs(TestID,ExampleNum,In,Out,
          once(each_ndividuator(TestID,ExampleNum,In,Out,PairGroups))))),
    AllPairGroups),
   show_groups(TestID),
@@ -552,7 +552,7 @@ each_ndividuator(TestID,ExampleNum,In,Out, OUTPUT):-
  findall(show_pair_result(PairName,Complete,InC,OutC),
   (get_each_ndividuator(Complete),
    with_indivs_mode(Complete,((
-    with_test_pairs(TestID,ExampleNum,In,Out, 
+    with_task_pairs(TestID,ExampleNum,In,Out, 
      ((  w_section(individuate_pair_debug(Complete),
           must_det_ll((
            once(individuate_pair(Complete,In,Out,InC,OutC)))))))))))),PairGroups),
@@ -577,18 +577,18 @@ show_i(Y,O):-
 ndividuator(TestID):- ensure_test(TestID),
   never_entire_suite,nop(show_test_grids), set_flag(indiv,0),
   %each_ndividuator(TestID),
-  detect_all_training_hints(TestID),
-  forall(with_test_pairs(TestID,ExampleNum,In,Out,ndividuator(TestID,ExampleNum,In,Out)),true).
+  detect_pair_hints(TestID),
+  forall(with_task_pairs(TestID,ExampleNum,In,Out,ndividuator(TestID,ExampleNum,In,Out)),true).
 
 ndividuator(TestID,ExampleNum,In,Out):- 
  get_indivs_mode(Complete), ndividuator(TestID,ExampleNum,Complete,In,Out).
 ndividuator(TestID,ExampleNum,Complete,In,Out):-  
  with_indivs_mode(Complete,((name_the_pair(TestID,ExampleNum,In,Out,_PairName),
-   with_test_pairs(TestID,ExampleNum,In,Out, i_pair(Complete,In,Out))))).
+   with_task_pairs(TestID,ExampleNum,In,Out, i_pair(Complete,In,Out))))).
 
-show_test_pairs(TestID):- ensure_test(TestID), set_flag(indiv,0),
- forall( with_test_pairs(TestID,ExampleNum,In,Out,
-   print_side_by_side(green,In,in(show_test_pairs(TestID>ExampleNum)),_,Out,out(show_test_pairs(TestID>ExampleNum)))), true).
+show_task_pairs(TestID):- ensure_test(TestID), set_flag(indiv,0),
+ forall( with_task_pairs(TestID,ExampleNum,In,Out,
+   print_side_by_side(green,In,in(show_task_pairs(TestID>ExampleNum)),_,Out,out(show_task_pairs(TestID>ExampleNum)))), true).
 %show_test_grids:- get_current_test(TestID),set_flag(indiv,0),with_test_grids(TestID,Grid,print_grid(show_test_grids(TestID),Grid)).
 
 
@@ -688,12 +688,18 @@ test_pairs(TestID,I,O):- test_pairs(TestID,_ExampleNum,I,O).
 
 test_pairs(TestID,ExampleNum,I,O):- get_pair_mode(entire_suite), !,ensure_test(TestID), kaggle_arc_safe(TestID,ExampleNum,I,O).
 test_pairs(_TestID,ExampleNum,I,_O):- nonvar(ExampleNum),nonvar(I),!.
-test_pairs(TestID,ExampleNum,I,O):- get_pair_mode(whole_test), ensure_test(TestID), !, %ignore(ExampleNum=trn+_), 
+
+test_pairs(TestID_IN,ExampleNum,I,O):- get_pair_mode(whole_test), ensure_test(TestID_IN,TestID),!, %ignore(ExampleNum=trn+_), 
   kaggle_arc_safe(TestID,ExampleNum,I,O).
 %test_pairs(TestSpec,ExampleNum,I,O):- compound(TestSpec),(TestSpec = (TestID>ExampleNum)),testspec_to_pairs(TestSpec,TestID,ExampleNum,I,O).
-test_pairs(TestID,ExampleNum,I,O):- ignore(ensure_test(TestID)), some_current_example_num(ExampleNum), kaggle_arc(TestID,ExampleNum,I,O).
 
-%with_test_pairs(TestID,I,O,P):- forall(test_pairs(TestID,I,O),my_menu_call((ensure_test(TestID),P))).
+%test_pairs(TestID_IN,ExampleNum,I,O):- get_pair_mode(whole_test), ensure_test(TestID_IN,TestID),!,kaggle_arc_safe(TestID,ExampleNum,I,O).
+%test_pairs(TestID_IN,ExampleNum,I,O):- get_pair_mode(single_pair), ensure_test(TestID_IN,TestID),!,kaggle_arc_safe(TestID,ExampleNum,I,O).
+
+test_pairs(TestID,ExampleNum,I,O):- ignore(ensure_test(TestID)), some_current_example_num(ExampleNum),
+  kaggle_arc(TestID,ExampleNum,I,O).
+
+%with_task_pairs(TestID,I,O,P):- forall(test_pairs(TestID,I,O),my_menu_call((ensure_test(TestID),P))).
 testspec_to_pairs(Var,TestID,ExampleNum,I,O):- var(Var),!,test_pairs(TestID,ExampleNum,I,O).
 testspec_to_pairs(TestSpec,TestID,ExampleNum,I,O):- 
   testid_name_num_io(TestSpec,TestID,Example,Num,_IO), ExampleNum = Example+Num,!,
@@ -703,7 +709,15 @@ testspec_to_pairs(TestSpec,TestID,ExampleNum,I,O):-
 for_each(Gen,Goal):-
   Gen,(Goal*->true;true).
 
-with_test_pairs(TestID,ExampleNum,I,O,P):- 
+with_trn_pairs(TestID,ExampleNum,In,Out,Goal):- 
+  ignore(ExampleNum=trn+_),
+  with_task_pairs(TestID,ExampleNum,In,Out,Goal).
+
+with_test_pairs(TestID,ExampleNum,In,Out,Goal):- 
+  ignore(ExampleNum=tst+_),
+  with_task_pairs(TestID,ExampleNum,In,Out,Goal).
+
+with_task_pairs(TestID,ExampleNum,I,O,P):- 
  for_each((test_pairs(TestID,ExampleNum,I,O)),
   my_menu_call((
     ensure_test(TestID),
@@ -1395,7 +1409,7 @@ my_shell_format(F,A):- shell_op((sformat(S,F,A), shell(S))).
 warn_skip(Goal):- u_dmsg(warn_skip(Goal)).
 
 save_supertest(TestID):- is_list(TestID),!,my_maplist(save_supertest,TestID).
-save_supertest(TestID):- ensure_test(TestID), save_supertest(TestID,_File).
+save_supertest(TestID_IN):- ensure_test(TestID_IN,TestID), save_supertest(TestID,_File).
 
 save_supertest(TestID,File):- var(TestID),!, forall(ensure_test(TestID), save_supertest(TestID,File)).
 save_supertest(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_supertest(TestID,File).
@@ -1681,7 +1695,7 @@ var_ensure_test(TestID,OUT):- var_ensure_test(TestID),OUT=TestID,is_valid_testna
 var_ensure_test(TestSpec,I,O,Goal):- 
   var_ensure_test(TestSpec,TestID),
   wots(Title,\+ \+ (I=(+(in)),O=(-(out)),writeln(Goal))),
-  forall(with_test_pairs(TestID,ExampleNum,I,O,
+  forall(with_task_pairs(TestID,ExampleNum,I,O,
     (print_side_by_side(green,I,orig_in(TestID,Title,ExampleNum),_,O,orig_out(TestID,Title,ExampleNum)),
      forall(Goal,true))),true).
 
@@ -2294,10 +2308,61 @@ color_sym(OS,C,Sym):- color_sym(OS,4,C,Sym).
 color_sym(_,_,C,Sym):- enum_colors(C),color_int(C,I),nth1(I,`ose=xt~+*zk>`,S),name(Sym,[S]).
 %color_sym(P*T,_,C,Sym):- enum_colors(C),color_int(C,I),S is P+I*T,name(Sym,[S]).
 
+with_current_test(P1):- current_predicate_human(P1/0),!,call(P1).
+with_current_test(P1):- get_pair_mode(entire_suite),!,
+  forall_count(all_arc_test_name(TestID), 
+           catch_non_abort(with_current_test(P1,TestID))).
+with_current_test(P1):- current_predicate(P1/1),!,call(P1,_).
+with_current_test(P1):- doall(with_current_test(P1,_TestID)).
 
-with_current_test(P1):- get_pair_mode(entire_suite),!,forall_count(all_arc_test_name(TestID),
- catch_non_abort(call(P1,TestID))).
-with_current_test(P1):- ensure_test(TestID), call(P1,TestID).
+%with_current_test(P1,TestID_IN):- ensure_test(TestID_IN,TestID), with_current_test(P1,TestID).
+
+
+with_current_test(P1,TestID):- get_pair_mode(single_pair),!, with_pair_mode(whole_test,with_current_test(P1,TestID)).  
+with_current_test(P1,TestID):- get_pair_mode(entire_suite),!,var(TestID),
+  all_arc_test_name(TestID), catch_non_abort(with_current_test(P1,TestID)).
+with_current_test(P1,TestID):- current_predicate_human(P1/1),!,ensure_test(TestID),call(P1,TestID).
+with_current_test(P1,TestID):- doall(with_current_test(P1,TestID,_)).
+
+with_current_test(P1,TestID,ExampleNum):- \+ ground(ExampleNum),get_pair_mode(single_pair),!,
+  with_pair_mode(whole_test,with_current_test(P1,TestID,ExampleNum)).  
+with_current_test(P1,TestID,ExampleNum):-  Call = with_current_test(P1,TestID),
+  \+ ground(Call), \+ \+ ((test_pairs(TestID,ExampleNum,_,_), ground(Call))),!,
+  test_pairs(TestID,ExampleNum,_,_),
+  call(Call). 
+with_current_test(P1,TestID,ExampleNum):- var(TestID),!,ensure_test(TestID),with_current_test(P1,TestID,ExampleNum).
+with_current_test(P1,TestID,ExampleNum):- var(ExampleNum),!,with_task_pairs(TestID,ExampleNum,_I,_O, with_current_test(P1,TestID,ExampleNum)).
+
+
+with_current_test(P1,TestID,ExampleNum):- current_predicate_human(P1/2),!,call(P1,TestID,ExampleNum).
+with_current_test(P1,TestID,ExampleNum):- with_current_test(P1,TestID,ExampleNum,_,_).
+
+
+with_current_test(P1,TestID,ExampleNum,I,O):- \+ ground(ExampleNum),get_pair_mode(single_pair),!,
+  with_pair_mode(whole_test,with_current_test(P1,TestID,ExampleNum,I,O)).  
+
+with_current_test(P1,TestID,ExampleNum,I,O):- 
+  Call = with_current_test(P1,TestID,ExampleNum,I,O),
+  \+ ground(Call), test_pairs(TestID,ExampleNum,I,O), ground(Call),call(Call). 
+
+with_current_test(P1,TestID,ExampleNum,I,O):- var(TestID),!,ensure_test(TestID),with_current_test(P1,TestID,ExampleNum,I,O).
+%with_current_test(P1,TestID,ExampleNum,I,O):- var(ExampleNum),!,with_task_pairs(TestID,ExampleNum,_I,_O, with_current_test(P1,TestID,ExampleNum,I,O)).
+with_current_test(P1,TestID,ExampleNum,I,O):- current_predicate_human(P1/4),!,with_task_pairs(TestID,ExampleNum,I,O,call(P1,TestID,ExampleNum,I,O)).
+with_current_test(P1,TestID,ExampleNum,I,O):- current_predicate_human(P1/2),!,with_task_pairs(TestID,ExampleNum,I,O,call(P1,TestID,ExampleNum)).
+
+with_current_test.
+
+current_predicate_human(F/A):- current_predicate(F/A,P), \+ clause(P,(with_current_test,_)).
+
+/*
+with_current_test(P1,TestID,ExampleNum,I,O):- var(I),var(O),!,
+  forall(kaggle_arc(TestID,ExampleNum,I,O),
+    with_current_test(P1,TestID,ExampleNum,I,O)).
+
+with_current_test(P1,TestID,ExampleNum,I,O):- 
+    with_task_pairs(TestID,ExampleNum,I,O,
+     with_current_test(P1,TestID,ExampleNum)).
+*/
 
 first_cmpd_goal(GG,_):- \+ compound(GG),!,fail.
 first_cmpd_goal(forall(G,_),GG):- !, first_cmpd_goal(G,GG).
@@ -2320,18 +2385,66 @@ indicates_arg1_testid(testid_name_num_io).
 indicates_arg1_testid(fix_test_name).
 indicates_arg1_testid(is_valid_testname).
 indicates_arg1_testid(with_test_grids).
+indicates_arg1_testid(with_task_grids).
+indicates_arg1_testid(with_trn_grids).
+%indicates_arg1_testid(into_test_id_io1).
+indicates_arg1_testid(test_grids).
 
-uses_test_id(P1):- clauses_predicate(M:F/N,P), 
-                   once((\+ indicates_arg1_testid(F),             
-                   \+ \+ (clause(M:P,GG),first_cmpd_goal(GG,G),compound(G),functor(G,GF,_),
+skip_uses_test_id(into_test_id_io1).
+skip_uses_test_id(do_menu_key).
+skip_uses_test_id(set_example_num).
+skip_uses_test_id(F):- indicates_arg1_testid(F).
+
+uses_test_id(P):- clauses_predicate(M:F/N,P), 
+                   once((
+                   \+ skip_uses_test_id(F),
+                   member(N,[0,1,4]),
+                   \+ \+ ((clause(M:P,GG,_Ref),
+                          first_cmpd_goal(GG,G),compound(G),functor(G,GF,_),
                           \+ \+ indicates_arg1_testid(GF),
-                          compound(P),arg(1,P,Var1),arg(1,G,Var2),Var1==Var2),
-                   N1 is N-1, functor(P1,F,N1),
-                   \+ predicate_property(M:P1,static))).
-scan_uses_test_id:- forall((uses_test_id(P1),atom(P1)),assertz_if_new(user:(P1:- with_current_test(P1)))).
-:- all_source_file_predicates_are_exported.
+                          if_t(compound(P),(arg(1,P,Var1),arg(1,G,Var2),Var1==Var2)),
+                          ignore((fail,N>=0,listing((M:P))))
 
-:- initialization(scan_uses_test_id).
+                   )),
+                   ((N1 is N-1, functor(P1,F,N1),
+                     nop((\+ predicate_property(M:P1,static))))))).
+
+assert_missing_skel_mfa(M,F,A):- 
+ ignore((
+  length(Args,A),
+   Head=..[F|Args],
+   \+ predicate_property(M:Head,static),
+   \+ predicate_property(M:Head,static),
+   \+ clause(M:Head,_),
+   Body=..[with_current_test,F|Args],
+  asserta(M:(Head:- (with_current_test,Body))),
+  writeln(synthesized(M:Head)))).
+
+
+make_use_test_id(MP):- strip_module(MP,M,P),functor(P,F,_),make_use_test_id(M,F).
+make_use_test_id(M,P):- compound(P),!,functor(P,F,_),make_use_test_id(M,F).
+make_use_test_id(M,(F/A)):- !, assert_missing_skel_mfa(M,F,A).
+make_use_test_id(M,F):-
+ must_det_ll((
+  assert_missing_skel_mfa(M,F,0),
+  assert_missing_skel_mfa(M,F,1),   
+  if_t(current_predicate_human(F/4),
+   assert_missing_skel_mfa(M,F,2)))).
+
+
+
+scan_uses_test_id:- scan_uses_test_id(uses_test_id).
+scan_uses_test_id(When):- 
+ dmsg(When),
+ forall(uses_test_id(P),make_use_test_id(P)).
+
+
+
+%:- all_source_file_predicates_are_exported.
+
+%:- initialization(scan_uses_test_id(now),now).
+:- initialization(scan_uses_test_id(default)).
+:- initialization(scan_uses_test_id(restore),restore).
 
 
 end_of_file.

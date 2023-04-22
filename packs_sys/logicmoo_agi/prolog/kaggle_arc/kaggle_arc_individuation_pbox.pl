@@ -238,7 +238,7 @@ quick_test_menu(test_pbox).
 
 
 pbox_indivs:- 
-  with_test_pairs(TestID,ExampleNum,I,O,pbox_pair(TestID,ExampleNum,I,O)).
+  with_task_pairs(TestID,ExampleNum,I,O,pbox_pair(TestID,ExampleNum,I,O)).
 
 pbox_pair(TestID,ExampleNum,GridIn,GridOut):-
   with_debugging(indiv(pbox),

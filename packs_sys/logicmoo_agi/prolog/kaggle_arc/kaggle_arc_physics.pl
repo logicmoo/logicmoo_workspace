@@ -333,10 +333,11 @@ learn_head((P:-_)):- compound(P), compound_name_arity(P,F,2),atom_concat('grid_'
 
 grid_rollD(Grid,RollD):-  do_rollD(Grid,RollD),!.
 grid_rollDR(Grid,RollD):-  do_rollDR(Grid,RollD),!.
-grid_rot90(Grid,Rot90):-  rot270(Grid,Rot270),rot180(Rot270,Rot90).
-grid_rot180(Grid,Rot180):- flipV(Grid,Rot90),flipH(Rot90,Rot180).
-grid_rot270(Grid,NewAnyWUpdate):- get_colums(Grid,NewAnyWUpdate),!.
-grid_flipH(Grid,FlipH):- my_maplist(reverse,Grid,FlipH).
+%grid_rot90(Grid,Rot90):- transpoze(Grid,Transposed),maplist(reverse,Transposed,Rot90).
+grid_rot90(Grid,Rot90):- reverse(Grid,GridR),transpoze(GridR,Rot90).
+grid_rot180(Grid,Rot180):- grid_flipV(Grid,FlipV),grid_flipH(FlipV,Rot180).
+grid_rot270(Grid,Rot270):- transpoze(Grid,Transposed),reverse(Transposed,Rot270).
+grid_flipH(Grid,FlipH):- maplist(reverse,Grid,FlipH).
 grid_flipV(Grid,FlipV):- reverse(Grid,FlipV).
 
 grid_flipDV(Grid,FlipHV):-flipD(Grid,FlipH),flipV(FlipH,FlipHV),!.
