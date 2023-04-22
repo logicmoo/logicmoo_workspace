@@ -10,30 +10,21 @@
 :- use_module(library(wfs)).
 
 do_lazy:-
-  prolog_load_context(variable_names,X),
-  do_lazy_vars(X).
+  prolog_load_context(variable_names,Vars),
+  do_lazy_goals(Vars).
 
-do_lazy_vars(X):- 
-  term_attvars(X,AttVars),
-  do_lazy_items(AttVars).
+get_delayed_goals(Term,Goals):-
+  copy_term(Term,Term,Goals).
 
-do_lazy_items(AttVars):- 
-  copy_term(AttVars,AttVars,Goals),  
-  do_lazy_goals(AttVars,Goals).
+do_lazy_goals(Vars):- 
+  get_delayed_goals(Vars,Goals),
+  maplist(add_eagerness([]),Goals,EagerGoals),
+  sort(EagerGoals,OrderedEagerGoals),!, % wdmsg(N=LazyGoals),!,
+  do_eager_goals(OrderedEagerGoals).
 
-do_lazy_goals(_,[]):- !.
-do_lazy_goals(_,[Goal]):- !, immc(Goal).
-do_lazy_goals(N,Goals):-
-  maplist(add_eagerness(N,Goals),Goals,EagerGoals),
-  sort(EagerGoals,LazyGoals),!,
-  % wdmsg(N=LazyGoals),!,
-  do_eager_attvars(N,LazyGoals).
-
-%do_eager_attvars(_,[Goal]):- !, immc(Goal).
-do_eager_attvars(_,[]):- !.
-do_eager_attvars(Vars,[Eager|Goals]):- !,
-  %remove_attrs(Eager,Nat),
-  immc(Eager), do_lazy_vars(Goals+Vars).
+do_eager_goals([Eager|Goals]):- !,
+  immc(Eager), get_delayed_goals(Eager+Goals).
+do_eager_goals(_).
 
 immc(eager(_N,V,Eager)):- !, del_attrs(V), !, immc(Eager).
 immc(freeze(V,Eager)):- del_attrs(V), !, immc(Eager).
@@ -42,14 +33,14 @@ immc(mpred_type_constraints: lazy_1(Eager)):-!, immc(Eager).
 immc(soon_1(Eager)):-!, immc(Eager).
 immc(Eager):- call(Eager).
 
-%add_eagerness(AllV,All,eager(_A,_B,Goal),New):- add_eagerness(AllV,All,Goal,New),!.
-add_eagerness(_AllV,_All,eager(N,A,Goal),eager(N,A,Goal)):-!.
-add_eagerness(AllV,All,freeze(FV,Goal),New):- !,add_eagerness(FV,All,Goal,New).
-add_eagerness(AllV,All,soon_1(Goal),New):- !, add_eagerness(AllV,All,Goal,New).
-add_eagerness(AllV,All,soon(Goal),New):- !, add_eagerness(AllV,All,Goal,New).
-add_eagerness(AllV,All,mpred_type_constraints:lazy_1(Goal),New):- !, add_eagerness(AllV,All,Goal,New).
-add_eagerness(AllV,All,mpred_type_constraints:lazy(Goal),New):- !, add_eagerness(AllV,All,Goal,New).
-add_eagerness(AllV,_All,Goal,eager(N,AllV,Goal)):- term_variables(Goal,Vs),length(Vs,N).
+add_eagerness(_,eager(_A,Vs,Goal),New):- add_eagerness(Vs,Goal,New),!.
+add_eagerness(_,eager(N,A,Goal),eager(N,A,Goal)):-!.
+add_eagerness(_,freeze(FV,Goal),New):- !,add_eagerness(FV,Goal,New).
+add_eagerness(Vs,soon_1(Goal),New):- !, add_eagerness(Vs,Goal,New).
+add_eagerness(Vs,soon(Goal),New):- !, add_eagerness(Vs,Goal,New).
+add_eagerness(Vs,mpred_type_constraints:lazy_1(Goal),New):- !, add_eagerness(Vs,Goal,New).
+add_eagerness(Vs,mpred_type_constraints:lazy(Goal),New):- !, add_eagerness(Vs,Goal,New).
+add_eagerness(Vs,Goal,eager(N,Vs,Goal)):- term_variables(Goal,TV),length(TV,N).
 
 %% soon( :GoalG) is semidet.
 %
@@ -70,8 +61,6 @@ soon_1(is(X,G)):- !,clpr:{X =:= G}.
 soon_1(G):- functor(G,F,2),clp_r_arithmetic(F),!,clpr:{G}.
 soon_1(G):- term_variables(G,[_]),!,call(G).
 soon_1(G):- term_variables(G,Vs),maplist(freeze_rev(soon_1(G)),Vs).
-
-
 
 :- meta_predicate(grid_call(+,+,-)).
 

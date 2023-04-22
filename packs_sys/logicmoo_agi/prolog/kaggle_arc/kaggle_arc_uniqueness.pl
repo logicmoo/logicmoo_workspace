@@ -81,8 +81,12 @@ has_propcounts(TestID):-
 %ensure_propcounts(_TestID):-!.
 ensure_propcounts(TestID):- var(TestID),!,ensure_test(TestID),ensure_propcounts(TestID).
 ensure_propcounts(TestID):- has_propcounts(TestID),!.
-ensure_propcounts(TestID):- once((with_pair_mode(whole_test,
-    once(with_luser(menu_key,'o',once(ndividuator(TestID))))))),has_propcounts(TestID),!.
+ensure_propcounts(TestID):- 
+ wots(_HIDE,once((with_pair_mode(whole_test,
+    once(with_luser(menu_key,'i',once(ndividuator(TestID)))))))),
+  once((with_pair_mode(whole_test,
+     once(with_luser(menu_key,'o',once(ndividuator(TestID))))))),
+ has_propcounts(TestID),!.
 ensure_propcounts(TestID):- show_prop_counts(TestID), my_assertion(has_propcounts(TestID)),!.
 
 %props_change(TestID,IO,P):- fail.
@@ -493,7 +497,10 @@ show_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):-
   forall(member(OD,Groups),
     assert_become_new(arc_cache:each_object_dependancy(TestID,ExampleNum,OD))),
   dash_chars,
-  maplist(assert_map_groups(TestID,ExampleNum,in),Groups),
+  wdmsg(show_object_dependancy(TestID,ExampleNum)),
+  dash_chars, maplist(assert_map_groups(TestID,ExampleNum,in),Groups),
+  dash_chars,
+  wdmsg(show_object_dependancy2(TestID,ExampleNum)),
   dash_chars,
   pp_ilp(Groups),
   dash_chars,
@@ -510,7 +517,7 @@ print_object_dependancy(TestID):-
      ignore((print_object_dependancy(TestID,ExampleNum)))).
 print_object_dependancy(TestID,ExampleNum):-  
   forall(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight),
-    pp_ilp(map_group(TestID,ExampleNum,IO,LeftRight))),
+    pp_ilp(LeftRight)),
   forall(arc_cache:map_pairs(TestID,ExampleNum,IO,Right,Left),
     pp_ilp(map_pairs(TestID,ExampleNum,IO,Right,Left))).
 
@@ -603,16 +610,21 @@ calc_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs):-
   maybe_remove_bg(RHSObjs,RHSObjs1),
   Step=0,Ctx=in_out,IsSwapped=false,
   calc_o_d_recursively(IsSwapped,Step,Ctx,RHSObjs1,LHSObjs1,[],Groups),
-  maplist(assert_map_groups(TestID,ExampleNum,in),Groups))).
+  maplist(assert_map_groups(TestID,ExampleNum,in),Groups),
+  !)).
 
 
-assert_map_groups(TestID,ExampleNum,IO,LeftRight):- !, nop(assert_map_groups(TestID,ExampleNum,IO,LeftRight)),!.
+%assert_map_groups(TestID,ExampleNum,IO,LeftRight):- !, nop(assert_map_groups(TestID,ExampleNum,IO,LeftRight)),!.
+
 assert_map_groups(TestID,ExampleNum,IO,LeftRight):-
  must_det_ll((
   into_lst(LeftRight,LeftRightList),
-  if_t(LeftRightList\=[_,_], pp_ilp(map_group(TestID,ExampleNum,IO)=LeftRightList)),
-  assert_become_new(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight)),
-  assert_map_pair_list(TestID,ExampleNum,IO,LeftRight))).
+  %if_t(LeftRightList\=[_,_], pp_ilp(LeftRight)),
+  print_ss(LeftRightList),
+  %pp_ilp(LeftRight),
+  wots(_,assert_become_new(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight))),
+  pp_ilp(LeftRight),
+  nop((assert_map_pair_list(TestID,ExampleNum,IO,LeftRight))))).
 
 assert_map_pair_list(_TestID,_ExampleNum,_IO,[]):-!.
 assert_map_pair_list(TestID,ExampleNum,IO,[Right,Left]):- is_object(Left), is_object(Right), !, 
