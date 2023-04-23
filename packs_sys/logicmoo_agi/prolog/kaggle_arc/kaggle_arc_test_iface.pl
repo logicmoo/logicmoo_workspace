@@ -103,11 +103,12 @@ menu_cmd1(_,'S','                  or (S)olve confirming it works on training pa
 menu_cmd1(_,'h','                  or (h)uman proposed solution',(human_test)).
 menu_cmd1(_,'r','               Maybe (r)un some of the above: (p)rint, (t)rain, (e)xamine and (s)olve !',(cls_z_make,fully_test)).
 menu_cmd1(_,'A','                  or (A)dvance to the next test and (r)un it',(cls_z_make,!,run_next_test)).
-menu_cmd1(_,'n','                  or (n)ext test (skipping this one)',(next_random_test,print_single_pair)).
-menu_cmd1(_,'b','                  or (b)ack to previous test',(prev_test,print_single_pair)).
+menu_cmd1(_,'N','                  or (N)ext random test',(randomize_suite,forward_test)).
+menu_cmd1(_,'n','                  or (n)ext test (skipping this one)',(forward_test)).
+menu_cmd1(_,'b','                  or (b)ack to previous test',(back_test)).
 menu_cmd1(_,'f','                  or (f)orce a favorite test.',(force_full_tee,enter_test)):- \+ arc_html.
 menu_cmd1(_,'~','                  or (PageUp) to begining of suite',(prev_suite)).
-menu_cmd1(_,'N','                  or (N)ext suite',(next_suite)).
+menu_cmd1(_,'~','                  or (PageDown) Next suite',(prev_suite)).
 menu_cmd1(i,'R','             Menu to (R)un all tests noninteractively',(run_all_tests)).
 menu_cmd1(_,'l','                  or (l)ist special tests to run,',(show_tests)).
 menu_cmd1(r,'i','             Re-enter(i)nteractve mode.',(interact)).
@@ -476,6 +477,8 @@ do_menu_codes([27,91,51,126]):- !, randomize_suite, print_qtest.
 do_menu_codes([27,79,68]):- !, prev_test, print_test.
 % ctrl right arrow
 do_menu_codes([27,79,67]):- !, next_test, print_test.
+
+
 % alt left arrow
 do_menu_codes([27,27,91,68]):- !, prev_test, print_test.
 % alt right arrow
@@ -494,6 +497,12 @@ do_menu_codes([27,91,66]):- !, was_set_pair_mode(single_pair),next_pair.
 do_menu_codes([27,91,68]):- !, was_set_pair_mode(whole_test), maybe_cls, prev_test, report_suite_test_count, print_qtest.
 % right arrow
 do_menu_codes([27,91,67]):- !, was_set_pair_mode(whole_test), maybe_cls, next_test, report_suite_test_count, print_qtest.
+
+%back_test:- do_menu_codes([27,91,68]),!.
+back_test:- format('~N'),prev_test,print_single_pair,!.
+%forward_test:- do_menu_codes([27,91,67]).
+forward_test:- next_test, print_single_pair,!.
+%forward_test:- next_random_test,print_single_pair.
 
 maybe_cls:- nop(cls_z).
 
@@ -629,13 +638,13 @@ get_pair_mode(Mode):- once(luser_getval('$pair_mode',Mode);next_pair_mode(Mode,_
 with_pair_mode(Mode,Goal):- get_pair_mode(OldMode), trusted_redo_call_cleanup( set_pair_mode(Mode), Goal, set_pair_mode(OldMode)). 
 switch_pair_mode:- get_pair_mode(Mode),next_pair_mode(Mode,NextMode),!,set_pair_mode(NextMode).
 show_pair_mode:- get_pair_mode(Mode),get_test_cmd(Cmd), luser_getval(test_suite_name,Suite), get_indivs_mode(IndivMode),
-  get_current_test(TestID),some_current_example_num(Example),!,
-  (nonvar(Example)-> (SelTest=(TestID>Example)) ; SelTest=TestID),  
+  get_current_test(TestID),some_current_example_num(ExampleNum),!,
+  (nonvar(ExampleNum)-> (SelTest=(TestID>ExampleNum)) ; SelTest=TestID),  
   ((muarc_tmp:cached_tests(Suite,Set),length(Set,Len)) -> true ; Len = ?),
   wots_vs(SS,color_print(yellow,call(format("'~w' (~w)",[Suite,Len])))),
   ppnl([format("~N ~w: ",[Mode]), format('~w',[SS])," indiv:",b(q(IndivMode)), " selected test: ",b(q(SelTest)), ".......... (e)xecute: ", b(q(Cmd))
     % "with pair mode set to: ",b(q(Mode)),
-  %b(q(example(Example)))
+  %b(q(example(ExampleNum)))
   ]),flush_tee_maybe.
 skip_entire_suite:- never_entire_suite,!,fail.
 never_entire_suite:- ignore((get_pair_mode(entire_suite),set_pair_mode(whole_test))).
@@ -644,21 +653,33 @@ never_entire_suite:- ignore((get_pair_mode(entire_suite),set_pair_mode(whole_tes
 
 dont_set_test_cmd(Var):- var(Var),!.
 dont_set_test_cmd(print_test).
+dont_set_test_cmd(print_qtest).
+dont_set_test_cmd(print_single_pair).
 dont_set_test_cmd(next_test).
+dont_set_test_cmd(next_random_test).
+dont_set_test_cmd(randomize_suite).
+dont_set_test_cmd(back_test).
+dont_set_test_cmd(forward_test).
 dont_set_test_cmd(prev_test).
 dont_set_test_cmd(do_web_menu_key).
 dont_set_test_cmd(do_menu_key).
+
+dont_set_test_cmd(P):- compound(P), in_iface_file(P),!.
+dont_set_test_cmd(A):- atom(A),current_predicate(A/_,P), in_iface_file(P).
+
 dont_set_test_cmd(A):- atom(A),!, \+ current_predicate(A/0), \+ current_predicate(A/1).
 dont_set_test_cmd(C):- \+ compound(C),!,fail.
 dont_set_test_cmd((C1,C2)):- dont_set_test_cmd(C1),dont_set_test_cmd(C2).
 dont_set_test_cmd(_:C):- !, dont_set_test_cmd(C).
 dont_set_test_cmd(C):- compound_name_arity(C,F,_),!,dont_set_test_cmd(F).
 
-set_test_cmd(Mode):- dont_set_test_cmd(Mode),!.
+in_iface_file(P):-predicate_property(P,file(File)),atom_contains(File,iface).
+
+set_test_cmd(Mode):- \+ \+ dont_set_test_cmd(Mode),!.
 set_test_cmd(Mode):- into_test_cmd(Mode,Cmd),luser_setval('cmd',Cmd).
 get_test_cmd(Mode):- luser_getval('cmd',Mode).
 
-set_test_cmd2(Mode):- dont_set_test_cmd(Mode),!.
+set_test_cmd2(Mode):- \+ \+ dont_set_test_cmd(Mode),!.
 set_test_cmd2(Mode):- into_test_cmd(Mode,Cmd),luser_setval('cmd2',Cmd).
 get_test_cmd2(Mode):- luser_getval('cmd2',Mode).
 
@@ -804,12 +825,13 @@ restart_suite:-
    set_current_test(NewFirst))).
 
 randomize_suite:-
-  luser_getval(test_suite_name,SuiteX), muarc_tmp:cached_tests(SuiteX,Set),
+ must_det_ll((
+  luser_getval(test_suite_name,SuiteX), test_suite_testIDs(SuiteX,Set),!,
   get_by_hard(SuiteX,ByHard), reverse(ByHard,RevByHard),
   ignore((
   ((Set == RevByHard ; Set == ByHard), random_permutation(Set,NewSet),   
    retractall(muarc_tmp:cached_tests(SuiteX,_)),
-   asserta_new(muarc_tmp:cached_tests(SuiteX,NewSet))))).
+   asserta_new(muarc_tmp:cached_tests(SuiteX,NewSet))))))).
  
 %prev_suite:- once((get_current_test(TestID),get_current_suite_testnames([First|_]))), report_suite_test_count,TestID\==First,!,restart_suite.
 
@@ -1141,7 +1163,7 @@ as_test_prop(Prop,Prop):- atom(Prop), use_atom_test(Prop).
 as_test_prop(Prop,F):- compound(Prop),compound_name_arity(Prop,F,_), use_atom_test(F).
 
 
-prev_test:-  get_current_test(TestID), get_prev_test(TestID,NextID), set_current_test(NextID).
+prev_test:-  must_det_ll((get_current_test(TestID), get_prev_test(TestID,NextID), set_current_test(NextID))).
 next_test:- get_current_test(TestID), notrace((get_next_test(TestID,NextID), set_current_test(NextID))),!.
 next_random_test:-  randomize_suite, next_test.
 is_valid_testname(TestID):- nonvar(TestID), kaggle_arc(TestID,_,_,_).
@@ -1581,14 +1603,17 @@ print_single_pair(TestID,ExampleNum,In,Out):-
 
 print_single_pair_pt2(TestID,ExampleNum,In,Out):- is_cgi,!, 
  must_det_ll((test_atom(TestID,TestAtom),
- in_out_name(ExampleNum,NameIn,RightTitle),
+ in_out_name(ExampleNum,NameIn0,RightTitle),
+              sformat(NameIn,'~w  "~w" ',[NameIn0,TestAtom]),
  (ID1 = (TestID>ExampleNum*in)),
  (ID2 = (TestID>ExampleNum*out)),
  print_ss_html_pair(cyan, 
    NameIn,navCmd((TestID>ExampleNum)),ID1,In,wqs('Input'),
    TestAtom,navCmd((TestAtom)),ID2,Out,RightTitle))),!.
 print_single_pair_pt2(TestID,ExampleNum,In1,Out1):- 
-   in_out_name(ExampleNum,NameIn,NameOut),!,%easy_diff_idea(TestID,ExampleNum,In1,Out1,LIST),!,
+   test_atom(TestID,TestAtom),
+   in_out_name(ExampleNum,NameIn0,NameOut),!,%easy_diff_idea(TestID,ExampleNum,In1,Out1,LIST),!,
+  sformat(NameIn,'~w  "~w" ',[NameIn0,TestAtom]),
    format('~Ntestcase(~q,"\n',[TestID>ExampleNum]),
    call_cleanup(ignore(print_side_by_side(cyan,In1,NameIn,_,Out1,NameOut)),write('").\n\n')),
    format('~N'),
@@ -2198,7 +2223,10 @@ testid_name_num_io_0(ID,Name,Example,Num,IO):- arc_atom_to_term(ID,Term,_), Term
 %testid_name_num_io_0(ID,Name,_Example,_Num,_IO):- atom(ID),!,fix_id_1(ID,   Name),!.
 testid_name_num_io_0(ID,Name,_Example,_Num,_IO):- fix_id_1(ID,   Name),!. %, kaggle_arc_io(Name,Example+Num,IO,_).
 
-testid_name_num_io_gid(TestID,Example,Num,IO,GIDR):- TestID=..[V,ID],atomic_list_concat([V,ID,Example,Num,IO],'_',GIDR).
+testid_name_num_io_gid(TestID,Example,Num,IO,GIDR):-
+   LIST=[V,ID,Example,Num,IO],
+   maplist(must_be_nonvar,LIST),
+   TestID=..[V,ID],atomic_list_concat(LIST,'_',GIDR).
 
 
 
@@ -2391,6 +2419,7 @@ indicates_arg1_testid(with_trn_grids).
 indicates_arg1_testid(test_grids).
 
 skip_uses_test_id(into_test_id_io1).
+skip_uses_test_id(get_prev_test).
 skip_uses_test_id(do_menu_key).
 skip_uses_test_id(set_example_num).
 skip_uses_test_id(F):- indicates_arg1_testid(F).

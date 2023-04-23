@@ -75,7 +75,7 @@ gpoints_to_iv_info(GPoints,ShapePoints,LocX,LocY,PenColors,RotG,Iv,Overrides,LPo
   %writeg([nowgrid=Grid]),
   ShapePoints=[_|_],
   into_solid_grid(Grid,Solid),
-  print_ss(grid_to_shape,Grid,Solid),
+  %print_ss(grid_to_shape,Grid,Solid),
   grid_to_shape(Solid,RotG,OX,OY,ShapePoints,PenColors),
   
   %writeg([then=Grid]),
@@ -110,7 +110,9 @@ real_colors(GPoints,Cs):-
 :- style_check(+singleton).
 make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):- 
  fix_point_colors(GPoints00,GPoints0),
+ must_be_nonvar(GID0),
  testid_name_num_io(GID0,TestID,Example,Num,IO),
+ must_be_nonvar(IO),
  testid_name_num_io_gid(TestID,Example,Num,IO,GIDR),
  GID0=GID,
  physical_points(GPoints0,GPointsM),
@@ -1665,7 +1667,7 @@ global_grid(I,G):- is_object(I), object_grid(I,G),!.
 global_grid0(I,G):- is_grid(I),!,G=I.
 global_grid0(ObjRef,List):- \+ is_object(ObjRef), into_obj(ObjRef,Obj),!,global_grid0(Obj,List).
 global_grid0(I,G):- must_det_ll((call((grid_size(I,H,V),globalpoints_maybe_bg(I,LP),points_to_grid(H,V,LP,G))))),!.
-global_grid0(I,G):- object_grid(I,G0),!,loc2D(I,H,V),pad_top(V,G0,GV),pad_left(H,GV,G).
+global_grid0(I,G):- object_grid(I,G1),into_solid_grid(G1,G0),!,loc2D(I,H,V),pad_top(V,G0,GV),pad_left(H,GV,G).
 
 global_grid(I,G):- global_grid(I,_OID,G),!.
 global_grid(I,G):- global_grid0(I,G),!.

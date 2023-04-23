@@ -533,51 +533,47 @@ op_op(P2a,P2b,I,O):- call(P2a,I,II),call(P2a,O,OO),call(P2b,II,OO),!.
 v_area(I,Size):- vis2D(I,IH,IV), Size is IH * IV.
 
 detect_pair_hints(TestID):- ensure_test(TestID),
-  training_only_examples(ExampleNum),
   w_section(title(detect_pair_hints(TestID>ExampleNum)),
     ( 
-       (in_smaller_than_out(TestID) ->
-        (compute_test_ii_hints(TestID), compute_test_oo_hints(TestID));
-        (compute_test_oo_hints(TestID), compute_test_ii_hints(TestID))),
+     training_only_examples(ExampleNum),
+     forall(must_ll(kaggle_arc(TestID,ExampleNum,In,Out)),
+         must_det_ll(detect_pair_hints(TestID,ExampleNum,In,Out))),
 
-       forall(must_ll(kaggle_arc(TestID,ExampleNum,In,Out)),
-           must_det_ll(detect_pair_hints(TestID,ExampleNum,In,Out))),
 
-       color_print(magenta,call(((must_det_ll(compute_and_show_test_hints(TestID)))))))).
+     nop((color_print(magenta,call(((must_det_ll(compute_and_show_test_hints(TestID)))))))))).
 
 training_only_examples(ExampleNum):- ignore(ExampleNum=(trn+_)).
 
 detect_pair_hints(TestID,ExampleNum,In,Out):- 
-  ensure_test(TestID), training_only_examples(ExampleNum),
+  ignore((training_only_examples(ExampleNum))),
+  Call = detect_pair_hints(TestID,ExampleNum,In,Out),
+  \+ ground(Call),!,
+  with_pair_mode(whole_test,(test_pairs(TestID,ExampleNum,In,Out), with_trn_pairs(TestID,ExampleNum,In,Out,Call))).
+detect_pair_hints(TestID,ExampleNum,In,Out):- 
+  ensure_test(TestID), 
+  ignore((training_only_examples(ExampleNum))),
   must_det_ll((
-  dmsg(detect_pair_hints(TestID,ExampleNum)),
+  %dmsg(detect_pair_hints(TestID,ExampleNum)),
   assert_id_grid_cells(_,In), assert_id_grid_cells(_,Out),
   % guess_board(TT),
   %print(TT),
   %ignore(show_reduced_io(In^Out)),
  % ignore(print_single_pair(TestID,ExampleNum,In,Out)),
-  grid_hint_swap(i-o,In,Out),
-  dash_chars)),!.
+  (in_smaller_than_out(TestID) ->
+   (compute_test_ii_hints(TestID,ExampleNum), compute_test_oo_hints(TestID,ExampleNum));
+   (compute_test_oo_hints(TestID,ExampleNum), compute_test_ii_hints(TestID,ExampleNum))),
+  grid_hint_swap(TestID,ExampleNum,i-o,In,Out),
+  % CALLS ignore(maybe_compute_test_io_hints(i-o,TestID,ExampleNum,In,Out)),
+  dash_chars)).
 
 %detect_pair_hints(TestID):- arc_test_property(TestID,(trn+1),PP,_),sub_var(i-i,PP),!.
-
-
-compute_test_io_hints(TestID):- 
-  forall(
-    kaggle_arc(TestID,ExampleNum,In,Out), 
-     ignore(maybe_compute_test_io_hints(i-o,TestID,ExampleNum,In,Out))).
-
-%maybe_compute_test_io_hints(_,TestID,ExampleNum,_,_):- arc_test_property(TestID,_,_-N),!.
-maybe_compute_test_io_hints(IO,TestID,ExampleNum,In,Out):-
-    ignore(add_xform_maybe(In,Out)),
-      forall(grid_hint_swap_io(IO,In,Out,Hints),add_hint(TestID,ExampleNum,Hints)).
 
 next_example_num(TestID,Example+Num,Example+Num2):- Num2 is Num+1,
   kaggle_arc_io(TestID,Example+Num2,_,_),!.
 next_example_num(_TestID,Example+_,Example+0).
 
-compute_test_oo_hints(_):- !.
-compute_test_oo_hints(TestID):- 
+compute_test_oo_hints(_TestID,_ExampleNum):-!.
+compute_test_oo_hints(TestID,ExampleNum):- 
   forall(
     kaggle_arc_io(TestID,ExampleNum,out,Out1), 
      (next_example_num(TestID,ExampleNum,ExampleNum2), kaggle_arc_io(TestID,ExampleNum2,out,Out2),
@@ -586,8 +582,8 @@ compute_test_oo_hints(TestID):-
  maybe_compute_test_oo_hints(TestID,ExampleNum,Out1,Out2):- 
    forall(grid_hint_recolor(o-o,Out1,Out2,Hints),add_hint(TestID,ExampleNum,Hints)).
 
-compute_test_ii_hints(_):-!.
-compute_test_ii_hints(TestID):- 
+compute_test_ii_hints(_,_):-!.
+compute_test_ii_hints(TestID,ExampleNum):- 
   forall(
     kaggle_arc_io(TestID,ExampleNum,in,In1), 
      (next_example_num(TestID,ExampleNum,ExampleNum2), kaggle_arc_io(TestID,ExampleNum2,in,In2),
@@ -708,7 +704,7 @@ min_list_unifier(A,B,[E1|C]):- nonvar(A),nonvar(B), select(E1,A,AA),nonvar(E1),s
 min_list_unifier(_,_,_):-!.
 %min_unifier(A,B,C):- is_list(B), is_list(A), length(B,L), length(A,L), length(C,L).
 
-grid_hint_swap(IO,In,Out):-
+grid_hint_swap(TestID,ExampleNum,IO,In,Out):-
  ignore(kaggle_arc(TestID,ExampleNum,In,Out)),
  w_section(title(grid_hint_swap(IO,TestID>ExampleNum)),
  (maybe_compute_test_io_hints(IO,TestID,ExampleNum,In,Out),
@@ -717,6 +713,10 @@ grid_hint_swap(IO,In,Out):-
      forall((arc_test_property(TestID,ExampleNum,P,V)),
        ignore((ptv1s(magenta+cyan,P=V)))))))).
 
+%maybe_compute_test_io_hints(_,TestID,ExampleNum,_,_):- arc_test_property(TestID,_,_-N),!.
+maybe_compute_test_io_hints(IO,TestID,ExampleNum,In,Out):-
+    ignore(add_xform_maybe(In,Out)),
+      forall(grid_hint_swap_io(IO,In,Out,Hints),add_hint(TestID,ExampleNum,Hints)).
 
 grid_hint_swap_io(IO,In,Out,Hints):-  grid_hint_recolor(IO,In,Out,Hints).
 grid_hint_swap_io(I-O,In,Out,rev(Hints)):- I\==O, 

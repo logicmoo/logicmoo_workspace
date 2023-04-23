@@ -146,7 +146,8 @@ show_indiv_object(Why, Obj):-
    Title = show_indiv(Why,objFn(Glyph),loc2D(OH,OV),center2G(CX,CY),size2D(H,V)),
    object_grid(Obj,Grid),
    pp(Title),
-   Grids = ["Global"=Global|_],
+   print_grid(global,Global),
+   Grids = _, %["Global"=Global|_],
    if_t((H\==1;V\==1),
      
     (append(_,["Object"=Grid|_],Grids), 

@@ -242,6 +242,23 @@ find_obj_mappings(A,BG,OO):-
   find_obj_mappings2(AINFO,BBR,OO).
 
 
+find_obj_mappings2([A,PA|PAP],BBR,pair4(A,PA,B,PB)):- !,
+   ord(NJ/O+JO+Joins,[PA,A],[PB,B]) = Why,
+   findall(Why,
+    (      
+     member([B,PB|PBP],BBR),
+     PA\==PB,
+     B\==A,
+     \+ is_whole_grid(B),
+      must_det_ll((
+     % maybe_allow_pair(PA,PB), allow_pair(PA,PB),  
+       jaccard(PA,PB,PAP,PBP,NJ,O,JO,_J,Joins)))),
+     Pairs), 
+   sort_safe(Pairs,RPairs),!,
+   %my_maplist(writeln,Pairs),
+   %last(RPairs,prop_atoms(Best,_,_,_)),
+   % Best = pair(PA,PB,_),
+   member(Why,RPairs).
 find_obj_mappings2([A,PA|PAP],BBR,pair4(A,PA,B,PB)):- 
    ord(NJ/O+JO+Joins,[PA,A],[PB,B]) = Why,
    findall(Why,
@@ -363,25 +380,51 @@ interesting_sub_atoms(EM,E) :- sub_term(E,EM),compound(E), \+ \+ (arg(_,E,A),ato
 select_obj_pair_2(AAR,BBR,PA,PB,(J/O)):- 
  AAR\==[],
  BBR\==[],
- ord(NJ/O+JO+Joins,PA,PB) = Why,
+ ord(NJ/O+JO+J+Joins,PA,PB) = Why,
  findall(Why,
   (member(PA,AAR), 
    member(PB,BBR), 
      must_det_ll((
    % maybe_allow_pair(PA,PB), allow_pair(PA,PB),
-     obj_atoms(PA,PAP), 
-     obj_atoms(PB,PBP),
-     intersection(PAP,PBP,Joins,OtherA,OtherB),     
-     flatten([OtherA,OtherB],Other),
-     length(Joins,J),length(Other,O),
-     NJ is -J,
-     JO is - rationalize(J/(O+1))))),
+     jaccard(PA,PB,_PAP,_PBP,NJ,O,JO,J,Joins)))),
    Pairs), 
  sort_safe(Pairs,RPairs),!,
  %my_maplist(writeln,Pairs),
  %last(RPairs,prop_atoms(Best,_,_,_)),
  % Best = pair(PA,PB,_),
-   member(Why,RPairs).
+ member(Why,RPairs).
+
+is_io(PB,IOB):- has_prop(giz(g(IOB)),PB).
+
+jaccard_focus(I,O,touch):- I=@=O,!.
+jaccard_focus(I,O,sameness):- I\=@=O,!.
+
+focus_type(sameness,link(_,_)):-!,fail.
+focus_type(sameness,center2G(_,_)):-!.
+focus_type(sameness,_). 
+%focus_type(touch,link(sees(_),_)).
+focus_type(touch,link(_,_)).
+focus_type(touch,center2G(_,_)).
+
+focus_type_include(Touch,Mask):- \+ \+ focus_type(Touch,Mask).
+include_focus(Touch,PBP0,PBP):-
+   my_include(focus_type_include(Touch),PBP0,PBP), PBP\==[].
+
+jaccard(PA,PB,PAP,PBP,NJ,O,JO,J,Joins):-
+  is_io(PA,IOA),is_io(PB,IOB),
+  jaccard_focus(IOA,IOB,Focus),
+  jaccard(Focus,PA,PB,PAP,PBP,NJ,O,JO,J,Joins).
+jaccard(Touch,PA,PB,PAP,PBP,NJ,O,JO,J,Joins):-
+     obj_atoms(PA,PAP0), include_focus(Touch,PAP0,PAP),
+     obj_atoms(PB,PBP0), include_focus(Touch,PBP0,PBP),
+     !,
+     intersection(PAP,PBP,Joins,OtherA,OtherB),     
+     flatten([OtherA,OtherB],Other),
+     length(Joins,J),length(Other,O),
+     NJ is -J,
+     JO is - rationalize(J/(O+1)),!.
+
+
 
 select_obj_pair_1(AAR,BBR,PA,PB,Why):- % fail,
  member(PA,AAR), get_selector(PA,PB), 

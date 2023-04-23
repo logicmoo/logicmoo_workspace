@@ -9,58 +9,82 @@
 :- ensure_loaded(library(logicmoo/typesystem/mpred_type_constraints)).
 :- use_module(library(wfs)).
 
+% This Prolog source code is for managing the execution of lazy goals.
+% The code is reformatted and commented for better understanding.
+
+% The entry point for handling lazy goals
 do_lazy:-
-  prolog_load_context(variable_names,Vars),
+  % Obtain the variable names in the current context
+  prolog_load_context(variable_names, Vars),
+  % Execute lazy goals with the given variables
   do_lazy_goals(Vars).
 
-get_delayed_goals(Term,Goals):-
-  copy_term(Term,Term,Goals).
+% Extract delayed goals from a given term
+get_delayed_goals(Term, OperationList):-
+  copy_term(Term, Term, OperationList).
 
-do_lazy_goals(Vars):- 
-  get_delayed_goals(Vars,Goals),
-  maplist(add_eagerness([]),Goals,EagerGoals),
-  sort(EagerGoals,OrderedEagerGoals),!, % wdmsg(N=LazyGoals),!,
-  do_eager_goals(OrderedEagerGoals).
+% Execute lazy goals in the order of their eagerness
+do_lazy_goals(Vars):-
+  % Get the delayed goals for the given variables
+  get_delayed_goals(Vars, OperationList),
+  % Add eagerness values to the goals
+  maplist(add_eagerness([]), OperationList, EagerOperationList),
+  % Sort the goals by their eagerness values
+  sort(EagerOperationList, OrderedEagerOperationList),!,
+  % Execute the ordered eager goals
+  do_eager_goals(OrderedEagerOperationList).
 
-do_eager_goals([Eager|Goals]):- !,
-  immc(Eager), get_delayed_goals(Eager+Goals).
+% Execute first Eager goal afterwords reorder if the rest of eagerness changes
+do_eager_goals([Eager|OperationList]):- !,
+  % Execute the current eager goal
+  immc(Eager),
+  % Continue with the remaining goals
+  do_lazy_goals(Eager+OperationList).
 do_eager_goals(_).
 
-immc(eager(_N,V,Eager)):- !, del_attrs(V), !, immc(Eager).
-immc(freeze(V,Eager)):- del_attrs(V), !, immc(Eager).
-immc(_:Eager):- !,immc(Eager).
-immc(mpred_type_constraints: lazy_1(Eager)):-!, immc(Eager).
+
+% Process eager goals, freeze goals, and other goal types.
+immc(eager(_,V,Eager)):- !, del_attrs(V), immc(Eager).
+immc(freeze(V,Eager)):- !, del_attrs(V), immc(Eager).
+immc(soon(Eager)):-!, immc(Eager).
 immc(soon_1(Eager)):-!, immc(Eager).
+immc(lazy(Eager)):-!, immc(Eager).
+immc(lazy_1(Eager)):-!, immc(Eager).
+immc(_:Eager):- !,immc(Eager).
 immc(Eager):- call(Eager).
 
-add_eagerness(_,eager(_A,Vs,Goal),New):- add_eagerness(Vs,Goal,New),!.
-add_eagerness(_,eager(N,A,Goal),eager(N,A,Goal)):-!.
-add_eagerness(_,freeze(FV,Goal),New):- !,add_eagerness(FV,Goal,New).
-add_eagerness(Vs,soon_1(Goal),New):- !, add_eagerness(Vs,Goal,New).
-add_eagerness(Vs,soon(Goal),New):- !, add_eagerness(Vs,Goal,New).
-add_eagerness(Vs,mpred_type_constraints:lazy_1(Goal),New):- !, add_eagerness(Vs,Goal,New).
-add_eagerness(Vs,mpred_type_constraints:lazy(Goal),New):- !, add_eagerness(Vs,Goal,New).
-add_eagerness(Vs,Goal,eager(N,Vs,Goal)):- term_variables(Goal,TV),length(TV,N).
+% Add eagerness levels to the goals.
+add_eagerness(Vs,soon(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(Vs,soon_1(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(Vs,lazy(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(Vs,lazy_1(Operation),New):- !, add_eagerness(Vs,Operation,New).
+add_eagerness(_,freeze(V,Operation),New):- !,add_eagerness(V,Operation,New).
+add_eagerness(_,eager(N,A,Operation),eager(N,A,Operation)):- preserve_eagerness(Operation),!.
+add_eagerness(_,eager(_,Vs,Operation),New):- add_eagerness(Vs,Operation,New),!.
+add_eagerness(Vs,Operation,eager(N,Vs,Operation)):- 
+  % actually compute it
+  term_variables(Operation,TV),length(TV,N).
 
-%% soon( :GoalG) is semidet.
-%
-% Lazy.
-%
-soon(G):- var(G),!,freeze(G,soon(G)).
-soon(G):- ground(G),!,call(G).
-soon((G1,G2)):- !, soon(G1),soon(G2).
-soon(is(X,G)):- !,clpr:{X =:= G}.
-soon(G):- functor(G,F,2),clp_r_arithmetic(F),!,clpr:{G}.
-soon(G):- term_variables(G,Vs),maplist(freeze_rev(soon_1(G)),Vs).
+preserve_eagerness(_Operation):- fail.
 
+% Execute a goal soon
+soon(Operation):- var(Operation),!,freeze(Operation,soon(Operation)).
+soon(Operation):- ground(Operation),!,call(Operation).
+soon((Operation_1,Operation_2)):- !, soon(Operation_1),soon(Operation_2).
+soon(is(X,Operation)):- !,clpr:{X =:= Operation}.
+soon(Operation):- functor(Operation,F,2),clp_r_arithmetic(F),!,clpr:{Operation}.
+soon(Operation):- term_variables(Operation,Vs),maplist(freeze_rev(soon_1(Operation)),Vs).
 
-soon_1(G):- var(G),!,freeze(G,soon_1(G)).
-soon_1(G):- ground(G),!,call(G).
-soon_1((G1,G2)):- !, soon_1(G1),soon_1(G2).
-soon_1(is(X,G)):- !,clpr:{X =:= G}.
-soon_1(G):- functor(G,F,2),clp_r_arithmetic(F),!,clpr:{G}.
-soon_1(G):- term_variables(G,[_]),!,call(G).
-soon_1(G):- term_variables(G,Vs),maplist(freeze_rev(soon_1(G)),Vs).
+% Delays code to be executed soon but not *too* soon
+soon_1(Operation):- var(Operation),!,freeze(Operation,soon_1(Operation)).
+soon_1((Operation_1,Operation_2)):- !, soon_1(Operation_1),soon_1(Operation_2).
+soon_1(Operation):- term_variables(Operation,Vs),soon_2(Vs,Operation).
+
+soon_2( [],Operation):- !,call(Operation).
+soon_2( _ ,is(X,Operation)):- !,clpr:{X =:= Operation}.
+soon_2( _ ,Operation):- functor(Operation,F,2),clp_r_arithmetic(F),!,clpr:{Operation}.
+soon_2([_],Operation):- !,call(Operation).
+soon_2( Vs,Operation):- maplist(freeze_rev(soon_1(Operation)),Vs).
 
 :- meta_predicate(grid_call(+,+,-)).
 
