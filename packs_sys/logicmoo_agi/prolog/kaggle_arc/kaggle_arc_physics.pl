@@ -482,7 +482,8 @@ move_object(H,V,I,O):- into_group(I,M),M\=@=I,!,move_object(H,V,M,O).
 
 is_input(VM):- VM.id = _ * _ * in.
 
-
+is_input_object(Obj):- is_object(Obj),obj_to_oid(Obj,OID),atom_contains(OID,'_in_'),!.
+is_output_object(Obj):- is_object(Obj), obj_to_oid(Obj,OID),atom_contains(OID,'_out_'),!.
 %ignore(((NewOptions\==Options;(GoneMissing\==[];SofarMaybeNewL\==SofarL)),
 
 %show_object_changes(_VM,_S,Goal):-!, call(Goal).

@@ -112,7 +112,7 @@ make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
  fix_point_colors(GPoints00,GPoints0),
  must_be_nonvar(GID0),
  testid_name_num_io(GID0,TestID,Example,Num,IO),
- must_be_nonvar(IO),
+ %must_be_nonvar(IO),
  testid_name_num_io_gid(TestID,Example,Num,IO,GIDR),
  GID0=GID,
  physical_points(GPoints0,GPointsM),
@@ -1422,10 +1422,13 @@ object_localpoints(I,XX):- must_be_free(XX), %stack_check_or_call(3000,(dmsg(sta
    is_cpoints_list(XX))),!.
 */
 
-object_localpoints(I,X):- indv_props_list(I,L), must_det_ll(object_l(localpoints(X),L)),!.
 
 
-object_l(P,L):- compound(P),functor(P,F,A),functor(PP,F,A), member(PP,L),!,P=PP.
+object_localpoints(I,X):- 
+  indv_props_list(I,L), must_det_ll(object_l(localpoints(X),L)),!.
+
+object_l(P,[Obj|L]):- (is_group(L);is_object(Obj)),!,mapgroup(object_l(P),[Obj|L]).
+object_l(P,L):- stack_check(999), compound(P),functor(P,F,A),functor(PP,F,A), member(PP,L),!,P=PP.
 object_l(globalpoints(O),L):- object_l(loc2D(OH,OV),L),object_l(localpoints(LPoints),L),!, offset_points(OH,OV,LPoints,O).
 object_l(loc2D(OH,OV),L):-  
   member(iz(cenGX(CX)),L),member(iz(cenGY(CY)),L),member(iz(sizeGX(SX)),L),member(iz(sizeGY(SY)),L),
@@ -1734,18 +1737,21 @@ rotSize2D(grav,NT,H,V):-  into_gridoid(NT,G),G\==NT, rotSize2D(grav,G,H,V).
 %externalize_links(obj_grp(O1L,Grp),[link(C,A),EL|More],[link(C,A),elink(C,Ext)|LMore]):- EL\=elink(_,_),externalize_obj(Obj,Other,Ext),!,externalize_links(obj_grp(O1L,Grp),[EL|More],LMore).
 
 externalize_links(Grp,NewObjs):- Grp==[],!,NewObjs=[].
+externalize_links(Grp,Grp):-!.
+/*
 externalize_links(Grp,NewObjs):- 
  must_det_ll((is_group_or_objects_list(Grp), 
-   maplist(externalize_links(grp(Grp)),Grp,NewObjs))).
+   maplist(externalize_links((Grp)),Grp,NewObjs))).
 %externalize_links(obj_grp(O1L,Grp),NewObj):- is_object(Obj),!,externalize_obj_links(Obj,NewObj),!.
 %externalize_links(obj_grp(O1L,Grp),Objs):-!.
 
-externalize_links(grp(Grp),Obj,NewObj):-
+externalize_links((Grp),Obj,NewObj):-
    indv_props_list(Obj,O1L), 
    maplist(externalize_links(obj_grp(O1L,Grp)),O1L,NewList), 
    NewObj=obj(NewList).
-
 %externalize_links(obj_grp(O1L,Grp),link(C,A),elink(C,Ext)):- !, externalize_obj(obj_grp_link(O1L,Grp,C),A,Ext).
+*/
+/*
 externalize_links(obj_grp(_O1L,_Grp),A,A).
 
 externalize_obj(obj_grp_link(O1,_Grp, C),OID2,Ext):- 
@@ -1755,7 +1761,7 @@ externalize_obj(obj_grp_link(O1,_Grp, C),OID2,Ext):-
    findall(Prop,
      (member(Functor,[giz(glyph),iz(sid),iz(type),iz(stype),delta(loc2D),delta(vis2D),delta(rot2D),delta(pen)]),
       externalize_prop(O1L,C,O2L,Functor,Prop)),Ext))).
-
+*/
 %[loc2D,vis2D,rot2D,iz(sid),iz(stype),colors]
 externalize_prop(O1L,_C,O2L,delta(Functor),Delta):- 
   select_prop(Functor,O1L,Prop1),

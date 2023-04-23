@@ -66,7 +66,7 @@ stack_check:- sanity(stack_check(6606)).
 %
 % Stack Check.
 %
-stack_check(BreakIfOver):- stack_check_else(BreakIfOver, trace_or_throw(stack_check(BreakIfOver))).
+stack_check(BreakIfOver):- stack_check_else(BreakIfOver, (ds,trace,break,trace_or_throw(stack_check(BreakIfOver)))).
 
 %= 	 	 
 

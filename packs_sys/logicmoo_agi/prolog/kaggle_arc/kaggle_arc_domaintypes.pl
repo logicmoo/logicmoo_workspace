@@ -600,7 +600,8 @@ is_object(O):- compound(O), O = obj(_).
 
 %is_object_group([G|V]):- is_object(G),is_list(V),my_maplist(is_object,V).
 %is_group(Dict):- is_vm_map(Dict),!,get_kov(objs,Dict,_).
-is_group([G|V]):- is_object_group([G|V]). % is_object_or_grid(G),is_list(V),my_maplist(is_object_or_grid,V),!.
+is_group([G|V]):- is_object_group([G|V]),!. % is_object_or_grid(G),is_list(V),my_maplist(is_object_or_grid,V),!.
+is_group(Grp):- is_mapping(Grp),!.
 
 :- ansi_term:import(is_group/1).
 

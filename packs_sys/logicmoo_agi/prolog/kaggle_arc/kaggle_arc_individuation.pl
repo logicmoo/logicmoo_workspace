@@ -4148,11 +4148,20 @@ remove_sort_tag(G,G).
 
 maybe_remove_sort_tag(L-G,G):- is_sort_tag(L).
 
+into_list(G,[]):- G==[],!.
+into_list(G,[G]):- \+ compound(G),!.
+into_list(G,[G]):- is_grid(G),!.
+into_list(G,[G]):- is_object(G),!.
 into_list(G,L):- maybe_remove_sort_tag(G,LL),!,into_list(LL,L).
-into_list(G,L):- is_grid(G),!,L=[G].
-into_list(G,L):- is_list(G),!,L=G.
+%into_list(G,L):- is_group(G),mapgroup(into_list,G,GG),!,flatten(GG,L).
+into_list(G,L):- is_mapping(G), get_mapping_info_list(G,_,List),!,into_list(List,L).
+into_list(G,L):- is_list(G),!,maplist(into_list,G,GG),!,flatten(GG,L).
 into_list(G,L):- is_vm_map(G),!,L = G.objs,my_assertion(is_list(L)).
-into_list(I,O):- listify(I,O),!.
+into_list(G,[obj(G)]):- is_obj_props(G),!.
+into_list(G,L):- listify(G,L),!.
+%into_list(G,Lst):- arg(_,G,List),is_list(List),!,into_list(List,Lst).
+%into_list(G,[G]).
+
 
 
 assume_vm(_).

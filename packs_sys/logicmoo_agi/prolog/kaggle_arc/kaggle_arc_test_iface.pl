@@ -2224,9 +2224,10 @@ testid_name_num_io_0(ID,Name,Example,Num,IO):- arc_atom_to_term(ID,Term,_), Term
 testid_name_num_io_0(ID,Name,_Example,_Num,_IO):- fix_id_1(ID,   Name),!. %, kaggle_arc_io(Name,Example+Num,IO,_).
 
 testid_name_num_io_gid(TestID,Example,Num,IO,GIDR):-
+   TestID=..[V,ID],
    LIST=[V,ID,Example,Num,IO],
    maplist(must_be_nonvar,LIST),
-   TestID=..[V,ID],atomic_list_concat(LIST,'_',GIDR).
+   atomic_list_concat(LIST,'_',GIDR).
 
 
 
