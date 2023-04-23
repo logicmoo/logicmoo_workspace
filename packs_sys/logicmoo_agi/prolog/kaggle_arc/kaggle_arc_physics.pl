@@ -89,7 +89,7 @@ neighbor_counts(Grid,GridO):-
 grid_mass_ints(Grid,GridIII):-
   unique_fg_colors(Grid,Sorted),
   %arc_test_property(Prop),
-  mapgrid(normal_w(Sorted),Grid,GridIII),!.
+  mapgrid(normal_w(Sorted),Grid,GridIII),!. 
   /*
   %Prop = unique_colors(lst(vals([[cyan,yellow,orange,green,red,blue,black],[orange,cyan,yellow,green,black,red,blue]]),len(7),diff([orange,cyan,yellow,green,black,red,blue]=@=[cyan,yellow,orange,green,red,blue,black])))
   dmiles  include(is_fg_color,CC,FG),

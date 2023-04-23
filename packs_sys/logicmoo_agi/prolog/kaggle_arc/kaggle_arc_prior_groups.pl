@@ -1416,12 +1416,13 @@ add_prior_info_1(_Objs,_ObjsLen,_Common,_VersionsByCount,PropList,PropList).
 
 use_simulars(_):- fail.
 use_rank(mass(_)).
+%redundant_prop(_,_):-!,fail.
 redundant_prop(_,nth_fg_color(N1,_)):- N1==1.
 redundant_prop(Props,unique_colors([FG])):- sub_var(pen([cc(FG,1)]),Props),!.
 redundant_prop(Props,cc(FG,_)):- is_real_fg_color(FG),sub_var(pen([cc(FG,1)]),Props),!.
 redundant_prop(Props,center2D(_,_)):- sub_compound(loc2D(_,_),Props).
 %redundant_prop(Props,center2D(X,Y)):- sub_var(center2G(X,Y),Props).
-redundant_prop(Props,center2G(X,Y)):- sub_var(center2D(X,Y),Props).
+%redundant_prop(Props,center2G(X,Y)):- sub_var(center2D(X,Y),Props).
 
 some_pgs_and_props(_,pg(_,Name,simulars,_)):- !, use_simulars(Name),!.
 some_pgs_and_props(_,pg(_,Name,rank1,_)):- !, use_rank(Name),!.
