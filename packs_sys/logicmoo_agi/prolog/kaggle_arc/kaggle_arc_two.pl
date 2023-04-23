@@ -26,7 +26,7 @@ train_test:- notrace(get_current_test(TestID)), once(train_test(TestID)).
 train_test(TestID):- with_pair_mode(whole_test,train_whole_test(TestID)).
 train_whole_test(TestID):- 
   clear_training(TestID),
-  compile_and_save_test(TestID),!,
+  compile_and_save_hints(TestID),!,
   locally(nb_setval(menu_key,o),ndividuator),
   locally(nb_setval(menu_key,s),ndividuator),!.
   %train_test(TestID,train_using_oo_ii_io).

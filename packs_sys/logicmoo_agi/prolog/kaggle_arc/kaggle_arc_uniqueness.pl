@@ -129,7 +129,7 @@ compute_scene_change(TestID):-
 
 
 compute_scene_change_pass1(TestID):- 
-  show_object_dependancy(TestID).
+  learn_object_dependancy(TestID).
 
 compute_scene_change_pass2(TestID):- 
   forall(props_change(TestID,IO,P),
@@ -142,16 +142,17 @@ assert_become_new(Term):- asserta_new(Term).
 
 
 solve_via_scene_change(TestID):-  
- ensure_test(TestID),
- clear_scene_rules(TestID),
- show_object_dependancy(TestID),
- learn_grid_size(TestID),
- ensure_scene_change_rules(TestID),
- show_scene_change_rules(TestID), 
- %ExampleNum=_+_,
- forall(kaggle_arc(TestID,ExampleNum,_,_),
+ must_det_ll((
+  ensure_test(TestID),
+  clear_scene_rules(TestID),
+  learn_grid_size(TestID),
+  %detect_pair_hints(TestID),
+  ensure_scene_change_rules(TestID),
+  print_scene_change_rules(TestID),
+  %ExampleNum=_+_,
+  forall(kaggle_arc(TestID,ExampleNum,_,_),
      ignore(time(solve_via_scene_change_rules(TestID,ExampleNum)))), 
- !.
+ !)).
 
 solve_via_scene_change_rules(TestID,ExampleNum):-
  must_det_ll((
@@ -165,8 +166,6 @@ solve_via_scene_change_rules(TestID,ExampleNum):-
   %wots(SS,solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,OObjs)),
   solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,OObjs),
   dash_chars,
-  wots(SS, (banner_lines(yellow,1),show_object_dependancy(TestID),banner_lines(yellow,1),
-     show_scene_change_rules(TestID),banner_lines(yellow,1))),
   print_ss(wqs(solve_via_scene_change_rules(ExampleNum)),Objs,OObjs),
   dash_chars,
   into_solid_grid(OObjs,OurSolution1),
@@ -176,18 +175,21 @@ solve_via_scene_change_rules(TestID,ExampleNum):-
   into_solid_grid(Expected,ExpectedOut),
   count_difs(ExpectedOut,OurSolution,Errors),
   print_ss(wqs(solve_via_scene_change_rules(TestID,ExampleNum,errors=Errors)),ExpectedOut,OurSolution))),
-  (Errors == 0 ->  banner_lines(green,4) ; (banner_lines(red,10),!,bt,!,write(SS),banner_lines(red,10),!,fail)).
+  (Errors == 0 ->  
+    banner_lines(green,4) 
+    ;(banner_lines(red,10),!,bt,!,banner_lines(red,1),
+      %print_scene_change_rules(TestID),banner_lines(red,1), 
+      banner_lines(red,10),!,
+    fail)).
    
 
 
-
-
-show_scene_change_rules(TestID):-
+print_scene_change_rules(TestID):-
+ ensure_test(TestID),
  must_det_ll((
-  ensure_test(TestID),
-  ensure_scene_change_rules(TestID),
   banner_lines(cyan,4),
-  show_assumed_mapped(TestID),
+  %show_assumed_mapped(TestID),
+  print_object_dependancy(TestID),
   banner_lines(cyan,3),
    Ele = ac2(IO,P,PSame),
    findall(Ele,is_accompany_changed_computed(TestID,IO,P,PSame),List),
@@ -259,10 +261,21 @@ correct_antes2(TestID,IO,P,PSame,Kept):-
 correct_antes2(_TestID,_IO,_P,PSame,PSame).
 
 solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,OObjs):-
- solve_obj_group(VM,TestID,ExampleNum,in,ROptions,Objs,OObjs).
+ solve_obj_group(VM,TestID,ExampleNum,in,ROptions,Objs,Objs1),
+ solve_obj_group(VM,TestID,ExampleNum,in_out,ROptions,Objs1,Objs2),
+ solve_obj_group(VM,TestID,ExampleNum,in_out_out,ROptions,Objs2,Objs3),!,
+ OObjs= Objs3.
+
   
 solve_obj_group(VM,TestID,ExampleNum,IO,ROptions,Objs,OObjs):-
-  my_maplist(solve_obj(VM,TestID,ExampleNum,IO,ROptions),Objs,OObjs).
+  %trace,arc_cache:map_group(TestID,ExampleNum,IO,Group),
+  GRP = grp(Info,[PreObjs,Out]),
+  findall(GRP,(arc_cache:map_pairs(TestID,_,_IO2,Info,Out,PreObjs), sub_var(IO,Info)),Group),
+  variant_list_to_set(Group,Set),
+  forall(member(GRP,Set),pp_ilp(GRP)),
+  trace,prop_can(TestID,IO,P,Preconds),
+
+  trace,my_maplist(solve_obj(VM,TestID,ExampleNum,IO,ROptions),Objs,OObjs).
 
 %solve_obj(_VM,_TestID,_ExampleNum,_IO,_ROptions,Obj,Obj):- is_bg_object(Obj),!.
 solve_obj(VM,TestID,_ExampleNum,_IO_Start,_ROptions,Obj,OObj):- 
@@ -500,32 +513,11 @@ maybe_show_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):-
   
 
 
-
-
 % The object dependancy is a list of lists of rules
 show_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):-
  must_det_ll((
-              maybe_remove_bg(LHSObjs,LHSObjs1),
-              maybe_remove_bg(RHSObjs,RHSObjs1),
-  Step=0,Ctx=in_out,IsSwapped=false,
-  calc_o_d_recursively(IsSwapped,Step,Ctx,RHSObjs1,LHSObjs1,[],Groups),
-  %maplist(pp_ilp,Groups),
-  % begin to display          
-
-  %maplist(writeg,Groups),
-  maplist(assert_map_groups(TestID,ExampleNum,in),Groups),
-  /*assert_become_new(arc_cache:object_dependancy(TestID,ExampleNum,Groups)),
-  forall(member(OD,Groups),
-    assert_become_new(arc_cache:each_object_dependancy(TestID,ExampleNum,OD))),
-  dash_chars,
-  maplist(assert_map_groups(TestID,ExampleNum,in),Groups),*/
-  dash_chars,
-  % the next line is outgoing
-
+  learn_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs),
   print_object_dependancy(TestID,ExampleNum))),!.
-
-%  writeg(sod(TestID,ExampleNum)==>Groups),nl, 
-%  dash_chars)),!.
 
 % print the object dependencies for this test
 % =============================================================
@@ -535,28 +527,28 @@ print_object_dependancy(TestID):-
  forall(kaggle_arc(TestID,ExampleNum,_,_),
      ignore((print_object_dependancy(TestID,ExampleNum)))).
 print_object_dependancy(TestID,ExampleNum):-  
-  forall(arc_cache:map_group(TestID,ExampleNum,_IO1,LeftRight),
-    pp_ilp(LeftRight)),
+ dash_chars,
+ forall(arc_cache:map_group(TestID,ExampleNum,_IO1,LeftRight), pp_ilp(LeftRight)),
+ dash_chars,
 %  forall(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight),
 %    pp_ilp(map_group(TestID,ExampleNum,IO,LeftRight))),
-  forall(arc_cache:map_pairs(TestID,ExampleNum,_IO2,Info,List),
-    pp_ilp(grp(Info,List))),
-  !.
+  nop((forall(arc_cache:map_pairs(TestID,ExampleNum,_IO2,Info,List),
+    pp_ilp(grp(Info,List))))),!.
 
 
 
 
 pp_ilp(Grp):-pp_ilp(1,Grp).
 
+pp_ilp(D,Grp):- is_mapping(Grp),
+  get_mapping_info_list(Grp,Info,List),
+  once(into_solid_grid_strings(List,Term)),
+  prefix_spaces(D,format('<grp ~w>\n',[Info])),pp_ilp(D+3,Term),prefix_spaces(D,write('</grp>\n')),!.
 pp_ilp(_,_):- format('~N'),nl,fail.
 pp_ilp(D,is_accompany_changed_db(_TestID,IO,P,PSame)):- 
  list_to_conjuncts(PSame,Conj),pp_ilp(D,(IO:P):-Conj),writeln('.'),!.
 pp_ilp(D,Grid):- is_grid(Grid),prefix_spaces(D,print_grid(Grid)),!,nl.
 pp_ilp(D,List):- is_list(List), \+ is_grid(List),maplist(pp_ilp(D+3),List).
-pp_ilp(D,Grp):- is_mapping(Grp),
-  get_mapping_info_list(Grp,Info,List),
-  once(into_solid_grid_strings(List,Term)),
-  prefix_spaces(D,format('<grp ~w>\n',[Info])),pp_ilp(D+3,Term),prefix_spaces(D,write('</grp>\n')),!.
 pp_ilp(D,T):- into_solid_grid_strings(T,G),!, prefix_spaces(D,print(G)),!.
 pp_ilp(D,T):- prefix_spaces(D,print(T)),!.
 
@@ -628,8 +620,8 @@ clear_object_dependancy(TestID):-
 clear_object_dependancy(TestID,ExampleNum):-  
   forall(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight),
     retract(arc_cache:map_group(TestID,ExampleNum,IO,LeftRight))),
-  forall(arc_cache:map_pairs(TestID,ExampleNum,IO,Right,Left),
-    retract(arc_cache:map_pairs(TestID,ExampleNum,IO,Right,Left))).
+  forall(arc_cache:map_pairs(TestID,ExampleNum,IO,Info,Right,Left),
+    retract(arc_cache:map_pairs(TestID,ExampleNum,IO,Info,Right,Left))).
 
 
 % =============================================================
@@ -643,31 +635,36 @@ learn_object_dependancy(TestID,ExampleNum):-
   forall(obj_group_gg(TestID,ExampleNum,LHSObjs,RHSObjs),
     learn_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs)).
 
-learn_object_dependancy(TestID,ExampleNum,LHSObjs,RHSObjs):-
+learn_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):- 
  must_det_ll((
-  maybe_remove_bg(LHSObjs,LHSObjs1),
-  maybe_remove_bg(RHSObjs,RHSObjs1),
-  Step=0,Ctx=in_out,IsSwapped=false,
-  calc_o_d_recursively(IsSwapped,Step,Ctx,RHSObjs1,LHSObjs1,[],Groups),
-  maplist(assert_map_groups(TestID,ExampleNum,in),Groups))).
+    maybe_remove_bg(LHSObjs,LHSObjs1),
+    maybe_remove_bg(RHSObjs,RHSObjs1),
+    Step=0,Ctx=in_out,IsSwapped=false,
+    calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,RHSObjs1,LHSObjs1,[],Groups),
+    variant_list_to_set(Groups,SetOfGroups),
+    maplist(assert_map_groups(TestID,ExampleNum,in),SetOfGroups))),!.
 
-:- dynamic(arc_cache:map_pairs/5).
+
+:- dynamic(arc_cache:map_pairs/6).
 :- dynamic(arc_cache:map_group/4).
 
 %assert_map_groups(TestID,ExampleNum,IO,LeftRight):- !, nop(assert_map_groups(TestID,ExampleNum,IO,LeftRight)),!.
+
+assert_map_groups(TestID,ExampleNum,IO,Group):- arc_cache:map_group(TestID,ExampleNum,IO,Group),!.
 assert_map_groups(TestID,ExampleNum,IO,Group):-
  %writeq(aSSSSSSSSSSSSSSSSSSSSSSSSSS_Sassert_map_groups(TestID,ExampleNum,IO,Group)),
  must_det_ll((
   %into_list(LeftRight,LeftRightList),
   %if_t(LeftRightList\=[_,_], pp_ilp(map_group(TestID,ExampleNum,IO)=LeftRightList)),
-  asserta_new(arc_cache:map_group(TestID,ExampleNum,IO,Group)),
-  forall((sub_term(Pair,Group),is_mapping(Pair),get_mapping_info_list(Pair,Info,List)),
-    (maplist(into_list,List,ListO),asserta_new(arc_cache:map_pairs(TestID,ExampleNum,IO,Info,ListO)))),
-  nop(assert_map_pair_list(TestID,ExampleNum,IO,Group)))).
+ 
+  asserta_if_new(arc_cache:map_group(TestID,ExampleNum,IO,Group)),
+  forall((sub_term(Pair,Group),is_mapping(Pair),get_mapping_info_list(Pair,Info,[In,Out])),
+    into_list(In,PreObjs),
+    asserta_new(arc_cache:map_pairs(TestID,ExampleNum,IO,Info,Out,PreObjs))))).
 
-get_obj_pair(TestID,_IO,I,O):- 
- arc_cache:map_pairs(TestID,_ExampleNum,_When,_Info,[PreL,PostL]),
- member(I,PreL),member(O,PostL).
+get_obj_pair(TestID,IO,I,O):- 
+ arc_cache:map_pairs(TestID,_ExampleNum,_When,Info,O,PreObjs),
+ sub_var(IO,Info),member(I,PreObjs).
 
 
 
@@ -685,46 +682,45 @@ get_mapping_info_list(grp(Info,List),Info,List).
 
 append_LR(Prev,Mappings,RestLR):- append(Prev,Mappings,RestLR),!.
 
-calc_o_d_recursively(IsSwapped,Step,Ctx,LHSObjs,RHSObjs,Prev,RestLR):-
+calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,LHSObjs,RHSObjs,Prev,RestLR):-
   maybe_remove_bg(LHSObjs,LHSObjs1),maybe_remove_bg(RHSObjs,RHSObjs1),
    once(( \=@=(LHSObjs,LHSObjs1); \=@=(RHSObjs,RHSObjs1))),!,
-  calc_o_d_recursively(IsSwapped,Step,Ctx,LHSObjs1,RHSObjs1,Prev,RestLR).
+  calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,LHSObjs1,RHSObjs1,Prev,RestLR).
 
 
-calc_o_d_recursively(_IsSwapped,_Step,_Ctx,Nil,Mappings,Prev,RestLR):- maplist(is_bg_object,Nil),
+calc_o_d_recursively(_TestID,_ExampleNum,_IsSwapped,_Step,_Ctx,Nil,Mappings,Prev,RestLR):- maplist(is_bg_object,Nil),
    is_mapping_list(Mappings),!, append_LR(Prev,Mappings,RestLR).
-calc_o_d_recursively(_IsSwapped,_Step,_Ctx,Mappings,Nil,Prev,RestLR):- maplist(is_bg_object,Nil),
+calc_o_d_recursively(_TestID,_ExampleNum,_IsSwapped,_Step,_Ctx,Mappings,Nil,Prev,RestLR):- maplist(is_bg_object,Nil),
    is_mapping_list(Mappings),!, append_LR(Prev,Mappings,RestLR).
 
-calc_o_d_recursively(IsSwapped,Step,Ctx,Nil,Objs,Prev,RestLR):- 
+calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Nil,Objs,Prev,RestLR):- 
    maplist(is_bg_object,Nil),
    print_grid(split_sorted,Objs),
    trace, split_sorted(Objs,SplitLHS,SplitRHS),
    SplitLHS\==[],SplitRHS\==[],!,
   incr_step(Step,IncrStep),
   incr_cntx(Ctx,IncrCtx),
-   calc_o_d_recursively(IsSwapped,IncrStep,IncrCtx,SplitLHS,SplitRHS,Prev,RestLR).
+   calc_o_d_recursively(TestID,ExampleNum,IsSwapped,IncrStep,IncrCtx,SplitLHS,SplitRHS,Prev,RestLR).
 
-calc_o_d_recursively(WasSwapped,Step,Ctx,RHSObjs,LHSObjs,Prev,RestLR):- 
+calc_o_d_recursively(TestID,ExampleNum,WasSwapped,Step,Ctx,RHSObjs,LHSObjs,Prev,RestLR):- 
   length(LHSObjs,Left),length(RHSObjs,Right),Right>Left,!,
   swap_tf(WasSwapped,IsSwapped),
-  calc_o_d_recursively(IsSwapped,Step,Ctx,LHSObjs,RHSObjs,Prev,RestLR).
+  calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,LHSObjs,RHSObjs,Prev,RestLR).
 
-calc_o_d_recursively(IsSwapped,Step,Ctx,RHSObjs,LHSObjs,Prev,PairsLHSgain):- 
-   map_right_to_left(IsSwapped,Step,Ctx,Prev,RHSObjs,LHSObjs,RestLR,Unused),
+calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,RHSObjs,LHSObjs,Prev,PairsLHSgain):- 
+   map_right_to_left(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,RHSObjs,LHSObjs,RestLR,Unused),
    incr_step(Step,IncrStep),
    incr_cntx(Ctx,IncrCtx),
-   calc_o_d_recursively(IsSwapped,IncrStep,IncrCtx,RestLR,Unused,Prev,PairsLHSgain).
+   calc_o_d_recursively(TestID,ExampleNum,IsSwapped,IncrStep,IncrCtx,RestLR,Unused,Prev,PairsLHSgain).
    
-map_right_to_left(IsSwapped,Step,Ctx,Prev,RHSObjs,LHSObjs,[Pairs|RestLR],Unused):-    
+map_right_to_left(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,RHSObjs,LHSObjs,[Pairs|RestLR],Unused):-    
   select_pair(Type,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest1,LHSRest1),
-
   remove_object(RHSRest1,Right,RHSRest2), remove_object(LHSRest1,Right,LHSRest2),
   remove_object(RHSRest2, Left,RHSRest ), remove_object(LHSRest2, Left,LHSRest ),
+  make_pairs(TestID,ExampleNum,Type,IsSwapped,Step,Ctx,Prev,Right,Left,Pairs),
+  map_right_to_left(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,RHSRest,LHSRest,RestLR,Unused).
 
-  make_pairs(Type,IsSwapped,Step,Ctx,Prev,Right,Left,Pairs),
-  map_right_to_left(IsSwapped,Step,Ctx,Prev,RHSRest,LHSRest,RestLR,Unused).
-map_right_to_left(_IsSwapped,_Step,_Ctx,_Prev,[],LHSUnused,[],LHSUnused).
+map_right_to_left(_TestID,_ExampleNum,_IsSwapped,_Step,_Ctx,_Prev,[],LHSUnused,[],LHSUnused).
 
 %incr_cntx(Ctx,NewCtx):- Ctx == in_out,!, NewCtx=out_out.
 incr_cntx(Ctx,NewCtx):- atom(Ctx),!, atom_concat(Ctx,'_out',NewCtx).
@@ -807,11 +803,13 @@ split_sorted_by_len(Objs, Len,Prime,SplitLHS,SplitRHS):-
 
 into_prop(CC,P):- sub_term(E,CC),compound(E),is_prop1(E),!,E=P.
 
-make_pairs(Type,s(IsSwapped),Step,Ctx,Prev,LHS,RHS,GRP):- nonvar(IsSwapped),!,
-  make_pairs(Type,IsSwapped,Step,Ctx,Prev,RHS,LHS,GRP).
-make_pairs(Type,IsSwapped,Step,Ctx,Prev,LHS,RHS,GRP):- Prev\==[], !, 
-  make_pairs(Type,IsSwapped,Step,Ctx,[],Prev,LHS,NLHS),make_pairs(Type,IsSwapped,Step,Ctx,[],NLHS,RHS,GRP).
-make_pairs(Type,IsSwapped,Step,Ctx,_,LHS,RHS,grp(info(Step,IsSwapped,Ctx,Type),[RHS,LHS])).
+make_pairs(TestID,ExampleNum,Type,s(IsSwapped),Step,Ctx,Prev,LHS,RHS,GRP):- nonvar(IsSwapped),!,
+  make_pairs(TestID,ExampleNum,Type,IsSwapped,Step,Ctx,Prev,RHS,LHS,GRP).
+make_pairs(TestID,ExampleNum,Type,IsSwapped,Step,Ctx,Prev,LHS,RHS,GRP):- Prev\==[], !, 
+  make_pairs(TestID,ExampleNum,Type,IsSwapped,Step,Ctx,[],Prev,LHS,NLHS),make_pairs(TestID,ExampleNum,Type,IsSwapped,Step,Ctx,[],NLHS,RHS,GRP).
+make_pairs(TestID,ExampleNum,Type,IsSwapped,Step,Ctx,_,LHS,RHS,GRP):-
+  Info = info(TestID,ExampleNum,Step,IsSwapped,Ctx,Type),
+  GRP = grp(Info,[RHS,LHS]).
 
 
 

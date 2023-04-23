@@ -24,10 +24,10 @@ i_pair(WasROptions,GridIn,GridOut):- fail, WasROptions==complete, % TODO unfail 
  show_individuated_pair(PairName,INDIV,GridIn,GridOut,InC,OutC)),_,fail),!.
 
 i_pair(ROptions,GridIn,GridOut):-
- must_det_ll((  
+ must_det_ll((    
   check_for_refreshness,
-  maybe_name_the_pair(GridIn,GridOut,PairName),
   individuate_pair(ROptions,GridIn,GridOut,InC,OutC),
+  maybe_name_the_pair(GridIn,GridOut,PairName),
   show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC,OutC))).
 
 

@@ -89,7 +89,7 @@ menu_cmd1(_,'j','                  or (j)unctions between objects',   (cls_z_mak
 menu_cmd1(_,'k','                  or (k)ill/clear all test data.',(update_changes,clear_test)).
 menu_cmd1(_,'B','                  or (B)oxes test.',(update_changes,pbox_indivs)).
 menu_cmd1(_,'R','                  or (R)epairs test.',(update_changes,repair_symmetry)).
-menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls_z_make,!,compute_and_show_test_hints,compile_and_save_test)).
+menu_cmd1(_,'g','                  or (g)ridcells between objects in the input/outputs',(cls_z_make,!,compute_and_show_test_hints,compile_and_save_hints)).
 menu_cmd1(_,'p','                  or (p)rint the test (textured grid)',(update_changes,maybe_set_suite,print_testinfo,print_test)).
 menu_cmd1(_,'w','                  or (w)rite the test info',(update_changes,switch_pair_mode)).
 menu_cmd1(_,'X','                  or  E(X)amine the program leared by training',(cls_z_make,print_test,!,learned_test,solve_easy)).
@@ -523,7 +523,7 @@ rtty1:- repeat,get_single_char(C),dmsg(c=C),fail.
 whole_ndividuator(TestID):- ensure_test(TestID),
   check_for_refreshness,
   nop(show_test_grids), set_flag(indiv,0),
-  compile_and_save_test,
+  compile_and_save_hints,
   with_individuated_cache(true,
    with_pair_mode(whole_test,
     findall(PairGroups,
@@ -538,7 +538,7 @@ whole_ndividuator(TestID):- ensure_test(TestID),
 each_ndividuator(TestID):- ensure_test(TestID),
   check_for_refreshness,
   nop(show_test_grids), set_flag(indiv,0),
-  compile_and_save_test,
+  compile_and_save_hints,
   findall(PairGroups,
   with_individuated_cache(true,
     (with_task_pairs(TestID,ExampleNum,In,Out,
@@ -586,7 +586,7 @@ show_i(Y,O):-
 ndividuator(TestID):- ensure_test(TestID),
   never_entire_suite,nop(show_test_grids), set_flag(indiv,0),
   %each_ndividuator(TestID),
-  detect_pair_hints(TestID),
+  compute_and_show_test_hints(TestID),
   forall(with_task_pairs(TestID,ExampleNum,In,Out,ndividuator(TestID,ExampleNum,In,Out)),true).
 
 ndividuator(TestID,ExampleNum,In,Out):- 
@@ -1363,7 +1363,7 @@ on_entering_test(TestID):-
 on_leaving_test(TestID):- is_list(TestID),!,my_maplist(on_leaving_test,TestID).
 on_leaving_test(TestID):-     
  must_det_ll((
-  save_supertest(TestID),
+  save_test_hints(TestID),
   clear_test(TestID),  
   flush_tee,
   clear_tee)).
@@ -1430,15 +1430,15 @@ my_shell_format(F,A):- shell_op((sformat(S,F,A), shell(S))).
 
 warn_skip(Goal):- u_dmsg(warn_skip(Goal)).
 
-save_supertest(TestID):- is_list(TestID),!,my_maplist(save_supertest,TestID).
-save_supertest(TestID_IN):- ensure_test(TestID_IN,TestID), save_supertest(TestID,_File).
+save_test_hints(TestID):- is_list(TestID),!,my_maplist(save_test_hints,TestID).
+save_test_hints(TestID_IN):- ensure_test(TestID_IN,TestID), save_test_hints(TestID,_File).
 
-save_supertest(TestID,File):- var(TestID),!, forall(ensure_test(TestID), save_supertest(TestID,File)).
-save_supertest(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_supertest(TestID,File).
-save_supertest(TestID,File):- maybe_append_file_extension(File,'.pl',NewName),!,save_supertest(TestID,NewName).
+save_test_hints(TestID,File):- var(TestID),!, forall(ensure_test(TestID), save_test_hints(TestID,File)).
+save_test_hints(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_test_hints(TestID,File).
+save_test_hints(TestID,File):- maybe_append_file_extension(File,'.pl',NewName),!,save_test_hints(TestID,NewName).
 
-%save_supertest(TestID,File):- !, warn_skip(save_supertest(TestID,File)).
-save_supertest(TestID,File):-
+%save_test_hints(TestID,File):- !, warn_skip(save_test_hints(TestID,File)).
+save_test_hints(TestID,File):-
  saveable_test_info(TestID,Info),
    setup_call_cleanup(open(File,write,O,[create([default]),encoding(text)]), 
        with_output_to(O,(
@@ -1560,7 +1560,7 @@ maybe_set_suite:- get_current_test(TestID),maybe_set_suite(TestID).
 
 print_single_pair(TName):- is_cgi,!,preview_test(TName).
 print_single_pair(TName):-
- must_det_ll((
+ ignore((
   fix_test_name(TName,TestID,ExampleNum),
   ensure_test(TestID),
   ignore(first_current_example_num(ExampleNum)),
@@ -2179,7 +2179,7 @@ fix_test_name(Try, TestID):- is_valid_testname(Try),!,TestID=Try.
 fix_test_name(Try, TestID):- fix_id_1(Try,   TestID),!.
 fix_test_name(Try, TestID):- testid_name_num_io(Try,TestID,_Example,_Num,_IO).
 
-fix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=@=G.
+gfix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=@=G.
 fix_test_name(V,VV,_):- var(V),!,VV=V.
 fix_test_name(ID,Fixed,Example+Num):- testid_name_num_io(ID,Tried,Example,Num,_), fix_test_name(Tried,Fixed).
 
@@ -2203,7 +2203,8 @@ testid_name_num_io_0(X,TestID,E,N,IO):- is_grid(X),!,kaggle_arc_io_current_first
 testid_name_num_io_0(ID,_Name,_Example,_Num,_IO):- is_grid(ID),!, fail.
 testid_name_num_io_0(ID,_Name,_Example,_Num,_IO):- is_list(ID), \+ my_maplist(nonvar,ID),!,fail.
 
-testid_name_num_io_0([V,Name,Example,ANum|IOL],TestID,Example,Num,IO):- !, atom(V),VName=..[V,Name],atom_number(ANum,Num),!,
+testid_name_num_io_0([V,Name,Example,ANum|IOL],TestID,Example,Num,IO):- !, atom(V),VName=..[V,Name],
+  atom_number(ANum,Num),!,
   fix_id_1(VName,TestID), freeze(IO,member(IO,[in,out])),member(IO,IOL),!.
 testid_name_num_io_0(TestID>Example+Num*IO,Name,Example,Num,IO):- !,fix_id_1(TestID,Name).
 testid_name_num_io_0(TestID>(Example+Num)*IO,Name,Example,Num,IO):- !,fix_id_1(TestID,Name).
@@ -2381,7 +2382,12 @@ with_current_test(P1,TestID,ExampleNum,I,O):- current_predicate_human(P1/2),!,wi
 
 with_current_test.
 
-current_predicate_human(F/A):- current_predicate(F/A,P), \+ clause(P,(with_current_test,_)).
+current_predicate_human(F/A):- current_predicate(F/A,P), 
+ \+ (clause(P,Body),
+     first_cmpd_goal(Body,G),
+     functor(G,with_current_test,_)).
+
+
 
 /*
 with_current_test(P1,TestID,ExampleNum,I,O):- var(I),var(O),!,

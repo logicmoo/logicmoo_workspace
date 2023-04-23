@@ -85,7 +85,7 @@ fav(t('f8b3ba0a'),
   indiv_h(colormass)).
 
 
-%~ (save_supertest(v('00576224'),'muarc_cache/00576224.ansi.pl'))
+%~ (save_test_hints(v('00576224'),'muarc_cache/00576224.ansi.pl'))
 %~ (clear_saveable_test_info(v('00576224')))
 %~ (clear_saveable_test_info(v('423a55dc')))
 
@@ -111,7 +111,7 @@ fav_testcase(v('423a55dc')>trn+1,"
 
 
 %= fav(v('423a55dc'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/423a55dc.json']),filename(['/data/evaluation/423a55dc.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(5, 1) ']).
-%~ (save_supertest(v('423a55dc'),'muarc_cache/423a55dc.ansi.pl'))
+%~ (save_test_hints(v('423a55dc'),'muarc_cache/423a55dc.ansi.pl'))
 %~ (clear_saveable_test_info(v('423a55dc')))
 %~ (clear_saveable_test_info(v('414297c0')))
 fav_testcase(v('414297c0')>trn+1,"
@@ -140,7 +140,7 @@ fav_testcase(v('414297c0')>trn+1,"
 
 
 %= fav(v('414297c0'),[no_sol(i(complete),resize_grid(11,12,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([11,12]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/414297c0.json']),filename(['/data/evaluation/414297c0.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('414297c0'),'muarc_cache/414297c0.ansi.pl'))
+%~ (save_test_hints(v('414297c0'),'muarc_cache/414297c0.ansi.pl'))
 %~ (clear_saveable_test_info(v('414297c0')))
 %~ (clear_saveable_test_info(v('40f6cd08')))
 fav_testcase(v('40f6cd08')>trn+1,"
@@ -183,7 +183,7 @@ fav_testcase(v('40f6cd08')>trn+1,"
 
 
 %= fav(v('40f6cd08'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/40f6cd08.json']),filename(['/data/evaluation/40f6cd08.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('40f6cd08'),'muarc_cache/40f6cd08.ansi.pl'))
+%~ (save_test_hints(v('40f6cd08'),'muarc_cache/40f6cd08.ansi.pl'))
 %~ (clear_saveable_test_info(v('40f6cd08')))
 %~ (clear_saveable_test_info(v('3f23242b')))
 fav_testcase(v('3f23242b')>trn+1,"
@@ -206,7 +206,7 @@ fav_testcase(v('3f23242b')>trn+1,"
 
 
 %= fav(v('3f23242b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3f23242b.json']),filename(['/data/evaluation/3f23242b.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('3f23242b'),'muarc_cache/3f23242b.ansi.pl'))
+%~ (save_test_hints(v('3f23242b'),'muarc_cache/3f23242b.ansi.pl'))
 %~ (clear_saveable_test_info(v('3f23242b')))
 %~ (clear_saveable_test_info(v('3ee1011a')))
 fav_testcase(v('3ee1011a')>trn+1,"
@@ -240,7 +240,7 @@ fav_testcase(v('3ee1011a')>trn+1,"
 
 
 %= fav(v('3ee1011a'),[no_sol(i(complete),resize_grid(5,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([5,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3ee1011a.json']),filename(['/data/evaluation/3ee1011a.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('3ee1011a'),'muarc_cache/3ee1011a.ansi.pl'))
+%~ (save_test_hints(v('3ee1011a'),'muarc_cache/3ee1011a.ansi.pl'))
 %~ (clear_saveable_test_info(v('3ee1011a')))
 %~ (clear_saveable_test_info(v('3ed85e70')))
 fav_testcase(v('3ed85e70')>trn+1,"
@@ -283,7 +283,7 @@ fav_testcase(v('3ed85e70')>trn+1,"
 
 
 %= fav(v('3ed85e70'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3ed85e70.json']),filename(['/data/evaluation/3ed85e70.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('3ed85e70'),'muarc_cache/3ed85e70.ansi.pl'))
+%~ (save_test_hints(v('3ed85e70'),'muarc_cache/3ed85e70.ansi.pl'))
 %~ (clear_saveable_test_info(v('3ed85e70')))
 %~ (clear_saveable_test_info(v('3d31c5b3')))
 fav_testcase(v('3d31c5b3')>trn+1,"
@@ -308,7 +308,7 @@ fav_testcase(v('3d31c5b3')>trn+1,"
 
 
 %= fav(v('3d31c5b3'),[no_sol(i(complete),resize_grid(6,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3d31c5b3.json']),filename(['/data/evaluation/3d31c5b3.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(6, 1) ']).
-%~ (save_supertest(v('3d31c5b3'),'muarc_cache/3d31c5b3.ansi.pl'))
+%~ (save_test_hints(v('3d31c5b3'),'muarc_cache/3d31c5b3.ansi.pl'))
 %~ (clear_saveable_test_info(v('3d31c5b3')))
 %~ (clear_saveable_test_info(v('3b4c2228')))
 fav_testcase(v('3b4c2228')>trn+1,"
@@ -328,7 +328,7 @@ fav_testcase(v('3b4c2228')>trn+1,"
 
 
 %= fav(v('3b4c2228'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3b4c2228.json']),filename(['/data/evaluation/3b4c2228.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(5, 2) ']).
-%~ (save_supertest(v('3b4c2228'),'muarc_cache/3b4c2228.ansi.pl'))
+%~ (save_test_hints(v('3b4c2228'),'muarc_cache/3b4c2228.ansi.pl'))
 %~ (clear_saveable_test_info(v('3b4c2228')))
 %~ (clear_saveable_test_info(v('3a301edc')))
 fav_testcase(v('3a301edc')>trn+1,"
@@ -354,7 +354,7 @@ fav_testcase(v('3a301edc')>trn+1,"
 
 
 %= fav(v('3a301edc'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3a301edc.json']),filename(['/data/evaluation/3a301edc.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(5, 1) ']).
-%~ (save_supertest(v('3a301edc'),'muarc_cache/3a301edc.ansi.pl'))
+%~ (save_test_hints(v('3a301edc'),'muarc_cache/3a301edc.ansi.pl'))
 %~ (clear_saveable_test_info(v('3a301edc')))
 %~ (clear_saveable_test_info(v('3979b1a8')))
 fav_testcase(v('3979b1a8')>trn+1,"
@@ -377,7 +377,7 @@ fav_testcase(v('3979b1a8')>trn+1,"
 
 
 %= fav(v('3979b1a8'),[no_sol(i(complete),resize_grid(10,10,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([10,10]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3979b1a8.json']),filename(['/data/evaluation/3979b1a8.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('3979b1a8'),'muarc_cache/3979b1a8.ansi.pl'))
+%~ (save_test_hints(v('3979b1a8'),'muarc_cache/3979b1a8.ansi.pl'))
 %~ (clear_saveable_test_info(v('3979b1a8')))
 %~ (clear_saveable_test_info(v('37d3e8b2')))
 fav_testcase(v('37d3e8b2')>trn+1,"
@@ -407,7 +407,7 @@ fav_testcase(v('37d3e8b2')>trn+1,"
 
 
 %= fav(v('37d3e8b2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/37d3e8b2.json']),filename(['/data/evaluation/37d3e8b2.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('37d3e8b2'),'muarc_cache/37d3e8b2.ansi.pl'))
+%~ (save_test_hints(v('37d3e8b2'),'muarc_cache/37d3e8b2.ansi.pl'))
 %~ (clear_saveable_test_info(v('37d3e8b2')))
 %~ (clear_saveable_test_info(v('358ba94e')))
 fav_testcase(v('358ba94e')>trn+1,"
@@ -435,7 +435,7 @@ fav_testcase(v('358ba94e')>trn+1,"
 
 
 %= fav(v('358ba94e'),[no_sol(i(complete),resize_grid(5,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([5,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/358ba94e.json']),filename(['/data/evaluation/358ba94e.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('358ba94e'),'muarc_cache/358ba94e.ansi.pl'))
+%~ (save_test_hints(v('358ba94e'),'muarc_cache/358ba94e.ansi.pl'))
 %~ (clear_saveable_test_info(v('358ba94e')))
 %~ (clear_saveable_test_info(v('351d6448')))
 fav_testcase(v('351d6448')>trn+1,"
@@ -463,7 +463,7 @@ fav_testcase(v('351d6448')>trn+1,"
 
 
 %= fav(v('351d6448'),[no_sol(i(complete),resize_grid(13,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([13,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/351d6448.json']),filename(['/data/evaluation/351d6448.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('351d6448'),'muarc_cache/351d6448.ansi.pl'))
+%~ (save_test_hints(v('351d6448'),'muarc_cache/351d6448.ansi.pl'))
 %~ (clear_saveable_test_info(v('351d6448')))
 %~ (clear_saveable_test_info(v('34b99a2b')))
 fav_testcase(v('34b99a2b')>trn+1,"
@@ -481,7 +481,7 @@ fav_testcase(v('34b99a2b')>trn+1,"
 
 
 %= fav(v('34b99a2b'),[no_sol(i(complete),resize_grid(4,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/34b99a2b.json']),filename(['/data/evaluation/34b99a2b.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('34b99a2b'),'muarc_cache/34b99a2b.ansi.pl'))
+%~ (save_test_hints(v('34b99a2b'),'muarc_cache/34b99a2b.ansi.pl'))
 %~ (clear_saveable_test_info(v('34b99a2b')))
 %~ (clear_saveable_test_info(v('3490cc26')))
 fav_testcase(v('3490cc26')>trn+1,"
@@ -520,7 +520,7 @@ fav_testcase(v('3490cc26')>trn+1,"
 
 
 %= fav(v('3490cc26'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3490cc26.json']),filename(['/data/evaluation/3490cc26.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('3490cc26'),'muarc_cache/3490cc26.ansi.pl'))
+%~ (save_test_hints(v('3490cc26'),'muarc_cache/3490cc26.ansi.pl'))
 %~ (clear_saveable_test_info(v('3490cc26')))
 %~ (clear_saveable_test_info(v('33b52de3')))
 fav_testcase(v('33b52de3')>trn+1,"
@@ -556,7 +556,7 @@ fav_testcase(v('33b52de3')>trn+1,"
 
 
 %= fav(v('33b52de3'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/33b52de3.json']),filename(['/data/evaluation/33b52de3.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('33b52de3'),'muarc_cache/33b52de3.ansi.pl'))
+%~ (save_test_hints(v('33b52de3'),'muarc_cache/33b52de3.ansi.pl'))
 %~ (clear_saveable_test_info(v('33b52de3')))
 %~ (clear_saveable_test_info(v('3391f8c0')))
 fav_testcase(v('3391f8c0')>trn+1,"
@@ -578,7 +578,7 @@ fav_testcase(v('3391f8c0')>trn+1,"
 
 
 %= fav(v('3391f8c0'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3391f8c0.json']),filename(['/data/evaluation/3391f8c0.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('3391f8c0'),'muarc_cache/3391f8c0.ansi.pl'))
+%~ (save_test_hints(v('3391f8c0'),'muarc_cache/3391f8c0.ansi.pl'))
 %~ (clear_saveable_test_info(v('3391f8c0')))
 %~ (clear_saveable_test_info(v('332efdb3')))
 fav_testcase(v('332efdb3')>trn+1,"
@@ -596,7 +596,7 @@ fav_testcase(v('332efdb3')>trn+1,"
 
 
 %= fav(v('332efdb3'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/332efdb3.json']),filename(['/data/evaluation/332efdb3.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('332efdb3'),'muarc_cache/332efdb3.ansi.pl'))
+%~ (save_test_hints(v('332efdb3'),'muarc_cache/332efdb3.ansi.pl'))
 %~ (clear_saveable_test_info(v('332efdb3')))
 %~ (clear_saveable_test_info(v('32e9702f')))
 fav_testcase(v('32e9702f')>trn+1,"
@@ -617,7 +617,7 @@ fav_testcase(v('32e9702f')>trn+1,"
 
 
 %= fav(v('32e9702f'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/32e9702f.json']),filename(['/data/evaluation/32e9702f.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('32e9702f'),'muarc_cache/32e9702f.ansi.pl'))
+%~ (save_test_hints(v('32e9702f'),'muarc_cache/32e9702f.ansi.pl'))
 %~ (clear_saveable_test_info(v('32e9702f')))
 %~ (clear_saveable_test_info(v('31d5ba1a')))
 fav_testcase(v('31d5ba1a')>trn+1,"
@@ -636,7 +636,7 @@ fav_testcase(v('31d5ba1a')>trn+1,"
 
 
 %= fav(v('31d5ba1a'),[no_sol(i(complete),resize_grid(5,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([5,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/31d5ba1a.json']),filename(['/data/evaluation/31d5ba1a.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(5, 2) ']).
-%~ (save_supertest(v('31d5ba1a'),'muarc_cache/31d5ba1a.ansi.pl'))
+%~ (save_test_hints(v('31d5ba1a'),'muarc_cache/31d5ba1a.ansi.pl'))
 %~ (clear_saveable_test_info(v('31d5ba1a')))
 %~ (clear_saveable_test_info(v('31adaf00')))
 fav_testcase(v('31adaf00')>trn+1,"
@@ -659,7 +659,7 @@ fav_testcase(v('31adaf00')>trn+1,"
 
 
 %= fav(v('31adaf00'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/31adaf00.json']),filename(['/data/evaluation/31adaf00.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('31adaf00'),'muarc_cache/31adaf00.ansi.pl'))
+%~ (save_test_hints(v('31adaf00'),'muarc_cache/31adaf00.ansi.pl'))
 %~ (clear_saveable_test_info(v('31adaf00')))
 %~ (clear_saveable_test_info(v('319f2597')))
 fav_testcase(v('319f2597')>trn+1,"
@@ -692,7 +692,7 @@ fav_testcase(v('319f2597')>trn+1,"
 
 
 %= fav(v('319f2597'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/319f2597.json']),filename(['/data/evaluation/319f2597.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('319f2597'),'muarc_cache/319f2597.ansi.pl'))
+%~ (save_test_hints(v('319f2597'),'muarc_cache/319f2597.ansi.pl'))
 %~ (clear_saveable_test_info(v('319f2597')))
 %~ (clear_saveable_test_info(v('3194b014')))
 fav_testcase(v('3194b014')>trn+1,"
@@ -725,7 +725,7 @@ fav_testcase(v('3194b014')>trn+1,"
 
 
 %= fav(v('3194b014'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/3194b014.json']),filename(['/data/evaluation/3194b014.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('3194b014'),'muarc_cache/3194b014.ansi.pl'))
+%~ (save_test_hints(v('3194b014'),'muarc_cache/3194b014.ansi.pl'))
 %~ (clear_saveable_test_info(v('3194b014')))
 %~ (clear_saveable_test_info(v('310f3251')))
 fav_testcase(v('310f3251')>trn+1,"
@@ -747,7 +747,7 @@ fav_testcase(v('310f3251')>trn+1,"
 
 
 %= fav(v('310f3251'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/310f3251.json']),filename(['/data/evaluation/310f3251.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('310f3251'),'muarc_cache/310f3251.ansi.pl'))
+%~ (save_test_hints(v('310f3251'),'muarc_cache/310f3251.ansi.pl'))
 %~ (clear_saveable_test_info(v('310f3251')))
 %~ (clear_saveable_test_info(v('2f0c5170')))
 fav_testcase(v('2f0c5170')>trn+1,"
@@ -781,7 +781,7 @@ fav_testcase(v('2f0c5170')>trn+1,"
 
 
 %= fav(v('2f0c5170'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2f0c5170.json']),filename(['/data/evaluation/2f0c5170.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('2f0c5170'),'muarc_cache/2f0c5170.ansi.pl'))
+%~ (save_test_hints(v('2f0c5170'),'muarc_cache/2f0c5170.ansi.pl'))
 %~ (clear_saveable_test_info(v('2f0c5170')))
 %~ (clear_saveable_test_info(v('2c737e39')))
 fav_testcase(v('2c737e39')>trn+1,"
@@ -806,7 +806,7 @@ fav_testcase(v('2c737e39')>trn+1,"
 
 
 %= fav(v('2c737e39'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2c737e39.json']),filename(['/data/evaluation/2c737e39.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('2c737e39'),'muarc_cache/2c737e39.ansi.pl'))
+%~ (save_test_hints(v('2c737e39'),'muarc_cache/2c737e39.ansi.pl'))
 %~ (clear_saveable_test_info(v('2c737e39')))
 %~ (clear_saveable_test_info(v('2c0b0aff')))
 fav_testcase(v('2c0b0aff')>trn+1,"
@@ -843,7 +843,7 @@ fav_testcase(v('2c0b0aff')>trn+1,"
 
 
 %= fav(v('2c0b0aff'),[no_sol(i(complete),resize_grid(8,7,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([8,7]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2c0b0aff.json']),filename(['/data/evaluation/2c0b0aff.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('2c0b0aff'),'muarc_cache/2c0b0aff.ansi.pl'))
+%~ (save_test_hints(v('2c0b0aff'),'muarc_cache/2c0b0aff.ansi.pl'))
 %~ (clear_saveable_test_info(v('2c0b0aff')))
 %~ (clear_saveable_test_info(v('2b01abd0')))
 fav_testcase(v('2b01abd0')>trn+1,"
@@ -867,7 +867,7 @@ fav_testcase(v('2b01abd0')>trn+1,"
 
 
 %= fav(v('2b01abd0'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2b01abd0.json']),filename(['/data/evaluation/2b01abd0.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('2b01abd0'),'muarc_cache/2b01abd0.ansi.pl'))
+%~ (save_test_hints(v('2b01abd0'),'muarc_cache/2b01abd0.ansi.pl'))
 %~ (clear_saveable_test_info(v('2b01abd0')))
 %~ (clear_saveable_test_info(v('2a5f8217')))
 fav_testcase(v('2a5f8217')>trn+1,"
@@ -889,7 +889,7 @@ fav_testcase(v('2a5f8217')>trn+1,"
 
 
 %= fav(v('2a5f8217'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2a5f8217.json']),filename(['/data/evaluation/2a5f8217.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('2a5f8217'),'muarc_cache/2a5f8217.ansi.pl'))
+%~ (save_test_hints(v('2a5f8217'),'muarc_cache/2a5f8217.ansi.pl'))
 %~ (clear_saveable_test_info(v('2a5f8217')))
 %~ (clear_saveable_test_info(v('29700607')))
 fav_testcase(v('29700607')>trn+1,"
@@ -914,7 +914,7 @@ fav_testcase(v('29700607')>trn+1,"
 
 
 %= fav(v('29700607'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/29700607.json']),filename(['/data/evaluation/29700607.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('29700607'),'muarc_cache/29700607.ansi.pl'))
+%~ (save_test_hints(v('29700607'),'muarc_cache/29700607.ansi.pl'))
 %~ (clear_saveable_test_info(v('29700607')))
 %~ (clear_saveable_test_info(v('292dd178')))
 fav_testcase(v('292dd178')>trn+1,"
@@ -934,7 +934,7 @@ fav_testcase(v('292dd178')>trn+1,"
 
 
 %= fav(v('292dd178'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/292dd178.json']),filename(['/data/evaluation/292dd178.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('292dd178'),'muarc_cache/292dd178.ansi.pl'))
+%~ (save_test_hints(v('292dd178'),'muarc_cache/292dd178.ansi.pl'))
 %~ (clear_saveable_test_info(v('292dd178')))
 %~ (clear_saveable_test_info(v('281123b4')))
 fav_testcase(v('281123b4')>trn+1,"
@@ -951,7 +951,7 @@ fav_testcase(v('281123b4')>trn+1,"
 
 
 %= fav(v('281123b4'),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,4]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/281123b4.json']),filename(['/data/evaluation/281123b4.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(6, 1) ']).
-%~ (save_supertest(v('281123b4'),'muarc_cache/281123b4.ansi.pl'))
+%~ (save_test_hints(v('281123b4'),'muarc_cache/281123b4.ansi.pl'))
 %~ (clear_saveable_test_info(v('281123b4')))
 %~ (clear_saveable_test_info(v('27f8ce4f')))
 fav_testcase(v('27f8ce4f')>trn+1,"
@@ -973,7 +973,7 @@ fav_testcase(v('27f8ce4f')>trn+1,"
 
 
 %= fav(v('27f8ce4f'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/27f8ce4f.json']),filename(['/data/evaluation/27f8ce4f.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('27f8ce4f'),'muarc_cache/27f8ce4f.ansi.pl'))
+%~ (save_test_hints(v('27f8ce4f'),'muarc_cache/27f8ce4f.ansi.pl'))
 %~ (clear_saveable_test_info(v('27f8ce4f')))
 %~ (clear_saveable_test_info(v('27a77e38')))
 fav_testcase(v('27a77e38')>trn+1,"
@@ -991,7 +991,7 @@ fav_testcase(v('27a77e38')>trn+1,"
 
 
 %= fav(v('27a77e38'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/27a77e38.json']),filename(['/data/evaluation/27a77e38.json']),-rotation_match,-mask_match,+shape_match,+color_match,second_most_used_color,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('27a77e38'),'muarc_cache/27a77e38.ansi.pl'))
+%~ (save_test_hints(v('27a77e38'),'muarc_cache/27a77e38.ansi.pl'))
 %~ (clear_saveable_test_info(v('27a77e38')))
 %~ (clear_saveable_test_info(v('2753e76c')))
 fav_testcase(v('2753e76c')>trn+1,"
@@ -1020,7 +1020,7 @@ fav_testcase(v('2753e76c')>trn+1,"
 
 
 %= fav(v('2753e76c'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2753e76c.json']),filename(['/data/evaluation/2753e76c.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('2753e76c'),'muarc_cache/2753e76c.ansi.pl'))
+%~ (save_test_hints(v('2753e76c'),'muarc_cache/2753e76c.ansi.pl'))
 %~ (clear_saveable_test_info(v('2753e76c')))
 %~ (clear_saveable_test_info(v('2697da3f')))
 fav_testcase(v('2697da3f')>trn+1,"
@@ -1044,7 +1044,7 @@ fav_testcase(v('2697da3f')>trn+1,"
 
 
 %= fav(v('2697da3f'),[no_sol(i(complete),resize_grid(15,15,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([15,15]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2697da3f.json']),filename(['/data/evaluation/2697da3f.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('2697da3f'),'muarc_cache/2697da3f.ansi.pl'))
+%~ (save_test_hints(v('2697da3f'),'muarc_cache/2697da3f.ansi.pl'))
 %~ (clear_saveable_test_info(v('2697da3f')))
 %~ (clear_saveable_test_info(v('2685904e')))
 fav_testcase(v('2685904e')>trn+1,"
@@ -1067,7 +1067,7 @@ fav_testcase(v('2685904e')>trn+1,"
 
 
 %= fav(v('2685904e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2685904e.json']),filename(['/data/evaluation/2685904e.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(6, 1) ']).
-%~ (save_supertest(v('2685904e'),'muarc_cache/2685904e.ansi.pl'))
+%~ (save_test_hints(v('2685904e'),'muarc_cache/2685904e.ansi.pl'))
 %~ (clear_saveable_test_info(v('2685904e')))
 %~ (clear_saveable_test_info(v('256b0a75')))
 fav_testcase(v('256b0a75')>trn+1,"
@@ -1102,7 +1102,7 @@ fav_testcase(v('256b0a75')>trn+1,"
 
 
 %= fav(v('256b0a75'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/256b0a75.json']),filename(['/data/evaluation/256b0a75.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('256b0a75'),'muarc_cache/256b0a75.ansi.pl'))
+%~ (save_test_hints(v('256b0a75'),'muarc_cache/256b0a75.ansi.pl'))
 %~ (clear_saveable_test_info(v('256b0a75')))
 %~ (clear_saveable_test_info(v('2546ccf6')))
 fav_testcase(v('2546ccf6')>trn+1,"
@@ -1134,7 +1134,7 @@ fav_testcase(v('2546ccf6')>trn+1,"
 
 
 %= fav(v('2546ccf6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2546ccf6.json']),filename(['/data/evaluation/2546ccf6.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('2546ccf6'),'muarc_cache/2546ccf6.ansi.pl'))
+%~ (save_test_hints(v('2546ccf6'),'muarc_cache/2546ccf6.ansi.pl'))
 %~ (clear_saveable_test_info(v('2546ccf6')))
 %~ (clear_saveable_test_info(v('25094a63')))
 fav_testcase(v('25094a63')>trn+1,"
@@ -1177,7 +1177,7 @@ fav_testcase(v('25094a63')>trn+1,"
 
 
 %= fav(v('25094a63'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/25094a63.json']),filename(['/data/evaluation/25094a63.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('25094a63'),'muarc_cache/25094a63.ansi.pl'))
+%~ (save_test_hints(v('25094a63'),'muarc_cache/25094a63.ansi.pl'))
 %~ (clear_saveable_test_info(v('25094a63')))
 %~ (clear_saveable_test_info(v('22a4bbc2')))
 fav_testcase(v('22a4bbc2')>trn+1,"
@@ -1209,7 +1209,7 @@ fav_testcase(v('22a4bbc2')>trn+1,"
 
 
 %= fav(v('22a4bbc2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/22a4bbc2.json']),filename(['/data/evaluation/22a4bbc2.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('22a4bbc2'),'muarc_cache/22a4bbc2.ansi.pl'))
+%~ (save_test_hints(v('22a4bbc2'),'muarc_cache/22a4bbc2.ansi.pl'))
 %~ (clear_saveable_test_info(v('22a4bbc2')))
 %~ (clear_saveable_test_info(v('21f83797')))
 fav_testcase(v('21f83797')>trn+1,"
@@ -1235,7 +1235,7 @@ fav_testcase(v('21f83797')>trn+1,"
 
 
 %= fav(v('21f83797'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/21f83797.json']),filename(['/data/evaluation/21f83797.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('21f83797'),'muarc_cache/21f83797.ansi.pl'))
+%~ (save_test_hints(v('21f83797'),'muarc_cache/21f83797.ansi.pl'))
 %~ (clear_saveable_test_info(v('21f83797')))
 %~ (clear_saveable_test_info(v('212895b5')))
 fav_testcase(v('212895b5')>trn+1,"
@@ -1266,7 +1266,7 @@ fav_testcase(v('212895b5')>trn+1,"
 
 
 %= fav(v('212895b5'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/212895b5.json']),filename(['/data/evaluation/212895b5.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('212895b5'),'muarc_cache/212895b5.ansi.pl'))
+%~ (save_test_hints(v('212895b5'),'muarc_cache/212895b5.ansi.pl'))
 %~ (clear_saveable_test_info(v('212895b5')))
 %~ (clear_saveable_test_info(v('20981f0e')))
 fav_testcase(v('20981f0e')>trn+1,"
@@ -1293,7 +1293,7 @@ fav_testcase(v('20981f0e')>trn+1,"
 
 
 %= fav(v('20981f0e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/20981f0e.json']),filename(['/data/evaluation/20981f0e.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('20981f0e'),'muarc_cache/20981f0e.ansi.pl'))
+%~ (save_test_hints(v('20981f0e'),'muarc_cache/20981f0e.ansi.pl'))
 %~ (clear_saveable_test_info(v('20981f0e')))
 %~ (clear_saveable_test_info(v('20818e16')))
 fav_testcase(v('20818e16')>trn+1,"
@@ -1322,7 +1322,7 @@ fav_testcase(v('20818e16')>trn+1,"
 
 
 %= fav(v('20818e16'),[no_sol(i(complete),resize_grid(8,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([8,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/20818e16.json']),filename(['/data/evaluation/20818e16.json'])]).
-%~ (save_supertest(v('20818e16'),'muarc_cache/20818e16.ansi.pl'))
+%~ (save_test_hints(v('20818e16'),'muarc_cache/20818e16.ansi.pl'))
 %~ (clear_saveable_test_info(v('20818e16')))
 %~ (clear_saveable_test_info(v('2072aba6')))
 fav_testcase(v('2072aba6')>trn+1,"
@@ -1341,7 +1341,7 @@ fav_testcase(v('2072aba6')>trn+1,"
 
 
 %= fav(v('2072aba6'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2072aba6.json']),filename(['/data/evaluation/2072aba6.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('2072aba6'),'muarc_cache/2072aba6.ansi.pl'))
+%~ (save_test_hints(v('2072aba6'),'muarc_cache/2072aba6.ansi.pl'))
 %~ (clear_saveable_test_info(v('2072aba6')))
 %~ (clear_saveable_test_info(v('2037f2c7')))
 fav_testcase(v('2037f2c7')>trn+1,"
@@ -1379,7 +1379,7 @@ fav_testcase(v('2037f2c7')>trn+1,"
 
 
 %= fav(v('2037f2c7'),[no_sol(i(complete),resize_grid(7,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/2037f2c7.json']),filename(['/data/evaluation/2037f2c7.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('2037f2c7'),'muarc_cache/2037f2c7.ansi.pl'))
+%~ (save_test_hints(v('2037f2c7'),'muarc_cache/2037f2c7.ansi.pl'))
 %~ (clear_saveable_test_info(v('2037f2c7')))
 %~ (clear_saveable_test_info(v('1e97544e')))
 fav_testcase(v('1e97544e')>trn+1,"
@@ -1415,7 +1415,7 @@ fav_testcase(v('1e97544e')>trn+1,"
 
 
 %= fav(v('1e97544e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),indiv([i_repair_patterns_f]),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1e97544e.json']),filename(['/data/evaluation/1e97544e.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('1e97544e'),'muarc_cache/1e97544e.ansi.pl'))
+%~ (save_test_hints(v('1e97544e'),'muarc_cache/1e97544e.ansi.pl'))
 %~ (clear_saveable_test_info(v('1e97544e')))
 %~ (clear_saveable_test_info(v('1e81d6f9')))
 fav_testcase(v('1e81d6f9')>trn+1,"
@@ -1443,7 +1443,7 @@ fav_testcase(v('1e81d6f9')>trn+1,"
 
 
 %= fav(v('1e81d6f9'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1e81d6f9.json']),filename(['/data/evaluation/1e81d6f9.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('1e81d6f9'),'muarc_cache/1e81d6f9.ansi.pl'))
+%~ (save_test_hints(v('1e81d6f9'),'muarc_cache/1e81d6f9.ansi.pl'))
 %~ (clear_saveable_test_info(v('1e81d6f9')))
 %~ (clear_saveable_test_info(v('1da012fc')))
 fav_testcase(v('1da012fc')>trn+1,"
@@ -1470,7 +1470,7 @@ fav_testcase(v('1da012fc')>trn+1,"
 
 
 %= fav(v('1da012fc'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1da012fc.json']),filename(['/data/evaluation/1da012fc.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('1da012fc'),'muarc_cache/1da012fc.ansi.pl'))
+%~ (save_test_hints(v('1da012fc'),'muarc_cache/1da012fc.ansi.pl'))
 %~ (clear_saveable_test_info(v('1da012fc')))
 %~ (clear_saveable_test_info(v('1d398264')))
 fav_testcase(v('1d398264')>trn+1,"
@@ -1493,7 +1493,7 @@ fav_testcase(v('1d398264')>trn+1,"
 
 
 %= fav(v('1d398264'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),ohuman([(iz(_35124,keypad),iz(_35124,multicolor),centerof(_35124,_35144)-->sunburst(_35144))]),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1d398264.json']),filename(['/data/evaluation/1d398264.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 2) ']).
-%~ (save_supertest(v('1d398264'),'muarc_cache/1d398264.ansi.pl'))
+%~ (save_test_hints(v('1d398264'),'muarc_cache/1d398264.ansi.pl'))
 %~ (clear_saveable_test_info(v('1d398264')))
 %~ (clear_saveable_test_info(v('1d0a4b61')))
 fav_testcase(v('1d0a4b61')>trn+1,"
@@ -1531,7 +1531,7 @@ fav_testcase(v('1d0a4b61')>trn+1,"
 
 
 %= fav(v('1d0a4b61'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1d0a4b61.json']),filename(['/data/evaluation/1d0a4b61.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('1d0a4b61'),'muarc_cache/1d0a4b61.ansi.pl'))
+%~ (save_test_hints(v('1d0a4b61'),'muarc_cache/1d0a4b61.ansi.pl'))
 %~ (clear_saveable_test_info(v('1d0a4b61')))
 %~ (clear_saveable_test_info(v('1c56ad9f')))
 fav_testcase(v('1c56ad9f')>trn+1,"
@@ -1559,7 +1559,7 @@ fav_testcase(v('1c56ad9f')>trn+1,"
 
 
 %= fav(v('1c56ad9f'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1c56ad9f.json']),filename(['/data/evaluation/1c56ad9f.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('1c56ad9f'),'muarc_cache/1c56ad9f.ansi.pl'))
+%~ (save_test_hints(v('1c56ad9f'),'muarc_cache/1c56ad9f.ansi.pl'))
 %~ (clear_saveable_test_info(v('1c56ad9f')))
 %~ (clear_saveable_test_info(v('1c0d0a4b')))
 fav_testcase(v('1c0d0a4b')>trn+1,"
@@ -1581,7 +1581,7 @@ fav_testcase(v('1c0d0a4b')>trn+1,"
 
 
 %= fav(v('1c0d0a4b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1c0d0a4b.json']),filename(['/data/evaluation/1c0d0a4b.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('1c0d0a4b'),'muarc_cache/1c0d0a4b.ansi.pl'))
+%~ (save_test_hints(v('1c0d0a4b'),'muarc_cache/1c0d0a4b.ansi.pl'))
 %~ (clear_saveable_test_info(v('1c0d0a4b')))
 %~ (clear_saveable_test_info(v('1c02dbbe')))
 fav_testcase(v('1c02dbbe')>trn+1,"
@@ -1609,7 +1609,7 @@ fav_testcase(v('1c02dbbe')>trn+1,"
 
 
 %= fav(v('1c02dbbe'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1c02dbbe.json']),filename(['/data/evaluation/1c02dbbe.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('1c02dbbe'),'muarc_cache/1c02dbbe.ansi.pl'))
+%~ (save_test_hints(v('1c02dbbe'),'muarc_cache/1c02dbbe.ansi.pl'))
 %~ (clear_saveable_test_info(v('1c02dbbe')))
 %~ (clear_saveable_test_info(v('1acc24af')))
 fav_testcase(v('1acc24af')>trn+1,"
@@ -1634,7 +1634,7 @@ fav_testcase(v('1acc24af')>trn+1,"
 
 
 %= fav(v('1acc24af'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1acc24af.json']),filename(['/data/evaluation/1acc24af.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('1acc24af'),'muarc_cache/1acc24af.ansi.pl'))
+%~ (save_test_hints(v('1acc24af'),'muarc_cache/1acc24af.ansi.pl'))
 %~ (clear_saveable_test_info(v('1acc24af')))
 %~ (clear_saveable_test_info(v('1a6449f1')))
 fav_testcase(v('1a6449f1')>trn+1,"
@@ -1668,7 +1668,7 @@ fav_testcase(v('1a6449f1')>trn+1,"
 
 
 %= fav(v('1a6449f1'),[no_sol(i(complete),resize_grid(7,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1a6449f1.json']),filename(['/data/evaluation/1a6449f1.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('1a6449f1'),'muarc_cache/1a6449f1.ansi.pl'))
+%~ (save_test_hints(v('1a6449f1'),'muarc_cache/1a6449f1.ansi.pl'))
 %~ (clear_saveable_test_info(v('1a6449f1')))
 %~ (clear_saveable_test_info(v('1a2e2828')))
 fav_testcase(v('1a2e2828')>trn+1,"
@@ -1690,7 +1690,7 @@ fav_testcase(v('1a2e2828')>trn+1,"
 
 
 %= fav(v('1a2e2828'),[no_sol(i(complete),resize_grid(1,1,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([1,1]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1a2e2828.json']),filename(['/data/evaluation/1a2e2828.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(5, 1) ']).
-%~ (save_supertest(v('1a2e2828'),'muarc_cache/1a2e2828.ansi.pl'))
+%~ (save_test_hints(v('1a2e2828'),'muarc_cache/1a2e2828.ansi.pl'))
 %~ (clear_saveable_test_info(v('1a2e2828')))
 %~ (clear_saveable_test_info(v('19bb5feb')))
 fav_testcase(v('19bb5feb')>trn+1,"
@@ -1719,7 +1719,7 @@ fav_testcase(v('19bb5feb')>trn+1,"
 
 
 %= fav(v('19bb5feb'),[no_sol(i(complete),resize_grid(2,2,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([2,2]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/19bb5feb.json']),filename(['/data/evaluation/19bb5feb.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('19bb5feb'),'muarc_cache/19bb5feb.ansi.pl'))
+%~ (save_test_hints(v('19bb5feb'),'muarc_cache/19bb5feb.ansi.pl'))
 %~ (clear_saveable_test_info(v('19bb5feb')))
 %~ (clear_saveable_test_info(v('1990f7a8')))
 fav_testcase(v('1990f7a8')>trn+1,"
@@ -1749,7 +1749,7 @@ fav_testcase(v('1990f7a8')>trn+1,"
 
 
 %= fav(v('1990f7a8'),[no_sol(i(complete),resize_grid(7,7,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,7]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/1990f7a8.json']),filename(['/data/evaluation/1990f7a8.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('1990f7a8'),'muarc_cache/1990f7a8.ansi.pl'))
+%~ (save_test_hints(v('1990f7a8'),'muarc_cache/1990f7a8.ansi.pl'))
 %~ (clear_saveable_test_info(v('1990f7a8')))
 %~ (clear_saveable_test_info(v('195ba7dc')))
 fav_testcase(v('195ba7dc')>trn+1,"
@@ -1767,7 +1767,7 @@ fav_testcase(v('195ba7dc')>trn+1,"
 
 
 %= fav(v('195ba7dc'),[no_sol(i(complete),resize_grid(6,5,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,5]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/195ba7dc.json']),filename(['/data/evaluation/195ba7dc.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('195ba7dc'),'muarc_cache/195ba7dc.ansi.pl'))
+%~ (save_test_hints(v('195ba7dc'),'muarc_cache/195ba7dc.ansi.pl'))
 %~ (clear_saveable_test_info(v('195ba7dc')))
 %~ (clear_saveable_test_info(v('184a9768')))
 fav_testcase(v('184a9768')>trn+1,"
@@ -1800,7 +1800,7 @@ fav_testcase(v('184a9768')>trn+1,"
 
 
 %= fav(v('184a9768'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/184a9768.json']),filename(['/data/evaluation/184a9768.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('184a9768'),'muarc_cache/184a9768.ansi.pl'))
+%~ (save_test_hints(v('184a9768'),'muarc_cache/184a9768.ansi.pl'))
 %~ (clear_saveable_test_info(v('184a9768')))
 %~ (clear_saveable_test_info(v('18419cfa')))
 fav_testcase(v('18419cfa')>trn+1,"
@@ -1831,7 +1831,7 @@ fav_testcase(v('18419cfa')>trn+1,"
 
 
 %= fav(v('18419cfa'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/18419cfa.json']),filename(['/data/evaluation/18419cfa.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('18419cfa'),'muarc_cache/18419cfa.ansi.pl'))
+%~ (save_test_hints(v('18419cfa'),'muarc_cache/18419cfa.ansi.pl'))
 %~ (clear_saveable_test_info(v('18419cfa')))
 %~ (clear_saveable_test_info(v('17cae0c1')))
 fav_testcase(v('17cae0c1')>trn+1,"
@@ -1847,7 +1847,7 @@ fav_testcase(v('17cae0c1')>trn+1,"
 
 
 %= fav(v('17cae0c1'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/17cae0c1.json']),filename(['/data/evaluation/17cae0c1.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('17cae0c1'),'muarc_cache/17cae0c1.ansi.pl'))
+%~ (save_test_hints(v('17cae0c1'),'muarc_cache/17cae0c1.ansi.pl'))
 %~ (clear_saveable_test_info(v('17cae0c1')))
 %~ (clear_saveable_test_info(v('17b80ad2')))
 fav_testcase(v('17b80ad2')>trn+1,"
@@ -1873,7 +1873,7 @@ fav_testcase(v('17b80ad2')>trn+1,"
 
 
 %= fav(v('17b80ad2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/17b80ad2.json']),filename(['/data/evaluation/17b80ad2.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('17b80ad2'),'muarc_cache/17b80ad2.ansi.pl'))
+%~ (save_test_hints(v('17b80ad2'),'muarc_cache/17b80ad2.ansi.pl'))
 %~ (clear_saveable_test_info(v('17b80ad2')))
 %~ (clear_saveable_test_info(v('16b78196')))
 fav_testcase(v('16b78196')>trn+1,"
@@ -1916,7 +1916,7 @@ fav_testcase(v('16b78196')>trn+1,"
 
 
 %= fav(v('16b78196'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/16b78196.json']),filename(['/data/evaluation/16b78196.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('16b78196'),'muarc_cache/16b78196.ansi.pl'))
+%~ (save_test_hints(v('16b78196'),'muarc_cache/16b78196.ansi.pl'))
 %~ (clear_saveable_test_info(v('16b78196')))
 %~ (clear_saveable_test_info(v('15696249')))
 fav_testcase(v('15696249')>trn+1,"
@@ -1938,7 +1938,7 @@ fav_testcase(v('15696249')>trn+1,"
 
 
 %= fav(v('15696249'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/15696249.json']),filename(['/data/evaluation/15696249.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('15696249'),'muarc_cache/15696249.ansi.pl'))
+%~ (save_test_hints(v('15696249'),'muarc_cache/15696249.ansi.pl'))
 %~ (clear_saveable_test_info(v('15696249')))
 %~ (clear_saveable_test_info(v('15663ba9')))
 fav_testcase(v('15663ba9')>trn+1,"
@@ -1963,7 +1963,7 @@ fav_testcase(v('15663ba9')>trn+1,"
 
 
 %= fav(v('15663ba9'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/15663ba9.json']),filename(['/data/evaluation/15663ba9.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('15663ba9'),'muarc_cache/15663ba9.ansi.pl'))
+%~ (save_test_hints(v('15663ba9'),'muarc_cache/15663ba9.ansi.pl'))
 %~ (clear_saveable_test_info(v('15663ba9')))
 %~ (clear_saveable_test_info(v('15113be4')))
 fav_testcase(v('15113be4')>trn+1,"
@@ -1999,7 +1999,7 @@ fav_testcase(v('15113be4')>trn+1,"
 
 
 %= fav(v('15113be4'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/15113be4.json']),filename(['/data/evaluation/15113be4.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('15113be4'),'muarc_cache/15113be4.ansi.pl'))
+%~ (save_test_hints(v('15113be4'),'muarc_cache/15113be4.ansi.pl'))
 %~ (clear_saveable_test_info(v('15113be4')))
 %~ (clear_saveable_test_info(v('14754a24')))
 fav_testcase(v('14754a24')>trn+1,"
@@ -2030,7 +2030,7 @@ fav_testcase(v('14754a24')>trn+1,"
 
 
 %= fav(v('14754a24'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/14754a24.json']),filename(['/data/evaluation/14754a24.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('14754a24'),'muarc_cache/14754a24.ansi.pl'))
+%~ (save_test_hints(v('14754a24'),'muarc_cache/14754a24.ansi.pl'))
 %~ (clear_saveable_test_info(v('14754a24')))
 %~ (clear_saveable_test_info(v('140c817e')))
 fav_testcase(v('140c817e')>trn+1,"
@@ -2052,7 +2052,7 @@ fav_testcase(v('140c817e')>trn+1,"
 
 
 %= fav(v('140c817e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/140c817e.json']),filename(['/data/evaluation/140c817e.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('140c817e'),'muarc_cache/140c817e.ansi.pl'))
+%~ (save_test_hints(v('140c817e'),'muarc_cache/140c817e.ansi.pl'))
 %~ (clear_saveable_test_info(v('140c817e')))
 %~ (clear_saveable_test_info(v('137f0df0')))
 fav_testcase(v('137f0df0')>trn+1,"
@@ -2075,7 +2075,7 @@ fav_testcase(v('137f0df0')>trn+1,"
 
 
 %= fav(v('137f0df0'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/137f0df0.json']),filename(['/data/evaluation/137f0df0.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('137f0df0'),'muarc_cache/137f0df0.ansi.pl'))
+%~ (save_test_hints(v('137f0df0'),'muarc_cache/137f0df0.ansi.pl'))
 %~ (clear_saveable_test_info(v('137f0df0')))
 %~ (clear_saveable_test_info(v('13713586')))
 fav_testcase(v('13713586')>trn+1,"
@@ -2104,7 +2104,7 @@ fav_testcase(v('13713586')>trn+1,"
 
 
 %= fav(v('13713586'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/13713586.json']),filename(['/data/evaluation/13713586.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('13713586'),'muarc_cache/13713586.ansi.pl'))
+%~ (save_test_hints(v('13713586'),'muarc_cache/13713586.ansi.pl'))
 %~ (clear_saveable_test_info(v('13713586')))
 %~ (clear_saveable_test_info(v('136b0064')))
 fav_testcase(v('136b0064')>trn+1,"
@@ -2132,7 +2132,7 @@ fav_testcase(v('136b0064')>trn+1,"
 
 
 %= fav(v('136b0064'),[no_sol(i(complete),resize_grid(7,7,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([7,7]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/136b0064.json']),filename(['/data/evaluation/136b0064.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('136b0064'),'muarc_cache/136b0064.ansi.pl'))
+%~ (save_test_hints(v('136b0064'),'muarc_cache/136b0064.ansi.pl'))
 %~ (clear_saveable_test_info(v('136b0064')))
 %~ (clear_saveable_test_info(v('12eac192')))
 fav_testcase(v('12eac192')>trn+1,"
@@ -2154,7 +2154,7 @@ fav_testcase(v('12eac192')>trn+1,"
 
 
 %= fav(v('12eac192'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/12eac192.json']),filename(['/data/evaluation/12eac192.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('12eac192'),'muarc_cache/12eac192.ansi.pl'))
+%~ (save_test_hints(v('12eac192'),'muarc_cache/12eac192.ansi.pl'))
 %~ (clear_saveable_test_info(v('12eac192')))
 %~ (clear_saveable_test_info(v('12997ef3')))
 fav_testcase(v('12997ef3')>trn+1,"
@@ -2178,7 +2178,7 @@ fav_testcase(v('12997ef3')>trn+1,"
 
 
 %= fav(v('12997ef3'),[no_sol(i(complete),resize_grid(9,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,3]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/12997ef3.json']),filename(['/data/evaluation/12997ef3.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 2) ']).
-%~ (save_supertest(v('12997ef3'),'muarc_cache/12997ef3.ansi.pl'))
+%~ (save_test_hints(v('12997ef3'),'muarc_cache/12997ef3.ansi.pl'))
 %~ (clear_saveable_test_info(v('12997ef3')))
 %~ (clear_saveable_test_info(v('12422b43')))
 fav_testcase(v('12422b43')>trn+1,"
@@ -2199,7 +2199,7 @@ fav_testcase(v('12422b43')>trn+1,"
 
 
 %= fav(v('12422b43'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/12422b43.json']),filename(['/data/evaluation/12422b43.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(5, 1) ']).
-%~ (save_supertest(v('12422b43'),'muarc_cache/12422b43.ansi.pl'))
+%~ (save_test_hints(v('12422b43'),'muarc_cache/12422b43.ansi.pl'))
 %~ (clear_saveable_test_info(v('12422b43')))
 %~ (clear_saveable_test_info(v('11e1fe23')))
 fav_testcase(v('11e1fe23')>trn+1,"
@@ -2224,7 +2224,7 @@ fav_testcase(v('11e1fe23')>trn+1,"
 
 
 %= fav(v('11e1fe23'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/11e1fe23.json']),filename(['/data/evaluation/11e1fe23.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('11e1fe23'),'muarc_cache/11e1fe23.ansi.pl'))
+%~ (save_test_hints(v('11e1fe23'),'muarc_cache/11e1fe23.ansi.pl'))
 %~ (clear_saveable_test_info(v('11e1fe23')))
 %~ (clear_saveable_test_info(v('103eff5b')))
 fav_testcase(v('103eff5b')>trn+1,"
@@ -2259,7 +2259,7 @@ fav_testcase(v('103eff5b')>trn+1,"
 
 
 %= fav(v('103eff5b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/103eff5b.json']),filename(['/data/evaluation/103eff5b.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('103eff5b'),'muarc_cache/103eff5b.ansi.pl'))
+%~ (save_test_hints(v('103eff5b'),'muarc_cache/103eff5b.ansi.pl'))
 %~ (clear_saveable_test_info(v('103eff5b')))
 %~ (clear_saveable_test_info(v('0f63c0b9')))
 fav_testcase(v('0f63c0b9')>trn+1,"
@@ -2287,7 +2287,7 @@ fav_testcase(v('0f63c0b9')>trn+1,"
 
 
 %= fav(v('0f63c0b9'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0f63c0b9.json']),filename(['/data/evaluation/0f63c0b9.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('0f63c0b9'),'muarc_cache/0f63c0b9.ansi.pl'))
+%~ (save_test_hints(v('0f63c0b9'),'muarc_cache/0f63c0b9.ansi.pl'))
 %~ (clear_saveable_test_info(v('0f63c0b9')))
 %~ (clear_saveable_test_info(v('0e671a1a')))
 fav_testcase(v('0e671a1a')>trn+1,"
@@ -2313,7 +2313,7 @@ fav_testcase(v('0e671a1a')>trn+1,"
 
 
 %= fav(v('0e671a1a'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0e671a1a.json']),filename(['/data/evaluation/0e671a1a.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('0e671a1a'),'muarc_cache/0e671a1a.ansi.pl'))
+%~ (save_test_hints(v('0e671a1a'),'muarc_cache/0e671a1a.ansi.pl'))
 %~ (clear_saveable_test_info(v('0e671a1a')))
 %~ (clear_saveable_test_info(v('0d87d2a6')))
 fav_testcase(v('0d87d2a6')>trn+1,"
@@ -2336,7 +2336,7 @@ fav_testcase(v('0d87d2a6')>trn+1,"
 
 
 %= fav(v('0d87d2a6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0d87d2a6.json']),filename(['/data/evaluation/0d87d2a6.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('0d87d2a6'),'muarc_cache/0d87d2a6.ansi.pl'))
+%~ (save_test_hints(v('0d87d2a6'),'muarc_cache/0d87d2a6.ansi.pl'))
 %~ (clear_saveable_test_info(v('0d87d2a6')))
 %~ (clear_saveable_test_info(v('0c9aba6e')))
 fav_testcase(v('0c9aba6e')>trn+1,"
@@ -2362,7 +2362,7 @@ fav_testcase(v('0c9aba6e')>trn+1,"
 
 
 %= fav(v('0c9aba6e'),[no_sol(i(complete),resize_grid(4,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0c9aba6e.json']),filename(['/data/evaluation/0c9aba6e.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('0c9aba6e'),'muarc_cache/0c9aba6e.ansi.pl'))
+%~ (save_test_hints(v('0c9aba6e'),'muarc_cache/0c9aba6e.ansi.pl'))
 %~ (clear_saveable_test_info(v('0c9aba6e')))
 %~ (clear_saveable_test_info(v('0c786b71')))
 fav_testcase(v('0c786b71')>trn+1,"
@@ -2381,7 +2381,7 @@ fav_testcase(v('0c786b71')>trn+1,"
 
 
 %= fav(v('0c786b71'),[no_sol(i(complete),resize_grid(8,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([8,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0c786b71.json']),filename(['/data/evaluation/0c786b71.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('0c786b71'),'muarc_cache/0c786b71.ansi.pl'))
+%~ (save_test_hints(v('0c786b71'),'muarc_cache/0c786b71.ansi.pl'))
 %~ (clear_saveable_test_info(v('0c786b71')))
 %~ (clear_saveable_test_info(v('0becf7df')))
 fav_testcase(v('0becf7df')>trn+1,"
@@ -2404,7 +2404,7 @@ fav_testcase(v('0becf7df')>trn+1,"
 
 
 %= fav(v('0becf7df'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0becf7df.json']),filename(['/data/evaluation/0becf7df.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('0becf7df'),'muarc_cache/0becf7df.ansi.pl'))
+%~ (save_test_hints(v('0becf7df'),'muarc_cache/0becf7df.ansi.pl'))
 %~ (clear_saveable_test_info(v('0becf7df')))
 %~ (clear_saveable_test_info(v('0bb8deee')))
 fav_testcase(v('0bb8deee')>trn+1,"
@@ -2432,7 +2432,7 @@ fav_testcase(v('0bb8deee')>trn+1,"
 
 
 %= fav(v('0bb8deee'),[no_sol(i(complete),resize_grid(6,6,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([6,6]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0bb8deee.json']),filename(['/data/evaluation/0bb8deee.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('0bb8deee'),'muarc_cache/0bb8deee.ansi.pl'))
+%~ (save_test_hints(v('0bb8deee'),'muarc_cache/0bb8deee.ansi.pl'))
 %~ (clear_saveable_test_info(v('0bb8deee')))
 %~ (clear_saveable_test_info(v('0b17323b')))
 fav_testcase(v('0b17323b')>trn+1,"
@@ -2460,7 +2460,7 @@ fav_testcase(v('0b17323b')>trn+1,"
 
 
 %= fav(v('0b17323b'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0b17323b.json']),filename(['/data/evaluation/0b17323b.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(2, 1) ']).
-%~ (save_supertest(v('0b17323b'),'muarc_cache/0b17323b.ansi.pl'))
+%~ (save_test_hints(v('0b17323b'),'muarc_cache/0b17323b.ansi.pl'))
 %~ (clear_saveable_test_info(v('0b17323b')))
 %~ (clear_saveable_test_info(v('0a2355a6')))
 fav_testcase(v('0a2355a6')>trn+1,"
@@ -2487,7 +2487,7 @@ fav_testcase(v('0a2355a6')>trn+1,"
 
 
 %= fav(v('0a2355a6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0a2355a6.json']),filename(['/data/evaluation/0a2355a6.json']),-rotation_match,-color_match,+shape_match,+mask_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('0a2355a6'),'muarc_cache/0a2355a6.ansi.pl'))
+%~ (save_test_hints(v('0a2355a6'),'muarc_cache/0a2355a6.ansi.pl'))
 %~ (clear_saveable_test_info(v('0a2355a6')))
 %~ (clear_saveable_test_info(v('0a1d4ef5')))
 fav_testcase(v('0a1d4ef5')>trn+1,"
@@ -2530,7 +2530,7 @@ fav_testcase(v('0a1d4ef5')>trn+1,"
 
 
 %= fav(v('0a1d4ef5'),[no_sol(i(complete),resize_grid(3,3,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0a1d4ef5.json']),filename(['/data/evaluation/0a1d4ef5.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('0a1d4ef5'),'muarc_cache/0a1d4ef5.ansi.pl'))
+%~ (save_test_hints(v('0a1d4ef5'),'muarc_cache/0a1d4ef5.ansi.pl'))
 %~ (clear_saveable_test_info(v('0a1d4ef5')))
 %~ (clear_saveable_test_info(v('09c534e7')))
 fav_testcase(v('09c534e7')>trn+1,"
@@ -2563,7 +2563,7 @@ fav_testcase(v('09c534e7')>trn+1,"
 
 
 %= fav(v('09c534e7'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/09c534e7.json']),filename(['/data/evaluation/09c534e7.json']),-rotation_match,+shape_match,+mask_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('09c534e7'),'muarc_cache/09c534e7.ansi.pl'))
+%~ (save_test_hints(v('09c534e7'),'muarc_cache/09c534e7.ansi.pl'))
 %~ (clear_saveable_test_info(v('09c534e7')))
 %~ (clear_saveable_test_info(v('0934a4d8')))
 fav_testcase(v('0934a4d8')>trn+1,"
@@ -2606,7 +2606,7 @@ fav_testcase(v('0934a4d8')>trn+1,"
 
 
 %= fav(v('0934a4d8'),[no_sol(i(complete),resize_grid(4,4,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([4,4]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0934a4d8.json']),filename(['/data/evaluation/0934a4d8.json']),-shape_match,-rotation_match,-mask_match,-color_match,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('0934a4d8'),'muarc_cache/0934a4d8.ansi.pl'))
+%~ (save_test_hints(v('0934a4d8'),'muarc_cache/0934a4d8.ansi.pl'))
 %~ (clear_saveable_test_info(v('0934a4d8')))
 %~ (clear_saveable_test_info(v('08573cc6')))
 fav_testcase(v('08573cc6')>trn+1,"
@@ -2630,7 +2630,7 @@ fav_testcase(v('08573cc6')>trn+1,"
 
 
 %= fav(v('08573cc6'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/08573cc6.json']),filename(['/data/evaluation/08573cc6.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('08573cc6'),'muarc_cache/08573cc6.ansi.pl'))
+%~ (save_test_hints(v('08573cc6'),'muarc_cache/08573cc6.ansi.pl'))
 %~ (clear_saveable_test_info(v('08573cc6')))
 %~ (clear_saveable_test_info(v('070dd51e')))
 fav_testcase(v('070dd51e')>trn+1,"
@@ -2663,7 +2663,7 @@ fav_testcase(v('070dd51e')>trn+1,"
 
 
 %= fav(v('070dd51e'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/070dd51e.json']),filename(['/data/evaluation/070dd51e.json']),-rotation_match,-mask_match,+shape_match,+color_match,+'Errors','https://www.kaggle.com/c/abstraction-and-reasoning-challenge/discussion/131021',grid_size_same,alphabetical_v,'(2, 1) ','(2, 1)']).
-%~ (save_supertest(v('070dd51e'),'muarc_cache/070dd51e.ansi.pl'))
+%~ (save_test_hints(v('070dd51e'),'muarc_cache/070dd51e.ansi.pl'))
 %~ (clear_saveable_test_info(v('070dd51e')))
 %~ (clear_saveable_test_info(v('0692e18c')))
 fav_testcase(v('0692e18c')>trn+1,"
@@ -2685,7 +2685,7 @@ fav_testcase(v('0692e18c')>trn+1,"
 
 
 %= fav(v('0692e18c'),[no_sol(i(complete),resize_grid(9,9,Color),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),out_grid([9,9]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0692e18c.json']),filename(['/data/evaluation/0692e18c.json']),-shape_match,-rotation_match,-mask_match,+color_match,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('0692e18c'),'muarc_cache/0692e18c.ansi.pl'))
+%~ (save_test_hints(v('0692e18c'),'muarc_cache/0692e18c.ansi.pl'))
 %~ (clear_saveable_test_info(v('0692e18c')))
 %~ (clear_saveable_test_info(v('0607ce86')))
 fav_testcase(v('0607ce86')>trn+1,"
@@ -2719,7 +2719,7 @@ fav_testcase(v('0607ce86')>trn+1,"
 
 
 %= fav(v('0607ce86'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/0607ce86.json']),filename(['/data/evaluation/0607ce86.json']),-rotation_match,-mask_match,+shape_match,+color_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('0607ce86'),'muarc_cache/0607ce86.ansi.pl'))
+%~ (save_test_hints(v('0607ce86'),'muarc_cache/0607ce86.ansi.pl'))
 %~ (clear_saveable_test_info(v('0607ce86')))
 %~ (clear_saveable_test_info(v('05a7bcf2')))
 fav_testcase(v('05a7bcf2')>trn+1,"
@@ -2762,7 +2762,7 @@ fav_testcase(v('05a7bcf2')>trn+1,"
 
 
 %= fav(v('05a7bcf2'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/05a7bcf2.json']),filename(['/data/evaluation/05a7bcf2.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(3, 1) ']).
-%~ (save_supertest(v('05a7bcf2'),'muarc_cache/05a7bcf2.ansi.pl'))
+%~ (save_test_hints(v('05a7bcf2'),'muarc_cache/05a7bcf2.ansi.pl'))
 %~ (clear_saveable_test_info(v('05a7bcf2')))
 %~ (clear_saveable_test_info(v('03560426')))
 fav_testcase(v('03560426')>trn+1,"
@@ -2785,7 +2785,7 @@ fav_testcase(v('03560426')>trn+1,"
 
 
 %= fav(v('03560426'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/03560426.json']),filename(['/data/evaluation/03560426.json']),grid_size_same]).
-%~ (save_supertest(v('03560426'),'muarc_cache/03560426.ansi.pl'))
+%~ (save_test_hints(v('03560426'),'muarc_cache/03560426.ansi.pl'))
 %~ (clear_saveable_test_info(v('03560426')))
 %~ (clear_saveable_test_info(v('00dbd492')))
 fav_testcase(v('00dbd492')>trn+1,"
@@ -2807,7 +2807,7 @@ fav_testcase(v('00dbd492')>trn+1,"
 
 
 %= fav(v('00dbd492'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/00dbd492.json']),filename(['/data/evaluation/00dbd492.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(4, 1) ']).
-%~ (save_supertest(v('00dbd492'),'muarc_cache/00dbd492.ansi.pl'))
+%~ (save_test_hints(v('00dbd492'),'muarc_cache/00dbd492.ansi.pl'))
 %~ (clear_saveable_test_info(v('00dbd492')))
 %~ (clear_saveable_test_info(v('009d5c81')))
 fav_testcase(v('009d5c81')>trn+1,"
@@ -2834,7 +2834,7 @@ fav_testcase(v('009d5c81')>trn+1,"
 
 
 %= fav(v('009d5c81'),[no_sol(i(complete),copy_grid(in),incomplete),test_suite([less_fav]),test_suite([evaluation]),test_suite([eval400]),test_suite([devaluation]),loadmask(['/data/evaluation/*.json']),loadmask(['./data/devaluation/*.json']),filename(['/opt/logicmoo_workspace/packs_sys/logicmoo_agi/prolog/kaggle_arc/data/devaluation/009d5c81.json']),filename(['/data/evaluation/009d5c81.json']),-rotation_match,-mask_match,-color_match,+shape_match,grid_size_same,alphabetical_v,'(5, 1) ']).
-%~ (save_supertest(v('009d5c81'),'muarc_cache/009d5c81.ansi.pl'))
+%~ (save_test_hints(v('009d5c81'),'muarc_cache/009d5c81.ansi.pl'))
 %~ (clear_saveable_test_info(v('009d5c81')))
 %~ (clear_saveable_test_info(v('00576224')))
 fav_testcase(v('00576224')>trn+1,"

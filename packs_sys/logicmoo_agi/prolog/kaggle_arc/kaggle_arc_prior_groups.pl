@@ -2303,7 +2303,7 @@ learn_ilp(TestID):-
     ensure_test(TestID),
     %abolish(arc_test_properties/3), dynamic(arc_test_properties/3),
     abolish(is_for_ilp/4), dynamic(is_for_ilp/4),
-    %compile_and_save_test(TestID),
+    %compile_and_save_hints(TestID),
     individuate_all_pairs_from_hints(TestID),
     with_individuated_cache(true, 
      forall(kaggle_arc(TestID,ExampleNum,I,O),

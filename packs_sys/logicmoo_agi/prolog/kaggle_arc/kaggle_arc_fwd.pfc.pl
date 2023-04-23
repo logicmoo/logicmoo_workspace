@@ -96,9 +96,10 @@ want_arg_counts(Pred,A,N,Col1,C,Col2)/(functor(CALL,Pred,A),arg(N,CALL,ARG1),arg
 
 ==> want_arg_counts(color_of,2,1,testID,2,color).
 
-(process_test(TestID) / (\+ saved_training(TestID))) ==> {compile_and_save_test(TestID)}.
+(process_test(TestID) / (\+ saved_training(TestID))) ==> {compile_and_save_hints(TestID)}.
 
-assert_obj_global_points==>
+assert_obj_global_points
+ ==>
   ((cindv( Obj, localpoints, _)/(obj_to_oid(Obj,GID),globalpoints(Obj,GPS)))==> {assert_id_cells(GID,GPS)}).
 
 
@@ -107,9 +108,10 @@ arc_test_property(T, common,(comp(i-o, area)), area(n(X, X, d(0), a(0), r(1))))/
 %arc_test_property(T, common,(comp(o-o, area)), area(n(X, X, d(0), a(0), r(1))))/nonvar(X)==> arc_note(T,"output size2D always equal as input").
 
 %:- forall_assert(kaggle_arc_io(TestID,ExampleNum,IO,_),some_grid_tid(TestID>ExampleNum*IO)).
-:- set_prolog_flag(pfc_term_expansion,false).
 
 need_save_rule1(Mode,Why,I,O)==>do_save_rule1(Mode,Why,I,O).
+
+:- set_prolog_flag(pfc_term_expansion,false).
 
 :- include(kaggle_arc_footer).
 

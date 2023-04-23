@@ -1852,15 +1852,14 @@ first_grid1(In,Out,IO):-
 %first_grid(In,Out,IO):- first_grid_same_areas(In,Out,IO).
 first_grid1(_In,_Out,in_out).
 
-compile_and_save_current_test(_):-!.
-compile_and_save_current_test(Why):-
+%compile_and_save_current_test_hints(_):-!.
+compile_and_save_current_test_hints(Why):-
  get_current_test(TestID),
- detect_pair_hints(TestID),!,
- time(compile_and_save_test(TestID)),!,
+ time(compile_and_save_hints(TestID)),!,
  forall(compile_and_save_current_test_pt_2(TestID,Why),true).
 
 arc_test_property(A,B,C):- 
-  get_current_test(TestID), compile_and_save_test(TestID), !,
+  get_current_test(TestID), compile_and_save_hints(TestID), !,
   arc_test_property(TestID,A,B,C).
 
 arc_common_property(Prop):- arc_test_property(common,_,Prop).
@@ -1895,13 +1894,13 @@ lessThan(How,A,B):- call(How,A,AA),call(How,B,BB), AA < BB.
 
 individuate_nonpair(ROptions,In,IndvSI):- 
   into_grid(In,InG), 
-  compile_and_save_current_test([for(InG)]),!,
+  compile_and_save_current_test_hints([for(InG)]),!,
   individuate(ROptions,InG,IndvSI).
 
 individuate_pair(ROptions,In,Out,InC,OutC):-
  into_grid(In,InG), into_grid(Out,OutG),
  [for(out,OutG),for(in,InG)] = Why,
- compile_and_save_current_test(Why),!,
+ compile_and_save_current_test_hints(Why),!,
   (individuate_pair1(ROptions,In,Out,IndvSI,IndvSO)*->
    true;individuate_pair2(ROptions,In,Out,IndvSI,IndvSO)),!,
  optimize_objects(IndvSI,IndvSO,InC,OutC).
@@ -4150,11 +4149,11 @@ maybe_remove_sort_tag(L-G,G):- is_sort_tag(L).
 
 into_list(G,[]):- G==[],!.
 into_list(G,[G]):- \+ compound(G),!.
+into_list(G,L):- is_mapping(G), get_mapping_info_list(G,_,List),!,into_list(List,L).
 into_list(G,[G]):- is_grid(G),!.
 into_list(G,[G]):- is_object(G),!.
 into_list(G,L):- maybe_remove_sort_tag(G,LL),!,into_list(LL,L).
 %into_list(G,L):- is_group(G),mapgroup(into_list,G,GG),!,flatten(GG,L).
-into_list(G,L):- is_mapping(G), get_mapping_info_list(G,_,List),!,into_list(List,L).
 into_list(G,L):- is_list(G),!,maplist(into_list,G,GG),!,flatten(GG,L).
 into_list(G,L):- is_vm_map(G),!,L = G.objs,my_assertion(is_list(L)).
 into_list(G,[obj(G)]):- is_obj_props(G),!.

@@ -50,10 +50,10 @@ print_ref(G):- format('~N'),write_canonical(G),format('.~n'),!.
 
 clsbake:- nop(clsmake).
 
-compile_and_save_test:- update_and_fail,fail.
-compile_and_save_test:- get_pair_mode(entire_suite),!,clsbake, 
-  forall_count(all_arc_test_name(TestID),time(compile_and_save_test(TestID))).
-compile_and_save_test:- get_current_test(TestID),time(compile_and_save_test(TestID)),!,  
+compile_and_save_hints:- update_and_fail,fail.
+compile_and_save_hints:- get_pair_mode(entire_suite),!,clsbake, 
+  forall_count(all_arc_test_name(TestID),time(compile_and_save_hints(TestID))).
+compile_and_save_hints:- get_current_test(TestID),time(compile_and_save_hints(TestID)),!,  
   detect_pair_hints,!.
 
 gen_gids:- 
@@ -76,24 +76,24 @@ once_with_workflow_status(Goal):-
   assert_in_testid(arc_cache:workflow_status(Goal,begun)),
   (call(Goal)-> assert_in_testid(arc_cache:workflow_status(Goal,success)) ; assert_in_testid(arc_cache:workflow_status(Goal,failed))).
 
-compile_and_save_test(TestID):- once_with_workflow_status(compile_and_save_test_now(TestID)).
+compile_and_save_hints(TestID):- once_with_workflow_status(compile_and_save_hints_now(TestID)).
 
-compile_and_save_test_now(TestID):- var(TestID),!,all_arc_test_name(TestID),compile_and_save_test_now(TestID).
-compile_and_save_test_now(Mask):- fix_test_name(Mask,TestID),  Mask\=@=TestID,!,compile_and_save_test_now(TestID).
-compile_and_save_test_now(TestID):- 
+compile_and_save_hints_now(TestID):- var(TestID),!,all_arc_test_name(TestID),compile_and_save_hints_now(TestID).
+compile_and_save_hints_now(Mask):- fix_test_name(Mask,TestID),  Mask\=@=TestID,!,compile_and_save_hints_now(TestID).
+compile_and_save_hints_now(TestID):- 
   %ignore(retract(saved_training(TestID))),
   %ignore(retract(process_test(TestID))),
 
   time((with_individuated_cache(true,
      ((
       gen_gids(TestID),
-      detect_pair_hints(TestID)),
+      detect_pair_hints(TestID),
       arc_assert(saved_training(TestID)),
       arc_assert(process_test(TestID)),
       nop(individuate_pairs_from_hints(TestID)),
       %train_test(TestID,train_using_io),  
       %print_hybrid_set,      
-      save_supertest(TestID))))).
+      nop(save_test_hints(TestID))))))).
 
 
 deduce_shapes(TestID):-
@@ -470,7 +470,12 @@ compute_and_show_test_hints(TestID):-
  ensure_test(TestID),format('~N'),
  w_section(compute_and_show_test_hints(TestID),
  ((\+ arc_test_property(TestID,trn+_,_,_) -> detect_pair_hints(TestID); true),
-  findall(F=Common,
+   show_common_test_hints(TestID))).
+ 
+
+show_common_test_hints(TestID):-
+ w_section(title(show_common_test_hints),
+ ((findall(F=Common,
   (arc_test_property(TestID,trn+0,F,_),
     retractall(arc_test_property(TestID,common,F,_)),
     (( findall(Data,arc_test_property(TestID,(trn+_),F,Data),Commons),
@@ -480,10 +485,8 @@ compute_and_show_test_hints(TestID):-
   %dash_chars,
   %print_test(TestID),
   %wots(SS,my_maplist(ptv1,SComs)),
-  w_section(title(list_common_props),
     (ptv1s(cyan+magenta,SComs),
-    with_li_pre(listing(io_xform(TestID,_,_))))))),
-  !.
+    with_li_pre(listing(io_xform(TestID,_,_))))))).
 
 my_sub_compound(_,C):- \+ compound(C),!,fail.
 my_sub_compound(S,C):- my_sub_compound_0(E,C),S=E.
@@ -553,6 +556,7 @@ detect_pair_hints(TestID,ExampleNum,In,Out):-
   ensure_test(TestID), 
   ignore((training_only_examples(ExampleNum))),
   must_det_ll((
+  ensure_the_alt_grids(TestID,ExampleNum,In,Out),
   %dmsg(detect_pair_hints(TestID,ExampleNum)),
   assert_id_grid_cells(_,In), assert_id_grid_cells(_,Out),
   % guess_board(TT),
@@ -895,7 +899,7 @@ count_N(Color,Flat,Count,Var):- freeze(Var,count_C(Color,Flat,Count)).
 count_C(Color,Flat,S+D):- member(Color,Flat),nonvar(Color),!,my_partition(cmatch(Color),Flat,Sames,Diffs),length(Sames,S),length(Diffs,D).
 
 ensure_arc_test_properties(TestID):- ignore(get_current_test(TestID)),
- ignore(( \+ arc_test_property(TestID,common,_,_), compile_and_save_test(TestID))).
+ ignore(( \+ arc_test_property(TestID,common,_,_), compile_and_save_hints(TestID))).
 
 :- decl_pt(test_prop,input_objects_first(testID)).
 input_objects_first(TestID):- 
@@ -1097,34 +1101,35 @@ illegal_column_data(In,Color,BorderNums):-
 
 
 /*
-save_the_alt_grids(TestID):- 
+ensure_the_alt_grids(TestID):- 
  forall(ensure_test(TestID),
   forall(kaggle_arc(TestID,ExampleNum,_,_),
-    once(save_the_alt_grids(TestID,ExampleNum)))).
+    once(ensure_the_alt_grids(TestID,ExampleNum)))).
 
-save_the_alt_grids(TestID,ExampleNum):-
+ensure_the_alt_grids(TestID,ExampleNum):-
   arc_test_property(TestID,ExampleNum,has_blank_alt_grid,_),!.
-save_the_alt_grids(TestID,ExampleNum):- 
+ensure_the_alt_grids(TestID,ExampleNum):- 
   ensure_test(TestID),
   ignore((training_only_examples(ExampleNum),
   forall(kaggle_arc(TestID,ExampleNum,I,O),
-    once(save_the_alt_grids(TestID,ExampleNum,I,O))))),!.
+    once(ensure_the_alt_grids(TestID,ExampleNum,I,O))))),!.
 */
-
-
-save_the_alt_grids(TestID,ExampleNum,In,Out):- 
-  with_trn_pairs(TestID,ExampleNum,In,Out,save_the_alt_grids(TestID,ExampleNum,[],In,Out)).
-save_the_alt_grids(TestID,ExampleNum,_,_,_):- arc_test_property(TestID,ExampleNum,ori(_),_),!.
-save_the_alt_grids(TestID,ExampleNum,_,_,_):- arc_test_property(TestID,ExampleNum,iro(_),_),!.
-save_the_alt_grids(TestID,ExampleNum,XForms,In,Out):-  same_sizes(In,Out),
+%detect_pair_hints(TestID),!,
+ensure_the_alt_grids(TestID,ExampleNum):-
+   with_current_test(ensure_the_alt_grids,TestID,ExampleNum).
+ensure_the_alt_grids(TestID,ExampleNum,In,Out):- 
+  with_trn_pairs(TestID,ExampleNum,In,Out,ensure_the_alt_grids(TestID,ExampleNum,[],In,Out)).
+ensure_the_alt_grids(TestID,ExampleNum,_,_,_):- arc_test_property(TestID,ExampleNum,ori(_),_),!.
+ensure_the_alt_grids(TestID,ExampleNum,_,_,_):- arc_test_property(TestID,ExampleNum,iro(_),_),!.
+ensure_the_alt_grids(TestID,ExampleNum,XForms,In,Out):-  same_sizes(In,Out),
   !, save_the_alt_grids_now(TestID,ExampleNum,XForms,In,Out),!.
-save_the_alt_grids(TestID,ExampleNum,XForms,In,Out):- fail,
+ensure_the_alt_grids(TestID,ExampleNum,XForms,In,Out):- fail,
   once((some_norm(In,OpI,NIn), print_ss(some_norm(OpI),In,NIn),
   some_norm(Out,OpO,NOut), print_ss(some_norm(OpO),Out,NOut), 
   same_sizes(NIn,NOut),
   once(NIn\=@=In;NOut\=@=Out))),
   save_the_alt_grids_now(TestID,ExampleNum,[ops(OpI,OpO)|XForms],NIn,NOut),!.
-save_the_alt_grids(TestID,ExampleNum,_XForms,In,Out):- 
+ensure_the_alt_grids(TestID,ExampleNum,_XForms,In,Out):- 
   assert_test_property(TestID,ExampleNum,iro(none),In),
   assert_test_property(TestID,ExampleNum,ori(none),Out),!.
   
@@ -1208,7 +1213,7 @@ has_blank_alt_grid(TestID,ExampleNum):- blank_alt_grid_count(TestID,ExampleNum,N
 blank_alt_grid_count(TestID,ExampleNum,N):-
   arc_test_property(TestID,ExampleNum,has_blank_alt_grid,N),!.
 blank_alt_grid_count(TestID,ExampleNum,N):- 
-  save_the_alt_grids(TestID,ExampleNum),
+  ensure_the_alt_grids(TestID,ExampleNum),
   findall(_,(alt_grids(TestID,ExampleNum,_,ROI),once(mass(ROI,Mass)),Mass=0),L),length(L,N),!,
   assert_test_property(TestID,ExampleNum,has_blank_alt_grid,N),
   ignore((N==0,
