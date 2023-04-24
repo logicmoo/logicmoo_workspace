@@ -41,7 +41,7 @@ translate_program(Prop,Merged):- is_list(Prop),
   maplist(translate_call(on_leave),Prop,Call,TransOut0),flatten_code(TransOut0,TransOut1),
   reverse(TransOut1,TransOut2),list_to_set(TransOut2,TransOut3),reverse(TransOut3,TransOut),
   merge_calls(TransIn,TransOut,Merged),!.
-
+translate_program(Prop,Prop):- !.
 merge_calls(TransIn,TransOut,Merged):-
  append(TransInL,[CallIn|TransInR],TransIn),
  append(TransOutL,[CallOut|TransOutR],TransOut),
@@ -79,13 +79,15 @@ tl_br(TL,T,L):- arg(1,TL,T),arg(2,TL,L),!.
 :- dynamic(p_solve/3).
 
 maybe_jit_one_test(TestID):-
-  clause(l_solve(TestID,IN,OUT),Program),
-  (clause(p_solve(TestID,IN,OUT), Body), % -> true;
-   (
+  (var(TestID)->kaggle_arc(TestID,trn+0,_,_);true),  
+  once((sub_atom_value(TestID,TestIDA),is_valid_atom_testname(TestIDA))),
+  clause(l_solve(TestIDA,IN,OUT),Program),
+  if_t( ( \+ clause(p_solve(TestIDA,_,_), _)),
+   must_det_ll(((
     translate_program(Program,Trans),
     list_to_conjuncts(Trans,Body),
-    assert_if_new(p_solve(TestID,IN,OUT):- Body),
-    pp(p_solve(TestID,IN,OUT):- Body))).
+    assert_if_new(p_solve(TestIDA,IN,OUT):- Body),
+    pp(p_solve(TestIDA,IN,OUT):- Body))))).
 
 into_pygrid(IO,IO).
 

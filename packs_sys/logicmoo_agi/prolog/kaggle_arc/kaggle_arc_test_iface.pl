@@ -850,6 +850,7 @@ next_suite:-
 :- dynamic(dont_sort_by_hard/1).
 dont_sort_by_hard(S):- S \== test_names_by_hard,!.
 dont_sort_by_hard(test_names_by_fav). dont_sort_by_hard(all_arc_test_name). dont_sort_by_hard(all_arc_test_name_unordered).
+dont_sort_by_hard(_).
 %dont_sort_by_hard(P):- atom(P), \+ atom_concat(_,'_hard',P).
 
 
@@ -865,7 +866,7 @@ test_suite_name(evaluation).
 test_suite_name(easy_solve_suite).
 test_suite_name(test_names_by_fav). 
 test_suite_name(human_t).
-test_suite_name(michod_solved_train).
+test_suite_name(michod_solved_ordered).
 test_suite_name(is_symgrid).
 %test_suite_name(sol_t).
 %test_suite_name(hard_t).
@@ -1357,7 +1358,7 @@ on_entering_test(TestID):-
   %force_flush_tee,
   clear_test(TestID),
   test_name_output_file(TestID,'.pl',PLFile),
-  load_file_dyn(PLFile))).
+  nop((load_file_dyn(PLFile))))).
 
 
 on_leaving_test(TestID):- is_list(TestID),!,my_maplist(on_leaving_test,TestID).
@@ -1437,7 +1438,7 @@ save_test_hints(TestID,File):- var(TestID),!, forall(ensure_test(TestID), save_t
 save_test_hints(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_test_hints(TestID,File).
 save_test_hints(TestID,File):- maybe_append_file_extension(File,'.pl',NewName),!,save_test_hints(TestID,NewName).
 
-%save_test_hints(TestID,File):- !, warn_skip(save_test_hints(TestID,File)).
+save_test_hints(TestID,File):- !, warn_skip(save_test_hints(TestID,File)).
 save_test_hints(TestID,File):-
  saveable_test_info(TestID,Info),
    setup_call_cleanup(open(File,write,O,[create([default]),encoding(text)]), 

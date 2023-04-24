@@ -730,14 +730,15 @@ learn_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):-
 % The object dependancy is a list of lists of rules
 %assert_map_groups(TestID,ExampleNum,IO,Group):- arc_cache:map_group(TestID,ExampleNum,IO,Group),!.
 assert_map_groups(TestID,ExampleNum,IO,Group):- 
-  assert_if_new(arc_cache:map_group(TestID,ExampleNum,IO,Group)),!.
+  assert_if_new(arc_cache:map_group(TestID,ExampleNum,IO,Group)),!,
+  assert_map_pairs(TestID,ExampleNum,IO,Group).
 
 merge_object_dependancy(_TestID):- !.
 merge_object_dependancy(TestID):-
   findall(Group,arc_cache:map_group(TestID,ExampleNum,_IO,Group),GroupS),
   %pp_ilp(GroupS),
   %itrace,some_min_unifier(GroupS,Group),
-  findall(assert_map_pairs(TestID,ExampleNum,_IO2),GroupS).
+  maplist(assert_map_pairs(TestID,ExampleNum,_IO2),GroupS).
   
 
 assert_map_pairs(TestID,ExampleNum,IO,Group):-

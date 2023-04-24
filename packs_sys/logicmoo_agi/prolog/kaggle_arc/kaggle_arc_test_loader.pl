@@ -75,9 +75,9 @@ load_json_file2(F, FullName):-
   no_uscore(UName,Name), 
   Testname=..[F,Name], 
   % dmsg(load_json_file=FullName),
-  setup_call_cleanup(open(FullName,read,In),
-   json:json_read(In,Term,[]),
-   close(In)),
+
+  setup_call_cleanup(open(FullName,read,In), json:json_read(In,Term,[]), close(In)),
+
   locally(t_l:local_test_props(filename=FullName),
     (load_json_of_file(Testname,file,Term),
      ignore((
@@ -262,7 +262,8 @@ load_json_files1:- load_json_files(michod,t,'./arc-task-generator/conditional_tr
 %load_json_files1:- load_json_files('secret_data_solution',v,'/secret_data/solution/*.json').
 % % % load_json_files1:- load_json_files('secret_data_solution',v,'/data/solution/*.json').
 
-load_json_files2:- load_json_files('MiniARC',t,'./MINI-ARC/data/MiniARC/*.json').
+load_json_files2:- load_json_files('MiniARC',t,'./MINI-ARC/data/MiniARC/*.json'),
+                   load_json_files('object_modifications_schema',t,'./object_modifications_schema/tasks/*.json').
 
 load_json_files:- 
   forall(load_json_files1,true).
@@ -313,7 +314,7 @@ maybe_reencode(_TName,_ExampleNum,In,Out,In,Out).
 kaggle_arc_raw(TestID,ExampleNum,In,Out):- kaggle_arc0(TestID,ExampleNum,In,Out)*-> true ; kaggle_arc1(TestID,ExampleNum,In,Out).
 kaggle_arc_raw(Name,tst+AnswerID,In,Grid):- kaggle_arc_answers(Name,ID,AnswerID,Grid), kaggle_arc0(Name,tst+ID,In,_Out).
 
-kaggle_arc0(TestID,ExampleNum,In,Out):- kaggle_arc_json(TestID,ExampleNum,In,O), disallow_test_out(ExampleNum,O,Out).
+kaggle_arc0(TestID,ExampleNum,In,Out):- kaggle_arc_json(TestID,ExampleNum,In,O), not_disallow_test_out(ExampleNum,O,Out).
 kaggle_arc1(TestID,ExampleNum,In,Out):- nonvar(ExampleNum),
   kaggle_arc0(TestID,NewExample,In,Out),!,
   ignore((\+ \+ nb_current(example,ExampleNum),  nb_setval(example,NewExample))).
@@ -323,7 +324,7 @@ kaggle_arc1(TestID,ExampleNum,In,Out):- nonvar(ExampleNum),
 
 %adisallow_test_out(trn+_,OO,OO):-!.
 %disallow_test_out(tst+_, O,OO):- grid_size(O,H,V),make_grid(H,V,OO).
-disallow_test_out(_,OO,OO).
+not_disallow_test_out(_,OO,OO).
 
 tasks_split(ID,String):- split_string(String,",[] \n\r\t\s",",[] \n\r\t\s",L),member(S,L),atom_string(E,S),atom_id_e(E,ID).
 

@@ -666,6 +666,7 @@ test_regressions:- make, forall((clause(mregression_test,Body),ppt(Body)),must_d
 :- ensure_loaded(kaggle_arc_simple).
 
 :- dynamic(saved_training/1).
+saved_training(_TestID):- true.
 saved_training(TestID):- call_u('~'(saved_training(TestID))), !, fail. % explictly always assume unsaved?
 saved_training(TestID):- test_name_output_file(TestID,'.pl',File),exists_file(File).
 
