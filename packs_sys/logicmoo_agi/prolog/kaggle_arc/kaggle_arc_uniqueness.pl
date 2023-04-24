@@ -117,9 +117,10 @@ ensure_scene_change_rules(TestID):-
  (\+ is_accompany_changed_db(TestID,_,_,_) -> compute_scene_change(TestID) ; true).
 compute_scene_change(TestID):-
  ensure_test(TestID),
- with_pair_mode(whole_test, 
- must_det_ll((banner_lines(red,4),
-  clear_scene_rules(TestID),  
+ with_pair_mode(whole_test,  
+ must_det_ll((
+  clear_scene_rules(TestID),
+  banner_lines(red,4),
   compute_scene_change_pass1(TestID),  
   banner_lines(orange,4),
   compute_scene_change_pass2(TestID),
@@ -148,8 +149,8 @@ solve_via_scene_change(TestID):-
  must_det_ll((
   ensure_test(TestID),
   clear_scene_rules(TestID),
-  learn_grid_size(TestID),
   %detect_pair_hints(TestID),
+  learn_grid_size(TestID),
   ensure_scene_change_rules(TestID),
   print_scene_change_rules(TestID),
   %ExampleNum=_+_,
@@ -167,7 +168,7 @@ solve_via_scene_change_rules(TestID,ExampleNum):-
   individuate(VM),
   Objs = VM.objs)),
   %wots(SS,solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,ObjsO)),
-  solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,ObjsO),
+  solve_obj_group(VM,TestID,ExampleNum,ROptions,in,Objs,ObjsO),
   dash_chars,
 
  must_det_ll((
@@ -194,7 +195,7 @@ print_scene_change_rules(TestID):-
  must_det_ll((
   banner_lines(cyan,4),
   %show_assumed_mapped(TestID),
-  print_object_dependancy(TestID),
+  %print_object_dependancy(TestID),
   banner_lines(cyan,3),
    Ele = ac2(IO,P,PSame),
    findall(Ele,is_accompany_changed_computed(TestID,IO,P,PSame),List),
@@ -272,7 +273,9 @@ solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,ObjsO):-
  solve_obj_group(VM,TestID,ExampleNum,in_out_out,ROptions,Objs2,Objs3),!,
  ObjsO= Objs3.
 
-  
+solve_obj_group(VM,TestID,ExampleNum,IO,ROptions,Objs,OObjs):- IO == in,!,
+  my_maplist(solve_obj(VM,TestID,ExampleNum,IO,ROptions),Objs,OObjs).
+
 solve_obj_group(VM,TestID,ExampleNum,IO,ROptions,Objs,ObjsO):-
   %trace,arc_cache:map_group(TestID,ExampleNum,IO,Group),
   GRP = grp(Info,PreObjs,Out),
@@ -298,20 +301,24 @@ solve_obj_list(S,VM,TestID,ExampleNum,IO_Start,ROptions,[Obj|Objs],[NewObj|ObjsO
   solve_obj(VM,TestID,ExampleNum,IO_Start,ROptions,Obj,NewObj),
   solve_obj_list(S,VM,TestID,ExampleNum,IO_Start,ROptions,Objs,ObjsO).
 
-solve_obj(VM,TestID,_ExampleNum,_IO_Start,_ROptions,Obj,NewObj):-
+
+solve_obj(_VM,_TestID,_ExampleNum,_IO,_ROptions,Obj,Obj):- is_bg_object(Obj),!.
+solve_obj(VM,TestID,_ExampleNum,_IO_Start,_ROptions,Obj,OObj):- 
  must_det_ll((
    %Agenda = agenda(IO,P,PSame),
    Agenda = P,
    IO=_,
    findall(Agenda,
-       (is_accompany_changed_verified(TestID,IO,P,PSame), 
+   (is_accompany_changed_verified(TestID,IO,P,PSame), 
         flatten(PSame,Rest), 
         forall(member(R,Rest),has_prop(R,Obj))),PsL),
  list_to_set(PsL,Ps), 
- edit_object(VM,Ps,Obj,NewObj))).
+ edit_object(VM,Ps,Obj,OObj))).
+%solve_obj(VM,_TestID,_ExampleNum,_IO_Start,_ROptions,Obj,OObj):-
+%  edit_object(VM,pen([cc(black,1)]),Obj,OObj).
 %solve_obj(VM,_TestID,_ExampleNum,_IO_Start,_ROptions,_Obj,[]).
 solve_obj(_VM,_TestID,_ExampleNum,_IO_Start,_ROptions,Obj,Obj).
-%  edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
+
 
 edit_object(_VM,Ps,_Obj,NewObj):- Ps==[],!,NewObj=[]. %edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
 edit_object(VM,Ps,Obj,NewObj):- Ps==[],!,edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
@@ -355,12 +362,19 @@ prop_can1(TestID,IO,P,Can):-
      findall(O,
        ((member(InOut,[in,out]),enum_object_ext(TestID,InOut,O),is_post_cond_obj(IO,O),has_prop(cc(bg,0),O),
          has_prop(P,O))),PostObjs),
-  post_cond_obj_to_pre_cond_obj(IO,P,PostObjs,PreObjs),
+  post_cond_obj_to_pre_cond_obj(TestID,IO,P,PostObjs,PreObjs),
   [Pre|PreRest]=PreObjs,
   indv_props_list(Pre,List),
   findall(U,(member(U,List),U\=@=P,ok_notice(U),forall(member(E,PreRest),has_prop(U,E))),Can).
 
-post_to_pre_object(TestID,IO,Post,Pre):- get_obj_pair(TestID,IO,I,O),O=@=Post,!,Pre=I.
+post_to_pre_object(TestID,IO,_P,Post,Pre):- get_obj_pair(TestID,IO,I,O),O=@=Post,!,Pre=I.
+post_to_pre_object(TestID,IO,_P,Post,Pre):- 
+    %props_change(TestID,IO,P),
+     findall(O,
+       ((member(InOut,[in,out]),enum_object_ext(TestID,InOut,O),is_pre_cond_obj(IO,O),has_prop(cc(bg,0),O)
+         )),PreObjs),
+     find_prox_mappings([],Post,post_to_pre_object,PreObjs,[Pre|_RHSRest]),!.
+
 
 is_pre_cond_obj(IO,O):- has_prop(giz(g(IO)),O),!.
 is_pre_cond_obj(in_out,IO):- !,is_pre_cond_obj(in,IO).
@@ -368,8 +382,8 @@ is_pre_cond_obj(s(X),O):- nonvar(X), is_pre_cond_obj(out,O).
 
 is_post_cond_obj(IO,O):- \+ is_pre_cond_obj(IO,O).
 
-post_cond_obj_to_pre_cond_obj(IO,P,PostObjs,PreObjs):-
-  findall(Pre,(member(Post,PostObjs),post_to_pre_object(IO,P,Post,Pre)),PreObjsL),
+post_cond_obj_to_pre_cond_obj(TestID,IO,P,PostObjs,PreObjs):-
+  findall(Pre,(member(Post,PostObjs),post_to_pre_object(TestID,IO,P,Post,Pre)),PreObjsL),
   list_to_set(PreObjsL,PreObjs).
 
 prop_cant(TestID,IO,P,Set):-
@@ -377,7 +391,7 @@ prop_cant(TestID,IO,P,Set):-
   findall(O,
     ((member(InOut,[in,out]),enum_object_ext(TestID,InOut,O),is_post_cond_obj(IO,O),has_prop(cc(bg,0),O),
       not_has_prop(P,O))),PostObjs),
-  post_cond_obj_to_pre_cond_obj(IO,P,PostObjs,PreObjs),
+  post_cond_obj_to_pre_cond_obj(TestID,IO,P,PostObjs,PreObjs),
   findall(Cant,
     ((member(O,PreObjs),indv_props_list(O,List),member(Cant,List),ok_notice(Cant))),Flat),
    list_to_set(Flat,Set).
@@ -523,7 +537,6 @@ show_object_dependancy(TestID):-
 % =============================================================
  ensure_test(TestID),
  learn_object_dependancy(TestID),
- merge_object_dependancy(TestID),
  print_object_dependancy(TestID).
 
 :- dynamic(arc_cache:map_pairs/6).
@@ -535,7 +548,8 @@ learn_object_dependancy(TestID):-
  ensure_test(TestID),
  ignore((ExampleNum=trn+_)),
  forall(kaggle_arc(TestID,ExampleNum,_,_),
-     learn_object_dependancy(TestID,ExampleNum)).
+     learn_object_dependancy(TestID,ExampleNum)),!,
+ merge_object_dependancy(TestID).
 
 learn_object_dependancy(TestID,ExampleNum):-
  ignore((ExampleNum=trn+_)), kaggle_arc(TestID,ExampleNum,_,_),
@@ -560,13 +574,16 @@ learn_object_dependancy(TestID,ExampleNum,RHSObjs,LHSObjs):-
 
 %assert_map_groups(TestID,ExampleNum,IO,LeftRight):- !, nop(assert_map_groups(TestID,ExampleNum,IO,LeftRight)),!.
 % The object dependancy is a list of lists of rules
-assert_map_groups(TestID,ExampleNum,IO,Group):- arc_cache:map_group(TestID,ExampleNum,IO,Group),!.
-assert_map_groups(TestID,ExampleNum,IO,Group):- asserta_if_new(arc_cache:map_group(TestID,ExampleNum,IO,Group)),!.
+%assert_map_groups(TestID,ExampleNum,IO,Group):- arc_cache:map_group(TestID,ExampleNum,IO,Group),!.
+assert_map_groups(TestID,ExampleNum,IO,Group):- 
+  assert_if_new(arc_cache:map_group(TestID,ExampleNum,IO,Group)),!.
 
+merge_object_dependancy(_TestID):- !.
 merge_object_dependancy(TestID):-
   findall(Group,arc_cache:map_group(TestID,_ExampleNum,_IO,Group),GroupS),
-  some_min_unifier(GroupS,Group),
-  pp(Group),trace.
+  pp_ilp(Group),
+  itrace,some_min_unifier(GroupS,Group),
+  trace.
 
 assert_map_pairs(TestID,ExampleNum,IO,Group):-
  %writeq(aSSSSSSSSSSSSSSSSSSSSSSSSSS_Sassert_map_groups(TestID,ExampleNum,IO,Group)),
