@@ -1179,9 +1179,11 @@ get_current_test(TestID):- kaggle_arc(TestID,_,_,_),!.
 get_current_test_fb(t('00d62c1b')).
 get_current_test_fb(v(fe9372f3)).
 
-get_current_test_atom(UUID):- get_current_test(TestID),test_atom(TestID,UUID).
+get_current_test_atom(UUID):- get_current_test(TestID),test_id_atom(TestID,UUID).
 
-test_atom(TestID,UUID):- ((compound(TestID),arg(1,TestID,UUID));UUID=TestID),atom(UUID),!.
+test_id_atom(TestID,UUID):- ((compound(TestID),arg(1,TestID,UUID));UUID=TestID),atom(UUID),!.
+test_id_atom(TestID,OID):- sub_atom_value(TestID,OID),is_valid_atom_testname(OID),!.
+test_id_atom(TestID,OID):- sub_atom_value(TestID,OID),!.
 
 get_random_test(ID):-  
  get_current_test(TestID),get_next_test(TestID,NextID),
@@ -1217,7 +1219,7 @@ set_current_test(Name):-
 
 really_set_current_test(TestID):-
   once(luser_getval(task,WTestID);WTestID=[]),
-  ignore((WTestID\==TestID,luser_setval(task,TestID), test_atom(TestID,Atom),set_html_component(task,Atom))),
+  ignore((WTestID\==TestID,luser_setval(task,TestID), test_id_atom(TestID,Atom),set_html_component(task,Atom))),
   once(luser_getval(last_test_name,WasTestID);WasTestID=[]),
   ignore((WasTestID\==TestID, new_current_test_info(WasTestID,TestID))).
 
@@ -1305,9 +1307,9 @@ test_name_ansi_output_file(TestID,File):- is_valid_atom_testname(TestID),!,
   atomic_list_concat(['muarc_cache/test_state/',TestID,'.ansi'],File1),
   arc_sub_path(File1,File),!.
 test_name_ansi_output_file(TestID,File):- \+ atom(TestID),
-  sub_atom_value(TestID,OID),is_valid_atom_testname(OID),!,
-  test_name_ansi_output_file(OID,File).
-test_name_ansi_output_file(TestID,File):- arc_sub_path(TestID,File).
+  test_id_atom(TestID,OID), test_name_ansi_output_file(OID,File).
+test_name_ansi_output_file(TestID,File):- arc_sub_path(TestID,File),!.
+
 
 test_name_output_file(TestID,Ext,ExtFile):- 
   test_name_ansi_output_file(TestID,File),
@@ -1586,7 +1588,7 @@ print_test(TName):-
 preview_test(TName):- \+ (is_cgi ; arc_html), !,print_single_pair(TName),!.
 preview_test(TName):- (is_cgi ; arc_html),!,
  fix_test_name(TName,TestID,ExampleNum1),
- test_atom(TestID,TestAtom),
+ test_id_atom(TestID,TestAtom),
  when_in_html((write('<hr>'),write_nav_cmd(pp(TestID),navCmd(TestAtom)))),
  write('<span class="flex_row">'),
   %set_example_num(ExampleNum1),
@@ -1603,7 +1605,7 @@ print_single_pair(TestID,ExampleNum,In,Out):-
    print_single_pair_pt2(TestID,ExampleNum,In1,Out1),!.
 
 print_single_pair_pt2(TestID,ExampleNum,In,Out):- is_cgi,!, 
- must_det_ll((test_atom(TestID,TestAtom),
+ must_det_ll((test_id_atom(TestID,TestAtom),
  in_out_name(ExampleNum,NameIn0,RightTitle),
               sformat(NameIn,'~w  "~w" ',[NameIn0,TestAtom]),
  (ID1 = (TestID>ExampleNum*in)),
@@ -1612,7 +1614,7 @@ print_single_pair_pt2(TestID,ExampleNum,In,Out):- is_cgi,!,
    NameIn,navCmd((TestID>ExampleNum)),ID1,In,wqs('Input'),
    TestAtom,navCmd((TestAtom)),ID2,Out,RightTitle))),!.
 print_single_pair_pt2(TestID,ExampleNum,In1,Out1):- 
-   test_atom(TestID,TestAtom),
+   test_id_atom(TestID,TestAtom),
    in_out_name(ExampleNum,NameIn0,NameOut),!,%easy_diff_idea(TestID,ExampleNum,In1,Out1,LIST),!,
   sformat(NameIn,'~w  "~w" ',[NameIn0,TestAtom]),
    format('~Ntestcase(~q,"\n',[TestID>ExampleNum]),

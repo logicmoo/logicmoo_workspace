@@ -366,7 +366,7 @@ into_title_str(Term,Str):- compound(Term), compound_name_arguments(Term,Name,Arg
    my_maplist(tersify,Nonvars,ArgsT), into_title_str([Name,"(",ArgsT,")"],Str),!.
 into_title_str(Term,Str):- catch(sformat(Str,'~p',[Term]),_,term_string(Term,Str)).
 
-has_short_id(TestID,testid,UUID):- is_valid_testname(TestID),test_atom(TestID,UUID).
+has_short_id(TestID,testid,UUID):- is_valid_testname(TestID),test_id_atom(TestID,UUID).
 has_short_id(Obj,object,OID):- is_object(Obj),obj_to_oid(Obj,OID).
 has_short_id(Grid,grid,GID):- is_grid(Grid),grid_to_gid(Grid,GID).
 

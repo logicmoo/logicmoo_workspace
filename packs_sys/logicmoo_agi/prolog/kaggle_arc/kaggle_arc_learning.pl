@@ -1960,14 +1960,14 @@ test_local_save(F,A):- setof(F/A,(test_local_save(F),current_predicate(arc_cache
 
 
 training_info(TestID,InfoSet):-
- sub_atom_value(TestID,TestIDA),
+ test_id_atom(TestID,TestIDA),
   findall(Ref,
   (test_local_dyn(F,A), functor(X,F,A),
       (clause(X,_,Ref);clause(arc_cache:X,_,Ref)),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),
   list_to_set(Info,InfoSet).
 
 saveable_test_info(TestID,InfoSet):-
- sub_atom_value(TestID,TestIDA),
+ test_id_atom(TestID,TestIDA),
  findall(Ref,
   (test_local_save(F,A), functor(X,F,A),
       (clause(X,_,Ref);clause(arc_cache:X,_,Ref)),once((arg(_,X,E),sub_atom_value(E,AV),atom_contains(AV,TestIDA)))),Info),

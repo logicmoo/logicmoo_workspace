@@ -80,7 +80,7 @@ tl_br(TL,T,L):- arg(1,TL,T),arg(2,TL,L),!.
 
 maybe_jit_one_test(TestID):-
   (var(TestID)->kaggle_arc(TestID,trn+0,_,_);true),  
-  once((sub_atom_value(TestID,TestIDA),is_valid_atom_testname(TestIDA))),
+  test_id_atom(TestID,TestIDA),
   clause(l_solve(TestIDA,IN,OUT),Program),
   if_t( ( \+ clause(p_solve(TestIDA,_,_), _)),
    must_det_ll(((

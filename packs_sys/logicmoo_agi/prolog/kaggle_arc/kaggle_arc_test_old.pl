@@ -91,7 +91,8 @@ type_to_letter(_,v).
 
 more_test_info(t(A),BCD):- more_test_info(t(A),B,C,_D),my_append([B,C,[alphabetical_t]],BCD).
 more_test_info(v(A),BCD):- more_test_info(v(A),B,C,_D),my_append([B,C,[alphabetical_v]],BCD).
-more_test_info(t(A),solves(More)):- clause(l_solve(A,in,out),More).
+more_test_info(TestID,solves(More)):- clause(l_solve(A,in,out),More),once((fix_test_name(A,TestID);TestID=t(A))).
+more_test_info(TestID,dsl_length(Len)):- michod_solved_len(TestID,Len).
 
 :- dynamic(more_test_info/4).
 more_test_info(t('0d3d703e'),[+mask_match,+shape_match,-rotation_match,-color_match,associate_colors_to_colors],['(4, 1)'],[tt]).
