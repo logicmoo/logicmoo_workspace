@@ -671,9 +671,9 @@ saved_training(TestID):- test_name_output_file(TestID,'.pl',File),exists_file(Fi
 
 
 
-:- set_prolog_flag(arc_term_expansion, true).
 
-:- ensure_loaded('kaggle_arc_fwd.pfc').
+%:- ensure_loaded('kaggle_arc_fwd.pfc').
+:- set_prolog_flag(arc_term_expansion, true).
 
 %:- set_prolog_flag(arc_term_expansion, false).
 
@@ -868,18 +868,23 @@ create_group_dmiles:-
     'e41c6fd3','ea32f347','37d3e8b2','0a2355a6', 'b230c067','a61f2674','d2abd087','08ed6ac7']))),
   %must_det_ll((create_group(dmiles_nsn2,[
   % 'a61f2674','0a2355a6', 'a61ba2ce', 'ea32f347', 'a79310a0', '37d3e8b2', 'e41c6fd3', 'b230c067', '0d3d703e', '08ed6ac7']))),
-   must_det_ll((create_group(dmiles,[
-              'makesboxsq','a61ba2ce',   
-              'e41c6fd3','ea32f347',
-              '37d3e8b2','0a2355a6',
-              'a79310a0','103eff5b',
-              '33b52de3','d2abd087','08ed6ac7',
-              '1b60fb0c','1d398264',
-              '0d3d703e','626c0bcc',
-              '5582e5ca','25d487eb',
-              '32e9702f','f8b3ba0a',
-              'b230c067',
-              '29c11459','a61f2674']))),
+
+   flatten([
+    % plus 1
+        '32e9702f', '1d398264', '29c11459',
+    %start (plus 1)
+        '25d487eb',
+    %copy with mod
+        'a61ba2ce', '08ed6ac7', '0a2355a6', '37d3e8b2', 'b230c067', 'd2abd087', 'ea32f347',
+    %copy with mod (harder?)
+        'e41c6fd3', 'a61f2674', '0d3d703e', 'makesboxsq', 'a79310a0',
+    %todo
+     'f8b3ba0a', '5582e5ca', '33b52de3', '1b60fb0c',
+    %recolor with a pattern from output
+     '103eff5b','626c0bcc',        
+        []],Flat),
+   list_to_set(Flat,SetR), reverse(SetR,Set),
+   must_det_ll((create_group(dmiles,Set))),
   set_current_test('0a2355a6'),
   set_pair_mode(whole_test),
   %set_current_test('makesboxsq'),

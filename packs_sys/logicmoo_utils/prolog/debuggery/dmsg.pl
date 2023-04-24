@@ -1251,6 +1251,9 @@ prepend_each_line(Pre,Goal):- fail,
 prepend_each_line(Pre,Goal):-
   with_output_to_each(string(Str),Goal)*->once((print_prepended(Pre,Str),new_line_if_needed)).
 
+prepend_each_line1(Pre,Goal):-
+  wots(string(Str),Goal)*->once((print_prepended(Pre,Str),new_line_if_needed)).
+
 into_cmt(SSS,Cmt):-
   wots(Cmt,print_prepended('%', SSS)).
 

@@ -2072,6 +2072,8 @@ use_system_portray(A=B):- use_system_portray(A),use_system_portray(B),!.
 
 as_is(V):- as_is0(V).
 
+not_string(V):- \+ string(V).
+
 as_is0(V):- var(V).
 as_is0(A) :- is_arity_lt1(A), !.
 as_is0(V) :- is_dict(V), !, fail.
@@ -2080,7 +2082,7 @@ as_is0(A) :- functor(A,F,_), simple_f(F), !.
 as_is0(A) :- ground(A), A = [ tag(_,_), Atom],atomic(Atom),!.
 as_is0(A) :- ground(A), A =  tag(_,_),!.
 as_is0(A) :- is_list(A),length(A,L),L>4,!,fail.
-as_is0(A) :- is_list(A), maplist(is_arity_lt1,A),!.
+as_is0(A) :- is_list(A), maplist(is_arity_lt1,A),maplist(not_string,A),!.
 %as_is0([A]) :- is_list(A),length(A,L),on_x_ignore(L<2),!.
 as_is0([A|L]) :- L==[],!, as_is0(A).
 

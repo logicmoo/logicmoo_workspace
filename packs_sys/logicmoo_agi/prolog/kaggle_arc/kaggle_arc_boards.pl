@@ -1194,9 +1194,11 @@ overlapping_image(In,Other,OLIn):-
 %32e9702f %33b52de3
 
 save_grid_calc(TestID,ExampleNum,XForms,In,Out,Op):-   
+  if_t(  ori([fg_intersectiond])\==ori([Op|XForms]),
+  (
  ignore((on_x_rtrace(call(Op,In,Out,RIO)), assert_test_property(TestID,ExampleNum,iro([Op|XForms]),RIO))),
  ignore((on_x_rtrace(call(Op,Out,In,ROI)), assert_test_property(TestID,ExampleNum,ori([Op|XForms]),ROI))),
- ignore((on_x_rtrace(print_ss(no(Op,TestID,ExampleNum,XForms),RIO,ROI)))).
+ ignore((on_x_rtrace(print_ss(no(Op,TestID,ExampleNum,XForms),RIO,ROI)))))).
 
 
 
