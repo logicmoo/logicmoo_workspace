@@ -875,7 +875,7 @@ create_group_dmiles:-
     %start (plus 1)
         '25d487eb',
     %copy with mod
-        'a61ba2ce', '08ed6ac7', '0a2355a6', '37d3e8b2', 'b230c067', 'd2abd087', 'ea32f347',
+        '08ed6ac7', 'ea32f347',  '0a2355a6', '37d3e8b2', 'a61ba2ce', 'b230c067',  'd2abd087', 
     %copy with mod (harder?)
         'e41c6fd3', 'a61f2674', '0d3d703e', 'makesboxsq', 'a79310a0',
     %todo
@@ -885,12 +885,12 @@ create_group_dmiles:-
         []],Flat),
    list_to_set(Flat,SetR), reverse(SetR,Set),
    must_det_ll((create_group(dmiles,Set))),
-  set_current_test('0a2355a6'),
+  %set_current_test('0a2355a6'),
   set_pair_mode(whole_test),
   %set_current_test('makesboxsq'),
-  %set_current_test('08ed6ac7'),
-  set_current_test('25d487eb'),
-  
+  %
+  %set_current_test('25d487eb'),
+  set_current_test('08ed6ac7'),
   !.
 :- initialization(create_group_dmiles).
 %:- noguitracer.
