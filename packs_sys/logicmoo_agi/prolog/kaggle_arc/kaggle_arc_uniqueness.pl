@@ -83,12 +83,17 @@ make_unifiable_u(X1,X1).
 
 
 
-has_propcounts(TestID):- 
+has_propcounts(TestID):- \+ use_pair_info,
  forall(current_example_nums(TestID,ExampleNum),
   ( \+ \+ (propcounts(TestID, ExampleNum, IO, count, _, _), sub_var(in,IO)),
-    \+ \+ (propcounts(TestID, ExampleNum, IO, count, _, _), sub_var(out,IO)))).
+    \+ \+ (propcounts(TestID, ExampleNum, IO, count, _, _), sub_var(out,IO)))),!.
+
+has_propcounts(TestID):- use_pair_info, !, 
+  arc_cache:individuated_cache(TestID,_,_,_,Objs), Objs\==[],!,
+  arc_cache:map_pairs(TestID,_,_IO2,_Info,_PreObjs,_Out).
 
 %ensure_propcounts(_TestID):-!.
+
 ensure_propcounts(TestID):- var(TestID),!,ensure_test(TestID),ensure_propcounts(TestID).
 ensure_propcounts(TestID):- has_propcounts(TestID),!.
 ensure_propcounts(TestID):- 
@@ -96,11 +101,66 @@ ensure_propcounts(TestID):-
     once(with_luser(menu_key,'i',once(ndividuator(TestID)))))))),
   once((with_pair_mode(whole_test,
      once(with_luser(menu_key,'o',once(ndividuator(TestID))))))),
+  learn_object_dependancy(TestID),
  has_propcounts(TestID),!.
 ensure_propcounts(TestID):- show_prop_counts(TestID), my_assertion(has_propcounts(TestID)),!.
 
 %ensure_props_change(TestID,IO,P):- fail.
 %  arc_cache:each_object_dependancy(TestID,ExampleNum,OD),
+
+
+
+use_pair_info.
+no_pair_info:- fail.
+gather_set(Ctx,Goal):-
+  copy_term(Ctx+Goal,NRV+Copy),
+  no_repeats_var(NRV), !, 
+  call(Copy),Ctx=NRV.
+
+p_to_utbs(TestID,Ctx,P,UTBLists):-
+ findall(UPB2,
+  gather_set(UPB2,(map_pairs_info_io(TestID,ExampleNum,Ctx,Step,Info,A,B,USame,UPA2,UPB2),member(P,UPB2))),UTBLists).
+
+:- use_module(library(ordsets)).
+
+% common_members(+ListOfLists, -Common)
+common_members([FirstList|Rest], Common) :-
+    maplist(list_to_ord_set, [FirstList|Rest], OrdSets),
+    foldl(ord_intersection, OrdSets, FirstList, Common).
+
+% list_to_ord_set(+List, -OrdSet)
+%list_to_ord_set(List, OrdSet) :- sort(List, OrdSet).
+
+% Example query:
+% ?- common_members([[1, 2, 3], [2, 3, 4], [1, 2, 3, 4, 5]], Common).
+% Common = [2, 3].
+
+
+map_pairs_info(TestID,Ctx,P):-
+  ensure_propcounts(TestID),
+  (var(Ctx)->gather_set(Ctx,map_pairs_info_io(TestID,ExampleNum,Ctx,Step,Info,A,B,USame,UPA2,UPB2));true),
+  %IO = in, Ctx = in_out,
+  %gather_set(P,(map_pairs_info_io(TestID,ExampleNum,Ctx,Step,Info,A,B,USame,UPA2,UPB2),member(P,PB2))).
+  gather_set(P,(map_pairs_info_io(TestID,ExampleNum,Ctx,Step,Info,A,B,USame,UPA2,UPB2),member(P,UPB2))),
+  p_to_utbs(TestID,Ctx,P,UTBLists),  
+  common_members(UTBLists,Members),
+  member(P,Members). 
+
+map_pairs_info_io(TestID,ExampleNum,Ctx,Step,Info,A,B,USame,UPA2,UPB2):-
+ Info = info(Step,_IsSwapped,Ctx,_TypeO,TestID,ExampleNum),
+  arc_cache:map_pairs(TestID,_,_,Info,A,B),
+  once((diff_l_r(A,B,Same,PA2,PB2),
+  unnumbervars(('$VAR'(0),'$VAR'('_'),Same,PA2,PB2),UNV))),
+  UNV = (_FG1,_BG1,USame,UPA2,UPB2).
+
+
+io_to_cntx(in,in_out).
+io_to_cntx(in,in_out_out).
+io_to_cntx(out,in_out_out).
+io_to_cntx(out,s(_)).
+
+ensure_props_change(TestID,IO,P):- 
+  use_pair_info,!,io_to_cntx(IO,Ctx),map_pairs_info(TestID,Ctx,P).
 
 ensure_props_change(_TestID,IO,P):- ground(IO),ground(P),!.
 ensure_props_change(TestID,IO,P):-
@@ -819,7 +879,8 @@ show_cp_diff([P|A],PB):- !, show_cp_diff(P,PB),show_cp_diff(A,PB).
 */
 show_cp_diff(A,B):-
  must_det_ll((
-  diff_l_r(A,B,Same,PA2,PB2),  
+  flat_props([A],PA), flat_props([B],PB),
+  diff_l_r(PA,PB,Same,PA2,PB2),  
   %flat_props([B],PB), intersection(Same,PB,S,SS,_), append(S,SS,SSame),
   print_diffs(1,Same),
   %length(SSame,SL), pp(sames=SL),  
@@ -850,13 +911,13 @@ bg_into_var(_,FG,FG).
 number_fg_colors(In,Out):- sub_var('@',In),!,subst(In,'@','$VAR'(0),Out),!.
 number_fg_colors(In,Out):- sub_var('fg',In),!,In=Out,!.
 number_fg_colors(In,Out):- mapgrid(bg_into_var('$VAR'('_')),In,Mid),In\=@=Mid,!,number_fg_colors(Mid,Out).
-number_fg_colors(In,Out):- sub_var(777,In),!,copy_term(In,Mid),subst001(Mid,'fg'(777),'@',Out),term_variables(Out,Vs),maplist('='('$VAR'('_')),Vs),!.
+number_fg_colors(In,Out):- sub_var(777,In),!,copy_term(In,Mid),subst001(Mid,'$VAR'(777),'@',Out),term_variables(Out,Vs),maplist('='('$VAR'('_')),Vs),!.
 number_fg_colors(In,Out):- \+ \+ (sub_term(E,In),is_real_fg_color(E)),!,  
   copy_safe(In,InC),unique_fg_colors(InC,Cs),
   Cs\==[], % at least some colors
   subst_colors_with_vars(Cs,Vs,InC,Mid),    
   ground(Cs), % fully grounded test
-  numbervars(Vs,777,_,[functor_name('fg'),singletons(false),attvar(skip)]),!,
+  numbervars(Vs,777,_,[functor_name('$VAR'),singletons(false),attvar(skip)]),!,
   number_fg_colors(Mid,Out).
 number_fg_colors(InOut,InOut).
 
