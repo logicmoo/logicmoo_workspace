@@ -547,8 +547,13 @@ add_bg(III,II,bg):- subst(III,'$VAR'('_'),'bg',II).
 %b_grid_to_norm(I,OUT):- b_grid_to_norm(Op,I,OO),OUT=(OO-w(Op)).
 %b_grid_to_norm(Op,I,O):- Op==[],!,I=O.
 %b_grid_to_norm(Op,IO,IIOO):-  compound(IO),IO=(I^O),b_grid_to_norm(Op,I,II),!,Op\==[],b_grid_to_norm(Op2,O,OO),!,Op=Op2,IIOO=II^OO.
-normalize_grid(OpRot,I,GOO):- grav_rot(I,R1,M),I\=@=M,!,normalize_grid(Op,M,GOO),append(Op,[R1],OpRot).
-normalize_grid(R2Op,I,GOOP):-   
+
+normalize_grid(OpRot,I,GOOD):-
+ normalize_grid3(OpRot,I,GOO),
+ ((sub_var(bg,GOOD),sub_var(black,GOOD))-> subst(GOO,'bg','$VAR'('_'),GOOD);GOO=GOOD).
+
+normalize_grid3(OpRot,I,GOO):- grav_rot(I,R1,M),I\=@=M,!,normalize_grid(Op,M,GOO),append(Op,[R1],OpRot).
+normalize_grid3(R2Op,I,GOOP):-   
  must_det_ll((
   debug_c(reduce,writeg(normalize_grid=I)),
   protect_vars(I,III,How),

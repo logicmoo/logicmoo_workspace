@@ -677,13 +677,15 @@ usefull_compare(P):- changed_by(P,_).
 
 remove_giz(L,O):- include(not_giz,L,M),list_to_set(M,O).
 not_giz(giz(_)):-!,fail.
-not_giz(pg(_,_,_,_)):-!,fail.
 not_giz(merged(_)):-!,fail.
-not_giz(/*b*/iz(_)):-!,fail.
 not_giz(changes(_)):-!,fail.
+not_giz(/*b*/iz(i_o(_))):-!,fail.
+not_giz(oid(_)):-!,fail.
+%not_giz(pg(_,_,_,_)):-!,fail.
 not_giz(P):- prop_type(_,P),!.
 not_giz(iz(_)):-!.
-not_giz(_):-!,fail.
+not_giz(_).
+%not_giz(_):-!,fail.
 
 prop_type(loc2D,loc2D(_,_)).
 prop_type(loc2D,center2G(_,_)).

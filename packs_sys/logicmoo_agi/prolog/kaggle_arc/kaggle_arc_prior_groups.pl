@@ -1409,10 +1409,15 @@ add_prior_info_1(_Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),
   %subst(PropList,Prop,R,PropListR),
   PropList = PropListR,
   nop(_=pg(Size,Name,rank3,Size)),
-  append(PropListR,[R,pg(ObjsLen,Name,simulars,N1)],OUTE),!,
+  extra_rank_prop(ObjsLen,Name,N1,ExtraProp),
+  append(PropListR,[R,ExtraProp,pg(ObjsLen,Name,simulars,N1)],OUTE),!,
   include(some_pgs_and_props(PropList),OUTE,OUT).
 
 add_prior_info_1(_Objs,_ObjsLen,_Common,_VersionsByCount,PropList,PropList).
+
+extra_rank_prop(ObjsLen,Name,N1,pg(_,Name,rankLS,largest)):- ObjsLen==N1,!.
+extra_rank_prop(_,Name,1,pg(_,Name,rankLS,smallest)):-!.
+extra_rank_prop(_,Name,_,pg(_,Name,rankLS,mediumest)).
 
 use_simulars(_):- fail.
 use_rank(mass(_)).
