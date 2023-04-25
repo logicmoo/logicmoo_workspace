@@ -15,8 +15,10 @@ clear_scene_rules(TestID):-
      ignore(retract(is_accompany_changed_db(TestID,IO,P,PSame)))),!,
   clear_object_dependancy(TestID).
 
+% Count occurrences of G and store the result in N
 count_of(G,N):- findall(G,G,L),variant_list_to_set(L,S),length(S,N).
 
+% Define predicates that shouldn't be noticed
 dont_notice(oid(_)).
 dont_notice(giz(_)).
 dont_notice(global2G(_,_)).
@@ -33,9 +35,11 @@ dont_notice(oid).
 dont_notice(giz).
 dont_notice(shape_rep).
 
+% Define predicates that should be noticed
 do_notice(pg(_,_,rank1,_)).
 do_notice(pg(_,_,_,_)).
 
+% Predicate to check if P should be noticed
 ok_notice(P):- \+ \+ do_notice(P),!.
 ok_notice(P):- \+ dont_notice(P).
 
@@ -50,6 +54,7 @@ dont_deduce(P):- sub_term(G,P),compound(G),is_gridoid(P).
 dont_deduce(unique_colors_count(_)).
 dont_deduce(P):- compound(P),compound_name_arguments(P,_,[X]),number(X).
 
+% Define predicates that should be deduced
 do_deduce(link(sees(_),_)).
 do_deduce(rot2D(_)).
 do_deduce(pen(_)).
@@ -57,16 +62,19 @@ do_deduce(iz(sid(_))).
 do_deduce(P):- compound(P),compound_name_arguments(P,_,[X,Y]),number(X),number(Y).
 do_deduce(rotSize2D(grav,_,_)).
 
+% Predicate to check if P should be deduced
 ok_deduce(P):- \+ \+ dont_deduce(P), !, fail.
-ok_deduce(P):- \+ \+ do_deduce(P),!.
+ok_deduce(P):- \+ \+ do_deduce(P), !.
 %ok_deduce(P):- \+ \+ dont_notice(P),!,fail.
 %ok_deduce(_).
 
+% Check if two values have the same property names but are not equal
 other_val(X1,X2):- X1\=@=X2, same_prop_names(X1,X2),!.
 same_prop_names(X1,X2):- 
   compound(X1),compound(X2), same_functor(X1,X2),!,
   make_unifiable_u(X1,U1), make_unifiable_u(X2,U2),  U1 =@= U2.
 
+% Helper predicate to create a unifiable version of a term
 make_unifiable_u(Atom,U):- atomic(Atom),!,freeze(U,atomic(U)).
 make_unifiable_u(link(sees(L),A),link(sees(U),B)):- !, maplist(make_unifiable_u,[A|L],[B|U]).
 make_unifiable_u(X1,U1):- make_unifiable_cc(X1,U1),!.
@@ -469,7 +477,8 @@ from_same_pair(Post,Pre):-
   has_prop(giz(example_num(trn+N)),Pre).
      
      
-
+obj_in_or_out(Pair,IO):- is_mapping(Pair),!,
+    get_mapping_info(Pair,Info,_In,_Out),arg(3,Info,IO).
 obj_in_or_out(Obj,IO):- must_det_ll(is_object(Obj)),has_prop(giz(g(I_O)),Obj),!,I_O=IO.
 obj_in_or_out(Obj,IO):- has_prop(iz(i_o(I_O)),Obj),!,I_O=IO.
 %obj_in_or_out(Obj,I_O):- is_input_object(Obj)-> IO =out ; IO =in.
@@ -798,6 +807,11 @@ pp_ilp(D,Grp):- is_mapping(Grp),
     print_io_terms(D+7,In,Out),
   prefix_spaces(D,(write('</grp>\n'),dash_chars)))).
 
+pp_ilp(D,Grid):- is_group(Grid),!, length(Grid,Len),
+   prefix_spaces(D,(format('<group ~w>\n',[len=Len]))),
+   prefix_spaces(D,mapgroup(pp_ilp(D+7),Grid)),!,nl,
+   prefix_spaces(D,(format('</group>\n',[]))),!.
+
 pp_ilp(D,Grid):- is_grid(Grid),!,prefix_spaces(D,print_grid(Grid)),!,nl.
 pp_ilp(D,Grid):- is_object(Grid),!,prefix_spaces(D,print_grid([Grid])),!,nl.
 
@@ -971,6 +985,16 @@ calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,[Right],[
 
 
 calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,RHSObjs,[Pairs|RestLR]):-
+ select_pair(Type,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest1,LHSRest1),
+ must_det_ll((
+  remove_object(RHSRest1,Right,RHSRest2), remove_object(LHSRest1,Right,LHSRest2),
+  remove_object(RHSRest2, Left,RHSRest ), remove_object(LHSRest2, Left,LHSRest ),
+  make_pairs(TestID,ExampleNum,Type,IsSwapped,Step,Ctx,Prev,Left,Right,Pairs),
+  append_LR(Prev,Pairs,NewPrev),
+  incr_step(Step,IncrStep),
+  calc_o_d_recursively(TestID,ExampleNum,IsSwapped,IncrStep,Ctx,NewPrev,LHSRest,RHSRest,RestLR))).
+
+calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,RHSObjs,[Pairs|RestLR]):-
  must_det_ll((
   select_pair(Type,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest1,LHSRest1),
   remove_object(RHSRest1,Right,RHSRest2), remove_object(LHSRest1,Right,LHSRest2),
@@ -979,7 +1003,8 @@ calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,RHSObjs,[
   append_LR(Prev,Pairs,NewPrev),
   incr_step(Step,IncrStep),
   calc_o_d_recursively(TestID,ExampleNum,IsSwapped,IncrStep,Ctx,NewPrev,LHSRest,RHSRest,RestLR))).
- 
+
+
 %incr_cntx(Ctx,NewCtx):- Ctx == in_out,!, NewCtx=out_out.
 incr_cntx(Ctx,NewCtx):- atom(Ctx),!, atom_concat(Ctx,'_out',NewCtx).
 incr_cntx(Ctx,s(Ctx)).
@@ -999,6 +1024,7 @@ in_to_ins(Ins,N,InsList):-
 %select_pair(perfect,_Prev,[A],[B],A,B,[],[]):-!.
 select_pair(perfect,_Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   select(Left,LHSObjs,RestLeft),
+  \+ is_mapping(Left),
   once((remove_object(RHSObjs,Left,RHSObjsMLeft),
   find_prox_mappings(Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(RestLeft,Right,LHSRest),
@@ -1007,6 +1033,7 @@ select_pair(perfect,_Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
 
 select_pair(perfect_w_prev,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   select(Left,[Prev|LHSObjs],RestLeft),
+  \+ is_mapping(Left),
   once((remove_object(RHSObjs,Left,RHSObjsMLeft),
   find_prox_mappings(Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(RestLeft,Right,LHSRest),
@@ -1014,8 +1041,8 @@ select_pair(perfect_w_prev,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   LeftMaybe = Left,!.
 
 select_pair(perfect_combo,_Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-  
-  last(LHSObjs,LastLHSObjs), \+ is_list(LastLHSObjs),
-  in_to_ins(LHSObjs,2,LHSObjs_Combos),
+  into_list(LHSObjs,LHSObjsL),variant_list_to_set(LHSObjsL,LHSObjsSet),
+  in_to_ins(LHSObjsSet,2,LHSObjs_Combos),
   select(Left,LHSObjs_Combos,LHSObjs_Combos_Rest),
   once((remove_object(RHSObjs,Left,RHSObjsMLeft),  
   find_prox_mappings(Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
