@@ -1397,9 +1397,10 @@ add_prior_info(Objs,ObjsLen,Common,VbO,obj(List),obj(NewList)):-
 add_prior_info(Objs,ObjsLen,Common,VbO,(List),(NewList)):- 
   add_prior_info_1(Objs,ObjsLen,Common,VbO,List,NewList),!.
 
-add_prior_info_1(_Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),
+add_prior_info_1(_Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),  
   length(VbO,Rankers), %Rankers>1,
   find_version(VbO,Prop,N1,N2,PropList),
+  Prop\=pen(_),
   member(Prop,PropList),
   %prop_name(Prop,Name),  
   value_to_name(Prop,Name),

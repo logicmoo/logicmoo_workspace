@@ -27,6 +27,7 @@ dont_notice(global2G(_,_)).
 %dont_notice(occurs_in_links(sees,_)).
 dont_notice(link(contains,_)).
 dont_notice(occurs_in_links(contained_by,_)).
+dont_notice(pg(_851136,pen(_851146),rankLS,_)).
 dont_notice(iz(i_o(_))).
 dont_notice(P):- compound(P),arg(_,P,E),is_gridoid(E),!.
 dont_notice(P):- compound(P),!,compound_name_arity(P,F,_),!,dont_notice(F).
@@ -162,7 +163,7 @@ map_pairs_info_io(TestID,ExampleNum,Ctx,Step,TypeO,A,B,USame,UPA2,UPB2):-
 
 
 io_to_cntx(in,in_out).
-io_to_cntx(in,in_out_out).
+%io_to_cntx(in,in_out_out).
 io_to_cntx(out,in_out_out).
 io_to_cntx(out,s(_)).
 
@@ -249,14 +250,12 @@ solve_via_scene_change_rules(TestID,ExampleNum):-
   grid_to_tid(In,TID),
   into_fti(TID,ROptions,In,VM),
   individuate(VM),
-  Objs = VM.objs)),
+  Objs = VM.objs,
   print_object_dependancy(TestID),
   print_scene_change_rules(TestID),
   %wots(SS,solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,ObjsO)),
-  solve_obj_group(VM,TestID,ExampleNum,ROptions,in,Objs,ObjsO),
+  enter_solve_obj(VM,TestID,ExampleNum,ROptions,Objs,ObjsO),
   dash_chars,
-
- must_det_ll((
   print_ss(wqs(solve_via_scene_change_rules(ExampleNum)),Objs,ObjsO),
   dash_chars,
   into_solid_grid(ObjsO,OurSolution1),
@@ -366,44 +365,71 @@ solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,ObjsO):-
     findall(PreObjs,arc_cache:map_pairs(TestID,_,trn+N,info(0,_,in_out,_,_,trn+N),PreObjs,Out),PreObjs),
   homogenize(OutL,Sames,Diffs),
 */
-solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,ObjsO):-
- solve_obj_group(VM,TestID,ExampleNum,in,ROptions,Objs,Objs1),
- Objs1 \==[],
- solve_obj_group(VM,TestID,ExampleNum,in_out,ROptions,Objs1,Objs2),
- solve_obj_group(VM,TestID,ExampleNum,in_out_out,ROptions,Objs2,Objs3),!,
- ObjsO= Objs3.
-
-solve_obj_group(VM,TestID,ExampleNum,IN_OUT,ROptions,Objs,OObjs):- IN_OUT == in,!,
-  my_maplist(solve_obj(VM,TestID,ExampleNum,IN_OUT,ROptions),Objs,OObjs).
-
-solve_obj_group(VM,TestID,ExampleNum,IN_OUT,ROptions,Objs,ObjsO):-
-  %trace,arc_cache:map_group(TestID,ExampleNum,IN_OUT,Group),
-  GRP = grp(Info,PreObjs,Out),
-  findall(GRP,(arc_cache:map_pairs(TestID,_,_IN_OUT2,Info,PreObjs,Out), sub_var(IN_OUT,Info)),Groups),
-  variant_list_to_set(Groups,Set),
-  banner_lines(blue,2),
-  forall(member(GRP,Set),pp_ilp(GRP)),
-  banner_lines(blue,2),
-  %trace,prop_can(TestID,IN_OUT,P,Preconds),
-  %trace,
-  solve_obj_set(Set,VM,TestID,ExampleNum,IN_OUT,ROptions,Objs,ObjsO),
-  flatten(ObjsO,ObjsO).
-
-%solve_obj(_VM,_TestID,_ExampleNum,_IN_OUT,_ROptions,Obj,Obj):- is_bg_object(Obj),!.
-
-solve_obj_set([],_VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Objs,Objs):-!.
-solve_obj_set([S|Set],VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Objs,ObjsO):-
-  solve_obj_list(S,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Objs,ObjsM),
-  solve_obj_set(Set,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,ObjsM,ObjsO).
-
-solve_obj_list(_,_VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Objs,Objs):- Objs == [], !.
-solve_obj_list(S,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,[Obj|Objs],[NewObj|ObjsO]):-
-  solve_obj(VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Obj,NewObj),
-  solve_obj_list(S,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Objs,ObjsO).
 
 
-solve_obj(_VM,_TestID,_ExampleNum,_IN_OUT,_ROptions,Obj,Obj):- is_bg_object(Obj),!.
-solve_obj(VM,TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Obj,OObj):- 
+enter_solve_obj(VM,TestID,ExampleNum,ROptions,Objs,ObjsO):-
+ must_det_ll((
+  solve_obj_group(VM,TestID,ExampleNum,ROptions,in_out,Objs,ObjsM),
+  solve_obj_group(VM,TestID,ExampleNum,ROptions,in_out_out,ObjsM,ObjsOF),
+  flatten(ObjsOF,ObjsO),
+  print_ss(in_out_out,ObjsOF,ObjsO))).
+
+solve_obj_group(VM,TestID,ExampleNum,ROptions,In_out,Objs,ObjsO):- In_out == in_out,!,
+ must_det_ll((
+ my_maplist(solve_obj(VM,TestID,ExampleNum,In_out,ROptions),Objs,ObjsOF),
+ flatten([ObjsOF],ObjsO),
+ print_ss(In_out,Objs,ObjsO))).
+
+
+solve_obj_group(_VM,TestID,_ExampleNum,Ctx,_ROptions,Objs,ObjsO):-
+ must_det_ll((
+  %PreObjsL,PostObjsL,_USame,_UPA2,_UPB2
+  %map_pairs_info_io(TestID,_ExampleNum,Ctx,_Step,_TypeO,PreObjsL,PostObjsL,_USame,_UPA2,_UPB2),   
+  CLS = prop_to_can(TestID,Ctx,SomeP,O,Can1,Cant,Preconds),
+  findall(CLS,prop_to_can(TestID,Ctx,SomeP,O,Can1,Cant,Preconds),FwdRules),% prop_can(TestID,Ctx,SomeP,Preconds)
+  maplist(apply_to_objs(Objs),FwdRules,ObjsO))).
+
+
+apply_to_objs(Objs,prop_to_can(TestID,Ctx,SomeP,O,Can1,Cant,Preconds),ObjsO):-
+ must_det_ll((
+  include(can_cant_props(Can,Cant),Objs,SelectedObjects),
+  %maybe_apply
+  findall(NewObjs,
+     (member(CLS,FwdRules),  maybe_apply(CLS,Objs,NewObjs)), NewObjL),
+  flatten([Objs,NewObjL],NewObjs),
+  variant_list_to_set(NewObjs,ObjsO))),!.
+
+/*
+solve_obj_group(_VM,TestID,_ExampleNum,Ctx,_ROptions,Objs,ObjsO):-
+  CLS = cl(Preconds,O,Cant),
+  findall(CLS,% prop_can(TestID,Ctx,SomeP,Preconds)
+    (prop_to_can(TestID,IN_OUT,P,_O,_Can1,Cant,Can),
+     include(can_cant_props(Can,Cant),Objs,SelctedObjects),
+
+   prop_to_can(TestID,Ctx,SomeP,O,_Can1,Cant,Preconds),FwdRules),
+  findall(NewObjs,
+     (member(CLS,FwdRules),  maybe_apply(CLS,Objs,NewObjs)),
+     NewObjL),
+  flatten([Objs,NewObjL],NewObjs),
+  variant_list_to_set(NewObjs,ObjsO),!.
+*/
+maybe_apply(CLS,Objs,NewObj):-   
+  CLS = cl(Preconds,O,_SomeP),
+  member(Obj,Objs),has_prop(Obj,Preconds),
+  NewObj=O,!.
+maybe_apply(CLS,Objs,NewObj):-   
+  CLS = cl(Preconds,O,_SomeP),
+  select(Obj,Objs,Rest),member(Obj2,Rest),
+  flat_props([Obj,Obj2],Props),
+  intersection(Props,Preconds,Matched,Missing,_Extra),
+  pp(matched=Matched),
+  Missing==[],
+  NewObj=O,!.
+
+
+
+solve_obj(_TestID,_ExampleNum,_IN_OUT,_ROptions,Obj,Obj):- is_bg_object(Obj),!.
+solve_obj(TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Obj,OObj):- 
  must_det_ll((
    %Agenda = agenda(IN_OUT,P,PSame),
    Agenda = P,
@@ -412,20 +438,20 @@ solve_obj(VM,TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Obj,OObj):-
    (is_accompany_changed_verified(TestID,IN_OUT,P,PSame), 
         flatten(PSame,Rest), 
         forall(member(R,Rest),has_prop(R,Obj))),PsL),
- list_to_set(PsL,Ps), 
- edit_object(VM,Ps,Obj,OObj))).
+ list_to_set(PsL,Ps),
+ trace,
+ edit_object(Ps,Obj,OObj))),!.
+solve_obj(_VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Obj,Obj).
 %solve_obj(VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Obj,OObj):-
 %  edit_object(VM,pen([cc(black,1)]),Obj,OObj).
 %solve_obj(VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,_Obj,[]).
-solve_obj(_VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Obj,Obj).
 
-
-edit_object(_VM,Ps,_Obj,NewObj):- Ps==[],!,NewObj=[]. %edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
-edit_object(VM,Ps,Obj,NewObj):- Ps==[],!,edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
-edit_object(VM,Ps,Obj,NewObj):-
+edit_object(Ps,_Obj,NewObj):- Ps==[],!,NewObj=[]. %edit_object(VM,pen([cc(black,1)]),Obj,NewObj).
+edit_object(Ps,Obj,NewObj):- Ps==[],!,edit_object(pen([cc(black,1)]),Obj,NewObj).
+edit_object(Ps,Obj,NewObj):-
   must_det_ll((
    wots(SS,writeln(Ps)),
-   override_object_1(VM,Ps,Obj,NewObj),
+   override_object_1(Ps,Obj,NewObj),
    into_solid_grid([NewObj],SG),SG=_,
    dash_chars,
    print_ss(override_object(SS),[Obj],[NewObj]),
@@ -434,15 +460,15 @@ edit_object(VM,Ps,Obj,NewObj):-
    intersection(PL1,PL2,_Same,Removed,Added),
   pp(([[removed=Removed],[added=Added]])))).
 
-override_object_1(_VM,[],IN_OUT,IN_OUT):-!.
-override_object_1(VM,[H|T],I,OO):- !, override_object_1(VM,H,I,M),!, override_object_1(VM,T,M,OO).
-override_object_1(VM,agenda(IN_OUT,P,PSame),I,O):- !, pp_ilp(IN_OUT:P-PSame), override_object_1(VM,P,I,O).
-override_object_1(_VM,pen([cc(Red,N)]),Obj,NewObj):- pen(Obj,[cc(Was,N)]), !,
+override_object_1([],IN_OUT,IN_OUT):-!.
+override_object_1([H|T],I,OO):- !, override_object_1(H,I,M),!, override_object_1(T,M,OO).
+override_object_1(agenda(IN_OUT,P,PSame),I,O):- !, pp_ilp(IN_OUT:P-PSame), override_object_1(P,I,O).
+override_object_1(pen([cc(Red,N)]),Obj,NewObj):- pen(Obj,[cc(Was,N)]), !,
   subst001(Obj,Was,Red,NewObj),!.
-override_object_1(VM,loc2D(X,Y),Obj,NewObj):- loc2D(Obj,WX,WY),
+override_object_1(loc2D(X,Y),Obj,NewObj):- loc2D(Obj,WX,WY),
   globalpoints(Obj,WPoints),deoffset_points(WX,WY,WPoints,LPoints),  
-  offset_points(X,Y,LPoints,GPoints),rebuild_from_globalpoints(VM,Obj,GPoints,NewObj).
-override_object_1(_VM,O,I,OO):- override_object(O,I,OO),!.
+  offset_points(X,Y,LPoints,GPoints),must_det_ll(peek_vm(VM)), rebuild_from_globalpoints(VM,Obj,GPoints,NewObj).
+override_object_1(O,I,OO):- override_object(O,I,OO),!.
 
 is_accompany_changed_verified(TestID,IN_OUT,P,PSame):-
   is_accompany_changed_computed(TestID,IN_OUT,P,PSame), PSame\==[].
@@ -954,8 +980,8 @@ show_cp_diff(A,B):-
   flat_props([A],PA), flat_props([B],PB),
   diff_l_r(PA,PB,Same,PA2,PB2),  
   %flat_props([B],PB), intersection(Same,PB,S,SS,_), append(S,SS,SSame),
-  print_diffs(1,Same),
-  %length(SSame,SL), pp(sames=SL),  
+  %maplist(print_diffs(1),Same),
+  length(Same,SL), pp(sames=SL),  
   length(PA2,LenA),pp(removed(LenA)=PA2),
   length(PB2,LenB),pp(added(LenB)=PB2),
   !)).
@@ -1047,7 +1073,8 @@ pp_ilp(D,Grid):- is_grid(Grid),!,prefix_spaces(D,print_grid(Grid)),!,nl.
 pp_ilp(D,Grid):- is_object(Grid),!,prefix_spaces(D,print_grid([Grid])),!,nl.
 
 pp_ilp(D,is_accompany_changed_db(_TestID,IN_OUT,P,PSame)):- 
- list_to_conjuncts(PSame,Conj),pp_ilp(D,((IN_OUT:P):-Conj)),!.
+  io_to_cntx(IN_OUT,CTX),
+ list_to_conjuncts(PSame,Conj),pp_ilp(D,((CTX:P):-Conj)),!.
 
 %pp_ilp(D,(H:-Conj)):- prefix_spaces(D,pp(H:-Conj)),!.
 pp_ilp(D,(H:-PSame)):-  list_to_conjuncts(PSame,Conj),prefix_spaces(D,(writeq(H:-Conj),writeln('.'))),!.
@@ -1142,7 +1169,7 @@ need_positional_context(_H,_V).
 into_solid_grid_str([Obj,Obj2],SS):- fail, is_object(Obj),is_object(Obj2),
  into_solid_grid_str(Obj,Grid1),
  into_solid_grid_str(Obj2,Grid2),
- wots(SS,print_side_by_side(Grid1,Grid2)),!.
+ wots(SS,print_ss(Grid1,Grid2)),!.
 
 into_solid_grid_str(Obj,SS):- is_object(Obj),loc2D(Obj,X,Y),
  vis2D(Obj,H,V), vis2D(Obj,H,V),has_prop(giz(g(IN_OUT)),Obj),
@@ -1584,6 +1611,18 @@ into_lst(ObjsL,Lst):- is_list(ObjsL),!,maplist(into_lst,ObjsL,LstL),append(LstL,
 into_lst(Grp,Lst):- is_mapping(Grp), get_mapping_info_list(Grp,_,List),!,into_lst(List,Lst).
 into_lst(Grp,Lst):- arg(_,Grp,List),is_list(List),!,into_lst(List,Lst).
 into_lst(ObjsL,[ObjsL]).
+
+%solve_obj(_VM,_TestID,_ExampleNum,_IN_OUT,_ROptions,Obj,Obj):- is_bg_object(Obj),!.
+
+solve_obj_set([],_VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Objs,Objs):-!.
+solve_obj_set([S|Set],VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Objs,ObjsO):-
+  solve_obj_list(S,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Objs,ObjsM),
+  solve_obj_set(Set,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,ObjsM,ObjsO).
+
+solve_obj_list(_,_VM,_TestID,_ExampleNum,_IN_OUT_Start,_ROptions,Objs,Objs):- Objs == [], !.
+solve_obj_list(S,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,[Obj|Objs],[NewObj|ObjsO]):-
+  solve_obj(VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Obj,NewObj),
+  solve_obj_list(S,VM,TestID,ExampleNum,IN_OUT_Start,ROptions,Objs,ObjsO).
 
 
 */
