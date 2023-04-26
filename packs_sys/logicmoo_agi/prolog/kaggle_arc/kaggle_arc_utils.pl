@@ -17,6 +17,18 @@ sort_safe(I,O):- catch(sort(I,O),_,I=O).
 with_tty_false(Goal):- with_set_stream(current_output,tty(false),Goal).
 with_tty_true(Goal):- with_set_stream(current_output,tty(true),Goal).
 
+% Count occurrences of G and store the result in N
+count_of(G,N):- findall_vset(G,G,S),length(S,N).
+findall_vset(T,G,S):- findall(T,G,L),variant_list_to_set(L,S).
+flatten_objects(Objs,ObjsO):- flatten([Objs],ObjsO),!.
+
+
+var_e(E,S):- E==S,!.
+var_e(E,S):- (nonvar(E);attvar(E)),!,E=@=S.
+
+variant_list_to_set([E|List],Out):- select(S,List,Rest),var_e(E,S),!, variant_list_to_set([E|Rest],Out).
+variant_list_to_set([E|List],[E|Out]):- !, variant_list_to_set(List,Out).
+variant_list_to_set(H,H).
 
 nb_subst(Obj,New,Old):-
   get_setarg_p1(nb_setarg,Found,Obj,P1),Found=@=Old,

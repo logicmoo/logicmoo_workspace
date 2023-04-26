@@ -346,7 +346,7 @@ fill_in_bg(_Black,G2,GG2):- is_fg_color(G2),!,ignore(G2=GG2).
 fill_in_bg(Black,G2,GG2):- \+ G2\=Black,!,ignore(GG2=Black).
 fill_in_bg(Alt,In,Out):- only_color_data_or(Alt,In,Out),!.
 fill_in_bg(_Alt,In,In):-!.
-into_solid_grid(I,GG1):- into_grid(I,G1),mapgrid(fill_in_bg(black),G1,GG1),!.
+into_solid_grid(I,GG):- must_det_ll((into_grid(I,G1),mapgrid(fill_in_bg(black),G1,GG1))),!,GG=GG1.
 
 
 

@@ -960,13 +960,6 @@ indv_eprops_list(Indv,List9):-
   indv_props_list(Indv,List0),
   ku_rewrite_props(List0,List9).
 
-var_e(E,S):- E==S,!.
-var_e(E,S):- (nonvar(E);attvar(E)),!,E=@=S.
-
-variant_list_to_set([E|List],Out):- select(S,List,Rest),var_e(E,S),!, variant_list_to_set([E|Rest],Out).
-variant_list_to_set([E|List],[E|Out]):- !, variant_list_to_set(List,Out).
-variant_list_to_set(H,H).
-
 flat_props(PropLists,OUTL):- is_list_of_prop_lists(PropLists),!,flatten(PropLists,OUTL).
 flat_props(Objs,EList):-
   maplist(indv_eprops_list,Objs,PropLists),
