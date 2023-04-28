@@ -348,9 +348,11 @@ subobj_atoms(PA,PAP):- must_det_ll((nonvar(PA),flatten([PA],M),
 
 never_matom(localpoints(_)).
 never_matom(shape_rep(grav,_)).
-never_matom(pg(_OG,_,_,_)).
+%never_matom(pg(_OG,_,_,_)).
 never_matom(giz(_)).
 never_matom(globalpoints(_)).
+never_matom(edit(_)).
+
 sub_obj_atom(_,E):- var(E),!,fail.
 sub_obj_atom(E,E):- \+ compound(E),!.
 sub_obj_atom(E,L):- is_list(L),!,member(EM,L),sub_obj_atom(E,EM).

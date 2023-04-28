@@ -34,7 +34,7 @@ learn_grid_size(In,Out,R):-
   locally(nb_setval(allow_unused_proportion,t),
     proportional(size2D(IH,IV),size2D(OH,OV),R)).
   %proportional_size2D(IH,IV,OH,OV,R).
-
+   
 predict_grid_size_now(TestID,In,PH,PV):-
    grid_size(In,IH,IV),
    get_learned_grid_size_info(TestID,List),
@@ -42,7 +42,7 @@ predict_grid_size_now(TestID,In,PH,PV):-
    predict_grid_size(List,IH,IV,PH,PV).
 
 
-predict_grid_size(TestID,In,Out):-
+predict_grid_size(TestID,In,Out):-    
    predict_grid_size_now(TestID,In,PH,PV),
   (var(Out)->make_grid(PH,PV,Out);true),!.
 
@@ -71,12 +71,12 @@ test_predict_grid_size(TestID,In,Out):-
    wots(SS,((             
      dash_chars, dash_chars, write(test_predict_grid_size(TestID)), write('\n'),   
        get_learned_grid_size_info(TestID,List),
-       alphabetize(List,ListA),
-       predsort_on(better_grid_size_prop,ListA,SList),
-       add_info(SList,[],NewInfo),
-        %my_maplist(ppnl,List),dash_chars,
-        my_maplist(ppnl,ListA),dash_chars,
-        my_maplist(ppnl,NewInfo),dash_chars,
+  alphabetize(List,ListA),
+  predsort_on(better_grid_size_prop,ListA,SList),
+  add_info(SList,[],NewInfo),
+   %my_maplist(ppnl,List),dash_chars,
+   my_maplist(ppnl,ListA),dash_chars,
+   my_maplist(ppnl,NewInfo),dash_chars,
         predict_grid_size_now(ListA,NewInfo,IH,IV,PH,PV),
 
    ((PH=OH,PV=OV) -> C = green ; C = red),
@@ -84,8 +84,6 @@ test_predict_grid_size(TestID,In,Out):-
    (C==green 
      -> asserta(muarc_tmp:grid_size_prediction(TestID,In,PH,PV))
      ;(nop(print_test(TestID)),  write(SS),assert_test_suite(failed_predict_grid_size,TestID),!,fail)).
-
-
 add_akeys(A,A-A).
 alphabetize(List,ListA):- my_maplist(add_akeys,List,AKeys),keysort(AKeys,AKeysSorted),my_maplist(arg(2),AKeysSorted,ListA).
 

@@ -480,7 +480,7 @@ show_common_test_hints(TestID):-
     retractall(arc_test_property(TestID,common,F,_)),
     (( findall(Data,arc_test_property(TestID,(trn+_),F,Data),Commons),
       once((some_min_unifier(Commons,Common),nonvar(Common))))),
-      assert_test_property(TestID,common,F,Common)),FComs), 
+      assert_test_property(TestID,common,F,Common)),FComs),
   sort_safe(FComs,SComs),
   %dash_chars,
   %print_test(TestID),
@@ -534,6 +534,9 @@ in_smaller_than_out(TestID):- forall(kaggle_arc(TestID,trn+_,I,O), op_op(v_area,
 op_op(P2a,P2b,I,O):- call(P2a,I,II),call(P2a,O,OO),call(P2b,II,OO),!.
 
 v_area(I,Size):- vis2D(I,IH,IV), Size is IH * IV.
+
+
+detect_all_training_hints(TestID):- detect_pair_hints(TestID).
 
 detect_pair_hints(TestID):- ensure_test(TestID),
   w_section(title(detect_pair_hints(TestID>ExampleNum)),

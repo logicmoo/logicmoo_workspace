@@ -483,48 +483,147 @@ all_ogs(IO,In,Out,Set):- %member(R,[strict,loose]),
 */
 %maybe_ogs(R,In,Out):-  find_ogs(X,Y,In,Out)*->R=strict;(ogs_11(X,Y,In,Out),R=loose).
 
+:- arc_history(test_what_unique).
+test_what_unique:- get_current_test(TestID), what_unique(TestID,n=0,n>10).
 
 
-accompany_change2(TestID,ExampleNum,[X1=P1O,X2=P2O,common=Intersect]):-
- changing_props(TestID,X1,X2),
- accompany_change(TestID,ExampleNum,X1,Props1,_NotProps1),
- accompany_change(TestID,ExampleNum,X2,Props2,_NotProps2),
- once((
-   intersection(Props1,Props2,Intersect,P1,P2),
-   include(has_other_val(Props2),P1,P1O),
-   include(has_other_val(Props1),P2,P2O))).
+:- arc_history((get_current_test(TestID),what_unique(TestID,n=0,n>10))).
+get_new_uniq_dict(Dict):- 
+    ArgDict = _{sharedWith:_SharedWith,object:_Obj,trait:_Trait,groupSizeMask:_GroupSizeMask,
+  actualGroupSize:_ActualGroupSize,countMask:_CountMask,
+  actualCount:_ActualCount,otherL:_OtherL,slistL:_ListL,
+  setL:_SetL,others:_TraitCountSets,how:_How,group:_Group},
+  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict).
 
-has_other_val(Props1,X2):- member(X1,Props1),other_val(X1,X2),!.
+is_fti_step(most_unique).
+most_unique(symmetry_type,VM):-
+  List = VM.objs,
+  last(List,Obj),
+  set(VM.solution)= Obj.
 
-accompany_change(TestID,ExampleNum,P,Props,NotProps):-
-  var(TestID),!,ensure_test(TestID),
-  accompany_change(TestID,ExampleNum,P,Props,NotProps).
-accompany_change(TestID,ExampleNum,P,Props,NotProps):-
-  var(ExampleNum),!,current_example_nums(TestID,ExampleNum),
-  accompany_change(TestID,ExampleNum,P,Props,NotProps).
-accompany_change(TestID,ExampleNum,P,Props,NotProps):-
-  var(P),!,props_change(TestID,IO,P),
-  accompany_change(TestID,ExampleNum,P,Props,NotProps).
 
-accompany_change(TestID,ExampleNum,P,Props,NotProps):-     
-   once((counts_change(TestID,ExampleNum,_I_or_O,P,N1,N2), N1<N2)),!,
-   %no_repeats_var(Out),
-  once(( obj_group_gg(TestID,ExampleNum,_In,Out),
-         once((my_partition(has_prop(P),Out,HasPropsO,NotHasPropsO),
-         common_props(HasPropsO,Common),  common_props(NotHasPropsO,NotCommon),
-         intersection(Common,NotCommon,_,Props1,NotProps))),
-         include(\=@=(P),Props1,Props),
-         Props\==[])).
+  
 
-accompany_change(TestID,ExampleNum,P,Props,NotProps):- fail,
-   counts_change(TestID,ExampleNum,_I_or_O,P,N1,N2), N1>N2,
-  once((
-   %obj_group_io(TestID,ExampleNum,in,In), my_partition(has_prop(P),In,HasPropsI,NotHasPropsI),
-  %obj_group_io(TestID,ExampleNum,out,Out),
-  objs_other_than_example(TestID,ExampleNum,out,Out),
-  my_partition(not_has_prop(P),Out,HasPropsO,NotHasPropsO),
-  %my_partition(not_has_prop(P),Others,HasPropsOthers,NotHasPropsOthers),
-  common_props(HasPropsO,Common),
-  common_props(NotHasPropsO,NotCommon),
-  intersection(Common,NotCommon,_,Props,NotProps),Props\==[])).
+what_unique:- get_current_test(TestID),what_unique(TestID).
+
+what_unique(TestID):- 
+   get_vm(VM),
+   ((VM.id \= (TestID > _ * _)), ndividuator),
+   get_vm(VM2), explain_uniqueness(VM2.objs).
+
+what_unique(TestID,Dict):- is_vm_map(Dict),!,what_unique_dict(TestID,Dict).
+what_unique(TestID,Obj):- get_current_test(TestID),select_group(TestID,Group,_How), member(Obj,Group), must_det_ll(what_unique(TestID,Obj,Group)).
+what_unique(TestID,Obj,Group):- (is_group(Group);is_object(Obj)),!,what_unique_obj(TestID,Obj,Group).
+what_unique(TestID,CountMask,GroupSizeMask):-
+  get_new_uniq_dict(Dict),
+  Dict.groupSizeMask = GroupSizeMask,
+  Dict.countMask = CountMask,!,
+  what_unique_dict(TestID,Dict),
+  report_unique(Dict).
+
+what_unique_obj:- get_current_test(TestID),what_unique_obj(TestID,_,_).
+what_unique_obj(TestID,Obj,Group):- 
+  get_new_uniq_dict(Dict),
+  Dict.group = Group,
+  Dict.object = Obj,
+  what_unique_dict(TestID,Dict),
+  report_unique(Dict).
+
+/*what_unique(TestID,CountMask,GroupSizeMask):-
+ what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,TraitCounts,How),
+ report_unique(SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,TraitCounts,How).
+*/
+report_unique(Dict):- var(Dict),get_new_uniq_dict(Dict),!,report_unique(Dict).
+report_unique(Dict):- var(Dict.actualCount),!,get_current_test(TestID), what_unique_dict(TestID,Dict),report_unique(Dict).
+report_unique(Dict):-
+ must_det_ll((
+  ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
+  actualGroupSize:ActualGroupSize,countMask:CountMask,
+  actualCount:ActualCount,otherL:OtherL,listL:ListL,
+  setL:SetL,others:TraitCountSets,how:How,group:Group},
+  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict),
+  maplist_e(tersify,TraitCountSets,HTraitSetO),
+  maplist_e(tersify,SharedWith,SharedWithO),
+  maplist_e(tersify,Group,GroupO),
+  maplist_e(tersify,Obj,ObjO),
+  %(Obj\==[] -> ignore(print_grid(Obj)) ; true),
+  format('~N'), pp(what_unique(ObjO=[ActualCount/ActualGroupSize-Trait],sharedWith=SharedWithO,
+  setL/listL=SetL/ListL,others=HTraitSetO,how=How,
+  groupSizeMask=GroupSizeMask,group:GroupO,countMask=CountMask,otherL=OtherL)))).
+
+maplist_e(P2,A,B):- is_list(A),!,mapgroup(P2,A,B).
+maplist_e(P2,A,B):- call(P2,A,B).
+
+:- style_check(-singleton).
+%:- arc_history(what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,Others,_How)).
+:- style_check(+singleton).
+
+
+obj_exclude(Obj,Group,Others):- var(Obj),!,select(Obj,Group,Others).
+obj_exclude(Obj,Group,Others):- select(O,Group,Others),(O==Obj *-> true; Group=Others).
+
+
+what_unique_dict(TestID,Dict):- 
+  ArgDict = _{sharedWith:SharedWith,object:Obj,trait:Trait,groupSizeMask:GroupSizeMask,
+  actualGroupSize:ActualGroupSize,countMask:CountMask,
+  actualCount:ActualCount,otherL:OtherL,listL:ListL,
+  setL:SetL,others:TraitCountSets,how:How,group:Group},
+  (var(Dict)->Dict=ArgDict ; Dict >:< ArgDict),
+  (var(Group)->(select_group(TestID,Group,How));true),
+  obj_exclude(Obj,Group,Others),  
+  length_criteria(Group,GroupSizeMask),
+  length(Group,ActualGroupSize),
+  mapgroup(each_trait,[Obj|Others],[_-ObjT|TraitList]),
+  member(Trait,ObjT),
+  \+ too_non_unique(Trait),
+  \+ too_unique(Trait),
+  found_in_o(Trait,TraitList,SharedWith),
+  length_criteria(SharedWith,CountMask),
+  length(SharedWith,ActualCount),
+   freeze(B,\+ \+ (member(E,SharedWith), E==B)),
+   my_partition(=(B-_),TraitList,_Mine,NotMine),
+   length(NotMine,OtherL),   
+   %dif(WTrait,Trait),
+   functor(Trait,F,A),functor(WTrait,F,A),
+   found_in_w(WTrait,NotMine,HTraitList),length(HTraitList,ListL),
+   sort_safe(HTraitList,HTraitSet),length(HTraitSet,SetL),
+   findall(C-HTrait,(member(HTrait,HTraitSet),found_in_w(HTrait,NotMine,LS),length(LS,C)),TraitCounts),
+   sort_safe(TraitCounts,TraitCountSets),
+   \+ filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How).
+
+
+explain_uniqueness(GroupWhole):-
+  object_printables(GroupWhole,Group,GroupPP),
+  get_current_test(TestID),!,
+  forall(member(Obj,Group),
+   (dash_chars,
+    object_glyph(Obj,G), object_color_glyph_short(Obj,GC), object_grid(Obj,OG), 
+    locally(nb_setval(color_index,[Obj|GroupPP]),print_side_by_side(GC,GroupPP,'explain_uniqueness',_,OG,G)),
+    dmsg(uobj=Obj),!,
+    forall(what_unique_obj(TestID,Obj,Group),true))),
+  dash_chars.
+
+
+% touching vs each dir
+% size2D
+
+
+
+:- style_check(-singleton).
+filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How):-
+  OtherL=<1.
+
+filter_what_unique(TestID,SharedWith,Obj,Trait,GroupSizeMask,ActualGroupSize,CountMask,ActualCount,OtherL,ListL,SetL,How):-
+ ListL=SetL, SetL>1.
+
+
+/*
+
+With each type of example we can have...
+
+values_all_same|values_all_dif
+values_where_1_stand_otherwise
+values_where_2_stand_otherwise
+
+*/
 

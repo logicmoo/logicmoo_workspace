@@ -787,8 +787,9 @@ aggregates(link(_,_,_)).
 aggregates(link(_,_)).
 aggregates(insideOf(_)).
 
+is_rule_mapping(Obj):- current_predicate(is_mapping/1), is_mapping(Obj),!.
 %is_bg_object(Obj):- get_black(Black),has_prop(pen(  [cc(Black,_)]),Obj).
-is_bg_object(Obj):- is_mapping(Obj),!,fail.
+is_bg_object(Obj):- is_rule_mapping(Obj),!,fail.
 is_bg_object(Obj):- sub_var(cc(fg,0),Obj),!, \+ is_whole_grid(Obj).
 is_bg_object(Obj):- \+ is_object(Obj),sub_var(cc(fg,0),Obj),!.
 

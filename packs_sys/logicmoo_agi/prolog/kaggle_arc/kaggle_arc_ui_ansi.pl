@@ -600,7 +600,8 @@ pp_hook_g1(O):-  is_colorish(O), data_type(O,DT), writeq('...'(DT)),!.
 
 pp_hook_g1(_):-  \+ in_pp(ansi),!, fail.
 
-pp_hook_g1(Grp):- is_mapping(Grp),pp_ilp(Grp),!.
+
+pp_hook_g1(Grp):- current_predicate(pp_ilp/1),is_rule_mapping(Grp),pp_ilp(Grp),!.
 
 pp_hook_g1(O):- atom(O), atom_contains(O,'o_'), pp_parent([LF|_]), \+ (LF==lf;LF==objFn), 
   resolve_reference(O,Var), O\==Var, \+ plain_var(Var),!, 

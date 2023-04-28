@@ -21,7 +21,9 @@ learned_test(TName):-
     if_t(TILen < 100, my_maplist(print_rule(TestID),TestInfo)),
     training_info(TestID,Learned), my_maplist(print_rule(TestID),Learned), length(Learned,LLen),
     ptc(orange,format('~N~n% Observed: ~w  Learned: ~w~n~n',[TILen,LLen])),!,
-    if_t((TILen==0,LLen==0),xlisting([TestID-(cached_tests)])).
+    if_t((TILen==0,LLen==0),xlisting([TestID-(cached_tests)])),
+    print_object_dependancy(TestID),
+    print_scene_change_rules(TestID),!.
 
 
 

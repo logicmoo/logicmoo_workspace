@@ -1390,7 +1390,7 @@ add_prior_info(Objs,ObjsLen,Common,VbO,obj(List),obj(NewList)):-
 add_prior_info(Objs,ObjsLen,Common,VbO,(List),(NewList)):- 
   add_prior_info_1(Objs,ObjsLen,Common,VbO,List,NewList),!.
 
-add_prior_info_1(_Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),  
+add_prior_info_1(_Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),
   length(VbO,Rankers), %Rankers>1,
   find_version(VbO,Prop,N1,N2,PropList),
   Prop\=pen(_),
@@ -1685,7 +1685,7 @@ treeify_props(_Named,[One],One):-!.
 %treeify_props(Named,RRR,OUT):- length(RRR,3),!,OUT=RRR.
 treeify_props(Named,RRR,HAD -> RO):- member(R,RRR),member(HAD,R), my_maplist(variant_select(HAD),RRR,RR),treeify_props(Named,RR,RO).
 
-treeify_props(Named,RRR, R):- is_list_of_prop_lists(RRR), \+ sub_compound(pg(_,_,_,_),RRR), once(add_rankings(RRR,RR)),RRR\=@=RR,!,treeify_props(Named,RR, R).
+%treeify_props(Named,RRR, R):- is_list_of_prop_lists(RRR), \+ sub_compound(pg(_,_,_,_),RRR), once(add_rankings(RRR,RR)),RRR\=@=RR,!,treeify_props(Named,RR, R).
 treeify_props(Named,RRR, R):- length(RRR,DontDivOnThisNumber), 
   treeify_props(Named,DontDivOnThisNumber,RRR, R),!,ignore(maybe_unite_oids(Named,R)).
 %treeify_props(Named,RRR,RR):- attempt_min_unifier_select(Named,RRR,R),RRR\=@=R,!,treeify_props(Named,R,RR), maybe_unite_oids(Named,RR).
