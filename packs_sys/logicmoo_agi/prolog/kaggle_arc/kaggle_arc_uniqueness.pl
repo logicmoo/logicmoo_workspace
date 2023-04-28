@@ -185,6 +185,7 @@ ensure_individuals1(TestID):-
 ensure_individuals1(TestID):- show_prop_counts(TestID), my_assertion(has_individuals(TestID)),!.
 
 
+
 has_propcounts(TestID):- 
  forall(current_example_nums(TestID,ExampleNum),
   ( \+ \+ (propcounts(TestID, ExampleNum, InOut, count, _, _), sub_var(in,InOut)),
@@ -358,9 +359,11 @@ solve_via_scene_change_rules(TestID,ExampleNum):-
   print_object_dependancy(TestID),
   print_scene_change_rules(TestID),
   print_ss(wqs(expected_answer(ExampleNum)),Objs,Expected),
-  %wots(SS,solve_obj_group(VM,TestID,ExampleNum,ROptions,Objs,ObjsO)),
-  enter_solve_obj(VM,TestID,ExampleNum,ROptions,Objs,ObjsO),
+  dash_chars)),!,
+ 
+  once(enter_solve_obj(VM,TestID,ExampleNum,ROptions,Objs,ObjsO)),
   
+ must_det_ll((
   dash_chars,
   print_ss(wqs(solve_via_scene_change_rules(ExampleNum)),Objs,ObjsO),
   dash_chars,
@@ -485,39 +488,48 @@ enter_solve_obj(VM,TestID,ExampleNum,ROptions,Objs,ObjsO):-
  ObjsO \==[],!.
 
 
-
-solve_obj_group(VM,TestID,Ctx,Objs,ObjsO):-
-  io_to_cntx(IN_OUT,Ctx),
-  Rule = implies(PSame,edit(P)),
-  findall(Rule,is_accompany_changed_verified(TestID,IN_OUT,P,PSame), Rules),
-  apply_rules_to_objects(Strategy,Rules,Objs,Todo),
-  pp(used_Strategy(Strategy)),
-  once((maplist(run_todo_output(VM),Todo,ObjsM),flatten_objects(ObjsM,ObjsO))),ObjsO\==[],!.
-
-
 two_way_mapping(Ways,Obj,Objs,Rules,Rule,RulesRest):-
    once((find_prox_mappings(Obj,obj_to_rule,Rules,[Rule|RulesRest]),
-   find_prox_mappings(Rule,rule_to_objs,Objs,[PickedObj|_]))), 
-      ((PickedObj == Obj)-> Ways = two_ways ; Ways = one_way).
+   find_prox_mappings(Rule,rule_to_objs,Objs,[PickedObj|_ObjsRest]))), 
+      ((PickedObj == Obj)-> Ways = two_ways ; Ways = one_way),
+  write_atoms_info(Ways,PickedObj),
+  write_atoms_info(paired2,Rule),
+  %maplist(write_atoms_info(leftover1),RulesRest),
+  %maplist(write_atoms_info(leftover2),ObjsRest),
+  !.
+      
+write_atoms_info(N,E):- obj_atoms(E,Atoms),!,%sort(Atoms,AE),
+  nl,writeln(N=Atoms).
 
-apply_rules_to_objects(_,_,[],[]):-!.
-apply_rules_to_objects(_,[],_,[]):-!.
-apply_rules_to_objects(one_to_one,Rules,Objs,[apply(Rule,Obj)|More]):-
+apply_rules_to_objects(_,_,_,[],[]):-!.
+apply_rules_to_objects(_,_,[],_,[]):-!.
+
+apply_rules_to_objects(Ways,one_to_one,Rules,Objs,[apply(Rule,Obj)|More]):- 
    select(Obj,Objs,ObjsRest),
-   two_way_mapping(_Ways,Obj,Objs,Rules,Rule,RulesRest),
-   apply_rules_to_objects(one_to_one,RulesRest,ObjsRest,More).
-  
-apply_rules_to_objects(each_object,Rules,Objs,[apply(Rule,Obj)|More]):-
+   two_way_mapping(Ways,Obj,Objs,Rules,Rule,RulesRest),
+   apply_rules_to_objects(Ways,one_to_one,RulesRest,ObjsRest,More).
+
+
+apply_rules_to_objects(Ways,each_object,Rules,Objs,[apply(Rule,Obj)|More]):-
    member(Rule,Rules),
-   two_way_mapping(_Ways,Rule,Rules,Objs,Obj,RestObjs),
-   apply_rules_to_objects(each_object,Rules,RestObjs,More).
+   two_way_mapping(Ways,Rule,Rules,Objs,Obj,ObjsRest),
+   apply_rules_to_objects(Ways,each_object,Rules,ObjsRest,More).
   
-apply_rules_to_objects(each_rule,Rules,Objs,[apply(Rule,Obj)|More]):-
+apply_rules_to_objects(Ways,each_rule,Rules,Objs,[apply(Rule,Obj)|More]):-
    member(Obj,Objs),
-   two_way_mapping(_Ways,Obj,Objs,Rules,Rule,RulesRest),
-   apply_rules_to_objects(each_rule,RulesRest,Objs,More).
+   two_way_mapping(Ways,Obj,Objs,Rules,Rule,RulesRest),
+   apply_rules_to_objects(Ways,each_rule,RulesRest,Objs,More).
+  
 
+solve_obj_group(VM,TestID,_ExampleNum,_ROptions,Ctx,Objs,ObjsO):-
+  io_to_cntx(IN_OUT,Ctx),
+  Rule = implies(obj_atoms(PSame),edit(P)),
+  findall(Rule,is_accompany_changed_verified(TestID,IN_OUT,P,PSame), Rules),
 
+  member(Ways-Strategy,[two_way-one_to_one,two_way-one_to_one,_-_]),
+  apply_rules_to_objects(Ways,Strategy,Rules,Objs,Todo),
+  pp(used_Strategy(Ways-Strategy)),
+  once((maplist(run_todo_output(VM),Todo,ObjsM),flatten_objects(ObjsM,ObjsO))),ObjsO\==[],!.
 
 solve_obj_group(_VM,TestID,_ExampleNum,Ctx,_ROptions,Objs,ObjsO):-
  must_det_ll((
@@ -891,7 +903,7 @@ prop_can1_map(TestID,IN_OUT,P,Can):-
 
 prop_can1_map(TestID,IN_OUT,P,[C]):-
   ensure_props_change(TestID,IN_OUT,P),
-  map_pairs_info_io(TestID,ExampleNum,Ctx,Step,TypeO,_A,O,USame,Can,UPB2),member(P,UPB2),ok_deduce(P),
+  map_pairs_info_io(TestID,_ExampleNum,_Ctx,_Step,_TypeO,_A,_O,_USame,Can,UPB2),member(P,UPB2),ok_deduce(P),
   member(C,Can),other_val(P,C).
 
   
@@ -1100,6 +1112,7 @@ assert_map_pairs(TestID,ExampleNum,Ctx,grp(Info,In,Out)):-
   %pp_ilp(grp(Info,InL,OutL)),!,
   assertz_new(arc_cache:map_pairs(TestID,ExampleNum,Ctx,Info,InL,OutL)),
   assertz_new(arc_cache:prop_dep(TestID,ExampleNum,Ctx,Info,InL,OutL,USame,InFlatProps,OutFlatProps)),!.
+assert_map_pairs(_TestID,_ExampleNum,_Ctx,call(Rule)):-!,must_det_ll(Rule),!.
 
 % print the object dependencies for this test
 % =============================================================
@@ -1109,10 +1122,11 @@ print_object_dependancy(TestID):-
    ( dash_chars,forall(arc_cache:map_group(TestID,_,_IN_OUT,Group),
     once(((dash_chars,dash_chars,pp_ilp(Group),dash_chars,dash_chars)))))),
   dash_chars,*/
- findall_vset(grp(Info,Pre,Post),arc_cache:map_pairs(TestID,_,_IN_OUT2,Info,Pre,Post),Set),
+ findall_vset(grp(Info,Pre,Post),arc_cache:map_pairs(TestID,_,_IN_OUT2,Info,Pre,Post),Set1),
+ maplist(pp_ilp,Set1),
  dash_chars,dash_chars,
- findall_vset(grp(Info,Pre,Post),pair_obj_info(TestID,_,_,Info,Pre,Post),Set),
- maplist(pp_ilp,Set),
+ findall_vset(grp(Info,Pre,Post),pair_obj_info(TestID,_,_,Info,Pre,Post),Set2),
+ if_t(Set1 \=@= Set2,  maplist(pp_ilp,Set2)),
  dash_chars,dash_chars.
 
 
@@ -1322,11 +1336,16 @@ calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,RHSObjs,R
   maybe_remove_bg(RHSObjs,RHSObjs1), \=@=(RHSObjs,RHSObjs1),!,
   must_det_ll((calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,RHSObjs1,RestLR))).
 
+calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,RHSObjs,RestLR):-
+  LHSObjs==[], RHSObjs == [], !, 
+  Info = info(Step,IsSwapped,Ctx,leftover,TestID,ExampleNum),
+  append_LR([call(assert_test_property(TestID,ExampleNum,deps,perfect_balance(Info)))],Prev,RestLR).
 
 calc_o_d_recursively(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,LHSObjs,RHSObjs,RestLR):- 
    Info = info(Step,IsSwapped,Ctx,leftover,TestID,ExampleNum),
-   RHSObjs==[], !, must_det_ll((maplist(into_delete(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,Info),
-     LHSObjs,Mappings),append_LR(Prev,Mappings,RestLR))).
+   RHSObjs==[], !, 
+    must_det_ll((maplist(into_delete(TestID,ExampleNum,IsSwapped,Step,Ctx,Prev,Info),
+     LHSObjs,Mappings),append_LR(Prev,[call(assert_test_property(TestID,ExampleNum,deps,ignore_rest(Info))),Mappings],RestLR))).
 
 calc_o_d_recursively(TestID,ExampleNum,IsSwapped,_Step,Ctx,Prev,LHSObjs,RHSObjs,RestLR):- 
    LHSObjs==[], !, must_det_ll((

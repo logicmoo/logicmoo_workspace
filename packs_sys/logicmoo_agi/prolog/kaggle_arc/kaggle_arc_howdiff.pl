@@ -206,7 +206,6 @@ final_alignment(_,_,AA,BB,AA,BB):-!.
 obj_grp_atoms(IO,A,[A,PA|Atoms]):- obj_grp_atomslist(IO,A,PA,Atoms).
 
 
-
 obj_grp_atomslist(IO,A,PA,Atoms):- \+ \+ see_object_atomslist(IO,A,PA,Atoms), !, see_object_atomslist(IO,A,PA,Atoms).
 obj_grp_atomslist(IO,A,PA,Atoms):- 
   obj_grp_atoms_deep(A,PA,Atoms),
@@ -335,44 +334,57 @@ diff_groups(A0,B0,DD):-
   diff_groups1(A2,B2,DD).
 
 obj_atoms(PA,PAP):- PA==[],!,PAP=[].
-obj_atoms(PA,PAP):- is_grid(PA),globalpoints(PA,GP),!,subobj_atoms(GP,PAP).
-obj_atoms(PA,PAP):- must_det_ll((nonvar(PA))),
-  indv_props_list(PA,MF),
-  must_det((subobj_atoms(MF,PAP),PAP\==[])),!.
-obj_atoms(PA,PAP):- subobj_atoms(PA,PAP),!.
+obj_atoms(PA,PAP):- must_det_ll((nonvar(PA))),is_grid(PA),globalpoints(PA,GP),!,subobj_atoms(points(GP),PAP).
+obj_atoms(PA,PAP):- sub_term(E,PA),compound(E),E=obj_atoms(UU),!,subobj_atoms(UU,PAP).
+obj_atoms(PA,PAP):- is_list(PA),maplist(obj_atoms,PA,LPA),append(LPA,PAP),!.
+obj_atoms(PA,PAP):- is_object(PA),must_det_ll((indv_props_list(PA,MF),subobj_atoms(MF,PAP),PAP\==[])).
+obj_atoms(PA,PAP):- into_obj_props1(PA,MF),must_subobj_atoms(MF,PAP),!.
+obj_atoms(PA,PAP):- must_subobj_atoms(PA,PAP),!.
+
+%never_matom(localpoints(_)).
+%never_matom(shape_rep(grav,_)).
+%never_matom(pg(_OG,_,_,_)).
+%never_matom(giz(_)).
+never_matom(edit(_)).
+%never_matom(globalpoints(_)).
+verbatum_matom(pg(_,_,_,_)).
+relaxed_matom(pg(_,A,B,C),pg(r,A,B,C)).
+relaxed_matom(link(A,r),link(A,r)).
+
+must_subobj_atoms(PA,PAP):- must_det_l((subobj_atoms(PA,PAP),PAP\==[])),!.
 
 subobj_atoms(PA,PAP):- PA==[],!,PAP=[].
-subobj_atoms(PA,PAP):- is_grid(PA),globalpoints(PA,GP),!,subobj_atoms(GP,PAP).
-subobj_atoms(PA,PAP):- must_det_ll((nonvar(PA),flatten([PA],M), 
-  findall(E,(member(SE,M),sub_obj_atom(E,SE)),PAP))),!.
-
-never_matom(localpoints(_)).
-never_matom(shape_rep(grav,_)).
-%never_matom(pg(_OG,_,_,_)).
-never_matom(giz(_)).
-never_matom(globalpoints(_)).
-never_matom(edit(_)).
+subobj_atoms(PA,PAP):- 
+  must_det_ll((nonvar(PA),flatten([PA],M),findall(E,(member(SE,M),sub_obj_atom(E,SE)),PAPF))),!,
+  flatten(PAPF,PAP).
 
 sub_obj_atom(_,E):- var(E),!,fail.
-sub_obj_atom(E,E):- \+ compound(E),!.
-sub_obj_atom(E,L):- is_list(L),!,member(EM,L),sub_obj_atom(E,EM).
-sub_obj_atom(NO,M):- remove_oids(M,MM,EL),EL\==[], !,sub_obj_atom(NO,MM).
-sub_obj_atom(M,pg(OG,H,L,_)):- !, ((M = (L/H));(M = (L/OG))).
-%sub_obj_atom(E,shape_rep(grav,CP)):- !, is_list(CP),member(E,CP).
-
 %sub_obj_atom(M,M):- attvar(M),!.
-%sub_obj_atom(A,A).
-sub_obj_atom(E,E).
+sub_obj_atom(E,E):- \+ compound(E),!.
+%sub_obj_atom(E,shape_rep(grav,CP)):- !, is_list(CP),member(E,CP).
+sub_obj_atom(_,E):- never_matom(E),!,fail.
+sub_obj_atom(E,E):- verbatum_matom(E).
+sub_obj_atom(E,L):- is_list(L),!,member(EM,L),sub_obj_atom(E,EM).
+
+sub_obj_atom(R,E):- relaxed_matom(E,R),E\=@=R.
+sub_obj_atom(NO,M):- remove_oids(M,MM,EL),EL\==[], !,sub_obj_atom(NO,MM).
+sub_obj_atom(M,M).
+sub_obj_atom(M,pg(T,P1,R,I)):- !, ((M = extra(R,I,T));(M = extra(R,T,P1)),(M = extra(R,I))). %, \+ (arg(_,M,V),var(V)).
+
+sub_obj_atom(M,M):- arg(_,M,N), number(N),!.
+sub_obj_atom(M,M):- arg(_,M,N), is_color(N),!.
+sub_obj_atom(M,M):- functor(link,M,_),!.
+
 %sub_obj_atom(globalpoints(E),globalpoints(CP)):- !, my_maplist(arg(2),CP,EL),!, (member(E,EL); (E=EL)).
-%sub_obj_atom(_,M):- never_matom(M),!,fail.
 %sub_obj_atom(A,M):- M = localpoints(_),!,A=M.
 %sub_obj_atom(iz(A),iz(A)):-!. % sub_obj_atom(A,M).
 sub_obj_atom(A,M):- M=..[F,List],is_list(List),length(List,Len),!,
   (A=len(F,Len) ; (interesting_sub_atoms(List,E),A=..[F,E])).
 
-sub_obj_atom(M,M):- functor(link,M,_),!.
 sub_obj_atom(E,M):- interesting_sub_atoms(M,E).
 %sub_obj_atom(S,M):- special_properties(M,L),!,member(S,L).
+
+interesting_sub_atoms(PA,PAP):- is_grid(PA),globalpoints(PA,GP),!,sub_obj_atom(points(GP),PAP).
 
 interesting_sub_atoms(List,E) :- is_list(List),!,member(EM,List),interesting_sub_atoms(EM,E).
 interesting_sub_atoms(E,_):- var(E),!,fail.

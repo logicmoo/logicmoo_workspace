@@ -1409,9 +1409,9 @@ add_prior_info_1(_Objs,ObjsLen,_Common,VbO,PropList,OUT):- is_list(PropList),
 
 add_prior_info_1(_Objs,_ObjsLen,_Common,_VersionsByCount,PropList,PropList).
 
-extra_rank_prop(ObjsLen,Name,N1,pg(_,Name,rankLS,largest)):- ObjsLen==N1,!.
-extra_rank_prop(_,Name,1,pg(_,Name,rankLS,smallest)):-!.
-extra_rank_prop(_,Name,_,pg(_,Name,rankLS,mediumest)).
+extra_rank_prop(ObjsLen,Name,N1,pg(ObjsLen,Name,rankLS,largest)):- ObjsLen==N1,!.
+extra_rank_prop(ObjsLen,Name,1,pg(ObjsLen,Name,rankLS,smallest)):-!.
+extra_rank_prop(ObjsLen,Name,_,pg(ObjsLen,Name,rankLS,mediumest)).
 
 use_simulars(_):- fail.
 use_rank(mass(_)).
