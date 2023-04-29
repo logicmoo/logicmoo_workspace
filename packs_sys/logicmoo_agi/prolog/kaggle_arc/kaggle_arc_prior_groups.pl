@@ -2128,6 +2128,9 @@ has_prop(call_1(A),Obj):- !, has_prop(AA,Obj),call(A,AA).
 has_prop(( \+ A),Obj):- !, \+ has_prop(A,Obj).
 has_prop(not(A),Obj):- !, \+ has_prop(A,Obj).
 has_prop(or(A,B),Obj):- !, (has_prop(A,Obj);has_prop(B,Obj)).
+has_prop([H],Obj):- !, has_prop(H,Obj).
+has_prop([ \+ H |T],Obj):- !, ( \+  has_prop(H,Obj)); has_prop(T,Obj).
+has_prop([H|T],Obj):- !, has_prop(H,Obj),has_prop(T,Obj).
 has_prop(Prop,Props):- is_obj_props(Props),!,member(Q,Props),(Q=@=Prop -> ! ; ( Q = Prop)).
 has_prop(Prop,Obj):- is_grid(Obj),!,grid_props(Obj,Props),!,member(Prop,Props).
 has_prop(Prop,ObjRef):- atom(ObjRef),into_obj(ObjRef,Obj),ObjRef\=@=Obj,!,has_prop(Prop,Obj).
