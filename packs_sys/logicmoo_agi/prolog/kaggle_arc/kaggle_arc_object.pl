@@ -193,8 +193,8 @@ make_indiv_object_s(GID0,GridH,GridV,Overrides0,GPoints00,ObjO):-
   flatten([ShapeNamesUF],ShapeNamesU),list_to_set(ShapeNamesU,ShapeNames),
   my_maplist(append_term(iz),ShapeNames,OShapeNames),
 
-  my_assertion(LocX=<GridH),
-  my_assertion(LocY=<GridV),
+  %my_assertion('LocX=<GridH',LocX=<GridH),
+  %my_assertion('LocY=<GridV',LocY=<GridV),
 
   % rotated local points 
   /*(memberchk(rot2D(RotOut),Overrides)-> FinalLocalPoints=LPoints;

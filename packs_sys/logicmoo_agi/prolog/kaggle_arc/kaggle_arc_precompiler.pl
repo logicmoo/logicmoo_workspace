@@ -28,7 +28,7 @@ must_det_ll_maplist(_,[],[],[]):-!.
 must_det_ll_maplist(P3,[HA|TA],[HB|TB],[HC|TC]):- must_det_ll(call(P3,HA,HB,HC)), must_det_ll_maplist(P3,TA,TB,TC).
 
 %must_det_ll(G):- !, once((notrace(G)*->true;must_det_ll_failed(G))).
-must_det_ll(G):- never_rrtrace,!,call(G).
+must_det_ll(G):- never_rrtrace,!,once(G).
 must_det_ll(G):- notrace(arc_html),!, ignore(notrace(G)),!.
 must_det_ll(G):- tracing,!, call(G). % once((call(G)*->true;must_det_ll_failed(G))).
 %must_det_ll(X):- !,must_not_error(X).
@@ -139,8 +139,10 @@ bts:-
   stream_property(S,file_no(1)), prolog_stack:print_prolog_backtrace(S, Stack),
   ignore((fail, current_output(Out), \+ stream_property(Out,file_no(1)), print_prolog_backtrace(Out, Stack))),!.
 
-my_assertion(G):- call(G),!.
-my_assertion(G):- u_dmsg(my_assertion(G)),writeq(goal(G)),nl,!,ibreak.
+my_assertion(G):- my_assertion(call(G),G).
+
+my_assertion(_,G):- call(G),!.
+my_assertion(Why,G):- u_dmsg(my_assertion(Why,G)),writeq(Why=goal(G)),nl,!,ibreak.
 
 must_be_free(Free):- plain_var(Free),!.
 must_be_free(Free):- \+ nonvar_or_ci(Free),!.
@@ -402,3 +404,5 @@ dte(set(E.v)):- set(E.that)=v.
 :- disable_arc_expansion.
 :- listing(dte).
 :- endif.
+
+

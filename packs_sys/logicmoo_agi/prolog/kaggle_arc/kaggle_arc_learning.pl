@@ -23,7 +23,7 @@ learned_test(TName):-
     ptc(orange,format('~N~n% Observed: ~w  Learned: ~w~n~n',[TILen,LLen])),!,
     if_t((TILen==0,LLen==0),xlisting([TestID-(cached_tests)])),
     print_object_dependancy(TestID),
-    print_scene_change_rules(TestID),!.
+    print_scene_change_rules(learned_test,TestID),!.
 
 
 
@@ -573,60 +573,54 @@ sorted_by_closeness(In,Sorted,Objs,List):- once(var(In);var(Objs)),!,enum_in_obj
 sorted_by_closeness(In,Sorted,Objs,List):- var(Sorted), my_maplist(obj_to_oid,Objs,OIDS), sort_safe(OIDS,Sorted),!,sorted_by_closeness(In,Sorted,Objs,List).
 sorted_by_closeness(In,Sorted,Objs,List):- saved_sorted_by_closeness(In,Sorted,Objs,List),!.
 sorted_by_closeness(In,Sorted,Objs,List):- 
-  find_prox_mappings(In,_,Objs,List),
+  sort_by_jaccard(In,_,Objs,List),
   asserta(saved_sorted_by_closeness(In,Sorted,Objs,List)),!.
 
 
-find_prox_mappings(A,GID,Candidates,Objs):-
-  find_prox_mappings([],A,GID,Candidates,Objs).
+sort_by_jaccard(A,Candidates,Objs):-
+  bonus_sort_by_jaccard([],A,sort_by_jaccard,Candidates,Objs).
 
-find_prox_mappings(Bonus,A,GID,Candidates,Objs):-
-    obj_grp_atomslist(GID,A,PA,PAP0),
+sort_by_jaccard(A,GroupID,Candidates,Objs):-
+  bonus_sort_by_jaccard([],A,GroupID,Candidates,Objs).
+
+bonus_sort_by_jaccard(Bonus,A,Candidates,Objs):-
+  bonus_sort_by_jaccard(Bonus,A,sort_by_jaccard,Candidates,Objs).
+
+bonus_sort_by_jaccard(Bonus,A,GroupID,Candidates,Objs):-
+    obj_grp_atomslist(GroupID,A,PA,PAP0),
     obj_atoms(Bonus,BonusAtoms),
     append(PAP0,BonusAtoms,PAP),
     ord(NJ/O+JO+Joins,[PA,A],[PB,B],B) = Why,
     !,
     findall(Why,
     (      
-     member(B,Candidates),obj_grp_atomslist(GID,B,PB,PBP),
-     PA\==PB,
-     B\==A,
-     \+ is_whole_grid(B),
-     must_det_ll((
+    member(B,Candidates),
+        B\==A,
+        \+ is_whole_grid(B),
+        obj_grp_atomslist(GroupID,B,PB,PBP),
+        PA\==PB,
+        memo_op(PAP,PBP,O,Joins,_J,NJ,JO)),
      % maybe_allow_pair(PA,PB), allow_pair(PA,PB),  
-       intersection(PAP,PBP,Joins,OtherA,OtherB),     
-       flatten([OtherA,OtherB],Other),
-       length(Joins,J),length(Other,O),
-       NJ is -J,
-       JO is - rationalize(J/(O+1))))),
      Pairs), 
    sort_safe(Pairs,RPairs),!,
    %list_upto(3,RPairs,Some),
    my_maplist(arg(4),RPairs,Objs).
-/*
-find_prox_mappings(A,GID,Objs):-
-    obj_grp_atomslist(_,A,PA,PAP),
-    ord(NJ/O+JO+Joins,[PA,A],[PB,B],B) = Why,
-    findall(Why,
-    (      
-     obj_grp_atomslist(GID,B,PB,PBP),
-     PA\==PB,
-     B\==A,
-     \+ is_whole_grid(B),
-     must_det_ll((
-     % maybe_allow_pair(PA,PB), allow_pair(PA,PB),  
-       intersection(PAP,PBP,Joins,OtherA,OtherB),     
-       flatten([OtherA,OtherB],Other),
-       length(Joins,J),length(Other,O),
+
+
+memo_op(PAP,PBP,O,Joins,J,NJ,JO):- PAP@>PBP->memo_op_1(PBP,PAP,O,Joins,J,NJ,JO);memo_op_1(PAP,PBP,O,Joins,J,NJ,JO).
+
+:- abolish(memo_op_then/7).
+:- dynamic(memo_op_then/7).
+memo_op_1(PAP,PBP,O,Joins,J,NJ,JO):- memo_op_then(PAP,PBP,O,Joins,J,NJ,JO),!.
+memo_op_1(PAP,PBP,O,Joins,J,NJ,JO):- memo_op_now(PAP,PBP,O,Joins,J,NJ,JO), asserta(memo_op_then(PAP,PBP,O,Joins,J,NJ,JO)),!.
+
+memo_op_now(PAP,PBP,O,Joins,J,NJ,JO):-
+       intersection(PAP,PBP,Joins,OtherA,OtherB),!,
+       %append([OtherA,OtherB],Other),
+       length(Joins,J),length(OtherA,OA),length(OtherB,OB),
+       O is OA+OB,
        NJ is -J,
-       JO is - rationalize(J/(O+1))))),
-     Pairs), 
-   sort_safe(Pairs,RPairs),!,
-   %list_upto(3,RPairs,Some),
-   my_maplist(arg(4),RPairs,Objs).
-*/
-
-
+       JO is - rationalize(J/(O+1)),!.
 
 maybe_exclude_whole([I],[I]).
 maybe_exclude_whole(I,I):- \+ (member(Obj,I), is_fg_object(Obj), \+ is_whole_grid(Obj)),!.
@@ -758,11 +752,11 @@ learn_group_mapping_now1(AG00,BG00):-
   my_maplist(obj_grp_atoms(OI),BG,_BGG),
 
   forall(member(B,BG),
-    ((find_prox_mappings(B,OI,AG,Objs),
+    ((sort_by_jaccard(B,OI,AG,Objs),
      save_rule1(OI,"ordered In <- Out", Objs,[B])))),
 
   forall(member(A,AG),
-    ((find_prox_mappings(A,IO_DIR,BG,Objs),
+    ((sort_by_jaccard(A,IO_DIR,BG,Objs),
      save_rule1(IO_DIR,"In -> ordered Out",[A],Objs)))).
 
      
@@ -784,11 +778,11 @@ learn_group_mapping_now(AG00,BG00):-
   my_maplist(obj_grp_atoms(OI),BG,_BGG))),
 
   forall(member(B,BG),
-    ((find_prox_mappings(B,OI,AG,Objs),
+    ((sort_by_jaccard(B,OI,AG,Objs),
      assert_doing_map(OI,B,Objs)))),
 
   forall(member(A,AG),
-    ((find_prox_mappings(A,IO_DIR,BG,Objs),
+    ((sort_by_jaccard(A,IO_DIR,BG,Objs),
      assert_doing_map(IO_DIR,A,Objs)))),
 
   must_det_ll((  
@@ -883,7 +877,7 @@ classify_rules(In,ExpectedOut,Rules,Keeper,Rejected,Unknown):-
   must_det_ll(classify_rules_0(In,ExpectedOut,Rules,Keeper,Rejected,Unknown)).
 
 classify_rules_0(In,ExpectedOut,Rules,[PAIR],[],[]):- fail,
-  select(I,In,_IIn), find_prox_mappings(I,ri,Rules,[R|_Sorted]),
+  select(I,In,_IIn), sort_by_jaccard(I,Rules,[R|_Sorted]),
   copy_term(R,RR),  
   PAIR = result(I,R,RR,GPs,Matches,untested),
   matches_input(I,RR,Matches),
@@ -892,7 +886,7 @@ classify_rules_0(In,ExpectedOut,Rules,[PAIR],[],[]):- fail,
   nop((pp_wcg(matches(classify_rules_0)=Matches), pp_wcg(rule(classify_rules_0)=R))).
 
 classify_rules_0(In,ExpectedOut,Rules,Keeper,Rejected,Unknown):-
-  select(I,In,IIn), find_prox_mappings(I,ri,Rules,Sorted),!,
+  select(I,In,IIn), sort_by_jaccard(I,Rules,Sorted),!,
   classify_rules_1([I|IIn],ExpectedOut,Sorted,[],Keeper,Rejected,Unknown).
 
 classify_rules_1(In,ExpectedOut,Rules,PairsUsed,Keeper,Rejected,Unknown):- 
@@ -1915,50 +1909,58 @@ learn_grid_local(_Mode,P,O):- ignore((\+ is_grid(P),is_grid(O),assert_visually(g
 
 test_local_dyn(F,A):- setof(F/A,(test_local_dyn(F),current_predicate(F/A)),L),member(F/A,L),A\==0.
 :- dynamic(test_local_dyn/1).
-test_local_dyn(learnt_rule).
-test_local_dyn(grid_associatable).
-test_local_dyn(propcounts).
-test_local_dyn(is_for_ilp).
-test_local_dyn(is_accompany_changed_db).
-test_local_dyn(test_associatable).
-test_local_dyn(object_to_object).
-%test_local_dyn(why_grouped).
-test_local_dyn(cached_dictation).
-test_local_dyn(oout_associatable).
 test_local_dyn(fav).
-test_local_dyn(propcount).
-test_local_dyn(showed_point_mapping).
+%test_local_dyn(why_grouped).
 
-
+test_local_save(P):- test_local_dyn(P).
 test_local_save(arc_test_property).
+test_local_save(assumed_mapped).
+test_local_save(assumed_unmapped).
+test_local_save(cached_dictation).
 test_local_save(cached_tests).
 test_local_save(cached_tests_hard).
 test_local_save(cindv).
 test_local_save(cmem).
 test_local_save(cmem_hv).
+test_local_save(did_map).
+test_local_save(each_object_dependancy).
 test_local_save(g_2_o).
 test_local_save(gid_glyph_oid).
-test_local_save(did_map).
-test_local_save(object_atomslist).
-test_local_save(assumed_mapped).
-test_local_save(assumed_unmapped).
-test_local_save(object_to_object).
+test_local_save(grid_associatable).
 test_local_save(individuated_cache).
+test_local_save(is_accompany_changed_db).
+test_local_save(is_for_ilp).
+test_local_save(is_grid_gid).
 test_local_save(is_grid_obj_count).
 test_local_save(is_grid_size).
+test_local_save(is_grid_tid).
 test_local_save(is_gridmass).
 test_local_save(is_why_grouped_g).
+test_local_save(kaggle_arc_answers).
+test_local_save(learnt_rule).
 test_local_save(note).
+test_local_save(obj_cache).
+test_local_save(object_atomslist).
+test_local_save(object_dependancy).
+test_local_save(object_to_object).
 test_local_save(oid_glyph_object).
 test_local_save(omem).
+test_local_save(oout_associatable).
+test_local_save(prop_dep).
+test_local_save(propcount).
+test_local_save(propcounts).
+test_local_save(showed_point_mapping).
 test_local_save(smem).
+test_local_save(test_associatable).
 test_local_save(test_info_cache).
-test_local_save(P):- test_local_dyn(P).
-test_local_save(F,A):- test_local_dyn(F,A).
-test_local_save(F,A):- setof(F/A,(test_local_save(F),current_predicate(F/A),A\==0),L),member(F/A,L).
-test_local_save(F,A):- setof(F/A,(current_predicate(arc_cache:F/A),A\==0,functor(P,F,A),
+
+test_local_save1(F,A):- test_local_dyn(F,A).
+test_local_save1(F,A):- setof(F/A,(test_local_save(F),current_predicate(F/A),A\==0),L),member(F/A,L).
+test_local_save1(F,A):- setof(F/A,(current_predicate(arc_cache:F/A),A\==0,functor(P,F,A),
   \+ predicate_property(arc_cache:P,imported_from(_))),L),member(F/A,L).
-test_local_save(F,A):- setof(F/A,(test_local_save(F),current_predicate(arc_cache:F/A),A\==0),L),member(F/A,L).
+test_local_save1(F,A):- setof(F/A,(test_local_save(F),current_predicate(arc_cache:F/A),A\==0),L),member(F/A,L).
+
+test_local_save(F,A):- findall_vset(F/A,test_local_save1(F,A),List),member(F/A,List).
 
 
 training_info(TestID,InfoSet):-

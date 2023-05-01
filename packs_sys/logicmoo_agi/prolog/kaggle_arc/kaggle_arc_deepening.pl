@@ -310,7 +310,7 @@ make_unifiable_f(I,O):- same_functor(I,O),!.
 
 
 has_individuals(TestID):- var(TestID), !, ensure_test(TestID), has_individuals(TestID).
-has_individuals(TestID):- use_pair_info, 
+has_individuals(TestID):- %use_pair_info, 
  forall(current_example_nums(TestID,ExampleNum),
   (arc_cache:individuated_cache(TestID,TID,GID,_,Objs), sub_var(ExampleNum,(TID,GID)), Objs\==[])),!.
 
@@ -319,15 +319,15 @@ ensure_individuals(TestID):- has_individuals(TestID),!.
 ensure_individuals(TestID):- 
  time((with_individuated_cache(true,
   once((with_pair_mode(whole_test, ensure_individuals1(TestID))))))), 
-   must_det_ll(has_individuals(TestID)),!.
+   has_individuals(TestID),!.
 
 ensure_individuals1(TestID):- has_individuals(TestID),!.
 ensure_individuals1(TestID):- 
  ensure_test(TestID),
   ignore((ExampleNum=trn+_)),
   print_collapsed(200, forall( kaggle_arc(TestID,ExampleNum,GridIn,GridOut),
-           individuate_pair(complete,GridIn,GridOut,_InC,_OutC))),
-    has_individuals(TestID),!.
+           individuate_pair(complete,GridIn,GridOut,_InC,_OutC))), has_individuals(TestID),!.
+
 ensure_individuals1(TestID):- 
    once((with_pair_mode(whole_test,
     once(with_luser(menu_key,'i',once(ndividuator(TestID))))))), has_individuals(TestID),!.
@@ -692,7 +692,7 @@ object_pair(TestID,IO,Obj,either,Other):-
        ((obj_in_or_out(Obj,out)->member(InOut,[in,out]);In=out),
          enum_object_ext(TestID,InOut,O),
          from_same_pair(This,O)),OtherObjs),
-     find_prox_mappings(Post,post_to_pre_object,OtherObjs,Others),
+     sort_by_jaccard(Post,post_to_pre_object,OtherObjs,Others),
      member(Other,Others).
 
      */
@@ -1263,18 +1263,18 @@ select_pair(perfect,_Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   select(Left,LHSObjs,RestLeft),
   \+ is_mapping(Left),
   once((remove_object(RHSObjs,Left,RHSObjsMLeft),
-  find_prox_mappings(Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
+  sort_by_jaccard(Left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(RestLeft,Right,LHSRest),
-  find_prox_mappings(Right,map_right_to_left,LHSObjs,[LeftMaybe|_]))),
+  sort_by_jaccard(Right,LHSObjs,[LeftMaybe|_]))),
   LeftMaybe = Left,!.
 
 select_pair(perfect_w_prev,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   select(Left,[Prev|LHSObjs],RestLeft),
   \+ is_mapping(Left),
   once((remove_object(RHSObjs,Left,RHSObjsMLeft),
-  find_prox_mappings(Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
+  sort_by_jaccard(Left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(RestLeft,Right,LHSRest),
-  find_prox_mappings(Right,map_right_to_left,LHSObjs,[LeftMaybe|_]))),
+  sort_by_jaccard(Right,LHSObjs,[LeftMaybe|_]))),
   LeftMaybe = Left,!.
 
 select_pair(perfect_combo,_Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-  
@@ -1282,30 +1282,30 @@ select_pair(perfect_combo,_Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   in_to_ins(LHSObjsSet,2,LHSObjs_Combos),
   select(Left,LHSObjs_Combos,LHSObjs_Combos_Rest),
   once((remove_object(RHSObjs,Left,RHSObjsMLeft),  
-  find_prox_mappings(Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
+  sort_by_jaccard(Left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(LHSObjs_Combos_Rest,Right,LHSRest),
-  find_prox_mappings(Right,map_right_to_left,LHSObjs_Combos,[LeftMaybe|_]))),
+  sort_by_jaccard(Right,LHSObjs_Combos,[LeftMaybe|_]))),
   LeftMaybe = Left,!.
 
 
 select_pair(need_prev,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   select(Left,LHSObjs,RestLeft),
   once((remove_object(RHSObjs,Left,RHSObjsMLeft),
-  find_prox_mappings(Prev,Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
+  sort_by_jaccard(Prev,Left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(RestLeft,Right,LHSRest),
-  find_prox_mappings(Prev,Right,map_right_to_left,LHSObjs,[LeftMaybe|_]))),
+  sort_by_jaccard(Prev,Right,LHSObjs,[LeftMaybe|_]))),
   LeftMaybe = Left,!.
 
 select_pair(from_left,Prev,RHSObjs,LHSObjs,Right,Left,RHSRest,LHSRest):-
   select(Left,LHSObjs,RestLeft),
   remove_object(RHSObjs,Left,RHSObjsMLeft),
-  find_prox_mappings(Prev,Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
+  sort_by_jaccard(Prev,Left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(RestLeft,Right,LHSRest),!.
 
 select_pair(from_right,Prev,LHSObjs,RHSObjs,Left,Right,LHSRest,RHSRest):-
   select(Left,LHSObjs,RestLeft),
   remove_object(RHSObjs,Left,RHSObjsMLeft),
-  find_prox_mappings(Prev,Left,map_right_to_left,RHSObjsMLeft,[Right|RHSRest]),
+  sort_by_jaccard(Prev,Left,RHSObjsMLeft,[Right|RHSRest]),
   remove_object(RestLeft,Right,LHSRest),!.
 
 remove_object(RHSObjs,[Left|More],RHSObjsMI):- 

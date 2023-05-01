@@ -117,7 +117,7 @@ menu_cmd1(r,'i','             Re-enter(i)nteractve mode.',(interact)).
 
 menu_cmd9(_,'m','recomple this progra(m),',(clear_tee,update_changes,threads)).
 menu_cmd9(_,'c','(c)lear the scrollback buffer,',(force_full_tee,really_cls)).
-menu_cmd9(_,'C','(C)lear cached test info,',(clear_training,clear_test)).
+menu_cmd9(_,'C','(C)lear cached test info,',(clear_training_now,clear_test_now)).
 menu_cmd9(_,'r','(r)un DSL code,',(call_dsl)).
 menu_cmd9(_,'Q','(Q)uit Menu,',true).
 menu_cmd9(_,'^q','(^q)uit to shell,',halt(4)). 
@@ -866,8 +866,9 @@ test_suite_name(evaluation).
 test_suite_name(easy_solve_suite).
 test_suite_name(test_names_by_fav). 
 test_suite_name(human_t).
-test_suite_name(michod_solved_ordered).
 test_suite_name(is_symgrid).
+test_suite_name(test_names_by_hard). 
+test_suite_name(michod_solved_ordered).
 %test_suite_name(sol_t).
 %test_suite_name(hard_t).
 %test_suite_name(key_pad_tests). % test_suite_name(alphabetical_v). test_suite_name(alphabetical_t).
@@ -879,7 +880,6 @@ test_suite_name(dbigham_eval_pass).
 test_suite_name(dbigham_train_pass).
 test_suite_name(dbigham_personal).
 test_suite_name(dbigham_fail).
-test_suite_name(test_names_by_hard). 
 test_suite_name(TS):- dir_test_suite_name(TS).
 test_suite_name(icecuber_pass).
 test_suite_name(icecuber_fail).
@@ -1316,7 +1316,8 @@ test_name_output_file(TestID,Ext,ExtFile):-
   ensure_file_extension(File,Ext,ExtFile),!.
 
 
-maybe_append_file_extension(File,DotExt,NewName):- \+ atom_concat(_,DotExt,File), atom_concat(File,DotExt,NewName).
+%maybe_append_file_extension(TestID,DotExt,NewName):- once(test_name_output_file(TestID,DotExt,NewName)),TestID\=@=NewName,!.
+maybe_append_file_extension(File,DotExt,NewName):- atom(File),atomic(DotExt), \+ atom_concat(_,DotExt,File), atom_concat(File,DotExt,NewName),!.
 
 ensure_file_extension(File,DotExt,NewName):- var(File),!,atom_concat(File,DotExt,NewName).
 ensure_file_extension(File,DotExt,NewName):- maybe_append_file_extension(File,DotExt,NewName),!.
@@ -1326,14 +1327,37 @@ call_file_goal(S,encoding(Enc)):- arc_set_stream(S,encoding(Enc)),!.
 call_file_goal(_, discontiguous(_)):- !.
 call_file_goal(_,Goal):- call(Goal),!.
 
-load_file_dyn(File):- maybe_append_file_extension(File,'.pl',NewName),!,load_file_dyn(NewName).
-load_file_dyn(File):- \+ exists_file(File), !.
-load_file_dyn(File):- load_file_dyn_pfc(File),!.
+load_file_dyn(TestID):- once(\+ atom(TestID); \+ exists_file(TestID)),
+  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(NewName).
+load_file_dyn(File):- warn_skip(load_file_dyn_pfc(File)),!.
+
+
+:- dynamic(has_loaded_file_dyn_pfc/1).
+
+load_file_dyn_pfc(TestID):- var(TestID),!,ensure_test(TestID),load_file_dyn_pfc(TestID).
+load_file_dyn_pfc(File):- has_loaded_file_dyn_pfc(File),!. 
+load_file_dyn_pfc(TestID):- once(\+ atom(TestID); \+ exists_file(TestID)),
+  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(NewName).
+load_file_dyn_pfc(File):- \+ exists_file(File), !, wdmsg(\+ exists_file(File)).
 %load_file_dyn(File):- consult(File),!.
-load_file_dyn_pfc(File):- 
- open(File,read,I),
+load_file_dyn_pfc(File):- asserta(has_loaded_file_dyn_pfc(File)),
+ writeln(load_file_dyn_pfc(File)),
+ setup_call_cleanup(open(File,read,I),
+     catch(load_dyn_stream(I),E,(print(E),catch(close(I),_,true),delete_file(File))),
+     catch(close(I),_,true)),!.
+
+load_dyn_stream(I):-  
  repeat,read_term(I,Term,[]),
- (Term = end_of_file -> ! ; (must_det_ll(load_file_term(I,Term)),fail)).
+           (Term = end_of_file -> ! ; 
+       (fail_compliants(load_file_term(I,Term)),fail)),!.
+
+load_dyn_stream(I):-  
+ repeat,fail_compliants(read_term(I,Term,[])),
+           (Term = end_of_file -> ! ; 
+       (fail_compliants(load_file_term(I,Term)),fail)),!.
+
+fail_compliants(G):- catch(G*->true;(wdmsg(fail(G)),fail),E,(wdmsg(error(E,G)),fail)),!.
+
 load_file_term(S,(:- Goal)):- !, call_file_goal(S,Goal).
 load_file_term(_,Term):- assertz_new(Term),!.
 %load_file_term(Term):- arc_assert(Term),!.
@@ -1358,9 +1382,8 @@ on_entering_test(TestID):-
   write_test_links_file,
   clear_tee,  
   %force_flush_tee,
-  clear_test(TestID),
-  test_name_output_file(TestID,'.pl',PLFile),
-  nop((load_file_dyn(PLFile))))).
+ % clear_test(TestID),
+  load_file_dyn(TestID))).
 
 
 on_leaving_test(TestID):- is_list(TestID),!,my_maplist(on_leaving_test,TestID).
@@ -1433,33 +1456,44 @@ my_shell_format(F,A):- shell_op((sformat(S,F,A), shell(S))).
 
 warn_skip(Goal):- u_dmsg(warn_skip(Goal)).
 
+
+
 save_test_hints(TestID):- is_list(TestID),!,my_maplist(save_test_hints,TestID).
 save_test_hints(TestID_IN):- ensure_test(TestID_IN,TestID), save_test_hints(TestID,_File).
 
 save_test_hints(TestID,File):- var(TestID),!, forall(ensure_test(TestID), save_test_hints(TestID,File)).
 save_test_hints(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_test_hints(TestID,File).
 save_test_hints(TestID,File):- maybe_append_file_extension(File,'.pl',NewName),!,save_test_hints(TestID,NewName).
-
 save_test_hints(TestID,File):- !, warn_skip(save_test_hints(TestID,File)).
-save_test_hints(TestID,File):-
- saveable_test_info(TestID,Info),
+
+save_test_hints_now(TestID):- test_name_output_file(TestID,'.pl',File), save_test_hints_now(TestID,File),!.
+save_test_hints_now(TestID,File):- var(File),!,test_name_output_file(TestID,'.pl',File), save_test_hints_now(TestID,File).
+save_test_hints_now(TestID,File):- maybe_append_file_extension(File,'.pl',NewName),!,save_test_hints_now(TestID,NewName).
+
+save_test_hints_now(TestID,File):-
    setup_call_cleanup(open(File,write,O,[create([default]),encoding(text)]), 
-       with_output_to(O,(
-         write_intermediatre_header,
-         my_maplist(print_ref,Info))),
+       with_output_to(O,print_test_file_hints(TestID)),
       close(O)), 
    nop(statistics).
 
+print_test_file_hints(TestID):- 
+  ensure_test(TestID),
+  write_intermediatre_header,
+  saveable_test_info(TestID,Info),
+  my_maplist(print_ref,Info).
 
 
 clear_test(TestID):- is_list(TestID),!,my_maplist(clear_test,TestID).
-clear_test(TestID):- ensure_test(TestID),
-   clear_training(TestID),
+clear_test(TestID):- ensure_test(TestID),warn_skip(clear_test(TestID)).
+clear_test_now(TestID):- ensure_test(TestID),
+   clear_training_now(TestID),
    %warn_skip
-   (clear_saveable_test_info(TestID)),
+   (clear_saveable_test_info_now(TestID)),
    unload_test_file(TestID).
 
-clear_saveable_test_info(TestID):- 
+clear_saveable_test_info(TestID):- ensure_test(TestID),warn_skip(clear_saveable_test_info(TestID)),!.
+clear_saveable_test_info_now(TestID):- 
+   ensure_test(TestID),
    saveable_test_info(TestID,Info),
    erase_refs(Info).
    
@@ -1491,7 +1525,9 @@ clear_test_training(TestID):-
       unload_file(File),
       (exists_file(File)->delete_file(File);true))),
 */
-clear_training(TestID):- ensure_test(TestID),
+clear_training(TestID):- ensure_test(TestID),warn_skip(clear_training(TestID)),!.
+
+clear_training_now(TestID):- ensure_test(TestID),
   %retractall(arc_cache:individuated_cache(_,_,_)),
   set_bgc(_),
   set_flag(indiv,0),
@@ -2186,11 +2222,12 @@ gfix_test_name(G,T,E):- is_grid(G),!, kaggle_arc_io(T,E,_,GO),GO=@=G.
 fix_test_name(V,VV,_):- var(V),!,VV=V.
 fix_test_name(ID,Fixed,Example+Num):- testid_name_num_io(ID,Tried,Example,Num,_), fix_test_name(Tried,Fixed).
 
+testid_name_num_io(ID,ID,_Example,_Num,_IO):- ID==v(p),!,break.
+testid_name_num_io(ID,ID,_Example,_Num,_IO):- compound(ID), \+ \+ kaggle_arc(ID,_,_,_),!.
 testid_name_num_io(ID,TestID,Example,Num,IO):- 
   track_modes(testid_name_num_io(ID,TestID,Example,Num,IO),Modes),
   testid_name_num_io_0(ID,TestID,Example,Num,IO),
   ignore((fail, Modes=[+,-|_], nonvar(TestID), kaggle_arc(TestID,_,_,_), really_set_current_test(TestID))).
-
 
 track_modes(I,M):- I=..[_|L],my_maplist(plus_minus_modes,L,M).
 plus_minus_modes(Var,-):- var(Var),!. 

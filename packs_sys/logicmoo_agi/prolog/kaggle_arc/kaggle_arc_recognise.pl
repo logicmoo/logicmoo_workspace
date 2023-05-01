@@ -854,7 +854,7 @@ was_result(SG,FG,WMatch):-
   numbervars(CSG+CFG,999,_,[attvar(bind)]),
   ignore((perfect_result(CSG,CFG,WMatch))).
 
-:- asserta((prolog_stack:option(_,_):- fail)).
+%:- asserta((prolog_stack:option(_,_):- fail)).
 
 test_ogs2:- 
  with_tag_class('table','grid-to-grid', 

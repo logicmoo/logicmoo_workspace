@@ -67,7 +67,10 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC00,OutC00):-
 
 
 show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
- ensure_test(TestID),
+  nop(show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB)).
+
+show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
+ %ensure_test(TestID),
  (var(PairName)->maybe_name_the_pair(GridIn,GridOut,PairName);true),
  ignore((pairname_to_examplenum(PairName,ExampleNum)->set_example_num(ExampleNum);ensure_example_num(GridIn,GridOut))),
  must_det_ll((
@@ -82,17 +85,24 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
   remove_background_only_object(InCB,InC),remove_background_only_object(OutCB,OutC),
   %pp(InC),
   print_side_by_side(green,InC,after_rm_bg(ROptions,ID1),_,OutC,objs(ID2)),
+  nop(show_individuated_pair_cont(PairName,ROptions,GridIn,GridOut,InC,OutC))))))).
 
+show_individuated_pair_cont(PairName,ROptions,GridIn,GridOut,InC,OutC):- 
+   show_indivs_side_by_side(inputs,InC),
+   show_indivs_side_by_side(outputs,OutC),!,
+   nop(show_individuated_pair_cont2(PairName,ROptions,GridIn,GridOut,InC,OutC)),!.
+
+show_individuated_pair_cont2(PairName,ROptions,_GridIn,GridOut,InC,OutC):- 
+ must_det_ll((
   if_t( \+ nb_current(menu_key,'i'),
 ((((((
 
-   show_indivs_side_by_side(inputs,InC),
-   show_indivs_side_by_side(outputs,OutC),
+      %show_indivs_side_by_side(inputs,InC),show_indivs_side_by_side(outputs,OutC),
     
   %w_section(show_io_groups,show_io_groups(green,ROptions,ID1,InC,ID2,OutC)),
   %show_io_groups(green,ROptions,ID1,InC,ID2,OutC),
   =(InCR,InC), =(OutCR,OutC),
-    print_side_by_side(green,InC,lhs(ROptions,ID1),_,OutC,rhs(ROptions,ID2)),
+  %  print_side_by_side(green,InC,lhs(ROptions,ID1),_,OutC,rhs(ROptions,ID2)),
  true))),
 
  (((
@@ -122,7 +132,7 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
        nop(pp(RulesUsed)),
        banner_lines(orange,2))))))))))),
 
-  banner_lines(orange,4))))))))))))),!,
+  banner_lines(orange,4)))))))))),!,
   if_wants_output_for(show_interesting_props,  show_interesting_props(PairName,InC,OutC)),!.
   
 
@@ -408,4 +418,3 @@ remove_colors([C|IPLs],In,Out):-
 
 
 :- include(kaggle_arc_footer).
-

@@ -185,7 +185,9 @@ assert_kaggle_arc_json(Name,Type,In0,Out0):-
 %assert_kaggle_arc_json_now(Name,Type,In,Out):- kaggle_arc_json(Name,Type,In,OutO),Out=OutO,!.
 assert_kaggle_arc_json_now(Name,Type,In,Out):- 
   retractall(kaggle_arc_json(Name,Type,_In,_Out)),
-  assert_if_new(kaggle_arc_json(Name,Type,In,Out)),
+  into_solid_grid(In,InS),
+  into_solid_grid(Out,OutS),
+  assert_if_new(kaggle_arc_json(Name,Type,InS,OutS)),
   add_test_info(Name).
 
 
@@ -255,15 +257,15 @@ load_json_files1:- load_json_files(eval400,v,'./data/devaluation/*.json').
 load_json_files1:- load_json_files('1D_testset',t,'./data/1D_testset/*.json').
 load_json_files1:- load_json_files('MyTrainingData',t,'./dbigham/Data/MyTrainingData/*.json').
 
-load_json_files1:- load_json_files(michod,t,'./arc-task-generator/conditional_transforms_schema/tasks/0*.json').
+%load_json_files1:- load_json_files('object_modifications_schema',t,'./object_modifications_schema/tasks/*.json').
 %:- load_json_files(v,'../../secret_data/solu**66/*.json').
 %:- load_json_files(v,'../../secret_data/evaluation/*.json').
 %load_json_files1:- load_deval, load_json_files('secret_data_evaluation',v,'/data/evaluation/*.json').
 %load_json_files1:- load_json_files('secret_data_solution',v,'/secret_data/solution/*.json').
 % % % load_json_files1:- load_json_files('secret_data_solution',v,'/data/solution/*.json').
 
-load_json_files2:- load_json_files('MiniARC',t,'./MINI-ARC/data/MiniARC/*.json'),
-                   load_json_files('object_modifications_schema',t,'./object_modifications_schema/tasks/*.json').
+%load_json_files2:- load_json_files(michod,t,'./arc-task-generator/conditional_transforms_schema/tasks/0*.json').
+load_json_files1:- load_json_files('MiniARC',t,'./MINI-ARC/data/MiniARC/*.json').
 
 load_json_files:- 
   forall(load_json_files1,true).

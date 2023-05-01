@@ -12,7 +12,7 @@
 :- discontiguous fav/2.
 fav(A,B):- nonvar_or_ci(A),nonvar_or_ci(B), cls1,mmake, asserta(fav(A,B),Ref),!, call_cleanup(arc1(A),erase(Ref)).
 
-fav(v('p'),[dmiles]).
+%fav(v('p'),[dmiles]).
 
 fav(v('37d3e8b2'),
  human(
