@@ -51,7 +51,7 @@ pixel_colors0(GH,CC):-
   %term_singletons(Cs,Ss),include(is_colorish,Ss,CC),!.
 
 pixel_colors1(GH,CC):- is_grid(GH),!,mapgrid(only_color_data_or(wbg),GH,Cs),append(Cs,CC).
-pixel_colors1(GH,CC):- is_list(GH),!,my_maplist(pixel_colors0,GH,PG),my_append(PG,CC).
+pixel_colors1(GH,CC):- is_list(GH),!,my_maplist(pixel_colors0,GH,PG),append(PG,CC).
 pixel_colors1(GH,CC):- is_colorish(GH),!,CC=GH.
 pixel_colors1(Cell,[C]):- is_point(Cell),!,only_color_data_or(fg,Cell,C).
 pixel_colors1(GH,CC):- globalpoints_include_bg(GH,GP),!,my_maplist(only_color_data_or(fg),GP,CC).
@@ -169,19 +169,19 @@ join_cols(Grid1,[Grid2|Grids],Result):-
 % grow([[sameR,sameR]],[[a,b,c]], [[a,b,c,a,b,c]]).
 hconcat(Grid1,[],Grid1):-!.
 hconcat(Grid1,Empty,Grid1):- is_empty_grid(Empty),!.
-hconcat(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),my_maplist(my_append,Grid1,Grid2,Grid).
+hconcat(Grid1,Grid2,Grid):- length(Grid1,Len),assertion(length(Grid2,Len)),my_maplist(append,Grid1,Grid2,Grid).
 
-vconcat(Grid1,Grid2,Grid):- my_append(Grid1,Grid2,Grid).
+vconcat(Grid1,Grid2,Grid):- append(Grid1,Grid2,Grid).
 
 p2_grow_row([],_,[]).
 p2_grow_row([C1|Row],Grid,GM):- !, call(C1,Grid,G1),p2_grow_row(Row,Grid,GR),hconcat(G1,GR,GM).
 p2_grow([],       _  ,[]).
-p2_grow([Row|Rows],Grid,G1GridO):- p2_grow_row(Row,Grid,G1), p2_grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
+p2_grow([Row|Rows],Grid,G1GridO):- p2_grow_row(Row,Grid,G1), p2_grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
 
 p1_grow_row([],_,[]).
 p1_grow_row([C1|Row],Grid,GM):- !, call(C1,G1),p1_grow_row(Row,Grid,GR),hconcat(G1,GR,GM).
 p1_grow([],       _  ,[]).
-p1_grow([Row|Rows],Grid,G1GridO):- p1_grow_row(Row,Grid,G1), p1_grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
+p1_grow([Row|Rows],Grid,G1GridO):- p1_grow_row(Row,Grid,G1), p1_grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
 
 
 copy_grid_based_on_color(Cell,G,G1):- \+ is_fg_color(Cell),!,grid_size(G,H,V),make_grid(H,V,G1), mapgrid(=(Cell),G1).
@@ -189,7 +189,7 @@ copy_grid_based_on_color(_,G,G1):- safe_grid(G,G1).
 grow_row([],_,[]).
 grow_row([C1|Row],Grid,GM):- !, copy_grid_based_on_color(C1,Grid,G1),grow_row(Row,Grid,GR),hconcat(G1,GR,GM).
 grow([],       _  ,[]).
-grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),my_append(G1,GridO,G1GridO).
+grow([Row|Rows],Grid,G1GridO):- grow_row(Row,Grid,G1), grow(Rows,Grid,GridO),append(G1,GridO,G1GridO).
 
 grow_from_shape(I,O):- max_fg_color(I,Max),mapgrid(only_this_color_or_p1(Max,var),I,Pattern),grow_from_shape(Pattern,I,O).
 grow_from_shape(Grid,I,O):- grow(Grid,I,O).
@@ -722,7 +722,7 @@ replace_col(N,Col,Grid,H,V,NewGrid):- N<0, NewN is H + N+1,!,replace_col(NewN,Co
 
 replace_col(N,Col,Grid,_,V,NewGrid):- Nm1 is N - 1, length(Col,V),my_maplist(replace_col_at_0(Nm1),Col,Grid,NewGrid).
 
-replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),my_append(Left,[_|Right],Row),my_append(Left,[Col|Right],NewRow).
+replace_col_at_0(N,Col,Row,NewRow):- length(Left,N),append(Left,[_|Right],Row),append(Left,[Col|Right],NewRow).
 
 
 get_surround_3x3(Grid,H,V,Result):-

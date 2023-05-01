@@ -752,24 +752,24 @@ with_objprops(Op,E,List,MidList):-with_objprops1(Op,E,List,MidList).
 with_objprops1(Op,E,List,MidList):- redress_override(E,EE),with_objprops2(Op,EE,List,MidList).
 
 with_objprops2(delq,E,List,NewList):-functor(E,F,A),functor(R,F,A),
-    my_append(Left,[R|Right],List), % E \=@= R,
-    my_append(Left,Right,NewList),!.
+    append(Left,[R|Right],List), % E \=@= R,
+    append(Left,Right,NewList),!.
 
 with_objprops2(override,-E,List,NewList):-
-    my_append(Left,[R|Right],List), E =@= R,
-    my_append(Left,Right,NewList),!.
+    append(Left,[R|Right],List), E =@= R,
+    append(Left,Right,NewList),!.
 
 with_objprops2(override,E,List,NewList):- \+ aggregates(E), my_assertion(compound(E)), functor(E,F,A),functor(R,F,A),
-    my_append(Left,[R|Right],List), % E \=@= R,
-    my_append(Left,[E|Right],NewList),!.
+    append(Left,[R|Right],List), % E \=@= R,
+    append(Left,[E|Right],NewList),!.
 
 with_objprops2(override,E,List,NewList):- 
-    my_append(Left,[changes(G)|Right],List), !,
-    (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; my_append(Left,[changes(G),E|Right],NewList)),!.
+    append(Left,[changes(G)|Right],List), !,
+    (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; append(Left,[changes(G),E|Right],NewList)),!.
 
 with_objprops2(override,E,List,NewList):- 
-    my_append(Left,[iz(G)|Right],List), 
-    (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; my_append(Left,[iz(G),E|Right],NewList)),!.
+    append(Left,[iz(G)|Right],List), 
+    (( \+ \+ (member(R,Right), R =@= E )) -> NewList = List ; append(Left,[iz(G),E|Right],NewList)),!.
 
 
 aggregates(iz(_)).
@@ -811,7 +811,7 @@ merge_objs(VM,Bigger,[New|Inside],IPROPS,Combined):-
 merge_2objs(CreatorVM,Bigger,NewInside,IPROPS,Combined):-
  globalpoints(Bigger,GP1), globalpoints(NewInside,GP2),      
  indv_props(Bigger,Props1),indv_props(NewInside,Props2),
- my_append([GP1,GP2],GPoints), my_append([Props1,Props2,IPROPS],Info),
+ append([GP1,GP2],GPoints), append([Props1,Props2,IPROPS],Info),
  my_partition(props_not_for_merge,Info,_Exclude,Include),
  make_indiv_object(CreatorVM,Include,GPoints,Combined).
 
@@ -1995,7 +1995,7 @@ find_outline_pred(P3,Grid):- is_grid(Grid),!,
      (writeln("TOO SLOWWWW"=P3),
       print_grid(H,V,Grid),
       writeln("TOO SLOWWWW"=P3))),
-   my_append(SOLS,[leftover(LeftOver)],SOLSL),
+   append(SOLS,[leftover(LeftOver)],SOLSL),
    dash_chars,
    (SOLS==[]-> ((writeln("NOTHING FROM"=P3),ignore((fail,catch((print_grid(H,V,ID,Grid),writeln("NOTTAAA"=P3),!,fail),_,fail)))));
    member(OL,SOLSL),
@@ -2029,12 +2029,12 @@ find_outlines_fast(Options,Grid,Sols,Rest):-
  point_groups_by_color(colormass,Groups,Points,Rest2), !,
 % mapgroup(print_grid(H,V),Groups),
  find_group_outlines(Options,Groups,Sols,Rest1),
- my_append(Rest1,Rest2,Rest).
+ append(Rest1,Rest2,Rest).
 
 find_group_outlines(Options,[G1|G2],Sols,Rest):-!,
   find_group_outlines_fix_rest(Options,G1,Sols1,Rest1),
   find_group_outlines(Options,G2,Sols2,Rest2),
-  my_append(Sols1,Sols2,Sols), my_append(Rest1,Rest2,Rest).
+  append(Sols1,Sols2,Sols), append(Rest1,Rest2,Rest).
 find_group_outlines(_,[],[],[]).
 
 find_group_outlines_fix_rest(Options,G,Sols,Rest):-
@@ -2186,7 +2186,7 @@ find_outline_path2(C,L,Grid,sol(ResultO,[]),LeftOverO):-
   %print_grid([blue-HV1,yellow-HV2,red-HV3|Grid4]), 
   (((outline_nav(HV1,C,Dir2,HV3,[C-HV1|Grid4],Result,LeftOver), [C-HV1,C-HV2|Result] = ResultO,once(length(Result,M)),M>L)
    ;(outline_nav(HV3,C,Dir1,HV1,[C-HV3|Grid4],Result,LeftOver), [C-HV3,C-HV2|Result] = ResultO,once(length(Result,M)),M>L))),
-  my_append(Others,LeftOver,LeftOverO).
+  append(Others,LeftOver,LeftOverO).
 
 
 object_nm_grid(Obj,SSP):-

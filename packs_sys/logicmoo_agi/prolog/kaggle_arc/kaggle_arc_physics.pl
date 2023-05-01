@@ -219,7 +219,7 @@ map_row_size(N,Len,[_|Rest],Mass):-
 is_top_heavy(Grid):- split_50_v(Grid,Top,Bottem),!,rot_mass(Top,TopM),rot_mass(Bottem,BottemM),!,BottemM>TopM.
 is_left_heavy(Grid0):- rot270(Grid0,Grid),!,is_top_heavy(Grid).
 split_50_v(Grid,Top,Bottem):- length_safe(Grid,N),H is floor(N/2), length_safe(Top,H),length_safe(Bottem,H),
-    my_append(Top,Rest,Grid),my_append(_Mid,Bottem,Rest).
+    append(Top,Rest,Grid),append(_Mid,Bottem,Rest).
 
 grav_mass(Grid,sameR):- iz(Grid,hv_symmetric),!.
 grav_mass(Grid,RotOut):- vis2D(Grid,H,V), !, tips_to_rot(Grid,H,V,RotOut,_).
@@ -724,7 +724,7 @@ find_contained_points(H,V,ID,[Found|Sofar],[Found|SofarInsteadM],NextScanPoints,
   mapgroup(mention_inside(Found),NewInside,NewInsideM))),
   ignore((length_safe(ContainedPoints,N),N>1,quietly(print_grid(H,V,"find_contained_points",[Found|NewInsideM])))),
   find_contained_points(H,V,ID,Sofar,SofarInstead,ScanPointsInstead,NextScanPointsInstead),
-  my_append(NewInsideM,SofarInstead,SofarInsteadM).
+  append(NewInsideM,SofarInstead,SofarInsteadM).
 find_contained_points(H,V,ID,[Found|Sofar],[Found|SofarInstead],NextScanPoints,NextScanPointsInstead):-
   find_contained_points(H,V,ID,Sofar,SofarInstead,NextScanPoints,NextScanPointsInstead).
 

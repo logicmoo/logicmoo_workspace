@@ -96,7 +96,7 @@ cache_suite(SuiteX):-
   forall_count(all_suite_test_name(TestID),time(cache_devel(TestID)))).
 
 cache_devel:- with_pair_mode(entire_suite, 
- forall_count(all_arc_test_name_unordered(TestID),
+ forall(all_arc_test_name_unordered(TestID),
   ((test_name_output_file(TestID,'.pl',File), ( exists_file(File)-> true; cache_devel(TestID)))))).
 %cache_devel(TestID):-  ensure_test(TestID), test_name_output_file(TestID,'.pl',File),  
 %  catch(cant_rrtrace(notrace(cache_devel(TestID,File))),E,wdmsg(cache_devel(TestID,File)=E)),!.
@@ -108,9 +108,10 @@ cache_devel(_TestID,File):- exists_file(File), size_file(File,Size), Size > 300_
 %cache_devel(_TestID,File):- exists_file(File), !, writeln(exists_file(File)),!.
 cache_devel( TestID,File):- 
   ensure_test(TestID),
+  alarm(180, halt(666), Id, [install(true),remove(false)]),
   nl,writeq(starting(cache_devel( TestID,File))),nl,
-  sformat(S,'touch "~w"',[File]), shell(S), 
-  call_with_time_limit(180.0,time(cache_devel_1(TestID))),
+ % sformat(S,'touch "~w"',[File]), shell(S), 
+  cache_devel_1(TestID),
   if_t(has_individuals(TestID),
   ((writeln(save_test_hints(TestID,File)),
     save_test_hints_now(TestID,File),
@@ -711,30 +712,35 @@ some_min_unifier_3(A,List,A):- my_maplist('=@='(A),List),!.
 some_min_unifier_3(A,[B|List],O):- must_min_unifier(A,B,C), some_min_unifier_3(C,List,O).
 
 is_a_min_unifier(A,B,C):- B==strict,A==loose,!,C=A.
-is_a_min_unifier(A,_,C):- A==fg,B\==bg,B\==wbg,!,C=A.
+is_a_min_unifier(A,B,C):- A==fg,B\==bg,B\==wbg,!,C=A.
 is_a_min_unifier(A,_,C):- plain_var(A),!,C=A.
 is_a_min_unifier(A,B,C):- compound(A),A=trim(BB),B==BB,!,C=A.
 
 min_unifier(A,B,C):- A=@=B,!,C=A.
-min_unifier(A,B,C):- is_a_min_unifier(A,B,C).
-min_unifier(B,A,C):- is_a_min_unifier(A,B,C).
+min_unifier(A,B,C):- is_a_min_unifier(A,B,C),!.
+min_unifier(B,A,C):- is_a_min_unifier(A,B,C),!.
+min_unifier(A,B,C):- min_unifier_u(A,B,C),!.
 /*
 
 min_unifier(A,B,A):- plain_var(B),!.
 min_unifier(A,B,B):- plain_var(A),!.
 */
 
-min_unifier(A,B,D):- number(A),number(B),!,c_proportional(A,B,D).
-min_unifier(A,B,AA):- is_grid(A),is_grid(B),!,min_grid_unifier(A,B,AA),!.
-min_unifier(A,B,AA):- is_list(A),is_list(B),!,min_list_unifier(A,B,AA),
+min_unifier_n(A,B,D):- number(A),number(B),!,c_proportional(A,B,D).
+min_unifier_n(A,B,D):- min_unifier_u(A,B,D).
+
+
+
+min_unifier_u(A,B,_):- (\+ compound(A);\+ compound(B)),!.
+min_unifier_u(A,B,AA):- is_grid(A),is_grid(B),!,min_grid_unifier(A,B,AA),!.
+min_unifier_u(A,B,AA):- is_list(A),is_list(B),!,min_list_unifier(A,B,AA),
   ignore((length(A,AL),length(B,AL),length(AA,AL))).
-min_unifier(A,B,AA):- is_cons(A),is_cons(B),!,min_list_unifier(A,B,AA),!.
+min_unifier_u(A,B,AA):- is_cons(A),is_cons(B),!,min_list_unifier(A,B,AA),!.
 %min_unifier(A,B,C):- is_list(A),sort_safe(A,AA),A\==AA,!,min_unifier(B,AA,C).
-min_unifier(A,B,R):- compound(A),compound(B),
+min_unifier_u(A,B,R):- compound(A),compound(B),
  compound_name_arguments(A,F,AA),compound_name_arguments(B,F,BB),!,
- my_maplist(must_min_unifier,AA,BB,RR),compound_name_arguments(R,F,RR).
-min_unifier(A,B,R):- relax_hint(A,R),\+ (B \= R),!.
-min_unifier(A,B,_):- (\+ compound(A);\+ compound(B)),!.
+ my_maplist(min_unifier,AA,BB,RR),compound_name_arguments(R,F,RR).
+min_unifier_u(A,B,R):- relax_hint(A,R),\+ (B \= R),!.
 
 is_cons(A):- compound(A),A=[_|_].
 

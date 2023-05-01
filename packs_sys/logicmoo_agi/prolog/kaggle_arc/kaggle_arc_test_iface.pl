@@ -1328,34 +1328,38 @@ call_file_goal(_, discontiguous(_)):- !.
 call_file_goal(_,Goal):- call(Goal),!.
 
 load_file_dyn(TestID):- once(\+ atom(TestID); \+ exists_file(TestID)),
-  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(NewName).
+  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(TestID,NewName).
 load_file_dyn(File):- warn_skip(load_file_dyn_pfc(File)),!.
 
 
 :- dynamic(has_loaded_file_dyn_pfc/1).
-
-load_file_dyn_pfc(TestID):- var(TestID),!,ensure_test(TestID),load_file_dyn_pfc(TestID).
-load_file_dyn_pfc(File):- has_loaded_file_dyn_pfc(File),!. 
 load_file_dyn_pfc(TestID):- once(\+ atom(TestID); \+ exists_file(TestID)),
-  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(NewName).
-load_file_dyn_pfc(File):- \+ exists_file(File), !, wdmsg(\+ exists_file(File)).
+  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(TestID,NewName).
+/*
+load_file_dyn_pfc(TestID,TestID):- var(TestID),!,ensure_test(TestID),load_file_dyn_pfc(TestID,TestID).
+load_file_dyn_pfc(TestID,File):- has_loaded_file_dyn_pfc(File),!. 
+load_file_dyn_pfc(TestID,TestID):- once(\+ atom(TestID); \+ exists_file(TestID)),
+  once(test_name_output_file(TestID,'.pl',NewName)),NewName\=@=TestID,!,load_file_dyn_pfc(TestID,NewName).
+load_file_dyn_pfc(TestID,File):- \+ exists_file(File), !, wdmsg(\+ exists_file(File)).
 %load_file_dyn(File):- consult(File),!.
-load_file_dyn_pfc(File):- asserta(has_loaded_file_dyn_pfc(File)),
- writeln(load_file_dyn_pfc(File)),
+*/
+load_file_dyn_pfc(TestID,File):- asserta(has_loaded_file_dyn_pfc(File)),
+ writeln(load_file_dyn_pfc(TestID,File)),
  setup_call_cleanup(open(File,read,I),
      catch(load_dyn_stream(I),E,(print(E),catch(close(I),_,true),delete_file(File))),
-     catch(close(I),_,true)),!.
+     catch(close(I),_,true)),!,
+ retractall(is_accompany_changed_db(TestID,_,_,_)).
 
 load_dyn_stream(I):-  
  repeat,read_term(I,Term,[]),
            (Term = end_of_file -> ! ; 
        (fail_compliants(load_file_term(I,Term)),fail)),!.
-
+/*
 load_dyn_stream(I):-  
  repeat,fail_compliants(read_term(I,Term,[])),
            (Term = end_of_file -> ! ; 
        (fail_compliants(load_file_term(I,Term)),fail)),!.
-
+*/
 fail_compliants(G):- catch(G*->true;(wdmsg(fail(G)),fail),E,(wdmsg(error(E,G)),fail)),!.
 
 load_file_term(S,(:- Goal)):- !, call_file_goal(S,Goal).
@@ -1892,13 +1896,13 @@ write_ansi_file(F):- call(F,Set),
 test_names_by_hard(Name):- 
  test_names_ord_hard(NamesByHard),
  test_names_ord_favs(FavList),
- my_append(NamesByHard,FavList,All),list_to_set(All,AllS),!,member(Name,AllS).
+ append(NamesByHard,FavList,All),list_to_set(All,AllS),!,member(Name,AllS).
 
 test_names_by_hard_rev(Name):- 
  test_names_ord_hard(NamesByHard),
  reverse(NamesByHard,NamesByHardR),
  test_names_ord_favs(FavList),
- my_append(NamesByHardR,FavList,All),list_to_set(All,AllS),!,member(Name,AllS).
+ append(NamesByHardR,FavList,All),list_to_set(All,AllS),!,member(Name,AllS).
 
 test_names_by_fav(Name):- test_names_ord_favs(All),member(Name,All).
 test_names_by_fav_rev(Name):- test_names_ord_favs(AllS),reverse(AllS,AllR),member(Name,AllR).

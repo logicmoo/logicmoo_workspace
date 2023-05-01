@@ -1678,7 +1678,7 @@ is_fti_step(reset_objs).
 reset_objs(VM):- 
   gset(VM.objs)= [].
 
-fix_indivs_options(O,L):-is_list(O),my_maplist(fix_indivs_options,O,OL),my_append(OL,L).
+fix_indivs_options(O,L):-is_list(O),my_maplist(fix_indivs_options,O,OL),append(OL,L).
 fix_indivs_options(G,[G]):- var(G),!.
 fix_indivs_options(I,O):- atom(I),individuation_macros(I,M),!,fix_indivs_options(M,O),!.
 fix_indivs_options(macro(I),[macro(O)]):- fix_indivs_options(I,O).
@@ -1781,7 +1781,7 @@ individuation_reserved_options(ROptions,Reserved,Options):-
    %select_default_i_options(Grid,H,V,Points,DefaultOptions),
    %default_i_options(DefaultOptions),
    %subst(Options0,defaults,DefaultOptions,Options),
-   %(Options0==Options -> my_append(Options,DefaultOptions,NewOptions) ; (Options=NewOptions)),!,
+   %(Options0==Options -> append(Options,DefaultOptions,NewOptions) ; (Options=NewOptions)),!,
    ignore((ROptions \= Options,is_list(ROptions), sub_var(complete,ROptions),
       (progress(blue,fix_indivs_options(ro=ROptions,r=Reserved,o=Options))))).
 
@@ -2367,8 +2367,8 @@ fti(VM,_):-
 fti(VM,[+(AddOptions)|TODO]):- !,
   must_det_ll((
   listify(AddOptions,OptionsL),
-  my_append(VM.options,OptionsL,set(VM.options)),
-  my_append(TODO,OptionsL,set(VM.lo_program)))).
+  append(VM.options,OptionsL,set(VM.options)),
+  append(TODO,OptionsL,set(VM.lo_program)))).
 
 
 fti(VM,Prog):- fail, length(Prog,Len),Len>1, exceeded_objs_max_len(VM),!,
@@ -2380,7 +2380,7 @@ fti(VM,[IsToBeRewritten|Rest]):-
     nonvar(IsToBeRewritten),
     individuation_macros(IsToBeRewritten,Expansion),!,
     listify(Expansion,ExpansionL),
-    my_append(ExpansionL,Rest,set(VM.lo_program)).
+    append(ExpansionL,Rest,set(VM.lo_program)).
 
 fti(VM,_):- fail, member(recalc_sizes,VM.options), once(recalc_sizes(VM)), fail.
 fti(VM,[recalc_sizes|TODO]):- nop(recalc_sizes(VM)),!, fti(VM,TODO).
@@ -2407,13 +2407,13 @@ option_matches(List,Arg):- member(E,List),E==Arg.
 
 fti(VM,[(OptionsL)|TODO]):- fail,
   is_list(OptionsL), \+ is_group(OptionsL), \+ is_grid(OptionsL),!,
-  my_append(VM.options,OptionsL,set(VM.options)),
-  my_append(TODO,OptionsL,set(VM.lo_program)).
+  append(VM.options,OptionsL,set(VM.options)),
+  append(TODO,OptionsL,set(VM.lo_program)).
 
 fti(VM,[options(AddOptions)|TODO]):-
   listify(AddOptions,OptionsL),
-  my_append(VM.options,OptionsL,set(VM.options)),
-  my_append(TODO,OptionsL,set(VM.lo_program)).
+  append(VM.options,OptionsL,set(VM.options)),
+  append(TODO,OptionsL,set(VM.lo_program)).
 
 fti(VM,[macrof(AddTodo)|set(VM.lo_program)]):-
   listify(AddTodo,TodoLst),
@@ -2421,7 +2421,7 @@ fti(VM,[macrof(AddTodo)|set(VM.lo_program)]):-
 
 fti(VM,[macro(AddTodo)|TODO]):-
   listify(AddTodo,TodoL),
-  my_append([progress|TodoL],TODO,set(VM.lo_program)).
+  append([progress|TodoL],TODO,set(VM.lo_program)).
 
 /*
 %fti(VM,Prog):- length(Prog,Len),Len>2, exceeded_objs_max_len(VM),!,set(VM.lo_program)= [do_ending],!,length(VM.objs,Count),set(VM.objs_max_len) is Count+3.
@@ -4010,7 +4010,7 @@ try_shape(VM,Method,LibName,Shape):-
    %intersection(ObjPoints,Points,Intersected,NeedAsWell,RestOfPoints),
    %Sofar = VM.robjs,
    %do_leftover(Sofar,NeedAsWell,Intersected,Use,Sofar2),   
-   %my_append(Intersected,Use,All),
+   %append(Intersected,Use,All),
    %list_to_set(All,AllS), AllS \== [],  
    %set(VM.lo_points) = RestOfPoints,
    %set(VM.objs)= Sofar2,
@@ -4033,7 +4033,7 @@ use_shapelib(VM,Name,[Obj|Reserved]):-
     Sofar = VM.objs,
    intersection(ObjPoints,Points,Intersected,NeedAsWell,RestOfPoints),
          do_leftover(Sofar,NeedAsWell,Intersected,Use,Sofar2),
-         my_append(Intersected,Use,All),
+         append(Intersected,Use,All),
          list_to_set(All,AllS))), AllS \== [],
          make_indiv_object(VM,[iz(override(Name))|AllS],Indiv0), 
          obj_to_oid(Obj,_,Iv), 
@@ -4045,7 +4045,7 @@ use_shapelib(VM,Name,[Obj|Reserved]):-
 do_leftover(Sofar,[],Intersected,Intersected,Sofar):- !.
 %do_leftover([],_,_,_,_):- !,fail.
 do_leftover(Sofar,LeftOverA,Intersected,Use,Removed):- select(S,Sofar,Removed), globalpoints(S,SPoints),
-    intersection(SPoints,LeftOverA,Usable,[],[]),my_append(Usable,Intersected,Use).
+    intersection(SPoints,LeftOverA,Usable,[],[]),append(Usable,Intersected,Use).
 
 one_fi(VM,retain(Option)):-
     Grid = VM.grid,
@@ -4170,7 +4170,7 @@ addPropPredInfo(VM,Prop,Pred2,Obj):- assume_vm(VM),!,into_list(Obj,List),
   my_maplist(Pred2,List,ListData),
   get_kov(Prop,VM,VMProp),
   intersection(VMProp,ListData,PretendToAdd,Prev,ReallyAdd),
-  my_append(VM.Prop,ReallyAdd,set(VM.Prop)).
+  append(VM.Prop,ReallyAdd,set(VM.Prop)).
 
 remPropPredInfo(VM,Prop,Pred2,Obj):- assume_vm(VM),!,into_list(Obj,List),
   my_maplist(Pred2,List,ListData),
@@ -4183,7 +4183,7 @@ addRObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List),
   intersection(VM.robjs,List,PretendToAdd,Prev,ReallyAdd),
   %addGridPoints(VM, Obj),
   %addGridPoints(VM, Obj),  
-  my_append(VM.robjs,ReallyAdd,set(VM.robjs)).
+  append(VM.robjs,ReallyAdd,set(VM.robjs)).
 
 remObjects(_VM,Obj):- Obj==[],!.
 remObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
@@ -4194,7 +4194,7 @@ remObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List),
 addLOPoints(_VM,Obj):- Obj==[],!.
 addLOPoints(VM, Obj):- assume_vm(VM),!,globalpoints(Obj,LOPoints), 
   intersection(VM.lo_points,LOPoints,PretendToAdd,Prev,ReallyAdd),
-  my_append(VM.lo_points,ReallyAdd,set(VM.lo_points)).
+  append(VM.lo_points,ReallyAdd,set(VM.lo_points)).
 
 remLOPoints(_VM,Obj):- Obj==[],!.
 %remLOPoints(VM,Obj):- is_group(Obj),!,mapgroup(remLOPoints(VM),Obj).
@@ -4211,20 +4211,20 @@ remGridPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 addGridPoints(_VM,Obj):- Obj==[],!.
 addGridPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,GPoints), 
   intersection(VM.added_points,GPoints,PretendToAdd,_Prev,ReallyAdd),
-  my_append(VM.added_points,ReallyAdd,set(VM.added_points)).
+  append(VM.added_points,ReallyAdd,set(VM.added_points)).
   
 
 addObjects(_VM,Obj):- Obj==[],!.
 addObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
   intersection(VM.objs,List,PretendToAdd,Prev,ReallyAdd),
-  my_append(VM.objs,ReallyAdd,set(VM.objs)),
+  append(VM.objs,ReallyAdd,set(VM.objs)),
   assumeAdded(VM,Obj).
 assumeAdded(VM,Obj):- addGridPoints(VM, Obj),remLOPoints(VM, Obj),!. % nop(assertion(member(Obj,VM.objs))).
 /*
 addObjects(_VM,Obj):- Obj==[],!.
 addObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List), 
   intersection(VM.objs,List,_PretendToAdd,_Prev,ReallyAdd),
-  my_append(VM.objs,ReallyAdd,set(VM.objs)).
+  append(VM.objs,ReallyAdd,set(VM.objs)).
   %my_maplist(mergeObject(VM),ReallyAdd).
 */
 
@@ -4242,7 +4242,7 @@ is_group_or_objects_list(ReallyAdd):- (is_list_of_prop_lists(ReallyAdd); is_grou
   
   
 
-%  my_append(VM.objs,ReallyAdd,set(VM.objs)).
+%  append(VM.objs,ReallyAdd,set(VM.objs)).
 
 addOGSObjects(_VM,Obj):- Obj==[],!.
 addOGSObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List),
@@ -4253,7 +4253,7 @@ addOGSObjects(VM,Obj):- assume_vm(VM),!,into_list(Obj,List),
 addRepairedPoints(_VM,Obj):- Obj==[],!.
 addRepairedPoints(VM, Obj):- assume_vm(VM),!,globalpoints(Obj,LOPoints),
    intersection(VM.repaired,LOPoints,PretendToAdd,Prev,ReallyAdd),
-   my_append(VM.repaired,ReallyAdd,set(VM.repaired)).
+   append(VM.repaired,ReallyAdd,set(VM.repaired)).
 
 remRepairedPoints(_VM,Obj):- Obj==[],!.
 remRepairedPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List), 
@@ -4263,9 +4263,9 @@ remRepairedPoints(VM,Obj):- assume_vm(VM),!,globalpoints(Obj,List),
 
 addOptions(VM, Obj):- assume_vm(VM),!,listify(Obj,List), 
   intersection(VM.options,Options,PretendToAdd,Prev,ReallyAdd),
-  my_append(VM.options,ReallyAdd,set(VM.options)),
+  append(VM.options,ReallyAdd,set(VM.options)),
   intersection(VM.lo_program,Options,PretendToAdd,Prev,ReallyAdd),
-  my_append(VM.lo_program,ReallyAdd,set(VM.lo_program)).
+  append(VM.lo_program,ReallyAdd,set(VM.lo_program)).
 
 remOptions(VM,Obj):- assume_vm(VM),!,listify(Obj,List), 
   intersection(VM.options,List,ReallyRemove,Keep,PretendToRemove),
@@ -4312,7 +4312,7 @@ cycle_back_in(VM,OptionC):-
   length(TODO,N),
   cycle_back_in(VM,OptionC,N,TODO),!.
 cycle_back_in(VM,OptionC,TODO):- 
-  length(TODO,N), N2 is floor(N/2),length(LL,N2),my_append(LL,RR,TODO),my_append(LL,[OptionC|RR],OptionsOut),
+  length(TODO,N), N2 is floor(N/2),length(LL,N2),append(LL,RR,TODO),append(LL,[OptionC|RR],OptionsOut),
   set(VM.lo_program)= OptionsOut.
 
 %cycle_back_in(VM,OptionC,0,TODO):- set(VM.lo_program) = [OptionC].
@@ -4654,7 +4654,7 @@ all_individuals_near(VM,Dir,Options,C1,Indv,ScanPoints,NewScanPoints,NewSet):-
    ok_color_with(C1,C2),
    individuals_near(VM,Dir,Options,C2,Indv,ScanPoints,New,NextScanPoints),
    (New == [] -> (NewSet = Indv, NewScanPoints = NextScanPoints)
-    ; (my_append(Indv,New,IndvNew),
+    ; (append(Indv,New,IndvNew),
         all_individuals_near(VM,Dir,Options,C1,IndvNew,NextScanPoints,NewScanPoints,NewSet))),!.
 
 individuals_near(_VM,_Dir,_Options,_C,_From,[],[],[]):-!.
@@ -4781,7 +4781,7 @@ unraw_inds2(_VM,_,IndvS,IndvS).
 
 
 merge_indivs(IndvA,IndvB,BetterA,BetterB,BetterC):-
-  my_append(IndvA,IndvB,IndvSU),list_to_set(IndvSU,IndvS),
+  append(IndvA,IndvB,IndvSU),list_to_set(IndvSU,IndvS),
   smallest_first(mass,IndvS,IndvC),
   merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterA,BetterB,BetterC),!.
 
@@ -4793,9 +4793,9 @@ merge_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   select(A,IndvA,IndvARest),
   select(A,IndvB,IndvBRest),
   merge_a_b(A,B,AA),
-  my_append(IndvARest,[AA],BetterA),
-  my_append(IndvBRest,[B],BetterB),
-  my_append(IndvCRest,[AA],BetterC),
+  append(IndvARest,[AA],BetterA),
+  append(IndvBRest,[B],BetterB),
+  append(IndvCRest,[AA],BetterC),
   merge_indivs_cleanup(BetterA,BetterB,BetterC,BetterAO,BetterBO,BetterCO),!.
 merge_indivs_cleanup(A,B,C,A,B,C).
 

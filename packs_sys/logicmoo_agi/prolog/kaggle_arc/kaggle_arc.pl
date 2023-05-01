@@ -301,8 +301,8 @@ echo_option(N,V):- u_dmsg(echo_option(N,V)).
 
 % we alias these so we can catch out of control list growth
 
-my_append(A,B):- append(A,B).
-my_append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
+%append(A,B):- append(A,B).
+%append(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 gappend(A,B):- append(A,B).
 gappend(A,B,C):- append(A,B,C). % ,check_len(A),check_len(C),check_len(C).
 check_len(_).

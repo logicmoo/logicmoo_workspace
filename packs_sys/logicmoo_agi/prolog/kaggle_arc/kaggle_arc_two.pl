@@ -310,7 +310,7 @@ do_sols_for(Trial,Why,InVM,TestID,ExampleNum) :-
 reuse_indivs(IndvA,IndvB,BetterA,BetterB):-
   smallest_first(IndvA,IndvAS),
   smallest_first(IndvB,IndvBS),
-  my_append(IndvAS,IndvBS,IndvCC), list_to_set(IndvCC,IndvC),
+  append(IndvAS,IndvBS,IndvCC), list_to_set(IndvCC,IndvC),
   smallest_first(IndvC,IndvCS),
   reuse_indivs_cleanup(IndvAS,IndvBS,IndvCS,BetterA,BetterB,_BetterC),!.
 
@@ -322,9 +322,9 @@ reuse_indivs_cleanup(IndvA,IndvB,IndvC,BetterAO,BetterBO,BetterCO):-
   select(A,IndvA,IndvARest),
   select(A,IndvB,IndvBRest),
   reuse_a_b(A,B,AA),
-  my_append(IndvARest,[AA],BetterA),
-  my_append(IndvBRest,[B],BetterB),
-  my_append(IndvCRest,[AA],BetterC),
+  append(IndvARest,[AA],BetterA),
+  append(IndvBRest,[B],BetterB),
+  append(IndvCRest,[AA],BetterC),
   reuse_indivs_cleanup(BetterA,BetterB,BetterC,BetterAO,BetterBO,BetterCO),!.
 reuse_indivs_cleanup(A,B,C,A,B,C).
 

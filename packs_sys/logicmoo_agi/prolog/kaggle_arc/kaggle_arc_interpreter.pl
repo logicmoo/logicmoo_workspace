@@ -204,7 +204,7 @@ show_workflow(In,[H|T],Out):-
   show_workflow(Mid,T,Out).
 show_workflow(In,add(P),Out):- !,
   show_workflow(In,P,Mid),!,
-  my_append(Mid,In,Out).
+  append(Mid,In,Out).
 show_workflow(In,each(P),Out):- show_workflow_each(In,P,Out).
 show_workflow(In,P,Out):- must_det_ll(call(P,In,Out)),!.
 show_workflow(In,P,In):- arcdbg(warn(failed(show_workflow(P)))),!.

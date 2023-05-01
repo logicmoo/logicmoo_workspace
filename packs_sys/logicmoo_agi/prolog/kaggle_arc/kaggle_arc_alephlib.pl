@@ -248,7 +248,7 @@ system:term_expansion((:- end_bg), []) :-
   %retractall(M:bgc(_)),
  % (M:bg(BG0)->
  %   retract(M:bg(BG0)),
- %   my_append(BG0,L,BG),
+ %   append(BG0,L,BG),
  %   arc_assert(M:bg(BG))
  % ;
  %   assert_all(L,M,_)
@@ -276,7 +276,7 @@ system:term_expansion((:- end_in_pos), []) :-
 %  (M:in(IN0)->
 %    retract(M:in(IN0)),%
 %	
-%    my_append(IN0,L,IN),
+%    append(IN0,L,IN),
 %    arc_assert(M:in(IN))
 %  ;
 %    arc_assert(M:in(L))
@@ -332,7 +332,7 @@ system:term_expansion((:- end_in_neg), []) :-
 %  (M:in(IN0)->
 %    retract(M:in(IN0)),
 	
-%    my_append(IN0,L,IN),
+%    append(IN0,L,IN),
 %    arc_assert(M:in(IN))
 %  ;
 %    arc_assert(M:in(L))
@@ -11158,7 +11158,7 @@ special_consideration(portray_literals,true,M):-
 special_consideration(record,true,M):-
 	noset(recordfile_stream,M),
 	(setting(recordfile,F,M) -> 
-		aleph_open(F,my_append,Stream),
+		aleph_open(F,append,Stream),
 		set(recordfile_stream,Stream,M);
 		true), !.
 special_consideration(record,false,M):-
@@ -11166,13 +11166,13 @@ special_consideration(record,false,M):-
 special_consideration(recordfile,File,M):-
 	noset(recordfile_stream,M), 
 	(setting(record,true,M) -> 
-		aleph_open(File,my_append,Stream),
+		aleph_open(File,append,Stream),
 		set(recordfile_stream,Stream,M);
 		true), !.
 special_consideration(good,true,M):-
 	noset(goodfile_stream,M),
 	(setting(goodfile,F,M) -> 
-		aleph_open(F,my_append,Stream),
+		aleph_open(F,append,Stream),
 		set(goodfile_stream,Stream,M);
 		true), !.
 special_consideration(good,false,M):-
@@ -11180,7 +11180,7 @@ special_consideration(good,false,M):-
 special_consideration(goodfile,File,M):-
 	noset(goodfile_stream,M), 
 	(setting(good,true,M) -> 
-		aleph_open(File,my_append,Stream),
+		aleph_open(File,append,Stream),
 		set(goodfile_stream,Stream,M);
 		true), !.
 special_consideration(minscore,_,M):-

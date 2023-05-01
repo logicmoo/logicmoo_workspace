@@ -1411,7 +1411,7 @@ select_group0(TestID,Group,How):-
     %length(Group1,G1), length(Group2,G2), G1>G2,
   once((sub_term(E,How1),sub_var(E,How2))),
   %member(M1,Group1),member(M2,Group2),M1=M2,
-  my_append(Group1,Group2,GroupJ), sort_safe(GroupJ,Group),
+  append(Group1,Group2,GroupJ), sort_safe(GroupJ,Group),
   How = [How1,How2])) 
     *-> true ; is_why_grouped(TestID,_,How,Group).
 

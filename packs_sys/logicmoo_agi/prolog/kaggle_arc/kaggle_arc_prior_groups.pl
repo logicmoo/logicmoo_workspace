@@ -1646,7 +1646,7 @@ largest_first(P2,IndvS0,IndvR):-
 largest_first_nonbg(IndvS,IndvOB):-  
   largest_first(mass,IndvS,IndvO),
   remove_bgs(IndvO,IndvL,BGIndvS),
-  my_append(IndvL,BGIndvS,IndvOB).
+  append(IndvL,BGIndvS,IndvOB).
 
 care_to_count(RawPropLists,PropLists):- is_list_of_lists(RawPropLists),!,maplist(care_to_count,RawPropLists,PropLists).
 care_to_count(GSS,GS):- is_list(GSS),include(is_care_to_count,GSS,GS).
@@ -1969,6 +1969,8 @@ make_unifiable_cc(cc(C,N),cc(_,N)):- is_real_color(C),!.
 make_unifiable_cc(cc(N,_),cc(N,_)):-!.
 make_unifiable_cc(oid(_),oid(_)):-!.
 make_unifiable_cc(recolor(N,_),recolor(N,_)):-!.
+make_unifiable_cc(rotSize2D(grav,_,_),rotSize2D(grav,_,_)):-!.
+%make_unifiable_cc(grid_ops(comp,_),grid_ops(comp,_)):-!.
 make_unifiable_cc(iz(symmetry_type(N,_)),iz(symmetry_type(N,_))):-!.
 make_unifiable_cc(pg(_,G,M,_),pg(_,UG,M,_)):-!,make_unifiable_cc(G,UG).
 make_unifiable_cc(O,U):- make_unifiable(O,U).

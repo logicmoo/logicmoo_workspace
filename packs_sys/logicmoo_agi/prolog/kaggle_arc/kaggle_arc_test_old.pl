@@ -89,8 +89,8 @@ test_classes_row(Names, Row) :-
 type_to_letter(training,t):-!.
 type_to_letter(_,v).
 
-more_test_info(t(A),BCD):- more_test_info(t(A),B,C,_D),my_append([B,C,[alphabetical_t]],BCD).
-more_test_info(v(A),BCD):- more_test_info(v(A),B,C,_D),my_append([B,C,[alphabetical_v]],BCD).
+more_test_info(t(A),BCD):- more_test_info(t(A),B,C,_D),append([B,C,[alphabetical_t]],BCD).
+more_test_info(v(A),BCD):- more_test_info(v(A),B,C,_D),append([B,C,[alphabetical_v]],BCD).
 more_test_info(TestID,solves(More)):- clause(l_solve(A,in,out),More),once((fix_test_name(A,TestID);TestID=t(A))).
 more_test_info(TestID,dsl_length(Len)):- michod_solved_len(TestID,Len).
 

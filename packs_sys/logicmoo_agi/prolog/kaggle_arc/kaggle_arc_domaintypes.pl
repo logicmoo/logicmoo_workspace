@@ -625,7 +625,7 @@ is_point_obj(O,Color,Point):- is_object(O),vis2D(O,1,1),
 %free_cell(8).
 
 %trim_unused_vert_square(BG,Grid,GridO).
-%trim_unused_vert_square(BG,GridR,GridO):- my_append(Grid,[Row],GridR),my_maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
+%trim_unused_vert_square(BG,GridR,GridO):- append(Grid,[Row],GridR),my_maplist(is_bg_or_var(BG),Row),trim_unused_vert_square(BG,Grid,GridO).
 %trim_unused_vert_square(_,G,G).*/
 
 non_h_rot(sameR).

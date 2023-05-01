@@ -30,7 +30,7 @@ combine_grids(How,[H|T],G,GO):- !,
   combine_grids(How,H,G,GM),
   combine_grids(How,T,GM,GO).
 combine_grids(overlay,H,G,GM):- globalpoints(H,Points),set_local_points(Points,G,GM),!.
-combine_grids(my_append,H,G,GM):- grid_size(H,W,_),length(Row,W), my_append(G,[Row|H],GM).
+combine_grids(append,H,G,GM):- grid_size(H,W,_),length(Row,W), append(G,[Row|H],GM).
   
 print_info:- test_config(noprint_info),!,fail.
 print_info:- test_config(print_info),!.
