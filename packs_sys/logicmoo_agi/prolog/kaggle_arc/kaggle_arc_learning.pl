@@ -558,8 +558,6 @@ learn_rule_in_out(Mode,In,Out):- is_list(In),is_list(Out),!,
 learn_rule_in_out(Mode,I,O):- 
   arc_assert(need_save_rule1(Mode,"INPUT <--> OUTPUT",I,O)).
 
-sort_by_closeness(In,Objs,List):- sorted_by_closeness(In,_Sorted,Objs,List).
-
 enum_in_objs(In,Objs):- nonvar(In),nonvar(Objs),!.
 enum_in_objs(In,Objs):- var(In),see_object_atomslist(_,In,_,_),enum_in_objs(In,Objs).
 %enum_in_objs(In,Objs):- is_list(Objs),var(In),select(In,Objs,Rest),Rest\==[],!, enum_in_objs(In,Objs).
@@ -568,63 +566,8 @@ enum_in_objs(In,Objs):- is_list(Objs),var(In),member(Obj,Objs),has_prop(giz(g(IO
 enum_in_objs(In,Objs):- var(Objs),nonvar(In),in_to_out(IO_DIR,OI),has_prop(giz(g(IO_DIR)),In), 
    prop_group(giz(g(OI)),Objs),Objs\==[],!,enum_in_objs(In,Objs).
 
-:- dynamic(saved_sorted_by_closeness/4).
-sorted_by_closeness(In,Sorted,Objs,List):- once(var(In);var(Objs)),!,enum_in_objs(In,Objs), sorted_by_closeness(In,Sorted,Objs,List),List\==[].
-sorted_by_closeness(In,Sorted,Objs,List):- var(Sorted), my_maplist(obj_to_oid,Objs,OIDS), sort_safe(OIDS,Sorted),!,sorted_by_closeness(In,Sorted,Objs,List).
-sorted_by_closeness(In,Sorted,Objs,List):- saved_sorted_by_closeness(In,Sorted,Objs,List),!.
-sorted_by_closeness(In,Sorted,Objs,List):- 
-  sort_by_jaccard(In,_,Objs,List),
-  asserta(saved_sorted_by_closeness(In,Sorted,Objs,List)),!.
 
 
-
-%find_prox_mappings(A,Candidates,Objs):- sort_by_jaccard(A,Candidates,Objs).
-sort_by_jaccard(A,Candidates,Objs):- bonus_sort_by_jaccard([],A,sort_by_jaccard,Candidates,Objs).
-
-find_prox_mappings(A,GroupID,Candidates,Objs):- sort_by_jaccard(A,GroupID,Candidates,Objs).
-sort_by_jaccard(A,GroupID,Candidates,Objs):- bonus_sort_by_jaccard([],A,GroupID,Candidates,Objs).
-
-bonus_sort_by_jaccard(Bonus,A,Candidates,Objs):-
-  bonus_sort_by_jaccard(Bonus,A,sort_by_jaccard,Candidates,Objs).
-
-find_prox_mappings(Bonus,A,GroupID,Candidates,Objs):- bonus_sort_by_jaccard(Bonus,A,GroupID,Candidates,Objs).
-bonus_sort_by_jaccard(_,_,_,[Obj],[Obj]):-!.
-bonus_sort_by_jaccard(Bonus,A,GroupID,Candidates,Objs):-
- must_det_ll((
-    obj_grp_atomslist(GroupID,A,PA,PAP0),
-    obj_atoms(Bonus,BonusAtoms),
-    append(PAP0,BonusAtoms,PAP),
-    ord(NJ/O+JO+Joins,[PA,A],[PB,B],B) = Why,
-    !,
-    findall(Why,
-    (      
-    member(B,Candidates),
-%        B\==A,
-%        \+ is_whole_grid(B),
-        obj_grp_atomslist(GroupID,B,PB,PBP),
-       % PA\==PB,
-        memo_op(PAP,PBP,O,Joins,_J,NJ,JO)),
-     % maybe_allow_pair(PA,PB), allow_pair(PA,PB),  
-     Pairs), 
-   sort_safe(Pairs,RPairs),
-   %list_upto(3,RPairs,Some),
-   my_maplist(arg(4),RPairs,Objs))).
-
-
-memo_op(PAP,PBP,O,Joins,J,NJ,JO):- PAP@>PBP->memo_op_1(PBP,PAP,O,Joins,J,NJ,JO);memo_op_1(PAP,PBP,O,Joins,J,NJ,JO).
-
-:- abolish(memo_op_then/7).
-:- dynamic(memo_op_then/7).
-memo_op_1(PAP,PBP,O,Joins,J,NJ,JO):- memo_op_then(PAP,PBP,O,Joins,J,NJ,JO),!.
-memo_op_1(PAP,PBP,O,Joins,J,NJ,JO):- memo_op_now(PAP,PBP,O,Joins,J,NJ,JO), asserta(memo_op_then(PAP,PBP,O,Joins,J,NJ,JO)),!.
-
-memo_op_now(PAP,PBP,O,Joins,J,NJ,JO):-
-       intersection(PAP,PBP,Joins,OtherA,OtherB),!,
-       %append([OtherA,OtherB],Other),
-       length(Joins,J),length(OtherA,OA),length(OtherB,OB),
-       O is OA+OB,
-       NJ is -J,
-       JO is - rationalize(J/(O+1)),!.
 
 maybe_exclude_whole([I],[I]).
 maybe_exclude_whole(I,I):- \+ (member(Obj,I), is_fg_object(Obj), \+ is_whole_grid(Obj)),!.

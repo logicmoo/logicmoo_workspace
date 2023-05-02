@@ -512,6 +512,134 @@ nearest_by_not_simular(A,B,R):- distance(A,B,R).
 
 distance(A,B,R):- loc2D(A,X1,Y1),loc2D(B,X2,Y2), R is sqrt(abs(X1-X2)*abs(Y1-Y2)).
 
+sort_by_closeness(In,Objs,List):- sorted_by_closeness(In,_Sorted,Objs,List).
+:- dynamic(saved_sorted_by_closeness/4).
+sorted_by_closeness(In,Sorted,Objs,List):- once(var(In);var(Objs)),!,enum_in_objs(In,Objs), sorted_by_closeness(In,Sorted,Objs,List),List\==[].
+sorted_by_closeness(In,Sorted,Objs,List):- var(Sorted), my_maplist(obj_to_oid,Objs,OIDS), sort_safe(OIDS,Sorted),!,sorted_by_closeness(In,Sorted,Objs,List).
+sorted_by_closeness(In,Sorted,Objs,List):- saved_sorted_by_closeness(In,Sorted,Objs,List),!.
+sorted_by_closeness(In,Sorted,Objs,List):- 
+  sort_by_jaccard(In,_,Objs,List),
+  asserta(saved_sorted_by_closeness(In,Sorted,Objs,List)),!.
+
+
+
+%find_prox_mappings(A,Candidates,Objs):- sort_by_jaccard(A,Candidates,Objs).
+sort_by_jaccard(A,Candidates,Objs):- bonus_sort_by_jaccard([],A,sort_by_jaccard,Candidates,Objs).
+
+find_prox_mappings(A,GroupID,Candidates,Objs):- sort_by_jaccard(A,GroupID,Candidates,Objs).
+sort_by_jaccard(A,GroupID,Candidates,Objs):- bonus_sort_by_jaccard([],A,GroupID,Candidates,Objs).
+
+bonus_sort_by_jaccard(Bonus,A,Candidates,Objs):-
+  bonus_sort_by_jaccard(Bonus,A,sort_by_jaccard,Candidates,Objs).
+
+find_prox_mappings(Bonus,A,GroupID,Candidates,Objs):- bonus_sort_by_jaccard(Bonus,A,GroupID,Candidates,Objs).
+
+points_by_distance_to_center(I,GGP):- center2D(I,X,Y), globalpoints(I,GP), sort_on(dist_to(X,Y),GP,GGP).
+
+dist_to(X1,Y1,HVP,Dist):- center2D(HVP,X2,Y2),dist(X1,Y1,X2,Y2,Dist).
+dist_to(P1,P2,Dist):- center2D(P1,X1,Y1), center2D(P2,X2,Y2),dist(X1,Y1,X2,Y2,Dist).
+
+
+sort_by_distance(Bonus,A,GroupID,Candidates,Objs):-
+     center2D(A,X1,Y1),
+     globalpoints(A,AP),
+     maplist(distance(A,AP,X1,Y1),Candidates,Results),
+     sort(Results,SortedR),sort(SortedR,Sorted),
+     tie_break_sbd(Bonus,A,GroupID,Sorted,Objs).
+
+tie_break_sbd(Bonus,A,GroupID,[W1,W2|Sorted],[S1,S2|Sorted]):-
+     arg(1,W1,W1a),arg(1,W2,W2a), arg(2,W2,W1b),arg(2,W2,W2b), W1a=:=W2a,W1b=:=W2b,
+     bonus_sort_by_jaccard0(Bonus,A,GroupID,[W1,W2],[S1,S2]),!.
+tie_break_sbd(_,_,_,Sorted,Sorted).     
+
+
+dist(X1,Y1,X2,Y2,Dist):-
+  DiffX is X1 - X2,
+  DiffY is Y1 - Y2,
+  Dist is sqrt(DiffX * DiffX + DiffY * DiffY).
+
+is_adjacent_same_color(R1,R2,0):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
+  member(C-P,CP1),member(C-P,CP2).
+
+% TODO Directional shooter
+is_adjacent_same_color(R1,R2,1):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
+  member(C-P1,CP1), member(C-P2,CP2),
+  is_adjacent_point(P1,Dir,P2), \+ is_diag(Dir),!.
+is_adjacent_same_color(R1,R2,2):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
+  member(C-P1,CP1), member(C-P2,CP2),
+  is_adjacent_point(P1,Dir,PM), is_adjacent_point(PM,Dir,P2), \+ is_diag(Dir),!.
+
+is_adjacent_same_color(R1,R2,2):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
+  member(C-P1,CP1), member(C-P2,CP2),
+  is_adjacent_point(P1,Dir,P2), is_diag(Dir),!.
+
+distance(A,_AP,_X1,_Y1,B,Res):- A=@=B,!, Res=inf.
+distance(_A,AP,_X1,_Y1,B,Res):- 
+ must_det_ll((
+  Res = dist(Close,R,B),
+  %center2D(B,X2,Y2),
+  %dist(X1,Y1,X2,Y2,R),
+  R = 1,
+  globalpoints(B,BP),
+  maplist(is_adjacent_closeness(AP),BP,N),
+  sumlist(N,Sum),
+  Close is R*Sum)).
+
+is_adjacent_closeness(AP,B,Sum):- maplist(is_adjacent_close(B),AP,N), sumlist(N,Sum).
+
+is_adjacent_close(A,B,Diff):- is_adjacent_point(A,Dir,B),!, (\+ is_diag(Dir) ->  Diff = -2 ; Diff = -1).
+is_adjacent_close(A,B,Diff):- center2D(A,X1,Y1),center2D(B,X2,Y2), dist(X1,Y1,X2,Y2,Dist),Diff is Dist+1.
+
+
+bonus_sort_by_jaccard(_,_,_,[Obj],[Obj]):-!.
+bonus_sort_by_jaccard(Bonus,A,GroupID,Candidates,Objs):- \+ \+ member(A,Candidates),!, 
+  sort_by_distance(Bonus,A,GroupID,Candidates,Objs).
+bonus_sort_by_jaccard(Bonus,A,GroupID,Candidates,Objs):- bonus_sort_by_jaccard0(Bonus,A,GroupID,Candidates,Objs).
+
+simularity(B,A,Number):- 
+  obj_grp_atomslist(simularity,B,PB,PBP),
+  obj_grp_atomslist(simularity,A,PA,PAP),
+  memo_op(PAP,PBP,O,Joins,_J,NJ,JO),
+  ord(NJ/O+JO+Joins,[PA,A],[PB,B],B) = Number.
+
+
+bonus_sort_by_jaccard0(Bonus,A,GroupID,Candidates,ObjsO):-
+ must_det_ll((
+    obj_grp_atomslist(GroupID,A,PA,PAP0),
+    obj_atoms(Bonus,BonusAtoms),
+    append(PAP0,BonusAtoms,PAP),
+    (ord((NJ/O+JO+Joins),[PA,A],[PB,B],B) = Why),
+    !,
+    findall(Why,
+     (member(B,Candidates),
+        B\==A,
+        \+ is_whole_grid(B),
+        obj_grp_atomslist(GroupID,B,PB,PBP),
+       % PA\==PB,
+        memo_op(PAP,PBP,O,Joins,_J,NJ,JO)),
+     % maybe_allow_pair(PA,PB), allow_pair(PA,PB),  
+     Pairs), 
+   sort_safe(Pairs,RPairs),
+   %list_upto(3,RPairs,Some),
+   my_maplist(arg(4),RPairs,Objs))),!,
+ Objs=ObjsO.
+
+
+memo_op(PAP,PBP,O,Joins,J,NJ,JO):- PAP@>PBP->memo_op_1(PBP,PAP,O,Joins,J,NJ,JO);memo_op_1(PAP,PBP,O,Joins,J,NJ,JO).
+
+:- abolish(memo_op_then/7).
+:- dynamic(memo_op_then/7).
+memo_op_1(PAP,PBP,O,Joins,J,NJ,JO):- memo_op_then(PAP,PBP,O,Joins,J,NJ,JO),!.
+memo_op_1(PAP,PBP,O,Joins,J,NJ,JO):- memo_op_now(PAP,PBP,O,Joins,J,NJ,JO), asserta(memo_op_then(PAP,PBP,O,Joins,J,NJ,JO)),!.
+
+memo_op_now(PAP,PBP,O,Joins,J,NJ,JO):-
+       intersection(PAP,PBP,Joins,OtherA,OtherB),!,
+       %append([OtherA,OtherB],Other),
+       length(Joins,J),length(OtherA,OA),length(OtherB,OB),
+       O is OA+OB,
+       NJ is -J,
+       JO is - rationalize(J/(O+1)),!.
+
 prox_mappings(TITLE,AG,BG,_BGG,APA):-
  ignore((  
   member(E,APA),E=obj(_),!,
@@ -1891,4 +2019,7 @@ prefer_grid(G):- is_object_or_grid(G).
 
 
 :- include(kaggle_arc_footer).
+
+
+
 

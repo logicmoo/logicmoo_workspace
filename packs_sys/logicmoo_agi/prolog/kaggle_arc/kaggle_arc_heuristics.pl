@@ -85,12 +85,13 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
   remove_background_only_object(InCB,InC),remove_background_only_object(OutCB,OutC),
   %pp(InC),
   print_side_by_side(green,InC,after_rm_bg(ROptions,ID1),_,OutC,objs(ID2)),
-  nop(show_individuated_pair_cont(PairName,ROptions,GridIn,GridOut,InC,OutC))))))).
+  show_individuated_pair_cont(PairName,ROptions,GridIn,GridOut,InC,OutC)))))).
 
 show_individuated_pair_cont(PairName,ROptions,GridIn,GridOut,InC,OutC):- 
+ must_det_ll((
    show_indivs_side_by_side(inputs,InC),
    show_indivs_side_by_side(outputs,OutC),!,
-   nop(show_individuated_pair_cont2(PairName,ROptions,GridIn,GridOut,InC,OutC)),!.
+   show_individuated_pair_cont2(PairName,ROptions,GridIn,GridOut,InC,OutC))),!.
 
 show_individuated_pair_cont2(PairName,ROptions,_GridIn,GridOut,InC,OutC):- 
  must_det_ll((
@@ -114,7 +115,7 @@ show_individuated_pair_cont2(PairName,ROptions,_GridIn,GridOut,InC,OutC):-
    %when_in_html(if_wants_output_for(sort_some_relations,sort_some_relations(InC,OutC))),
 
   % (sub_var(trn,ID1)->show_object_dependancy(TestID,ExampleNum,InC,OutC);show_object_dependancy(TestID)),
- if_t( fail,((
+ if_t( true,((
 
 
    w_section(learn_group_mapping,        if_t(sub_var(trn,ID1), learn_group_mapping(InCR,OutCR))),

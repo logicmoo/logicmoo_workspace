@@ -871,12 +871,12 @@ save_how_io(TestID,HowIn,HowOut):-
 
 obj_group_pair(TestID,ExampleNum,InC,OutC):-
    current_example_nums(TestID,ExampleNum),
-   no_repeats_var(OutC), % set_example_num(ExampleNum),
-   obj_group5(TestID,ExampleNum,in,HowIn,InC), InC\==[],  length(InC,L),
+   %no_repeats_var(OutC), % set_example_num(ExampleNum),
+   once((obj_group5(TestID,ExampleNum,in,HowIn,InC), InC\==[],  length(InC,L),
 
    (((obj_group5(TestID,ExampleNum,out,HowOut,OOut),length(OOut,L),save_how_io(TestID,HowIn,HowOut)))
      ;obj_group5(TestID,ExampleNum,out,_,OOut)),   
-   OutC = OOut.
+   OutC = OOut)).
 
 objs_other_than_example(TestID,ExampleNum,InOut,Others):-
   findall(O,(current_example_nums(TestID,OExampleNum),
