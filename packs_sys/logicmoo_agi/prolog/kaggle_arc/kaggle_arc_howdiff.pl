@@ -735,18 +735,21 @@ type_prop(rescale,iz(sizeGY(_))).
 type_prop(rescale,rotSize2D(_,_,_)).
 type_prop(rescale,mass(_)).
 type_prop(rescale,cc(_,_)).
+type_prop(rescale,grid_rep(norm,_)).
 type_prop(reshape,shape_rep(grav,_)).
 type_prop(reshape,iz(sid(_))).
 type_prop(reshape,iz(stype(_))).
 type_prop(reshape,iz(algo_sid(_, _))).
 type_prop(reshape,iz(filltype(_))).
 type_prop(reshape,iz(symmetry_type(_,_))).
+type_prop(reshape,grid_rep(norm,_)).
 type_prop(reorder,pg(_Peers,_OG,_Type,_Ord)).
 type_prop(reorder,link_count(_,_)).
 type_prop(reorder,occurs_in_links(_,_)).
 type_prop(repaint,colors_cc(_)).
 type_prop(repaint,pen(_)).
 type_prop(repaint,cc(_,_)).
+type_prop(repaint,grid_rep(norm,_)).
 
 
 changed_by(colorlesspoints,reshape).

@@ -1827,6 +1827,11 @@ diff_l_r(InL,OutL,Same,InFlatP,OutPFlat):- fail,
   flat_props([UseL],PA), flat_props([OutL],PB),
   noteable_propdiffs(PA,PB,Same,InFlatP,OutPFlat))),!.
 
+% copy/transform  1-to-1
+diff_l_r([InL],[OutL],PA,[],OutFlat):- OutL\==[],!,
+  must_det_ll((flat_props([InL],PA), flat_props([OutL],PB),
+  intersection(PA,PB,_Shared,_L,OutFlat))).
+
 % copy/transform
 diff_l_r([InL],OutL,PA1,[],OutFlat):- OutL\==[],!,
   must_det_ll((flat_props([InL],PA), flat_props([OutL],PB),
