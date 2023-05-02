@@ -602,7 +602,7 @@ extend_grp_member_proplist(Grp,Props,OUTL):- is_list_of_prop_lists(Props),!,mapl
 extend_grp_member_proplist(Grp,[obj(Obj)],[obj(OUT)]):- extend_grp_member_proplist(Grp,Obj,OUT),!.
 extend_grp_member_proplist(Grp,obj(Obj),obj(OUT)):-!, extend_grp_member_proplist(Grp,Obj,OUT).
 
-extend_grp_member_proplist(_Grp,Props,OUTL):- must_det_ll(is_obj_props(Props)), length(Props,Len), Len==1,!,Props=OUTL.
+extend_grp_member_proplist(_Grp,Props,OUTL):- is_obj_props(Props), length(Props,Len), Len==1,!,Props=OUTL.
 extend_grp_member_proplist(Grp,Props,OUTL):- 
   Obj = obj(Props),
   findall(P,extend_obj_prop(Grp,Obj,P),NewProps),
@@ -1005,7 +1005,7 @@ flat_props(Objs,EList):-
   flatten(PropLists,List), %list_to_set(List,Set),
   include(not_skip_ku,List,EList).
 
-hack_prop_groups(Named,Objs):- ds, break,
+hack_prop_groups(Named,Objs):- %ds, break,
  must_det_ll((
   flat_props(Objs,EList),
   w_section(print_elists(Named),
@@ -1677,7 +1677,7 @@ variance_had_counts(Common,HAD,RRR,Versions,Missing,VersionsByCount,Variance):-
   length(Missing,ML),
   findall(UHAD,(member(RR,RRR), indv_props_list(RR,R), member(UHAD,R)),VersionL),
   variant_list_to_set(VersionL,VersionSet),
-  some_min_unifier(VersionSet,Common),nonvar(Common),
+  once((call((some_min_unifier(VersionSet,Common),nonvar(Common))))),
   number_from_magnitude(VersionSet,VersionSetNumbered),
   count_each(VersionSet,VersionL,CountOfEachL),
   subst_2L(VersionSet,VersionSetNumbered,CountOfEachL,CountOfEachNumbered),

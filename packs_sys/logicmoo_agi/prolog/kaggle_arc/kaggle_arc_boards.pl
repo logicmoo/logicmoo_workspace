@@ -108,14 +108,14 @@ cache_devel(_TestID,File):- exists_file(File), size_file(File,Size), Size > 300_
 %cache_devel(_TestID,File):- exists_file(File), !, writeln(exists_file(File)),!.
 cache_devel( TestID,File):- 
   ensure_test(TestID),
-  alarm(180, halt(666), Id, [install(true),remove(false)]),
+  alarm(300, halt(0), Id, [install(true),remove(false)]),
   nl,writeq(starting(cache_devel( TestID,File))),nl,
- % sformat(S,'touch "~w"',[File]), shell(S), 
+ sformat(S,'touch "~w"',[File]), shell(S), 
   cache_devel_1(TestID),
-  if_t(has_individuals(TestID),
-  ((writeln(save_test_hints(TestID,File)),
+  writeln(save_test_hints(TestID,File)),
+  remove_alarm(Id),
     save_test_hints_now(TestID,File),
-    writeln(finised_saving(TestID,File))))).
+    writeln(finised_saving(TestID,File)).
 
 cache_devel_1(TestID):- 
   learn_grid_size(TestID),
@@ -473,10 +473,13 @@ hint_into_data(vis_hv_term(Hints),(F)):- !, hint_into_data(Hints,F).
 hint_into_data(mono(Hints),(F)):- !, hint_into_data(Hints,F).
 hint_into_data(Data,Data).
 
-
+ 
 relax_hint(G,G):- (\+ compound(G)) -> !; true.
-relax_hint(rev(G),rev(GG)):- !, relax_hint(G,GG).
-relax_hint(mono(G),mono(GG)):- !, relax_hint(G,GG).
+%relax_hint(rev(G),rev(GG)):- !, relax_hint(G,GG).
+%relax_hint(mono(G),mono(GG)):- !, relax_hint(G,GG).
+%relax_hint(iz(G),iz(GG)):- relax_hint(G,GG).
+%relax_hint(info(G),info(GG)):- relax_hint(G,GG).
+relax_hint(P,PP):- compound_name_arguments(P,F,[G]),compound_name_arguments(PP,F,[GG]),relax_hint(G,GG).
 relax_hint(cg(W,G),cg(W,GG)):- !, relax_hint(G,GG).
 relax_hint(G,GG):- compound(G), duplicate_term(G,GG),arg(N,G,E),relax_arg(E,Hints),nb_setarg(N,GG,Hints).
 %relax_hint(G,GG):- functor(G,F,A),functor(GG,F,A).
@@ -484,6 +487,7 @@ relax_hint(G,GG):- compound(G), duplicate_term(G,GG),arg(N,G,E),relax_arg(E,Hint
 relax_arg(E,C):- is_color(E),!,relax_color_arg(E,C).
 %relax_arg(E,_):- var(E),!,fail.
 relax_arg(E,E):- var(E) -> !; true.
+relax_arg((G),(GG)):- relax_hint(G,GG).
 relax_arg(E,len(L)):- is_list(E),length(E,L).
 relax_arg(_,_).
 
@@ -708,8 +712,11 @@ min_unifier_e(_,_,_).
 some_min_unifier(X,X):- \+ compound(X),!.
 some_min_unifier([A|List],Term):- some_min_unifier_3(A,List,Term).
 
-some_min_unifier_3(A,List,A):- my_maplist('=@='(A),List),!.
-some_min_unifier_3(A,[B|List],O):- must_min_unifier(A,B,C), some_min_unifier_3(C,List,O).
+can_unfy_already(A,B):- \+ \+ A = B.
+some_min_unifier_3(A,[B|List],O):- min_unifier(B,A,C),nonvar(C),some_min_unifier_3(C,List,O),!.
+some_min_unifier_3(A,[B|List],O):- relax_hint(A,AA),nonvar(AA),maplist(can_unfy_already(AA),[B|List]), some_min_unifier_3(AA,List,O),!.
+some_min_unifier_3(A,List,A):- my_maplist(can_unfy_already(A),List),!.
+
 
 is_a_min_unifier(A,B,C):- B==strict,A==loose,!,C=A.
 is_a_min_unifier(A,B,C):- A==fg,B\==bg,B\==wbg,!,C=A.
@@ -727,11 +734,11 @@ min_unifier(A,B,B):- plain_var(A),!.
 */
 
 min_unifier_n(A,B,D):- number(A),number(B),!,c_proportional(A,B,D).
-min_unifier_n(A,B,D):- min_unifier_u(A,B,D).
+min_unifier_n(A,B,D):- min_unifier(A,B,D).
 
 
 
-min_unifier_u(A,B,_):- (\+ compound(A);\+ compound(B)),!.
+min_unifier_u(A,B,_):- (\+ compound(A); \+ compound(B)),!.
 min_unifier_u(A,B,AA):- is_grid(A),is_grid(B),!,min_grid_unifier(A,B,AA),!.
 min_unifier_u(A,B,AA):- is_list(A),is_list(B),!,min_list_unifier(A,B,AA),
   ignore((length(A,AL),length(B,AL),length(AA,AL))).
@@ -740,6 +747,7 @@ min_unifier_u(A,B,AA):- is_cons(A),is_cons(B),!,min_list_unifier(A,B,AA),!.
 min_unifier_u(A,B,R):- compound(A),compound(B),
  compound_name_arguments(A,F,AA),compound_name_arguments(B,F,BB),!,
  my_maplist(min_unifier,AA,BB,RR),compound_name_arguments(R,F,RR).
+
 min_unifier_u(A,B,R):- relax_hint(A,R),\+ (B \= R),!.
 
 is_cons(A):- compound(A),A=[_|_].

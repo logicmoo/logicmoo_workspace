@@ -418,7 +418,7 @@ to_realer_color(C,N):- into_color_name_always(C,CN),C\=@=CN,!,to_realer_color(CN
 object_glyph_colorz(Obj,Colors):-
   unique_colors(Obj,[UC|CL]),
   findall(RC,(member(FC,[UC|CL]),to_realer_color(FC,RC)),NColors),
-  (nonvar(UC)-> flatten_set([NColors,UC],Colors);Colors=NColors),!.
+  (nonvar(UC)-> flatten_sets([NColors,UC],Colors);Colors=NColors),!.
 object_glyph_colorz(_,[fg]).
 
 object_color_glyph_long(PA, CGA):- 

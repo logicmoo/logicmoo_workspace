@@ -2292,13 +2292,13 @@ nobject_glyph(G,Glyph):- compound_var(G,N),!,nobject_glyph(N,Glyph).
 nobject_glyph(A,Glyph):- atom(A),atom_chars(A,Chars),last(Chars,Glyph),!.
 nobject_glyph(G,Glyph):- term_to_atom(G,A),nobject_glyph(A,Glyph).
 
+int2glyph(GN2,Glyph):- int2glyph0(GN2,Glyph),!.%unwonk_ansi(Glyph).
+int2glyph0(GN2,Glyph):- quietly(int2glyph1(GN2,Glyph)),!.
+int2glyph0(GN,Glyph):- GN > 255, GN2 is GN div 2 + (GN rem 2), int2glyph1(GN2,Glyph),!.
+int2glyph0(GN2,Glyph):- itrace,i_sym(GN2,GN),!,i_glyph(GN,Glyph),!.
 
-int2glyph(GN2,Glyph):- quietly(int2glyph0(GN2,Glyph)),!.
-int2glyph(GN,Glyph):- GN > 255, GN2 is GN div 2 + (GN rem 2), int2glyph(GN2,Glyph),!.
-int2glyph(GN2,Glyph):- atrace,i_sym(GN2,GN),!,i_glyph(GN,Glyph),!.
-
-int2glyph0(GN2,Glyph):- i_sym(GN2,GN),i_glyph(GN,Glyph),atom(Glyph),!.
-int2glyph0(GN,Glyph):- GN > 255, GN2 is GN div 2 + (GN rem 2), int2glyph0(GN2,Glyph),!.
+int2glyph1(GN2,Glyph):- i_sym(GN2,GN),i_glyph(GN,Glyph),atom(Glyph),!.
+int2glyph1(GN,Glyph):- GN > 255, GN2 is GN div 2 + (GN rem 2), int2glyph1(GN2,Glyph),!.
 
 
 %user:portray(S):- (string(S);atom(S)),atom_codes(S,[27|_]),write('"'),write(S),write('"').
@@ -2413,15 +2413,17 @@ i_glyph(_,Glyph):- bg_dot(Code), name_safe(Glyph,[Code]),!.
 %i_glyph(N,Glyph):- i_glyph0(N,Glyph),!.%:- atrace,i_glyph0(N,Glyph),atom(Glyph),!.
 
 name_safe(Glyph,Codes):- catch(name(Glyph,Codes),_,fail).
-i_glyph0(NIL,'?'):- NIL==nil,!.
-i_glyph0(N,Glyph):- bg_sym_ui(BG), BG==N, bg_dot(Code), name_safe(Glyph,[Code]),!.
-i_glyph0(N,Glyph):- atom(N),name_safe(N,[_111,95,Code|_])->name_safe(Glyph,[Code]),!.
-i_glyph0(N,Glyph):- atom(N),atom_number(N,Num),i_glyph(Num,Glyph),!.
-i_glyph0(N,Glyph):- atom(N),name_safe(N,[Code])->name_safe(Glyph,[Code]),!.
-i_glyph0(Code,Glyph):- integer(Code), Code> 255, name_safe(Glyph,[Code]),!.
-i_glyph0(N,Glyph):- integer(N),quietly((i_sym(N,Code),name_safe(Glyph,[Code]))),!.
-i_glyph0(N,Glyph):- plain_var(N),format(chars(Codes),'~p',[N]),last(Codes,Glyph),!.
-i_glyph0(N,Glyph):- number(N), N>10, integer(N),N3 is N div 3, i_glyph0(N3,Glyph),!.
+
+i_glyph0(N,C):-i_glyph1(N,Glyph),!,atom_chars(Glyph,[C|_]).
+i_glyph1(NIL,'?'):- NIL==nil,!.
+i_glyph1(N,Glyph):- bg_sym_ui(BG), BG==N, bg_dot(Code), name_safe(Glyph,[Code]),!.
+i_glyph1(Code,Glyph):- integer(Code), Code> 255, name_safe(Glyph,[Code]),!.
+i_glyph1(N,Glyph):- integer(N),quietly((i_sym(N,Code),name_safe(Glyph,[Code]))),!.
+i_glyph1(N,Glyph):- number(N), N>10, integer(N),N3 is N div 3, i_glyph1(N3,Glyph),!.
+i_glyph1(N,Glyph):- plain_var(N),format(chars(Codes),'~p',[N]),last(Codes,Glyph),!.
+i_glyph1(N,Glyph):- atom(N),name_safe(N,[_111,95,Code|_])->name_safe(Glyph,[Code]),!.
+i_glyph1(N,Glyph):- atom(N),atom_number(N,Num),i_glyph(Num,Glyph),!.
+i_glyph1(N,Glyph):- atom(N),name_safe(N,[Code])->name_safe(Glyph,[Code]),!.
 %i_glyph(N,Glyph):- atom(N),atom_chars(N,Chars),last(Chars,LGlyph),upcase_atom(LGlyph,Glyph).
                                                                             
 i_sym(N2,Code):- integer(N2),!, N is N2+160, change_code(N,NN), iss:i_syms(Codes),nth0(NN,Codes,Code),!.
@@ -2431,6 +2433,33 @@ i_sym(N,Code):- plain_var(N), Code = 63.
 %change_code(N,M):- N>10, M is (N * 10 ),!.
 change_code(N,M):- M is N.
 
+
+unwonk_ansi(Y,YY):- string(Y),!,atomics_to_string(List,"\u0083",Y),atomics_to_string(List,YY).
+unwonk_ansi(Y,YY):- is_list(Y),!,maplist(unwonk_ansi,Y,YY).
+unwonk_ansi(Y, Y):- \+ callable(Y),!.
+unwonk_ansi(Y,YY):- Y = oid_glyph_object(OID,Glyph,Obj), YY = oid_glyph_object(YOID,YGlyph,YObj),
+  unwonk_atom(OID,Number,YOID),
+  unwonk_ansi(Obj,YObj),  
+  unwonk_atom(Glyph,Number,YGlyph),!,
+  format(user_error,'~N% ~p.~n',[YY]).
+   
+unwonk_ansi(Y,YY):- compound(Y),!,compound_name_arguments(Y,F,A),maplist(unwonk_ansi,A,AA),compound_name_arguments(YY,F,AA),!.
+unwonk_ansi(Y, Y):- \+ atom(Y),!.
+unwonk_ansi(Y,YY):- unwonk_atom(Y,YY,_),!.
+unwonk_ansi(Y,Y).
+
+
+unwonk_atom(Y,YY,Number):- atom_codes(Y,[111,95,195,402|_Rest]),atomic_list_concat([o,Bad,ANumber|GID_L],'_',Y),
+  atom_number(ANumber,Number),
+  unbad_glyph(Bad,Number,Glyph),!,                            atomic_list_concat([o,Glyph,ANumber|GID_L],'_',YY).
+unwonk_atom(Y,YY,Number):- atom_codes(Y,[195,402|_]), glyph_b_g(YY,Number,Y),!.
+unwonk_atom(Y,YY,_):- atomics_to_string(List,"\u0083",Y),atomic_list_concat(List,YY).
+ 
+
+unbad_glyph(Bad,Number,Glyph):- glyph_b_g(Glyph,N,Bad),!,ignore(Number=N).
+unbad_glyph(Bad,Number,Glyph):- int2glyph(Number,Glyph),asserta(glyph_b_g(Glyph,Number,Bad)),!.
+
+:- dynamic(glyph_b_g/3).
 
 
 print_g1(P2,_,_, E):- print_g1(P2,E),!. 
