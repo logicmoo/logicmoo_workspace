@@ -187,12 +187,15 @@ solve_via_scene_change_rules(TestID,ExampleNum):-
   count_difs(ExpectedOut,OurSolution,Errors),
   print_ss(wqs(solve_via_scene_change(TestID,ExampleNum,errors=Errors)),ExpectedOut,OurSolution))),
   (Errors == 0 ->  
-    banner_lines(green,4) 
+   (banner_lines(green,4),
+    print_scene_change_rules(rules_at_time_of_success,TestID),
+    banner_lines(green,4))
     ;(banner_lines(red,10),!,%bt,
-     !,banner_lines(red,1),
-      %print_scene_change_rules(TestID),banner_lines(red,1), 
-      banner_lines(red,10),!,
-    fail)).
+     !,banner_lines(red,10),
+      %print_scene_change_rules(TestID),banner_lines(red,1),       
+      print_scene_change_rules(rules_at_time_of_failure,TestID),
+      banner_lines(red,5),
+      !,fail)).
 
 resize_our_solution(PX,PY,OurSolution1,OurSolution):-
   once(ground(PX+PY)
@@ -797,7 +800,7 @@ good_for_lhs(iz(cenGX(_))).
 good_for_lhs(iz(cenGY(_))).
 %good_for_lhs(iz(fg_or_bg(_))).
 good_for_lhs(iz(filltype(_))).
-good_for_lhs(iz(info(birth(_)))).
+good_for_lhs(iz(info(_))).
 good_for_lhs(iz(sid(_))).
 good_for_lhs(iz(sizeGX(_))).
 good_for_lhs(iz(sizeGY(_))).
@@ -1692,31 +1695,36 @@ solve_obj_list(S,VM,TestID,ExampleNum,IO__Start,ROptions,[Obj|Objs],[NewObj|Objs
 
 */
 
-has_individuals(TestID):- var(TestID), !, ensure_test(TestID), has_individuals(TestID).
-has_individuals(TestID):-  
+has_individuals(TestID):- var(TestID), !, ensure_test(TestID), has_individuals_real(TestID).
+has_individuals(TestID):- has_individuals_real(TestID),!.
+has_individuals(TestID):- warn_skip(has_individuals(TestID)),!.
+has_individuals_real(TestID):-  
  forall(current_example_nums(TestID,ExampleNum),
   (arc_cache:individuated_cache(TestID,TID,GID,_,Objs), sub_var(ExampleNum,(TID,GID)), Objs\==[])),!.
  
 
 
 ensure_individuals(TestID):- var(TestID),!,ensure_test(TestID),ensure_individuals(TestID).
-ensure_individuals(TestID):- has_individuals(TestID),!.
-ensure_individuals(TestID):- load_file_dyn_pfc(TestID),has_individuals(TestID),!.
+ensure_individuals(TestID):- has_individuals_real(TestID),!.
+ensure_individuals(TestID):- load_file_dyn_pfc(TestID),has_individuals_real(TestID),!.
 ensure_individuals(TestID):- 
  time((with_individuated_cache(true,
   once((with_pair_mode(whole_test, ensure_individuals1(TestID))))))), 
  save_test_hints_now(TestID).
 
 % ensure_individuals1 tries the ensure_individuals2 
-ensure_individuals1(TestID):- has_individuals(TestID),!.
+ensure_individuals1(TestID):- has_individuals_real(TestID),!.
 ensure_individuals1(TestID):- 
   ensure_test(TestID),
-    once((with_pair_mode(whole_test, 
-          ensure_individuals2(TestID)),has_individuals(TestID))),!.
+    ignore(once((with_pair_mode(whole_test, 
+          ensure_individuals2(TestID)),
+    has_individuals_real(TestID)))),!.
  
 ensure_individuals2(TestID):- ignore((ExampleNum=trn+_)),
   print_collapsed(200, forall( kaggle_arc(TestID,ExampleNum,GridIn,GridOut),
            individuate_pair(complete,GridIn,GridOut,_InC,_OutC))).
+ensure_individuals2(TestID):- warn_skip(ensure_individuals2(TestID)),!.
+
 ensure_individuals2(TestID):- once(with_luser(menu_key,'i',once(ndividuator(TestID)))).
 ensure_individuals2(TestID):- once(with_luser(menu_key,'o',once(ndividuator(TestID)))).
 ensure_individuals2(TestID):- calc_propcounts(TestID).
@@ -2171,7 +2179,7 @@ assert_become_new(Term):- asserta_new(Term).
 
 at_least_one_overlap(DSame,PSame):-
   member(DS,DSame),member(S,PSame),
-  (DS=@=S;other_val(S,DS)),!.
+  (DS=@=S;( \+ DS\=S );other_val(S,DS)),!.
 
 correct_antes1(TestID,IO_,P,PSame,SL):- 
   %rev_in_out_atoms(OI,IO_),
@@ -2179,22 +2187,26 @@ correct_antes1(TestID,IO_,P,PSame,SL):-
    (member(S,PSame),
      \+ \+ ((
        forall((ac_db(TestID,IO_,DP,DSame),at_least_one_overlap(DSame,PSame)),
-          ((P==DP)-> true; (member(DS,DSame),  \+ negated_s_lit(S,_), other_val(S,DS))))))),
+          ((P==DP)-> true; (member(DS,DSame),  
+             \+ negated_s_lit(S,_), other_val(S,DS))))))),
    SL), SL\==[],!.
 correct_antes1(_TestID,_IO_,_P,PSame,PSame).
 
+is_unbound_prop(S):- make_unifiable(S,DS), S=@=DS,!.
+
 correct_antes_neg(TestID,IO_,P,PSame,Kept):-
   %rev_in_out_atoms(OI,IO_),
-  findall( ( \+ S),
-   ((ac_db(TestID,IO_,DP,DSame), 
+  findall( ( \+ DS),
+   ((member(S,PSame), \+ negated_s_lit(S,_), is_unbound_prop(S), make_unifiable(S,DS),
+     ac_db(TestID,IO_,DP,DSame),      
      other_val(P,DP), at_least_one_overlap(DSame,PSame),
-     member(S,DSame),  \+ negated_s_lit(S,_), make_unifiable_u(S,SU), SU\=@=S , \+ member(SU,PSame))), SL),
-  SL\==[],
-  append(PSame,SL,Kept),Kept\==[],!.
+     member(DS,DSame), \+ negated_s_lit(DS,_), \+ is_unbound_prop(DS), 
+       \+ member(\+ DS,PSame))), SL), SL\==[],
+  append(PSame,SL,Kept),Kept\==[], !.
 correct_antes_neg(_TestID,_IO_,_P,PSame,PSame).
 
+correct_antes2(TestID,IO_,P,PSame,Kept):- correct_antes_neg(TestID,IO_,P,PSame,Kept).
 correct_antes2(_TestID,_IO_,_P,PSame,Kept):- vsr_set(PSame,Kept),!.
-correct_antes2(TestID,IO_,P,PSame,Kept):- fail, correct_antes_neg(TestID,IO_,P,PSame,Kept).
 correct_antes2(_TestID,_IO_,_P,PSame,PSame).
 
 correct_antes3(_TestID,_IO_,P,PSame,Kept):- fail,
