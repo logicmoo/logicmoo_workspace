@@ -558,20 +558,13 @@ dist(X1,Y1,X2,Y2,Dist):-
   DiffY is Y1 - Y2,
   Dist is sqrt(DiffX * DiffX + DiffY * DiffY).
 
-is_adjacent_same_color(R1,R2,0):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
-  member(C-P,CP1),member(C-P,CP2).
+object_points(R1,R2,P1,P2):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,member(C-P1,CP1), member(C-P2,CP2).
 
 % TODO Directional shooter
-is_adjacent_same_color(R1,R2,1):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
-  member(C-P1,CP1), member(C-P2,CP2),
-  is_adjacent_point(P1,Dir,P2), \+ is_diag(Dir),!.
-is_adjacent_same_color(R1,R2,2):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
-  member(C-P1,CP1), member(C-P2,CP2),
-  is_adjacent_point(P1,Dir,PM), is_adjacent_point(PM,Dir,P2), \+ is_diag(Dir),!.
-
-is_adjacent_same_color(R1,R2,2):- globalpoints(R1,CP1),globalpoints(R2,CP2),!,
-  member(C-P1,CP1), member(C-P2,CP2),
-  is_adjacent_point(P1,Dir,P2), is_diag(Dir),!.
+is_adjacent_same_color(R1,R2,0):- object_points(R1,R2,P,P).
+is_adjacent_same_color(R1,R2,1):- object_points(R1,R2,P1,P2), is_adjacent_point(P1,Dir,P2), \+ is_diag(Dir).
+is_adjacent_same_color(R1,R2,2):- object_points(R1,R2,P1,P2), is_adjacent_point(P1,Dir,PM), \+ is_diag(Dir), is_adjacent_point(PM,Dir,P2).
+is_adjacent_same_color(R1,R2,2):- object_points(R1,R2,P1,P2), is_adjacent_point(P1,Dir,P2), is_diag(Dir).
 
 distance(A,_AP,_X1,_Y1,B,Res):- A=@=B,!, Res=inf.
 distance(_A,AP,_X1,_Y1,B,Res):- 

@@ -66,8 +66,8 @@ show_individuated_pair(PairName,ROptions,GridIn,GridOut,InC00,OutC00):-
   show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCR,OutCR),!.
 
 
-show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
-  nop(show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB)).
+%show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
+%  nop(show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB)).
 
 show_individuated_pair(PairName,ROptions,GridIn,GridOut,InCB,OutCB):-
  %ensure_test(TestID),

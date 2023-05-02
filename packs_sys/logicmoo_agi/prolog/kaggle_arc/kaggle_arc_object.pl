@@ -1797,16 +1797,14 @@ center2G(I,X,Y):- indv_props(I,iz(cenGX(X))),indv_props(I,iz(cenGY(Y))),!.
 % Calculate the center of mass of a list of points
 center2D(I,X,Y):- is_cpoint(I),!,I=(_-P),hv_point(X,Y,P),!.
 center2D(I,X,Y):- is_point(I),!,hv_point(X,Y,I),!.
+center2D(I,X,Y):- indv_props(I,center2D(XX,YY)),nonvar(XX),nonvar(YY),!,XX=X,YY=Y.
 center2D(I,X,Y):- is_grid(I), !, grid_size(I,H,V),X is floor(H/2),Y is floor(V/2).
-center2D(I,X,Y):- indv_props(I,center2D(X,Y)),nonvar(X),nonvar(Y),!.
 center2D([], inf, inf):-!.
-center2D(I,X,Y):- \+ is_list(I),!, must_det_ll((globalpoints(I,Points),center2D(Points,X,Y))).
+center2D(I,X,Y):- \+ is_list(I),!, must_det_ll((globalpoints(I,Points),center2D(Points,XX,YY))),!,XX=X,YY=Y.
 center2D(Points, CenterX, CenterY) :- maplist(center2D,Points,X,Y),
-   length(Points,Count),
-   sumlist(X,SumX),sumlist(Y,SumY),
+   length(Points,Count), sumlist(X,SumX),sumlist(Y,SumY),
     Count > 0, % Ensure there's at least one point to avoid division by zero
-    CenterX is round(SumX / Count),
-    CenterY is round(SumY / Count).
+    CenterX is round(SumX / Count), CenterY is round(SumY / Count).
 
 %center2D(I,X,Y):- indv_props(I,iz(cenXD(X))),indv_props(I,iz(cenYD(Y))),!.
 %center2G(Obj,CentX,CentY):- vis2D(Obj,H,V), loc2D(Obj,X,Y),CentX is X + floor(H/2),CentY is Y + floor(V/2).
